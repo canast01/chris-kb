@@ -4454,40 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-to-back-up" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What to Back Up
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connection-server-adam-backup-vdmexport" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection Server ADAM Backup (vdmexport)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Connection Server ADAM Backup (vdmexport)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#verify-the-backup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4495,11 +4461,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4853,7 +4814,7 @@
 
 
 <h1 id="horizon-backup-and-restore">Horizon — Backup and Restore<a class="headerlink" href="#horizon-backup-and-restore" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Backup Sources                        Backup Methods
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Backup Sources                        Backup Methods
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────┐               ┌────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  (ADAM/LDAP)        │               └────────────────────────────┘
@@ -4868,80 +4829,57 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  + AppStack VMDKs   │               │  on datastore              │
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└─────────────────────┘               └────────────────────────────┘
 </code></pre></div>
-<h2 id="what-to-back-up">What to Back Up<a class="headerlink" href="#what-to-back-up" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Backup Method</th>
-<th>RPO Target</th>
-<th>Critical?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Connection Server ADAM/LDAP config</td>
-<td><code>vdmexport.exe</code></td>
-<td>Daily</td>
-<td>Yes — entire pod config</td>
-</tr>
-<tr>
-<td>App Volumes Manager SQL database</td>
-<td>SQL Server backup</td>
-<td>Daily</td>
-<td>Yes — all AppStack/writable assignments</td>
-</tr>
-<tr>
-<td>DEM Config Share</td>
-<td>File-level backup (agent-based or SMB snapshot)</td>
-<td>Daily</td>
-<td>Yes — all user environment policies</td>
-</tr>
-<tr>
-<td>vCenter golden image VM snapshots</td>
-<td>vSphere snapshot + datastore backup</td>
-<td>Weekly</td>
-<td>Yes — without this, pool rebuilds require re-imaging</td>
-</tr>
-<tr>
-<td>App Volumes AppStack VMDKs</td>
-<td>Datastore-level backup or file copy</td>
-<td>Weekly</td>
-<td>Yes — application packages</td>
-</tr>
-<tr>
-<td>UAG configuration</td>
-<td>INI file + screenshot of settings</td>
-<td>Per change</td>
-<td>Yes — allows rapid redeploy</td>
-</tr>
-<tr>
-<td>Horizon event database (SQL)</td>
-<td>SQL Server backup</td>
-<td>Daily</td>
-<td>No — historical reporting only</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="connection-server-adam-backup-vdmexport">Connection Server ADAM Backup (vdmexport)<a class="headerlink" href="#connection-server-adam-backup-vdmexport" title="Permanent link">&para;</a></h2>
-<p>The Connection Server configuration is stored in an <strong>ADAM (Active Directory Lightweight Directory Services)</strong> instance on each Connection Server. <code>vdmexport.exe</code> exports this as an LDIF file.</p>
-<h3 id="backup">Backup<a class="headerlink" href="#backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>:: Run on the Connection Server (or any CS in the pod)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>:: Default install path
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>cd &quot;C:\Program Files\VMware\VMware View\Server\tools\bin&quot;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>:: Export to LDIF
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vdmexport.exe -f C:\Backups\horizon-config-backup.ldif
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>:: Export with date stamp (run from CMD)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vdmexport.exe -f &quot;C:\Backups\horizon-config-%DATE:~10,4%%DATE:~4,2%%DATE:~7,2%.ldif&quot;
-</code></pre></div>
-<p><strong>Automate with Task Scheduler:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>:: Create scheduled task — daily at 02:00
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>schtasks /create /tn &quot;Horizon ADAM Backup&quot; /tr ^
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  &quot;\&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmexport.exe\&quot; -f C:\Backups\horizon-config-latest.ldif&quot; ^
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  /sc DAILY /st 02:00 /ru SYSTEM
+┌────────────────────────────────── VMware Horizon — Backup &amp; Restore ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │
+│  VMs, and user profile shares; desktop VMs themselves are stateless (instant clone).                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Config Backup                 │  │             Golden Image Backup             │   │
+│   │          LDAP backup: vdmexport.exe          │  │          VM snapshot before update          │   │
+│   │           Schedule: daily minimum            │  │         Clone golden image: pre-push        │   │
+│   │           Store: secure file share           │  │            Keep N-1 + N-2 images            │   │
+│   │          Include: Events DB backup           │  │          VADP: backup if persistent         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LDAP backup is most critical; without it Horizon config must be rebuilt manually.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Profile &amp; Restore               │  │              Restore Procedure              │   │
+│   │          User profiles: FSLogix/DEM          │  │           Restore LDAP: vdmimport           │   │
+│   │         Profile share: daily backup          │  │          Re-register CS: reconnect          │   │
+│   │           DEM config: GPO + share            │  │          Rebuild pools from golden          │   │
+│   │          AppStack: backup VMDK file          │  │             Validate: test login            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Server VMs should be backed up via VADP as well; profile CIFS share                       │
+│  must be on backed-up NAS; AppStack VMDKs on backed-up datastore.                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vdmexport.exe = Horizon LDAP config export tool; run on Connection Server                            │
+│  vdmimport     = Horizon LDAP config import; restore from backup                                      │
+│  LDAP          = Horizon stores its config in AD LDS (LDAP store)                                     │
+│  Golden image  = template VM; all instant clones derive from this                                     │
+│  N-1/N-2       = keep two previous golden image versions for rollback                                 │
+│  Events DB     = Horizon event log; SQL Server; backup separately                                     │
+│  FSLogix       = user profile container; VHDX file on CIFS share                                      │
+│  DEM           = Dynamic Environment Manager; policy-based profile                                    │
+│  AppStack      = App Volumes VMDK; contains installed applications                                    │
+│  VADP          = backup API; use for persistent full clone VMs                                        │
+│  CIFS share    = Windows file share; user profile store                                               │
+│  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Automate with Task Scheduler:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```cmd
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>:: Create scheduled task — daily at 02:00
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>schtasks /create /tn &quot;Horizon ADAM Backup&quot; /tr ^
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  &quot;\&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmexport.exe\&quot; -f C:\Backups\horizon-config-latest.ldif&quot; ^
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  /sc DAILY /st 02:00 /ru SYSTEM
 </code></pre></div></p>
 <p><strong>What is included in the LDIF export:</strong>
 - Desktop pool definitions
@@ -4956,67 +4894,67 @@
 - Event database (SQL — backed up separately)
 - Connection Server service account passwords (re-entered at restore time)</p>
 <h3 id="verify-the-backup">Verify the Backup<a class="headerlink" href="#verify-the-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check file was created and is non-zero</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="s2">&quot;C:\Backups\horizon-config-latest.ldif&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">if</span> <span class="p">((</span><span class="nb">Get-Item</span> <span class="nv">$backup</span><span class="p">).</span><span class="n">Length</span> <span class="o">-gt</span> <span class="n">1MB</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Backup OK: </span><span class="p">$((</span><span class="nb">Get-Item</span> <span class="nv">$backup</span><span class="p">).</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)</span><span class="s2"> MB&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;Backup file is suspiciously small — check vdmexport output&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Quick content check — should contain Connection Server entries</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$backup</span> <span class="n">-Pattern</span> <span class="s2">&quot;cn=vdi&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check file was created and is non-zero</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$backup</span> <span class="p">=</span> <span class="s2">&quot;C:\Backups\horizon-config-latest.ldif&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">if</span> <span class="p">((</span><span class="nb">Get-Item</span> <span class="nv">$backup</span><span class="p">).</span><span class="n">Length</span> <span class="o">-gt</span> <span class="n">1MB</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Backup OK: </span><span class="p">$((</span><span class="nb">Get-Item</span> <span class="nv">$backup</span><span class="p">).</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)</span><span class="s2"> MB&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nb">Write-Warning</span> <span class="s2">&quot;Backup file is suspiciously small — check vdmexport output&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Quick content check — should contain Connection Server entries</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$backup</span> <span class="n">-Pattern</span> <span class="s2">&quot;cn=vdi&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">5</span>
 </code></pre></div>
 <hr />
 <h2 id="app-volumes-manager-database-backup">App Volumes Manager Database Backup<a class="headerlink" href="#app-volumes-manager-database-backup" title="Permanent link">&para;</a></h2>
 <p>App Volumes Manager uses a SQL Server database (<code>cloudvolumes</code> by default).</p>
 <h3 id="sql-server-backup-t-sql">SQL Server Backup (T-SQL)<a class="headerlink" href="#sql-server-backup-t-sql" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Full backup</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">cloudvolumes</span><span class="p">]</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLBackups\cloudvolumes_full.bak&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="n">COMPRESSION</span><span class="p">,</span><span class="w"> </span><span class="n">STATS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">-- Verify backup</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">RESTORE</span><span class="w"> </span><span class="n">VERIFYONLY</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLBackups\cloudvolumes_full.bak&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Full backup</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">BACKUP</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">cloudvolumes</span><span class="p">]</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="k">TO</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLBackups\cloudvolumes_full.bak&#39;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="k">WITH</span><span class="w"> </span><span class="n">COMPRESSION</span><span class="p">,</span><span class="w"> </span><span class="n">STATS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">-- Verify backup</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">RESTORE</span><span class="w"> </span><span class="n">VERIFYONLY</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLBackups\cloudvolumes_full.bak&#39;</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="sql-agent-job-powershell-setup">SQL Agent Job (PowerShell setup)<a class="headerlink" href="#sql-agent-job-powershell-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Using dbatools module</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Install-Module</span> <span class="n">dbatools</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Backup</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Backup-DbaDatabase</span> <span class="n">-SqlInstance</span> <span class="n">sql01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  <span class="n">-Database</span> <span class="n">cloudvolumes</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="n">-BackupDirectory</span> <span class="s2">&quot;\\backupserver\SQLBackups\AppVolumes&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  <span class="n">-CompressBackup</span> <span class="p">`</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="n">-Checksum</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Restore test (to alternate instance)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Restore-DbaDatabase</span> <span class="n">-SqlInstance</span> <span class="n">sql01-test</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  <span class="n">-Path</span> <span class="s2">&quot;\\backupserver\SQLBackups\AppVolumes\cloudvolumes_*.bak&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  <span class="n">-DatabaseName</span> <span class="n">cloudvolumes_restore_test</span> <span class="p">`</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>  <span class="n">-WithReplace</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Using dbatools module</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Install-Module</span> <span class="n">dbatools</span> <span class="n">-Scope</span> <span class="n">CurrentUser</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Backup</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Backup-DbaDatabase</span> <span class="n">-SqlInstance</span> <span class="n">sql01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="n">-Database</span> <span class="n">cloudvolumes</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="n">-BackupDirectory</span> <span class="s2">&quot;\\backupserver\SQLBackups\AppVolumes&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  <span class="n">-CompressBackup</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="n">-Checksum</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Restore test (to alternate instance)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Restore-DbaDatabase</span> <span class="n">-SqlInstance</span> <span class="n">sql01-test</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">`</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  <span class="n">-Path</span> <span class="s2">&quot;\\backupserver\SQLBackups\AppVolumes\cloudvolumes_*.bak&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  <span class="n">-DatabaseName</span> <span class="n">cloudvolumes_restore_test</span> <span class="p">`</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>  <span class="n">-WithReplace</span>
 </code></pre></div>
 <hr />
 <h2 id="dem-config-share-backup">DEM Config Share Backup<a class="headerlink" href="#dem-config-share-backup" title="Permanent link">&para;</a></h2>
 <p>The DEM config share is a standard SMB file share — back it up with whatever agent-based or share-snapshot method you use for file servers.</p>
 <h3 id="robocopy-backup">Robocopy Backup<a class="headerlink" href="#robocopy-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>:: Mirror DEM config share to backup location
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>robocopy \\fileserver\DEMConfig D:\Backups\DEMConfig /MIR /LOG:D:\Logs\dem-backup.log /NP /R:3 /W:10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>:: Mirror DEM config share to backup location
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>robocopy \\fileserver\DEMConfig D:\Backups\DEMConfig /MIR /LOG:D:\Logs\dem-backup.log /NP /R:3 /W:10
 </code></pre></div>
 <h3 id="powershell-with-date-stamp">PowerShell with Date Stamp<a class="headerlink" href="#powershell-with-date-stamp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$src</span> <span class="p">=</span> <span class="s2">&quot;\\fileserver\DEMConfig&quot;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$dst</span> <span class="p">=</span> <span class="s2">&quot;D:\Backups\DEMConfig\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$dst</span> <span class="n">-Force</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">robocopy</span> <span class="nv">$src</span> <span class="nv">$dst</span> <span class="p">/</span><span class="n">MIR</span> <span class="p">/</span><span class="n">R</span><span class="p">:</span><span class="n">3</span> <span class="p">/</span><span class="n">W</span><span class="p">:</span><span class="n">5</span> <span class="p">/</span><span class="n">LOG</span><span class="p">:</span><span class="s2">&quot;D:\Logs\dem-backup-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.log&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">$src</span> <span class="p">=</span> <span class="s2">&quot;\\fileserver\DEMConfig&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$dst</span> <span class="p">=</span> <span class="s2">&quot;D:\Backups\DEMConfig\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$dst</span> <span class="n">-Force</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">robocopy</span> <span class="nv">$src</span> <span class="nv">$dst</span> <span class="p">/</span><span class="n">MIR</span> <span class="p">/</span><span class="n">R</span><span class="p">:</span><span class="n">3</span> <span class="p">/</span><span class="n">W</span><span class="p">:</span><span class="n">5</span> <span class="p">/</span><span class="n">LOG</span><span class="p">:</span><span class="s2">&quot;D:\Logs\dem-backup-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">.log&quot;</span>
 </code></pre></div>
 <p><strong>What is in the DEM Config Share:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>DEMConfig\
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  General\          — Global DEM settings
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  FlexEngine\       — FlexEngine policies (app settings capture, drive maps, etc.)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  DirectFlex\       — DirectFlex triggers
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  Exports\          — Exported settings bundles
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  PolicyTemplates\  — Custom policy templates
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  Logging\          — DEM agent logs (read/write by all desktops)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>DEMConfig\
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  General\          — Global DEM settings
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  FlexEngine\       — FlexEngine policies (app settings capture, drive maps, etc.)
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  DirectFlex\       — DirectFlex triggers
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Exports\          — Exported settings bundles
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  PolicyTemplates\  — Custom policy templates
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  Logging\          — DEM agent logs (read/write by all desktops)
 </code></pre></div>
 <p>Note: The <code>Logging\</code> subfolder can grow large. Exclude from backup or set a retention policy.</p>
 <hr />
@@ -5026,51 +4964,51 @@
 <li><strong>Datastore-level backup</strong> (preferred if using a backup product with VADP support, e.g., Veeam, Commvault) — back up the <code>cloudvolumes/apps/</code> folder as VM-agnostic VMDK files</li>
 <li><strong>File copy to NFS/CIFS backup share</strong> — AppStacks are read-only so file copy is safe while desktops are running</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># PowerCLI — copy AppStack VMDKs to backup datastore</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">$srcDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;SAN-Datastore01&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">$dstDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;Backup-Datastore&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Use Copy-DatastoreItem (requires datastore provider)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">New-PSDrive</span> <span class="n">-Name</span> <span class="n">srcDS</span> <span class="n">-PSProvider</span> <span class="n">VimDatastore</span> <span class="n">-Root</span> <span class="s2">&quot;\&quot;</span> <span class="n">-Datastore</span> <span class="nv">$srcDS</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">New-PSDrive</span> <span class="n">-Name</span> <span class="n">dstDS</span> <span class="n">-PSProvider</span> <span class="n">VimDatastore</span> <span class="n">-Root</span> <span class="s2">&quot;\&quot;</span> <span class="n">-Datastore</span> <span class="nv">$dstDS</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="nb">Copy-DatastoreItem</span> <span class="n">-Item</span> <span class="s2">&quot;srcDS:\cloudvolumes\apps\*&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  <span class="n">-Destination</span> <span class="s2">&quot;dstDS:\cloudvolumes-backup\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">\&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  <span class="n">-Recurse</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># PowerCLI — copy AppStack VMDKs to backup datastore</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Connect-VIServer</span> <span class="n">vcenter</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">$srcDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;SAN-Datastore01&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">$dstDS</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;Backup-Datastore&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Use Copy-DatastoreItem (requires datastore provider)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">New-PSDrive</span> <span class="n">-Name</span> <span class="n">srcDS</span> <span class="n">-PSProvider</span> <span class="n">VimDatastore</span> <span class="n">-Root</span> <span class="s2">&quot;\&quot;</span> <span class="n">-Datastore</span> <span class="nv">$srcDS</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">New-PSDrive</span> <span class="n">-Name</span> <span class="n">dstDS</span> <span class="n">-PSProvider</span> <span class="n">VimDatastore</span> <span class="n">-Root</span> <span class="s2">&quot;\&quot;</span> <span class="n">-Datastore</span> <span class="nv">$dstDS</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nb">Copy-DatastoreItem</span> <span class="n">-Item</span> <span class="s2">&quot;srcDS:\cloudvolumes\apps\*&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>  <span class="n">-Destination</span> <span class="s2">&quot;dstDS:\cloudvolumes-backup\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">)</span><span class="s2">\&quot;</span> <span class="p">`</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>  <span class="n">-Recurse</span>
 </code></pre></div>
 <hr />
 <h2 id="golden-image-snapshot-management">Golden Image Snapshot Management<a class="headerlink" href="#golden-image-snapshot-management" title="Permanent link">&para;</a></h2>
 <p>Golden image snapshots are the recovery point for Instant Clone pool image quality.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># List snapshots on golden image VM</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Verify snapshot is in &quot;PUBLISHED&quot; state (by naming convention)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*PUBLISHED*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># Remove deprecated snapshots older than 90 days</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*DEPRECATED*&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># List snapshots on golden image VM</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Verify snapshot is in &quot;PUBLISHED&quot; state (by naming convention)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*PUBLISHED*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Remove deprecated snapshots older than 90 days</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Get-VM</span> <span class="s2">&quot;GoldenImage-Win11&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*DEPRECATED*&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">90</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <hr />
 <h2 id="connection-server-restore-procedure">Connection Server Restore Procedure<a class="headerlink" href="#connection-server-restore-procedure" title="Permanent link">&para;</a></h2>
 <h3 id="scenario-single-cs-failure-others-still-running">Scenario: Single CS Failure (Others Still Running)<a class="headerlink" href="#scenario-single-cs-failure-others-still-running" title="Permanent link">&para;</a></h3>
 <p>No restore needed — ADAM replicates automatically. Install a new Connection Server, add it to the pod:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>:: During Connection Server install, choose &quot;Add a Replica Server&quot;
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>:: Point to existing Connection Server FQDN
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>:: ADAM config replicates automatically within minutes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>:: During Connection Server install, choose &quot;Add a Replica Server&quot;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>:: Point to existing Connection Server FQDN
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>:: ADAM config replicates automatically within minutes
 </code></pre></div>
 <h3 id="scenario-all-connection-servers-lost-full-pod-recovery">Scenario: All Connection Servers Lost (Full Pod Recovery)<a class="headerlink" href="#scenario-all-connection-servers-lost-full-pod-recovery" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Install Windows Server, join domain, install Horizon Connection Server (choose <strong>Standard</strong> install)</li>
 <li>Import the LDIF backup:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cd &quot;C:\Program Files\VMware\VMware View\Server\tools\bin&quot;
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>:: Import backed-up configuration
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cd &quot;C:\Program Files\VMware\VMware View\Server\tools\bin&quot;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>:: Import backed-up configuration
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif
 </code></pre></div>
 <ol>
 <li>Re-enter credentials for:</li>
@@ -5090,24 +5028,24 @@
 </li>
 </ol>
 <h3 id="scenario-ldif-import-fails">Scenario: LDIF Import Fails<a class="headerlink" href="#scenario-ldif-import-fails" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>:: Import with verbose logging
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif -v
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>:: Common error: duplicate entries — use -u flag to update instead of add
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif -u
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>:: Import with verbose logging
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif -v
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>:: Common error: duplicate entries — use -u flag to update instead of add
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>vdmimport.exe -f C:\Backups\horizon-config-backup.ldif -u
 </code></pre></div>
 <hr />
 <h2 id="writable-volume-app-volumes-backup">Writable Volume (App Volumes) Backup<a class="headerlink" href="#writable-volume-app-volumes-backup" title="Permanent link">&para;</a></h2>
 <p>Writable volumes contain user-installed apps and data. They require consistent backup (VM-aware or quiesced).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Using Veeam PowerShell snap-in (example)</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Protect the App Volumes writable volume datastore</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c"># In practice, use VADP-aware backup that quiesces VMDKs</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c"># OR — only back up writables for users who require it (not all deployments need this)</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c"># File copy approach (offline volumes only — only safe when user is logged off)</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c"># Check if writable is attached (in-use) before copying</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Using Veeam PowerShell snap-in (example)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Protect the App Volumes writable volume datastore</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c"># In practice, use VADP-aware backup that quiesces VMDKs</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c"># OR — only back up writables for users who require it (not all deployments need this)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># File copy approach (offline volumes only — only safe when user is logged off)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c"># Check if writable is attached (in-use) before copying</span>
 </code></pre></div>
 <p><strong>Recommendation for most environments:</strong> Writable volumes are for user-installed apps, not primary data. Rely on the App Volumes Manager DB backup (which records the assignment) and re-provision the writable volume VMDK if lost. User-installed apps can be re-installed or recaptured as AppStacks.</p>
 

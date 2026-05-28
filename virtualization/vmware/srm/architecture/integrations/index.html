@@ -4280,57 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vcenter-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vCenter Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vCenter Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#site-pairing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Site Pairing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-replication-adapter-sra-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Replication Adapter (SRA) Integration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage Replication Adapter (SRA) Integration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sra-registration-and-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRA Registration and Testing
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#sra-for-pure-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4340,8 +4289,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#sra-for-dell-powerstore-emc" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4349,11 +4298,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4707,7 +4651,7 @@
 
 
 <h1 id="srm-integrations">SRM — Integrations<a class="headerlink" href="#srm-integrations" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  SRM Integration Points
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  SRM Integration Points
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   vCenter    │   │  vSphere     │   │  Storage     │   │    NSX-T     │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  (both sites)│   │  Replication │   │  Array + SRA │   │  (segments)  │
@@ -4726,72 +4670,102 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                 │  (site pair)    │
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                 └─────────────────┘
 </code></pre></div>
-<h2 id="vcenter-integration">vCenter Integration<a class="headerlink" href="#vcenter-integration" title="Permanent link">&para;</a></h2>
-<p>SRM Server registers with vCenter as a vCenter extension. This registration:</p>
-<ul>
-<li>Adds the <strong>Site Recovery</strong> plugin to the vSphere Client UI.</li>
-<li>Allows SRM to manage VM inventory, power operations, and guest customization.</li>
-<li>Uses a service account with <strong>Site Recovery Administrator</strong> privileges on the vCenter.</li>
-</ul>
-<p>SRM is installed per site. Each SRM Server registers with its local vCenter. The <strong>site pairing</strong> then links the two SRM Servers together, establishing bi-directional awareness.</p>
-<h3 id="site-pairing">Site Pairing<a class="headerlink" href="#site-pairing" title="Permanent link">&para;</a></h3>
-<p>Pairing is initiated from one site (either) via SRM UI → Site Recovery → <strong>New Site Pair</strong>.</p>
-<p>Steps:
-1. Enter the remote vCenter FQDN/IP and credentials.
-2. SRM retrieves the remote site's SSL certificate thumbprint.
-3. Administrator reviews and accepts the thumbprint.
-4. SRM registers the remote site's SRM extension and exchanges certificates.
-5. Pairing appears as <strong>Connected</strong> in both sites.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify site pairing via SRM REST API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://srm-server.example.com/api/sites&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$SRM_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<p>Re-pairing is required if either SRM Server's certificate is rotated (thumbprint changes invalidate the trust).</p>
-<hr />
-<h2 id="storage-replication-adapter-sra-integration">Storage Replication Adapter (SRA) Integration<a class="headerlink" href="#storage-replication-adapter-sra-integration" title="Permanent link">&para;</a></h2>
-<p>SRAs are vendor-provided plugins that give SRM control over array-level replication. Each SRA implements a defined interface (XML-based API) that SRM calls to:</p>
-<ul>
-<li><strong>Discover</strong> replicated devices (LUNs, volumes, datastores).</li>
-<li><strong>Test failover</strong> — create writable snapshots of replicated volumes without breaking replication.</li>
-<li><strong>Failover</strong> — promote replicated volumes to writable, break replication.</li>
-<li><strong>Reverse replication</strong> — re-establish replication in the opposite direction for failback.</li>
-<li><strong>Query replication state</strong> — check RPO compliance and replication health.</li>
-</ul>
-<p>SRA binaries are installed on the SRM Server (Windows: <code>C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\&lt;vendor&gt;\</code>, appliance: <code>/opt/vmware/srm/storage/sra/&lt;vendor&gt;/</code>).</p>
-<h3 id="sra-registration-and-testing">SRA Registration and Testing<a class="headerlink" href="#sra-registration-and-testing" title="Permanent link">&para;</a></h3>
-<p>After installing an SRA:</p>
-<ol>
-<li>In SRM UI → Array Managers → <strong>Add Array Manager</strong>.</li>
-<li>Select the SRA type from the drop-down (populated from installed SRAs).</li>
-<li>Enter array credentials (username, password, array management IP/hostname).</li>
-<li>SRM calls the SRA's <code>discoverArrays</code> command to validate connectivity.</li>
-<li>Assign array pair (protected site array ↔ recovery site array).</li>
-<li>Scan for replicated devices.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From SRM appliance: list installed SRAs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/opt/vmware/srm/storage/sra/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SRA log for errors after an array scan</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/srm/srm-sra.log
-</code></pre></div>
+┌────────────────────────────────────── VMware SRM — Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM integrates with vCenter, vSphere Replication, storage arrays, NSX for network                    │
+│  remapping, and Aria Operations for DR health monitoring.                                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             vCenter Integration              │  │           Replication Integration           │   │
+│   │            Registered per vCenter            │  │         vSphere Replication: native         │   │
+│   │        VM inventory: protection grps         │  │              SRA: array plug-in             │   │
+│   │         vCenter events: failover log         │  │           Dell EMC: SRA available           │   │
+│   │           Alarms: DR plan test due           │  │            NetApp: SnapMirror SRA           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SRA enables array-based replication; without it, only vSphere Replication is available.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network Integration              │  │            Monitoring Integration           │   │
+│   │             NSX: network mapping             │  │            Aria Ops: SRM adapter            │   │
+│   │         IP customisation: re-IP VMs          │  │           Compliance: test alerts           │   │
+│   │           vDS: port group mapping            │  │         Email: plan run notification        │   │
+│   │            Stretched L2: no re-IP            │  │         CMDB: CI update on failover         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  WAN link between sites carries replication traffic; network mapping ensures VMs                      │
+│  connect to correct networks after failover.                                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRA           = Storage Replication Adapter; array vendor plug-in for SRM                            │
+│  vSphere Rep   = host-based replication; native SRM integration                                       │
+│  SnapMirror SRA= NetApp SRA; uses SnapMirror for array replication                                    │
+│  Network mapping= map protected-site portgroup to recovery-site portgroup                             │
+│  IP customisation= script to re-IP VMs after failover to recovery site                                │
+│  Stretched L2  = same subnet both sites; no IP change needed                                          │
+│  vDS port group= vSphere Distributed Switch segment; mapped in SRM                                    │
+│  NSX segment   = overlay network; SRM can map NSX segments                                            │
+│  Aria Ops      = monitors SRM compliance and last test date                                           │
+│  CMDB          = Configuration Management DB; update CI on failover                                   │
+│  Protection group= set of VMs protected by same replication and plan                                  │
+│  Test due alarm = SRM reminds when DR test is overdue                                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Re-pairing is required if either SRM Server&#39;s certificate is rotated (thumbprint changes invalidate the trust).
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Storage Replication Adapter (SRA) Integration
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SRAs are vendor-provided plugins that give SRM control over array-level replication. Each SRA implements a defined interface (XML-based API) that SRM calls to:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- **Discover** replicated devices (LUNs, volumes, datastores).
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- **Test failover** — create writable snapshots of replicated volumes without breaking replication.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- **Failover** — promote replicated volumes to writable, break replication.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- **Reverse replication** — re-establish replication in the opposite direction for failback.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- **Query replication state** — check RPO compliance and replication health.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SRA binaries are installed on the SRM Server (Windows: `C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\&lt;vendor&gt;\`, appliance: `/opt/vmware/srm/storage/sra/&lt;vendor&gt;/`).
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### SRA Registration and Testing
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>After installing an SRA:
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>1. In SRM UI → Array Managers → **Add Array Manager**.
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>2. Select the SRA type from the drop-down (populated from installed SRAs).
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>3. Enter array credentials (username, password, array management IP/hostname).
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>4. SRM calls the SRA&#39;s `discoverArrays` command to validate connectivity.
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>5. Assign array pair (protected site array ↔ recovery site array).
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>6. Scan for replicated devices.
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>```bash
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># From SRM appliance: list installed SRAs
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>ls -la /opt/vmware/srm/storage/sra/
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a># Check SRA log for errors after an array scan
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>tail -f /var/log/vmware/srm/srm-sra.log
+</code></pre></div></p>
 <h3 id="sra-for-pure-storage">SRA for Pure Storage<a class="headerlink" href="#sra-for-pure-storage" title="Permanent link">&para;</a></h3>
 <p>Pure Storage FlashArray SRA is available from Pure Storage support portal.</p>
 <p><strong>Installation (SRM appliance):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Download SRA bundle from Pure Storage portal</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># File: pure-sra-&lt;version&gt;-vmware.tar.gz</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Upload to SRM appliance and install</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>scp<span class="w"> </span>pure-sra-4.0.0-vmware.tar.gz<span class="w"> </span>root@srm-appliance:/tmp/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>ssh<span class="w"> </span>root@srm-appliance
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">cd</span><span class="w"> </span>/tmp
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>tar<span class="w"> </span>xzf<span class="w"> </span>pure-sra-4.0.0-vmware.tar.gz
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>./install.sh
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Installs SRA to /opt/vmware/srm/storage/sra/Pure/</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Restart SRM service to detect new SRA</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vmware-dr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Download SRA bundle from Pure Storage portal</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># File: pure-sra-&lt;version&gt;-vmware.tar.gz</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Upload to SRM appliance and install</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>scp<span class="w"> </span>pure-sra-4.0.0-vmware.tar.gz<span class="w"> </span>root@srm-appliance:/tmp/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ssh<span class="w"> </span>root@srm-appliance
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">cd</span><span class="w"> </span>/tmp
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>tar<span class="w"> </span>xzf<span class="w"> </span>pure-sra-4.0.0-vmware.tar.gz
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>./install.sh
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Installs SRA to /opt/vmware/srm/storage/sra/Pure/</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Restart SRM service to detect new SRA</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vmware-dr
 </code></pre></div>
 <p><strong>Array Manager configuration for Pure:</strong></p>
 <table>
@@ -4826,19 +4800,19 @@
 </table>
 <p><strong>Pure minimum permissions for SRA account:</strong></p>
 <p>The SRA account on the Pure FlashArray requires <code>array_admin</code> role for replication operations (failover, reverse).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On Pure FlashArray CLI</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>purecli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>srmuser<span class="w"> </span>--role<span class="w"> </span>array_admin
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>purecli<span class="w"> </span>user<span class="w"> </span>setpassword<span class="w"> </span>srmuser
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On Pure FlashArray CLI</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>purecli<span class="w"> </span>user<span class="w"> </span>create<span class="w"> </span>srmuser<span class="w"> </span>--role<span class="w"> </span>array_admin
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>purecli<span class="w"> </span>user<span class="w"> </span>setpassword<span class="w"> </span>srmuser
 </code></pre></div>
 <h3 id="sra-for-dell-powerstore-emc">SRA for Dell PowerStore / EMC<a class="headerlink" href="#sra-for-dell-powerstore-emc" title="Permanent link">&para;</a></h3>
 <p>Dell provides SRAs for multiple product lines.</p>
 <p><strong>PowerStore SRA (appliance):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>scp<span class="w"> </span>Dell_SRA_for_PowerStore_&lt;version&gt;.tar.gz<span class="w"> </span>root@srm-appliance:/tmp/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>root@srm-appliance
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">cd</span><span class="w"> </span>/tmp
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>tar<span class="w"> </span>xzf<span class="w"> </span>Dell_SRA_for_PowerStore_&lt;version&gt;.tar.gz
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>./install.sh
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vmware-dr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>scp<span class="w"> </span>Dell_SRA_for_PowerStore_&lt;version&gt;.tar.gz<span class="w"> </span>root@srm-appliance:/tmp/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@srm-appliance
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">cd</span><span class="w"> </span>/tmp
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>tar<span class="w"> </span>xzf<span class="w"> </span>Dell_SRA_for_PowerStore_&lt;version&gt;.tar.gz
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>./install.sh
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>vmware-dr
 </code></pre></div>
 <p><strong>PowerStore SRA credentials:</strong></p>
 <table>
@@ -4878,12 +4852,12 @@
 <li>SRM configured to use the VR Appliances.</li>
 </ol>
 <h3 id="vr-appliance-deployment">VR Appliance Deployment<a class="headerlink" href="#vr-appliance-deployment" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Deploy via govc</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>govc<span class="w"> </span>import.ova<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--ds<span class="o">=</span>vsanDatastore<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--net<span class="o">=</span><span class="s2">&quot;Management&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--name<span class="o">=</span>vr-appliance-01<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>vSphere_Replication_OVF10.ova
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Deploy via govc</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>govc<span class="w"> </span>import.ova<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--ds<span class="o">=</span>vsanDatastore<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--net<span class="o">=</span><span class="s2">&quot;Management&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--name<span class="o">=</span>vr-appliance-01<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>vSphere_Replication_OVF10.ova
 </code></pre></div>
 <p>After deployment:
 - Access VR Appliance VAMI at <code>https://&lt;vr-ip&gt;:5480</code>
@@ -4960,36 +4934,36 @@
 </tbody>
 </table>
 <h3 id="vr-appliance-health-check">VR Appliance Health Check<a class="headerlink" href="#vr-appliance-health-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to VR appliance</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh<span class="w"> </span>admin@vr-appliance.example.com
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check VR service status</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcd-watchdog
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbrsrv
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># List active replication sessions</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>hbr-configure<span class="w"> </span>-l
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># VR log location</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/log/vmware/
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># hbrsrv.log      — main replication server log</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># vmware-vcd-watchdog.log — VR daemon log</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to VR appliance</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>admin@vr-appliance.example.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check VR service status</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcd-watchdog
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-hbrsrv
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># List active replication sessions</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>hbr-configure<span class="w"> </span>-l
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># VR log location</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/var/log/vmware/
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># hbrsrv.log      — main replication server log</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># vmware-vcd-watchdog.log — VR daemon log</span>
 </code></pre></div>
 <hr />
 <h2 id="nsx-t-integration-for-network-mapping">NSX-T Integration for Network Mapping<a class="headerlink" href="#nsx-t-integration-for-network-mapping" title="Permanent link">&para;</a></h2>
 <p>When the protected and recovery sites use NSX-T, SRM uses <strong>network mappings</strong> to translate NSX-T logical segments between sites.</p>
 <h3 id="port-group-mapping-vds-based">Port Group Mapping (vDS-based)<a class="headerlink" href="#port-group-mapping-vds-based" title="Permanent link">&para;</a></h3>
 <p>Standard mapping for traditional vSphere networking:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Protected Site: dvPortGroup-App-VLAN100
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>      ↓ maps to ↓
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Recovery Site:  dvPortGroup-App-VLAN200
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Protected Site: dvPortGroup-App-VLAN100
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>      ↓ maps to ↓
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Recovery Site:  dvPortGroup-App-VLAN200
 </code></pre></div>
 <p>Configure in SRM UI: Site Recovery → Inventory Mappings → Network → <strong>Add Mapping</strong>.</p>
 <h3 id="nsx-t-logical-segment-mapping">NSX-T Logical Segment Mapping<a class="headerlink" href="#nsx-t-logical-segment-mapping" title="Permanent link">&para;</a></h3>
 <p>When using NSX-T overlay segments, segments have logical names (not tied to physical VLANs):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Protected Site: overlay-segment-app-tier  (NSX-T logical segment)
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>      ↓ maps to ↓
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Recovery Site:  overlay-segment-app-tier  (same name at recovery site, different segment ID)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Protected Site: overlay-segment-app-tier  (NSX-T logical segment)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>      ↓ maps to ↓
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>Recovery Site:  overlay-segment-app-tier  (same name at recovery site, different segment ID)
 </code></pre></div>
 <p>SRM discovers NSX-T segments via the vSphere Client's NSX-T integration. Requirements:</p>
 <ul>

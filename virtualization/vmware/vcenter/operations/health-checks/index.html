@@ -4454,39 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#appliance-management-interface" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Appliance Management Interface
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#checking-service-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checking Service Status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-partition-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk Partition Usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#sso-and-lookup-service-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4741,7 +4708,7 @@
 
 
 <h1 id="vcenter-health-checks">vCenter — Health Checks<a class="headerlink" href="#vcenter-health-checks" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Health Check Coverage Map
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Health Check Coverage Map
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>════════════════════════════════════════════════════════
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  VAMI (:5480)                   Shell (SSH)
@@ -4773,52 +4740,88 @@
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  Weekly ──▶ datastore capacity, certificate expiry
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  Pre-change ──▶ backup current, HA capacity, no migrations
 </code></pre></div>
-<h2 id="appliance-management-interface">Appliance Management Interface<a class="headerlink" href="#appliance-management-interface" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Log into the VCSA Appliance Management Interface (VAMI) at <code>https://&lt;vcenter&gt;:5480</code></li>
-<li>Check CPU, memory, and disk usage</li>
-<li>Confirm all services are shown as healthy</li>
-</ul>
-<h2 id="checking-service-status">Checking Service Status<a class="headerlink" href="#checking-service-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to vCenter, then:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
-</code></pre></div>
-<h2 id="disk-partition-usage">Disk Partition Usage<a class="headerlink" href="#disk-partition-usage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>df<span class="w"> </span>-h
-</code></pre></div>
+┌─────────────────────────────────── vCenter Server — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Regular vCenter health checks verify service state, certificate validity, database                   │
+│  health, and host connectivity to prevent silent failures.                                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Service Health                │  │              Certificate Health             │   │
+│   │          VAMI: Summary panel green           │  │             Cert expiry &gt;30 days            │   │
+│   │           vmon-cli -l: all RUNNING           │  │            STS cert: renew yearly           │   │
+│   │          SSO: login works normally           │  │           Machine cert: auto-renew          │   │
+│   │          Events: no critical alarms          │  │            certmgr: check via CLI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check services first; certificate expiry is the most common silent failure mode.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Database &amp; Disk                │  │              Host Connectivity              │   │
+│   │          Postgres: no vacuums stuck          │  │             All hosts: Connected            │   │
+│   │         Disk usage &lt;80% on /storage          │  │           vpxa heartbeat: &lt;60s ago          │   │
+│   │            Stats DB: no overflow             │  │             DRS: no red clusters            │   │
+│   │          Backup: last run &lt;24h ago           │  │          HA: no admission failures          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  VCSA health depends on underlying ESXi host resource availability and shared                         │
+│  storage connectivity; network latency to hosts must be &lt;10ms.                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI         = vCenter Appliance Management Interface; port 5480                                     │
+│  vmon-cli     = service monitor; RUNNING state = healthy                                              │
+│  STS cert     = Security Token Service cert; 2-year expiry; breaks SSO if expired                     │
+│  Machine cert = VCSA machine SSL cert; auto-renewed by default                                        │
+│  certmgr      = certificate manager utility on VCSA appliance shell                                   │
+│  vpxa         = host agent; heartbeat to vCenter; disconnect = host error                             │
+│  Postgres     = VCSA embedded DB; vacuum stuck = performance degradation                              │
+│  /storage     = VCSA data partition; events, stats, logs stored here                                  │
+│  HA admission = cluster reserves capacity for one host failure; red if short                          │
+│  DRS red      = DRS migration imbalance or constraint violation                                       │
+│  Stats DB     = performance metrics; rollup jobs run on schedule                                      │
+│  certmgr      = /usr/lib/vmware-vmca/bin/certool for cert inspection                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Disk Partition Usage
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>df -h
+</code></pre></div></p>
 <p>Key partitions to monitor:
 - <code>/storage/log</code> — fills quickly during issues
 - <code>/storage/db</code> — vCenter database
 - <code>/storage/core</code> — core appliance data</p>
 <h2 id="sso-and-lookup-service-health">SSO and Lookup Service Health<a class="headerlink" href="#sso-and-lookup-service-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-lookupsvc
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-eam
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-lookupsvc
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-eam
 </code></pre></div>
 <h2 id="dns-and-ntp-validation">DNS and NTP Validation<a class="headerlink" href="#dns-and-ntp-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DNS from vCenter appliance shell</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nslookup<span class="w"> </span>&lt;vcenter-fqdn&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dig<span class="w"> </span>&lt;vcenter-fqdn&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check NTP status</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>timedatectl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check DNS from vCenter appliance shell</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nslookup<span class="w"> </span>&lt;vcenter-fqdn&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>dig<span class="w"> </span>&lt;vcenter-fqdn&gt;
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check NTP status</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>timedatectl
 </code></pre></div>
 <h2 id="powercli-health-checks">PowerCLI Health Checks<a class="headerlink" href="#powercli-health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Host connectivity</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Cluster DRS/HA state</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">HAEnabled</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Recent error events</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">100</span> <span class="n">-Type</span> <span class="n">Error</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">FullFormattedMessage</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Stale snapshots</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># vCenter REST API health</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="n">-u</span> <span class="s1">&#39;administrator@vsphere.local&#39;</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">vcenter</span><span class="p">&gt;/</span><span class="n">api</span><span class="p">/</span><span class="n">vcenter</span><span class="p">/</span><span class="n">health</span><span class="p">/</span><span class="n">system</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Host connectivity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Cluster DRS/HA state</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">HAEnabled</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Recent error events</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-VIEvent</span> <span class="n">-MaxSamples</span> <span class="n">100</span> <span class="n">-Type</span> <span class="n">Error</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">CreatedTime</span><span class="p">,</span> <span class="n">FullFormattedMessage</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Stale snapshots</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">3</span><span class="p">)}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># vCenter REST API health</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="n">-u</span> <span class="s1">&#39;administrator@vsphere.local&#39;</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">vcenter</span><span class="p">&gt;/</span><span class="n">api</span><span class="p">/</span><span class="n">vcenter</span><span class="p">/</span><span class="n">health</span><span class="p">/</span><span class="n">system</span>
 </code></pre></div>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <table>

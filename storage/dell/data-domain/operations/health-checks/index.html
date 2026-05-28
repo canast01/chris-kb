@@ -4215,28 +4215,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#daily-health-check-script" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Health Check Script
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#weekly-health-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Weekly Health Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#health-check-pre-change" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4492,7 +4470,7 @@
 
 <h1 id="data-domain-health-checks">Data Domain — Health Checks<a class="headerlink" href="#data-domain-health-checks" title="Permanent link">&para;</a></h1>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A([Daily Health Check]) --&gt; B["alerts show current\nAny active alerts?"]
     B --&gt; C{"Critical or\nhardware alert?"}
     C --&gt;|Yes| D["disk show state\nenclosure show hardware\nOpen Dell support case"]
@@ -4507,93 +4485,59 @@
     L --&gt;|Yes| M["ddboost status\nReset credentials if needed"]
     L --&gt;|No| N([All checks passed])
     D &amp; G &amp; J &amp; M --&gt; N</code></pre>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] Run <code>filesys show space</code></td>
-<td><code>filesys show space</code></td>
-<td>check pre- and post-compression capacity; alert if post-compression used exceeds 80% of usable capacity</td>
-</tr>
-<tr>
-<td>[ ] Run <code>filesys show compression</code></td>
-<td><code>filesys show compression</code></td>
-<td>confirm the global dedup ratio is above 10:1 (healthy target is 20:1+); a significant drop compared to the previous day warrants investigation</td>
-</tr>
-<tr>
-<td>[ ] Run <code>alerts show current</code></td>
-<td><code>alerts show current</code></td>
-<td>review all active hardware and software alerts; triage by severity</td>
-</tr>
-<tr>
-<td>[ ] Run <code>replication show</code></td>
-<td><code>replication show</code></td>
-<td>confirm all replication contexts are in <code>Normal</code> or <code>Replicating</code> state; investigate any context in <code>Error</code> or <code>Warning</code> state</td>
-</tr>
-<tr>
-<td>[ ] Run <code>ddboost show clients</code></td>
-<td><code>ddboost show clients</code></td>
-<td>confirm all expected backup servers are connected and authenticated</td>
-</tr>
-<tr>
-<td>[ ] Confirm backup software jobs (Avamar, NetWorker, Veeam, Commvault)</td>
-<td></td>
-<td>check backup application logs if DDBoost clients show unexpected disconnects</td>
-</tr>
-<tr>
-<td>[ ] Run <code>filesys status</code> to confirm the filesystem is <code>Enabled</code> and <code>Running</code></td>
-<td><code>filesys status</code></td>
-<td></td>
-</tr>
-<tr>
-<td>[ ] Review ESRS / CloudIQ / Smart Connect for any proactive support alerts</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h2 id="daily-health-check-script">Daily Health Check Script<a class="headerlink" href="#daily-health-check-script" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. System alerts — any unacknowledged issues?</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>alert<span class="w"> </span>show<span class="w"> </span>current
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Filesystem status</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># 3. Disk state — all normal?</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>disk<span class="w"> </span>show<span class="w"> </span>state
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># 4. Replication lag</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>replication<span class="w"> </span>status
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>lag
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 5. Cleaning status</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
-</code></pre></div>
-<h2 id="weekly-health-check">Weekly Health Check<a class="headerlink" href="#weekly-health-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Compression and deduplication ratio</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>summary
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># DDBoost active clients</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># NFS and CIFS connections</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>nfs<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cifs<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Alert history (look for recurring alerts)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>alert<span class="w"> </span>show<span class="w"> </span><span class="nb">history</span><span class="w"> </span>brief
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># System uptime and performance stats</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>system<span class="w"> </span>show<span class="w"> </span>uptime
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>system<span class="w"> </span>show<span class="w"> </span>stats
-</code></pre></div>
+┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Daily: filesys space &lt; 80%, replication in sync, no disk faults, alerts clear         │   │
+│   │            Weekly: verify cleaning completed, check NVRAM, review dedup efficiency            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Daily Checks                 │  │                Weekly Checks                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           filesys show space &lt; 80%           │  │        Cleaning: completed this week        │   │
+│   │          Replication lag &lt; 4 hours           │  │          Dedup ratio not degrading          │   │
+│   │             No disk fault alerts             │  │               NVRAM no errors               │   │
+│   │            Backup jobs succeeded             │  │            Hardware health clean            │   │
+│   │             CloudIQ health score             │  │             License utilisation             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │     Command      │   Pass criteria   │   Fail action    │    Frequency     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     FS space     │filesys show space│     &lt; 80% used    │  Expire backups  │      Daily       │   │
+│   │     Rep lag      │ replication show │       &lt; 4 hr      │  Check WAN/link  │      Daily       │   │
+│   │   Disk health    │ disk show state  │       All OK      │   Replace disk   │      Daily       │   │
+│   │     Cleaning     │filesys clean show│   Ran this week   │  Manual trigger  │      Weekly      │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    80% threshold  = DDOS performance degrades significantly above 80% full; expand or expire          │
+│    Cleaning cycle = Weekly automatic cleaning; reclaims space; takes 2–12 hours to complete           │
+│    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Weekly Health Check
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Compression and deduplication ratio
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>filesys show compression summary
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># DDBoost active clients
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ddboost show clients
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># NFS and CIFS connections
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nfs show clients
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>cifs show clients
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Alert history (look for recurring alerts)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>alert show history brief
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># System uptime and performance stats
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>system show uptime
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>system show stats
+</code></pre></div></p>
 <h2 id="health-check-pre-change">Health Check — Pre-Change<a class="headerlink" href="#health-check-pre-change" title="Permanent link">&para;</a></h2>
 <p>Run these checks before any planned change or as first-response steps when investigating backup failures or capacity alerts.</p>
 <ul>
@@ -4606,38 +4550,38 @@
 <li>[ ] <code>system show</code> — system hardware health is clean; note firmware version</li>
 <li>[ ] <code>mtree list</code> — all MTrees are accessible; per-MTree quotas are not exhausted</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check filesystem operational status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show pre- and post-compression space usage</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show global deduplication and compression ratio</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show all replication contexts, their state, and lag</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>replication<span class="w"> </span>show
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Show per-context replication throughput and detailed status</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>replication<span class="w"> </span>status
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># List all MTrees and their individual space usage</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>mtree<span class="w"> </span>list
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Show per-MTree dedup ratio for a specific MTree</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>mtree<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># List DDBoost-connected clients and storage unit status</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Show DDBoost service status</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>ddboost<span class="w"> </span>status
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Show all currently active system alerts</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>alerts<span class="w"> </span>show<span class="w"> </span>current
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="c1"># Show system hardware health and DDOS version</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>system<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check filesystem operational status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show pre- and post-compression space usage</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show global deduplication and compression ratio</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Show all replication contexts, their state, and lag</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>replication<span class="w"> </span>show
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show per-context replication throughput and detailed status</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>replication<span class="w"> </span>status
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List all MTrees and their individual space usage</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>mtree<span class="w"> </span>list
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Show per-MTree dedup ratio for a specific MTree</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>mtree<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># List DDBoost-connected clients and storage unit status</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Show DDBoost service status</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Show all currently active system alerts</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>alerts<span class="w"> </span>show<span class="w"> </span>current
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="c1"># Show system hardware health and DDOS version</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>system<span class="w"> </span>show
 </code></pre></div>
 <h2 id="capacity-monitoring">Capacity Monitoring<a class="headerlink" href="#capacity-monitoring" title="Permanent link">&para;</a></h2>
 <table>
@@ -4672,24 +4616,24 @@
 </tbody>
 </table>
 <h2 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All replication contexts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Contexts not in replicating or idle state</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>replication<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;replicating\|idle&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Lag detail per context</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>replication<span class="w"> </span>show<span class="w"> </span>stats
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All replication contexts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Contexts not in replicating or idle state</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;replicating\|idle&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Lag detail per context</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>replication<span class="w"> </span>show<span class="w"> </span>stats
 </code></pre></div>
 <h2 id="hardware-health">Hardware Health<a class="headerlink" href="#hardware-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disk states (no failed or reconstructing disks)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Enclosure health (power, fans, temperature)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>enclosure<span class="w"> </span>show<span class="w"> </span>hardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;fault|failed|warning&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># RAID group status</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>raid<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;normal\|OK&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disk states (no failed or reconstructing disks)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>normal
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enclosure health (power, fans, temperature)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>enclosure<span class="w"> </span>show<span class="w"> </span>hardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;fault|failed|warning&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># RAID group status</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>raid<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;normal\|OK&quot;</span>
 </code></pre></div>
 <h2 id="pre-change-checklist">Pre-Change Checklist<a class="headerlink" href="#pre-change-checklist" title="Permanent link">&para;</a></h2>
 <ul>

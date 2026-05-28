@@ -2895,41 +2895,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#veeam-backup-replication-troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Veeam Backup &amp; Replication Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Veeam Backup &amp; Replication Troubleshooting">
+    <nav class="md-nav" aria-label="Diagnostic Flowchart">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#job-status-and-history" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Job Status and History
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#vss-error-investigation" class="md-nav__link">
@@ -3281,7 +3248,7 @@
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A[Backup Job Failed] --&gt; B[Identify error in job log]
     B --&gt; C{Error type?}
     C -- Network/Timeout --&gt; D[Test-NetConnection to repo\nCheck MTU / proxy]
@@ -3302,115 +3269,105 @@
     Q -- Yes --&gt; S[Re-push agent\nCheck firewall port 2500-3300]
     C -- Authentication --&gt; T[Check service account in job\nTest-ADServiceAccount]
     T --&gt; U[Reset password\nVerify AD group membership]</code></pre>
-<hr />
-<h2 id="veeam-backup-replication-troubleshooting">Veeam Backup &amp; Replication Troubleshooting<a class="headerlink" href="#veeam-backup-replication-troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="job-status-and-history">Job Status and History<a class="headerlink" href="#job-status-and-history" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Connect to VBR server (run from VBR console or remote PS session)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-PSSnapin</span> <span class="n">VeeamPSSnapIn</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># List all jobs with last result</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">JobType</span><span class="p">,</span> <span class="n">IsScheduleEnabled</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastResult&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetLastResult</span><span class="p">()}},</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;LastRun&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ScheduleOptions</span><span class="p">.</span><span class="n">LatestRunLocal</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Get detailed session info for a failing job</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$job</span> <span class="p">=</span> <span class="nb">Get-VBRJob</span> <span class="n">-Name</span> <span class="s2">&quot;Job-PROD-VMs&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span> <span class="o">-eq</span> <span class="nv">$job</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="nb">Sort-Object</span> <span class="n">EndTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$session</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">EndTime</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Get task-level results (individual VM status within job)</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nv">$session</span><span class="p">.</span><span class="n">GetTaskSessions</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">Info</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-</code></pre></div>
-<h3 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Log Path</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VBR Server</td>
-<td><code>C:\ProgramData\Veeam\Backup\</code></td>
-</tr>
-<tr>
-<td>Agent (Windows)</td>
-<td><code>C:\ProgramData\Veeam\Backup\&lt;JobName&gt;.log</code></td>
-</tr>
-<tr>
-<td>Agent (Linux)</td>
-<td><code>/var/log/veeam/backup/</code></td>
-</tr>
-<tr>
-<td>Veeam Transport</td>
-<td><code>C:\ProgramData\Veeam\Backup\VeeamTransport.log</code></td>
-</tr>
-<tr>
-<td>Mount Server</td>
-<td><code>C:\ProgramData\Veeam\Backup\VeeamMount.log</code></td>
-</tr>
-<tr>
-<td>Guest Interaction</td>
-<td><code>C:\Windows\Temp\VeeamGuestHelper_*.log</code> (on guest)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Get repository free space</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;TotalGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedTotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># List restore points for a VM</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-sql01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">Algorithm</span> <span class="p">|</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
-</code></pre></div>
+┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Backup failures: job errors, proxy overload, repo full, snapshot stun, network        │   │
+│   │             First check: job log → error code → check proxy/repo/network → resolve            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Veeam            │  │          NetBackup          │  │          Commvault          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Proxy agent error      │  │       Media server err      │  │        MA agent error       │   │
+│   │       Repository full       │  │           STU full          │  │      Disk library full      │   │
+│   │       Snapshot removal      │  │       Snapshot timeout      │  │         VSS failure         │   │
+│   │       VMware tools err      │  │        Client network       │  │        Subclient miss       │   │
+│   │        Transport mode       │  │        Expired certs        │  │         Job schedule        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Job failed    │  Job log error   │   Per error code  │   Job retry OK   │ Persistent fail  │   │
+│   │    Repo full     │  Repo capacity   │   Expire/expand   │   Space freed    │  No space avail  │   │
+│   │  Snapshot fail   │   VMware tools   │    Update tools   │   Snapshot OK    │  Datastore full  │   │
+│   │    Proxy err     │  Proxy CPU/RAM   │    Reduce tasks   │  Job completes   │ Agent reinstall  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Transport mode= Veeam: HotAdd, NBD, Direct SAN; wrong mode causes snapshot or perf issues          │
+│    VSS           = Windows Volume Shadow Copy Service; required for consistent Windows backups        │
+│    STU           = NetBackup Storage Unit; target for backup data; check capacity and path            │
+│    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Log Locations
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Component | Log Path |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| VBR Server | `C:\ProgramData\Veeam\Backup\` |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Agent (Windows) | `C:\ProgramData\Veeam\Backup\&lt;JobName&gt;.log` |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Agent (Linux) | `/var/log/veeam/backup/` |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Veeam Transport | `C:\ProgramData\Veeam\Backup\VeeamTransport.log` |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Mount Server | `C:\ProgramData\Veeam\Backup\VeeamMount.log` |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Guest Interaction | `C:\Windows\Temp\VeeamGuestHelper_*.log` (on guest) |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```powershell
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Get repository free space
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-VBRRepository | Select-Object Name, Path,
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    @{N=&#39;FreeGB&#39;;E={[math]::Round($_.GetContainer().CachedFreeSpace/1GB,1)}},
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    @{N=&#39;TotalGB&#39;;E={[math]::Round($_.GetContainer().CachedTotalSpace/1GB,1)}} |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    Format-Table -AutoSize
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># List restore points for a VM
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-VBRRestorePoint -Name &quot;vm-prod-sql01&quot; | Select-Object Name, CreationTime, Algorithm |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Sort-Object CreationTime -Descending | Select-Object -First 10
+</code></pre></div></p>
 <h3 id="vss-error-investigation">VSS Error Investigation<a class="headerlink" href="#vss-error-investigation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rem List VSS writers and state
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vssadmin list writers
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>rem Expected healthy output:
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>rem Writer name: &#39;SqlServerWriter&#39;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>rem    Writer Id: {a65faa63-5ea8-4ebc-9dbd-a0c4db26912a}
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>rem    Writer Instance Id: {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>rem    State: [1] Stable
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>rem    Last error: No error
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>rem A failed writer shows:
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>rem    State: [8] Failed
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>rem    Last error: Retryable error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>rem List VSS writers and state
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vssadmin list writers
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>rem Expected healthy output:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>rem Writer name: &#39;SqlServerWriter&#39;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>rem    Writer Id: {a65faa63-5ea8-4ebc-9dbd-a0c4db26912a}
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>rem    Writer Instance Id: {xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>rem    State: [1] Stable
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>rem    Last error: No error
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>rem A failed writer shows:
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>rem    State: [8] Failed
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>rem    Last error: Retryable error
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Restart common VSS writers</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$writers</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s1">&#39;VSS&#39;</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s1">&#39;SQLWriter&#39;</span><span class="p">,</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="s1">&#39;MSExchangeWriter&#39;</span><span class="p">,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="s1">&#39;System Writer&#39;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="p">@(</span><span class="s1">&#39;VSS&#39;</span><span class="p">,</span><span class="s1">&#39;SQLWriter&#39;</span><span class="p">,</span><span class="s1">&#39;MSExchangeIS&#39;</span><span class="p">,</span><span class="s1">&#39;BITS&#39;</span><span class="p">))</span> <span class="p">{</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Restarted $svc&quot;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Restart common VSS writers</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$writers</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="s1">&#39;VSS&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s1">&#39;SQLWriter&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="s1">&#39;MSExchangeWriter&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="s1">&#39;System Writer&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="p">@(</span><span class="s1">&#39;VSS&#39;</span><span class="p">,</span><span class="s1">&#39;SQLWriter&#39;</span><span class="p">,</span><span class="s1">&#39;MSExchangeIS&#39;</span><span class="p">,</span><span class="s1">&#39;BITS&#39;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Restarted $svc&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="commvault-troubleshooting">Commvault Troubleshooting<a class="headerlink" href="#commvault-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="job-status">Job Status<a class="headerlink" href="#job-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List recent backup jobs (run on CommServe or via CLI)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>qlist<span class="w"> </span>job<span class="w"> </span>-t<span class="w"> </span>backup<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># 10234  Backup  Completed  srv-prod-db01   default     05/08 02:00:03     05/08 03:45:11</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 10235  Backup  Failed     srv-prod-app02  default     05/08 02:00:05     05/08 02:17:33</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Get failure reason for a specific job</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_GetJobFailureReason<span class="w"> </span>-si<span class="w"> </span><span class="m">10235</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># List active jobs</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>qlist<span class="w"> </span>job<span class="w"> </span>-t<span class="w"> </span>backup<span class="w"> </span>-st<span class="w"> </span>running
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List recent backup jobs (run on CommServe or via CLI)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>qlist<span class="w"> </span>job<span class="w"> </span>-t<span class="w"> </span>backup<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># 10234  Backup  Completed  srv-prod-db01   default     05/08 02:00:03     05/08 03:45:11</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 10235  Backup  Failed     srv-prod-app02  default     05/08 02:00:05     05/08 02:17:33</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Get failure reason for a specific job</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_GetJobFailureReason<span class="w"> </span>-si<span class="w"> </span><span class="m">10235</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># List active jobs</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>qlist<span class="w"> </span>job<span class="w"> </span>-t<span class="w"> </span>backup<span class="w"> </span>-st<span class="w"> </span>running
 </code></pre></div>
 <h3 id="log-locations-and-analysis">Log Locations and Analysis<a class="headerlink" href="#log-locations-and-analysis" title="Permanent link">&para;</a></h3>
 <table>
@@ -3439,11 +3396,11 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check cvfwd log for network errors</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/cvfwd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check connectivity from client to MediaAgent</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>telnet<span class="w"> </span>mediaagent01.corp.example.com<span class="w"> </span><span class="m">8400</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check cvfwd log for network errors</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|timeout&quot;</span><span class="w"> </span>/var/log/commvault/Log_Files/cvfwd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check connectivity from client to MediaAgent</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>telnet<span class="w"> </span>mediaagent01.corp.example.com<span class="w"> </span><span class="m">8400</span>
 </code></pre></div>
 <h3 id="commvault-job-failure-reason-codes">Commvault Job Failure Reason Codes<a class="headerlink" href="#commvault-job-failure-reason-codes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3485,17 +3442,17 @@
 <hr />
 <h2 id="netbackup-troubleshooting">NetBackup Troubleshooting<a class="headerlink" href="#netbackup-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="job-status_1">Job Status<a class="headerlink" href="#job-status_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List recent jobs with status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-M<span class="w"> </span>master01.corp.example.com
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Filter failed jobs only</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-M<span class="w"> </span>master01<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 1 &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Get detailed job info</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-all_columns
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Query error detail</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>bperror<span class="w"> </span>-S<span class="w"> </span>master01<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-l
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List recent jobs with status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-all_columns<span class="w"> </span>-M<span class="w"> </span>master01.corp.example.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Filter failed jobs only</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>bpdbjobs<span class="w"> </span>-report<span class="w"> </span>-M<span class="w"> </span>master01<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; 1 &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Get detailed job info</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>bpdbjobs<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-all_columns
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Query error detail</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>bperror<span class="w"> </span>-S<span class="w"> </span>master01<span class="w"> </span>-jobid<span class="w"> </span><span class="m">123456</span><span class="w"> </span>-l
 </code></pre></div>
 <h3 id="netbackup-status-code-reference">NetBackup Status Code Reference<a class="headerlink" href="#netbackup-status-code-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -3549,50 +3506,50 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check backup client connectivity</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>client01.corp.example.com
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify NetBackup daemon status on client</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Check catalog health</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-M<span class="w"> </span>master01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check backup client connectivity</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>bptestbpcd<span class="w"> </span>-client<span class="w"> </span>client01.corp.example.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Verify NetBackup daemon status on client</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>/usr/openv/netbackup/bin/bpps<span class="w"> </span>-a
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check catalog health</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-M<span class="w"> </span>master01
 </code></pre></div>
 <hr />
 <h2 id="repository-capacity-checks">Repository Capacity Checks<a class="headerlink" href="#repository-capacity-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Linux: disk usage on repository mount</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/backup
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Filesystem      Size  Used Avail Use% Mounted on</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># /dev/sdb1        20T   18T  2.0T  90% /backup</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Find largest directories consuming space</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/backup/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Windows: check backup drive</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>Get-PSDrive<span class="w"> </span>-Name<span class="w"> </span>D<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Used,<span class="w"> </span>Free<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">        </span><span class="o">[</span>PSCustomObject<span class="o">]</span>@<span class="o">{</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">            </span><span class="nv">Drive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>.Name
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">            </span><span class="nv">UsedGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">            </span><span class="nv">FreeGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">            </span><span class="nv">UsedPct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/<span class="o">(</span><span class="nv">$_</span>.Used+<span class="nv">$_</span>.Free<span class="o">)</span>*100,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">        </span><span class="o">}</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Linux: disk usage on repository mount</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/backup
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Filesystem      Size  Used Avail Use% Mounted on</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># /dev/sdb1        20T   18T  2.0T  90% /backup</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Find largest directories consuming space</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/backup/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Windows: check backup drive</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Get-PSDrive<span class="w"> </span>-Name<span class="w"> </span>D<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>Used,<span class="w"> </span>Free<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">        </span><span class="o">[</span>PSCustomObject<span class="o">]</span>@<span class="o">{</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">            </span><span class="nv">Drive</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>.Name
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">            </span><span class="nv">UsedGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">            </span><span class="nv">FreeGB</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Free/1GB,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">            </span><span class="nv">UsedPct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span>math<span class="o">]</span>::Round<span class="o">(</span><span class="nv">$_</span>.Used/<span class="o">(</span><span class="nv">$_</span>.Used+<span class="nv">$_</span>.Free<span class="o">)</span>*100,<span class="w"> </span><span class="m">1</span><span class="o">)</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="o">}</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="o">}</span>
 </code></pre></div>
 <hr />
 <h2 id="network-path-validation-to-backup-target">Network Path Validation to Backup Target<a class="headerlink" href="#network-path-validation-to-backup-target" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Test TCP connectivity to backup repository (Veeam default ports 2500-3300)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2500</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2501</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c"># Measure throughput with iperf3 (install on both ends)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Server side:</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="n">iperf3</span> <span class="n">-s</span> <span class="n">-p</span> <span class="n">5201</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Client side:</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">iperf3</span> <span class="n">-c</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-p</span> <span class="n">5201</span> <span class="n">-t</span> <span class="n">30</span> <span class="n">-P</span> <span class="n">4</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c"># Example good output:</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c"># [SUM]   0.00-30.00  sec  33.8 GBytes  9.69 Gbits/sec    0   sender</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Test TCP connectivity to backup repository (Veeam default ports 2500-3300)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2500</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Port</span> <span class="n">2501</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Measure throughput with iperf3 (install on both ends)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Server side:</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">iperf3</span> <span class="n">-s</span> <span class="n">-p</span> <span class="n">5201</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Client side:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">iperf3</span> <span class="n">-c</span> <span class="n">repo01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-p</span> <span class="n">5201</span> <span class="n">-t</span> <span class="n">30</span> <span class="n">-P</span> <span class="n">4</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c"># Example good output:</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># [SUM]   0.00-30.00  sec  33.8 GBytes  9.69 Gbits/sec    0   sender</span>
 </code></pre></div>
 <hr />
 <h2 id="top-10-veeam-error-codes-with-fixes">Top 10 Veeam Error Codes with Fixes<a class="headerlink" href="#top-10-veeam-error-codes-with-fixes" title="Permanent link">&para;</a></h2>

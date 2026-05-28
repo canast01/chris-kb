@@ -4167,28 +4167,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#notification-rule-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notification Rule Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scg-registration-records" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SCG Registration Records
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#audit-log-exports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4486,7 +4464,7 @@
 <h2 id="what-to-back-up-on-the-customer-side">What to Back Up on the Customer Side<a class="headerlink" href="#what-to-back-up-on-the-customer-side" title="Permanent link">&para;</a></h2>
 <h3 id="api-credentials">API Credentials<a class="headerlink" href="#api-credentials" title="Permanent link">&para;</a></h3>
 <p>API client credentials (client ID and client secret) are the most critical item to protect. The client secret is shown only once at creation time — it cannot be retrieved from the CloudIQ portal after that.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify your secrets vault has the following stored per API client:</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify your secrets vault has the following stored per API client:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># - Client ID (shown on the API Access page)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># - Client Secret (copy at creation time only)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># - Date created</span>
@@ -4502,138 +4480,112 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&amp;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; d=json.load(sys.stdin); print(&#39;OK&#39; if &#39;access_token&#39; in d else &#39;FAIL&#39;)&quot;</span>
 </code></pre></div>
-<p>Store client secrets in an enterprise secrets manager:</p>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CyberArk PAM</td>
-<td>Preferred for large enterprise environments; full audit trail</td>
-</tr>
-<tr>
-<td>HashiCorp Vault</td>
-<td>Recommended for infrastructure-as-code environments</td>
-</tr>
-<tr>
-<td>AWS Secrets Manager</td>
-<td>For cloud-native automation pipelines</td>
-</tr>
-<tr>
-<td>Azure Key Vault</td>
-<td>For Azure-hosted automation</td>
-</tr>
-<tr>
-<td>1Password Business</td>
-<td>For smaller teams without dedicated PAM</td>
-</tr>
-</tbody>
-</table>
-<p>Never store client secrets in plaintext configuration files, scripts, <code>.env</code> files committed to version control, or shared wiki pages.</p>
-<h3 id="notification-rule-configuration">Notification Rule Configuration<a class="headerlink" href="#notification-rule-configuration" title="Permanent link">&para;</a></h3>
-<p>CloudIQ notification rules (recipients, severity filters, webhook URLs) are not exportable via the API as of CloudIQ API v6. Document them externally so they can be recreated if the account is reset or if a new CloudIQ tenant is provisioned.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export notification rule summary via REST API (for documentation purposes)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;your-access-token&gt;&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">BASE</span><span class="o">=</span><span class="s2">&quot;https://cloudiq.apis.dell.com/rest/v1&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;<span class="w"> </span>cloudiq_notification_rules_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Store this file in your CMDB or infrastructure documentation repository</span>
-</code></pre></div>
-<p>Document for each notification rule:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Rule name</td>
-<td><code>storage-ops-critical-email</code></td>
-</tr>
-<tr>
-<td>Severity filter</td>
-<td>CRITICAL</td>
-</tr>
-<tr>
-<td>Systems scope</td>
-<td>All, or specific tag (<code>env:production</code>)</td>
-</tr>
-<tr>
-<td>Destination type</td>
-<td>Email / Webhook</td>
-</tr>
-<tr>
-<td>Recipients / URL</td>
-<td><code>storage-ops@corp.example.com</code> / <code>https://hooks.slack.com/...</code></td>
-</tr>
-<tr>
-<td>Created by</td>
-<td><code>admin@corp.example.com</code></td>
-</tr>
-<tr>
-<td>Last reviewed</td>
-<td>2026-01-15</td>
-</tr>
-</tbody>
-</table>
-<h3 id="scg-registration-records">SCG Registration Records<a class="headerlink" href="#scg-registration-records" title="Permanent link">&para;</a></h3>
-<p>The Secure Connect Gateway (SCG) is the on-premises component. Maintain a record of:</p>
-<ul>
-<li>Which storage systems are registered to which SCG appliance</li>
-<li>The SCG management IP and version</li>
-<li>Which systems are registered to both SCG appliances (for redundancy)</li>
-</ul>
-<p>This information is required if you need to rebuild or replace the SCG appliance — re-registration requires the management IP and credentials for each array.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export the list of devices registered to the SCG</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># From the SCG web UI: https://&lt;scg-ip&gt;:9443</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Settings → Registered Devices → Export to CSV</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Or query the CloudIQ API for all monitored systems</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?limit=200&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">print(&#39;system_name,type,health_score,location&#39;)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">for s in data.get(&#39;results&#39;, []):</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    print(f&#39;{s.get(\&quot;system_name\&quot;,\&quot;\&quot;)},{s.get(\&quot;type\&quot;,\&quot;\&quot;)},{s.get(\&quot;health_score\&quot;,\&quot;\&quot;)},{s.get(\&quot;location\&quot;,\&quot;\&quot;)}&#39;)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>cloudiq_systems_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
-</code></pre></div>
+┌─────────────────────────────────── Dell CloudIQ Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          CloudIQ SaaS platform backed up by Dell; SCG configuration exported manually         │   │
+│   │            SCG VM snapshot or OVA export preserves system credentials and settings            │   │
+│   │              CloudIQ telemetry data retained in Dell cloud for 90 days by default             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG VM snapshot → export settings → restore to new SCG VM → re-register in CloudIQ                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SCG Backup                  │  │                 CloudIQ SaaS                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          VM snapshot (ESXi/Hyper-V)          │  │           Dell manages SaaS backup          │   │
+│   │          Settings export via SCG UI          │  │           Historical data: 90 days          │   │
+│   │           System credential backup           │  │            Config replicated geo            │   │
+│   │              Certificate backup              │  │          No customer action needed          │   │
+│   │             OVA re-deploy for DR             │  │       Org data persists after SCG loss      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG restore: deploy new OVA → import settings → re-register with CloudIQ org → verify              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  Restore procedure: 1) Deploy fresh SCG OVA on VMware/Hyper-V                 │   │
+│   │                       2) Import exported settings file via SCG admin UI                       │   │
+│   │                       3) Re-register SCG with CloudIQ organisation token                      │   │
+│   │                   4) Verify storage systems reconnect and telemetry resumes                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SCG settings export = JSON export of all system credentials, proxy config, and certs               │
+│    Org token          = CloudIQ organisation registration token; links SCG to correct tenant          │
+│    90-day retention   = CloudIQ keeps 90 days of telemetry; older data rolled off automatically       │
+│    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Document for each notification rule:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Field | Example |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Rule name | `storage-ops-critical-email` |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Severity filter | CRITICAL |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Systems scope | All, or specific tag (`env:production`) |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Destination type | Email / Webhook |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Recipients / URL | `storage-ops@corp.example.com` / `https://hooks.slack.com/...` |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Created by | `admin@corp.example.com` |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Last reviewed | 2026-01-15 |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>### SCG Registration Records
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>The Secure Connect Gateway (SCG) is the on-premises component. Maintain a record of:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Which storage systems are registered to which SCG appliance
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- The SCG management IP and version
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- Which systems are registered to both SCG appliances (for redundancy)
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>This information is required if you need to rebuild or replace the SCG appliance — re-registration requires the management IP and credentials for each array.
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>```bash
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Export the list of devices registered to the SCG
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># From the SCG web UI: https://&lt;scg-ip&gt;:9443
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Settings → Registered Devices → Export to CSV
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Or query the CloudIQ API for all monitored systems
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>curl -s -X GET &quot;${BASE}/systems?limit=200&quot; \
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  -H &quot;Authorization: Bearer ${TOKEN}&quot; \
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  | python3 -c &quot;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>import sys, json
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>data = json.load(sys.stdin)
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>print(&#39;system_name,type,health_score,location&#39;)
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>for s in data.get(&#39;results&#39;, []):
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    print(f&#39;{s.get(\&quot;system_name\&quot;,\&quot;\&quot;)},{s.get(\&quot;type\&quot;,\&quot;\&quot;)},{s.get(\&quot;health_score\&quot;,\&quot;\&quot;)},{s.get(\&quot;location\&quot;,\&quot;\&quot;)}&#39;)
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>&quot; &gt; cloudiq_systems_$(date +%Y%m%d).csv
+</code></pre></div></p>
 <h3 id="audit-log-exports">Audit Log Exports<a class="headerlink" href="#audit-log-exports" title="Permanent link">&para;</a></h3>
 <p>CloudIQ's audit log records user logins, configuration changes, and API activity. The retention window in the CloudIQ portal is limited. Export the audit log regularly and retain the exports per your organisation's security policy (typically 90 days minimum, 12 months for PCI or HIPAA environments).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export audit log via CloudIQ portal</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Admin &gt; Audit Log &gt; Export as CSV</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Set date range: last 30 days (run monthly)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Store exports with naming convention:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># cloudiq_audit_YYYYMM.csv</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Retain for minimum 90 days; 12 months if under PCI-DSS, HIPAA, or ISO 27001</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export audit log via CloudIQ portal</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Admin &gt; Audit Log &gt; Export as CSV</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Set date range: last 30 days (run monthly)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Store exports with naming convention:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># cloudiq_audit_YYYYMM.csv</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Retain for minimum 90 days; 12 months if under PCI-DSS, HIPAA, or ISO 27001</span>
 </code></pre></div>
 <h3 id="custom-dashboard-and-report-configurations">Custom Dashboard and Report Configurations<a class="headerlink" href="#custom-dashboard-and-report-configurations" title="Permanent link">&para;</a></h3>
 <p>If you have created custom dashboards or scheduled reports in CloudIQ, document their configuration. These are not exportable and would need to be recreated manually if the account is reset.</p>
 <hr />
 <h2 id="scg-appliance-backup">SCG Appliance Backup<a class="headerlink" href="#scg-appliance-backup" title="Permanent link">&para;</a></h2>
 <p>The SCG virtual appliance stores its registration database, proxy settings, and device credentials locally. Back up the SCG VM using your standard hypervisor snapshot or backup tooling.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># VM-level backup (example: ESXi snapshot before SCG update)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Run from vCenter or via ESXCLI on the ESXi host</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Quiesce the SCG VM before snapshotting</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># vCenter → SCG VM → Actions → Snapshots → Take Snapshot</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Name: &quot;pre-update-YYYYMMDD&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Enable: Snapshot the virtual machine&#39;s memory (optional)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Enable: Quiesce guest file system (requires VMware Tools)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># For Veeam integration:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Veeam → Jobs → Backup Job → Add SCG VM</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Recommended: daily backup; retain 7 days of restore points</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VM-level backup (example: ESXi snapshot before SCG update)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Run from vCenter or via ESXCLI on the ESXi host</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Quiesce the SCG VM before snapshotting</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># vCenter → SCG VM → Actions → Snapshots → Take Snapshot</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Name: &quot;pre-update-YYYYMMDD&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enable: Snapshot the virtual machine&#39;s memory (optional)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Enable: Quiesce guest file system (requires VMware Tools)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># For Veeam integration:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Veeam → Jobs → Backup Job → Add SCG VM</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Recommended: daily backup; retain 7 days of restore points</span>
 </code></pre></div>
 <p>After SCG restore from backup, verify all registered devices are still reporting by checking the CloudIQ portal — the systems should reappear within 30 minutes of the SCG coming back online.</p>
 <hr />
@@ -4667,33 +4619,33 @@
 </ol>
 <h3 id="recreate-notification-rules">Recreate Notification Rules<a class="headerlink" href="#recreate-notification-rules" title="Permanent link">&para;</a></h3>
 <p>After an account reset, recreate notification rules from your documentation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a new notification rule via REST API (example: email rule for CRITICAL alerts)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;name&quot;: &quot;storage-ops-critical-email&quot;,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;severity&quot;: [&quot;CRITICAL&quot;],</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">    &quot;notification_type&quot;: &quot;EMAIL&quot;,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">    &quot;recipients&quot;: [&quot;storage-ops@corp.example.com&quot;],</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Create webhook notification rule for ServiceNow</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">    &quot;name&quot;: &quot;servicenow-incident-critical&quot;,</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">    &quot;severity&quot;: [&quot;CRITICAL&quot;],</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">    &quot;notification_type&quot;: &quot;WEBHOOK&quot;,</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">    &quot;webhook_url&quot;: &quot;https://your-instance.service-now.com/api/now/table/incident&quot;,</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Send a test notification to validate</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules/&lt;rule-id&gt;/test&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a new notification rule via REST API (example: email rule for CRITICAL alerts)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;name&quot;: &quot;storage-ops-critical-email&quot;,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;severity&quot;: [&quot;CRITICAL&quot;],</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;notification_type&quot;: &quot;EMAIL&quot;,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    &quot;recipients&quot;: [&quot;storage-ops@corp.example.com&quot;],</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    &quot;enabled&quot;: true</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Create webhook notification rule for ServiceNow</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">    &quot;name&quot;: &quot;servicenow-incident-critical&quot;,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">    &quot;severity&quot;: [&quot;CRITICAL&quot;],</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">    &quot;notification_type&quot;: &quot;WEBHOOK&quot;,</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">    &quot;webhook_url&quot;: &quot;https://your-instance.service-now.com/api/now/table/incident&quot;,</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s1">    &quot;enabled&quot;: true</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Send a test notification to validate</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/notification-rules/&lt;rule-id&gt;/test&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="backup-verification-checklist-quarterly">Backup Verification Checklist (Quarterly)<a class="headerlink" href="#backup-verification-checklist-quarterly" title="Permanent link">&para;</a></h2>

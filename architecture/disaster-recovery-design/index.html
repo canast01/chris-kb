@@ -2663,78 +2663,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DR Strategy Selection">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#active-active" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Active-Active
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#warm-standby" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warm Standby
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pilot-light" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pilot Light
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#backup-restore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup-Restore
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication-technology-selection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication Technology Selection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dr-site-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DR Site Topology
-      
-    </span>
-  </a>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3059,7 +2987,7 @@
 <hr />
 <h2 id="dr-strategy-selection">DR Strategy Selection<a class="headerlink" href="#dr-strategy-selection" title="Permanent link">&para;</a></h2>
 <p>Four canonical DR strategies exist, differing in cost, complexity, and recovery speed. Selecting the wrong strategy is the most common DR design error.</p>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A["What is the RTO?"] --&gt; B{RTO &lt; 15 min?}
     B --&gt;|Yes| C{RPO = 0?}
     C --&gt;|Yes| D["Active-Active\n(sync replication, both sites serve traffic)"]
@@ -3071,168 +2999,43 @@
     F --&gt;|No| J{RTO &lt; 24 hr?}
     J --&gt;|Yes| K["Pilot Light\n(scale up on failover)"]
     J --&gt;|No| L["Backup-Restore\n(periodic backup, manual restore process)"]</code></pre>
-<h3 id="active-active">Active-Active<a class="headerlink" href="#active-active" title="Permanent link">&para;</a></h3>
-<p>Both sites simultaneously serve production traffic. Load is distributed across sites (e.g., via GSLB — Global Server Load Balancing). Any single-site failure causes graceful degradation, not a recovery event.</p>
-<ul>
-<li>Requires: synchronous replication (≤5 ms RTT between sites), stateless application design or distributed data layer, GSLB for client routing</li>
-<li>Technology: vSAN Stretched Cluster, Dell EMC SRDF/S (synchronous), Oracle RAC Extended, NSX Federation</li>
-<li>Cost: highest (100% over-provisioning at secondary site)</li>
-<li>Best for: Tier 0 workloads where any recovery window is unacceptable</li>
-</ul>
-<h3 id="warm-standby">Warm Standby<a class="headerlink" href="#warm-standby" title="Permanent link">&para;</a></h3>
-<p>Secondary site is fully provisioned and VMs are running (or on hot standby). Replication is asynchronous with a short lag (minutes). Failover requires a manual or automated switchover, not a full rebuild.</p>
-<ul>
-<li>Requires: dedicated compute at DR site, automated failover orchestration, pre-configured networking</li>
-<li>Technology: Dell RecoverPoint for VMs, vSphere Replication (async), Zerto</li>
-<li>Cost: moderate-high (DR site runs at reduced capacity until failover)</li>
-<li>Best for: Tier 1 workloads with RTO 15 min – 2 hr</li>
-</ul>
-<h3 id="pilot-light">Pilot Light<a class="headerlink" href="#pilot-light" title="Permanent link">&para;</a></h3>
-<p>Core infrastructure (networking, AD, DNS) runs continuously at the DR site. Application servers are shut down but replicated. On failover, infrastructure is scaled up and VMs are powered on.</p>
-<ul>
-<li>Requires: core services pre-running, automation scripts for scale-up, validated boot order</li>
-<li>Technology: Veeam Backup &amp; Replication, AWS CloudEndure, Azure Site Recovery</li>
-<li>Cost: moderate (minimal steady-state footprint)</li>
-<li>Best for: Tier 2 workloads with RTO 2–8 hr</li>
-</ul>
-<h3 id="backup-restore">Backup-Restore<a class="headerlink" href="#backup-restore" title="Permanent link">&para;</a></h3>
-<p>No live replication. Recovery relies entirely on restoring from the most recent backup. Acceptable only for non-time-sensitive workloads.</p>
-<ul>
-<li>Requires: tested restore procedures, off-site backup copies, documented rebuild steps</li>
-<li>Technology: Veeam, Commvault, AWS Backup, Azure Backup</li>
-<li>Cost: lowest</li>
-<li>Best for: Tier 3/4 workloads; also the fallback strategy for all tiers when primary DR mechanism fails</li>
-</ul>
-<hr />
-<h2 id="replication-technology-selection">Replication Technology Selection<a class="headerlink" href="#replication-technology-selection" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Technology</th>
-<th>Vendor</th>
-<th>Type</th>
-<th>Granularity</th>
-<th>Consistency</th>
-<th>Typical RTO</th>
-<th>Tier</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>SRDF/S (Synchronous)</td>
-<td>Dell EMC</td>
-<td>Array-level</td>
-<td>LUN</td>
-<td>Crash-consistent</td>
-<td>&lt;15 min</td>
-<td>0</td>
-</tr>
-<tr>
-<td>SRDF/A (Asynchronous)</td>
-<td>Dell EMC</td>
-<td>Array-level</td>
-<td>LUN</td>
-<td>Crash-consistent</td>
-<td>&lt;1 hr</td>
-<td>1</td>
-</tr>
-<tr>
-<td>RecoverPoint for VMs</td>
-<td>Dell EMC</td>
-<td>Hypervisor</td>
-<td>VM</td>
-<td>App-consistent (VSS)</td>
-<td>&lt;30 min</td>
-<td>1</td>
-</tr>
-<tr>
-<td>vSphere Replication</td>
-<td>VMware</td>
-<td>Hypervisor</td>
-<td>VM</td>
-<td>Crash-consistent</td>
-<td>1–4 hr</td>
-<td>1/2</td>
-</tr>
-<tr>
-<td>Zerto</td>
-<td>Zerto/HPE</td>
-<td>Hypervisor</td>
-<td>VM / journal</td>
-<td>Near-CDP, app-consistent</td>
-<td>&lt;15 min</td>
-<td>1</td>
-</tr>
-<tr>
-<td>Veeam Backup &amp; Replication</td>
-<td>Veeam</td>
-<td>Agent/proxy</td>
-<td>VM / server</td>
-<td>App-consistent (VSS/quiesce)</td>
-<td>1–4 hr</td>
-<td>2/3</td>
-</tr>
-<tr>
-<td>Azure Site Recovery</td>
-<td>Microsoft</td>
-<td>Agent</td>
-<td>VM</td>
-<td>App-consistent</td>
-<td>1–2 hr</td>
-<td>2</td>
-</tr>
-<tr>
-<td>AWS CloudEndure</td>
-<td>AWS</td>
-<td>Agent</td>
-<td>Server</td>
-<td>Crash-consistent</td>
-<td>&lt;1 hr</td>
-<td>1/2</td>
-</tr>
-<tr>
-<td>Commvault IntelliSnap</td>
-<td>Commvault</td>
-<td>Array + agent</td>
-<td>Volume / VM</td>
-<td>App-consistent</td>
-<td>1–8 hr</td>
-<td>2/3</td>
-</tr>
-</tbody>
-</table>
-<p>Selection criteria:
-- <strong>RPO drives replication type</strong>: RPO=0 → synchronous array-level; RPO=minutes → journal-based or async with short cycle; RPO=hours → scheduled snapshot/backup
-- <strong>Application consistency</strong>: databases require application-quiesced snapshots (VSS on Windows, freeze/thaw on Linux) to recover cleanly
-- <strong>Array vendor lock-in</strong>: SRDF requires PowerMax/VMAX on both ends; RecoverPoint is flexible but requires the RecoverPoint appliance</p>
-<hr />
-<h2 id="dr-site-topology">DR Site Topology<a class="headerlink" href="#dr-site-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    subgraph Primary_Site["Primary Site (DC1)"]
-        P_Core["Core Switch Pair\n(Cisco Nexus 9504 vPC)"]
-        P_Compute["vSphere Cluster\n6× ESXi hosts"]
-        P_Storage["Dell PowerMax\n(SRDF source)"]
-        P_FW["Firewall Pair\n(Palo Alto PA-5450 HA)"]
-        P_Edge["WAN Edge / MPLS PE"]
-    end
-
-    subgraph DR_Site["DR Site (DC2)"]
-        D_Core["Core Switch Pair\n(Cisco Nexus 9000 vPC)"]
-        D_Compute["vSphere Cluster\n4× ESXi hosts (Tier 0/1)"]
-        D_Storage["Dell PowerMax\n(SRDF target)"]
-        D_FW["Firewall Pair\n(Palo Alto PA-3450 HA)"]
-        D_Edge["WAN Edge / MPLS PE"]
-    end
-
-    subgraph Cloud_DR["Cloud DR (AWS / Azure)"]
-        C_Vault["Backup Vault\n(Veeam Cloud Connect)"]
-        C_ASR["Azure Site Recovery\n(Tier 2 VMs)"]
-    end
-
-    P_Edge &lt;--&gt;|"MPLS / DIA\n10 Gbps"| D_Edge
-    P_Storage &lt;--&gt;|"SRDF replication\n(dedicated DWDM link)"| D_Storage
-    P_Edge &lt;--&gt;|"Internet / ExpressRoute"| Cloud_DR
-    D_Edge &lt;--&gt;|"Internet"| Cloud_DR</code></pre>
+┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        DR design: select site topology and replication pattern to meet RPO/RTO targets        │   │
+│   │          Tiers: hot standby (&lt; 1 min RTO), warm (&lt; 4h), cold (&gt; 4h, data only backup)         │   │
+│   │       Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   DR Tiers                   │  │             Replication Options             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │             Hot: always-on sync              │  │           Sync: zero RPO; ≤ 100km           │   │
+│   │            Warm: replicated async            │  │              Async: RPO minutes             │   │
+│   │              Cold: backup only               │  │             SRM / Zerto / vVols             │   │
+│   │             DR site sizing: N+x              │  │          Storage-level replication          │   │
+│   │            Test annually minimum             │  │           App-consistent snapshots          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Tier       │       RPO        │        RTO        │       Cost       │    Technology    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Hot standby    │    Near zero     │      &lt; 15 min     │     Highest      │     Sync rep     │   │
+│   │   Warm standby   │     &lt; 15 min     │     1-4 hours     │      Medium      │    Async rep     │   │
+│   │   Cold standby   │    &lt; 24 hours    │     &gt; 4 hours     │      Lowest      │   Backup/tape    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    RPO          = Recovery Point Objective; max acceptable data loss; drives replication freq         │
+│    RTO          = Recovery Time Objective; max acceptable downtime; drives DR tier selection          │
+│    Synchronous  = Write confirmed only after replica ACK; zero data loss; limited by distance         │
+│    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval        │
+│    SRM          = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites        │
+│    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p><strong>Design decisions for DR site topology:</strong></p>
 <table>
 <thead>

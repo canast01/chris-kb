@@ -4454,28 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#lifecycle-management-patching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Lifecycle Management (Patching)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sddc-manager-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SDDC Manager Backup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#password-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4686,7 +4664,7 @@
 
 
 <h1 id="vcf-procedures">VCF — Procedures<a class="headerlink" href="#vcf-procedures" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Operational Procedures — Decision Map
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Operational Procedures — Decision Map
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Routine Operations                                 │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────┬───────────────┬────────────────┬─────────────┘
@@ -4710,34 +4688,62 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│ first!       │ │ after rotate │ │ → NSX → ESXi      │
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└──────────────┘ └──────────────┘ └────────────────┘
 </code></pre></div>
-<h2 id="lifecycle-management-patching">Lifecycle Management (Patching)<a class="headerlink" href="#lifecycle-management-patching" title="Permanent link">&para;</a></h2>
-<p>All VCF component upgrades must go through SDDC Manager LCM. Patching components independently breaks the BOM alignment and can block future LCM upgrades.</p>
-<p><strong>Pre-upgrade checklist:</strong></p>
-<ul>
-<li>[ ] All workload domains healthy in SDDC Manager</li>
-<li>[ ] No active critical alarms in vCenter or NSX Manager</li>
-<li>[ ] vSAN Skyline Health shows no critical issues</li>
-<li>[ ] SDDC Manager backup completed successfully within 24 hours</li>
-<li>[ ] BOM compatibility confirmed — check VCF release notes for target version</li>
-<li>[ ] Maintenance window scheduled with change management</li>
-</ul>
-<p><strong>Upgrade order within a VCF release:</strong></p>
-<ol>
-<li>SDDC Manager itself (if being upgraded)</li>
-<li>Management domain: vCenter → ESXi → vSAN → NSX (in BOM order)</li>
-<li>Workload domains (in order)</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SDDC Manager → Lifecycle Management → Upgrade → select target bundle → run pre-check → schedule
-</code></pre></div>
-<h2 id="sddc-manager-backup">SDDC Manager Backup<a class="headerlink" href="#sddc-manager-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Administration → Backup → Configure (SFTP target recommended)
-</code></pre></div>
+┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐
+│                                                                                                       │
+│  Routine VCF procedures: add host to free pool, create workload domain, rotate                        │
+│  passwords, renew certificates, and commission/decommission domains.                                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Host Management                │  │              Domain Management              │   │
+│   │         Commission host to free pool         │  │            Create workload domain           │   │
+│   │         Validate: HCL + connectivity         │  │            Select hosts from pool           │   │
+│   │          Assign to workload domain           │  │           SDDC Mgr deploys VC+NSX           │   │
+│   │          Remove: decommission first          │  │           Decommission: drain VMs           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Commission adds hardware capacity; workload domain creation consumes free pool hosts.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Credential &amp; Cert Rotation          │  │               Cluster Scaling               │   │
+│   │         Rotate: SDDC Mgr &gt; Security          │  │         Expand: add hosts to domain         │   │
+│   │        Remediate: fix stuck rotation         │  │           Contract: drain + remove          │   │
+│   │           Certs: Certificates tab            │  │            Add cluster to domain            │   │
+│   │            CSR: generate + import            │  │         Delete cluster: drain first         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Adding hosts requires physical cabling, BIOS config, and SDDC Mgr commissioning;                     │
+│  password rotation may cause brief component restarts.                                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Commission    = add physical host to SDDC Mgr free pool                                              │
+│  Decommission  = remove host from VCF; must drain first                                               │
+│  Free pool     = hosts available for domain assignment                                                │
+│  Workload domain= isolated cluster with its own vCenter + NSX                                         │
+│  Credential rotation= SDDC Mgr rotates passwords for all managed components                           │
+│  CSR           = Certificate Signing Request; generated by SDDC Mgr                                   │
+│  Remediate     = fix stuck lifecycle task; retry failed step                                          │
+│  Expand cluster= add hosts to existing cluster in a domain                                            │
+│  Contract      = reduce cluster size; hosts return to free pool                                       │
+│  Drain         = migrate VMs off host before decommission                                             │
+│  Security tab  = SDDC Mgr area for credential rotation and cert management                            │
+│  Certificate tab= SDDC Mgr UI for cert status, CSR, and import                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## SDDC Manager Backup
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>SDDC Manager → Administration → Backup → Configure (SFTP target recommended)
+</code></pre></div></p>
 <ul>
 <li>Schedule: daily; retain at least 7 restore points</li>
 <li>On-demand: <code>SDDC Manager → Administration → Backup → Backup Now</code></li>
 </ul>
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SDDC Manager → Security → Password Management
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Security → Password Management
 </code></pre></div>
 <p><strong>Break-glass rotation procedure:</strong></p>
 <ol>

@@ -3915,17 +3915,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cod-license-not-activating-step-by-step" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        COD License Not Activating — Step-by-Step
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#capacity-not-available-after-activation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4141,7 +4130,7 @@
 </blockquote>
 <hr />
 <h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current license status for the array</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check current license status for the array</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Show COD-specific feature license</span>
@@ -4165,61 +4154,87 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Review SYMCLI audit log for COD activations</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-action<span class="w"> </span><span class="s2">&quot;license&quot;</span>
 </code></pre></div>
-<h2 id="cod-license-not-activating-step-by-step">COD License Not Activating — Step-by-Step<a class="headerlink" href="#cod-license-not-activating-step-by-step" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Confirm the license file SID matches the target array:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># The license file is XML — open it and check the SID field</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SID\|serial&quot;</span><span class="w"> </span>cod-license.xml
-</code></pre></div>
-<ol>
-<li>Confirm SYMCLI can communicate with the array:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>show
-</code></pre></div>
+┌──────────────────────────────────────── Dell COD Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         COD diagnostics: key rejected, capacity not increasing, license portal errors         │   │
+│   │               Key rejection: wrong serial number, duplicate use, corrupted file               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Common Problems                │  │               Diagnostic Steps              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Key rejected: serial mismatch         │  │        Verify array serial in portal        │   │
+│   │             Key already applied              │  │          Check license list in GUI          │   │
+│   │           Capacity not increasing            │  │         Verify pool expansion needed        │   │
+│   │         Portal error generating key          │  │            Open Dell licensing SR           │   │
+│   │              Key file corrupted              │  │           Re-download from portal           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │    Root cause    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Key rejected   │   Wrong serial   │  Get correct key  │  Apply succeeds  │  Portal issues   │   │
+│   │  No cap change   │Pool not expanded │    Expand pool    │  Capacity grows  │  HW not visible  │   │
+│   │     Key used     │ Duplicate apply  │   Check lic list  │  Already active  │        —         │   │
+│   │   File corrupt   │  Download issue  │    Re-download    │  Apply succeeds  │    Portal SR     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Serial mismatch = License key generated for different array serial; portal may have wrong SN       │
+│    Pool expansion  = After COD unlock, pool must be expanded to include new drives in capacity        │
+│    Duplicate apply = Applying same key twice; array reports already activated; not an error           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>2. Confirm SYMCLI can communicate with the array:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>symcfg -sid &lt;SID&gt; show
+</code></pre></div></p>
 <ol>
 <li>Check current license state:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
 </code></pre></div>
 <ol>
 <li>Attempt license installation:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>cod-license.xml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>cod-license.xml
 </code></pre></div>
 <ol>
 <li>If installation fails, capture the full error:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>cod-license.xml<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-install-error.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>symlicense<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>install<span class="w"> </span>-file<span class="w"> </span>cod-license.xml<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/cod-install-error.txt
 </code></pre></div>
 <ol>
 <li>Open a Dell Support case with the error output and the license file (do not share the license file publicly).</li>
 </ol>
 <h2 id="capacity-not-available-after-activation">Capacity Not Available After Activation<a class="headerlink" href="#capacity-not-available-after-activation" title="Permanent link">&para;</a></h2>
 <p>After license activation, new drives may take several minutes to be enumerated and available.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Step 1 — trigger device discovery</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>discover
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Step 2 — wait 3–5 minutes, then check for new devices</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ready\|avail&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Step 3 — confirm pool capacity has increased</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-pool<span class="w"> </span>-dp<span class="w"> </span>list
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Step 4 — if devices are visible but not in a pool, add them:</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># (Use Unisphere GUI → Storage → Storage Pools → Add Drives)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Or via SYMCLI:</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;add drives to pool &lt;pool-name&gt; type thin;&quot;</span><span class="w"> </span>commit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1 — trigger device discovery</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>discover
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Step 2 — wait 3–5 minutes, then check for new devices</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sympd<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ready\|avail&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Step 3 — confirm pool capacity has increased</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-pool<span class="w"> </span>-dp<span class="w"> </span>list
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 4 — if devices are visible but not in a pool, add them:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># (Use Unisphere GUI → Storage → Storage Pools → Add Drives)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Or via SYMCLI:</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;add drives to pool &lt;pool-name&gt; type thin;&quot;</span><span class="w"> </span>commit
 </code></pre></div>
 <h2 id="audit-trail-recovery">Audit Trail Recovery<a class="headerlink" href="#audit-trail-recovery" title="Permanent link">&para;</a></h2>
 <p>If a COD activation was performed without a proper change ticket, reconstruct the audit trail from SYMCLI logs before closing the gap.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Review SYMCLI operations log for the activation date</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-start_time<span class="w"> </span>&lt;date&gt;<span class="w"> </span>-end_time<span class="w"> </span>&lt;date&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Review Unisphere audit log via REST API (if activation was done through Unisphere GUI)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere-host&gt;:8443/univmax/restapi/103/system/audit?startTime=&lt;epoch&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Review SYMCLI operations log for the activation date</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>symaudit<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list<span class="w"> </span>-start_time<span class="w"> </span>&lt;date&gt;<span class="w"> </span>-end_time<span class="w"> </span>&lt;date&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Review Unisphere audit log via REST API (if activation was done through Unisphere GUI)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;:&lt;pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;unisphere-host&gt;:8443/univmax/restapi/103/system/audit?startTime=&lt;epoch&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <p>Document the findings and retroactively create the change record to maintain compliance.</p>
 

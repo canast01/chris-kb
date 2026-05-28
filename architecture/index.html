@@ -2761,6 +2761,37 @@
 Enterprise infrastructure architecture design guides covering high availability patterns, storage tiering, network topology, and disaster recovery design principles.
 </div>
 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────── Architecture — HA Design, Storage, Networking &amp; Disaster Recovery ──────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       Architecture design guides for enterprise infrastructure: HA, storage, network, DR      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │    Design principles: eliminate single points of failure; automate failover; test recovery    │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │     All designs must state: RPO/RTO targets, failure domain boundaries, and recovery path     │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │         Compute &amp; HA        │  │      Storage &amp; Network      │  │        DR &amp; Recovery        │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │      N+1 host capacity      │  │       Storage tiering       │  │      RPO / RTO targets      │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       DRS + vSphere HA      │  │       Redundant paths       │  │      Active-passive DR      │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │     Failure domain plan     │  │       L3 segmentation       │  │      Replication design     │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │     Anti-affinity rules     │  │     Spine-leaf topology     │  │       Failover runbook      │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │        Resource pools       │  │      BGP peering design     │  │       Recovery testing      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    N+1          = One more host than minimum required; one failure without service impact             │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Failure domain= Boundary within which a single failure has impact; AZ / rack / PDU                 │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    Anti-affinity = Rule keeping workloads on different hosts for HA; opposite of affinity             │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│    Spine-leaf   = Data centre switching topology; spine = core, leaf = ToR; no STP needed             │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Active-passive= Primary handles all traffic; standby takes over on failure (vs active-active)      │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    RPO/RTO      = Recovery Point/Time Objectives; quantify acceptable data loss and downtime          │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="articles">Articles<a class="headerlink" href="#articles" title="Permanent link">&para;</a></h2>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="disaster-recovery-design/">
@@ -2785,28 +2816,6 @@ Enterprise infrastructure architecture design guides covering high availability 
 </div>
 
 <h2 id="enterprise-architecture-overview">Enterprise Architecture Overview<a class="headerlink" href="#enterprise-architecture-overview" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  COMP["Compute\nESXi · Linux · Windows"] --&gt; FABRIC["SAN Fabric\nBrocade · Cisco MDS"]
-  COMP --&gt; NET["Network\nVDS · NSX · VLANs"]
-  FABRIC --&gt; STORE["Storage\nFlashArray · PowerMax · ONTAP"]
-  NET --&gt; STORE
-  STORE --&gt;|"replication"| DR["Disaster Recovery\nSRM · SRDF · RecoverPoint"]
-  COMP --&gt; MON["Monitoring\nAria Ops · CloudIQ · Pure1"]
-  STORE --&gt; MON
-  COMP --&gt; SEC["Security\nAD · CyberArk · PKI"]
-  NET --&gt; SEC
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef mon fill:#b45309,stroke:#92400e,color:#fff
-  classDef sec fill:#15803d,stroke:#166534,color:#fff
-  class COMP,FABRIC ctrl
-  class STORE store
-  class NET net
-  class DR dr
-  class MON mon
-  class SEC sec</code></pre>
 
 
 

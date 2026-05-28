@@ -2829,56 +2829,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#network-topology-key-segments" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Topology — Key Segments
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloud-resource-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud Resource Mapping
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Cloud Resource Mapping">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#aws" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#azure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#change-impact-assessment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3092,7 +3042,7 @@
 </table>
 <h2 id="dependency-map-template">Dependency Map Template<a class="headerlink" href="#dependency-map-template" title="Permanent link">&para;</a></h2>
 <p>For each application, document:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## Application: Payments API</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gu">## Application: Payments API</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gs">**Tier:**</span> Production
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gs">**Hosts:**</span> pay-api-01, pay-api-02, pay-api-03 (load balanced via alb-pay-prod)
@@ -3124,68 +3074,46 @@
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">-</span><span class="w"> </span>TLS cert: *.payments.example.com — expires 2027-03-01
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="k">-</span><span class="w"> </span>Secrets: vault path <span class="sb">`secret/payments/db_password`</span>, <span class="sb">`secret/payments/fraud_api_key`</span>
 </code></pre></div>
-<h2 id="network-topology-key-segments">Network Topology — Key Segments<a class="headerlink" href="#network-topology-key-segments" title="Permanent link">&para;</a></h2>
-<p>Document logical network zones and permitted flows:</p>
-<table>
-<thead>
-<tr>
-<th>Zone</th>
-<th>CIDR</th>
-<th>Purpose</th>
-<th>Inter-zone Rules</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Production</td>
-<td>10.0.0.0/16</td>
-<td>Live workloads</td>
-<td>→ DB zone (allowed); → internet (via proxy)</td>
-</tr>
-<tr>
-<td>Database</td>
-<td>10.1.0.0/24</td>
-<td>Database servers</td>
-<td>← Prod zone only; no internet</td>
-</tr>
-<tr>
-<td>Management</td>
-<td>10.2.0.0/24</td>
-<td>Jump hosts, monitoring</td>
-<td>→ All zones (admin access)</td>
-</tr>
-<tr>
-<td>DMZ</td>
-<td>10.3.0.0/24</td>
-<td>Internet-facing services</td>
-<td>→ Prod zone (limited); internet inbound</td>
-</tr>
-</tbody>
-</table>
-<h2 id="cloud-resource-mapping">Cloud Resource Mapping<a class="headerlink" href="#cloud-resource-mapping" title="Permanent link">&para;</a></h2>
-<h3 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all EC2 instances with tags</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Reservations[*].Instances[*].{ID:InstanceId,Name:Tags[?Key==`Name`].Value|[0],Env:Tags[?Key==`Environment`].Value|[0],State:State.Name,AZ:Placement.AvailabilityZone}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List RDS instances and their VPCs</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,VPC:DBSubnetGroup.VpcId,Status:DBInstanceStatus}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--output<span class="w"> </span>table
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Application dependency map — Resource Groups</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws<span class="w"> </span>resource-groups<span class="w"> </span>list-groups
-</code></pre></div>
-<h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all resources by environment tag</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--tag<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Type:type,RG:resourceGroup,Location:location}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show VM and its disk / network dependencies</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--show-details<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}&#39;</span><span class="w"> </span>-o<span class="w"> </span>json
-</code></pre></div>
+┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Environment map: production, staging, dev, DR — document dependencies and data flows     │   │
+│   │      Identify: shared services (AD, DNS, NTP) vs environment-specific (app, DB, storage)      │   │
+│   │       DR site must mirror prod sizing; test failover path; document RTO/RPO per service       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Production         │  │        Non-Production       │  │        DR / Recovery        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Live workloads       │  │     Staging mirrors prod    │  │      Replication target     │   │
+│   │        Change managed       │  │        Dev = isolated       │  │       Tested annually       │   │
+│   │        Monitored 24/7       │  │     No prod data in dev     │  │       RTO/RPO defined       │   │
+│   │         SLA enforced        │  │      Refresh from prod      │  │      Activation runbook     │   │
+│   │      Access controlled      │  │     Config parity check     │  │        Config in sync       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Config parity = Staging config matches prod (versions, settings) for realistic testing             │
+│    Data masking  = Replace prod PII with synthetic data before copying to non-prod environments       │
+│    Shared service= Component used across environments (AD, DNS, NTP); single point of attention       │
+│    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
+│    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Azure
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List all resources by environment tag
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az resource list --tag Environment=Production \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  --query &#39;[*].{Name:name,Type:type,RG:resourceGroup,Location:location}&#39; -o table
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Show VM and its disk / network dependencies
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az vm show -g &lt;rg&gt; -n &lt;vm-name&gt; --show-details \
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  --query &#39;{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}&#39; -o json
+</code></pre></div></p>
 <h2 id="change-impact-assessment">Change Impact Assessment<a class="headerlink" href="#change-impact-assessment" title="Permanent link">&para;</a></h2>
 <p>Before any change, use the dependency map to answer:</p>
 <ol>
@@ -3202,20 +3130,20 @@
 <li>Keep maps in version-controlled docs alongside infrastructure code</li>
 </ul>
 <h2 id="discovery-tools">Discovery Tools<a class="headerlink" href="#discovery-tools" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># netstat — find connections on a host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ss<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># established TCP connections and owning process</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ss<span class="w"> </span>-tlnp<span class="w">   </span><span class="c1"># listening ports</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Find which process owns a port</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:&lt;port&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Trace network path to a service</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>traceroute<span class="w"> </span>&lt;target-host&gt;
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>&lt;target-host&gt;
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># DNS record discovery</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>ANY
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>dig<span class="w"> </span>-t<span class="w"> </span>SRV<span class="w"> </span>_service._proto.&lt;domain&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># netstat — find connections on a host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ss<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># established TCP connections and owning process</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ss<span class="w"> </span>-tlnp<span class="w">   </span><span class="c1"># listening ports</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Find which process owns a port</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:&lt;port&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Trace network path to a service</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>traceroute<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># DNS record discovery</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>ANY
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>dig<span class="w"> </span>-t<span class="w"> </span>SRV<span class="w"> </span>_service._proto.&lt;domain&gt;
 </code></pre></div>
 
 

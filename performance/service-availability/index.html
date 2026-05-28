@@ -2818,39 +2818,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synthetic-monitoring-external-probes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synthetic Monitoring (External Probes)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#uptime-monitoring-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Uptime Monitoring Tools
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#azure-monitor-availability-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure Monitor — Availability Test
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#aws-route-53-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3019,106 +2986,98 @@
 
 <h1 id="service-availability-monitoring">Service Availability Monitoring<a class="headerlink" href="#service-availability-monitoring" title="Permanent link">&para;</a></h1>
 <h2 id="availability-calculation">Availability Calculation<a class="headerlink" href="#availability-calculation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Availability % = (Total time - Downtime) / Total time × 100
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Availability % = (Total time - Downtime) / Total time × 100
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>99.9%  → 8.7 hours downtime/year (43.8 min/month)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>99.95% → 4.4 hours downtime/year (21.9 min/month)
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>99.99% → 52 minutes downtime/year (4.4 min/month)
 </code></pre></div>
-<h2 id="synthetic-monitoring-external-probes">Synthetic Monitoring (External Probes)<a class="headerlink" href="#synthetic-monitoring-external-probes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># HTTP health check — confirm endpoint returns 200</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code} %{time_total}s\n&quot;</span><span class="w"> </span>https://&lt;app&gt;/health
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># TCP port check</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;succeeded|failed&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># DNS resolution check</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dig<span class="w"> </span>+short<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>@8.8.8.8
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Script: check multiple services</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">for</span><span class="w"> </span>endpoint<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s2">&quot;https://app1/health&quot;</span><span class="w"> </span><span class="s2">&quot;https://app2/health&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nv">code</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$endpoint</span><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$code</span><span class="s2">&quot;</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;200&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;ALERT: </span><span class="nv">$endpoint</span><span class="s2"> returned </span><span class="nv">$code</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="k">fi</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">done</span>
-</code></pre></div>
-<h2 id="uptime-monitoring-tools">Uptime Monitoring Tools<a class="headerlink" href="#uptime-monitoring-tools" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Prometheus Blackbox Exporter</td>
-<td>HTTP/TCP/ICMP probes from internal</td>
-<td>Integrates with Grafana</td>
-</tr>
-<tr>
-<td>Zabbix</td>
-<td>HTTP/TCP/ICMP + agent checks</td>
-<td>All-in-one monitoring</td>
-</tr>
-<tr>
-<td>Pingdom / UptimeRobot</td>
-<td>External HTTP probes</td>
-<td>External visibility; SLA reporting</td>
-</tr>
-<tr>
-<td>Azure Monitor / Application Insights</td>
-<td>App-level availability tests</td>
-<td>Built-in for Azure workloads</td>
-</tr>
-<tr>
-<td>AWS CloudWatch</td>
-<td>Route 53 health checks</td>
-<td>Native for AWS endpoints</td>
-</tr>
-</tbody>
-</table>
-<h2 id="azure-monitor-availability-test">Azure Monitor — Availability Test<a class="headerlink" href="#azure-monitor-availability-test" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an availability test (ping test)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>app-insights<span class="w"> </span>web-test<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--app-insights<span class="w"> </span>&lt;ai-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-n<span class="w"> </span>&lt;test-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--defined-web-test-kind<span class="w"> </span>ping<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--locations<span class="w"> </span><span class="s1">&#39;[{&quot;Id&quot;:&quot;us-east-az&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://&lt;app&gt;/health&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--frequency<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--timeout<span class="w"> </span><span class="m">30</span>
-</code></pre></div>
+┌───────────────────────────────── Performance — Service Availability ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Measure and report service availability; track downtime; compare against SLA targets     │   │
+│   │     Availability = (total time - downtime) / total time * 100; track per service per month    │   │
+│   │         Planned maintenance excluded from calculation if pre-approved and communicated        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Availability Tiers              │  │                 Measurement                 │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           99.9% = 8.7h/yr downtime           │  │           Monitor: synthetic check          │   │
+│   │               99.95% = 4.4h/yr               │  │          Log outage: start/end time         │   │
+│   │              99.99% = 52 min/yr              │  │          Calculate monthly percent          │   │
+│   │             99.999% = 5.2 min/yr             │  │            Report to stakeholders           │   │
+│   │           Target per service tier            │  │             Trend vs SLA target             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │   Availability   │   Downtime/yr    │    Downtime/mo    │       Tier       │     Example      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │      99.9%       │    8.7 hours     │      43.8 min     │     Standard     │     Dev/test     │   │
+│   │      99.95%      │    4.4 hours     │      21.9 min     │     Business     │  Internal apps   │   │
+│   │      99.99%      │      52 min      │      4.4 min      │     Critical     │  Prod services   │   │
+│   │     99.999%      │     5.2 min      │       26 sec      │     Mission      │    Core infra    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Synthetic check = Automated probe that tests service endpoint; detects outages before users        │
+│    Maintenance window= Planned downtime; communicated in advance; excluded from availability calc     │
+│    Error budget  = 1 - SLO; allowable downtime; consumed by incidents and planned maintenance         │
+│    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Uptime Monitoring Tools
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Tool | Method | Notes |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Prometheus Blackbox Exporter | HTTP/TCP/ICMP probes from internal | Integrates with Grafana |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Zabbix | HTTP/TCP/ICMP + agent checks | All-in-one monitoring |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Pingdom / UptimeRobot | External HTTP probes | External visibility; SLA reporting |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Azure Monitor / Application Insights | App-level availability tests | Built-in for Azure workloads |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| AWS CloudWatch | Route 53 health checks | Native for AWS endpoints |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Azure Monitor — Availability Test
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Create an availability test (ping test)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>az monitor app-insights web-test create \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  -g &lt;rg&gt; \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  --app-insights &lt;ai-name&gt; \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  -n &lt;test-name&gt; \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  --defined-web-test-kind ping \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  --locations &#39;[{&quot;Id&quot;:&quot;us-east-az&quot;}]&#39; \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  --url &quot;https://&lt;app&gt;/health&quot; \
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  --frequency 300 \
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  --timeout 30
+</code></pre></div></p>
 <h2 id="aws-route-53-health-checks">AWS Route 53 Health Checks<a class="headerlink" href="#aws-route-53-health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create HTTP health check</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-health-check<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--health-check-config<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s1">    &quot;Type&quot;: &quot;HTTPS&quot;,</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;FullyQualifiedDomainName&quot;: &quot;&lt;app-host&gt;&quot;,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;Port&quot;: 443,</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;ResourcePath&quot;: &quot;/health&quot;,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;RequestInterval&quot;: 30,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    &quot;FailureThreshold&quot;: 3</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Get health check status</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>aws<span class="w"> </span>route53<span class="w"> </span>get-health-check-status<span class="w"> </span>--health-check-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create HTTP health check</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-health-check<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--health-check-config<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;Type&quot;: &quot;HTTPS&quot;,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;FullyQualifiedDomainName&quot;: &quot;&lt;app-host&gt;&quot;,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;Port&quot;: 443,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;ResourcePath&quot;: &quot;/health&quot;,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;RequestInterval&quot;: 30,</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;FailureThreshold&quot;: 3</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Get health check status</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>aws<span class="w"> </span>route53<span class="w"> </span>get-health-check-status<span class="w"> </span>--health-check-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}&#39;</span>
 </code></pre></div>
 <h2 id="availability-incident-tracking">Availability Incident Tracking<a class="headerlink" href="#availability-incident-tracking" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Incident:       APP-2026-042
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Service:        ERP Application
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Start time:     2026-05-05 14:23 UTC
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>End time:       2026-05-05 15:07 UTC
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Downtime:       44 minutes
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>SLO impact:     Monthly budget: 43.8 min — budget consumed 100%
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Root cause:     Database connection pool exhausted due to slow query
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Detection:      Monitoring alert fired at 14:24 (1 min after start)
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Resolution:     Restarted connection pool; fixed query index
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Incident:       APP-2026-042
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Service:        ERP Application
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Start time:     2026-05-05 14:23 UTC
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>End time:       2026-05-05 15:07 UTC
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Downtime:       44 minutes
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>SLO impact:     Monthly budget: 43.8 min — budget consumed 100%
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Root cause:     Database connection pool exhausted due to slow query
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Detection:      Monitoring alert fired at 14:24 (1 min after start)
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Resolution:     Restarted connection pool; fixed query index
 </code></pre></div>
 <h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
 <table>

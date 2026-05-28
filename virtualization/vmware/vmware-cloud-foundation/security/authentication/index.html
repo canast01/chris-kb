@@ -4338,40 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#password-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Password Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Password Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#health-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Health Commands
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#common-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4381,8 +4347,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#operational-tasks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4392,8 +4358,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#upgrade-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4403,8 +4369,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4412,11 +4378,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4620,7 +4581,7 @@
 
 
 <h1 id="vcf-security-authentication">VCF Security — Authentication<a class="headerlink" href="#vcf-security-authentication" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Authentication Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Authentication Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Operator / Admin                                   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────────────────────┬──────────────────────────────┘
@@ -4646,48 +4607,52 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│              │ │              │ │ on schedule       │
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└──────────────┘ └──────────────┘ └──────────────────┘
 </code></pre></div>
-<h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<p>Credential rotation, password lifecycle, account ownership, and validation.</p>
-<h3 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Review active alarms.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Check recent failed tasks.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm service health.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Confirm capacity and performance are normal.</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>Check recent changes.</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add environment-specific commands here</span>
-</code></pre></div>
+┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
+│                                                                                                       │
+│  VCF authentication flows through SDDC Manager (API token), vCenter SSO (per domain),                 │
+│  and NSX; vIDM provides unified identity across all VCF components.                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              SDDC Manager Auth               │  │               Per-Domain Auth               │   │
+│   │           Local users + AD groups            │  │         Each domain: own vCenter SSO        │   │
+│   │             API: POST /v1/tokens             │  │             AD joined per domain            │   │
+│   │            Bearer token: 24h TTL             │  │           SSO: local + AD identity          │   │
+│   │            MFA: via RADIUS proxy             │  │          vIDM: optional unified SSO         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SDDC Manager token auth is separate from each domain SSO; both may need AD.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               vIDM Integration               │  │              NSX Authentication             │   │
+│   │         Unified identity across VCF          │  │            NSX: local + vIDM/LDAP           │   │
+│   │           SAML federation to Aria            │  │            NSX token: 24h expiry            │   │
+│   │           AD: one source per vIDM            │  │            NSX API: Bearer token            │   │
+│   │             MFA: per vIDM policy             │  │           NSX UI: SSO via vCenter           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AD DCs must be reachable on management network; vIDM requires TCP 443 to AD and                      │
+│  all VCF components; RADIUS server required for MFA.                                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vIDM         = VMware Identity Manager; unified SSO across VCF                                       │
+│  SDDC Mgr token= bearer JWT; 24h TTL; POST /v1/tokens                                                 │
+│  SAML         = Security Assertion Markup Language; federation format                                 │
+│  vCenter SSO  = per-domain identity service; issues SAML tokens                                       │
+│  RADIUS       = Remote Authentication Dial-In User Service; MFA backend                               │
+│  Bearer token = JWT presented in Authorization header for API calls                                   │
+│  AD joined    = vCenter SSO configured with AD as identity source                                     │
+│  NSX token    = separate API token; 24h TTL; POST to NSX manager                                      │
+│  MFA          = Multi-Factor Auth; enforced via vIDM or RADIUS policy                                 │
+│  TTL          = Token Time-to-Live; renew before expiry for automation                                │
+│  NSX SSO      = NSX UI login via vCenter SSO delegation                                               │
+│  SAML to Aria = vIDM provides SAML assertions to Aria Operations/Logs                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h3 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Failed or stuck tasks.</li>

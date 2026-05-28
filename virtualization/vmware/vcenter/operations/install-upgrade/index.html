@@ -4454,28 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#version-and-support-matrix" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Version and Support Matrix
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-order-critical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Order (Critical)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vcenter-upgrade-procedure-vcsa" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4758,7 +4736,7 @@
 
 
 <h1 id="vcenter-install-upgrade">vCenter — Install &amp; Upgrade<a class="headerlink" href="#vcenter-install-upgrade" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSphere Upgrade Sequence
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSphere Upgrade Sequence
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>════════════════════════════════════════════════════════
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  MUST follow this order — newer ESXi is NOT supported by older vCenter
@@ -4803,86 +4781,69 @@
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  Rollback: full restore from pre-upgrade backup only
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>            (no in-place rollback; keep old VCSA off for 24h window)
 </code></pre></div>
-<h2 id="version-and-support-matrix">Version and Support Matrix<a class="headerlink" href="#version-and-support-matrix" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Version</th>
-<th>Release</th>
-<th>General Support End</th>
-<th>Technical Guidance End</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vSphere 6.5</td>
-<td>2016-11</td>
-<td>2022-10-15</td>
-<td>2023-11-15</td>
-</tr>
-<tr>
-<td>vSphere 6.7</td>
-<td>2018-04</td>
-<td>2022-10-15</td>
-<td>2023-11-15</td>
-</tr>
-<tr>
-<td>vSphere 7.0</td>
-<td>2020-04</td>
-<td>2025-04-02</td>
-<td>2027-04-02</td>
-</tr>
-<tr>
-<td>vSphere 7.0 U3</td>
-<td>2021-10</td>
-<td>2025-04-02</td>
-<td>2027-04-02</td>
-</tr>
-<tr>
-<td>vSphere 8.0</td>
-<td>2022-10</td>
-<td>2027-10 (est.)</td>
-<td>2029-10 (est.)</td>
-</tr>
-<tr>
-<td>vSphere 8.0 U2</td>
-<td>2023-09</td>
-<td>2027-10 (est.)</td>
-<td>2029-10 (est.)</td>
-</tr>
-<tr>
-<td>vSphere 8.0 U3</td>
-<td>2024-06</td>
-<td>2027-10 (est.)</td>
-<td>2029-10 (est.)</td>
-</tr>
-</tbody>
-</table>
-<p>Always verify at <a href="https://support.broadcom.com/group/ecx/productlifecycle">Broadcom Product Lifecycle</a>.</p>
-<h2 id="upgrade-order-critical">Upgrade Order (Critical)<a class="headerlink" href="#upgrade-order-critical" title="Permanent link">&para;</a></h2>
-<p>Always upgrade in this sequence to maintain interoperability support:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. vCenter Server (VCSA)          ← upgrade first, always
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. vSAN (if applicable)           ← vSAN upgrade wizard in vCenter
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. NSX Manager (if applicable)    ← must be compatible with new vCenter
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. ESXi hosts                     ← one at a time, cluster by cluster
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. VM hardware version            ← optional; check guest OS compatibility
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. VMware Tools                   ← can be done before or after VM hardware
-</code></pre></div>
-<p><strong>Never upgrade ESXi before vCenter.</strong> A newer ESXi host is not supported by an older vCenter.</p>
-<pre class="mermaid"><code>graph TD
-    backup["1. File-based backup of vCenter\n(VAMI → Backup)"]
-    interop["2. Check interop matrix\n(vCenter × ESXi × NSX × vSAN)"]
-    vcUpgrade["3. Upgrade vCenter Server\n(Stage 1: deploy / Stage 2: migrate)"]
-    vsanUpgrade["4. Upgrade vSAN\n(vSAN upgrade wizard in vCenter)"]
-    nsxUpgrade["5. Upgrade NSX Manager\n(if deployed)"]
-    esxiUpgrade["6. Upgrade ESXi hosts\n(vLCM — one cluster at a time)"]
-    vmhw["7. Update VM hardware version\n(optional — check guest OS compat)"]
-    tools["8. Update VMware Tools\n(all powered-on VMs)"]
-
-    backup --&gt; interop --&gt; vcUpgrade --&gt; vsanUpgrade --&gt; nsxUpgrade --&gt; esxiUpgrade --&gt; vmhw --&gt; tools
-
-    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-    class backup,interop,vcUpgrade,vsanUpgrade,nsxUpgrade,esxiUpgrade,vmhw,tools step</code></pre>
+┌───────────────────────────────── vCenter Server — Install &amp; Upgrade ──────────────────────────────────┐
+│                                                                                                       │
+│  vCenter is deployed as an OVA; upgrades use the built-in VCSA installer ISO                          │
+│  which migrates config from the old appliance in two stages.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Pre-Install Checklist             │  │               Deployment Steps              │   │
+│   │          DNS A + PTR records ready           │  │            Mount ISO on jump host           │   │
+│   │           NTP configured on hosts            │  │            Run vcsa-ui-installer            │   │
+│   │            Port 443/80/9443 open             │  │             Stage 1: OVA deploy             │   │
+│   │         SSO password complexity met          │  │            Stage 2: configure SSO           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Pre-install DNS and NTP are critical; failures here block SSO certificate issuance.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Pre-Checks              │  │              Upgrade Procedure              │   │
+│   │              Snapshot old VCSA               │  │           ISO: vcsa-deploy upgrade          │   │
+│   │           Run Pre-Upgrade Checker            │  │           Stage 1: new VCSA boots           │   │
+│   │           Check cert expiry first            │  │           Stage 2: config migrated          │   │
+│   │          Drain old VC of snapshots           │  │           Old VC powered off after          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Target ESXi host needs sufficient RAM/CPU/storage for VCSA size tier;                                │
+│  upgrade deploys a second appliance temporarily (needs 2x storage).                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCSA installer = GUI/CLI ISO tool; runs on Windows/Linux/Mac jump host                               │
+│  vcsa-deploy    = CLI installer included in the VCSA ISO                                              │
+│  Stage 1        = OVA deployment; network and storage config                                          │
+│  Stage 2        = SSO setup; inventory and config import                                              │
+│  Pre-check      = built-in checker; validates certs, DNS, ports, DB                                   │
+│  Snapshot (pre) = rollback point before upgrade; remove after success                                 │
+│  Jump host      = Windows/Linux machine that mounts and runs ISO installer                            │
+│  DNS PTR        = reverse lookup; required for VCSA identity establishment                            │
+│  SSO complexity = min 8 chars, upper, lower, digit, special                                           │
+│  Drain snapshots= remove all VM snapshots before upgrading to avoid bloat                             │
+│  Port 9443      = VCSA appliance management HTTPS (VAMI)                                              │
+│  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Never upgrade ESXi before vCenter.** A newer ESXi host is not supported by an older vCenter.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```mermaid
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>graph TD
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    backup[&quot;1. File-based backup of vCenter\n(VAMI → Backup)&quot;]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    interop[&quot;2. Check interop matrix\n(vCenter × ESXi × NSX × vSAN)&quot;]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    vcUpgrade[&quot;3. Upgrade vCenter Server\n(Stage 1: deploy / Stage 2: migrate)&quot;]
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    vsanUpgrade[&quot;4. Upgrade vSAN\n(vSAN upgrade wizard in vCenter)&quot;]
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    nsxUpgrade[&quot;5. Upgrade NSX Manager\n(if deployed)&quot;]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    esxiUpgrade[&quot;6. Upgrade ESXi hosts\n(vLCM — one cluster at a time)&quot;]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    vmhw[&quot;7. Update VM hardware version\n(optional — check guest OS compat)&quot;]
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    tools[&quot;8. Update VMware Tools\n(all powered-on VMs)&quot;]
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    backup --&gt; interop --&gt; vcUpgrade --&gt; vsanUpgrade --&gt; nsxUpgrade --&gt; esxiUpgrade --&gt; vmhw --&gt; tools
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    class backup,interop,vcUpgrade,vsanUpgrade,nsxUpgrade,esxiUpgrade,vmhw,tools step
+</code></pre></div></p>
 <h2 id="vcenter-upgrade-procedure-vcsa">vCenter Upgrade Procedure (VCSA)<a class="headerlink" href="#vcenter-upgrade-procedure-vcsa" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Take a <strong>file-based backup</strong> of vCenter (VAMI → Backup)</li>

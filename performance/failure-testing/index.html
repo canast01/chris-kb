@@ -2840,17 +2840,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-failure-tests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Failure Tests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#application-resilience-tests" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3060,7 +3049,7 @@
 <li>[ ] Test scope documented (what will break, what must not break)</li>
 </ul>
 <h2 id="linux-failure-injection">Linux — Failure Injection<a class="headerlink" href="#linux-failure-injection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Kill a process (simulate crash)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Kill a process (simulate crash)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>nginx<span class="k">)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># CPU saturation (use with caution — runs until ^C)</span>
@@ -3077,34 +3066,55 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Remove after test</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>tc<span class="w"> </span>qdisc<span class="w"> </span>del<span class="w"> </span>dev<span class="w"> </span>eth0<span class="w"> </span>root
 </code></pre></div>
-<h2 id="storage-failure-tests">Storage Failure Tests<a class="headerlink" href="#storage-failure-tests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Simulate path failure (multipath — disable a path)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span>offline<span class="w"> </span>&gt;<span class="w"> </span>/sys/block/&lt;device&gt;/device/state
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Re-enable</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span>running<span class="w"> </span>&gt;<span class="w"> </span>/sys/block/&lt;device&gt;/device/state
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check multipath responds correctly</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>multipath<span class="w"> </span>-ll
-</code></pre></div>
-<p><strong>VMware — simulate host failure:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Suspend a VM (simulates host failure for HA test)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Suspend-VM</span> <span class="n">-VM</span> <span class="s2">&quot;&lt;vm-name&gt;&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Monitor: HA should restart VM on another host</span>
+┌──────────────────────────────────── Performance — Failure Testing ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Failure testing: deliberately inject faults to verify HA and DR actually work         │   │
+│   │      Test in isolation first; graduate to production with maintenance window and rollback     │   │
+│   │            Document hypothesis, expected result, actual result, and any gaps found            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Test Types                  │  │                   Process                   │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Node/host failure (power off)         │  │              Define hypothesis              │   │
+│   │            Network partition test            │  │             Raise change ticket             │   │
+│   │             Storage path failure             │  │                 Inject fault                │   │
+│   │             Service kill / crash             │  │              Measure RTO actual             │   │
+│   │             Resource exhaustion              │  │             Document gaps found             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Chaos engineering= Deliberate fault injection to reveal weaknesses before they cause incidents     │
+│    Game day       = Scheduled failure testing exercise; all stakeholders notified; results shared     │
+│    Blast radius   = Scope of failure; limit during tests by isolating to one component                │
+│    Steady state   = Known-good performance baseline before fault injection begins                     │
+│    Rollback       = Restore normal state after test; documented before injection starts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**VMware — simulate host failure:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```powershell
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># Suspend a VM (simulates host failure for HA test)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Suspend-VM -VM &quot;&lt;vm-name&gt;&quot; -Confirm:$false
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># Monitor: HA should restart VM on another host
 </code></pre></div></p>
 <h2 id="application-resilience-tests">Application Resilience Tests<a class="headerlink" href="#application-resilience-tests" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test graceful shutdown</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: requests in flight complete; no connection errors to load balancer</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Test reload without downtime</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected: zero downtime; access logs show no 502/503</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Test dependency failure (block outbound connection to DB port)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Expected: application returns 503 not 500; retries correctly; alerts fire</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Cleanup:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>iptables<span class="w"> </span>-D<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test graceful shutdown</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: requests in flight complete; no connection errors to load balancer</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Test reload without downtime</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected: zero downtime; access logs show no 502/503</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test dependency failure (block outbound connection to DB port)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>iptables<span class="w"> </span>-I<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Expected: application returns 503 not 500; retries correctly; alerts fire</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Cleanup:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>iptables<span class="w"> </span>-D<span class="w"> </span>OUTPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">5432</span><span class="w"> </span>-j<span class="w"> </span>DROP
 </code></pre></div>
 <h2 id="observability-during-tests">Observability During Tests<a class="headerlink" href="#observability-during-tests" title="Permanent link">&para;</a></h2>
 <p>Confirm the following fire correctly during each test:
@@ -3113,17 +3123,17 @@
 - [ ] Dashboard shows the fault clearly
 - [ ] Logs contain meaningful error messages (not just generic "connection failed")</p>
 <h2 id="test-results-documentation">Test Results Documentation<a class="headerlink" href="#test-results-documentation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Test:           Storage path failure — multipath failover
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Date:           2026-05-06
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Environment:    Prod-like (UAT)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Scenario:       Disabled one FC path to array on host web-prod-01
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Expected:       Multipath redirects I/O to surviving path; no I/O errors at application layer
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Actual:         I/O redirected within 2 seconds; application logs show no errors
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>RTO observed:   2 seconds (path failover)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Alert fired:    Yes — &quot;Storage path degraded&quot; alert at 00:32
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Pass/Fail:      Pass
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>Notes:          Alert was 45 seconds delayed — investigate alerting lag
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Test:           Storage path failure — multipath failover
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Date:           2026-05-06
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Environment:    Prod-like (UAT)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Scenario:       Disabled one FC path to array on host web-prod-01
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Expected:       Multipath redirects I/O to surviving path; no I/O errors at application layer
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Actual:         I/O redirected within 2 seconds; application logs show no errors
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>RTO observed:   2 seconds (path failover)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Alert fired:    Yes — &quot;Storage path degraded&quot; alert at 00:32
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Recovery:       Re-enabled path; multipath rebalanced within 5 seconds
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Pass/Fail:      Pass
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>Notes:          Alert was 45 seconds delayed — investigate alerting lag
 </code></pre></div>
 
 

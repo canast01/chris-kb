@@ -2829,28 +2829,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-2-implementation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2 — Implementation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-3-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 3 — Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#phase-4-monitoring-soak" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3053,7 +3031,7 @@
 <li>[ ] Deployment runbook reviewed by implementer</li>
 </ul>
 <h2 id="phase-1-preparation-before-window">Phase 1 — Preparation (before window)<a class="headerlink" href="#phase-1-preparation-before-window" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Snapshot / backup before change (example: VM snapshot)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Snapshot / backup before change (example: VM snapshot)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Azure</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>az<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;snapshot-name&gt;<span class="w"> </span>--source<span class="w"> </span>&lt;disk-id&gt;
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -3067,38 +3045,56 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health
 </code></pre></div>
-<h2 id="phase-2-implementation">Phase 2 — Implementation<a class="headerlink" href="#phase-2-implementation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># For package-based deployments</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>apt-get<span class="w"> </span>install<span class="w"> </span>--only-upgrade<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;version&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># or</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>yum<span class="w"> </span>update<span class="w"> </span>&lt;package&gt;-&lt;version&gt;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># For file-based deployments</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--backup<span class="w"> </span>--suffix<span class="o">=</span><span class="s2">&quot;.pre-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&lt;source&gt;<span class="w"> </span>&lt;dest&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># For systemd service config changes</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>cp<span class="w"> </span>/etc/service.conf<span class="w"> </span>/etc/service.conf.pre-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># apply change...</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>systemctl<span class="w"> </span>daemon-reload
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># For database schema changes (example: PostgreSQL)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-f<span class="w"> </span>migration_XXXX_up.sql
-</code></pre></div>
-<h2 id="phase-3-validation">Phase 3 — Validation<a class="headerlink" href="#phase-3-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Service health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># No new errors since restart</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;5 minutes ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|critical|fail&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Key process running</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>pgrep<span class="w"> </span>-a<span class="w"> </span>&lt;process&gt;
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Functional smoke test</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-sw<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;endpoint&gt;/api/status
-</code></pre></div>
+┌──────────────────────────────────────── Deployment Procedure ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Deployment: execute change per approved RFC; document each step and outcome          │   │
+│   │         No deviation from approved steps without ECAB approval; call out any variance         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Deployment Steps               │  │                Documentation                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          1. Go/No-Go decision call           │  │                Log start time               │   │
+│   │        2. Confirm attendees on bridge        │  │           Capture each step output          │   │
+│   │        3. Execute RFC steps in order         │  │             Note any deviations             │   │
+│   │        4. Checkpoint after each tier         │  │            Screenshot key states            │   │
+│   │           5. Run validation checks           │  │            Log end time + outcome           │   │
+│   │          6. Go/No-Go for next phase          │  │             Notify stakeholders             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │    Checkpoint    │     Trigger      │      Decision     │     If pass      │     If fail      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Go/No-Go     │   Before exec    │     Team vote     │     Proceed      │   Defer change   │   │
+│   │    Mid-change    │ After each tier  │    Lead decides   │    Next step     │     Rollback     │   │
+│   │    Validation    │ After last step  │    Test results   │   Close change   │     Rollback     │   │
+│   │   Time overrun   │  Beyond window   │    Lead decides   │   Brief extend   │     Rollback     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Go/No-Go   = Explicit decision call before proceeding; requires confirmation from lead             │
+│    Deviation   = Any step that differs from approved RFC; document and get verbal ECAB approval       │
+│    Time overrun= Execution exceeds approved window; decision: extend (if safe) or rollback            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Phase 3 — Validation
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Service health
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl status &lt;service&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl -sf http://localhost:&lt;port&gt;/health &amp;&amp; echo &quot;OK&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># No new errors since restart
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>journalctl -u &lt;service&gt; --since &quot;5 minutes ago&quot; | grep -iE &quot;error|critical|fail&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Key process running
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>pgrep -a &lt;process&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Functional smoke test
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>curl -o /dev/null -sw &quot;%{http_code}&quot; https://&lt;endpoint&gt;/api/status
+</code></pre></div></p>
 <h2 id="phase-4-monitoring-soak">Phase 4 — Monitoring Soak<a class="headerlink" href="#phase-4-monitoring-soak" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Watch dashboards for <strong>30 minutes minimum</strong> after deployment</li>
@@ -3107,46 +3103,46 @@
 <li>Get confirmation from service owner before closing window</li>
 </ul>
 <h2 id="phase-5-close">Phase 5 — Close<a class="headerlink" href="#phase-5-close" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove temporary files and pre-change backups (after soak period)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rm<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w">   </span><span class="c1"># only after validation passes</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Update ITSM ticket: outcome, duration, any deviations</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Remove temporary files and pre-change backups (after soak period)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rm<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w">   </span><span class="c1"># only after validation passes</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Update ITSM ticket: outcome, duration, any deviations</span>
 </code></pre></div>
 <h2 id="rollback-decision-tree">Rollback Decision Tree<a class="headerlink" href="#rollback-decision-tree" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Validation fails?
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  ├─ Immediate: service down / error rate &gt; 3×baseline
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  │     → Roll back now; notify stakeholders
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  └─ Degraded: latency elevated / some errors
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        → Investigate for 10 min
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>              ├─ Improving → continue soak
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>              └─ Not improving → roll back
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Validation fails?
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  ├─ Immediate: service down / error rate &gt; 3×baseline
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  │     → Roll back now; notify stakeholders
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  └─ Degraded: latency elevated / some errors
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        → Investigate for 10 min
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>              ├─ Improving → continue soak
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>              └─ Not improving → roll back
 </code></pre></div>
 <h2 id="rollback-steps">Rollback Steps<a class="headerlink" href="#rollback-steps" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Restore config from backup</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w"> </span>/etc/&lt;service&gt;.conf
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Rollback package to previous version</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;prev-version&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Rollback DB migration</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-f<span class="w"> </span>migration_XXXX_down.sql
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Re-validate after rollback (same checks as Phase 3)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore config from backup</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;.conf.pre-&lt;date&gt;<span class="w"> </span>/etc/&lt;service&gt;.conf
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Rollback package to previous version</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>apt-get<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;prev-version&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Rollback DB migration</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>psql<span class="w"> </span>-U<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;db&gt;<span class="w"> </span>-f<span class="w"> </span>migration_XXXX_down.sql
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Re-validate after rollback (same checks as Phase 3)</span>
 </code></pre></div>
 <h2 id="deployment-log-template">Deployment Log Template<a class="headerlink" href="#deployment-log-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Change:        ITSM-XXXX
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Date/Time:     2026-05-06 22:00 UTC
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Implementer:   &lt;name&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Window:        22:00 – 23:00 UTC
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Restart:           Service restarted 22:05 UTC; came up in 8 seconds
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Validation:        Health check OK; error rate 0%; latency normal
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Outcome:           Success
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Ticket closed:     22:42 UTC
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Change:        ITSM-XXXX
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Date/Time:     2026-05-06 22:00 UTC
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Implementer:   &lt;name&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Window:        22:00 – 23:00 UTC
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Pre-change backup: Snapshot snap-abc123 created 21:55 UTC
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>Implementation:    Deployed package nginx=1.24.0-2 at 22:04 UTC
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Restart:           Service restarted 22:05 UTC; came up in 8 seconds
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Validation:        Health check OK; error rate 0%; latency normal
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Monitoring soak:   22:05 – 22:40 UTC — no alerts fired
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>Outcome:           Success
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>Ticket closed:     22:42 UTC
 </code></pre></div>
 
 

@@ -4338,67 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sso-authentication-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSO Authentication Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sso-security" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSO Security
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SSO Security">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentication-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication Policy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#identity-source-best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Identity Source Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unlocking-a-locked-sso-account" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unlocking a Locked SSO Account
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#tls-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4770,7 +4709,7 @@
 
 
 <h1 id="vcenter-security-authentication">vCenter Security — Authentication<a class="headerlink" href="#vcenter-security-authentication" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SSO Authentication Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>SSO Authentication Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>════════════════════════════════════════════════════════
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  User / Browser
@@ -4813,69 +4752,79 @@
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>               └──▶ ESXi host certs (auto-signed by VMCA)
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>  STS Signing Cert ──▶ signs all SAML tokens (10yr default)
 </code></pre></div>
-<h2 id="sso-authentication-flow">SSO Authentication Flow<a class="headerlink" href="#sso-authentication-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant user as User / Browser
-    participant vc as vCenter (port 443)
-    participant sso as vSphere SSO (STS)
-    participant idp as Identity Source (AD/LDAP)
-
-    user-&gt;&gt;vc: Login request (username + password)
-    vc-&gt;&gt;sso: Delegate authentication
-    sso-&gt;&gt;idp: LDAP bind + user lookup
-    idp--&gt;&gt;sso: User attributes &amp; group membership
-    sso--&gt;&gt;sso: Validate credentials &amp; policy
-    sso--&gt;&gt;vc: SAML token (signed)
-    vc--&gt;&gt;user: Session established
-    Note over vc,user: Token valid for 30 min (inactivity timeout)</code></pre>
-<h2 id="sso-security">SSO Security<a class="headerlink" href="#sso-security" title="Permanent link">&para;</a></h2>
-<h3 id="authentication-policy">Authentication Policy<a class="headerlink" href="#authentication-policy" title="Permanent link">&para;</a></h3>
-<p>Configure at <strong>Administration → Single Sign On → Configuration → Policies → Password Policy</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Recommended Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Maximum lifetime</td>
-<td>90 days</td>
-</tr>
-<tr>
-<td>Minimum length</td>
-<td>16 characters</td>
-</tr>
-<tr>
-<td>Complexity</td>
-<td>Uppercase + lowercase + digits + special</td>
-</tr>
-<tr>
-<td>Lockout (failed attempts)</td>
-<td>5 attempts</td>
-</tr>
-<tr>
-<td>Lockout duration</td>
-<td>5 minutes</td>
-</tr>
-<tr>
-<td>Failed attempt interval</td>
-<td>3 minutes</td>
-</tr>
-</tbody>
-</table>
-<h3 id="identity-source-best-practices">Identity Source Best Practices<a class="headerlink" href="#identity-source-best-practices" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Use LDAPS (port 636) not plain LDAP for all AD identity sources</li>
-<li>Use a dedicated service account for LDAP bind; restrict it to read-only AD access</li>
-<li>Enable multi-factor authentication at the IdP level using SAML federation (ADFS/Okta)</li>
-<li>Review identity sources quarterly; remove unused sources</li>
-</ul>
-<h3 id="unlocking-a-locked-sso-account">Unlocking a Locked SSO Account<a class="headerlink" href="#unlocking-a-locked-sso-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From VCSA shell — unlock administrator@vsphere.local</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span>--account<span class="w"> </span>administrator<span class="w"> </span>--domain<span class="w"> </span>vsphere.local
-</code></pre></div>
+┌─────────────────────────────────── vCenter Server — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  vCenter authentication is handled by the embedded SSO service; it validates                          │
+│  credentials against identity sources and issues SAML tokens for session access.                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Authentication Flow              │  │                 MFA Options                 │   │
+│   │         User → vSphere Client login          │  │               Smart card / CAC              │   │
+│   │          SSO validates credentials           │  │              RSA SecurID token              │   │
+│   │          SAML token issued (8h TTL)          │  │              RADIUS integration             │   │
+│   │           Token used for API calls           │  │             Duo via RADIUS proxy            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SSO token TTL is 8h; re-login required; API calls use bearer token from POST /api/session.           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Session Management              │  │               Lockout Policies              │   │
+│   │           Max concurrent sessions            │  │              5 failed → lockout             │   │
+│   │          Idle timeout: configurable          │  │           Lockout duration: 5 min           │   │
+│   │        Force re-auth on privilege op         │  │              Unlock: SSO admin              │   │
+│   │        API session token: short-lived        │  │            Alert on failed logins           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SSO service runs on VCSA; AD/LDAP identity source must be reachable from                             │
+│  management network on port 389 (LDAP) or 636 (LDAPS).                                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO          = Single Sign-On; built into VCSA; core auth service                                    │
+│  SAML token   = XML security assertion; vCenter uses this internally                                  │
+│  SAML TTL     = 8 hours default; configurable in SSO configuration                                    │
+│  Smart card   = PIV/CAC certificate-based login; requires vCenter config                              │
+│  RSA SecurID  = one-time password hardware token; RADIUS integration                                  │
+│  RADIUS       = Remote Authentication Dial-In User Service; MFA backend                               │
+│  Duo          = MFA provider; integrates via RADIUS proxy to vCenter                                  │
+│  Lockout      = SSO account temporarily blocked after failed attempts                                 │
+│  Idle timeout = browser session closes after inactivity period                                        │
+│  POST /api/session= REST API login; returns bearer token in response                                  │
+│  LDAPS        = LDAP over TLS/SSL; port 636; required for AD in vcenter 8+                            │
+│  AD identity  = Active Directory added as SSO identity source                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## SSO Security
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Authentication Policy
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Configure at **Administration → Single Sign On → Configuration → Policies → Password Policy**:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Parameter | Recommended Value |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Maximum lifetime | 90 days |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Minimum length | 16 characters |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Complexity | Uppercase + lowercase + digits + special |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Lockout (failed attempts) | 5 attempts |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Lockout duration | 5 minutes |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Failed attempt interval | 3 minutes |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>### Identity Source Best Practices
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- Use LDAPS (port 636) not plain LDAP for all AD identity sources
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- Use a dedicated service account for LDAP bind; restrict it to read-only AD access
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- Enable multi-factor authentication at the IdP level using SAML federation (ADFS/Okta)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>- Review identity sources quarterly; remove unused sources
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>### Unlocking a Locked SSO Account
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>```bash
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># From VCSA shell — unlock administrator@vsphere.local
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>/usr/lib/vmware-vmafd/bin/dir-cli user unlock --account administrator --domain vsphere.local
+</code></pre></div></p>
 <h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
 <p>vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.</p>
 <h3 id="certificate-modes">Certificate Modes<a class="headerlink" href="#certificate-modes" title="Permanent link">&para;</a></h3>

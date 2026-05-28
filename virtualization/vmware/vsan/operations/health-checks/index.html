@@ -4454,28 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#weekly-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Weekly Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#performance-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4708,7 +4686,7 @@
 
 
 <h1 id="vsan-health-checks">vSAN — Health Checks<a class="headerlink" href="#vsan-health-checks" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSAN HEALTH CHECK SCOPE
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSAN HEALTH CHECK SCOPE
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ┌───────────────────────────────────────────────────────┐
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │                   vSAN Cluster                        │
@@ -4740,101 +4718,70 @@
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>           ▼
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  Skyline Health (vCenter UI) + esxcli vsan health cluster list
 </code></pre></div>
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command / Location</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cluster health summary</td>
-<td><code>Get-VsanClusterHealthSummary</code></td>
-<td>All tests should return green</td>
-</tr>
-<tr>
-<td>Object health</td>
-<td>vCenter → vSAN → Monitor → Virtual Objects</td>
-<td>Flag any inaccessible or degraded objects</td>
-</tr>
-<tr>
-<td>Disk groups</td>
-<td><code>Get-VsanDiskGroup</code></td>
-<td>All healthy; no drives evacuating or absent</td>
-</tr>
-<tr>
-<td>Resync status</td>
-<td>vCenter → vSAN → Monitor → Resyncing Objects</td>
-<td>Confirm no unexpected resync in progress</td>
-</tr>
-<tr>
-<td>Capacity per host</td>
-<td>vCenter → vSAN → Monitor → Capacity</td>
-<td>Flag hosts above 70%</td>
-</tr>
-<tr>
-<td>Witness appliance (2-node/stretched)</td>
-<td>Ping / vCenter</td>
-<td>Confirm reachable</td>
-</tr>
-<tr>
-<td>Performance dashboard</td>
-<td>vCenter → vSAN → Monitor → Performance</td>
-<td>Review for latency or throughput anomalies</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># PowerCLI vSAN health sweep</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VsanClusterHealthSummary</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">Groups</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">GroupName</span><span class="p">,</span><span class="n">GroupHealth</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-VsanDiskGroup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">VMHost</span><span class="p">,</span><span class="n">State</span><span class="p">,@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;DiskCount&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Disks</span><span class="p">.</span><span class="n">Count</span><span class="p">}}</span>
-</code></pre></div>
-<hr />
-<h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command / Location</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Storage policy compliance</td>
-<td>vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant</td>
-<td>All objects should be compliant; non-compliant triggers resync</td>
-</tr>
-<tr>
-<td>Capacity trend</td>
-<td>vCenter → vSAN → Monitor → Capacity → Capacity History</td>
-<td>Identify growth trends; flag if projected to hit 70% within 30 days</td>
-</tr>
-<tr>
-<td>Resync history</td>
-<td>vCenter → vSAN → Monitor → Resyncing Objects → History</td>
-<td>Confirm all resyncs completed; flag any that are stalled or recurring</td>
-</tr>
-<tr>
-<td>vSAN health test detail</td>
-<td>vCenter → vSAN → Monitor → Skyline Health</td>
-<td>Expand any yellow/red items; review recommended actions</td>
-</tr>
-<tr>
-<td>Software version alignment</td>
-<td><code>esxcli system version get</code> on each host</td>
-<td>All hosts in a cluster must run the same ESXi build</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check policy compliance across all VMs</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">ComplianceStatus</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Cluster capacity summary</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">TotalCapacityGB</span><span class="p">,</span><span class="n">UsedSpaceGB</span>
-</code></pre></div>
+┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN health checks verify cluster, network, disk, and object health; run daily                       │
+│  via the vSAN Health UI or Test-VsanClusterHealth PowerCLI cmdlet.                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Cluster Health                │  │                Network Health               │   │
+│   │         All hosts: member of cluster         │  │             vSAN MTU test: 9000             │   │
+│   │             No host disconnected             │  │          Latency &lt;1ms host to host          │   │
+│   │        Witness reachable (stretched)         │  │            No multicast required            │   │
+│   │         No decommission in progress          │  │            Unicast agent running            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster and network health are prerequisites; disk and object health depend on them.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Disk &amp; Object Health             │  │               Capacity Health               │   │
+│   │            All disks: healthy/OK             │  │            Free space &gt;30% total            │   │
+│   │            No degraded components            │  │               Resync ETA &lt;24h               │   │
+│   │           Policy compliance: 100%            │  │           No dedup overhead alarm           │   │
+│   │           Resync: 0 bytes pending            │  │          Capacity per host balanced         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical disk health reported via SMART; failed disk shows degraded component;                       │
+│  replace disk within 60 minutes to avoid data loss window.                                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Degraded      = component lost; vSAN has no redundancy until rebuilt                                 │
+│  Absent        = component temporarily missing; wait 60min before rebuild                             │
+│  Resync        = rebuilding missing components after host/disk failure                                │
+│  Policy compliance= all VMs must meet FTT policy; red = risk                                          │
+│  MTU test      = vSAN sends 8972-byte pings to test jumbo frames end-to-end                           │
+│  Unicast agent = replaced multicast in vSAN 6.6+; always check running                                │
+│  SMART         = disk self-monitoring; pre-failure indicator                                          │
+│  Decommission  = remove host from vSAN while migrating data; slow                                     │
+│  60-min timer  = vSAN waits 60 min before marking absent as degraded                                  │
+│  Witness (stretched)= third-site VM; heartbeat must be &lt;200ms RTT                                     │
+│  Free 30%      = vSAN needs headroom for resync; alert at &lt;25%                                        │
+│  Resync ETA    = estimate shown in vSAN performance health panel                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Weekly Checks
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Check | Command / Location | Notes |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Storage policy compliance | vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant | All objects should be compliant; non-compliant triggers resync |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Capacity trend | vCenter → vSAN → Monitor → Capacity → Capacity History | Identify growth trends; flag if projected to hit 70% within 30 days |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Resync history | vCenter → vSAN → Monitor → Resyncing Objects → History | Confirm all resyncs completed; flag any that are stalled or recurring |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| vSAN health test detail | vCenter → vSAN → Monitor → Skyline Health | Expand any yellow/red items; review recommended actions |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Software version alignment | `esxcli system version get` on each host | All hosts in a cluster must run the same ESXi build |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```powershell
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check policy compliance across all VMs
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Get-VM | Get-SpbmEntityConfiguration | Where-Object {$_.ComplianceStatus -ne &quot;compliant&quot;} | Select Name,ComplianceStatus
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Cluster capacity summary
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Get-VsanSpaceUsage -Cluster (Get-Cluster) | Select FreeSpaceGB,TotalCapacityGB,UsedSpaceGB
+</code></pre></div></p>
 <hr />
 <h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
 <p>Normal operating ranges for a healthy vSAN cluster. Values vary by workload — establish a baseline during steady-state and alert on deviation.</p>
@@ -4884,8 +4831,8 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Per-host latency and IOPS from ESXi shell</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>perf<span class="w"> </span>query<span class="w"> </span>-e<span class="w"> </span>host-domclient<span class="w"> </span>-st<span class="w"> </span><span class="m">2024</span>-01-01T00:00:00
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Per-host latency and IOPS from ESXi shell</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>perf<span class="w"> </span>query<span class="w"> </span>-e<span class="w"> </span>host-domclient<span class="w"> </span>-st<span class="w"> </span><span class="m">2024</span>-01-01T00:00:00
 </code></pre></div>
 <hr />
 <h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
@@ -4920,9 +4867,9 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="stretched-cluster-checks">Stretched Cluster Checks<a class="headerlink" href="#stretched-cluster-checks" title="Permanent link">&para;</a></h2>
@@ -4963,8 +4910,8 @@
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check witness appliance connectivity</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcStretchedClusterSystem-vsan-stretched-cluster-system&quot;</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check witness appliance connectivity</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcStretchedClusterSystem-vsan-stretched-cluster-system&quot;</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
 </code></pre></div>
 <hr />
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>

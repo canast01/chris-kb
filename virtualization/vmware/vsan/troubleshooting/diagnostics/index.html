@@ -4280,28 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#diagnostic-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#performance-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4807,7 +4785,7 @@
 
 <h1 id="vsan-diagnostics">vSAN — Diagnostics<a class="headerlink" href="#vsan-diagnostics" title="Permanent link">&para;</a></h1>
 <p>Diagnostic procedures for vSAN performance, object health, network issues, and disk failures. Use this page when initial health checks do not identify the root cause and deeper investigation is required.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DIAGNOSTIC TOOL CHAIN
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DIAGNOSTIC TOOL CHAIN
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  Incident
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>     │
@@ -4838,96 +4816,80 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                          ▼
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                 Upload to Broadcom case
 </code></pre></div>
-<hr />
-<h2 id="diagnostic-sequence">Diagnostic Sequence<a class="headerlink" href="#diagnostic-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    incident(["vSAN incident reported"])
-    s1["1. Cluster status\nesxcli vsan cluster get"]
-    s2["2. Health checks\nesxcli vsan health cluster list"]
-    s3["3. Object health\nesxcli vsan debug object list\n(filter: grep -v Healthy)"]
-    s4["4. Resync status\nesxcli vsan debug resync summary get"]
-    s5["5. Disk group status\nesxcli vsan storage list"]
-    s6["6. Network test\nesxcli vsan debug network test\nvmkping -d -s 8972 &lt;peer&gt;"]
-    s7["7. Log review\nvmkernel.log / clomd.log\ncmmdsd.log / vsanmgmt.log"]
-    s8["8. Collect support bundle\nvm-support --vsan\nUpload to Broadcom case"]
-
-    incident --&gt; s1 --&gt; s2 --&gt; s3 --&gt; s4 --&gt; s5 --&gt; s6 --&gt; s7 --&gt; s8
-
-    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef start fill:#15803d,stroke:#166534,color:#fff
-
-    class s1,s2,s3,s4,s5,s6,s7,s8 step
-    class incident start</code></pre>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Log</th>
-<th>Location</th>
-<th>Contents</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VMkernel</td>
-<td><code>/var/log/vmkernel.log</code></td>
-<td>ESXi kernel messages — disk I/O errors, NIC errors, vSAN module messages</td>
-</tr>
-<tr>
-<td>vSAN management</td>
-<td><code>/var/log/vsanmgmt.log</code></td>
-<td>vSAN management plane — health checks, policy changes</td>
-</tr>
-<tr>
-<td>CLOM</td>
-<td><code>/var/log/clomd.log</code></td>
-<td>Cluster Level Object Manager — placement decisions, resync triggers</td>
-</tr>
-<tr>
-<td>CMMDS</td>
-<td><code>/var/log/cmmdsd.log</code></td>
-<td>Cluster monitoring, membership, and directory service — host join/leave events</td>
-</tr>
-<tr>
-<td>LSOM</td>
-<td><code>/var/log/vsand.log</code></td>
-<td>Local Storage Object Manager — on-disk I/O, disk group events</td>
-</tr>
-<tr>
-<td>VOBD</td>
-<td><code>/var/log/vobd.log</code></td>
-<td>vSphere Object-Based Datastore — datastore events</td>
-</tr>
-<tr>
-<td>Hostd</td>
-<td><code>/var/log/hostd.log</code></td>
-<td>Host daemon — vCenter-to-host API, task execution</td>
-</tr>
-<tr>
-<td>vSAN DDP</td>
-<td><code>/var/log/vsan-dp.log</code></td>
-<td>Data protection and IO stats</td>
-</tr>
-<tr>
-<td>ESXi syslog</td>
-<td><code>/var/log/syslog.log</code></td>
-<td>General syslog — includes vsand and clomd messages</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Useful grep patterns:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disk errors in vmkernel log</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;scsi\|disk\|naa\|devio\|abort&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;err\|fail\|warn&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># vSAN object events (CLOM decisions)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;resync\|rebuild\|absent\|degrade&quot;</span><span class="w"> </span>/var/log/clomd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># CMMDS membership changes (hosts joining/leaving)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;member\|join\|leave\|partition&quot;</span><span class="w"> </span>/var/log/cmmdsd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># vSAN management health events</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|warn\|error&quot;</span><span class="w"> </span>/var/log/vsanmgmt.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-</code></pre></div>
+┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN diagnostics use the health UI, esxcli, RVC, cmmds-tool, and support bundle                      │
+│  to identify root causes of component, network, and performance issues.                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Health UI Checks               │  │               CLI Diagnostics               │   │
+│   │           vSAN Health: all green?            │  │           esxcli vsan debug object          │   │
+│   │          Object health: policy met?          │  │         cmmds-tool find -t DOM_NAME         │   │
+│   │           Network: MTU test pass?            │  │           esxcli vsan storage list          │   │
+│   │           Disk: all SMART healthy?           │  │         vsan.resync_dashboard (RVC)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Start in health UI; drill to object level with esxcli for per-component detail.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Performance Diagnostics            │  │                Log Collection               │   │
+│   │          vSAN Perf: latency graphs           │  │         VC support bundle: host logs        │   │
+│   │         vsanObserver: per-host stats         │  │           vm-support on host shell          │   │
+│   │        IOPS/throughput per datastore         │  │               vsan_health*.log              │   │
+│   │         NIC utilisation: esxtop net          │  │             vsantraces: I/O path            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All diagnostics run from ESXi host shell or vCenter; vsanObserver requires Java;                     │
+│  support bundle is generated from vSphere Client &gt; vCenter.                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  cmmds-tool    = Cluster Membership and Directory Service CLI                                         │
+│  DOM_NAME      = Distributed Object Manager; per-object UUID                                          │
+│  RVC           = Ruby vSphere Console; vsan.resync_dashboard                                          │
+│  vsanObserver  = performance data collection tool; needs RVC                                          │
+│  vsan trace    = detailed I/O path log; written per host                                              │
+│  vm-support    = ESXi support bundle generator; per host                                              │
+│  esxtop net    = real-time ESXi NIC stats; throughput + drops                                         │
+│  MTU test      = pings vSAN VMkernel with 8972-byte payload                                           │
+│  IOPS graph    = vSAN Performance Service; must be enabled                                            │
+│  vsan_health   = health service log; check for ERROR lines                                            │
+│  Object health = per-VM health; shows absent/degraded components                                      │
+│  SMART         = disk self-test; pre-failure indicator                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Log Locations
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Log | Location | Contents |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| VMkernel | `/var/log/vmkernel.log` | ESXi kernel messages — disk I/O errors, NIC errors, vSAN module messages |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| vSAN management | `/var/log/vsanmgmt.log` | vSAN management plane — health checks, policy changes |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| CLOM | `/var/log/clomd.log` | Cluster Level Object Manager — placement decisions, resync triggers |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| CMMDS | `/var/log/cmmdsd.log` | Cluster monitoring, membership, and directory service — host join/leave events |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| LSOM | `/var/log/vsand.log` | Local Storage Object Manager — on-disk I/O, disk group events |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| VOBD | `/var/log/vobd.log` | vSphere Object-Based Datastore — datastore events |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Hostd | `/var/log/hostd.log` | Host daemon — vCenter-to-host API, task execution |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| vSAN DDP | `/var/log/vsan-dp.log` | Data protection and IO stats |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| ESXi syslog | `/var/log/syslog.log` | General syslog — includes vsand and clomd messages |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>**Useful grep patterns:**
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Disk errors in vmkernel log
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>grep -i &quot;scsi\|disk\|naa\|devio\|abort&quot; /var/log/vmkernel.log | grep -i &quot;err\|fail\|warn&quot; | tail -50
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># vSAN object events (CLOM decisions)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>grep -i &quot;resync\|rebuild\|absent\|degrade&quot; /var/log/clomd.log | tail -50
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># CMMDS membership changes (hosts joining/leaving)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>grep -i &quot;member\|join\|leave\|partition&quot; /var/log/cmmdsd.log | tail -30
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># vSAN management health events
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>grep -i &quot;fail\|warn\|error&quot; /var/log/vsanmgmt.log | tail -50
+</code></pre></div></p>
 <hr />
 <h2 id="performance-diagnostics">Performance Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
 <h3 id="baseline-checks">Baseline Checks<a class="headerlink" href="#baseline-checks" title="Permanent link">&para;</a></h3>

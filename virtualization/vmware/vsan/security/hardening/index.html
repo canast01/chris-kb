@@ -4338,40 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#hardening-control-layers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardening Control Layers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#esxi-host-hardening" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ESXi Host Hardening
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="ESXi Host Hardening">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#disable-unnecessary-services" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disable Unnecessary Services
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ssh-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4381,8 +4347,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#esxi-firewall" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4392,8 +4358,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#account-and-password-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4403,8 +4369,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#limit-root-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4414,8 +4380,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#audit-logging-to-syslog" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4425,8 +4391,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#ntp-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4434,11 +4400,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4815,7 +4776,7 @@
 
 <h1 id="vsan-hardening">vSAN — Hardening<a class="headerlink" href="#vsan-hardening" title="Permanent link">&para;</a></h1>
 <p>vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>HARDENING LAYERS
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>HARDENING LAYERS
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  ┌──────────────────────────────────────────────────────┐
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  │  NETWORK LAYER                                       │
@@ -4846,50 +4807,74 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  │  └── Aria Operations → SCG compliance score          │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  └──────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="hardening-control-layers">Hardening Control Layers<a class="headerlink" href="#hardening-control-layers" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    subgraph "Network Layer"
-        fw["ESXi Host Firewall\n(restrict SSH, VSAN ports)"]
-        nioc["NIOC — vSAN traffic\nbandwidth reservation"]
-    end
-
-    subgraph "Authentication Layer"
-        lockdown["Lockdown Mode\n(Normal or Strict)"]
-        pwd["Password complexity\n&amp; account lockout"]
-        ntp["NTP — clock sync\n(500 ms max drift for vSAN)"]
-    end
-
-    subgraph "Encryption Layer"
-        dit["Data-in-Transit\nEncryption (AES-256-GCM)"]
-        dar["Data-at-Rest\nEncryption (D@RE via KMS)"]
-    end
-
-    subgraph "Audit Layer"
-        syslog["Syslog to SIEM\n(SSH login, disk events)"]
-        hostProf["Host Profiles\n(enforce baseline; detect drift)"]
-    end
-
-    fw &amp; nioc --&gt; lockdown &amp; pwd &amp; ntp --&gt; dit &amp; dar --&gt; syslog &amp; hostProf</code></pre>
-<h2 id="esxi-host-hardening">ESXi Host Hardening<a class="headerlink" href="#esxi-host-hardening" title="Permanent link">&para;</a></h2>
-<h3 id="disable-unnecessary-services">Disable Unnecessary Services<a class="headerlink" href="#disable-unnecessary-services" title="Permanent link">&para;</a></h3>
-<p>The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all services and their status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span><span class="w">  </span><span class="c1"># only needed if in MM</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vim-cmd<span class="w"> </span>hostsvc/service/list
+┌────────────────────────────────────────── vSAN — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN hardening includes ESXi host hardening, vSAN network isolation, data-at-rest                    │
+│  encryption, disk-level secure erase, and lockdown mode on all hosts.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │                Host Hardening               │   │
+│   │             Dedicated vSAN VLAN              │  │            Lockdown mode: enabled           │   │
+│   │          Isolate from guest VM nets          │  │           SSH: off when not in use          │   │
+│   │          Jumbo frames vSAN net only          │  │           ESXi shell: time-limited          │   │
+│   │        Firewall: block mgmt from VMs         │  │              Patch: 30-day SLA              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network isolation prevents VM-level attacks on vSAN management traffic.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Data Hardening                │  │              Compliance &amp; Audit             │   │
+│   │          Enable at-rest encryption           │  │            CIS vSphere benchmark            │   │
+│   │         Secure erase on disk removal         │  │         Syslog: vSAN events to SIEM         │   │
+│   │               KMS HA: 2+ nodes               │  │         Policy: enforce FTT&gt;0 always        │   │
+│   │           Re-key schedule: 90 days           │  │          Alert: disk removed event          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical disk security: tag decommissioned drives, apply secure erase, log disposal;                 │
+│  KMS appliances must be physically secured.                                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Lockdown mode  = blocks direct ESXi access; requires vCenter for all ops                             │
+│  At-rest enc    = AES-256 encryption of all vSAN disk data                                            │
+│  Secure erase   = SCSI sanitize command; wipe disk before decommission                                │
+│  KMS HA         = 2+ KMS nodes; survives single KMS failure                                           │
+│  Re-key         = rotate KEK on schedule; 90 days is common policy                                    │
+│  vSAN VLAN      = dedicated L2 segment for inter-host vSAN traffic                                    │
+│  SIEM           = Security Info and Event Mgmt; vSAN alerts forwarded                                 │
+│  CIS benchmark  = Centre for Internet Security; vSphere hardening checklist                           │
+│  FTT&gt;0 policy   = ensure all VMs have ≥1 failure tolerance                                            │
+│  Disk disposal  = document and secure-erase all removed vSAN disks                                    │
+│  Patch SLA      = critical patches within 7d; high within 30d                                         │
+│  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## ESXi Host Hardening
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Disable Unnecessary Services
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Disable services that should not be running</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># CIM server (not needed unless hardware monitoring via CIM)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>wbem<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># SFCBD (CIM broker) — disable if CIM is disabled</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>/etc/init.d/sfcbd-watchdog<span class="w"> </span>stop
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>chkconfig<span class="w"> </span>sfcbd-watchdog<span class="w"> </span>off
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># NTP daemon should be RUNNING (required for vSAN)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># SSH should be STOPPED unless in use</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># ESXi Shell should be STOPPED</span>
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># List all services and their status
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli system maintenanceMode set --enable false  # only needed if in MM
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vim-cmd hostsvc/service/list
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Disable services that should not be running
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># CIM server (not needed unless hardware monitoring via CIM)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli system wbem set --enable false
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># SFCBD (CIM broker) — disable if CIM is disabled
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>/etc/init.d/sfcbd-watchdog stop
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>chkconfig sfcbd-watchdog off
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># NTP daemon should be RUNNING (required for vSAN)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># SSH should be STOPPED unless in use
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># ESXi Shell should be STOPPED
+</code></pre></div></p>
 <p><strong>Service baseline:</strong></p>
 <table>
 <thead>

@@ -2840,89 +2840,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#policy-enforcement-mechanisms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Policy Enforcement Mechanisms
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Policy Enforcement Mechanisms">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#data-loss-prevention-dlp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Loss Prevention (DLP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#access-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Access Controls
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#privileged-access-management-pam" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Privileged Access Management (PAM)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gdpr-and-compliance-alignment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GDPR and Compliance Alignment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-lineage-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Lineage Tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quarterly-access-review-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quarterly Access Review Process
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#audit-log-requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3210,7 +3127,7 @@
 - File server classification rules via File Server Resource Manager (FSRM)</p>
 <hr />
 <h2 id="governance-process-flowchart">Governance Process Flowchart<a class="headerlink" href="#governance-process-flowchart" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A[Data Asset Identified / Created] --&gt; B[Data Owner Assigned]
     B --&gt; C[Classification Applied\nPurview / Manual Label]
     C --&gt; D{Classification Level}
@@ -3228,173 +3145,98 @@
     O -- Yes --&gt; P[Update Controls, Notify Owners]
     O -- No --&gt; J
     P --&gt; J</code></pre>
-<hr />
-<h2 id="policy-enforcement-mechanisms">Policy Enforcement Mechanisms<a class="headerlink" href="#policy-enforcement-mechanisms" title="Permanent link">&para;</a></h2>
-<h3 id="data-loss-prevention-dlp">Data Loss Prevention (DLP)<a class="headerlink" href="#data-loss-prevention-dlp" title="Permanent link">&para;</a></h3>
-<p>DLP policies detect and block sensitive data exfiltration across channels.</p>
-<table>
-<thead>
-<tr>
-<th>Channel</th>
-<th>DLP Tool</th>
-<th>Policy Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Email (Exchange Online)</td>
-<td>Microsoft Purview DLP</td>
-<td>Block send of messages containing UK National Insurance numbers or credit card patterns</td>
-</tr>
-<tr>
-<td>Endpoint file transfer</td>
-<td>Purview Endpoint DLP / Symantec DLP</td>
-<td>Alert when Restricted files are copied to USB or personal cloud storage</td>
-</tr>
-<tr>
-<td>SharePoint / OneDrive</td>
-<td>Purview DLP</td>
-<td>Block external sharing of Confidential-labelled documents without explicit approval</td>
-</tr>
-<tr>
-<td>Network egress</td>
-<td>Palo Alto DLP / Forcepoint</td>
-<td>Inspect outbound streams for PII patterns; block or quarantine</td>
-</tr>
-</tbody>
-</table>
-<h3 id="access-controls">Access Controls<a class="headerlink" href="#access-controls" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Example: Apply RBAC on a Confidential data share via AD group</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Create scoped AD security group</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">New-ADGroup</span> <span class="n">-Name</span> <span class="s2">&quot;DL-FinanceData-ReadOnly&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">-GroupScope</span> <span class="n">DomainLocal</span> <span class="p">`</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">-GroupCategory</span> <span class="n">Security</span> <span class="p">`</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=DataGroups,DC=corp,DC=local&quot;</span>
+┌────────────────────────────────── Data Protection — Data Governance ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Data governance: define who owns data, who can access it, and how its use is audited     │   │
+│   │       Roles: owner (accountable) → steward (operational) → custodian (IT stores/secures)      │   │
+│   │      Aligned to regulations: GDPR (EU PII), HIPAA (PHI), SOX (financial), PCI DSS (cards)     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Data Ownership       │  │       Access Controls       │  │          Compliance         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Owner: BU lead       │  │      RBAC + least priv      │  │        GDPR — EU PII        │   │
+│   │      Steward: BU member     │  │     Quarterly access rev    │  │         HIPAA — PHI         │   │
+│   │      Custodian: IT/ops      │  │      JIT / PIM for priv     │  │       SOX — financial       │   │
+│   │      Processor: vendor      │  │     Audit log all access    │  │       PCI DSS — cards       │   │
+│   │        DPA agreements       │  │     Breach notification     │  │      Annual DPA review      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Data owner    = Business accountable for a dataset; approves access and classification             │
+│    Data steward  = Day-to-day oversight of data quality and policy compliance in a domain             │
+│    Data custodian= IT team responsible for storing, securing, and backing up the data                 │
+│    DPA           = Data Processing Agreement; contract with vendors who process personal data         │
+│    GDPR          = EU regulation; rights over personal data; 72h breach notification                  │
+│    JIT           = Just-In-Time access; privileged access granted for a time-limited session          │
+│    PIM           = Privileged Identity Management; Azure AD tool for JIT role activation              │
+│    Access review = Periodic check that all current permissions are still appropriate and needed       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Privileged Access Management (PAM)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Restricted data access for privileged accounts must be brokered through a PAM solution (CyberArk, BeyondTrust):
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Session recording enabled for all privileged access to data stores
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Just-in-time (JIT) access provisioning — no standing Restricted access for admin accounts
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Credentials vaulted and rotated automatically
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Assign group to NTFS ACL on file share</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">$acl</span> <span class="p">=</span> <span class="nb">Get-Acl</span> <span class="s2">&quot;\\fileserver01\FinanceData&quot;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">$rule</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">System</span><span class="p">.</span><span class="n">Security</span><span class="p">.</span><span class="n">AccessControl</span><span class="p">.</span><span class="n">FileSystemAccessRule</span><span class="p">(</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="s2">&quot;CORP\DL-FinanceData-ReadOnly&quot;</span><span class="p">,</span> <span class="s2">&quot;ReadAndExecute&quot;</span><span class="p">,</span> <span class="s2">&quot;ContainerInherit,ObjectInherit&quot;</span><span class="p">,</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Allow&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$acl</span><span class="p">.</span><span class="n">AddAccessRule</span><span class="p">(</span><span class="nv">$rule</span><span class="p">)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Set-Acl</span> <span class="s2">&quot;\\fileserver01\FinanceData&quot;</span> <span class="nv">$acl</span>
-</code></pre></div>
-<h3 id="privileged-access-management-pam">Privileged Access Management (PAM)<a class="headerlink" href="#privileged-access-management-pam" title="Permanent link">&para;</a></h3>
-<p>Restricted data access for privileged accounts must be brokered through a PAM solution (CyberArk, BeyondTrust):
-- Session recording enabled for all privileged access to data stores
-- Just-in-time (JIT) access provisioning — no standing Restricted access for admin accounts
-- Credentials vaulted and rotated automatically</p>
-<hr />
-<h2 id="gdpr-and-compliance-alignment">GDPR and Compliance Alignment<a class="headerlink" href="#gdpr-and-compliance-alignment" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Requirement</th>
-<th>GDPR Article</th>
-<th>Implementation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Lawful basis for processing</td>
-<td>Art. 6</td>
-<td>Data Owner documents basis in Data Register</td>
-</tr>
-<tr>
-<td>Data minimisation</td>
-<td>Art. 5(1)(c)</td>
-<td>DLP + access controls limit scope of processing</td>
-</tr>
-<tr>
-<td>Right of access (DSAR)</td>
-<td>Art. 15</td>
-<td>Purview Content Search + documented DSAR process (30-day SLA)</td>
-</tr>
-<tr>
-<td>Right to erasure</td>
-<td>Art. 17</td>
-<td>Deletion workflow: data custodian executes secure erase; legal hold check required first</td>
-</tr>
-<tr>
-<td>Data breach notification</td>
-<td>Art. 33</td>
-<td>72-hour notification to supervisory authority; incident response procedure</td>
-</tr>
-<tr>
-<td>Records of processing activities (ROPA)</td>
-<td>Art. 30</td>
-<td>Maintained in CMDB / GRC tool; reviewed annually</td>
-</tr>
-<tr>
-<td>Data Protection Impact Assessment (DPIA)</td>
-<td>Art. 35</td>
-<td>Required for new systems processing Restricted data</td>
-</tr>
-<tr>
-<td>Data transfers outside EU/UK</td>
-<td>Art. 44-49</td>
-<td>Standard Contractual Clauses (SCCs) / adequacy decisions documented per transfer</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="data-lineage-tracking">Data Lineage Tracking<a class="headerlink" href="#data-lineage-tracking" title="Permanent link">&para;</a></h2>
-<p>Data lineage maps the origin, movement, transformation, and consumption of data assets. It is essential for impact analysis, compliance audits, and incident response.</p>
-<p>Tools:
-- <strong>Microsoft Purview Data Map</strong> — auto-scans Azure, SQL, SharePoint, and on-prem SQL Server to build lineage graphs
-- <strong>Apache Atlas</strong> — for Hadoop/data lake environments
-- <strong>Informatica IDMC</strong> — for complex ETL pipeline lineage
-- <strong>Manual ROPA entries</strong> — for systems not covered by automated scanning</p>
-<p>Minimum lineage record per dataset:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dataset name</td>
-<td>CustomerOrders_2026</td>
-</tr>
-<tr>
-<td>Source system</td>
-<td>ERP (SAP S/4HANA)</td>
-</tr>
-<tr>
-<td>Processing steps</td>
-<td>Extract → Transform (PII mask) → Load to DWH</td>
-</tr>
-<tr>
-<td>Consumers</td>
-<td>Finance BI team, Sales reports, Audit</td>
-</tr>
-<tr>
-<td>Classification</td>
-<td>Confidential</td>
-</tr>
-<tr>
-<td>Data Owner</td>
-<td>Head of Finance</td>
-</tr>
-<tr>
-<td>Last reviewed</td>
-<td>2026-05-01</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="quarterly-access-review-process">Quarterly Access Review Process<a class="headerlink" href="#quarterly-access-review-process" title="Permanent link">&para;</a></h2>
-<p>Access reviews must be completed within 10 business days of quarter start.</p>
-<ol>
-<li><strong>Generate access report</strong> — export group memberships and share/application permissions from AD and target systems.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export AD group members for review</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-ADGroupMember</span> <span class="n">-Identity</span> <span class="s2">&quot;DL-FinanceData-ReadOnly&quot;</span> <span class="n">-Recursive</span> <span class="p">|</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span><span class="p">,</span> <span class="n">ObjectClass</span> <span class="p">|</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">Export-Csv</span> <span class="s2">&quot;C:\Reviews\Q2-2026-FinanceData-Access.csv&quot;</span> <span class="n">-NoTypeInformation</span>
-</code></pre></div>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>---
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>## GDPR and Compliance Alignment
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Requirement | GDPR Article | Implementation |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>|---|---|---|
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Lawful basis for processing | Art. 6 | Data Owner documents basis in Data Register |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Data minimisation | Art. 5(1)(c) | DLP + access controls limit scope of processing |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Right of access (DSAR) | Art. 15 | Purview Content Search + documented DSAR process (30-day SLA) |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Right to erasure | Art. 17 | Deletion workflow: data custodian executes secure erase; legal hold check required first |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Data breach notification | Art. 33 | 72-hour notification to supervisory authority; incident response procedure |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Records of processing activities (ROPA) | Art. 30 | Maintained in CMDB / GRC tool; reviewed annually |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Data Protection Impact Assessment (DPIA) | Art. 35 | Required for new systems processing Restricted data |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Data transfers outside EU/UK | Art. 44-49 | Standard Contractual Clauses (SCCs) / adequacy decisions documented per transfer |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>---
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>## Data Lineage Tracking
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Data lineage maps the origin, movement, transformation, and consumption of data assets. It is essential for impact analysis, compliance audits, and incident response.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>Tools:
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>- **Microsoft Purview Data Map** — auto-scans Azure, SQL, SharePoint, and on-prem SQL Server to build lineage graphs
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>- **Apache Atlas** — for Hadoop/data lake environments
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>- **Informatica IDMC** — for complex ETL pipeline lineage
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>- **Manual ROPA entries** — for systems not covered by automated scanning
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>Minimum lineage record per dataset:
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>| Field | Example |
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>|---|---|
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>| Dataset name | CustomerOrders_2026 |
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>| Source system | ERP (SAP S/4HANA) |
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>| Processing steps | Extract → Transform (PII mask) → Load to DWH |
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>| Consumers | Finance BI team, Sales reports, Audit |
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>| Classification | Confidential |
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>| Data Owner | Head of Finance |
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>| Last reviewed | 2026-05-01 |
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>---
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>## Quarterly Access Review Process
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>Access reviews must be completed within 10 business days of quarter start.
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>1. **Generate access report** — export group memberships and share/application permissions from AD and target systems.
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>```powershell
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a># Export AD group members for review
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>Get-ADGroupMember -Identity &quot;DL-FinanceData-ReadOnly&quot; -Recursive |
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    Select-Object Name, SamAccountName, ObjectClass |
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    Export-Csv &quot;C:\Reviews\Q2-2026-FinanceData-Access.csv&quot; -NoTypeInformation
+</code></pre></div></p>
 <ol>
 <li><strong>Distribute to Data Owners</strong> — send CSV report to relevant Data Owner via secure channel with 5-business-day response deadline.</li>
 <li><strong>Owner certification</strong> — Owner marks each entry as Certify / Revoke / Escalate.</li>
@@ -3453,21 +3295,21 @@
 </tbody>
 </table>
 <h3 id="enable-sql-server-audit-t-sql">Enable SQL Server Audit (T-SQL)<a class="headerlink" href="#enable-sql-server-audit-t-sql" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Create server audit to file</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">TO</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="p">(</span><span class="n">FILEPATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLAudit\&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">MAXSIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="n">MB</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_ROLLOVER_FILES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">ON_FAILURE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CONTINUE</span><span class="p">);</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">-- Enable the audit</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">);</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- Create database audit specification for sensitive tables</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">USE</span><span class="w"> </span><span class="n">FinanceDB</span><span class="p">;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="n">SPECIFICATION</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_DataAccess</span><span class="p">]</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">FOR</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">ADD</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dbo</span><span class="p">.</span><span class="n">CustomerPayments</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">PUBLIC</span><span class="p">),</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">ADD</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dbo</span><span class="p">.</span><span class="n">PayrollData</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">PUBLIC</span><span class="p">)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Create server audit to file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">TO</span><span class="w"> </span><span class="n">FILE</span><span class="w"> </span><span class="p">(</span><span class="n">FILEPATH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;D:\SQLAudit\&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">MAXSIZE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1024</span><span class="w"> </span><span class="n">MB</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_ROLLOVER_FILES</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="n">ON_FAILURE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CONTINUE</span><span class="p">);</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- Enable the audit</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">ALTER</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">);</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">-- Create database audit specification for sensitive tables</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">USE</span><span class="w"> </span><span class="n">FinanceDB</span><span class="p">;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="n">SPECIFICATION</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_DataAccess</span><span class="p">]</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FOR</span><span class="w"> </span><span class="n">SERVER</span><span class="w"> </span><span class="n">AUDIT</span><span class="w"> </span><span class="p">[</span><span class="n">FinanceDB_Audit</span><span class="p">]</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">ADD</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dbo</span><span class="p">.</span><span class="n">CustomerPayments</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">PUBLIC</span><span class="p">),</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">ADD</span><span class="w"> </span><span class="p">(</span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">dbo</span><span class="p">.</span><span class="n">PayrollData</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">PUBLIC</span><span class="p">)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">WITH</span><span class="w"> </span><span class="p">(</span><span class="k">STATE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">);</span>
 </code></pre></div>
 <hr />
 <h2 id="governance-tooling">Governance Tooling<a class="headerlink" href="#governance-tooling" title="Permanent link">&para;</a></h2>

@@ -4324,17 +4324,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#logical-hierarchy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logical Hierarchy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#service-startup-order" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4705,7 +4694,7 @@
 <li><strong>Witness</strong> — tie-breaker for split-brain; can be a small VM (2 vCPU / 1 GB RAM)</li>
 </ul>
 <p>Shared storage is <strong>not</strong> required — replication is network-based over a dedicated HA network. Failover is automatic on active node failure; RPO is near-zero, RTO is typically under 60 seconds.</p>
-<pre class="mermaid"><code>graph LR
+<p><pre class="mermaid"><code>graph LR
     clients["vSphere Clients\n&amp; API consumers"]
     active["Active VCSA\n(serves all traffic)"]
     passive["Passive VCSA\n(hot standby)"]
@@ -4725,43 +4714,81 @@
     class passive standby
     class witness witness
     class clients client</code></pre>
-<hr />
-<h2 id="logical-hierarchy">Logical Hierarchy<a class="headerlink" href="#logical-hierarchy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vCenter Server
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>└── Datacenter (DC-&lt;site&gt;)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    ├── Cluster (CL-&lt;site&gt;-&lt;function&gt;)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    │   ├── ESXi Host (esxi-01.&lt;domain&gt;)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    │   │   └── VMs
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    │   └── vSAN Datastore / VMFS / NFS
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    └── Standalone Host (uncommon in production)
-</code></pre></div>
-<p>Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.</p>
-<pre class="mermaid"><code>graph TD
-    vc["vCenter Server"]
-    dc["Datacenter\n(DC-site)"]
-    cl["Cluster\n(CL-site-function)"]
-    rp["Resource Pool\n(RP-tier-team)"]
-    host["ESXi Host\n(esxi-nn.domain)"]
-    vm["Virtual Machines"]
-    ds["Datastore\n(vSAN / VMFS / NFS)"]
-
-    vc --&gt; dc
-    dc --&gt; cl
-    cl --&gt; rp
-    cl --&gt; host
-    rp --&gt; vm
-    host --&gt; vm
-    host --&gt; ds
-
-    classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-    classDef infra fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef compute fill:#15803d,stroke:#166534,color:#fff
-    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class vc,dc mgmt
-    class cl,rp infra
-    class host,vm compute
-    class ds storage</code></pre>
+┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter Server is the centralised management platform for vSphere; all                               │
+│  ESXi hosts, VMs, clusters, and policies are controlled through its APIs.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Client Layer                 │  │             API / Service Layer             │   │
+│   │          vSphere Client (HTML5 UI)           │  │             REST API + SOAP API             │   │
+│   │             CLI: govc, PowerCLI              │  │           SSO token auth for calls          │   │
+│   │            SDKs: Python, Go, Java            │  │             vCenter API gateway             │   │
+│   │             vCenter Mob browser              │  │               Task / event bus              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Client requests hit the API gateway; SSO validates the token before any operation.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Core Services                 │  │              Host Agent (vpxa)              │   │
+│   │          Inventory: hosts/VMs/nets           │  │            Runs on each ESXi host           │   │
+│   │            Scheduler: DRS/HA/DPM             │  │            Relays tasks to hostd            │   │
+│   │            Storage: SDRS/profiles            │  │           Reports events up to VC           │   │
+│   │           Postgres DB: full state            │  │           Reconnects on VC restart          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vCenter Server Appliance (VCSA) runs as a Linux VM on an ESXi host; requires                         │
+│  shared storage and management network reachability from all managed hosts.                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VCSA          = vCenter Server Appliance; OVA-deployed Photon OS VM                                  │
+│  vpxd          = vCenter Server daemon; core process; crash restarts service                          │
+│  vpxa          = vCenter agent on each ESXi host; bridges host and vCenter                            │
+│  hostd         = host daemon on ESXi; handles VM power ops, storage, network                          │
+│  PSC           = Platform Services Controller; merged into VCSA 7.0+                                  │
+│  SSO           = Single Sign-On; identity store; issues SAML tokens for API                           │
+│  DRS           = Distributed Resource Scheduler; automates VM placement                               │
+│  HA            = High Availability; restarts VMs on host failure automatically                        │
+│  DPM           = Distributed Power Management; powers off idle hosts                                  │
+│  SDRS          = Storage DRS; balances datastore utilisation automatically                            │
+│  vDS           = vSphere Distributed Switch; managed centrally from vCenter                           │
+│  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>graph TD
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    vc[&quot;vCenter Server&quot;]
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    dc[&quot;Datacenter\n(DC-site)&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    cl[&quot;Cluster\n(CL-site-function)&quot;]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    rp[&quot;Resource Pool\n(RP-tier-team)&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    host[&quot;ESXi Host\n(esxi-nn.domain)&quot;]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    vm[&quot;Virtual Machines&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    ds[&quot;Datastore\n(vSAN / VMFS / NFS)&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    vc --&gt; dc
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    dc --&gt; cl
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    cl --&gt; rp
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    cl --&gt; host
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    rp --&gt; vm
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    host --&gt; vm
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    host --&gt; ds
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    classDef infra fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    classDef compute fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    class vc,dc mgmt
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    class cl,rp infra
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    class host,vm compute
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    class ds storage
+</code></pre></div></p>
 <hr />
 <h2 id="service-startup-order">Service Startup Order<a class="headerlink" href="#service-startup-order" title="Permanent link">&para;</a></h2>
 <p>Services must start in the correct dependency order or vpxd will fail to initialise:</p>

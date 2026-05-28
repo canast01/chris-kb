@@ -4338,17 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vsan-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4548,7 +4537,7 @@
 
 
 <h1 id="vcf-encryption">VCF — Encryption<a class="headerlink" href="#vcf-encryption" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Encryption — Certificate and Data Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Encryption — Certificate and Data Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  TLS Certificate Lifecycle (via SDDC Manager)       │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                     │
@@ -4579,21 +4568,64 @@
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  KMS HA is critical — loss = datastore inaccessible │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<p>All VCF component certificates are managed through SDDC Manager. Do not replace certificates directly through component UIs — SDDC Manager will lose track of the state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SDDC Manager → Security → Certificate Management
-</code></pre></div>
-<p><strong>Replacement procedure:</strong></p>
-<ol>
-<li>Generate CSR in SDDC Manager for the target component</li>
-<li>Submit CSR to internal CA and receive signed certificate + CA chain</li>
-<li>Import the signed cert and chain back into SDDC Manager</li>
-<li>SDDC Manager installs the certificate and restarts affected services</li>
-</ol>
-<p><strong>Check certificate expiry:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-</code></pre></div>
+┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
+│                                                                                                       │
+│  VCF encryption covers transport (TLS 1.2+), vSAN at-rest encryption, VM encryption,                  │
+│  and SDDC Manager credential vault; all keys via external KMS.                                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Transport Encryption             │  │               vSAN Encryption               │   │
+│   │         All APIs: TLS 1.2+ enforced          │  │            Cluster-level AES-256            │   │
+│   │         NSX: TLS between components          │  │              KMS: KMIP protocol             │   │
+│   │           SDDC Mgr: TLS to all VCF           │  │              DEK/KEK hierarchy              │   │
+│   │            Backup: encrypted SFTP            │  │          Re-key: rolling no outage          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Transport protects management plane; vSAN encryption protects data at rest.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │              SDDC Manager Vault             │   │
+│   │          SDDC Mgr: rotate all certs          │  │         Service passwords: encrypted        │   │
+│   │          Custom CA: enterprise PKI           │  │            SDDC DB: AES encrypted           │   │
+│   │           VMCA: default per domain           │  │          Optional: HashiCorp Vault          │   │
+│   │        Expiry: 30d alert in SDDC Mgr         │  │          Master key: admin password         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS must be highly available on management network; SDDC Manager DB encryption                       │
+│  key is derived from the admin password — protect and rotate it.                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+     = minimum transport security for all VCF APIs                                           │
+│  vSAN enc     = cluster-level AES-256 encryption of all disk data                                     │
+│  KMS          = Key Management Server; KMIP protocol; holds KEKs                                      │
+│  KMIP         = Key Management Interoperability Protocol; port 5696                                   │
+│  DEK          = Data Encryption Key; per disk group                                                   │
+│  KEK          = Key Encryption Key; from KMS; wraps DEKs                                              │
+│  Re-key       = rotate KEK without downtime; new KEK wraps existing DEKs                              │
+│  SDDC vault   = encrypted store for all component service passwords                                   │
+│  VMCA         = vSphere Certificate Authority; per-domain default CA                                  │
+│  Custom CA    = replace VMCA with enterprise PKI via SDDC Mgr                                         │
+│  HashiCorp Vault= optional external credential store for SDDC Mgr                                     │
+│  Master key   = SDDC Mgr DB encryption; derived from admin password                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Replacement procedure:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. Generate CSR in SDDC Manager for the target component
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. Submit CSR to internal CA and receive signed certificate + CA chain
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. Import the signed cert and chain back into SDDC Manager
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4. SDDC Manager installs the certificate and restarts affected services
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>**Check certificate expiry:**
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>openssl s_client -connect &lt;vcenter-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  | openssl x509 -noout -subject -dates
+</code></pre></div></p>
 <p><strong>Lead times:</strong></p>
 <table>
 <thead>

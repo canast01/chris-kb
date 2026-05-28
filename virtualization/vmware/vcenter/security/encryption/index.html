@@ -4338,100 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-in-transit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data in Transit
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-at-rest-vm-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data at Rest — VM Encryption
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data at Rest — VM Encryption">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vsphere-native-key-provider-nkp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSphere Native Key Provider (NKP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#external-kms-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        External KMS Integration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#encrypted-vm-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encrypted VM Management
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsan-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vm-encryption-key-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VM Encryption Key Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vsphere-trust-authority-vta" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4775,7 +4681,7 @@
 
 
 <h1 id="vcenter-security-encryption">vCenter Security — Encryption<a class="headerlink" href="#vcenter-security-encryption" title="Permanent link">&para;</a></h1>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSphere Encryption Key Flow
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vSphere Encryption Key Flow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>════════════════════════════════════════════════════════
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  External KMS               vCenter Server          ESXi Host
@@ -4807,65 +4713,91 @@
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  │  vCenter ──TLS──▶ ESXi :443 (host management)      │
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  └────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="data-in-transit">Data in Transit<a class="headerlink" href="#data-in-transit" title="Permanent link">&para;</a></h2>
-<p>vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.</p>
-<p>All API and UI traffic to vCenter uses HTTPS on port 443. VAMI traffic uses HTTPS on port 5480. LDAPS (port 636) is required for Active Directory identity source connections.</p>
-<p>Verify TLS configuration after upgrading from older vSphere versions using the <code>tls-reconfigurator</code> tool available in the VCSA.</p>
-<h2 id="data-at-rest-vm-encryption">Data at Rest — VM Encryption<a class="headerlink" href="#data-at-rest-vm-encryption" title="Permanent link">&para;</a></h2>
-<p>vCenter manages VM-level encryption through vSphere Native Key Provider (NKP) or an external KMS.</p>
-<h3 id="vsphere-native-key-provider-nkp">vSphere Native Key Provider (NKP)<a class="headerlink" href="#vsphere-native-key-provider-nkp" title="Permanent link">&para;</a></h3>
-<p>Available from vSphere 7.0 U2+. No external KMS required. The key is stored in vCenter and distributed to ESXi hosts.</p>
-<ul>
-<li>Enable from <strong>vCenter → Configure → Key Providers → Add Native Key Provider</strong></li>
-<li>Back up the NKP immediately after creation — the backup passphrase is required for recovery</li>
-<li>Used for VM encryption, vSAN encryption (where supported), and TPM attestation</li>
-</ul>
-<h3 id="external-kms-integration">External KMS Integration<a class="headerlink" href="#external-kms-integration" title="Permanent link">&para;</a></h3>
-<p>For compliance environments requiring an external KMIP-compatible KMS:</p>
-<ul>
-<li>Supported KMS: Thales CipherTrust, Entrust nShield, HyTrust KeyControl</li>
-<li>Register at <strong>vCenter → Configure → Key Providers → Add Standard Key Provider</strong></li>
-<li>vCenter acts as KMIP client; ESXi hosts retrieve keys via vCenter</li>
-</ul>
-<h3 id="encrypted-vm-management">Encrypted VM Management<a class="headerlink" href="#encrypted-vm-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check VM encryption status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-View</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Property</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Encrypted&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">KeyId</span> <span class="o">-ne</span> <span class="nv">$null</span><span class="p">}}</span>
+┌───────────────────────────────────── vCenter Server — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter encrypts management traffic via TLS and integrates with external KMS                         │
+│  for VM encryption and vSAN encryption key management.                                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Transport Encryption             │  │                VM Encryption                │   │
+│   │          All API traffic: TLS 1.2+           │  │            Encrypt VM via policy            │   │
+│   │           VCSA ↔ ESXi: TLS on 443            │  │           KMS: external key server          │   │
+│   │           DB: Postgres on loopback           │  │             DEK per VM: AES-256             │   │
+│   │          Backup: encrypted tarball           │  │            KEK from KMS wraps DEK           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Transport encryption protects management plane; VM encryption protects data at rest.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │               vSAN Encryption               │   │
+│   │              VMCA: internal CA               │  │           vSAN: cluster-level AES           │   │
+│   │          Custom CA: enterprise PKI           │  │            KMS required for vSAN            │   │
+│   │          Cert expiry: monitor 30d+           │  │         Re-key: rolling no downtime         │   │
+│   │          STS cert: 2yr manual renew          │  │           Shred key: destroys data          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS server must be reachable from vCenter management network on KMIP port 5696;                      │
+│  KMS unavailability prevents encrypted VM power-on.                                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+     = minimum transport security for all vCenter API traffic                                │
+│  VMCA         = vSphere Certificate Authority; embedded in VCSA                                       │
+│  STS cert     = Security Token Service cert; 2-year expiry; breaks SSO                                │
+│  KMS          = Key Management Server; KMIP protocol; stores KEKs                                     │
+│  KMIP         = Key Management Interoperability Protocol; port 5696                                   │
+│  DEK          = Data Encryption Key; unique per VM; encrypts VMDK                                     │
+│  KEK          = Key Encryption Key; stored in KMS; wraps DEKs                                         │
+│  AES-256      = Advanced Encryption Standard; key size used by VM/vSAN enc                            │
+│  Re-key       = rotate DEKs without powering off VM; KMS generates new KEK                            │
+│  Shred key    = destroy KEK in KMS; renders encrypted data unrecoverable                              │
+│  Custom CA    = replace VMCA-signed certs with enterprise PKI certs                                   │
+│  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## vSAN Encryption
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vSAN data-at-rest encryption is configured at the cluster level and requires a key provider (NKP or external KMS). Encryption is applied at the disk group layer.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Encrypt a VM (requires key provider configured)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Use vSphere Client: VM → Edit Settings → VM Options → Encryption</span>
-</code></pre></div>
-<h2 id="vsan-encryption">vSAN Encryption<a class="headerlink" href="#vsan-encryption" title="Permanent link">&para;</a></h2>
-<p>vSAN data-at-rest encryption is configured at the cluster level and requires a key provider (NKP or external KMS). Encryption is applied at the disk group layer.</p>
-<p>Configure at <strong>vCenter → Cluster → Configure → vSAN → Services → Data Encryption</strong>.</p>
-<h2 id="certificate-encryption">Certificate Encryption<a class="headerlink" href="#certificate-encryption" title="Permanent link">&para;</a></h2>
-<p>All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.</p>
-<p>See <a href="../authentication/">Authentication</a> for certificate management procedures.</p>
-<h2 id="vm-encryption-key-flow">VM Encryption Key Flow<a class="headerlink" href="#vm-encryption-key-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    kms["External KMS\n(KMIP-compatible)"]
-    vc["vCenter Server\n(KMIP client)"]
-    kek["Key Encryption Key (KEK)\nper ESXi host"]
-    esxi["ESXi Host\n(holds encrypted DEK)"]
-    dek["Data Encryption Key (DEK)\nper VM — encrypted by KEK"]
-    disk["Encrypted VMDK\non datastore"]
-
-    kms --&gt;|"provides KEK on request"| vc
-    vc --&gt;|"delivers KEK"| esxi
-    esxi --&gt;|"generates and encrypts DEK\nusing KEK"| dek
-    dek --&gt;|"used to encrypt"| disk
-
-    classDef kms fill:#dc2626,stroke:#b91c1c,color:#fff
-    classDef vc fill:#b45309,stroke:#92400e,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef key fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class kms kms
-    class vc vc
-    class esxi host
-    class kek,dek key
-    class disk store</code></pre>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Configure at **vCenter → Cluster → Configure → vSAN → Services → Data Encryption**.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## Certificate Encryption
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>See [Authentication](../authentication/index.md) for certificate management procedures.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## VM Encryption Key Flow
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```mermaid
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>graph TD
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    kms[&quot;External KMS\n(KMIP-compatible)&quot;]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    vc[&quot;vCenter Server\n(KMIP client)&quot;]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    kek[&quot;Key Encryption Key (KEK)\nper ESXi host&quot;]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    esxi[&quot;ESXi Host\n(holds encrypted DEK)&quot;]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    dek[&quot;Data Encryption Key (DEK)\nper VM — encrypted by KEK&quot;]
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    disk[&quot;Encrypted VMDK\non datastore&quot;]
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    kms --&gt;|&quot;provides KEK on request&quot;| vc
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    vc --&gt;|&quot;delivers KEK&quot;| esxi
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    esxi --&gt;|&quot;generates and encrypts DEK\nusing KEK&quot;| dek
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    dek --&gt;|&quot;used to encrypt&quot;| disk
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    classDef kms fill:#dc2626,stroke:#b91c1c,color:#fff
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    classDef vc fill:#b45309,stroke:#92400e,color:#fff
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    classDef host fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    classDef key fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    class kms kms
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    class vc vc
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    class esxi host
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    class kek,dek key
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    class disk store
+</code></pre></div></p>
 <h2 id="vsphere-trust-authority-vta">vSphere Trust Authority (vTA)<a class="headerlink" href="#vsphere-trust-authority-vta" title="Permanent link">&para;</a></h2>
 <p>vSphere Trust Authority (vTA), available from vSphere 7.0+, provides hardware-attested trust for ESXi hosts. A dedicated Trust Authority cluster attests that ESXi hosts are running trusted firmware and software before they are allowed to receive encryption keys.</p>
 <p>Use cases:

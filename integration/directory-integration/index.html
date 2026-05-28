@@ -2830,17 +2830,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sssd-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SSSD Configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#restrict-login-to-ad-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3049,7 +3038,7 @@
 <p>Connect Linux and Windows systems to Active Directory or LDAP for centralised authentication, group-based access control, and identity management.</p>
 <h2 id="linux-active-directory-sssd">Linux → Active Directory (SSSD)<a class="headerlink" href="#linux-active-directory-sssd" title="Permanent link">&para;</a></h2>
 <h3 id="join-domain">Join Domain<a class="headerlink" href="#join-domain" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install required packages (RHEL/Rocky)</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install required packages (RHEL/Rocky)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>realmd<span class="w"> </span>sssd<span class="w"> </span>adcli<span class="w"> </span>samba-common-tools<span class="w"> </span>krb5-workstation
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Install (Debian/Ubuntu)</span>
@@ -3065,105 +3054,115 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>realm<span class="w"> </span>list
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>id<span class="w"> </span>administrator@corp.example.com
 </code></pre></div>
-<h3 id="sssd-configuration">SSSD Configuration<a class="headerlink" href="#sssd-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/sssd/sssd.conf</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">[sssd]</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">domains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.example.com</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="na">config_file_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="na">services</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nss, pam</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">[domain/corp.example.com]</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">ad_domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.example.com</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">krb5_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CORP.EXAMPLE.COM</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="na">realmd_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">manages-system joined-with-adcli</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="na">cache_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="na">id_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="na">auth_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="na">access_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="na">krb5_store_password_if_offline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="na">default_shell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/bin/bash</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="na">fallback_homedir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/%u@%d</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="na">use_fully_qualified_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w">   </span><span class="c1"># omit @domain suffix for local users</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="na">ldap_id_mapping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>sssd
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Test</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>id<span class="w"> </span>&lt;ad-username&gt;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>getent<span class="w"> </span>passwd<span class="w"> </span>&lt;ad-username&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>getent<span class="w"> </span>group<span class="w"> </span><span class="s2">&quot;Domain Admins&quot;</span>
-</code></pre></div>
+┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Integrate infrastructure services with Active Directory via LDAPS for authentication     │   │
+│   │      Service account: dedicated bind account; read-only to OU; password rotation tracked      │   │
+│   │        Required: LDAPS (port 636) only; import AD CA cert; test bind before production        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 LDAP Config                  │  │               Troubleshooting               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            Server: DC IP or FQDN             │  │             ldapsearch bind test            │   │
+│   │              Port: 636 (LDAPS)               │  │           Check CA in trust store           │   │
+│   │           Bind DN: svc-ldap@domain           │  │        Verify service acct not locked       │   │
+│   │          Base DN: DC=corp,DC=local           │  │         Check OU search permissions         │   │
+│   │            Group filter: memberOf            │  │           AD event log: 4771/4776           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Bind DN      = Distinguished Name of service account used to authenticate to LDAP                  │
+│    Base DN      = Search root in directory tree; e.g. DC=corp,DC=local for full domain                │
+│    LDAPS        = LDAP over TLS port 636; required; plain LDAP (389) transmits creds in clear         │
+│    memberOf     = AD attribute listing group DNs; used for group-based role mapping                   │
+│    ldapsearch   = CLI tool to test LDAP queries; confirm bind and attribute retrieval                 │
+│    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl enable --now sssd
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># Test
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>id &lt;ad-username&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>getent passwd &lt;ad-username&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>getent group &quot;Domain Admins&quot;
+</code></pre></div></p>
 <h3 id="restrict-login-to-ad-groups">Restrict Login to AD Groups<a class="headerlink" href="#restrict-login-to-ad-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Allow only members of &#39;linux-admins&#39; AD group to log in</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span>linux-admins@corp.example.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Or edit /etc/sssd/sssd.conf:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># access_provider = simple</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># simple_allow_groups = linux-admins@corp.example.com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Allow only members of &#39;linux-admins&#39; AD group to log in</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>realm<span class="w"> </span>permit<span class="w"> </span>-g<span class="w"> </span>linux-admins@corp.example.com
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Or edit /etc/sssd/sssd.conf:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># access_provider = simple</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># simple_allow_groups = linux-admins@corp.example.com</span>
 </code></pre></div>
 <h2 id="linux-active-directory-winbind">Linux → Active Directory (Winbind)<a class="headerlink" href="#linux-active-directory-winbind" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># smb.conf excerpt for AD membership</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="o">[</span>global<span class="o">]</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">   </span><span class="nv">workgroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>CORP
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">   </span><span class="nv">realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>CORP.EXAMPLE.COM
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">   </span><span class="nv">security</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ADS
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>*<span class="w"> </span>:<span class="w"> </span><span class="nv">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10000</span>-19999
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>CORP<span class="w"> </span>:<span class="w"> </span><span class="nv">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>rid
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>CORP<span class="w"> </span>:<span class="w"> </span><span class="nv">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000000</span>-1999999
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">   </span>winbind<span class="w"> </span>use<span class="w"> </span>default<span class="w"> </span><span class="nv">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>yes
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">   </span>winbind<span class="w"> </span>enum<span class="w"> </span><span class="nv">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>no
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">   </span>winbind<span class="w"> </span>enum<span class="w"> </span><span class="nv">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>no
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Join</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>net<span class="w"> </span>ads<span class="w"> </span>join<span class="w"> </span>-U<span class="w"> </span>administrator
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>winbind
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Test</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>wbinfo<span class="w"> </span>-t<span class="w">        </span><span class="c1"># check trust</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>wbinfo<span class="w"> </span>-u<span class="w">        </span><span class="c1"># list domain users</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>wbinfo<span class="w"> </span>-g<span class="w">        </span><span class="c1"># list domain groups</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>wbinfo<span class="w"> </span>-i<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="c1"># get user info</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># smb.conf excerpt for AD membership</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="o">[</span>global<span class="o">]</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">   </span><span class="nv">workgroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>CORP
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">   </span><span class="nv">realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>CORP.EXAMPLE.COM
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">   </span><span class="nv">security</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ADS
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>*<span class="w"> </span>:<span class="w"> </span><span class="nv">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10000</span>-19999
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>CORP<span class="w"> </span>:<span class="w"> </span><span class="nv">backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>rid
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">   </span>idmap<span class="w"> </span>config<span class="w"> </span>CORP<span class="w"> </span>:<span class="w"> </span><span class="nv">range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1000000</span>-1999999
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">   </span>winbind<span class="w"> </span>use<span class="w"> </span>default<span class="w"> </span><span class="nv">domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>yes
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">   </span>winbind<span class="w"> </span>enum<span class="w"> </span><span class="nv">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>no
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">   </span>winbind<span class="w"> </span>enum<span class="w"> </span><span class="nv">groups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>no
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Join</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>net<span class="w"> </span>ads<span class="w"> </span>join<span class="w"> </span>-U<span class="w"> </span>administrator
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>winbind
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Test</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>wbinfo<span class="w"> </span>-t<span class="w">        </span><span class="c1"># check trust</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>wbinfo<span class="w"> </span>-u<span class="w">        </span><span class="c1"># list domain users</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>wbinfo<span class="w"> </span>-g<span class="w">        </span><span class="c1"># list domain groups</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>wbinfo<span class="w"> </span>-i<span class="w"> </span>&lt;user&gt;<span class="w"> </span><span class="c1"># get user info</span>
 </code></pre></div>
 <h2 id="linux-ldap-openldap-non-ad">Linux → LDAP (OpenLDAP / non-AD)<a class="headerlink" href="#linux-ldap-openldap-non-ad" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSSD with LDAP provider</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /etc/sssd/sssd.conf</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="o">[</span>domain/ldap.example.com<span class="o">]</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">id_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldap
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">auth_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldap
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">ldap_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldaps://ldap.example.com:636
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">ldap_search_base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dc</span><span class="o">=</span>example,dc<span class="o">=</span>com
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">ldap_default_bind_dn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">cn</span><span class="o">=</span>readonly,dc<span class="o">=</span>example,dc<span class="o">=</span>com
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">ldap_default_authtok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;bind-password&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nv">ldap_tls_reqcert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>demand
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nv">ldap_tls_cacert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/etc/ssl/certs/internal-ca.crt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSSD with LDAP provider</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /etc/sssd/sssd.conf</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="o">[</span>domain/ldap.example.com<span class="o">]</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">id_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldap
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">auth_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldap
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">ldap_uri</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ldaps://ldap.example.com:636
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">ldap_search_base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">dc</span><span class="o">=</span>example,dc<span class="o">=</span>com
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">ldap_default_bind_dn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">cn</span><span class="o">=</span>readonly,dc<span class="o">=</span>example,dc<span class="o">=</span>com
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">ldap_default_authtok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>&lt;bind-password&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">ldap_tls_reqcert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>demand
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">ldap_tls_cacert</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/etc/ssl/certs/internal-ca.crt
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test LDAP query</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;cn=readonly,dc=example,dc=com&quot;</span><span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(uid=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test LDAP query</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;cn=readonly,dc=example,dc=com&quot;</span><span class="w"> </span>-w<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;dc=example,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(uid=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
 </code></pre></div>
 <h2 id="windows-domain-join">Windows — Domain Join<a class="headerlink" href="#windows-domain-join" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Join to domain</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Add-Computer</span> <span class="n">-DomainName</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Verify domain membership</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Join to domain</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Add-Computer</span> <span class="n">-DomainName</span> <span class="s2">&quot;corp.example.com&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Verify domain membership</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
 </code></pre></div>
 <h2 id="health-checks">Health Checks<a class="headerlink" href="#health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSSD health</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>sssctl<span class="w"> </span>domain-status<span class="w"> </span>corp.example.com<span class="w">    </span><span class="c1"># shows DC used and last successful auth</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>sssctl<span class="w"> </span>cache-expire<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w">        </span><span class="c1"># force cache refresh for one user</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Kerberos ticket</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>klist<span class="w"> </span>-c<span class="w">                                 </span><span class="c1"># show current tickets</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>kinit<span class="w"> </span>&lt;user&gt;@CORP.EXAMPLE.COM<span class="w">            </span><span class="c1"># obtain ticket manually</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Clear SSSD cache (force re-fetch from DC)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Winbind</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>wbinfo<span class="w"> </span>--ping-dc<span class="w">                         </span><span class="c1"># check DC reachable</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>net<span class="w"> </span>ads<span class="w"> </span>testjoin<span class="w">                         </span><span class="c1"># verify machine account still valid</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSSD health</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>sssctl<span class="w"> </span>domain-status<span class="w"> </span>corp.example.com<span class="w">    </span><span class="c1"># shows DC used and last successful auth</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>sssctl<span class="w"> </span>cache-expire<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w">        </span><span class="c1"># force cache refresh for one user</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Kerberos ticket</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>klist<span class="w"> </span>-c<span class="w">                                 </span><span class="c1"># show current tickets</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>kinit<span class="w"> </span>&lt;user&gt;@CORP.EXAMPLE.COM<span class="w">            </span><span class="c1"># obtain ticket manually</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Clear SSSD cache (force re-fetch from DC)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Winbind</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>wbinfo<span class="w"> </span>--ping-dc<span class="w">                         </span><span class="c1"># check DC reachable</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>net<span class="w"> </span>ads<span class="w"> </span>testjoin<span class="w">                         </span><span class="c1"># verify machine account still valid</span>
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>

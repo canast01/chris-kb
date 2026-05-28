@@ -2674,80 +2674,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-network-design" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Network Design
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage Network Design">
+    <nav class="md-nav" aria-label="Protocol Selection">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#dedicated-fabric-for-fibre-channel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dedicated Fabric for Fibre Channel
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vlan-isolation-for-iscsi-and-nfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VLAN Isolation for iSCSI and NFS
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multipath-io-mpio-on-iscsi-nfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multipath I/O (MPIO) on iSCSI / NFS
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#capacity-planning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity Planning
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Capacity Planning">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#formula" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Formula
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#worked-example-vsan-cluster" class="md-nav__link">
@@ -3327,7 +3255,7 @@
 </tbody>
 </table>
 <p><strong>Protocol selection decision guide:</strong></p>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A["What is the workload?"]
     A --&gt; B{Block storage\nrequired?}
     B --&gt;|Yes| C{Latency &lt; 500 µs\nrequired?}
@@ -3340,52 +3268,67 @@
     H --&gt;|No - Linux/VMware| J["NFS v3 or v4.1\non NAS"]
     A --&gt; K{Archive or\ncloud tiering?}
     K --&gt;|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]</code></pre>
-<hr />
-<h2 id="storage-network-design">Storage Network Design<a class="headerlink" href="#storage-network-design" title="Permanent link">&para;</a></h2>
-<p>The storage network must be treated as a dedicated, isolated infrastructure component. Mixing storage traffic with VM production traffic causes I/O contention, inconsistent latency, and difficult-to-diagnose performance problems.</p>
-<h3 id="dedicated-fabric-for-fibre-channel">Dedicated Fabric for Fibre Channel<a class="headerlink" href="#dedicated-fabric-for-fibre-channel" title="Permanent link">&para;</a></h3>
-<p>FC SANs use a dedicated switching fabric completely separate from Ethernet.</p>
-<pre class="mermaid"><code>graph TD
-    subgraph FC_Fabric_A["FC Fabric A"]
-        MDS_A["Cisco MDS 9396S\n(Fabric A)"]
-    end
-    subgraph FC_Fabric_B["FC Fabric B"]
-        MDS_B["Cisco MDS 9396S\n(Fabric B)"]
-    end
-    subgraph Array["Dell PowerMax 2500"]
-        SP_A["Storage Processor A"]
-        SP_B["Storage Processor B"]
-    end
-    H1_HBA_A["Host 1 HBA A"] --&gt; MDS_A
-    H1_HBA_B["Host 1 HBA B"] --&gt; MDS_B
-    H2_HBA_A["Host 2 HBA A"] --&gt; MDS_A
-    H2_HBA_B["Host 2 HBA B"] --&gt; MDS_B
-    MDS_A --&gt; SP_A
-    MDS_B --&gt; SP_B
-    SP_A &lt;--&gt;|"Array internal\ncrossbar"| SP_B</code></pre>
-<ul>
-<li>Each host has HBAs connecting to both Fabric A and Fabric B — no single fabric failure takes down host access</li>
-<li>Storage processors are cross-connected internally; either SP can serve data from any drive group</li>
-<li>Zone each host's HBA WWN to only the array ports it needs — do not use single initiator / multiple target zoning unless the vendor certifies it</li>
-</ul>
-<h3 id="vlan-isolation-for-iscsi-and-nfs">VLAN Isolation for iSCSI and NFS<a class="headerlink" href="#vlan-isolation-for-iscsi-and-nfs" title="Permanent link">&para;</a></h3>
-<p>For Ethernet-based storage protocols (iSCSI, NFS, NVMe-oF RoCE):
-- Create dedicated storage VLANs (see network design VLAN table: VLAN 300 for iSCSI/vSAN, VLAN 310 for NFS)
-- Enable jumbo frames (MTU 9000) on all switches and host interfaces in the storage path
-- Do not route storage VLANs to the internet or DMZ — they should be fully isolated
-- Use dedicated VMkernel ports on ESXi with explicit traffic type assignments</p>
-<h3 id="multipath-io-mpio-on-iscsi-nfs">Multipath I/O (MPIO) on iSCSI / NFS<a class="headerlink" href="#multipath-io-mpio-on-iscsi-nfs" title="Permanent link">&para;</a></h3>
-<p>Configure at least 2 independent paths for all storage connections:
-- 2 × storage VMkernel ports on different subnets (e.g., 192.168.30.1 and 192.168.31.1)
-- Connect each VMkernel to a different physical uplink (NIC A → ToR A → array port 1; NIC B → ToR B → array port 2)
-- For iSCSI: use software iSCSI with port binding, or hardware iSCSI HBAs
-- For NFS: use NFS port binding (NFS 4.1 with session trunking) for multipath across multiple VMkernel IPs</p>
-<hr />
-<h2 id="capacity-planning">Capacity Planning<a class="headerlink" href="#capacity-planning" title="Permanent link">&para;</a></h2>
-<h3 id="formula">Formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
-<p>Capacity planning for storage must account for actual usable capacity, not raw capacity. Overhead from RAID, snapshots, metadata, and reserved space reduces usable capacity significantly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Usable Capacity = Raw Capacity × RAID Efficiency × (1 − Overhead)
-</code></pre></div>
+┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Storage design: tier workloads by I/O profile; select protocol; plan redundancy        │   │
+│   │            Tiers: NVMe (&lt; 0.1ms) → SSD (&lt; 1ms) → SAS/NL-SAS (2-5ms) → archive/cloud           │   │
+│   │          Protocol: FC (SAN/high perf), iSCSI (SAN/cost), NFS/SMB (file), S3 (object)          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Design Considerations             │  │                  Redundancy                 │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │             Workload I/O profile             │  │           RAID 5/6 or erasure code          │   │
+│   │              Capacity now + 3yr              │  │               Dual controllers              │   │
+│   │              Protocol selection              │  │               Multipath (MPIO)              │   │
+│   │              Thin vs thick prov              │  │            Replication to DR site           │   │
+│   │              Encryption at rest              │  │               Snapshot policy               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    NVMe         = Non-Volatile Memory Express; PCIe-attached flash; lowest latency storage            │
+│    FC           = Fibre Channel; dedicated SAN fabric; high performance and reliability               │
+│    iSCSI        = SCSI over IP; block storage over Ethernet; lower cost than FC                       │
+│    Erasure code = Striping with parity across drives; space-efficient; used in scale-out arrays       │
+│    Thin prov    = Space allocated on-demand; must monitor actual usage vs overcommit                  │
+│    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>- Each host has HBAs connecting to both Fabric A and Fabric B — no single fabric failure takes down host access
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Storage processors are cross-connected internally; either SP can serve data from any drive group
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Zone each host&#39;s HBA WWN to only the array ports it needs — do not use single initiator / multiple target zoning unless the vendor certifies it
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### VLAN Isolation for iSCSI and NFS
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>For Ethernet-based storage protocols (iSCSI, NFS, NVMe-oF RoCE):
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- Create dedicated storage VLANs (see network design VLAN table: VLAN 300 for iSCSI/vSAN, VLAN 310 for NFS)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>- Enable jumbo frames (MTU 9000) on all switches and host interfaces in the storage path
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>- Do not route storage VLANs to the internet or DMZ — they should be fully isolated
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- Use dedicated VMkernel ports on ESXi with explicit traffic type assignments
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>### Multipath I/O (MPIO) on iSCSI / NFS
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Configure at least 2 independent paths for all storage connections:
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- 2 × storage VMkernel ports on different subnets (e.g., 192.168.30.1 and 192.168.31.1)
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>- Connect each VMkernel to a different physical uplink (NIC A → ToR A → array port 1; NIC B → ToR B → array port 2)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>- For iSCSI: use software iSCSI with port binding, or hardware iSCSI HBAs
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>- For NFS: use NFS port binding (NFS 4.1 with session trunking) for multipath across multiple VMkernel IPs
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>---
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>## Capacity Planning
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>### Formula
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>Capacity planning for storage must account for actual usable capacity, not raw capacity. Overhead from RAID, snapshots, metadata, and reserved space reduces usable capacity significantly.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>```text
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Usable Capacity = Raw Capacity × RAID Efficiency × (1 − Overhead)
+</code></pre></div></p>
 <p>Where:
 - <strong>RAID Efficiency</strong>: RAID-1 = 50%; RAID-5 (4+1) = 80%; RAID-6 (4+2) = 67%; RAID-10 = 50%
 - <strong>Overhead</strong>: Snapshots (10–20%), metadata (2–5%), reserve/headroom (20% minimum)</p>

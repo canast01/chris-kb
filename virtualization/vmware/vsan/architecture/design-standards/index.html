@@ -4291,28 +4291,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#network-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stretched-cluster-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stretched Cluster Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#storage-policy-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4576,97 +4554,99 @@
 </tbody>
 </table>
 <p><strong>Network validation before cluster creation:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify MTU 9000 end-to-end</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify MTU 9000 end-to-end</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;remote-vsan-vmk-ip&gt;
 </code></pre></div>
-<p>Ping must succeed at the large packet size. If it fails, check switch port MTU, vDS port group MTU, and vmkernel adapter MTU.</p>
-<hr />
-<h2 id="network-architecture">Network Architecture<a class="headerlink" href="#network-architecture" title="Permanent link">&para;</a></h2>
-<p>vSAN requires a dedicated VMkernel port (vmk) on every host. All vSAN replication and storage I/O flows over this network.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ESXi Host
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── vmk0 — Management
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── vmk1 — vMotion
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── vmk2 — vSAN (dedicated 10/25 GbE NIC or NIC pair)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└── vmk3 — VM Traffic (optional, separate pNIC)
-</code></pre></div>
-<p><strong>Switch configuration requirements:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>MTU</td>
-<td>9000 (jumbo frames) — switch, vDS, and vmk must all match</td>
-</tr>
-<tr>
-<td>Port type</td>
-<td>Access (not trunk) for vSAN VLAN</td>
-</tr>
-<tr>
-<td>Flow control</td>
-<td>Disabled (vSAN handles congestion internally)</td>
-</tr>
-<tr>
-<td>Spanning Tree</td>
-<td>PortFast / Edge Port on all vSAN-connected ports</td>
-</tr>
-</tbody>
-</table>
-<p><strong>vDS port group settings for vSAN VMkernel:</strong></p>
-<ul>
-<li>VLAN: dedicated VLAN (not shared with vMotion or management)</li>
-<li>Load balancing: Route based on physical NIC load (or LACP if supported)</li>
-<li>Failover order: Active-Active if two pNICs dedicated to vSAN</li>
-</ul>
-<p><strong>Bandwidth sizing guidance:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Traffic type</th>
-<th>Minimum</th>
-<th>Recommended</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vSAN replication (per host)</td>
-<td>10 GbE</td>
-<td>25 GbE</td>
-</tr>
-<tr>
-<td>ESA (NVMe-based)</td>
-<td>25 GbE</td>
-<td>25 GbE or 2×10 GbE LACP</td>
-</tr>
-<tr>
-<td>Stretched cluster inter-site</td>
-<td>10 GbE</td>
-<td>25 GbE + &lt; 5 ms RTT</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="stretched-cluster-architecture">Stretched Cluster Architecture<a class="headerlink" href="#stretched-cluster-architecture" title="Permanent link">&para;</a></h2>
-<p>A vSAN stretched cluster spans two physical sites with a witness at a third location. Each site is a fault domain. FTT=1 RAID-1 places one mirror at each site, with the witness providing quorum arbitration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Site A (preferred)          Site B (secondary)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>┌─────────────────┐         ┌─────────────────┐
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│ ESXi-01         │         │ ESXi-03         │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│ ESXi-02         │         │ ESXi-04         │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│ Component A ────┼─────────┼──► Component B  │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>└─────────────────┘         └─────────────────┘
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>         │                          │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>         └──────────┬───────────────┘
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>                    │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>              ┌─────┴──────┐
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>              │  Witness    │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>              │ (Site C /  │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>              │  vCloud)   │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>              └────────────┘
-</code></pre></div>
+┌─────────────────────────────────────── vSAN — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN design standards cover host sizing, disk group ratios, network requirements,                    │
+│  fault tolerance policy selection, and cluster expansion rules.                                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Host &amp; Disk Standards             │  │              Network Standards              │   │
+│   │             Min 3 hosts (FTT=1)              │  │        10GbE minimum; 25GbE preferred       │   │
+│   │         Homogeneous hosts preferred          │  │            Dedicated VMkernel NIC           │   │
+│   │          Cache:capacity 1:10 ratio           │  │            Jumbo frames: MTU 9000           │   │
+│   │          vSAN HCL: all disks listed          │  │          Latency &lt;1ms host to host          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All hardware must appear on the vSAN HCL; off-HCL disks cause unsupported state.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Policy Standards               │  │              Capacity Planning              │   │
+│   │            Prod VMs: FTT=1 RAID-1            │  │            Slack: 30% free always           │   │
+│   │            Critical: FTT=2 RAID-6            │  │           Resync headroom: 1 host           │   │
+│   │           Test/dev: FTT=0 (no HA)            │  │         Expand by 3 hosts (FD rule)         │   │
+│   │           Encryption: policy-based           │  │           Dedup/compress: OSA only          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All ESXi hosts contribute their local NVMe/SSD/HDD to the shared vSAN datastore;                     │
+│  TOR switches must support jumbo frames and LLDP for vSAN network health.                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HCL          = Hardware Compatibility List; VMware approved disk list                                │
+│  FTT          = Failures To Tolerate; defines redundancy level                                        │
+│  RAID-1       = mirroring; FTT=1 needs 3 hosts; simple, higher cost                                   │
+│  RAID-5/6     = erasure coding; space-efficient; FTT=1 needs 4, FTT=2 needs 6                         │
+│  Cache ratio  = 1:10 cache to capacity; e.g., 400GB cache → 4TB capacity                              │
+│  30% slack    = required for resync operations after disk/host failure                                │
+│  Resync headroom= capacity to rebuild one failed host worth of data                                   │
+│  OSA          = Original Storage Architecture; HDD+SSD; supports dedup                                │
+│  ESA          = Express Storage Architecture; all-NVMe; no dedup needed                               │
+│  Homogeneous  = same CPU/RAM/disk model per host; simplifies policy math                              │
+│  MTU 9000     = jumbo frames; reduces CPU overhead for large I/O                                      │
+│  LLDP         = Link Layer Discovery Protocol; used for vSAN net health                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Switch configuration requirements:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Setting | Value |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| MTU | 9000 (jumbo frames) — switch, vDS, and vmk must all match |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Port type | Access (not trunk) for vSAN VLAN |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Flow control | Disabled (vSAN handles congestion internally) |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Spanning Tree | PortFast / Edge Port on all vSAN-connected ports |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>**vDS port group settings for vSAN VMkernel:**
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- VLAN: dedicated VLAN (not shared with vMotion or management)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Load balancing: Route based on physical NIC load (or LACP if supported)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Failover order: Active-Active if two pNICs dedicated to vSAN
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>**Bandwidth sizing guidance:**
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Traffic type | Minimum | Recommended |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|---|---|---|
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| vSAN replication (per host) | 10 GbE | 25 GbE |
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| ESA (NVMe-based) | 25 GbE | 25 GbE or 2×10 GbE LACP |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| Stretched cluster inter-site | 10 GbE | 25 GbE + &lt; 5 ms RTT |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>---
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>## Stretched Cluster Architecture
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>A vSAN stretched cluster spans two physical sites with a witness at a third location. Each site is a fault domain. FTT=1 RAID-1 places one mirror at each site, with the witness providing quorum arbitration.
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>```text
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Site A (preferred)          Site B (secondary)
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>┌─────────────────┐         ┌─────────────────┐
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│ ESXi-01         │         │ ESXi-03         │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│ ESXi-02         │         │ ESXi-04         │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│ Component A ────┼─────────┼──► Component B  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>└─────────────────┘         └─────────────────┘
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>         │                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>         └──────────┬───────────────┘
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>                    │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>              ┌─────┴──────┐
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>              │  Witness    │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>              │ (Site C /  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>              │  vCloud)   │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>              └────────────┘
+</code></pre></div></p>
 <p><strong>Stretched cluster requirements:</strong></p>
 <table>
 <thead>
@@ -4884,12 +4864,12 @@
 <li>10% operational headroom</li>
 </ul>
 <p><strong>Monitoring commands:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check cluster capacity from any ESXi host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># PowerCLI capacity overview</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Get-VsanSpaceUsage<span class="w"> </span>-Cluster<span class="w"> </span>&lt;clustername&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check cluster capacity from any ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PowerCLI capacity overview</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Get-VsanSpaceUsage<span class="w"> </span>-Cluster<span class="w"> </span>&lt;clustername&gt;
 </code></pre></div>
 <p>Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.</p>
 

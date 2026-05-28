@@ -4223,52 +4223,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#post-change-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Change Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mtree-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MTree Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MTree Management">
+    <nav class="md-nav" aria-label="Maintenance Window">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#capacity-and-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity and Usage
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mtree-space-actions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MTree Space Actions
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#replication-state" class="md-nav__link">
@@ -4667,7 +4623,7 @@
 </tbody>
 </table>
 <h2 id="maintenance-window">Maintenance Window<a class="headerlink" href="#maintenance-window" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
+<p><pre class="mermaid"><code>flowchart TD
     A([Start Maintenance]) --&gt; B["Confirm window does not\noverlap backup schedule"]
     B --&gt; C["replication show\nNote context states"]
     C --&gt; D{"Any context\nin Error?"}
@@ -4685,92 +4641,95 @@
     M --&gt; K
     L --&gt;|Yes| N["Run test DDBoost backup\nConfirm job success"]
     N --&gt; O([Close Window])</code></pre>
-<p>Steps for planned maintenance on a Data Domain — schedule outside the backup window whenever possible.</p>
-<ol>
-<li>Confirm the maintenance window does not overlap with the backup window — check backup software schedules and confirm no jobs will run during the change</li>
-<li>Run <code>replication show</code> to note the current state of all contexts; if the change requires a replication pause, run <code>replication sync &lt;context&gt;</code> to bring the context to current before pausing</li>
-<li>Confirm no active backup sessions by checking backup software dashboards; wait for any running jobs to complete before starting</li>
-<li>If this is a DDOS upgrade: run <code>filesys clean start</code> and wait for it to complete before the upgrade to reduce post-upgrade clean time</li>
-<li>Export a configuration backup via System Manager before any upgrade or hardware change</li>
-<li>Perform the change per the approved runbook (DDOS upgrade, shelf expansion, or configuration change)</li>
-<li>After the change, run <code>filesys status</code>, <code>replication show</code>, and <code>alerts show current</code> to confirm all services are healthy</li>
-<li>Run a test DDBoost backup from at least one backup server and confirm the job completes successfully before closing the window</li>
-</ol>
-<h2 id="post-change-validation">Post-Change Validation<a class="headerlink" href="#post-change-validation" title="Permanent link">&para;</a></h2>
-<p>Run these checks after any change to confirm the Data Domain is healthy and backup services are restored.</p>
-<ul>
-<li>[ ] <code>filesys status</code> — filesystem is <code>Enabled</code> and <code>Running</code></li>
-<li>[ ] <code>alerts show current</code> — no new alerts introduced by the change</li>
-<li>[ ] <code>replication show</code> — all replication contexts back to <code>Normal</code> state; confirm lag has not grown during the change window</li>
-<li>[ ] <code>ddboost show clients</code> — all backup servers reconnected and authenticated</li>
-<li>[ ] <code>filesys show compression</code> — dedup ratio is consistent with the pre-change ratio; a significant drop post-change may indicate a configuration issue</li>
-<li>[ ] Backup job success: confirm at least one DDBoost backup job completes successfully after the change</li>
-<li>[ ] <code>system show</code> — confirms DDOS version (if this was an upgrade) and hardware health is clean</li>
-<li>[ ] ESRS / CloudIQ shows no new proactive alerts after the change</li>
-</ul>
-<h2 id="mtree-management">MTree Management<a class="headerlink" href="#mtree-management" title="Permanent link">&para;</a></h2>
-<p>MTrees are the primary logical partitions on a Data Domain system. Each MTree maps to a directory under <code>/data/col1/</code> and can have independent quotas, replication, and retention lock settings.</p>
-<h3 id="capacity-and-usage">Capacity and Usage<a class="headerlink" href="#capacity-and-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all MTrees with usage</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check MTree quota utilisation</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
+┌───────────────────────────────────── Dell Data Domain Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Standard procedures: create MTree, configure replication, set quota, run cleaning       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      # Create a new MTree                                     │   │
+│   │                                mtree create /data/col1/mybackup                               │   │
+│   │            mtree modify /data/col1/mybackup quota soft-limit 10 TB hard-limit 12 TB           │   │
+│   │                                                                                               │   │
+│   │                                 # Create NFS export from MTree                                │   │
+│   │                        nfs add /data/col1/mybackup clients 10.0.0.0/24                        │   │
+│   │                                                                                               │   │
+│   │                                   # Configure DD Boost user                                   │   │
+│   │                           ddboost user assign myboostuser role admin                          │   │
+│   │                        ddboost storage-unit create /data/col1/mybackup                        │   │
+│   │                                                                                               │   │
+│   │                      # Configure replication context (MTree replication)                      │   │
+│   │                 replication add source mtree://dd-primary/data/col1/mybackup \                │   │
+│   │                           destination mtree://dd-dr/data/col1/mybackup                        │   │
+│   │                  replication initialize mtree://dd-primary/data/col1/mybackup                 │   │
+│   │                                                                                               │   │
+│   │                                     # Run manual cleaning                                     │   │
+│   │                                      filesys clean start                                      │   │
+│   │                             filesys clean show  # monitor progress                            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    mtree create      = Creates logical partition in DDOS; quota enforced per MTree                    │
+│    ddboost storage-unit= Registers MTree as DD Boost storage unit; backup app connects here           │
+│    replication initialize= Seeds initial MTree copy to DR DD; only sends unique segments              │
+│    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### MTree Space Actions
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Reduce quota if an MTree is over-allocated
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>mtree quota set hard-limit &lt;new_size&gt; TiB /data/col1/&lt;mtree_name&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Compare pre-compression vs post-compression per MTree</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B2<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;mtree&quot;</span>
-</code></pre></div>
-<h3 id="mtree-space-actions">MTree Space Actions<a class="headerlink" href="#mtree-space-actions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Reduce quota if an MTree is over-allocated</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span>&lt;new_size&gt;<span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Remove quota entirely (no limit)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span>reset<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
-</code></pre></div>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Remove quota entirely (no limit)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mtree quota reset /data/col1/&lt;mtree_name&gt;
+</code></pre></div></p>
 <h3 id="replication-state">Replication State<a class="headerlink" href="#replication-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check which MTrees are replicating and their state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show replication lag for a specific MTree</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check which MTrees are replicating and their state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show replication lag for a specific MTree</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>replication<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;mtree_name&gt;
 </code></pre></div>
 <h3 id="retention-lock-review">Retention Lock Review<a class="headerlink" href="#retention-lock-review" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if retention lock is enabled on an MTree</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span>status<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List MTrees with retention lock enabled</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;mtree|retention&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if retention lock is enabled on an MTree</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span>status<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List MTrees with retention lock enabled</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mtree<span class="w"> </span>list<span class="w"> </span>--verbose<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;mtree|retention&quot;</span>
 </code></pre></div>
 <h3 id="creating-mtrees-for-new-backup-applications">Creating MTrees for New Backup Applications<a class="headerlink" href="#creating-mtrees-for-new-backup-applications" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — create the MTree</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>mtree<span class="w"> </span>create<span class="w"> </span>/data/col1/&lt;application&gt;_backup
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Step 2 — set a quota (prevent runaway growth)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span><span class="m">5</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>soft-limit<span class="w"> </span><span class="m">4</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Step 3 — create an NFS export or DDBoost storage unit</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;application&gt;_backup<span class="w"> </span>clients<span class="w"> </span>&lt;backup_server_ip&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># OR</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>create<span class="w"> </span>&lt;application&gt;_backup
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 4 — verify</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>mtree<span class="w"> </span>show<span class="w"> </span>/data/col1/&lt;application&gt;_backup
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — create the MTree</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>mtree<span class="w"> </span>create<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — set a quota (prevent runaway growth)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>hard-limit<span class="w"> </span><span class="m">5</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mtree<span class="w"> </span>quota<span class="w"> </span><span class="nb">set</span><span class="w"> </span>soft-limit<span class="w"> </span><span class="m">4</span><span class="w"> </span>TiB<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Step 3 — create an NFS export or DDBoost storage unit</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>nfs<span class="w"> </span>add<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;application&gt;_backup<span class="w"> </span>clients<span class="w"> </span>&lt;backup_server_ip&gt;
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># OR</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>create<span class="w"> </span>&lt;application&gt;_backup
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Step 4 — verify</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>mtree<span class="w"> </span>show<span class="w"> </span>/data/col1/&lt;application&gt;_backup
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>mtree<span class="w"> </span>quota<span class="w"> </span>show
 </code></pre></div>
 <h3 id="decommissioning-an-mtree">Decommissioning an MTree<a class="headerlink" href="#decommissioning-an-mtree" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Step 1 — confirm backup data has been expired in the backup application</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Step 2 — remove the NFS export or DDBoost storage unit</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>nfs<span class="w"> </span>del<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># OR</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>delete<span class="w"> </span>&lt;storage_unit_name&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Step 3 — delete the MTree</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>mtree<span class="w"> </span>delete<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 4 — run cleaning to reclaim space</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — confirm backup data has been expired in the backup application</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Step 2 — remove the NFS export or DDBoost storage unit</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>nfs<span class="w"> </span>del<span class="w"> </span><span class="nb">export</span><span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># OR</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>delete<span class="w"> </span>&lt;storage_unit_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Step 3 — delete the MTree</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>mtree<span class="w"> </span>delete<span class="w"> </span>/data/col1/&lt;mtree_name&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 4 — run cleaning to reclaim space</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
 </code></pre></div>
 <h3 id="mtree-health-summary">MTree Health Summary<a class="headerlink" href="#mtree-health-summary" title="Permanent link">&para;</a></h3>
 <table>
@@ -4814,37 +4773,37 @@
 <li>Post-clean, <code>filesys show space</code> shows reduced post-comp usage.</li>
 </ol>
 <h3 id="running-cleaning">Running Cleaning<a class="headerlink" href="#running-cleaning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Start an immediate cleaning cycle</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check cleaning status</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Stop cleaning in progress</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>stop
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Start an immediate cleaning cycle</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>start
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check cleaning status</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Stop cleaning in progress</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>stop
 </code></pre></div>
 <h3 id="automatic-cleaning-schedule">Automatic Cleaning Schedule<a class="headerlink" href="#automatic-cleaning-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View scheduled cleaning windows</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Set a cleaning schedule (run Tuesdays at 02:00)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span><span class="nb">set</span><span class="w"> </span>day<span class="w"> </span>tue<span class="w"> </span>start-time<span class="w"> </span><span class="m">02</span>:00
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Enable automatic cleaning</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Disable automatic cleaning (manual-only mode)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span>disable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View scheduled cleaning windows</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set a cleaning schedule (run Tuesdays at 02:00)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span><span class="nb">set</span><span class="w"> </span>day<span class="w"> </span>tue<span class="w"> </span>start-time<span class="w"> </span><span class="m">02</span>:00
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Enable automatic cleaning</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Disable automatic cleaning (manual-only mode)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>filesys<span class="w"> </span>clean<span class="w"> </span>schedule<span class="w"> </span>disable
 </code></pre></div>
 <h3 id="monitoring-cleaning-progress">Monitoring Cleaning Progress<a class="headerlink" href="#monitoring-cleaning-progress" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Active cleaning progress</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Space before and after (run filesys show space before and after)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Cleaning history</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>show<span class="w"> </span><span class="nb">history</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Active cleaning progress</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Space before and after (run filesys show space before and after)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Cleaning history</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>filesys<span class="w"> </span>clean<span class="w"> </span>show<span class="w"> </span><span class="nb">history</span>
 </code></pre></div>
 <h3 id="space-reclaim-expectations">Space Reclaim Expectations<a class="headerlink" href="#space-reclaim-expectations" title="Permanent link">&para;</a></h3>
 <table>
@@ -4878,14 +4837,14 @@
 <li>Before a capacity upgrade (to accurately assess current usage)</li>
 </ul>
 <h3 id="cleaning-troubleshooting">Cleaning Troubleshooting<a class="headerlink" href="#cleaning-troubleshooting" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Cleaning not reclaiming space — confirm data is actually expired</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Check in backup application: are expired jobs marked as deleted?</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Cleaning status shows errors</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>log<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>clean
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Cleaning taking too long</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>system<span class="w"> </span>show<span class="w"> </span>stats<span class="w">   </span><span class="c1"># check if high I/O is causing slowdown</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Cleaning not reclaiming space — confirm data is actually expired</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Check in backup application: are expired jobs marked as deleted?</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Cleaning status shows errors</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>log<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>clean
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Cleaning taking too long</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>system<span class="w"> </span>show<span class="w"> </span>stats<span class="w">   </span><span class="c1"># check if high I/O is causing slowdown</span>
 </code></pre></div>
 
 

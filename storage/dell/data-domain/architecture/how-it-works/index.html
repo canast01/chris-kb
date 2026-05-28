@@ -3994,28 +3994,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ddfs-data-domain-file-system" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DDFS (Data Domain File System)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Path
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4251,7 +4229,7 @@
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around <strong>inline global deduplication</strong>. All data is deduplicated as it is written using the SISL (Stream-Informed Segment Layout) engine — not in post-processing. Typical deduplication ratios: 20:1 or greater across mixed workloads.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
+<p><pre class="mermaid"><code>graph TB
   BU(["Backup Servers\nNetBackup / Commvault / Veeam"]) --&gt;|"DDBoost / NFS / CIFS / VTL"| DD["Dell Data Domain\n(dedup + compression)"]
   DD --&gt;|"DD Replicator\nTCP 2051"| DDDR["Remote Data Domain\n(DR copy)"]
   DD --&gt; CLOUD["Cloud Tier\nS3 / Azure Blob — long-term"]
@@ -4264,32 +4242,66 @@
   class BU host
   class CLOUD cloud
   class DDDR dr</code></pre>
-<h2 id="ddfs-data-domain-file-system">DDFS (Data Domain File System)<a class="headerlink" href="#ddfs-data-domain-file-system" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DDFS
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── Namespace (MTrees: /data/col1/&lt;name&gt;)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── MTree: mtree-veeam-prod
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── MTree: mtree-netbackup-ora
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └── MTree: mtree-commvault-sql
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── Segment Store (deduplicated data containers)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── Fingerprint Index (segment lookup table)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└── Cleaning (garbage collection of unreferenced segments)
-</code></pre></div>
-<p>Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.</p>
-<h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    client(["Backup Client"])
-    dsp["DDBoost Library\n(source-side dedup filter)\n~50% traffic reduction"]
-    sisl["SISL Engine\n(segment fingerprinting + locality filter)"]
-    nvram["NVRAM Write Cache\n(power-safe)"]
-    store["[(DDFS Segment Store)]\n(deduplicated + compressed)"]
-    repl["DD Replicator\n(async delta sync — TCP 2051)"]
-    remote["Remote Data Domain"]
-
-    client --&gt;|"DDBoost over IP"| dsp
-    dsp --&gt;|"unique segments only"| sisl
-    sisl --&gt; nvram
-    nvram --&gt; store
-    store --&gt; repl --&gt; remote</code></pre>
+┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Data Domain performs inline dedup: segments incoming data, hashes, checks index        │   │
+│   │            Unique segments written to DDOS; duplicates recorded as references only            │   │
+│   │           NVRAM buffers writes; segment index (fingerprint DB) held in RAM for speed          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Write path: data → segment → hash → index lookup → unique: write / dup: reference only             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Write Path                  │  │                  Read Path                  │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │       1. Data enters via NFS/Boost/VTL       │  │          1. Restore request arrives         │   │
+│   │      2. Chunked into variable segments       │  │        2. DDOS resolves segment refs        │   │
+│   │       3. SHA-1 fingerprint per segment       │  │          3. Segments read from disk         │   │
+│   │         4. Index lookup in RAM/NVRAM         │  │           4. Reassembled in order           │   │
+│   │       5. Unique: write to disk + index       │  │         5. Decompressed + delivered         │   │
+│   │       6. Duplicate: metadata ref only        │  │          6. Data returned to client         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     DD Boost: client-side library segments data before sending; reduces network by 50–90%     │   │
+│   │       Cleaning: DDOS garbage collects orphaned segments during off-hours (cron default)       │   │
+│   │           Replication: only sends unique new segments to DR DD; bandwidth-efficient           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Segment       = Variable-length data chunk (avg 8 KB); unit of deduplication                       │
+│    Fingerprint   = SHA-1 hash of segment content; used as dedup index key                             │
+│    Segment index = In-RAM hash table mapping fingerprints to disk locations                           │
+│    NVRAM cache   = Incoming writes staged in NVRAM; protects against power loss mid-stream            │
+│    Cleaning      = Scheduled DDOS process removing segments no longer referenced                      │
+│    DD Boost lib  = Plugin installed in backup app (NBU, Networker, Veeam); enables client dedup       │
+│    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Data Path
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```mermaid
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>graph TD
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    client([&quot;Backup Client&quot;])
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    dsp[&quot;DDBoost Library\n(source-side dedup filter)\n~50% traffic reduction&quot;]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    sisl[&quot;SISL Engine\n(segment fingerprinting + locality filter)&quot;]
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    nvram[&quot;NVRAM Write Cache\n(power-safe)&quot;]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    store[&quot;[(DDFS Segment Store)]\n(deduplicated + compressed)&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    repl[&quot;DD Replicator\n(async delta sync — TCP 2051)&quot;]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    remote[&quot;Remote Data Domain&quot;]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    client --&gt;|&quot;DDBoost over IP&quot;| dsp
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    dsp --&gt;|&quot;unique segments only&quot;| sisl
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    sisl --&gt; nvram
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    nvram --&gt; store
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    store --&gt; repl --&gt; remote
+</code></pre></div></p>
 <p>DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.</p>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
