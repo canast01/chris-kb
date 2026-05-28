@@ -1,5 +1,50 @@
 # CloudIQ — Integrations
 
+```
+┌────────────────────────────────────── Dell CloudIQ Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           CloudIQ integrates via REST API, webhooks, email, ITSM connectors, and SSO          │   │
+│   │       Alert webhooks post to ServiceNow, Slack, or any HTTP endpoint on threshold breach      │   │
+│   │       REST API exposes asset inventory, health scores, and metrics for custom dashboards      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    CloudIQ alert → webhook → ITSM ticket or Slack notification; REST API → BI/CMDB                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Alerting          │  │          API / Data         │  │           Identity          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │         Email alerts        │  │       CloudIQ REST API      │  │        SSO (SAML 2.0)       │   │
+│   │        Webhook HTTP/S       │  │       Asset inventory       │  │         Dell account        │   │
+│   │       ServiceNow conn.      │  │        Metrics export       │  │          RBAC roles         │   │
+│   │        Slack webhook        │  │        Report export        │  │        MFA supported        │   │
+│   │          PagerDuty          │  │           CSV/JSON          │  │         Org grouping        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    API token from CloudIQ settings → REST calls for health/capacity → CMDB or BI ingest               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │   Integration    │      Method      │      Trigger      │     Use case     │       Auth       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    ServiceNow    │     Webhook      │    Alert fires    │   Auto ticket    │     API key      │   │
+│   │      Slack       │     Webhook      │    Alert fires    │  ChatOps notify  │   Webhook URL    │   │
+│   │    Custom BI     │     REST API     │     Scheduled     │    Dashboards    │   Bearer token   │   │
+│   │       CMDB       │     REST API     │     On-demand     │    Asset sync    │   Bearer token   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Webhook        = HTTP POST sent by CloudIQ to external URL when alert condition met                │
+│    REST API       = CloudIQ public API; authenticated with OAuth bearer token; GET/POST               │
+│    SSO            = SAML 2.0 identity federation; Dell accounts or corp IdP supported                 │
+│    ServiceNow     = CloudIQ native connector creates incidents in ServiceNow on alert                 │
+│    Report export  = PDF/CSV capacity and health reports downloadable or emailed on schedule           │
+│    Org grouping   = Group systems by site/customer in CloudIQ for MSP multi-tenancy                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Connectivity and Integration Points
 
 | Interface | Protocol / Endpoint | Purpose |

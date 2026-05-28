@@ -51,59 +51,45 @@ echo "Token: ${TOKEN:0:40}..."   # Print first 40 chars to confirm success
 AUTH="Authorization: Bearer ${TOKEN}"
 BASE="https://cloudiq.apis.dell.com/rest/v1"
 ```
-
-**Token management:**
-
-| Field | Value |
-|---|---|
-| `grant_type` | Always `client_credentials` |
-| `expires_in` | `3600` (1 hour); re-authenticate before expiry |
-| Scope | Determined by API key permissions set in portal |
-
----
-
-## Systems API
-
-```bash
-# --- List all monitored systems ---
-curl -s -X GET "${BASE}/systems" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# List systems with pagination (default page size: 100)
-curl -s -X GET "${BASE}/systems?limit=50&offset=0" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# Filter systems by type (e.g. POWERFLEX, POWERMAX, UNITY_XT, POWERSTORE)
-curl -s -X GET "${BASE}/systems?type=POWERMAX" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# Filter systems by a specific site/location tag
-curl -s -X GET "${BASE}/systems?location=DC1" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# --- Get details for a specific system ---
-SYSTEM_ID="<system-id>"   # From the list above; e.g. "PS00xxxxxxx"
-
-curl -s -X GET "${BASE}/systems/${SYSTEM_ID}" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# Key fields returned:
-#   id               – CloudIQ system identifier
-#   model            – Array model string
-#   type             – Product type (POWERMAX, UNITY_XT, etc.)
-#   health_score     – 0–100 score (100 = fully healthy)
-#   health_issue_count – Number of open health issues
-#   location         – User-defined location label
-#   firmware_version – Current firmware / software version
-#   capacity_impact  – Capacity health indicator
-
-# --- Get system health score history ---
-curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/health-scores" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# Get health issues (root causes of score degradation)
-curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/health-issues" \
-  -H "${AUTH}" | python3 -m json.tool
+┌───────────────────────────────────── Dell CloudIQ CLI Reference ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              CloudIQ management via SCG CLI (SSH to SCG VM) and CloudIQ REST API              │   │
+│   │             SCG CLI: system status, device list, connectivity test, log collection            │   │
+│   │            CloudIQ REST API: retrieve assets, health scores, metrics, alert history           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          SCG Status         │  │       SCG Device Mgmt       │  │         CloudIQ API         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │          scg status         │  │       scg device list       │  │        GET /v1/assets       │   │
+│   │       scg connectivity      │  │        scg device add       │  │        GET /v1/health       │   │
+│   │       scg log collect       │  │      scg device remove      │  │       GET /v1/metrics       │   │
+│   │         scg version         │  │       scg device test       │  │        GET /v1/alerts       │   │
+│   │         scg upgrade         │  │       scg device show       │  │       POST /v1/reports      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Common workflows: check status → list devices → test connectivity → collect logs                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        scg status                — show SCG service state, version, registered devices        │   │
+│   │             scg connectivity --test   — verify outbound HTTPS to CloudIQ endpoints            │   │
+│   │         scg device list           — show all registered storage systems and poll state        │   │
+│   │            scg log collect           — bundle SCG logs for support; output to /tmp            │   │
+│   │           curl -H "Authorization: Bearer $TOKEN" https://cloudiq.dell.com/v1/assets           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SCG CLI      = SSH to SCG VM (admin user); menu-driven or direct scg commands                      │
+│    Bearer token = OAuth 2.0 token from CloudIQ API key; passed in Authorization header                │
+│    scg device test= Validates REST API credentials and connectivity for a registered system           │
+│    /v1/assets   = CloudIQ REST endpoint: returns all storage assets with attributes                   │
+│    /v1/health   = CloudIQ REST endpoint: returns health scores for all systems                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

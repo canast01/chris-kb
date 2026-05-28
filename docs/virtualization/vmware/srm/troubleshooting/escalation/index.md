@@ -1,5 +1,52 @@
 # SRM — Escalation
 
+```
+┌─────────────────────────────────────── VMware SRM — Escalation ───────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate SRM issues to VMware GSS when failover fails, site pair cannot reconnect,                   │
+│  or replication is permanently broken; attach support bundle and SRA logs.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │         Real failover fails mid-run          │  │          Collect SRM support bundle         │   │
+│   │           Site pair unrecoverable            │  │          Collect vSR appliance logs         │   │
+│   │         Replication broken: all VMs          │  │            Note exact error text            │   │
+│   │             Self-help exhausted              │  │             Timeline of changes             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Failed real failover is P1; collect all logs before any further changes.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │           Open SR: broadcom portal           │  │             T1: triage + bundle             │   │
+│   │           P1: real failover failed           │  │             T2: SRM SE assigned             │   │
+│   │           Include SRM version + OS           │  │            T3: engineering review           │   │
+│   │           Attach bundle + SRA logs           │  │          Involve storage vendor too         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ABR issues require parallel storage vendor engagement (Dell/NetApp GSS);                             │
+│  prepare access to SRM Server via RDP and storage admin credentials.                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM support bundle= generated from SRM UI; includes all SRM logs                                     │
+│  vSR logs      = vSphere Replication appliance logs; hbrsrv.log                                       │
+│  SRA logs      = storage replication adapter; array-specific errors                                   │
+│  P1 SR         = site recovery failure; production impact; urgent                                     │
+│  Storage vendor= Dell/NetApp parallel engagement for ABR issues                                       │
+│  Timeline      = changes made before failure; critical for GSS                                        │
+│  T2 SRM SE     = VMware senior SRM engineer                                                           │
+│  SRM version   = check SRM About page in vSphere Client                                               │
+│  OS version    = Windows Server version on SRM Server                                                 │
+│  RDP access    = GSS may need remote desktop to SRM Server                                            │
+│  Do not retry  = failed failover: stop; GSS will guide next steps                                     │
+│  Broadcom portal= support.broadcom.com; former my.vmware.com                                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
   Escalation Path
 ┌──────────────────────────────────────────────────────────────┐

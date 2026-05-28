@@ -144,152 +144,41 @@ set CLOUDIQ_CLIENT_ID=your-client-id
 set CLOUDIQ_CLIENT_SECRET=your-client-secret
 python cloudiq_alert_poller.py
 ```
-
-**What you should see**
-
-A report grouped by severity (CRITICAL, ERROR, WARNING, INFO). Each alert shows the system name, component, and description. The final lines show total alert count and an overall OK/WARNING/CRITICAL status. The script exits non-zero if critical alerts are present.
-
----
-
-## Capacity Trend Reporter
-
-Queries CloudIQ for all storage systems, fetches their capacity metrics, and prints a trend report showing current utilisation and projected days-to-full. Flags systems under 30 days to full.
-
-~~~python
-#!/usr/bin/env python3
-# cloudiq_capacity_reporter.py — CloudIQ capacity trend and days-to-full reporter
-# Requirements: requests
-# Usage: CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy WARN_DAYS=30 ./cloudiq_capacity_reporter.py
-
-import os
-import sys
-import requests
-from datetime import datetime
-
-CLIENT_ID     = os.environ.get("CLOUDIQ_CLIENT_ID", "")
-CLIENT_SECRET = os.environ.get("CLOUDIQ_CLIENT_SECRET", "")
-WARN_DAYS     = int(os.environ.get("WARN_DAYS", "30"))
-CLOUDIQ_BASE  = "https://cloudiq.dell.com"
-API_BASE      = f"{CLOUDIQ_BASE}/cloudiq/rest/v1"
-
-if not CLIENT_ID or not CLIENT_SECRET:
-    print("ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.", file=sys.stderr)
-    sys.exit(1)
-
-session = requests.Session()
-
-
-def get_token():
-    resp = session.post(
-        f"{CLOUDIQ_BASE}/auth/v1/token",
-        data={"grant_type": "client_credentials",
-              "client_id": CLIENT_ID, "client_secret": CLIENT_SECRET},
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-    )
-    resp.raise_for_status()
-    return resp.json()["access_token"]
-
-
-def api_get(token, path, params=None):
-    resp = session.get(
-        f"{API_BASE}{path}",
-        headers={"Authorization": f"Bearer {token}"},
-        params=params,
-    )
-    resp.raise_for_status()
-    return resp.json()
-
-
-def main():
-    exit_code = 0
-    token = get_token()
-
-    systems_data = api_get(token, "/storage-systems")
-    systems = systems_data.get("results", [])
-
-    print("=" * 80)
-    print("  CloudIQ Capacity Trend Report")
-    print(f"  Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print("=" * 80)
-    print(f"\n{'SYSTEM':<30}  {'TYPE':<15}  {'USED %':>7}  {'DAYS TO FULL':>13}  STATUS")
-    print("-" * 80)
-
-    for sys_obj in systems:
-        sys_id   = sys_obj.get("id", "unknown")
-        sys_name = sys_obj.get("system_name", sys_obj.get("name", sys_id))
-        sys_type = sys_obj.get("system_type", sys_obj.get("type", "unknown"))
-
-        try:
-            cap = api_get(token, f"/storage-systems/{sys_id}/capacity")
-        except Exception:
-            cap = {}
-
-        total  = float(cap.get("total_subscribed_tib", cap.get("total_tib", 0)))
-        used   = float(cap.get("used_tib", 0))
-        dtf    = cap.get("days_until_full", cap.get("daysUntilFull", None))
-        pct    = (used / total * 100) if total > 0 else 0.0
-
-        if dtf is not None:
-            dtf_val = int(dtf)
-            dtf_str = str(dtf_val)
-        else:
-            dtf_val = 9999
-            dtf_str = "N/A"
-
-        if dtf_val <= WARN_DAYS:
-            status = f"WARNING — {dtf_str} days"
-            exit_code = max(exit_code, 1)
-        elif pct >= 85:
-            status = "WARNING — over 85%"
-            exit_code = max(exit_code, 1)
-        else:
-            status = "OK"
-
-        print(f"{sys_name:<30}  {sys_type:<15}  {pct:>6.1f}%  {dtf_str:>13}  {status}")
-
-    print("-" * 80)
-    labels = {0: "OK", 1: "WARNING", 2: "CRITICAL"}
-    print(f"\nOverall: {labels.get(exit_code, 'UNKNOWN')}")
-    sys.exit(exit_code)
-
-
-if __name__ == "__main__":
-    main()
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.7 or newer installed (python.org)
-- The `requests` library: run `pip install requests` in Command Prompt
-- A CloudIQ API client ID and secret from cloudiq.dell.com → Settings → API Access
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**, change "Save as type" to **All Files**
-4. Name it `cloudiq_capacity_reporter.py` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `CLOUDIQ_CLIENT_ID` | Your CloudIQ API client ID | cloudiq.dell.com → Settings → API Access |
-| `CLOUDIQ_CLIENT_SECRET` | Your CloudIQ API client secret | Shown when credentials are created |
-| `WARN_DAYS` | Days-to-full threshold to flag | Default is `30` |
-
-**Step 3 — Open a terminal**
-
-- **For .py (Python):** Open Command Prompt. Install Python first from python.org if needed.
-
-**Step 4 — Run the script**
-
-```bash
-cd C:\Users\YourName\Desktop
-set CLOUDIQ_CLIENT_ID=your-client-id
-set CLOUDIQ_CLIENT_SECRET=your-client-secret
-python cloudiq_capacity_reporter.py
+┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Automate CloudIQ operations with REST API scripts: asset queries, health reports       │   │
+│   │        Use Bearer token authentication; base URL: https://cloudiq.dell.com/cloudiq/rest       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       # Get Bearer token                                      │   │
+│   │                 TOKEN=$(curl -s -X POST https://cloudiq.dell.com/auth/token \                 │   │
+│   │             -d "grant_type=client_credentials&client_id=$ID&client_secret=$SECRET" \          │   │
+│   │                                      | jq -r .access_token)                                   │   │
+│   │                                                                                               │   │
+│   │                          # List all storage systems and health scores                         │   │
+│   │                          curl -s -H "Authorization: Bearer $TOKEN" \                          │   │
+│   │                    https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems \                 │   │
+│   │                   | jq ".results[] | {name, health_score, capacity_used_pct}"                 │   │
+│   │                                                                                               │   │
+│   │                                # Export capacity report to CSV                                │   │
+│   │                          curl -s -H "Authorization: Bearer $TOKEN" \                          │   │
+│   │                "https://cloudiq.dell.com/cloudiq/rest/v1/metrics?type=capacity" \             │   │
+│   │                 | jq -r ".results[] | [.system,.date,.used_gb,.total_gb] | @csv"              │   │
+│   │                                                                                               │   │
+│   │                               # SCG: test all device connections                              │   │
+│   │               ssh admin@<SCG_IP> "scg device list --format json | jq .[].status"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    client_credentials = OAuth 2.0 flow for API automation; client ID + secret from CloudIQ UI         │
+│    access_token       = Short-lived JWT bearer token; typically 1-hour expiry; refresh as needed      │
+│    health_score       = Numeric 0-100 AI score per system in API response                             │
+│    /v1/metrics        = Telemetry endpoint: query capacity, performance, alerts by system             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

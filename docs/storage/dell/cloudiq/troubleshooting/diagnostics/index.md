@@ -1,5 +1,44 @@
 # CloudIQ — Diagnostics
 
+```
+┌────────────────────────────────────── Dell CloudIQ Diagnostics ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Diagnose CloudIQ issues with SCG CLI commands, log bundles, and API connectivity       │   │
+│   │             scg connectivity --test: validates HTTPS outbound to CloudIQ endpoints            │   │
+│   │               scg log collect: bundles all SCG logs for Dell support case upload              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              # Step 1 — Check SCG service status                              │   │
+│   │                                       ssh admin@<SCG_IP>                                      │   │
+│   │                                           scg status                                          │   │
+│   │                                                                                               │   │
+│   │                             # Step 2 — Test outbound connectivity                             │   │
+│   │                                    scg connectivity --test                                    │   │
+│   │                                                                                               │   │
+│   │                           # Step 3 — Test specific device connection                          │   │
+│   │                                scg device test --id <device_id>                               │   │
+│   │                                                                                               │   │
+│   │                              # Step 4 — Collect logs for support                              │   │
+│   │                         scg log collect --output /tmp/scg_logs.tar.gz                         │   │
+│   │                                                                                               │   │
+│   │                                 # Step 5 — View SCG system log                                │   │
+│   │                                  tail -f /var/log/scg/scg.log                                 │   │
+│   │                                                                                               │   │
+│   │                     # Step 6 — Check DNS resolution for CloudIQ endpoints                     │   │
+│   │                                   nslookup cloudiq.dell.com                                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    scg connectivity = Tests TCP/HTTPS reachability to all required CloudIQ cloud endpoints            │
+│    scg device test  = Authenticates to specific storage system and reports poll success/fail          │
+│    scg log collect  = Bundles SCG application logs, config (sanitised), and diagnostics               │
+│    /var/log/scg     = SCG application log directory; scg.log for main service events                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 > Part of the [CloudIQ](../../index.md) reference.
 
 ---

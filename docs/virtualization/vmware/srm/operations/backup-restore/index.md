@@ -22,47 +22,51 @@
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
-
-## What SRM Stores and Where
-
-SRM does not have its own independent database for most critical configuration. Understanding where data lives is essential for backup planning.
-
-| Data | Storage Location | Backup Method |
-|---|---|---|
-| Recovery Plans | vCenter database (Postgres, embedded or external) | vCenter backup |
-| Protection Group definitions | vCenter database | vCenter backup |
-| Inventory mappings (network, folder, resource) | vCenter database | vCenter backup |
-| IP customization rules | vCenter database | vCenter backup |
-| SRA credentials (array usernames/passwords) | SRM local config files (encrypted) | SRM config backup / appliance snapshot |
-| Site pairing certificate trust | SRM Server config | SRM config backup |
-| SRM Server settings | SRM Server (appliance or Windows) | Appliance snapshot / OS backup |
-| vSphere Replication config (per-VM replication jobs) | VR Appliance + vCenter | VR appliance backup |
-| VR Appliance config | VR Appliance local | VR appliance snapshot / OVF export |
-
-**Key point:** Backing up vCenter covers the majority of SRM's logical configuration. The SRM appliance or Windows server itself holds the certificate trust and SRA credentials — these must be backed up separately.
-
----
-
-## Back Up vCenter (Covers SRM Config)
-
-### VCSA File-Based Backup
-
-```bash
-# Access VCSA VAMI backup:
-# https://<vcenter-fqdn>:5480 → Backup → Backup Now
-
-# Or via API:
-curl -sk -X POST \
-  "https://vcenter.example.com/api/appliance/recovery/backup/job" \
-  -H "vmware-api-session-id: $VC_SESSION" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "location": "sftp://backup-server.example.com/vcsa-backups/",
-    "location_user": "backupuser",
-    "location_password": "secretpassword",
-    "parts": ["seat", "common"],
-    "comment": "Daily scheduled backup"
-  }'
+┌──────────────────────────────────── VMware SRM — Backup & Restore ────────────────────────────────────┐
+│                                                                                                       │
+│  SRM backup covers the SRM Server configuration database; VMs protected by SRM are                    │
+│  backed up separately via VADP; replication is not a backup substitute.                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              SRM Config Backup               │  │           What Replication Is NOT           │   │
+│   │          SRM DB: SQL Server backup           │  │             Replication ≠ backup            │   │
+│   │           Frequency: daily minimum           │  │          Corrupt file: replicated!          │   │
+│   │          SRM Server VM: VADP backup          │  │           Ransomware: replicates!           │   │
+│   │         vSphere Replication: no cfg          │  │            Backup: immutable copy           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Always run separate VADP backup alongside replication for data protection.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              SRM Server Restore              │  │            Recovery Plan Restore            │   │
+│   │           Restore from VADP backup           │  │           Plans: stored in SRM DB           │   │
+│   │           Re-register with vCenter           │  │         Re-pair sites after restore         │   │
+│   │           Re-pair with remote SRM            │  │           Verify: plan still valid          │   │
+│   │           Validate: plans visible            │  │          Test before real DR event          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Server is a Windows VM with SQL Server; both must be backed up;                                  │
+│  SQL Server AlwaysOn can provide HA for SRM DB.                                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM DB        = SQL Server database; stores all plans and config                                     │
+│  VADP          = backup API; backup SRM Server VM via snapshot                                        │
+│  vSphere Rep   = VM-level replication; not a point-in-time backup                                     │
+│  Immutable     = backup that cannot be deleted by ransomware                                          │
+│  Re-register   = re-link SRM Server to vCenter after restore                                          │
+│  Re-pair       = reconnect two SRM Servers after site or restore                                      │
+│  AlwaysOn      = SQL Server HA; SRM DB fails over automatically                                       │
+│  Recovery plan = stored in SRM DB; lost if DB lost without backup                                     │
+│  Corrupt file  = replication copies corruption in RPO window                                          │
+│  Ransomware    = encrypts production; replication copies encryption!                                  │
+│  Point-in-time = backup feature; replication has no point-in-time                                     │
+│  VADP backup   = standard VM backup; required for SRM Server VM                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Backup parts that include SRM data:**

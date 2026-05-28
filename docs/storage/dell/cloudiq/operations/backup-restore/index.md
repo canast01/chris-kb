@@ -33,32 +33,47 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
   -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}" \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print('OK' if 'access_token' in d else 'FAIL')"
 ```
-
-Store client secrets in an enterprise secrets manager:
-
-| Platform | Notes |
-|---|---|
-| CyberArk PAM | Preferred for large enterprise environments; full audit trail |
-| HashiCorp Vault | Recommended for infrastructure-as-code environments |
-| AWS Secrets Manager | For cloud-native automation pipelines |
-| Azure Key Vault | For Azure-hosted automation |
-| 1Password Business | For smaller teams without dedicated PAM |
-
-Never store client secrets in plaintext configuration files, scripts, `.env` files committed to version control, or shared wiki pages.
-
-### Notification Rule Configuration
-
-CloudIQ notification rules (recipients, severity filters, webhook URLs) are not exportable via the API as of CloudIQ API v6. Document them externally so they can be recreated if the account is reset or if a new CloudIQ tenant is provisioned.
-
-```bash
-# Export notification rule summary via REST API (for documentation purposes)
-TOKEN="<your-access-token>"
-BASE="https://cloudiq.apis.dell.com/rest/v1"
-
-curl -s -X GET "${BASE}/notification-rules" \
-  -H "Authorization: Bearer ${TOKEN}" | python3 -m json.tool > cloudiq_notification_rules_$(date +%Y%m%d).json
-
-# Store this file in your CMDB or infrastructure documentation repository
+┌─────────────────────────────────── Dell CloudIQ Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          CloudIQ SaaS platform backed up by Dell; SCG configuration exported manually         │   │
+│   │            SCG VM snapshot or OVA export preserves system credentials and settings            │   │
+│   │              CloudIQ telemetry data retained in Dell cloud for 90 days by default             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG VM snapshot → export settings → restore to new SCG VM → re-register in CloudIQ                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SCG Backup                  │  │                 CloudIQ SaaS                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          VM snapshot (ESXi/Hyper-V)          │  │           Dell manages SaaS backup          │   │
+│   │          Settings export via SCG UI          │  │           Historical data: 90 days          │   │
+│   │           System credential backup           │  │            Config replicated geo            │   │
+│   │              Certificate backup              │  │          No customer action needed          │   │
+│   │             OVA re-deploy for DR             │  │       Org data persists after SCG loss      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG restore: deploy new OVA → import settings → re-register with CloudIQ org → verify              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  Restore procedure: 1) Deploy fresh SCG OVA on VMware/Hyper-V                 │   │
+│   │                       2) Import exported settings file via SCG admin UI                       │   │
+│   │                       3) Re-register SCG with CloudIQ organisation token                      │   │
+│   │                   4) Verify storage systems reconnect and telemetry resumes                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SCG settings export = JSON export of all system credentials, proxy config, and certs               │
+│    Org token          = CloudIQ organisation registration token; links SCG to correct tenant          │
+│    90-day retention   = CloudIQ keeps 90 days of telemetry; older data rolled off automatically       │
+│    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Document for each notification rule:

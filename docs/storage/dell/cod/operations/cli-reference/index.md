@@ -56,43 +56,44 @@ symcfg -sid <sid> list -disk
 # Show only thin/EFD disks with capacity summary
 symcfg -sid <sid> list -disk -thin
 ```
-
-**Key capacity fields from `symcfg list -v -sid <sid>`:**
-
-| Field | Meaning |
-|---|---|
-| `Licensed Capacity (MB)` | Total capacity this array is licensed to use |
-| `Configured Capacity (MB)` | Capacity actually formatted and available to pools |
-| `Emulation Capacity (MB)` | Total physical raw capacity installed (including locked COD) |
-| `COD Capacity (MB)` | Capacity that is installed but currently locked under COD |
-
----
-
-## SYMCLI — Viewing Licensed Capacity
-
-```bash
-# List all license entitlements on the array
-symcfg -sid <sid> list -license
-
-# Output columns:
-#   Feature Name     – e.g. "PowerMax 2500 COD Base", "Open Replicator"
-#   Status           – Enabled / Disabled
-#   Count            – Licensed count or capacity (TB/unit)
-#   Expiry Date      – For time-limited licenses
-
-# Show license details for a specific feature
-symcfg -sid <sid> list -license -feature "PowerMax COD"
-
-# Verify total licensed vs configured capacity (COD delta)
-# Licensed capacity = already-active + COD available to activate
-symcfg list -v -sid <sid> | grep -E "Licensed|Configured|COD|Emulation"
-
-# --- Import a new license file (provided by Dell after COD purchase) ---
-# License file is a .dat file from Dell License Management portal
-symlmf -sid <sid> import -file /tmp/new_license.dat
-
-# Verify the new license is reflected
-symcfg -sid <sid> list -license
+┌─────────────────────────────────────── Dell COD CLI Reference ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          COD license CLI commands vary by product family: PowerStore, Unity, PowerMax         │   │
+│   │             All products support GUI activation; CLI/REST provides automation path            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          PowerStore         │  │           Unity XT          │  │           PowerMax          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │     pstore> license list    │  │     uemcli license -list    │  │         symlic list         │   │
+│   │     pstore> license add     │  │    uemcli license -upload   │  │        symlic install       │   │
+│   │     REST: POST /license     │  │     REST: POST /license     │  │      Solutions Enabler      │   │
+│   │     REST: GET /capacity     │  │        GUI: Settings        │  │        Unisphere GUI        │   │
+│   │     GUI: Settings > Lic     │  │         >  Licenses         │  │       Solutions Enblr       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               # PowerStore REST — list licenses                               │   │
+│   │              curl -sk -u admin:$PASS https://<ps>/api/rest/license | jq .[].name              │   │
+│   │                                                                                               │   │
+│   │                                 # Unity uemcli — list licenses                                │   │
+│   │                      uemcli -d <unity_ip> -u admin -p $PASS /license show                     │   │
+│   │                                                                                               │   │
+│   │                          # PowerMax Solutions Enabler — list licenses                         │   │
+│   │                                     symlic -sid <SID> list                                    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    pstore CLI     = PowerStore management CLI; access via SSH or embedded shell                       │
+│    uemcli         = Unisphere for Unity CLI; installed on mgmt workstation or run from Unity          │
+│    symlic         = Solutions Enabler command for PowerMax license management                         │
+│    Solutions Enabler= Dell software toolkit for PowerMax management automation                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

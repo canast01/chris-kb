@@ -20,33 +20,51 @@
                  │  (site pair)    │
                  └─────────────────┘
 ```
-
-## vCenter Integration
-
-SRM Server registers with vCenter as a vCenter extension. This registration:
-
-- Adds the **Site Recovery** plugin to the vSphere Client UI.
-- Allows SRM to manage VM inventory, power operations, and guest customization.
-- Uses a service account with **Site Recovery Administrator** privileges on the vCenter.
-
-SRM is installed per site. Each SRM Server registers with its local vCenter. The **site pairing** then links the two SRM Servers together, establishing bi-directional awareness.
-
-### Site Pairing
-
-Pairing is initiated from one site (either) via SRM UI → Site Recovery → **New Site Pair**.
-
-Steps:
-1. Enter the remote vCenter FQDN/IP and credentials.
-2. SRM retrieves the remote site's SSL certificate thumbprint.
-3. Administrator reviews and accepts the thumbprint.
-4. SRM registers the remote site's SRM extension and exchanges certificates.
-5. Pairing appears as **Connected** in both sites.
-
-```bash
-# Verify site pairing via SRM REST API
-curl -sk -X GET \
-  "https://srm-server.example.com/api/sites" \
-  -H "Authorization: Bearer $SRM_TOKEN" | python3 -m json.tool
+┌────────────────────────────────────── VMware SRM — Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM integrates with vCenter, vSphere Replication, storage arrays, NSX for network                    │
+│  remapping, and Aria Operations for DR health monitoring.                                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             vCenter Integration              │  │           Replication Integration           │   │
+│   │            Registered per vCenter            │  │         vSphere Replication: native         │   │
+│   │        VM inventory: protection grps         │  │              SRA: array plug-in             │   │
+│   │         vCenter events: failover log         │  │           Dell EMC: SRA available           │   │
+│   │           Alarms: DR plan test due           │  │            NetApp: SnapMirror SRA           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SRA enables array-based replication; without it, only vSphere Replication is available.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network Integration              │  │            Monitoring Integration           │   │
+│   │             NSX: network mapping             │  │            Aria Ops: SRM adapter            │   │
+│   │         IP customisation: re-IP VMs          │  │           Compliance: test alerts           │   │
+│   │           vDS: port group mapping            │  │         Email: plan run notification        │   │
+│   │            Stretched L2: no re-IP            │  │         CMDB: CI update on failover         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  WAN link between sites carries replication traffic; network mapping ensures VMs                      │
+│  connect to correct networks after failover.                                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRA           = Storage Replication Adapter; array vendor plug-in for SRM                            │
+│  vSphere Rep   = host-based replication; native SRM integration                                       │
+│  SnapMirror SRA= NetApp SRA; uses SnapMirror for array replication                                    │
+│  Network mapping= map protected-site portgroup to recovery-site portgroup                             │
+│  IP customisation= script to re-IP VMs after failover to recovery site                                │
+│  Stretched L2  = same subnet both sites; no IP change needed                                          │
+│  vDS port group= vSphere Distributed Switch segment; mapped in SRM                                    │
+│  NSX segment   = overlay network; SRM can map NSX segments                                            │
+│  Aria Ops      = monitors SRM compliance and last test date                                           │
+│  CMDB          = Configuration Management DB; update CI on failover                                   │
+│  Protection group= set of VMs protected by same replication and plan                                  │
+│  Test due alarm = SRM reminds when DR test is overdue                                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Re-pairing is required if either SRM Server's certificate is rotated (thumbprint changes invalidate the trust).

@@ -6922,3 +6922,1003 @@ def dell_vplex_troubleshooting():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+# ── Dell CloudIQ sub-pages ────────────────────────────────────────────────────
+
+@kb_diagram(
+    'dell-cloudiq-arch',
+    'docs/storage/dell/cloudiq/architecture/index.md',
+    'Dell CloudIQ architecture overview — cloud-based AIOps platform for Dell storage',
+)
+def dell_cloudiq_arch():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Architecture'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ: SaaS AIOps platform collecting telemetry from Dell storage and servers')))
+    lines.append(R(bMid(IV_L, IV_R, 'Telemetry flows from Secure Connect Gateway (SCG) to Dell cloud backend')))
+    lines.append(R(bMid(IV_L, IV_R, 'Provides capacity planning, performance analytics, and predictive health scoring')))
+    lines.append(R(bMid(IV_L, IV_R, 'No on-premises compute required; SCG is the only local component')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Storage arrays → SCG collects telemetry → CloudIQ cloud → dashboards + AI insights'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Data Collection'), bMid(B2_L, B2_R, 'Cloud Platform'), bMid(B3_L, B3_R, 'Capabilities'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG on-prem'), bMid(B2_L, B2_R, 'Dell SaaS cloud'), bMid(B3_L, B3_R, 'Health scoring'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'REST API polling'), bMid(B2_L, B2_R, 'ML/AI engine'), bMid(B3_L, B3_R, 'Capacity predict'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Event forwarding'), bMid(B2_L, B2_R, 'Telemetry ingest'), bMid(B3_L, B3_R, 'Perf analytics'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Alert aggregation'), bMid(B2_L, B2_R, 'Multi-tenant'), bMid(B3_L, B3_R, 'Anomaly detect'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Secure outbound'), bMid(B2_L, B2_R, 'API gateway'), bMid(B3_L, B3_R, 'Recommendations'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG sends telemetry outbound HTTPS 443 → CloudIQ ingests → AI scoring → UI alerts'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Layer', 'Component', 'Function', 'Protocol', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Edge', 'SCG VM', 'Telemetry relay', 'HTTPS 443', 'Outbound only'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Transport', 'Internet/proxy', 'Secure tunnel', 'TLS 1.2+', 'Proxy supported'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Cloud', 'CloudIQ SaaS', 'AI analytics', 'REST API', 'Dell-hosted'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Access', 'Web browser', 'Dashboards', 'HTTPS', 'SSO/MFA'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCG VM runs on ESXi or Hyper-V on-premises; arrays connect via management IP'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ      = Dell SaaS AIOps platform; receives telemetry via SCG; provides AI-driven insights'))
+    lines.append(txt_row('  SCG          = Secure Connect Gateway; on-premises VM relaying telemetry to Dell cloud'))
+    lines.append(txt_row('  Health score = AI-generated 0-100 score per system; green/yellow/red risk bands'))
+    lines.append(txt_row('  Capacity IQ  = CloudIQ module projecting when storage will fill based on growth trends'))
+    lines.append(txt_row('  Performance  = CloudIQ latency/IOPS/bandwidth dashboards per workload over time'))
+    lines.append(txt_row('  Anomaly      = ML baseline comparison; alerts when metric deviates from normal pattern'))
+    lines.append(txt_row('  Telemetry    = Performance, capacity, configuration, and event data sent every 5 minutes'))
+    lines.append(txt_row('  Multi-tenant = Single CloudIQ login spans all Dell storage systems across sites'))
+    lines.append(txt_row('  AI engine    = Dell ML models trained on fleet-wide data; predict failures before they occur'))
+    lines.append(txt_row('  Outbound only= No inbound connections; SCG initiates all communication to CloudIQ'))
+    lines.append(txt_row('  Proxy support= SCG can route telemetry through HTTP/HTTPS proxy if direct internet blocked'))
+    lines.append(txt_row('  SaaS         = Software-as-a-Service; Dell manages platform updates; no admin overhead'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-arch-how',
+    'docs/storage/dell/cloudiq/architecture/how-it-works/index.md',
+    'Dell CloudIQ how it works — SCG collection, telemetry pipeline, AI analysis',
+)
+def dell_cloudiq_arch_how():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ — How It Works'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'SCG polls storage REST APIs every 5 min; forwards telemetry to CloudIQ cloud')))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ ML engine baselines each system; scores health; fires alerts on anomalies')))
+    lines.append(R(bMid(IV_L, IV_R, 'User views insights in web UI; recommendations trigger remediation workflows')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Storage → SCG polls → HTTPS telemetry stream → CloudIQ ingest → AI score → UI alert'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'On-Premises Collection'), bMid(B2_L, B2_R, 'Cloud Processing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG VM polls storage REST APIs'), bMid(B2_L, B2_R, 'CloudIQ ingests telemetry stream'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Collects perf, capacity, events'), bMid(B2_L, B2_R, 'ML baselines each metric per array'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Compresses and batches data'), bMid(B2_L, B2_R, 'Health score computed 0–100'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'TLS-encrypted outbound HTTPS'), bMid(B2_L, B2_R, 'Anomaly detection fires alerts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No inbound ports required'), bMid(B2_L, B2_R, 'Recommendations generated'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Proxy and CA cert configurable'), bMid(B2_L, B2_R, 'Dashboards updated in UI'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG data collection interval: 5 min for telemetry; 24 h for full configuration snapshot'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 1 — SCG discovers arrays via management IP + credentials (added in SCG UI)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 2 — SCG polls array REST API: metrics, alerts, capacity, config inventory')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 3 — Telemetry batched and forwarded outbound HTTPS to CloudIQ ingest endpoint')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 4 — CloudIQ ML scores health; capacity IQ projects runway; anomalies alert')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 5 — Admin views dashboards; exports reports; acts on recommendations')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: SCG VM (2 vCPU, 8 GB RAM, 100 GB disk) on ESXi or Hyper-V; outbound 443'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG polling   = SCG REST client queries each storage system management API every 5 min'))
+    lines.append(txt_row('  Telemetry batch= Metrics compressed and batched before forwarding to reduce bandwidth'))
+    lines.append(txt_row('  ML baseline   = CloudIQ learns normal performance/capacity pattern per system over 7+ days'))
+    lines.append(txt_row('  Anomaly alert = Deviation beyond ML confidence band triggers email/webhook notification'))
+    lines.append(txt_row('  Configuration snapshot= Full inventory of volumes, pools, hosts sent every 24 hours'))
+    lines.append(txt_row('  Runway        = Capacity IQ prediction: days until storage pool reaches defined threshold'))
+    lines.append(txt_row('  Health score  = Composite AI score; red <70, yellow 70–89, green 90–100'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-arch-int',
+    'docs/storage/dell/cloudiq/architecture/integrations/index.md',
+    'Dell CloudIQ integrations — ITSM, email alerts, REST API, ServiceNow, Slack',
+)
+def dell_cloudiq_arch_int():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Integrations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ integrates via REST API, webhooks, email, ITSM connectors, and SSO')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert webhooks post to ServiceNow, Slack, or any HTTP endpoint on threshold breach')))
+    lines.append(R(bMid(IV_L, IV_R, 'REST API exposes asset inventory, health scores, and metrics for custom dashboards')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  CloudIQ alert → webhook → ITSM ticket or Slack notification; REST API → BI/CMDB'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Alerting'), bMid(B2_L, B2_R, 'API / Data'), bMid(B3_L, B3_R, 'Identity'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Email alerts'), bMid(B2_L, B2_R, 'CloudIQ REST API'), bMid(B3_L, B3_R, 'SSO (SAML 2.0)'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Webhook HTTP/S'), bMid(B2_L, B2_R, 'Asset inventory'), bMid(B3_L, B3_R, 'Dell account'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'ServiceNow conn.'), bMid(B2_L, B2_R, 'Metrics export'), bMid(B3_L, B3_R, 'RBAC roles'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Slack webhook'), bMid(B2_L, B2_R, 'Report export'), bMid(B3_L, B3_R, 'MFA supported'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'PagerDuty'), bMid(B2_L, B2_R, 'CSV/JSON'), bMid(B3_L, B3_R, 'Org grouping'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  API token from CloudIQ settings → REST calls for health/capacity → CMDB or BI ingest'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Integration', 'Method', 'Trigger', 'Use case', 'Auth'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['ServiceNow', 'Webhook', 'Alert fires', 'Auto ticket', 'API key'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Slack', 'Webhook', 'Alert fires', 'ChatOps notify', 'Webhook URL'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Custom BI', 'REST API', 'Scheduled', 'Dashboards', 'Bearer token'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CMDB', 'REST API', 'On-demand', 'Asset sync', 'Bearer token'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Webhook        = HTTP POST sent by CloudIQ to external URL when alert condition met'))
+    lines.append(txt_row('  REST API       = CloudIQ public API; authenticated with OAuth bearer token; GET/POST'))
+    lines.append(txt_row('  SSO            = SAML 2.0 identity federation; Dell accounts or corp IdP supported'))
+    lines.append(txt_row('  ServiceNow     = CloudIQ native connector creates incidents in ServiceNow on alert'))
+    lines.append(txt_row('  Report export  = PDF/CSV capacity and health reports downloadable or emailed on schedule'))
+    lines.append(txt_row('  Org grouping   = Group systems by site/customer in CloudIQ for MSP multi-tenancy'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ops-backup',
+    'docs/storage/dell/cloudiq/operations/backup-restore/index.md',
+    'Dell CloudIQ backup/restore — SaaS config backup, SCG settings export',
+)
+def dell_cloudiq_ops_backup():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Backup and Restore'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ SaaS platform backed up by Dell; SCG configuration exported manually')))
+    lines.append(R(bMid(IV_L, IV_R, 'SCG VM snapshot or OVA export preserves system credentials and settings')))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ telemetry data retained in Dell cloud for 90 days by default')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG VM snapshot → export settings → restore to new SCG VM → re-register in CloudIQ'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG Backup'), bMid(B2_L, B2_R, 'CloudIQ SaaS'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VM snapshot (ESXi/Hyper-V)'), bMid(B2_L, B2_R, 'Dell manages SaaS backup'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Settings export via SCG UI'), bMid(B2_L, B2_R, 'Historical data: 90 days'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'System credential backup'), bMid(B2_L, B2_R, 'Config replicated geo'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Certificate backup'), bMid(B2_L, B2_R, 'No customer action needed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'OVA re-deploy for DR'), bMid(B2_L, B2_R, 'Org data persists after SCG loss'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG restore: deploy new OVA → import settings → re-register with CloudIQ org → verify'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Restore procedure: 1) Deploy fresh SCG OVA on VMware/Hyper-V')))
+    lines.append(R(bMid(IV_L, IV_R, '2) Import exported settings file via SCG admin UI')))
+    lines.append(R(bMid(IV_L, IV_R, '3) Re-register SCG with CloudIQ organisation token')))
+    lines.append(R(bMid(IV_L, IV_R, '4) Verify storage systems reconnect and telemetry resumes')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG settings export = JSON export of all system credentials, proxy config, and certs'))
+    lines.append(txt_row('  Org token          = CloudIQ organisation registration token; links SCG to correct tenant'))
+    lines.append(txt_row('  90-day retention   = CloudIQ keeps 90 days of telemetry; older data rolled off automatically'))
+    lines.append(txt_row('  SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ops-cli',
+    'docs/storage/dell/cloudiq/operations/cli-reference/index.md',
+    'Dell CloudIQ CLI reference — SCG CLI commands, REST API endpoints',
+)
+def dell_cloudiq_ops_cli():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ CLI Reference'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ management via SCG CLI (SSH to SCG VM) and CloudIQ REST API')))
+    lines.append(R(bMid(IV_L, IV_R, 'SCG CLI: system status, device list, connectivity test, log collection')))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ REST API: retrieve assets, health scores, metrics, alert history')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG Status'), bMid(B2_L, B2_R, 'SCG Device Mgmt'), bMid(B3_L, B3_R, 'CloudIQ API'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'scg status'), bMid(B2_L, B2_R, 'scg device list'), bMid(B3_L, B3_R, 'GET /v1/assets'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'scg connectivity'), bMid(B2_L, B2_R, 'scg device add'), bMid(B3_L, B3_R, 'GET /v1/health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'scg log collect'), bMid(B2_L, B2_R, 'scg device remove'), bMid(B3_L, B3_R, 'GET /v1/metrics'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'scg version'), bMid(B2_L, B2_R, 'scg device test'), bMid(B3_L, B3_R, 'GET /v1/alerts'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'scg upgrade'), bMid(B2_L, B2_R, 'scg device show'), bMid(B3_L, B3_R, 'POST /v1/reports'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Common workflows: check status → list devices → test connectivity → collect logs'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'scg status                — show SCG service state, version, registered devices')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg connectivity --test   — verify outbound HTTPS to CloudIQ endpoints')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg device list           — show all registered storage systems and poll state')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg log collect           — bundle SCG logs for support; output to /tmp')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -H "Authorization: Bearer $TOKEN" https://cloudiq.dell.com/v1/assets')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SCG CLI      = SSH to SCG VM (admin user); menu-driven or direct scg commands'))
+    lines.append(txt_row('  Bearer token = OAuth 2.0 token from CloudIQ API key; passed in Authorization header'))
+    lines.append(txt_row('  scg device test= Validates REST API credentials and connectivity for a registered system'))
+    lines.append(txt_row('  /v1/assets   = CloudIQ REST endpoint: returns all storage assets with attributes'))
+    lines.append(txt_row('  /v1/health   = CloudIQ REST endpoint: returns health scores for all systems'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ops-health',
+    'docs/storage/dell/cloudiq/operations/health-checks/index.md',
+    'Dell CloudIQ health checks — verify telemetry, SCG status, alert review',
+)
+def dell_cloudiq_ops_health():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Health Checks'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Verify CloudIQ and SCG health: telemetry currency, SCG connectivity, alert review')))
+    lines.append(R(bMid(IV_L, IV_R, 'Check last telemetry timestamp per system; red/yellow health scores; open alerts')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG Health'), bMid(B2_L, B2_R, 'CloudIQ Health'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG service status: running'), bMid(B2_L, B2_R, 'All systems: last seen < 15 min'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Outbound connectivity OK'), bMid(B2_L, B2_R, 'Health scores: no red systems'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'All devices: poll state green'), bMid(B2_L, B2_R, 'Active alerts reviewed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG version current'), bMid(B2_L, B2_R, 'Capacity runway > 30 days'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Certificate validity'), bMid(B2_L, B2_R, 'No stale/disconnected systems'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Check', 'Where', 'Pass criteria', 'Fail action', 'Frequency'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SCG status', 'SCG CLI', 'All green', 'Restart SCG', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Telemetry age', 'CloudIQ UI', '< 15 min', 'Test SCG conn', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Health scores', 'CloudIQ dash', 'All green', 'Review alerts', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Capacity IQ', 'CloudIQ dash', '>30 days', 'Expand pools', 'Weekly'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Telemetry age  = Time since last successful telemetry upload per system; > 15 min = gap'))
+    lines.append(txt_row('  Stale system   = System in CloudIQ with no telemetry for > 1 hour; SCG poll failure'))
+    lines.append(txt_row('  Capacity runway= Days until storage pool reaches fill threshold based on growth rate'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ops-scripts',
+    'docs/storage/dell/cloudiq/operations/scripts/index.md',
+    'Dell CloudIQ scripts — REST API query scripts, report automation, asset export',
+)
+def dell_cloudiq_ops_scripts():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Scripts'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Automate CloudIQ operations with REST API scripts: asset queries, health reports')))
+    lines.append(R(bMid(IV_L, IV_R, 'Use Bearer token authentication; base URL: https://cloudiq.dell.com/cloudiq/rest')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Get Bearer token')))
+    lines.append(R(bMid(IV_L, IV_R, 'TOKEN=$(curl -s -X POST https://cloudiq.dell.com/auth/token \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  -d "grant_type=client_credentials&client_id=$ID&client_secret=$SECRET" \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  | jq -r .access_token)')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# List all storage systems and health scores')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -s -H "Authorization: Bearer $TOKEN" \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  | jq ".results[] | {name, health_score, capacity_used_pct}"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Export capacity report to CSV')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -s -H "Authorization: Bearer $TOKEN" \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  "https://cloudiq.dell.com/cloudiq/rest/v1/metrics?type=capacity" \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  | jq -r ".results[] | [.system,.date,.used_gb,.total_gb] | @csv"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# SCG: test all device connections')))
+    lines.append(R(bMid(IV_L, IV_R, 'ssh admin@<SCG_IP> "scg device list --format json | jq .[].status"')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  client_credentials = OAuth 2.0 flow for API automation; client ID + secret from CloudIQ UI'))
+    lines.append(txt_row('  access_token       = Short-lived JWT bearer token; typically 1-hour expiry; refresh as needed'))
+    lines.append(txt_row('  health_score       = Numeric 0-100 AI score per system in API response'))
+    lines.append(txt_row('  /v1/metrics        = Telemetry endpoint: query capacity, performance, alerts by system'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ts-issues',
+    'docs/storage/dell/cloudiq/troubleshooting/common-issues/index.md',
+    'Dell CloudIQ common issues — stale telemetry, SCG offline, missing systems',
+)
+def dell_cloudiq_ts_issues():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Common Issues'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Top issues: SCG offline, stale/missing telemetry, system not appearing in CloudIQ')))
+    lines.append(R(bMid(IV_L, IV_R, 'Most problems root-cause to SCG connectivity loss or credential expiry on device')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG Issues'), bMid(B2_L, B2_R, 'Telemetry Issues'), bMid(B3_L, B3_R, 'CloudIQ UI Issues'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG service down'), bMid(B2_L, B2_R, 'Stale data > 1h'), bMid(B3_L, B3_R, 'System missing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Firewall blocked'), bMid(B2_L, B2_R, 'Device poll fail'), bMid(B3_L, B3_R, 'Wrong health score'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Proxy auth fail'), bMid(B2_L, B2_R, 'Cred expired'), bMid(B3_L, B3_R, 'Alert not firing'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SSL cert error'), bMid(B2_L, B2_R, 'API unreachable'), bMid(B3_L, B3_R, 'Login fails SSO'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG version old'), bMid(B2_L, B2_R, 'Incomplete data'), bMid(B3_L, B3_R, 'Report blank'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Problem', 'Likely cause', 'First check', 'Fix', 'Verify'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Stale telemetry', 'SCG offline', 'scg status', 'Restart SCG', 'Check UI age'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['System missing', 'Not registered', 'scg device list', 'Add device', 'Appears in UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Poll fail', 'Cred/firewall', 'scg device test', 'Fix creds/FW', 'Poll green'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SCG offline', 'VM powered off', 'vSphere check', 'Power on VM', 'scg status OK'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Stale telemetry = Last-seen timestamp > 1 hour; data gap; UI shows last known state'))
+    lines.append(txt_row('  Device poll fail= SCG cannot reach storage REST API; check IP, credentials, and port 443'))
+    lines.append(txt_row('  Proxy auth fail = SCG proxy requires authentication; configure proxy creds in SCG settings'))
+    lines.append(txt_row('  SSL cert error  = SCG cannot validate CloudIQ endpoint cert; add CA to SCG trust store'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ts-diag',
+    'docs/storage/dell/cloudiq/troubleshooting/diagnostics/index.md',
+    'Dell CloudIQ diagnostics — SCG log collection, connectivity test, API debug',
+)
+def dell_cloudiq_ts_diag():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Diagnostics'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnose CloudIQ issues with SCG CLI commands, log bundles, and API connectivity')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg connectivity --test: validates HTTPS outbound to CloudIQ endpoints')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg log collect: bundles all SCG logs for Dell support case upload')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 1 — Check SCG service status')))
+    lines.append(R(bMid(IV_L, IV_R, 'ssh admin@<SCG_IP>')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg status')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 2 — Test outbound connectivity')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg connectivity --test')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 3 — Test specific device connection')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg device test --id <device_id>')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 4 — Collect logs for support')))
+    lines.append(R(bMid(IV_L, IV_R, 'scg log collect --output /tmp/scg_logs.tar.gz')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 5 — View SCG system log')))
+    lines.append(R(bMid(IV_L, IV_R, 'tail -f /var/log/scg/scg.log')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 6 — Check DNS resolution for CloudIQ endpoints')))
+    lines.append(R(bMid(IV_L, IV_R, 'nslookup cloudiq.dell.com')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  scg connectivity = Tests TCP/HTTPS reachability to all required CloudIQ cloud endpoints'))
+    lines.append(txt_row('  scg device test  = Authenticates to specific storage system and reports poll success/fail'))
+    lines.append(txt_row('  scg log collect  = Bundles SCG application logs, config (sanitised), and diagnostics'))
+    lines.append(txt_row('  /var/log/scg     = SCG application log directory; scg.log for main service events'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cloudiq-ts-esc',
+    'docs/storage/dell/cloudiq/troubleshooting/escalation/index.md',
+    'Dell CloudIQ escalation — support case, log bundle, CloudIQ SR process',
+)
+def dell_cloudiq_ts_esc():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell CloudIQ Escalation'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalate CloudIQ issues to Dell Support with SR; attach SCG log bundle and API trace')))
+    lines.append(R(bMid(IV_L, IV_R, 'SCG issues: collect scg logs, note SCG version, capture connectivity test output')))
+    lines.append(R(bMid(IV_L, IV_R, 'CloudIQ data issues: note system name, time window, expected vs actual values')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Before Escalating'), bMid(B2_L, B2_R, 'Escalation Steps'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG version (scg version)'), bMid(B2_L, B2_R, 'Open SR at support.dell.com'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Connectivity test output'), bMid(B2_L, B2_R, 'Attach SCG log bundle'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SCG log bundle collected'), bMid(B2_L, B2_R, 'Note affected system IDs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Affected system name + ID'), bMid(B2_L, B2_R, 'CloudIQ org ID from UI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Time window of issue'), bMid(B2_L, B2_R, 'Request CloudIQ backend check'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SR             = Service Request; Dell support case opened at support.dell.com'))
+    lines.append(txt_row('  CloudIQ org ID = Unique identifier for your CloudIQ tenant; visible in Settings > Org'))
+    lines.append(txt_row('  Backend check  = Dell CloudIQ SRE team investigates ingest pipeline for missing data'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+# ── Dell COD sub-pages ────────────────────────────────────────────────────────
+
+@kb_diagram(
+    'dell-cod-arch',
+    'docs/storage/dell/cod/architecture/index.md',
+    'Dell COD architecture overview — Capacity On Demand licensing model',
+)
+def dell_cod_arch():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Architecture'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'COD (Capacity On Demand): pre-installed storage capacity unlocked via license key')))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardware installed at factory; additional capacity activated instantly with no I/O impact')))
+    lines.append(R(bMid(IV_L, IV_R, 'Eliminates future expansion downtime; pay as capacity is needed')))
+    lines.append(R(bMid(IV_L, IV_R, 'Supported on PowerStore, PowerMax, Unity, PowerScale product families')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Array ships with reserved capacity → license key purchased → capacity unlocked live'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Pre-installed HW'), bMid(B2_L, B2_R, 'License Activation'), bMid(B3_L, B3_R, 'Benefits'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Drives installed'), bMid(B2_L, B2_R, 'License key file'), bMid(B3_L, B3_R, 'No downtime'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Logically locked'), bMid(B2_L, B2_R, 'Applied via GUI'), bMid(B3_L, B3_R, 'Instant expand'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No config change'), bMid(B2_L, B2_R, 'or REST API'), bMid(B3_L, B3_R, 'Predictable cost'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Physical at install'), bMid(B2_L, B2_R, 'Immediate unlock'), bMid(B3_L, B3_R, 'No truck roll'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Validated at ship'), bMid(B2_L, B2_R, 'Online activation'), bMid(B3_L, B3_R, 'Capacity buffer'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Product', 'COD type', 'Activation', 'Granularity', 'Max units'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['PowerStore', 'Capacity COD', 'License key', 'per TB', 'Varies'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['PowerMax', 'COD/FOD', 'License key', 'per TB', 'Model dep'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Unity XT', 'COD drive', 'License key', 'per drive', 'Per chassis'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['PowerScale', 'Node license', 'License key', 'per node', 'Per cluster'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: drives/nodes present in hardware; logically invisible until license applied'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  COD          = Capacity On Demand; pre-installed hardware unlocked via license key'))
+    lines.append(txt_row('  FOD          = Feature On Demand; software feature (e.g. protocol, function) unlocked similarly'))
+    lines.append(txt_row('  License key  = Cryptographic string from Dell licensing portal; applied to specific array'))
+    lines.append(txt_row('  Instant unlock= Capacity available within seconds of applying license; no reboot required'))
+    lines.append(txt_row('  Capacity buffer= Buying COD upfront avoids lead time delays when capacity is urgently needed'))
+    lines.append(txt_row('  Truck roll   = Physical site visit to install hardware; COD eliminates this for expansion'))
+    lines.append(txt_row('  Online activation= COD licensed against specific array serial number; tied to that system'))
+    lines.append(txt_row('  Logically locked= Drive/node present in hardware inventory but excluded from pool until unlocked'))
+    lines.append(txt_row('  Validated at ship= Dell verifies all COD hardware functional before shipment'))
+    lines.append(txt_row('  No I/O impact= COD activation does not disrupt running workloads; fully online operation'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-arch-design',
+    'docs/storage/dell/cod/architecture/design-standards/index.md',
+    'Dell COD design standards — purchase planning, activation workflow, documentation',
+)
+def dell_cod_arch_design():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'COD design: order COD with initial array purchase; size for 18-month growth horizon')))
+    lines.append(R(bMid(IV_L, IV_R, 'Document licensed vs unlocked capacity; track activation dates and remaining COD')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Ordering Standards'), bMid(B2_L, B2_R, 'Operational Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Order with initial purchase'), bMid(B2_L, B2_R, 'Track COD in CMDB/asset register'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Size for 18-month growth'), bMid(B2_L, B2_R, 'Store license keys in vault'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'COD up to max chassis cap'), bMid(B2_L, B2_R, 'Review remaining COD monthly'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Document at purchase'), bMid(B2_L, B2_R, 'Activate via change ticket'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Verify hardware at delivery'), bMid(B2_L, B2_R, 'Alert at 20% COD remaining'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Standard', 'Requirement', 'Reason', 'Owner', 'Review'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CMDB track', 'All COD units', 'Capacity mgmt', 'Storage team', 'Monthly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Key storage', 'Password vault', 'License security', 'Storage team', 'Annual'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Activation CHG', 'Change ticket', 'Auditability', 'Change mgr', 'Per event'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['30-day alert', '20% COD left', 'Avoid shortage', 'Monitoring', 'Automated'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  18-month horizon = Plan COD to cover growth without frequent re-orders or lead time risk'))
+    lines.append(txt_row('  CMDB tracking    = Record array serial, COD TB ordered, TB activated, TB remaining per system'))
+    lines.append(txt_row('  Vault            = Secure credential/key store (CyberArk or similar) for license keys'))
+    lines.append(txt_row('  Change ticket    = COD activation via formal change management; document before/after capacity'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-arch-how',
+    'docs/storage/dell/cod/architecture/how-it-works/index.md',
+    'Dell COD how it works — license key application, capacity unlock steps',
+)
+def dell_cod_arch_how():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD — How It Works'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardware ships with locked capacity; Dell licensing portal generates key for array serial')))
+    lines.append(R(bMid(IV_L, IV_R, 'Apply license key via array management GUI or REST API; capacity available instantly')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 1 — Verify locked capacity visible in array: check available unlicensed drives/TB')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 2 — Log in to Dell Licensing Portal: licensing.dell.com')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 3 — Generate COD license key for specific array serial number')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 4 — Apply key in array management UI: Settings > Licenses > Upload')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 5 — Verify new capacity appears in available pool (no reboot needed)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 6 — Update CMDB: record activation date, TB unlocked, remaining COD')))
+    lines.append(R(bMid(IV_L, IV_R, 'Step 7 — Close change ticket with before/after capacity screenshot')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'PowerStore REST activation:')))
+    lines.append(R(bMid(IV_L, IV_R, 'POST /api/rest/license  --data {"key": "<license_string>"}')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, 'Verify on PowerStore:')))
+    lines.append(R(bMid(IV_L, IV_R, 'GET /api/rest/capacity  → check used_gb and total_gb change')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Locked capacity  = Drives/nodes installed but not accessible; shown as "reserved" in array'))
+    lines.append(txt_row('  Licensing portal = Dell web portal for generating COD/FOD keys per array serial number'))
+    lines.append(txt_row('  Key binding      = COD key cryptographically tied to array serial; cannot be reused'))
+    lines.append(txt_row('  Instant unlock   = Capacity joins pool within seconds; no volume migration or downtime'))
+    lines.append(txt_row('  Before/after     = Screenshot capacity before and after activation; attach to change ticket'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-ops-cli',
+    'docs/storage/dell/cod/operations/cli-reference/index.md',
+    'Dell COD CLI reference — license commands per product (PowerStore, Unity, PowerMax)',
+)
+def dell_cod_ops_cli():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD CLI Reference'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'COD license CLI commands vary by product family: PowerStore, Unity, PowerMax')))
+    lines.append(R(bMid(IV_L, IV_R, 'All products support GUI activation; CLI/REST provides automation path')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'PowerStore'), bMid(B2_L, B2_R, 'Unity XT'), bMid(B3_L, B3_R, 'PowerMax'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'pstore> license list'), bMid(B2_L, B2_R, 'uemcli license -list'), bMid(B3_L, B3_R, 'symlic list'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'pstore> license add'), bMid(B2_L, B2_R, 'uemcli license -upload'), bMid(B3_L, B3_R, 'symlic install'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'REST: POST /license'), bMid(B2_L, B2_R, 'REST: POST /license'), bMid(B3_L, B3_R, 'Solutions Enabler'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'REST: GET /capacity'), bMid(B2_L, B2_R, 'GUI: Settings'), bMid(B3_L, B3_R, 'Unisphere GUI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'GUI: Settings > Lic'), bMid(B2_L, B2_R, '>  Licenses'), bMid(B3_L, B3_R, 'Solutions Enblr'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# PowerStore REST — list licenses')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -sk -u admin:$PASS https://<ps>/api/rest/license | jq .[].name')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Unity uemcli — list licenses')))
+    lines.append(R(bMid(IV_L, IV_R, 'uemcli -d <unity_ip> -u admin -p $PASS /license show')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# PowerMax Solutions Enabler — list licenses')))
+    lines.append(R(bMid(IV_L, IV_R, 'symlic -sid <SID> list')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  pstore CLI     = PowerStore management CLI; access via SSH or embedded shell'))
+    lines.append(txt_row('  uemcli         = Unisphere for Unity CLI; installed on mgmt workstation or run from Unity'))
+    lines.append(txt_row('  symlic         = Solutions Enabler command for PowerMax license management'))
+    lines.append(txt_row('  Solutions Enabler= Dell software toolkit for PowerMax management automation'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-ops-health',
+    'docs/storage/dell/cod/operations/health-checks/index.md',
+    'Dell COD health checks — verify remaining COD, alert thresholds, license validity',
+)
+def dell_cod_ops_health():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Health Checks'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Monthly COD health check: verify remaining unlocked capacity, plan next activation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Alert when COD remaining < 20%; track activation history in CMDB')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'What to Check'), bMid(B2_L, B2_R, 'Pass Criteria'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'COD remaining per array'), bMid(B2_L, B2_R, '> 20% of purchased COD available'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'License validity'), bMid(B2_L, B2_R, 'All licenses valid, no expiry'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CMDB currency'), bMid(B2_L, B2_R, 'CMDB matches array license state'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key store entry'), bMid(B2_L, B2_R, 'All keys stored in vault'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Growth projection'), bMid(B2_L, B2_R, '> 90 days runway with current COD'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Check', 'Frequency', 'Tool', 'Alert threshold', 'Action'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['COD remaining', 'Monthly', 'CMDB/array', '< 20%', 'Order more COD'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Growth rate', 'Monthly', 'CloudIQ', '< 90 days', 'Activate COD'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['License valid', 'Quarterly', 'Array GUI', 'Any invalid', 'Re-issue key'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CMDB sync', 'Monthly', 'Manual', 'Mismatch', 'Update CMDB'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  COD remaining = Total COD purchased minus COD already activated; stored in CMDB'))
+    lines.append(txt_row('  Growth rate   = Monthly capacity consumption rate; used to project activation trigger date'))
+    lines.append(txt_row('  90-day runway = If current rate consumes remaining COD in < 90 days, activate more now'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-ops-install',
+    'docs/storage/dell/cod/operations/install-upgrade/index.md',
+    'Dell COD install/upgrade — new array COD configuration, license activation steps',
+)
+def dell_cod_ops_install():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Install / Upgrade'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'COD install: order COD with array; verify hardware at delivery; register license keys')))
+    lines.append(R(bMid(IV_L, IV_R, 'COD upgrade: purchase additional COD for existing array; apply keys via licensing portal')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'New array with COD:')))
+    lines.append(R(bMid(IV_L, IV_R, '1. Verify COD hardware visible in array management (locked drives/nodes listed)')))
+    lines.append(R(bMid(IV_L, IV_R, '2. Log in to Dell Licensing Portal; find array by serial number')))
+    lines.append(R(bMid(IV_L, IV_R, '3. Download COD license key file')))
+    lines.append(R(bMid(IV_L, IV_R, '4. Store key in password vault before applying')))
+    lines.append(R(bMid(IV_L, IV_R, '5. Apply via array Settings > Licenses or REST API')))
+    lines.append(R(bMid(IV_L, IV_R, '6. Confirm unlocked capacity appears in pool')))
+    lines.append(R(bMid(IV_L, IV_R, '7. Update CMDB: total COD, activated, remaining')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, 'Upgrading existing COD:')))
+    lines.append(R(bMid(IV_L, IV_R, '1. Purchase additional COD through Dell account team')))
+    lines.append(R(bMid(IV_L, IV_R, '2. Dell issues updated key for array serial')))
+    lines.append(R(bMid(IV_L, IV_R, '3. Apply new key; previous activations remain active')))
+    lines.append(R(bMid(IV_L, IV_R, '4. Update CMDB with new COD total')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dell Licensing Portal = licensing.dell.com; manage COD/FOD keys per serial number'))
+    lines.append(txt_row('  Updated key           = New COD key includes all previous + new units; apply to replace old'))
+    lines.append(txt_row('  Locked drives visible = Array shows reserved drives in inventory before COD applied'))
+    lines.append(txt_row('  CMDB update           = Record activation date, TB added, cumulative totals per array'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-ops-scripts',
+    'docs/storage/dell/cod/operations/scripts/index.md',
+    'Dell COD scripts — license status query, COD remaining report, activation automation',
+)
+def dell_cod_ops_scripts():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Scripts'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Scripts to query COD status across products and generate remaining-capacity reports')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# PowerStore — list license capacity')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -sk -u admin:$PASS https://<ps>/api/rest/license \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  | jq ".[] | {name: .name, is_evaluation: .is_evaluation}"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# PowerStore — check capacity after COD activation')))
+    lines.append(R(bMid(IV_L, IV_R, 'curl -sk -u admin:$PASS https://<ps>/api/rest/cluster \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  | jq ".[0] | {total_raw_capacity, usable_raw_capacity}"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Unity — list license status via uemcli')))
+    lines.append(R(bMid(IV_L, IV_R, 'uemcli -d <unity> -u admin -p $PASS /license show -output csv')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# PowerMax Solutions Enabler — list COD licenses')))
+    lines.append(R(bMid(IV_L, IV_R, 'symlic -sid <SID> list | grep -i "capacity on demand"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Report: all arrays, COD status, capacity summary')))
+    lines.append(R(bMid(IV_L, IV_R, 'for ARRAY in "${ARRAYS[@]}"; do')))
+    lines.append(R(bMid(IV_L, IV_R, '  echo "=== $ARRAY ==="; curl -sk ... /api/rest/license | jq ...')))
+    lines.append(R(bMid(IV_L, IV_R, 'done')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  total_raw_capacity = All physical raw storage including locked COD; in bytes'))
+    lines.append(txt_row('  usable_raw_capacity= Capacity available to create pools; increases after COD activation'))
+    lines.append(txt_row('  symlic             = Solutions Enabler license command; requires SYMAPI connectivity'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-cod-ts-diag',
+    'docs/storage/dell/cod/troubleshooting/diagnostics/index.md',
+    'Dell COD diagnostics — license activation failure, key validation, support steps',
+)
+def dell_cod_ts_diag():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell COD Diagnostics'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'COD diagnostics: key rejected, capacity not increasing, license portal errors')))
+    lines.append(R(bMid(IV_L, IV_R, 'Key rejection: wrong serial number, duplicate use, corrupted file')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Common Problems'), bMid(B2_L, B2_R, 'Diagnostic Steps'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key rejected: serial mismatch'), bMid(B2_L, B2_R, 'Verify array serial in portal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key already applied'), bMid(B2_L, B2_R, 'Check license list in GUI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Capacity not increasing'), bMid(B2_L, B2_R, 'Verify pool expansion needed'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Portal error generating key'), bMid(B2_L, B2_R, 'Open Dell licensing SR'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Key file corrupted'), bMid(B2_L, B2_R, 'Re-download from portal'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Problem', 'Root cause', 'Fix', 'Verify', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Key rejected', 'Wrong serial', 'Get correct key', 'Apply succeeds', 'Portal issues'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['No cap change', 'Pool not expanded', 'Expand pool', 'Capacity grows', 'HW not visible'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Key used', 'Duplicate apply', 'Check lic list', 'Already active', '—'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['File corrupt', 'Download issue', 'Re-download', 'Apply succeeds', 'Portal SR'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Serial mismatch = License key generated for different array serial; portal may have wrong SN'))
+    lines.append(txt_row('  Pool expansion  = After COD unlock, pool must be expanded to include new drives in capacity'))
+    lines.append(txt_row('  Duplicate apply = Applying same key twice; array reports already activated; not an error'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

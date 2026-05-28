@@ -47,17 +47,40 @@ systemctl restart dsagw
 journalctl -u dsagw -f
 # Look for: "connection refused", "TLS handshake failed", "authentication error"
 ```
-
-**Step 2 — Verify SCG can reach Dell endpoints:**
-
-```bash
-# Test connectivity to Dell telemetry endpoints
-curl -k https://cloudiq.dell.com
-curl -k https://esrs3.emc.com
-
-# If either fails — check proxy or firewall rules
-# Required: outbound HTTPS (443) to both endpoints
-# If behind a proxy: SCG web UI → Settings → Proxy → verify configuration
+┌───────────────────────────────────── Dell CloudIQ Common Issues ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Top issues: SCG offline, stale/missing telemetry, system not appearing in CloudIQ       │   │
+│   │        Most problems root-cause to SCG connectivity loss or credential expiry on device       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          SCG Issues         │  │       Telemetry Issues      │  │      CloudIQ UI Issues      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       SCG service down      │  │       Stale data > 1h       │  │        System missing       │   │
+│   │       Firewall blocked      │  │       Device poll fail      │  │      Wrong health score     │   │
+│   │       Proxy auth fail       │  │         Cred expired        │  │       Alert not firing      │   │
+│   │        SSL cert error       │  │       API unreachable       │  │       Login fails SSO       │   │
+│   │       SCG version old       │  │       Incomplete data       │  │         Report blank        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │   Likely cause   │    First check    │       Fix        │      Verify      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │ Stale telemetry  │   SCG offline    │     scg status    │   Restart SCG    │   Check UI age   │   │
+│   │  System missing  │  Not registered  │  scg device list  │    Add device    │  Appears in UI   │   │
+│   │    Poll fail     │  Cred/firewall   │  scg device test  │   Fix creds/FW   │    Poll green    │   │
+│   │   SCG offline    │  VM powered off  │   vSphere check   │   Power on VM    │  scg status OK   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Stale telemetry = Last-seen timestamp > 1 hour; data gap; UI shows last known state                │
+│    Device poll fail= SCG cannot reach storage REST API; check IP, credentials, and port 443           │
+│    Proxy auth fail = SCG proxy requires authentication; configure proxy creds in SCG settings         │
+│    SSL cert error  = SCG cannot validate CloudIQ endpoint cert; add CA to SCG trust store             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Step 3 — Verify the system is registered to SCG:**

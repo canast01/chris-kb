@@ -22,90 +22,51 @@
 │  Network Mapping: Protected VLAN ──► Recovery VLAN / Test    │
 └──────────────────────────────────────────────────────────────┘
 ```
-
-## SRM Server Sizing
-
-### SRM Appliance (8.x+)
-
-VMware ships SRM as an OVA appliance from version 8.x. Sizing is based on the number of protected VMs.
-
-| Deployment Size | Protected VMs | vCPU | RAM | Disk |
-|---|---|---|---|---|
-| Tiny | ≤ 100 | 2 | 8 GB | 40 GB |
-| Small | ≤ 250 | 4 | 12 GB | 40 GB |
-| Medium | ≤ 500 | 8 | 16 GB | 40 GB |
-| Large | ≤ 1000 | 16 | 32 GB | 40 GB |
-
-Notes:
-- These values are per SRM appliance (one per site).
-- VM count refers to protected VMs, not total VMs in the vCenter.
-- If running concurrent Recovery Plan tests or executions, scale up by one tier.
-- SRM appliance root disk is thin-provisioned; ensure datastore has headroom for logs.
-
-### SRM Server (Windows, pre-8.x)
-
-| Protected VMs | vCPU | RAM |
-|---|---|---|
-| ≤ 100 | 2 | 4 GB |
-| 100–500 | 4 | 8 GB |
-| 500–1000 | 8 | 16 GB |
-
----
-
-## Network Requirements
-
-### SRM Site-to-Site Ports
-
-All communication between SRM Servers at the two sites traverses the WAN link. Ensure firewall rules permit:
-
-| Source | Destination | Port | Protocol | Purpose |
-|---|---|---|---|---|
-| SRM Server (protected) | SRM Server (recovery) | 443 | TCP | SRM site pairing HTTPS API |
-| SRM Server (recovery) | SRM Server (protected) | 443 | TCP | Bi-directional site pairing |
-| SRM Server (protected) | SRM Server (recovery) | 9086 | TCP | SRM legacy pairing (pre-8.x) |
-| vCenter (protected) | vCenter (recovery) | 443 | TCP | Cross-vCenter VM operations |
-| ESXi hosts (protected) | VR Appliance (recovery) | 44046 | TCP | vSphere Replication data |
-| VR Appliance (protected) | VR Appliance (recovery) | 10000, 10001 | TCP | VR management channel |
-| SRM Server | Storage array management | 443 | TCP | SRA to array API |
-
-### SRM Local Site Ports
-
-| Source | Destination | Port | Protocol | Purpose |
-|---|---|---|---|---|
-| SRM Server | vCenter Server | 443 | TCP | SRM ↔ vCenter API |
-| vSphere Client browser | SRM Server | 443 | TCP | UI access |
-| SRM Server | ESXi hosts | 443, 902 | TCP | VM power operations |
-| SRM Server | VR Appliance | 8043 | TCP | SRM ↔ VR integration |
-
----
-
-## vSphere Replication Appliance Sizing
-
-VR Appliance sizing depends on both VM count and aggregate daily change rate.
-
-| Deployment Size | Protected VMs | Daily Change Rate | vCPU | RAM |
-|---|---|---|---|---|
-| Small | ≤ 100 | Low (< 100 GB/day) | 4 | 8 GB |
-| Medium | ≤ 500 | Medium (100–500 GB/day) | 8 | 16 GB |
-| Large | ≤ 2000 | High (> 500 GB/day) | 16 | 32 GB |
-
-Guidelines:
-- Deploy one VR Appliance per site minimum. Scale out with additional VR Appliances for high VM counts.
-- VR Appliances can be load-balanced for replication sessions — configure in VAMI → Configuration → Servers.
-- Low RPO (5–15 min) on many VMs increases change rate impact significantly — account for this in sizing.
-
----
-
-## Recovery Site Network Design
-
-### Shadow Port Groups
-
-For every production VLAN at the protected site, create a corresponding port group at the recovery site. Common patterns:
-
-**Option A: Same VLAN IDs** — If WAN connectivity is re-routed and the recovery site switches can accommodate the same VLAN IDs:
-```text
-Protected: dvPG-App-VLAN100  →  Recovery: dvPG-App-VLAN100
-Protected: dvPG-DB-VLAN200   →  Recovery: dvPG-DB-VLAN200
+┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐
+│                                                                                                       │
+│  SRM design standards define RPO tiers, protection group structure, test frequency,                   │
+│  recovery plan priority, and site-pair capacity requirements.                                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              RPO Tier Standards              │  │           Protection Group Design           │   │
+│   │          Tier 1: ≤15min (ABR/sync)           │  │          Group by application tier          │   │
+│   │           Tier 2: ≤1h (vSR async)            │  │              One plan per group             │   │
+│   │           Tier 3: ≤4h (vSR async)            │  │           Startup order: DB first           │   │
+│   │          Tier 4: 24h (non-critical)          │  │          Dependencies: script wait          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  RPO tier drives replication technology choice; group VMs by app dependency.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Recovery Site Standards            │  │                Test Standards               │   │
+│   │          Capacity: 100% Tier 1 VMs           │  │           Test: at least quarterly          │   │
+│   │          Standby: Tier 2–4 (burst)           │  │            Document RTO achieved            │   │
+│   │              N+1 hosts minimum               │  │           Cleanup: auto after test          │   │
+│   │             Same vSAN disk count             │  │          Evidence: screenshot plan          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Recovery site needs compute and storage for Tier 1 VMs always on standby;                            │
+│  WAN bandwidth must sustain replication traffic for all tiers.                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; acceptable data loss window                                │
+│  RTO           = Recovery Time Objective; time to restore service                                     │
+│  Tier 1        = most critical; <15min RPO; ABR or vSR 5min                                           │
+│  Protection group= set of VMs with same replication and recovery plan                                 │
+│  Startup order = SRM powers on VMs in sequence; DB before app                                         │
+│  Script wait   = custom step; waits for service health before next VM                                 │
+│  Burst capacity= recovery site scales up on failover from off state                                   │
+│  N+1 hosts     = recovery site has one host spare for HA during DR                                    │
+│  Quarterly test= regulatory minimum for most DR frameworks                                            │
+│  Evidence      = screenshot + log of test outcome for audit                                           │
+│  Cleanup       = SRM removes test VMs and snapshots after test                                        │
+│  WAN BW        = replication bandwidth; plan for peak replication rate                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.
 

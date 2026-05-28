@@ -21,31 +21,38 @@ Frame upgrade or replacement?
         ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
         └── NO  → Entitlement remains active until frame decommission
 ```
-
-## COD and PowerMax Frame Upgrades
-
-When a PowerMax frame is upgraded (e.g., PowerMax 2000 → PowerMax 8000), COD entitlements are transferred to the new frame's SID. This is not automatic — it requires a formal request to Dell:
-
-1. Raise a request via Dell Support or the account team to transfer entitlements
-2. Provide old and new frame serial numbers
-3. Dell issues new license files tied to the new SID
-4. Apply new license files to the replacement frame
-5. Retire the old license files — they are no longer valid
-
-**Never apply a license file to a different SID than it was issued for** — it will fail and may trigger a support case.
-
-## Reviewing COD Entitlement
-
-```bash
-# List all license entitlements for an array
-symlicense -sid <SID> list
-
-# Show detail for COD-specific licenses
-symlicense -sid <SID> show -feature COD
-
-# Compare installed vs licensed capacity
-symcfg -sid <SID> list -capacity
-symcfg -sid <SID> show -detail
+┌───────────────────────────────────── Dell COD Install / Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     COD install: order COD with array; verify hardware at delivery; register license keys     │   │
+│   │    COD upgrade: purchase additional COD for existing array; apply keys via licensing portal   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      New array with COD:                                      │   │
+│   │        1. Verify COD hardware visible in array management (locked drives/nodes listed)        │   │
+│   │                2. Log in to Dell Licensing Portal; find array by serial number                │   │
+│   │                                3. Download COD license key file                               │   │
+│   │                         4. Store key in password vault before applying                        │   │
+│   │                       5. Apply via array Settings > Licenses or REST API                      │   │
+│   │                          6. Confirm unlocked capacity appears in pool                         │   │
+│   │                        7. Update CMDB: total COD, activated, remaining                        │   │
+│   │                                                                                               │   │
+│   │                                    Upgrading existing COD:                                    │   │
+│   │                      1. Purchase additional COD through Dell account team                     │   │
+│   │                          2. Dell issues updated key for array serial                          │   │
+│   │                      3. Apply new key; previous activations remain active                     │   │
+│   │                               4. Update CMDB with new COD total                               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dell Licensing Portal = licensing.dell.com; manage COD/FOD keys per serial number                  │
+│    Updated key           = New COD key includes all previous + new units; apply to replace old        │
+│    Locked drives visible = Array shows reserved drives in inventory before COD applied                │
+│    CMDB update           = Record activation date, TB added, cumulative totals per array              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Cross-reference this output against the Dell License Management Portal to confirm the portal record matches what the array reports. Discrepancies must be resolved with Dell before the next capacity review.

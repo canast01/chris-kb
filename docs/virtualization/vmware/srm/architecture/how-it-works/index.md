@@ -22,93 +22,51 @@ Protected Site                        Recovery Site
          │                                      │
          └──── Replication (ABR or VR) ─────────┘
 ```
-
----
-
-## Replication Methods
-
-| Attribute | Array-Based Replication (ABR) | vSphere Replication (VR) |
-|---|---|---|
-| RPO minimum | Depends on array (typically 0–15 min) | 5 minutes |
-| Granularity | Entire LUN / volume | Per individual VM |
-| Cost | Requires storage array replication license | Included with most vSphere editions |
-| SRA required | Yes — vendor-specific SRA | No |
-| Snapshot consistency | Array consistency groups | VM-level quiescing (VMware Tools) |
-| Network bandwidth | Handled by array fabric | Uses VMkernel / management network |
-| Change tracking | Block-level via array | vSphere Changed Block Tracking (CBT) |
-| Recovery site storage | Must be same array vendor (usually) | Any datastore visible to recovery ESXi |
-| Multi-VM consistency | Consistency groups (array-coordinated) | Independent per VM (no cross-VM atomicity) |
-
-### ABR Mechanism
-
-1. Array at protected site replicates blocks to array at recovery site asynchronously (or synchronously for RPO=0).
-2. At recovery site, replicated volumes are presented to ESXi hosts as read-only.
-3. SRA queries the array to discover which VMs live on replicated datastores.
-4. On failover, SRA issues commands to the array to perform a storage failover (promote snapshot, break replication, mount writable).
-
-### vSphere Replication Mechanism
-
-1. VR filter (installed on ESXi kernel via VIB) intercepts writes to VMDK.
-2. Changed blocks are sent to the VR appliance at the recovery site over TCP 31031 (VAMI) / TCP 44046 (replication data).
-3. VR appliance writes received blocks to a staging area on the recovery site datastore.
-4. At failover, SRM instructs VR to finalize the disk copy (apply any in-flight changes).
-
----
-
-## Protection Group Types
-
-### ABR Protection Group
-
-- Groups VMs that reside on a replicated LUN/volume.
-- All VMs on the same array replication group are included together — you cannot split a consistency group across protection groups.
-- SRM automatically discovers VMs on replicated datastores via SRA.
-- If a VM spans multiple datastores, all datastores must be included in the same replication group.
-
-### vSphere Replication Protection Group (Individual VM)
-
-- Each VM is independently replicated.
-- You configure replication per VM — different RPOs per VM are valid.
-- Protection group can contain any mix of VMs regardless of datastore.
-- No storage-level consistency — if you need cross-VM consistency, coordinate with application quiescing or use ABR.
-
-### Datastore Group (VR-based)
-
-- Available when using vSAN stretched cluster — not applicable in standard two-site SRM.
-
----
-
-## Protection Group States
-
-| State | Meaning |
-|---|---|
-| OK | All VMs protected, RPO met, placeholder VMs exist |
-| Warning | One or more VMs approaching RPO threshold |
-| Error | RPO violated, replication stopped, or SRA unreachable |
-| Not Configured | VMs exist on replicated datastore but not yet added to a group |
-
----
-
-## Recovery Plan Structure
-
-A Recovery Plan defines the exact steps SRM executes during failover. One Recovery Plan can reference multiple Protection Groups.
-
-### Recovery Plan Components
-
-```text
-Recovery Plan
-├── Protection Groups (one or more)
-├── Priority Groups (1–5, executed sequentially)
-│   ├── Priority 1 — infrastructure VMs (DNS, AD, DB)
-│   ├── Priority 2 — application servers
-│   ├── Priority 3 — web/frontend
-│   └── Priority 5 — non-critical / batch
-├── Steps (per VM within a priority group)
-│   ├── Pre-power-on steps (run command, send message)
-│   ├── Power on VM
-│   └── Post-power-on steps (run command, wait for heartbeat)
-├── Network Mappings (map protected site port groups → recovery site port groups)
-├── IP Customization (static re-IP rules per VM or subnet)
-└── Dependencies (optionally wait for another plan to complete first)
+┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM orchestrates VM failover between a protected site and recovery site using                        │
+│  replication (vSphere Replication or array-based) and recovery plans.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Protected Site                │  │                Recovery Site                │   │
+│   │             SRM Server: primary              │  │             SRM Server: recovery            │   │
+│   │           VMs: production running            │  │            Replicas: powered off            │   │
+│   │           Replication: vSR or ABR            │  │           Recovery plan: failover           │   │
+│   │           Site pair: bidirectional           │  │          Test: no production impact         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Site pair connects two SRM servers; recovery plans define failover order and steps.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Recovery Plan Execution            │  │              Replication Types              │   │
+│   │        Test: isolated bubble network         │  │           vSR: vSphere Replication          │   │
+│   │          Planned: graceful failover          │  │           ABR: array-based SAN rep          │   │
+│   │          Disaster: forced failover           │  │              RPO: vSR 5min–24h              │   │
+│   │          Failback: reprotect + run           │  │              ABR: near-zero RPO             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Servers run as Windows VMs on vCenter; replication traffic uses dedicated network                │
+│  or SAN replication; sites connected by WAN/MPLS/dark fibre.                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM Server    = Windows VM; Horizon-like broker for DR orchestration                                 │
+│  Site pair     = bidirectional connection between two SRM servers                                     │
+│  Recovery plan = ordered list of VMs + steps for failover                                             │
+│  vSR           = vSphere Replication; host-based async replication                                    │
+│  ABR           = Array-Based Replication; SAN-level sync/async                                        │
+│  RPO           = Recovery Point Objective; max data age at recovery                                   │
+│  Test failover = runs in bubble network; does not impact production                                   │
+│  Planned failover= graceful; sync replication, then failover                                          │
+│  Disaster failover= forced; uses last available replica state                                         │
+│  Failback      = reprotect recovery site as new protected site                                        │
+│  Bubble network= isolated test network; no production routing                                         │
+│  Reprotect     = reverse replication direction after failover                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Priority Groups

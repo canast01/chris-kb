@@ -1,5 +1,52 @@
 # SRM — Common Issues
 
+```
+┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
+│                                                                                                       │
+│  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │
+│  failure, IP customisation not applied, and cleanup stuck after test.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Site Pair Issues               │  │              Replication Issues             │   │
+│   │         Pair disconnected: check net         │  │           Lag > RPO: check WAN BW           │   │
+│   │            Cert expired: re-pair             │  │          vSR error: check vRAM host         │   │
+│   │          vCenter unreachable: check          │  │          ABR error: check SRA logs          │   │
+│   │          Port 9086: check firewall           │  │          Disk full: clear vSR logs          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cert expiry is the most common site pair disconnection cause; monitor 30+ days ahead.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Plan Test Failures              │  │               Post-Test Issues              │   │
+│   │         VM fail to power on: vSphere         │  │             Cleanup stuck: force            │   │
+│   │          IP script error: check log          │  │             Test VMs not deleted            │   │
+│   │          Network mapping wrong: fix          │  │           Snapshots remain: purge           │   │
+│   │           Script timeout: increase           │  │           Re-run cleanup in SRM UI          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Most issues: WAN bandwidth (lag), network mapping (IP/VLAN), cert expiry (pair),                     │
+│  or vCenter connectivity; check all four before deep investigation.                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Site pair disconnected= SRM Servers lost TCP connectivity                                            │
+│  Port 9086     = SRM inter-site communication; must be open in FW                                     │
+│  Cert expired  = site pair uses TLS certs; expiry breaks connection                                   │
+│  Re-pair       = re-establish site trust after cert or config change                                  │
+│  vSR host      = vSphere Replication Server appliance; check logs                                     │
+│  SRA logs      = Storage Replication Adapter log; array errors here                                   │
+│  IP script     = customisation script; failure blocks VM connectivity                                 │
+│  Network mapping= maps protected-site portgroup to recovery portgroup                                 │
+│  Cleanup stuck = SRM cleanup task hung; force via SRM UI                                              │
+│  Force cleanup = right-click plan > Cleanup in SRM UI                                                 │
+│  WAN BW        = insufficient bandwidth causes replication lag                                        │
+│  Snapshot purge= manual delete of orphan snapshots after stuck cleanup                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
   Triage Decision Tree
 ┌──────────────────────────────────────────────────────────────┐

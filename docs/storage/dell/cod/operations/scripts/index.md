@@ -88,141 +88,40 @@ Open a terminal on the Solutions Enabler host (Linux).
 chmod +x cod_capacity_report.sh
 SID=000123456789 ./cod_capacity_report.sh
 ```
-
-**What you should see**
-
-Four sections: array configuration overview (capacity in GB/TB), physical drive inventory (first 60 lines), license status showing COD licenses, and thin pool utilisation showing how full each storage pool is. Review pool utilisation to see how much COD reserve remains.
-
----
-
-## COD Threshold Alerter
-
-Reads `symcfg` pool output for a PowerMax SID and parses usable vs. total pool capacity. Warns if the activated pool utilisation is above a configurable threshold, signalling it is time to plan the next COD activation.
-
-~~~python
-#!/usr/bin/env python3
-# cod_threshold_alerter.py — Alert when PowerMax pool capacity approaches COD ceiling
-# Requirements: symcfg on PATH (Solutions Enabler)
-# Usage: SID=000123456789 WARN_PCT=80 CRIT_PCT=90 ./cod_threshold_alerter.py
-
-import os
-import sys
-import subprocess
-import re
-
-SID       = os.environ.get("SID", "")
-WARN_PCT  = float(os.environ.get("WARN_PCT", "80"))
-CRIT_PCT  = float(os.environ.get("CRIT_PCT", "90"))
-SYMCLI    = os.environ.get("SYMCLI_PATH", "/usr/symcli/bin") + "/symcfg"
-
-if not SID:
-    print("ERROR: SID must be set.", file=sys.stderr)
-    sys.exit(1)
-
-
-def run_symcfg():
-    result = subprocess.run(
-        [SYMCLI, "-sid", SID, "-pool", "-dp", "list"],
-        capture_output=True, text=True
-    )
-    if result.returncode != 0:
-        print(f"ERROR: symcfg failed:\n{result.stderr}")
-        sys.exit(2)
-    return result.stdout
-
-
-def parse_pools(output):
-    """
-    Parse symcfg -pool -dp list output.
-    Typical line: pool_name  total_tracks  used_tracks  ...
-    We look for GB/TB values with regex.
-    """
-    pools = []
-    for line in output.splitlines():
-        # Match lines with pool name and capacity figures
-        # e.g.: SRP_1    1234567    987654    ...
-        parts = re.split(r'\s+', line.strip())
-        if len(parts) < 4:
-            continue
-        name = parts[0]
-        # Skip header lines
-        if name in ("Pool", "Name", "---", ""):
-            continue
-        # Try to find percent-full in the line
-        pct_match = re.search(r'(\d+(?:\.\d+)?)\s*%', line)
-        if pct_match:
-            pools.append({"name": name, "pct": float(pct_match.group(1))})
-    return pools
-
-
-def main():
-    output = run_symcfg()
-    pools  = parse_pools(output)
-    exit_code = 0
-
-    print("=" * 55)
-    print(f"  COD Threshold Alerter — SID {SID}")
-    print("=" * 55)
-
-    if not pools:
-        # Print raw output if parsing found nothing
-        print("\nRaw symcfg output (manual review required):")
-        print(output)
-        sys.exit(0)
-
-    print(f"\n{'POOL':<25}  {'USED %':>8}  STATUS")
-    print("-" * 45)
-
-    for p in pools:
-        if p["pct"] >= CRIT_PCT:
-            status = "CRITICAL — activate next COD increment immediately"
-            exit_code = max(exit_code, 2)
-        elif p["pct"] >= WARN_PCT:
-            status = "WARNING  — plan next COD activation"
-            exit_code = max(exit_code, 1)
-        else:
-            status = "OK"
-        print(f"{p['name']:<25}  {p['pct']:>7.1f}%  {status}")
-
-    print("-" * 45)
-    labels = {0: "OK", 1: "WARNING", 2: "CRITICAL"}
-    print(f"\nOverall: {labels.get(exit_code, 'UNKNOWN')}")
-    sys.exit(exit_code)
-
-
-if __name__ == "__main__":
-    main()
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.7 or newer on the Solutions Enabler host (or any Linux server with SYMCLI on PATH)
-- The `symcfg` command must be accessible — run `symcfg list` to test
-- The SID of your PowerMax array
-
-**Step 1 — Save the file**
-
-1. Copy the code block above
-2. Save it as `cod_threshold_alerter.py` on the Solutions Enabler server
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `SID` | Your PowerMax system ID (12 digits) | Run `symcfg list` |
-| `WARN_PCT` | Pool usage % to trigger WARNING | Default is `80` |
-| `CRIT_PCT` | Pool usage % to trigger CRITICAL | Default is `90` |
-| `SYMCLI_PATH` | Path to SYMCLI binaries | Default is `/usr/symcli/bin` |
-
-**Step 3 — Open a terminal**
-
-Open a terminal on the Solutions Enabler host.
-
-**Step 4 — Run the script**
-
-```text
-SID=000123456789 WARN_PCT=80 CRIT_PCT=90 python3 cod_threshold_alerter.py
+┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Scripts to query COD status across products and generate remaining-capacity reports      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              # PowerStore — list license capacity                             │   │
+│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/license \                    │   │
+│   │                    | jq ".[] | {name: .name, is_evaluation: .is_evaluation}"                  │   │
+│   │                                                                                               │   │
+│   │                       # PowerStore — check capacity after COD activation                      │   │
+│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/cluster \                    │   │
+│   │                     | jq ".[0] | {total_raw_capacity, usable_raw_capacity}"                   │   │
+│   │                                                                                               │   │
+│   │                            # Unity — list license status via uemcli                           │   │
+│   │                 uemcli -d <unity> -u admin -p $PASS /license show -output csv                 │   │
+│   │                                                                                               │   │
+│   │                        # PowerMax Solutions Enabler — list COD licenses                       │   │
+│   │                     symlic -sid <SID> list | grep -i "capacity on demand"                     │   │
+│   │                                                                                               │   │
+│   │                       # Report: all arrays, COD status, capacity summary                      │   │
+│   │                                for ARRAY in "${ARRAYS[@]}"; do                                │   │
+│   │                  echo "=== $ARRAY ==="; curl -sk ... /api/rest/license | jq ...               │   │
+│   │                                              done                                             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    total_raw_capacity = All physical raw storage including locked COD; in bytes                       │
+│    usable_raw_capacity= Capacity available to create pools; increases after COD activation            │
+│    symlic             = Solutions Enabler license command; requires SYMAPI connectivity               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**
