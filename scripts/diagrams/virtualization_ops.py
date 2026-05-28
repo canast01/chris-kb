@@ -422,3 +422,407 @@ def virt_runbook_cert_renewal():
     lines.append(txt_row())
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-evidence-collection',
+    'docs/virtualization/operations/runbooks/evidence-collection/index.md',
+    'Evidence collection runbook — gather logs and screenshots before escalation',
+)
+def virt_runbook_evidence():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Virtualization Evidence Collection Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Collect evidence before vendor escalation, RCA work, or major incident review'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Pre-Checks'), bMid(B2_L, B2_R, 'Collect'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm issue scope'), bMid(B2_L, B2_R, 'Screenshot active alarms'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm affected objects'), bMid(B2_L, B2_R, 'Export tasks and events'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm timestamps + timezone'), bMid(B2_L, B2_R, 'Note object names + IDs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm recent changes'), bMid(B2_L, B2_R, 'Collect ESXi / VCSA logs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm ticket / case number'), bMid(B2_L, B2_R, 'Capture version strings'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, ''), bMid(B2_L, B2_R, 'Export support bundle'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, ''), bMid(B2_L, B2_R, 'Attach all to ticket'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Support bundle  = vm-support.sh output; full ESXi/VCSA log archive for vendor support'))
+    lines.append(txt_row('  Tasks + events  = vCenter audit trail; export via Monitor → Tasks for the time window'))
+    lines.append(txt_row('  Affected object = VM, host, datastore, or network affected by the incident'))
+    lines.append(txt_row('  Case number     = Vendor support ticket ID; always reference in evidence bundle name'))
+    lines.append(txt_row('  Timezone        = Always record timestamps in UTC to avoid ambiguity across regions'))
+    lines.append(txt_row('  RCA             = Root Cause Analysis; requires accurate timeline and evidence log'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-host-evacuation',
+    'docs/virtualization/operations/runbooks/host-evacuation/index.md',
+    'ESXi host evacuation runbook — safely drain a host before maintenance',
+)
+def virt_runbook_host_evacuation():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'ESXi Host Evacuation Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Drain all VMs from a host before patching, hardware work, or decommission'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Phase', 'Action', 'Verify', 'On FAIL', 'Tool'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['──────────────', '──────────────', '───────────────', '──────────────', '──────────────'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['1  Pre-check', 'Confirm cluster OK', 'HA/DRS enabled', 'Fix before start', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['2  Maintenance', 'Enter maint. mode', 'DRS vMotions VMs', 'vMotion manually', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['3  Verify drain', 'No VMs on host', '0 VM count', 'Force migrate', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['4  Work', 'Perform task', 'Task completed', 'Rollback plan', 'Per procedure'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['5  Exit maint.', 'Exit maint. mode', 'Host reconnects', 'Check hostd/vpxa', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['6  Post-check', 'Validate health', 'DRS rebalances', 'Review alarms', 'vSphere Client'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Maintenance mode = ESXi state that blocks new VM placement and triggers DRS evacuation'))
+    lines.append(txt_row('  vMotion          = Live migration of a running VM between ESXi hosts; zero downtime'))
+    lines.append(txt_row('  DRS              = Distributed Resource Scheduler; automates vMotion during evacuation'))
+    lines.append(txt_row('  hostd            = ESXi host management daemon; restart if host fails to reconnect'))
+    lines.append(txt_row('  vpxa             = vCenter agent on ESXi; restart to fix disconnected host state'))
+    lines.append(txt_row('  HA admission     = Cluster must have spare capacity to accept evacuated VMs'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-incident-response',
+    'docs/virtualization/operations/runbooks/incident-response/index.md',
+    'Incident response runbook — detect, assess, contain, resolve, close',
+)
+def virt_runbook_incident_response():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Incident Response Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Use for any active VMware platform issue; follow phases in order'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Detect + Assess'), bMid(TB2_L, TB2_R, 'Contain + Fix'), bMid(TB3_L, TB3_R, 'Resolve + Close'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Alert or user report'), bMid(TB2_L, TB2_R, 'Isolate scope'), bMid(TB3_L, TB3_R, 'Verify fix holds'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Confirm issue is real'), bMid(TB2_L, TB2_R, 'Prevent spread'), bMid(TB3_L, TB3_R, 'Monitor 30 min'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Open incident ticket'), bMid(TB2_L, TB2_R, 'Apply fix / workaround'), bMid(TB3_L, TB3_R, 'Notify stakeholders'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Define scope: VM/host'), bMid(TB2_L, TB2_R, 'Collect evidence'), bMid(TB3_L, TB3_R, 'Close ticket'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Set severity P1/P2/P3'), bMid(TB2_L, TB2_R, 'Escalate if P1'), bMid(TB3_L, TB3_R, 'Schedule RCA'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Notify stakeholders'), bMid(TB2_L, TB2_R, 'Update ticket live'), bMid(TB3_L, TB3_R, 'Post-mortem doc'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  P1 = Critical; full platform or business service down; immediate escalation required'))
+    lines.append(txt_row('  P2 = Major; significant degradation; resolve within business hours'))
+    lines.append(txt_row('  P3 = Minor; limited impact; resolve within next maintenance window'))
+    lines.append(txt_row('  Contain   = Stop the issue spreading before applying a fix; e.g. isolate a host'))
+    lines.append(txt_row('  Workaround = Temporary fix to restore service; permanent fix follows in RCA action'))
+    lines.append(txt_row('  Post-mortem = Written RCA document; timeline, root cause, and preventive actions'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-maintenance-window',
+    'docs/virtualization/operations/runbooks/maintenance-window/index.md',
+    'Maintenance window runbook — pre, execute, post, and close phases',
+)
+def virt_runbook_maintenance_window():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Maintenance Window Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Use for all planned VMware work; follow pre/execute/post phases in order'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Phase', 'Key Actions', 'Gate Criteria', 'On FAIL', 'Owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['──────────────', '──────────────', '───────────────', '──────────────', '──────────────'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['1  Pre-checks', 'Health + backups', 'All green', 'Do not proceed', 'Infra engineer'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['2  Notify', 'Stakeholders out', 'Comms confirmed', 'Delay window', 'Change manager'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['3  Execute', 'Perform change', 'Per procedure', 'Rollback plan', 'Infra engineer'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['4  Post-check', 'Validate health', 'All checks pass', '→ incident proc.', 'Infra engineer'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['5  App check', 'Owner confirms', 'Sign-off received', 'Escalate to P2', 'App owner'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['6  Close', 'Update CR + docs', 'CR closed', 'Note exceptions', 'Change manager'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  CR          = Change Record; ITSM ticket approved before work begins; closed after'))
+    lines.append(txt_row('  Rollback    = Pre-planned steps to undo the change if it fails; must be documented'))
+    lines.append(txt_row('  Comms       = Stakeholder notification; send before window opens and after it closes'))
+    lines.append(txt_row('  App owner   = Business owner of the application; provides sign-off after maintenance'))
+    lines.append(txt_row('  Gate        = Go/no-go check at each phase; any failure stops the window'))
+    lines.append(txt_row('  Exceptions  = Deviations from the plan; always document in the change record'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-network-validation',
+    'docs/virtualization/operations/runbooks/network-validation/index.md',
+    'Network validation runbook — check VM, port group, uplink, and VLAN after changes',
+)
+def virt_runbook_network_validation():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Virtualization Network Validation Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Use after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check Sequence'), bMid(B2_L, B2_R, 'Common Fixes'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '1. VM network assignment'), bMid(B2_L, B2_R, 'Reassign port group'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2. Port group VLAN config'), bMid(B2_L, B2_R, 'Fix VLAN ID mismatch'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '3. Host uplink status'), bMid(B2_L, B2_R, 'Check NIC / cable'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4. VLAN / overlay config'), bMid(B2_L, B2_R, 'Fix switch VLAN trunk'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '5. NSX segment (if overlay)'), bMid(B2_L, B2_R, 'Re-deploy NSX config'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '6. Ping from VM'), bMid(B2_L, B2_R, 'Check firewall rule'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '7. DNS resolution in VM'), bMid(B2_L, B2_R, 'Check DNS server IP'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '8. App connectivity test'), bMid(B2_L, B2_R, 'App owner confirms'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Port group    = Named network on a vSwitch or dvSwitch; VMs connect to port groups'))
+    lines.append(txt_row('  dvSwitch      = Distributed virtual switch; managed centrally from vCenter'))
+    lines.append(txt_row('  VLAN trunk    = Physical switch port allowing multiple VLANs; must match port group'))
+    lines.append(txt_row('  NSX segment   = Overlay network (GENEVE); not tied to physical VLANs'))
+    lines.append(txt_row('  Uplink        = Physical NIC on ESXi connected to physical switch; check link state'))
+    lines.append(txt_row('  Teaming       = NIC bonding policy on vSwitch; active/standby or load balance'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-rca-template',
+    'docs/virtualization/operations/runbooks/rca-template/index.md',
+    'RCA template — structure for post-incident root cause analysis documents',
+)
+def virt_runbook_rca_template():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'RCA Template — Root Cause Analysis'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Complete after every P1/P2 incident; attach to change record and share with team'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Document Sections'), bMid(B2_L, B2_R, 'Action Items'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Summary: what happened'), bMid(B2_L, B2_R, 'Immediate: already done'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Impact: systems + users'), bMid(B2_L, B2_R, 'Short-term: within 7 days'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Timeline: ordered events'), bMid(B2_L, B2_R, 'Long-term: prevent recurrence'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Root cause: why it failed'), bMid(B2_L, B2_R, 'Owner assigned per item'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Contributing factors'), bMid(B2_L, B2_R, 'Due dates set'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'What went well'), bMid(B2_L, B2_R, 'Tracked in ITSM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Lessons learned'), bMid(B2_L, B2_R, 'Reviewed at team meeting'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Root cause      = The single underlying reason the incident occurred; not a symptom'))
+    lines.append(txt_row('  Contributing    = Factors that made the failure worse or harder to detect'))
+    lines.append(txt_row('  Timeline        = Chronological event log from first detection to resolution'))
+    lines.append(txt_row('  5 Whys          = Ask "why" five times to drill from symptom to root cause'))
+    lines.append(txt_row('  Action item     = Specific task with owner and due date to prevent recurrence'))
+    lines.append(txt_row('  Blameless RCA   = Focus on system/process failures, not individual mistakes'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-snapshot-cleanup',
+    'docs/virtualization/operations/runbooks/snapshot-cleanup/index.md',
+    'Snapshot cleanup runbook — identify, consolidate, and remove stale snapshots',
+)
+def virt_runbook_snapshot_cleanup():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'vSAN Snapshot Cleanup Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identify degraded vSAN objects; check disks and hosts; restore or rebuild'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Step', 'Action', 'Check', 'On FAIL', 'Tool'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['──────────────', '──────────────', '───────────────', '──────────────', '──────────────'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['1  vSAN health', 'Open Skyline', 'No red checks', 'Note failures', 'vCenter UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['2  Objects', 'Virtual Objects', 'Degraded list', 'Note VM names', 'vCenter UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['3  Disk check', 'Physical Disk', 'No failed disks', 'Replace disk', 'iDRAC / UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['4  Host check', 'Host status', 'All connected', 'Rejoin cluster', 'vCenter UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['5  Rebuild', 'Policy repair', 'Objects rebuild', 'Escalate VMware', 'vCenter UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['6  Verify', 'Skyline green', 'No degraded obj', 'Re-run steps', 'vCenter UI'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Skyline Health = vSAN built-in health checks UI; vCenter → Cluster → vSAN → Skyline'))
+    lines.append(txt_row('  Degraded obj   = vSAN object with fewer mirrors than the storage policy requires'))
+    lines.append(txt_row('  Non-compliant  = vSAN object exists but does not meet current storage policy'))
+    lines.append(txt_row('  Absent         = vSAN object has no accessible components; VM may be impacted'))
+    lines.append(txt_row('  Policy repair  = vSAN automatically rebuilds objects after a host or disk returns'))
+    lines.append(txt_row('  FTT            = Failures To Tolerate; storage policy setting; FTT=1 needs 3 hosts min'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-storage-path-validation',
+    'docs/virtualization/operations/runbooks/storage-path-validation/index.md',
+    'Storage path validation runbook — check datastores, adapters, paths, and multipathing',
+)
+def virt_runbook_storage_path():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Storage Path Validation Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Use after SAN changes, storage maintenance, host work, or datastore alerts'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check Sequence'), bMid(B2_L, B2_R, 'Common Fixes'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '1. Datastore visibility'), bMid(B2_L, B2_R, 'Rescan HBA adapters'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2. Host storage adapters'), bMid(B2_L, B2_R, 'Check HBA driver/FW'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '3. Path count and state'), bMid(B2_L, B2_R, 'Fix zoning on SAN switch'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4. Multipathing policy'), bMid(B2_L, B2_R, 'Set RR per array guide'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '5. Array masking / zoning'), bMid(B2_L, B2_R, 'Add host to zone set'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '6. Datastore I/O test'), bMid(B2_L, B2_R, 'Run iometer / dd test'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '7. App I/O validation'), bMid(B2_L, B2_R, 'App owner confirms'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  HBA      = Host Bus Adapter; FC or iSCSI NIC on ESXi connecting to SAN fabric'))
+    lines.append(txt_row('  Zoning   = SAN switch config allowing specific HBAs to see specific storage ports'))
+    lines.append(txt_row('  Masking  = Array-side config allowing specific initiators to access specific LUNs'))
+    lines.append(txt_row('  RR       = Round Robin multipathing policy; distributes I/O across all active paths'))
+    lines.append(txt_row('  Dead path = Path in dead/error state; verify SAN port, cable, and zone config'))
+    lines.append(txt_row('  Rescan   = ESXi re-discovers storage; run after SAN changes to pick up new LUNs'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-vcenter-outage',
+    'docs/virtualization/operations/runbooks/vcenter-outage/index.md',
+    'vCenter outage runbook — diagnose and restore VCSA availability',
+)
+def virt_runbook_vcenter_outage():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'vCenter Outage Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  ESXi hosts continue running VMs independently; vCenter is management plane only'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Diagnose'), bMid(B2_L, B2_R, 'Restore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Ping vCenter FQDN + IP'), bMid(B2_L, B2_R, 'Power on VCSA VM via iDRAC'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Access VAMI port 5480'), bMid(B2_L, B2_R, 'Start services via VAMI'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Review service health'), bMid(B2_L, B2_R, 'service-control --start --all'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check disk partitions'), bMid(B2_L, B2_R, 'Free disk if /storage full'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check DNS forward/reverse'), bMid(B2_L, B2_R, 'Fix DNS record / hosts file'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check VCSA VM power state'), bMid(B2_L, B2_R, 'Restore from file backup'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check iDRAC / IPMI logs'), bMid(B2_L, B2_R, 'Escalate to VMware GSS'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  VCSA         = vCenter Server Appliance; Linux-based VM running all vCenter services'))
+    lines.append(txt_row('  VAMI         = Appliance Management Interface; port 5480; accessible when vCenter UI is not'))
+    lines.append(txt_row('  service-control = VCSA CLI tool; start/stop/status all vCenter services'))
+    lines.append(txt_row('  Management plane = vCenter; losing it does NOT stop running VMs — hosts operate standalone'))
+    lines.append(txt_row('  File backup  = vCenter native backup; SFTP destination; restore via VCSA installer'))
+    lines.append(txt_row('  GSS          = VMware Global Support Services; escalate P1 outages with SR number'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-vm-lifecycle',
+    'docs/virtualization/operations/runbooks/vm-lifecycle/index.md',
+    'VM lifecycle runbook — build, change, review, and decommission procedures',
+)
+def virt_runbook_vm_lifecycle():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'VM Lifecycle Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Standard steps for VM deploy, reconfigure, ownership review, and decommission'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Build'), bMid(TB2_L, TB2_R, 'Operate + Review'), bMid(TB3_L, TB3_R, 'Decommission'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Validate request'), bMid(TB2_L, TB2_R, 'Confirm owner'), bMid(TB3_L, TB3_R, 'Owner approval'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Confirm sizing'), bMid(TB2_L, TB2_R, 'Review sizing'), bMid(TB3_L, TB3_R, 'Final backup'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Deploy from template'), bMid(TB2_L, TB2_R, 'Check backup'), bMid(TB3_L, TB3_R, 'Power off VM'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Apply naming standard'), bMid(TB2_L, TB2_R, 'Check monitoring'), bMid(TB3_L, TB3_R, 'Delete from vCenter'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Assign backup policy'), bMid(TB2_L, TB2_R, 'Patch compliance'), bMid(TB3_L, TB3_R, 'Remove from backup'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Add to monitoring'), bMid(TB2_L, TB2_R, 'Annual review'), bMid(TB3_L, TB3_R, 'Update CMDB'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Template     = Golden image VM used as the base for new deployments; keep patched'))
+    lines.append(txt_row('  Naming std   = Consistent VM name format; e.g. SITE-ROLE-NN; critical for CMDB'))
+    lines.append(txt_row('  Backup policy = Defines schedule, retention, and target for the VM backup job'))
+    lines.append(txt_row('  CMDB         = Configuration Management Database; tracks all VMs and their owners'))
+    lines.append(txt_row('  Annual review = Yearly check that VM is still needed and owner is still valid'))
+    lines.append(txt_row('  Decommission  = Remove VM, backup exclusions, monitoring, DNS, and CMDB in that order'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

@@ -1,5 +1,35 @@
 # Virtualization Evidence Collection
 
+```
+┌───────────────────────────── Virtualization Evidence Collection Runbook ──────────────────────────────┐
+│                                                                                                       │
+│    Collect evidence before vendor escalation, RCA work, or major incident review                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Pre-Checks                  │  │                   Collect                   │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │             Confirm issue scope              │  │           Screenshot active alarms          │   │
+│   │           Confirm affected objects           │  │           Export tasks and events           │   │
+│   │        Confirm timestamps + timezone         │  │           Note object names + IDs           │   │
+│   │            Confirm recent changes            │  │           Collect ESXi / VCSA logs          │   │
+│   │         Confirm ticket / case number         │  │           Capture version strings           │   │
+│   │                                              │  │            Export support bundle            │   │
+│   │                                              │  │             Attach all to ticket            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Support bundle  = vm-support.sh output; full ESXi/VCSA log archive for vendor support              │
+│    Tasks + events  = vCenter audit trail; export via Monitor → Tasks for the time window              │
+│    Affected object = VM, host, datastore, or network affected by the incident                         │
+│    Case number     = Vendor support ticket ID; always reference in evidence bundle name               │
+│    Timezone        = Always record timestamps in UTC to avoid ambiguity across regions                │
+│    RCA             = Root Cause Analysis; requires accurate timeline and evidence log                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 Use this before vendor escalation, RCA work, or major incident review.
