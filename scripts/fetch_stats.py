@@ -37,25 +37,15 @@ QUERY = """
 query Stats($accountTag: string!, $siteTag: string!, $start7: Time!, $start30: Time!, $end: Time!) {
   viewer {
     accounts(filter: {accountTag: $accountTag}) {
-      views7: rumPageloadEventsAdaptiveGroups(
+      summary7: rumPageloadEventsAdaptiveGroups(
         filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start7}, {datetime_leq: $end}]}
         limit: 1
-      ) { count }
+      ) { count sum { visits } }
 
-      visits7: rumPageloadEventsAdaptiveGroups(
-        filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start7}, {datetime_leq: $end}, {newVisit: true}]}
-        limit: 1
-      ) { count }
-
-      views30: rumPageloadEventsAdaptiveGroups(
+      summary30: rumPageloadEventsAdaptiveGroups(
         filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start30}, {datetime_leq: $end}]}
         limit: 1
-      ) { count }
-
-      visits30: rumPageloadEventsAdaptiveGroups(
-        filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start30}, {datetime_leq: $end}, {newVisit: true}]}
-        limit: 1
-      ) { count }
+      ) { count sum { visits } }
 
       topPages: rumPageloadEventsAdaptiveGroups(
         filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start30}, {datetime_leq: $end}]}
@@ -136,10 +126,10 @@ def main():
 
     acct = result['data']['viewer']['accounts'][0]
 
-    views7   = sum(g['count'] for g in acct['views7'])
-    visits7  = sum(g['count'] for g in acct['visits7'])
-    views30  = sum(g['count'] for g in acct['views30'])
-    visits30 = sum(g['count'] for g in acct['visits30'])
+    views7   = sum(g['count'] for g in acct['summary7'])
+    visits7  = sum(g['sum']['visits'] for g in acct['summary7'])
+    views30  = sum(g['count'] for g in acct['summary30'])
+    visits30 = sum(g['sum']['visits'] for g in acct['summary30'])
 
     top_pages = [(g['count'], g['dimensions']['requestPath']) for g in acct['topPages']]
     top_countries = [(g['count'], g['dimensions']['country'] or '—') for g in acct['topCountries']]
