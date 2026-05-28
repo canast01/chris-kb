@@ -4,12 +4,14 @@ Fetch Cloudflare Web Analytics data and write docs/stats/index.md.
 Run from repo root. Requires env vars:
   CF_API_TOKEN  — Cloudflare API token (Account Analytics: Read)
   CF_ACCOUNT_ID — Cloudflare account ID (visible in dash.cloudflare.com URL)
+  CF_SITE_TAG   — Web Analytics site tag (from URL when viewing site in Cloudflare)
 """
 import os, sys, json, urllib.request, urllib.error
 from datetime import datetime, timezone, timedelta
 
 TOKEN      = os.environ.get('CF_API_TOKEN', '')
 ACCOUNT_ID = os.environ.get('CF_ACCOUNT_ID', '')
+SITE_TAG   = os.environ.get('CF_SITE_TAG', '')
 HOSTNAME   = 'chrisanastasiadis.com'
 OUT        = 'docs/stats/index.md'
 
@@ -104,22 +106,11 @@ def bar(count, max_count, width=20):
     return '█' * filled + '░' * (width - filled)
 
 def main():
-    if not TOKEN or not ACCOUNT_ID:
-        fallback('CF_API_TOKEN or CF_ACCOUNT_ID not set')
+    if not TOKEN or not ACCOUNT_ID or not SITE_TAG:
+        fallback('CF_API_TOKEN, CF_ACCOUNT_ID, or CF_SITE_TAG not set')
         return
 
-    # Get site tag
-    try:
-        resp = cf_get(f'/accounts/{ACCOUNT_ID}/rum/site_info/list')
-        sites = resp.get('result', [])
-        site = next((s for s in sites if s.get('host') == HOSTNAME), None)
-        if not site:
-            fallback(f'no Web Analytics site found for {HOSTNAME}')
-            return
-        site_tag = site['site_tag']
-    except Exception as e:
-        fallback(f'site lookup failed: {e}')
-        return
+    site_tag = SITE_TAG
 
     # Build time windows
     now = datetime.now(timezone.utc)
