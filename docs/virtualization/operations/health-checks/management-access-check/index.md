@@ -33,20 +33,35 @@ Management Access Check Flow
   │  └─ Hardware     No disk / NIC / PSU alerts         │
   └─────────────────────────────────────────────────────┘
 ```
-## Connectivity Checks
-
-```bash
-# Verify DNS resolution for management FQDNs
-for fqdn in vcenter.example.local nsx.example.local sddc-manager.example.local aria-ops.example.local; do
-    result=$(nslookup $fqdn 2>/dev/null | grep "Address:" | tail -1)
-    echo "$fqdn → $result"
-done
-
-# Verify HTTPS reachability
-for url in https://vcenter.example.local https://nsx.example.local; do
-    code=$(curl -sk -o /dev/null -w "%{http_code}" "$url")
-    echo "$url → HTTP $code"
-done
+┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
+│                                                                                                       │
+│    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Check Sequence (per endpoint)         │  │             Endpoints to Verify             │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │            1. DNS resolves FQDN?             │  │             vCenter FQDN (HTTPS)            │   │
+│   │            FAIL → check DNS / HOSTS          │  │               └─ SSO login test             │   │
+│   │         2. HTTPS port 443 reachable?         │  │               └─ VAMI port 5480             │   │
+│   │           FAIL → check firewall rule         │  │               NSX Manager FQDN              │   │
+│   │              3. Login succeeds?              │  │             Backup console FQDN             │   │
+│   │           FAIL → check SSO / AD bind         │  │             Monitoring dashboard            │   │
+│   │        4. Session timeout acceptable?        │  │              Storage array FQDN             │   │
+│   │           FAIL → check session policy        │  │              vSAN Witness host              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FQDN    = Fully Qualified Domain Name; must resolve in DNS; e.g. vcenter.corp.local                │
+│    SSO     = vCenter Single Sign-On; authentication service; default domain: vsphere.local            │
+│    VAMI    = vCenter Appliance Management Interface; port 5480; cert and patch management             │
+│    AD bind = LDAP/LDAPS connection from SSO to Active Directory; check if login fails                 │
+│    Timeout = Session idle timeout; check if users report being logged out too quickly                 │
+│    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## vCenter Access

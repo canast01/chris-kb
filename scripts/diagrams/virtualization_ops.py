@@ -1,0 +1,424 @@
+"""
+Virtualization operations: health checks and runbooks.
+Auto-registered via @kb_diagram decorator at import time.
+"""
+from ._core import kb_diagram, make_helpers, bTop, bMid, bBot, sections, arrow, connector, merge, title_border, row
+
+W2 = 103
+IV_L, IV_R = 3, 99
+B1_L, B1_R = 3, 50
+B2_L, B2_R = 53, 99
+M1, M2 = 26, 76
+TB1_L, TB1_R = 3, 33
+TB2_L, TB2_R = 36, 66
+TB3_L, TB3_R = 69, 99
+TM1, TM2, TM3 = 18, 51, 84
+PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks',
+    'docs/virtualization/operations/health-checks/index.md',
+    'Virtualization health checks — daily, capacity, and change-window checks',
+)
+def virt_health_checks():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Virtualization Health Checks'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Structured checks across daily operations, capacity planning, and change management'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Daily (~15 min)'), bMid(TB2_L, TB2_R, 'Capacity (weekly)'), bMid(TB3_L, TB3_R, 'Pre / Post Change'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'vCenter alarms'), bMid(TB2_L, TB2_R, 'CPU < 70% target'), bMid(TB3_L, TB3_R, 'Alarms cleared'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Host connectivity'), bMid(TB2_L, TB2_R, 'RAM balloon = 0'), bMid(TB3_L, TB3_R, 'vSAN healthy'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'vSAN health'), bMid(TB2_L, TB2_R, 'Storage < 80%'), bMid(TB3_L, TB3_R, 'Snapshots clear'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Datastore space'), bMid(TB2_L, TB2_R, 'Growth trend OK'), bMid(TB3_L, TB3_R, 'Backups confirmed'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'VM state check'), bMid(TB2_L, TB2_R, 'Forecast 90 days'), bMid(TB3_L, TB3_R, 'HA/DRS active'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Backup status'), bMid(TB2_L, TB2_R, 'Licence headroom'), bMid(TB3_L, TB3_R, 'App owner sign-off'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  HA         = High Availability; restarts VMs on surviving hosts when a host fails'))
+    lines.append(txt_row('  DRS        = Distributed Resource Scheduler; balances VM load across cluster hosts'))
+    lines.append(txt_row('  vSAN       = VMware hyper-converged storage; health = no resync, no degraded objects'))
+    lines.append(txt_row('  Balloon    = VMware memory reclaim driver; non-zero = host under memory pressure'))
+    lines.append(txt_row('  Swap       = VM disk-based memory swap; non-zero = critical memory shortage on host'))
+    lines.append(txt_row('  Datastore  = Storage volume presented to ESXi; monitor used % and provisioning ratio'))
+    lines.append(txt_row('  VAMI       = vCenter Appliance Management Interface; port 5480; cert and patch mgmt'))
+    lines.append(txt_row('  Alarm      = vCenter triggered alert; P1=red critical, P2=yellow warning, P3=info'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-alert-review',
+    'docs/virtualization/operations/health-checks/alert-review/index.md',
+    'Alert health check — sources, triage priority, and response actions',
+)
+def virt_alert_review():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Alert Health Check — Review Flow'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Review all active alerts every morning; triage by priority; assign or suppress'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Alert Sources'), bMid(TB2_L, TB2_R, 'Priority Triage'), bMid(TB3_L, TB3_R, 'Response Actions'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'vCenter alarms'), bMid(TB2_L, TB2_R, 'P1 = red critical'), bMid(TB3_L, TB3_R, 'P1 → immediate'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Aria Operations'), bMid(TB2_L, TB2_R, 'P2 = yellow warn'), bMid(TB3_L, TB3_R, 'P2 → assign owner'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Pure1 / iDRAC'), bMid(TB2_L, TB2_R, 'P3 = blue info'), bMid(TB3_L, TB3_R, 'P3 → log + weekly'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Monitoring tools'), bMid(TB2_L, TB2_R, ''), bMid(TB3_L, TB3_R, 'False pos → tune'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Manual reports'), bMid(TB2_L, TB2_R, ''), bMid(TB3_L, TB3_R, 'Repeat → RCA req'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  P1           = Critical; immediate action; escalate if not resolved within 30 min'))
+    lines.append(txt_row('  P2           = Warning; assign an owner; resolve within business hours'))
+    lines.append(txt_row('  P3           = Informational; log and review weekly; no immediate action required'))
+    lines.append(txt_row('  False positive = Alert fires incorrectly; tune threshold or suppress after RCA'))
+    lines.append(txt_row('  Repeat alert  = Same alert fires repeatedly; trigger RCA to find root cause'))
+    lines.append(txt_row('  Aria Ops      = VMware Aria Operations; collects metrics and fires perf alerts'))
+    lines.append(txt_row('  Pure1         = Pure Storage cloud portal; array health, capacity, and alerts'))
+    lines.append(txt_row('  iDRAC         = Dell integrated remote access; hardware alerts: temp, disk, PSU'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-daily-health-check',
+    'docs/virtualization/operations/health-checks/daily-health-check/index.md',
+    'Daily health check — morning sequence covering all critical components',
+)
+def virt_daily_health_check():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Daily Health Check — Morning Sequence'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Run every morning; target completion under 15 minutes; document failures in the change log'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Step', 'Component', 'Pass Condition', 'On FAIL', 'Tool'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['──────────────', '──────────────', '───────────────', '──────────────', '──────────────'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['1  vCenter', 'No red alarms', 'All green/clear', 'Investigate 1st', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['2  Host status', 'All connected', 'No disconnects', 'Restart vpxa', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['3  Cluster HA', 'HA enabled', 'Admission OK', 'Check HA logs', 'esxcli / UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['4  vSAN health', 'Green status', 'No resync', 'vSAN Health UI', 'vSAN Health UI'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['5  Datastores', '< 80% used', 'No overprov.', 'Free up space', 'Storage view'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['6  VM state', 'All powered on', 'No stuck tasks', 'Force-end task', 'vSphere Client'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['7  Backup jobs', 'All succeeded', 'No failed jobs', '→ backup runbook', 'Backup console'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['8  Snapshots', 'None stale', '< 24h or 10 GB', 'Consolidate VMs', 'Snapshot mgr'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  vpxa       = VMware vCenter Agent on each ESXi host; restart restores host connection'))
+    lines.append(txt_row('  hostd      = ESXi host management daemon; restart if vpxa restart fails'))
+    lines.append(txt_row('  HA admission = Policy ensuring enough cluster capacity to restart all protected VMs'))
+    lines.append(txt_row('  Resync     = vSAN rebuilding data to meet the storage policy; do not patch during'))
+    lines.append(txt_row('  Consolidate = Merging stale snapshots into the VM base disk; run via vSphere Client'))
+    lines.append(txt_row('  Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-capacity-review',
+    'docs/virtualization/operations/health-checks/capacity-review/index.md',
+    'Capacity review — CPU, RAM, storage, vSAN, and licensing thresholds',
+)
+def virt_capacity_review():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Capacity Review — Weekly Resource Check'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Run weekly and after any significant workload addition; forecast 90 days ahead'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Resource', 'Green', 'Amber — action', 'Red — escalate', 'Frequency'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['──────────────', '──────────────', '───────────────', '──────────────', '──────────────'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['CPU cluster', '< 70% avg', '70-85% → plan', '85%+ → P1 now', 'Daily + weekly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['RAM balloon', '0 balloon', 'Any → investig.', '> 0 swap → P1', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Datastore', '< 75% used', '75-85% → free', '85%+ → expand', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['vSAN capacity', '< 70% used', '70-80% → plan', '80%+ → P1 now', 'Weekly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4],
+                            ['Licensing', 'All covered', 'Expiry < 60 d', 'Expiry < 30 d', 'Monthly'])))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure'))
+    lines.append(txt_row('  Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1'))
+    lines.append(txt_row('  Headroom   = Spare capacity after HA failover reservation is accounted for'))
+    lines.append(txt_row('  Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc'))
+    lines.append(txt_row('  Forecast   = Project current growth rate 90 days; order hardware before hitting amber'))
+    lines.append(txt_row('  vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-management-access-check',
+    'docs/virtualization/operations/health-checks/management-access-check/index.md',
+    'Management access check — DNS, HTTPS, and login validation for all endpoints',
+)
+def virt_mgmt_access_check():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Management Access Check'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Run weekly; confirm DNS, HTTPS, and login for every management endpoint'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check Sequence (per endpoint)'), bMid(B2_L, B2_R, 'Endpoints to Verify'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '1. DNS resolves FQDN?'), bMid(B2_L, B2_R, 'vCenter FQDN (HTTPS)'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '   FAIL → check DNS / HOSTS'), bMid(B2_L, B2_R, '  └─ SSO login test'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2. HTTPS port 443 reachable?'), bMid(B2_L, B2_R, '  └─ VAMI port 5480'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '   FAIL → check firewall rule'), bMid(B2_L, B2_R, 'NSX Manager FQDN'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '3. Login succeeds?'), bMid(B2_L, B2_R, 'Backup console FQDN'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '   FAIL → check SSO / AD bind'), bMid(B2_L, B2_R, 'Monitoring dashboard'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4. Session timeout acceptable?'), bMid(B2_L, B2_R, 'Storage array FQDN'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '   FAIL → check session policy'), bMid(B2_L, B2_R, 'vSAN Witness host'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  FQDN    = Fully Qualified Domain Name; must resolve in DNS; e.g. vcenter.corp.local'))
+    lines.append(txt_row('  SSO     = vCenter Single Sign-On; authentication service; default domain: vsphere.local'))
+    lines.append(txt_row('  VAMI    = vCenter Appliance Management Interface; port 5480; cert and patch management'))
+    lines.append(txt_row('  AD bind = LDAP/LDAPS connection from SSO to Active Directory; check if login fails'))
+    lines.append(txt_row('  Timeout = Session idle timeout; check if users report being logged out too quickly'))
+    lines.append(txt_row('  NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-pre-change-check',
+    'docs/virtualization/operations/health-checks/pre-change-check/index.md',
+    'Pre-change checks — baseline validation before any maintenance or upgrade',
+)
+def virt_pre_change_check():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Pre-Change Checks — Before Maintenance'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Verify platform is healthy before any host maintenance, upgrade, or config change'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'vCenter Health'), bMid(TB2_L, TB2_R, 'vSAN + Storage'), bMid(TB3_L, TB3_R, 'Snapshots + Backup'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'All hosts connected'), bMid(TB2_L, TB2_R, 'vSAN health green'), bMid(TB3_L, TB3_R, 'No stale snapshots'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'No active alarms'), bMid(TB2_L, TB2_R, 'No resync in prog.'), bMid(TB3_L, TB3_R, 'Snaps < 24h/10 GB'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'HA/DRS enabled'), bMid(TB2_L, TB2_R, 'All paths active'), bMid(TB3_L, TB3_R, 'Backup ran < 24h'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Admission ctrl OK'), bMid(TB2_L, TB2_R, 'Datastore < 80%'), bMid(TB3_L, TB3_R, 'Change rec. approv.'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Tasks/events clear'), bMid(TB2_L, TB2_R, 'No stale extents'), bMid(TB3_L, TB3_R, 'MW window confirm.'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1])))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'All PASS → proceed with change    ·    Any FAIL → hold until resolved')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Admission ctrl = HA policy reserving cluster capacity to restart all protected VMs'))
+    lines.append(txt_row('  Resync         = vSAN rebuilding data after a failure; change causes resync cascade'))
+    lines.append(txt_row('  Stale extent   = vSAN object component with no active mirror; signals degraded health'))
+    lines.append(txt_row('  Active paths   = Storage paths from ESXi to array; all should be active/optimised'))
+    lines.append(txt_row('  MW window      = Maintenance window; agreed time with app owner and change manager'))
+    lines.append(txt_row('  Change rec.    = ITSM change record; must be approved before any maintenance begins'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-health-checks-post-change-validation',
+    'docs/virtualization/operations/health-checks/post-change-validation/index.md',
+    'Post-change validation — immediate and extended checks after any maintenance',
+)
+def virt_post_change_validation():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Post-Change Validation'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Run after any change — maintenance, upgrade, patch, or config modification'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Immediate — within 5 min'), bMid(B2_L, B2_R, 'Extended — within 1 hour'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Hosts connected to vCenter'), bMid(B2_L, B2_R, 'Monitoring alerts clear'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cluster HA / DRS active'), bMid(B2_L, B2_R, 'App owner confirms OK'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No VMs in unexpected state'), bMid(B2_L, B2_R, 'Backup job succeeds'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Datastore paths accessible'), bMid(B2_L, B2_R, 'Snapshot count stable'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No new critical alarms'), bMid(B2_L, B2_R, 'Performance metrics normal'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'vSAN health green'), bMid(B2_L, B2_R, 'Change record closed'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Unexpected state = VM powered off, suspended, or orphaned unexpectedly after change'))
+    lines.append(txt_row('  Datastore paths  = Storage I/O paths from ESXi; check via esxcli storage core path list'))
+    lines.append(txt_row('  Snapshot stable  = No new snapshots created by backup; no stale snapshots accumulating'))
+    lines.append(txt_row('  App owner        = Business stakeholder; must confirm application is healthy post-change'))
+    lines.append(txt_row('  Change record    = Close only after all checks pass and app owner sign-off is documented'))
+    lines.append(txt_row('  Monitoring alert = Any new alert fired after change = likely caused by the change; triage'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks',
+    'docs/virtualization/operations/runbooks/index.md',
+    'Virtualization runbooks — incident, planned work, and reference index',
+)
+def virt_runbooks_index():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'Virtualization Runbooks'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Practical runbooks for incidents, maintenance, lifecycle work, and RCA follow-up'))
+    lines.append(txt_row())
+    lines.append(R(arrow([TM1, TM2, TM3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(TB1_L, TB1_R), bTop(TB2_L, TB2_R), bTop(TB3_L, TB3_R))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Incident Response'), bMid(TB2_L, TB2_R, 'Planned Work'), bMid(TB3_L, TB3_R, 'Reference'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, '─────────────────'), bMid(TB2_L, TB2_R, '─────────────────'), bMid(TB3_L, TB3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Backup failure'), bMid(TB2_L, TB2_R, 'Host evacuation'), bMid(TB3_L, TB3_R, 'Health check index'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'vCenter outage'), bMid(TB2_L, TB2_R, 'Snapshot cleanup'), bMid(TB3_L, TB3_R, 'Troubleshooting'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Host disconnected'), bMid(TB2_L, TB2_R, 'VM lifecycle'), bMid(TB3_L, TB3_R, 'Inventory'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Evidence collect'), bMid(TB2_L, TB2_R, 'Cert renewal'), bMid(TB3_L, TB3_R, 'Quick reference'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'RCA template'), bMid(TB2_L, TB2_R, 'Maintenance window'), bMid(TB3_L, TB3_R, 'Decision trees'))))
+    lines.append(R(merge(bMid(TB1_L, TB1_R, 'Incident response'), bMid(TB2_L, TB2_R, 'Network validation'), bMid(TB3_L, TB3_R, 'Cheat sheets'))))
+    lines.append(R(merge(bBot(TB1_L, TB1_R), bBot(TB2_L, TB2_R), bBot(TB3_L, TB3_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Runbook          = Step-by-step procedure for a known task or incident type'))
+    lines.append(txt_row('  Evidence collect = Gather logs and screenshots before any remediation begins'))
+    lines.append(txt_row('  RCA              = Root Cause Analysis; post-incident document explaining why failure occurred'))
+    lines.append(txt_row('  Host evacuation  = vMotion all VMs off a host before patching or hardware work'))
+    lines.append(txt_row('  VM lifecycle     = Standard steps for deploy, rename, reconfigure, and decommission'))
+    lines.append(txt_row('  Incident         = Unplanned disruption; follow incident response runbook immediately'))
+    lines.append(txt_row('  Planned work     = Scheduled change; requires approved change record before starting'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-backup-failure',
+    'docs/virtualization/operations/runbooks/backup-failure/index.md',
+    'VMware backup failure runbook — diagnose, fix, and verify backup jobs',
+)
+def virt_runbook_backup_failure():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'VMware Backup Failure Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Identify failed VMs, diagnose the error, remediate, and verify before closing'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identify + Diagnose'), bMid(B2_L, B2_R, 'Fix + Verify'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Check console for failed jobs'), bMid(B2_L, B2_R, 'Check VM snapshot state'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Note VM, job, error, time'), bMid(B2_L, B2_R, 'Right-click VM → Snapshots'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Common errors:'), bMid(B2_L, B2_R, 'Consolidate stale snapshots'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '· Snapshot creation failed'), bMid(B2_L, B2_R, 'Free datastore space if full'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '· Snapshot consolidation warn'), bMid(B2_L, B2_R, 'Fix proxy / network path'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '· Datastore out of space'), bMid(B2_L, B2_R, 'Retry failed job manually'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '· Network / proxy failure'), bMid(B2_L, B2_R, 'Verify job succeeded'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '· vCenter API error'), bMid(B2_L, B2_R, 'Document in change record'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Snapshot      = Point-in-time copy of VM disk state; backup creates and removes per job'))
+    lines.append(txt_row('  Consolidation = Merging leftover snapshot files into base disk; run if stale snap exists'))
+    lines.append(txt_row('  Proxy         = Backup proxy server that performs data movement; check connectivity'))
+    lines.append(txt_row('  CBT           = Changed Block Tracking; VMware API tracking changed disk blocks for backup'))
+    lines.append(txt_row('  quiesce       = VSS snapshot with application-consistent state; fails if VMware tools old'))
+    lines.append(txt_row('  Orphaned snap = Snapshot in datastore but not in vCenter; causes silent disk growth'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'virtualization-operations-runbooks-certificate-renewal-planning',
+    'docs/virtualization/operations/runbooks/certificate-renewal-planning/index.md',
+    'VMware certificate renewal runbook — planning and execution steps',
+)
+def virt_runbook_cert_renewal():
+    R, txt_row = make_helpers(W2)
+    lines = []
+    lines.append(title_border(W2, 'VMware Certificate Renewal Runbook'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Plan certificate renewals early; capture pre/post evidence; test all integrations'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Planning'), bMid(B2_L, B2_R, 'Execution'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '──────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Identify expiring certificate'), bMid(B2_L, B2_R, 'Schedule maintenance window'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm type: SSL / STS / SU'), bMid(B2_L, B2_R, 'Notify stakeholders'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'List all affected products'), bMid(B2_L, B2_R, 'Run cert renewal procedure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Note integrations at risk'), bMid(B2_L, B2_R, 'Post-change: login test'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Capture: subject, SAN, expiry'), bMid(B2_L, B2_R, 'Verify all integrations OK'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Screenshot as pre-evidence'), bMid(B2_L, B2_R, 'Capture post-change evidence'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Confirm vCenter backup exists'), bMid(B2_L, B2_R, 'Close change record'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Machine SSL = vCenter/ESXi HTTPS cert; presented to browsers and API clients'))
+    lines.append(txt_row('  STS cert    = Security Token Service cert; used for SAML token signing in SSO'))
+    lines.append(txt_row('  SU cert     = Solution User cert; used by vCenter services to authenticate to SSO'))
+    lines.append(txt_row('  SAN         = Subject Alternative Name; list of FQDNs the cert is valid for'))
+    lines.append(txt_row('  VMCA        = VMware Certificate Authority; built-in CA; issues certs to ESXi hosts'))
+    lines.append(txt_row('  Expiry buffer = Renew at 60 days remaining; 30 days = urgent; 0 days = service outage'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

@@ -38,14 +38,38 @@ Pre-Change Baseline Sequence
                           ▼
                  PROCEED WITH CHANGE
 ```
-## 1. vCenter and Management Access
-
-```powershell
-# Confirm vCenter is reachable and you can authenticate
-Connect-VIServer -Server vcenter.example.local
-
-# vCenter version and build
-$global:DefaultVIServer | Select-Object Name, Version, Build, IsConnected
+┌─────────────────────────────── Pre-Change Checks — Before Maintenance ────────────────────────────────┐
+│                                                                                                       │
+│    Verify platform is healthy before any host maintenance, upgrade, or config change                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        vCenter Health       │  │        vSAN + Storage       │  │      Snapshots + Backup     │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │     All hosts connected     │  │      vSAN health green      │  │      No stale snapshots     │   │
+│   │       No active alarms      │  │      No resync in prog.     │  │      Snaps < 24h/10 GB      │   │
+│   │        HA/DRS enabled       │  │       All paths active      │  │       Backup ran < 24h      │   │
+│   │      Admission ctrl OK      │  │       Datastore < 80%       │  │     Change rec. approv.     │   │
+│   │      Tasks/events clear     │  │       No stale extents      │  │      MW window confirm.     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                                            │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             All PASS → proceed with change    ·    Any FAIL → hold until resolved             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Admission ctrl = HA policy reserving cluster capacity to restart all protected VMs                 │
+│    Resync         = vSAN rebuilding data after a failure; change causes resync cascade                │
+│    Stale extent   = vSAN object component with no active mirror; signals degraded health              │
+│    Active paths   = Storage paths from ESXi to array; all should be active/optimised                  │
+│    MW window      = Maintenance window; agreed time with app owner and change manager                 │
+│    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 2. Host Connectivity

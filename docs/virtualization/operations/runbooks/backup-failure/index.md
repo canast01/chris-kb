@@ -1,5 +1,36 @@
 # VMware Backup Failure Runbook
 
+```
+┌──────────────────────────────────── VMware Backup Failure Runbook ────────────────────────────────────┐
+│                                                                                                       │
+│    Identify failed VMs, diagnose the error, remediate, and verify before closing                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Identify + Diagnose              │  │                 Fix + Verify                │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │        Check console for failed jobs         │  │           Check VM snapshot state           │   │
+│   │          Note VM, job, error, time           │  │          Right-click VM → Snapshots         │   │
+│   │                Common errors:                │  │         Consolidate stale snapshots         │   │
+│   │          · Snapshot creation failed          │  │         Free datastore space if full        │   │
+│   │        · Snapshot consolidation warn         │  │           Fix proxy / network path          │   │
+│   │           · Datastore out of space           │  │          Retry failed job manually          │   │
+│   │          · Network / proxy failure           │  │             Verify job succeeded            │   │
+│   │             · vCenter API error              │  │          Document in change record          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Snapshot      = Point-in-time copy of VM disk state; backup creates and removes per job            │
+│    Consolidation = Merging leftover snapshot files into base disk; run if stale snap exists           │
+│    Proxy         = Backup proxy server that performs data movement; check connectivity                │
+│    CBT           = Changed Block Tracking; VMware API tracking changed disk blocks for backup         │
+│    quiesce       = VSS snapshot with application-consistent state; fails if VMware tools old          │
+│    Orphaned snap = Snapshot in datastore but not in vCenter; causes silent disk growth                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Identify Failed VMs
 
 - Review the backup platform for failed or missed backup jobs

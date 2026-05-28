@@ -17,5 +17,6 @@ from . import tools
 from . import automation
 from . import ops
 from . import governance
+from . import virtualization_ops
 
 from ._core import DIAGRAMS

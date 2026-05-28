@@ -36,17 +36,30 @@ Capacity Check Flow
   │                fails — expand immediately           │
   └─────────────────────────────────────────────────────┘
 ```
-## Cluster CPU and Memory
-
-```powershell
-# Via vCenter PowerCLI
-$clusters = Get-Cluster
-foreach ($c in $clusters) {
-    $hosts = Get-VMHost -Location $c
-    $totalCPU = ($hosts | Measure-Object -Property NumCpu -Sum).Sum
-    $usedCPU  = ($hosts | Get-Stat -Stat cpu.usage.average -MaxSamples 1 | Measure-Object -Property Value -Average).Average
-    Write-Host "$($c.Name): CPU=$($usedCPU.ToString('0.0'))%  Hosts=$($hosts.Count)"
-}
+┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
+│                                                                                                       │
+│    Run weekly and after any significant workload addition; forecast 90 days ahead                     │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Resource     │      Green       │   Amber — action  │  Red — escalate  │    Frequency     │   │
+│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
+│   │   CPU cluster    │    < 70% avg     │   70-85% → plan   │  85%+ → P1 now   │  Daily + weekly  │   │
+│   │   RAM balloon    │    0 balloon     │  Any → investig.  │  > 0 swap → P1   │      Daily       │   │
+│   │    Datastore     │    < 75% used    │   75-85% → free   │  85%+ → expand   │      Daily       │   │
+│   │  vSAN capacity   │    < 70% used    │   70-80% → plan   │  80%+ → P1 now   │      Weekly      │   │
+│   │    Licensing     │   All covered    │   Expiry < 60 d   │  Expiry < 30 d   │     Monthly      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure            │
+│    Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1                  │
+│    Headroom   = Spare capacity after HA failover reservation is accounted for                         │
+│    Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc            │
+│    Forecast   = Project current growth rate 90 days; order hardware before hitting amber              │
+│    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Thresholds:
