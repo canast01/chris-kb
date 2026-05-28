@@ -55,7 +55,7 @@ def bMid(l, r, text=''):
     """One content row of a box. text is centred and truncated to inner width."""
     iw = r - l - 1
     if len(text) > iw:
-        print(f'  WARN bMid: truncated ({len(text)} → {iw}): {text!r}', file=sys.stderr)
+        raise ValueError(f'bMid: text too long ({len(text)} > {iw}): {text!r}')
     txt = text.center(iw)[:iw]
     d = {l: '│', r: '│'}
     for i, c in enumerate(txt):
@@ -88,7 +88,7 @@ def sections(l, r, divs, texts):
         sr = boundaries[i + 1]
         iw = sr - sl - 1
         if len(text) > iw:
-            print(f'  WARN sections[{i}]: truncated ({len(text)} → {iw}): {text!r}', file=sys.stderr)
+            raise ValueError(f'sections[{i}]: text too long ({len(text)} > {iw}): {text!r}')
         txt = text.center(iw)[:iw]
         for j, c in enumerate(txt):
             d[sl + 1 + j] = c
@@ -114,8 +114,7 @@ def title_border(w, title, top=True):
     if title:
         padded = f' {title} '
         if len(padded) > w:
-            print(f'  WARN title_border: title too long ({len(padded)} > {w}): {title!r}', file=sys.stderr)
-            padded = padded[:w]
+            raise ValueError(f'title_border: title too long ({len(padded)} > {w}): {title!r}')
         left_dashes = (w - len(padded)) // 2
         right_dashes = w - len(padded) - left_dashes
         inner = '─' * left_dashes + padded + '─' * right_dashes
@@ -151,8 +150,7 @@ def make_helpers(w):
         for i, c in enumerate(text):
             pos = indent + i
             if pos >= w:
-                print(f'  WARN txt_row: truncated at col {w} (indent={indent}): {text!r}', file=sys.stderr)
-                break
+                raise ValueError(f'txt_row: text too long (truncates at col {w}, indent={indent}): {text!r}')
             if 0 <= pos < w:
                 r[pos] = c
         return '│' + ''.join(r) + '│'
