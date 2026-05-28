@@ -32,13 +32,41 @@ smartctl -a /dev/sda | grep -E "Serial|Model|Capacity|Health"
 ip link show | awk '/^[0-9]/{print $2}'
 ethtool <interface> | grep -E "Speed|Duplex"
 ```
-
-```powershell
-# Windows — hardware inventory
-Get-WmiObject Win32_ComputerSystem | Select-Object Manufacturer, Model, TotalPhysicalMemory
-Get-WmiObject Win32_BIOS | Select-Object SerialNumber, Version
-Get-WmiObject Win32_PhysicalMemory | Select-Object Capacity, Speed
-Get-Disk | Select-Object Number, FriendlyName, SerialNumber, Size
+┌───────────────────────────────────── Inventory — Asset Tracking ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Hardware asset register: serial number, rack location, owner, function, lifecycle state    │   │
+│   │        Update register at: receipt, rack/decommission, ownership change, support change       │   │
+│   │     Audit: reconcile physical assets against register quarterly; investigate discrepancies    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Register Attributes              │  │               Lifecycle States              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            Hostname + IP address             │  │              Ordered: PO raised             │   │
+│   │            Serial number + model             │  │          In use: active production          │   │
+│   │            Rack / rack unit / DC             │  │            Maintenance: in repair           │   │
+│   │             Owner + cost centre              │  │            EOL: past support end            │   │
+│   │             Support contract ref             │  │           Decommissioned: retired           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Field       │     Example      │  Source of truth  │   Updated when   │      Owner       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │      Serial      │    SVC-12345X    │    Vendor label   │    On receipt    │    Asset team    │   │
+│   │     Rack loc     │   DC1-A01-U14    │     DCIM tool     │    On install    │      DC ops      │   │
+│   │    Lifecycle     │    Active/EOL    │  CMDB + register  │    On change     │    Asset team    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DCIM         = Data Centre Infrastructure Management tool; tracks rack/power/cooling               │
+│    Rack unit    = 1U = 44.45 mm height; standard measure for data centre rack space                   │
+│    Cost centre  = Finance code; determines which team is billed for the asset                         │
+│    Asset audit  = Physical reconciliation of assets against register; finds ghost/missing assets      │
+│    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Cloud Asset Inventory

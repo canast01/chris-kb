@@ -42,37 +42,42 @@ flowchart TD
     O --> P[Test Report Generated]
     P --> M
 ```
-
----
-
-## Veeam SureBackup — Automated VM Verification
-
-SureBackup boots backed-up VMs in an isolated Virtual Lab and runs verification scripts against them. It proves bootability and application availability without touching production.
-
-### SureBackup Job Configuration (PowerShell)
-
-```powershell
-# Create a Virtual Lab (isolated network)
-Add-VBRVirtualLab -Server "vcenter01.example.local" `
-    -Name "SureBackup-VLab" `
-    -Datastore "DS-BACKUP-VLAB" `
-    -ProductionNetwork "VM Network" `
-    -IsolatedNetworkCIDR "172.16.254.0/24"
-
-# Create an Application Group referencing critical VMs
-$dc  = Get-VBRProtectionGroupObject -Name "DC01"
-$sql = Get-VBRProtectionGroupObject -Name "SQL-PROD-01"
-
-Add-VBRApplicationGroup -Name "AG-CriticalInfra" `
-    -VM @($dc, $sql) `
-    -StartupDelay 120
-
-# Create a SureBackup Job
-Add-VBRSureBackupJob `
-    -Name "SBK-CriticalInfra-Daily" `
-    -VirtualLab (Get-VBRVirtualLab -Name "SureBackup-VLab") `
-    -ApplicationGroup (Get-VBRApplicationGroup -Name "AG-CriticalInfra") `
-    -ScheduleOptions (New-VBRScheduleOptions -Daily -DailyTime "04:00")
+┌───────────────────────────────── Data Protection — Backup Validation ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Backup validation: confirm jobs complete, data is intact, restores work before needed     │   │
+│   │              Automated: every job — checksums + VM boot test; evidence in job log             │   │
+│   │      Manual: quarterly — full application restore with user acceptance and signed report      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Automated Validation             │  │            Manual Restore Testing           │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Veeam SureBackup: boot VM test        │  │         Quarterly full restore test         │   │
+│   │         Commvault: snap verify mount         │  │         Application-level acceptance        │   │
+│   │        NBU bpverify: media integrity         │  │         User validates restored data        │   │
+│   │         Checksum validation on file          │  │          Document result + sign-off         │   │
+│   │         Alert on job failure or skip         │  │          Update test calendar entry         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Tier       │      Method      │     Frequency     │ Success criteria │     Evidence     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Auto/basic    │  Job log check   │    Every backup   │   Job success    │  Job log entry   │   │
+│   │    Auto/deep     │  Mount/boot VM   │    Daily/weekly   │  VM boots clean  │  SureBackup log  │   │
+│   │      Manual      │   Full restore   │     Quarterly     │  App functional  │  Signed report   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SureBackup  = Veeam automated recovery verification; boots VM from backup in isolated sandbox      │
+│    bpverify    = NetBackup command; reads backup image and verifies data integrity on media           │
+│    Checksum    = Hash of backup data; mismatch indicates corruption in backup storage                 │
+│    RTO         = Recovery Time Objective; max time to restore; verified in manual restore tests       │
+│    RPO         = Recovery Point Objective; max data loss; validated by backup job frequency           │
+│    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### SureBackup Verification Tests (per VM)

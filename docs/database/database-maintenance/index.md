@@ -31,18 +31,36 @@ SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
-
-### PostgreSQL — WAL Cleanup
-
-```bash
-# Old WAL segments are recycled automatically; check pg_wal is not growing unbounded
-du -sh /var/lib/postgresql/data/pg_wal/
-
-# Inactive replication slots hold WAL — find and review
-psql -c "SELECT slot_name, active, restart_lsn FROM pg_replication_slots WHERE active = false;"
-
-# Drop inactive slot (WARNING: only if no longer needed)
-# psql -c "SELECT pg_drop_replication_slot('slot_name');"
+┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Scheduled DB maintenance keeps performance stable and prevents space exhaustion        │   │
+│   │      Index maintenance: rebuild (>30% fragmentation) or reorganise (10-30% fragmentation)     │   │
+│   │       Run during low-traffic maintenance windows; monitor impact on production workloads      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Index Maintenance      │  │      Statistics Update      │  │        Log Management       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      PG: REINDEX TABLE      │  │      PG: ANALYZE / auto     │  │      PG: WAL truncation     │   │
+│   │       PG: VACUUM FULL       │  │     MSSQL: UPDATE STATS     │  │      MSSQL: DBCC SHRINK     │   │
+│   │      MSSQL: ALTER INDEX     │  │     MySQL: ANALYZE TABLE    │  │     MySQL: PURGE BINARY     │   │
+│   │     Check fragmentation     │  │    Stale stats = bad plan   │  │       Log backup first      │   │
+│   │      Online vs offline      │  │   Trigger after bulk load   │  │      Monitor VLF count      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VACUUM        = PostgreSQL process; reclaims dead row space; VACUUM FULL rewrites table            │
+│    autovacuum    = PostgreSQL background process; runs VACUUM/ANALYZE automatically                   │
+│    Fragmentation = Index leaf pages out of order; > 30% triggers REBUILD (full rewrite)               │
+│    REORGANIZE    = Online defrag (SQL Server); moves leaf pages in-place; low-impact                  │
+│    Statistics    = Histogram of data distribution; query planner uses them for plan selection         │
+│    VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## MySQL / MariaDB Maintenance

@@ -4,6 +4,38 @@
 Enterprise infrastructure architecture design guides covering high availability patterns, storage tiering, network topology, and disaster recovery design principles.
 </div>
 
+```
+┌────────────────── Architecture — HA Design, Storage, Networking & Disaster Recovery ──────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Architecture design guides for enterprise infrastructure: HA, storage, network, DR      │   │
+│   │    Design principles: eliminate single points of failure; automate failover; test recovery    │   │
+│   │     All designs must state: RPO/RTO targets, failure domain boundaries, and recovery path     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Compute & HA        │  │      Storage & Network      │  │        DR & Recovery        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      N+1 host capacity      │  │       Storage tiering       │  │      RPO / RTO targets      │   │
+│   │       DRS + vSphere HA      │  │       Redundant paths       │  │      Active-passive DR      │   │
+│   │     Failure domain plan     │  │       L3 segmentation       │  │      Replication design     │   │
+│   │     Anti-affinity rules     │  │     Spine-leaf topology     │  │       Failover runbook      │   │
+│   │        Resource pools       │  │      BGP peering design     │  │       Recovery testing      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    N+1          = One more host than minimum required; one failure without service impact             │
+│    Failure domain= Boundary within which a single failure has impact; AZ / rack / PDU                 │
+│    Anti-affinity = Rule keeping workloads on different hosts for HA; opposite of affinity             │
+│    Spine-leaf   = Data centre switching topology; spine = core, leaf = ToR; no STP needed             │
+│    Active-passive= Primary handles all traffic; standby takes over on failure (vs active-active)      │
+│    RPO/RTO      = Recovery Point/Time Objectives; quantify acceptable data loss and downtime          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Articles
 
 <div class="kb-grid kb-grid-3">
@@ -30,27 +62,4 @@ Enterprise infrastructure architecture design guides covering high availability 
 
 ## Enterprise Architecture Overview
 
-```mermaid
-graph TB
-  COMP["Compute\nESXi · Linux · Windows"] --> FABRIC["SAN Fabric\nBrocade · Cisco MDS"]
-  COMP --> NET["Network\nVDS · NSX · VLANs"]
-  FABRIC --> STORE["Storage\nFlashArray · PowerMax · ONTAP"]
-  NET --> STORE
-  STORE -->|"replication"| DR["Disaster Recovery\nSRM · SRDF · RecoverPoint"]
-  COMP --> MON["Monitoring\nAria Ops · CloudIQ · Pure1"]
-  STORE --> MON
-  COMP --> SEC["Security\nAD · CyberArk · PKI"]
-  NET --> SEC
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef net fill:#1d4ed8,stroke:#1e40af,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  classDef mon fill:#b45309,stroke:#92400e,color:#fff
-  classDef sec fill:#15803d,stroke:#166534,color:#fff
-  class COMP,FABRIC ctrl
-  class STORE store
-  class NET net
-  class DR dr
-  class MON mon
-  class SEC sec
-```
+

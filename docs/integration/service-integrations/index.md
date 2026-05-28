@@ -25,21 +25,36 @@ curl -s http://alertmanager:9093/api/v2/alerts | jq '.[] | {alertname:.labels.al
 # Grafana datasource health
 curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.name, type:.type, url:.url}'
 ```
-
-## Syslog / Log Forwarding
-
-```bash
-# Verify rsyslog is forwarding
-systemctl status rsyslog
-# Test send a message and check it arrives at SIEM
-logger -p local0.info "Test message from $(hostname) at $(date)"
-# Then grep SIEM for that message
-
-# Check rsyslog forwarding config
-grep -E "@@|omfwd" /etc/rsyslog.conf /etc/rsyslog.d/*.conf
-
-# TCP connectivity to syslog receiver
-nc -zv <syslog-server> 514
+┌───────────────────────────────── Integration — Service Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Patterns for integrating infrastructure components with ITSM, monitoring, backup, SIEM    │   │
+│   │       Typically via: REST API (webhook/poll), SNMP traps, syslog, agent, or file export       │   │
+│   │         Use dedicated service accounts; minimal scope; rotate credentials on schedule         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      ITSM (ServiceNow)      │  │          Monitoring         │  │       Security (SIEM)       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │         CMDB CI sync        │  │      SNMP trap receiver     │  │      Syslog forwarding      │   │
+│   │     Incident auto-create    │  │      Agent (Zabbix/NR)      │  │      CEF / JSON events      │   │
+│   │     Change feed webhook     │  │       REST API polling      │  │      API key for ingest     │   │
+│   │    MID Server for on-prem   │  │     Alert routing rules     │  │    TLS syslog (port 6514)   │   │
+│   │    Test: CI creation flow   │  │     Test: send test trap    │  │     Test: logger command    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    MID Server    = ServiceNow component that runs on-prem; proxies API calls to instance              │
+│    SNMP trap     = Unsolicited alert from device to monitoring; receiver must be configured           │
+│    CEF           = Common Event Format; Syslog header + key=value pairs; standard SIEM intake         │
+│    Syslog/514    = UDP syslog; no guarantee of delivery; TLS syslog (6514) preferred                  │
+│    Webhook       = HTTP callback; source POSTs event payload to receiver URL on trigger               │
+│    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Backup Agent Integration

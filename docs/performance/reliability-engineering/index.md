@@ -1,5 +1,37 @@
 # Reliability Engineering
 
+```
+┌──────────────────────────────── Performance — Reliability Engineering ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Reliability engineering: measure, track, and improve system dependability over time      │   │
+│   │        MTTR: reduce by improving detection, runbooks, and automation of recovery steps        │   │
+│   │       MTBF: improve by eliminating failure causes via root cause analysis and hardening       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Metrics                    │  │             Improvement Actions             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │               MTTR per service               │  │         Automate detection (alerts)         │   │
+│   │               MTBF per service               │  │           Improve runbook quality           │   │
+│   │                Availability %                │  │           RCA + corrective actions          │   │
+│   │              Incident frequency              │  │          Eliminate repeat failures          │   │
+│   │             Change failure rate              │  │            Improve test coverage            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    MTTR         = Mean Time To Recover; total incident downtime / number of incidents                 │
+│    MTBF         = Mean Time Between Failures; total uptime / number of failures                       │
+│    Availability = (MTBF / (MTBF + MTTR)) * 100%; four nines = 99.99% = ~52 min/yr                     │
+│    Change fail rate= % of changes causing incidents; target < 5% per DORA metrics                     │
+│    FMEA         = Failure Mode and Effects Analysis; proactive failure scenario assessment            │
+│    Toil         = Repetitive manual work; automate to reduce MTTR and operator error                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 Reliability engineering systematically improves system resilience through redundancy, failure testing, and learning from incidents.
 
 ## Core Principles

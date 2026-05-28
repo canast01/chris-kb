@@ -82,33 +82,36 @@ graph TD
     SW_ToR_A --> Host2
     SW_ToR_B --> Host3
 ```
-
-**Failure domain layers and design decisions:**
-
-| Layer | Failure Event | Design Response |
-|-------|--------------|-----------------|
-| Server NIC | Single NIC failure | LACP bonding (802.3ad) across dual NICs |
-| ToR Switch | Switch failure or upgrade | Dual ToR per rack; hosts dual-home to both |
-| PDU | PDU breaker trip | Distribute racks across PDU A and PDU B; dual PSU per server |
-| Rack | Rack power loss or cooling | Spread HA pairs across multiple racks |
-| Row/Room | Room-level CRAC failure | Separate rows fed by independent cooling |
-| Site | Site-level disaster | DR replication to secondary site (see DR Design guide) |
-
-Rule: no two nodes that form an HA pair should share the same PDU and the same ToR switch.
-
----
-
-## VMware vSphere HA Design
-
-vSphere HA provides automatic VM restart on surviving hosts when a host fails. It is the baseline Tier 1/2 compute HA mechanism in VMware environments.
-
-### vSphere HA Key Design Decisions
-
-**Admission Control Policy**
-Set admission control to reserve capacity for N host failures. For a 6-host cluster tolerating 1 failure, reserve 1/6 of total cluster resources (CPU + memory).
-
-```text
-Reserved capacity = (1 / total_hosts) × cluster_resources
+┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         HA design: eliminate single points of failure; automate detection and failover        │   │
+│   │        Layers: compute (vSphere HA), storage (multi-path/RAID), network (bonding/LACP)        │   │
+│   │        Rule: every component has a redundant path; failure triggers automatic recovery        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 HA Patterns                  │  │              Redundancy Layers              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Active-active: both serve           │  │              Compute: N+1 hosts             │   │
+│   │        Active-passive: auto failover         │  │           Storage: dual paths MPIO          │   │
+│   │           N+1 / N+2 host capacity            │  │           Network: bonding / LACP           │   │
+│   │             Anti-affinity rules              │  │            Power: dual PSU + PDU            │   │
+│   │             Heartbeat monitoring             │  │             Site: AZ or DC pair             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SPOF         = Single Point of Failure; any component whose failure stops the service              │
+│    MPIO         = Multi-Path I/O; multiple physical paths to storage; path failure is transparent     │
+│    LACP         = Link Aggregation Control Protocol; bonds multiple NICs into one logical link        │
+│    vSphere HA   = Restarts VMs on surviving hosts within minutes of host failure                      │
+│    Fencing      = Isolate a failed node before failover to prevent split-brain                        │
+│    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.

@@ -49,35 +49,35 @@ For each application, document:
 - TLS cert: *.payments.example.com — expires 2027-03-01
 - Secrets: vault path `secret/payments/db_password`, `secret/payments/fraud_api_key`
 ```
-
-## Network Topology — Key Segments
-
-Document logical network zones and permitted flows:
-
-| Zone | CIDR | Purpose | Inter-zone Rules |
-|---|---|---|---|
-| Production | 10.0.0.0/16 | Live workloads | → DB zone (allowed); → internet (via proxy) |
-| Database | 10.1.0.0/24 | Database servers | ← Prod zone only; no internet |
-| Management | 10.2.0.0/24 | Jump hosts, monitoring | → All zones (admin access) |
-| DMZ | 10.3.0.0/24 | Internet-facing services | → Prod zone (limited); internet inbound |
-
-## Cloud Resource Mapping
-
-### AWS
-
-```bash
-# List all EC2 instances with tags
-aws ec2 describe-instances \
-  --query 'Reservations[*].Instances[*].{ID:InstanceId,Name:Tags[?Key==`Name`].Value|[0],Env:Tags[?Key==`Environment`].Value|[0],State:State.Name,AZ:Placement.AvailabilityZone}' \
-  --output table
-
-# List RDS instances and their VPCs
-aws rds describe-db-instances \
-  --query 'DBInstances[*].{ID:DBInstanceIdentifier,Engine:Engine,VPC:DBSubnetGroup.VpcId,Status:DBInstanceStatus}' \
-  --output table
-
-# Application dependency map — Resource Groups
-aws resource-groups list-groups
+┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Environment map: production, staging, dev, DR — document dependencies and data flows     │   │
+│   │      Identify: shared services (AD, DNS, NTP) vs environment-specific (app, DB, storage)      │   │
+│   │       DR site must mirror prod sizing; test failover path; document RTO/RPO per service       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Production         │  │        Non-Production       │  │        DR / Recovery        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Live workloads       │  │     Staging mirrors prod    │  │      Replication target     │   │
+│   │        Change managed       │  │        Dev = isolated       │  │       Tested annually       │   │
+│   │        Monitored 24/7       │  │     No prod data in dev     │  │       RTO/RPO defined       │   │
+│   │         SLA enforced        │  │      Refresh from prod      │  │      Activation runbook     │   │
+│   │      Access controlled      │  │     Config parity check     │  │        Config in sync       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Config parity = Staging config matches prod (versions, settings) for realistic testing             │
+│    Data masking  = Replace prod PII with synthetic data before copying to non-prod environments       │
+│    Shared service= Component used across environments (AD, DNS, NTP); single point of attention       │
+│    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
+│    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Azure

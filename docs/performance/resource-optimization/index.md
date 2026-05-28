@@ -15,14 +15,35 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 # Memory available
 free -h | awk '/Mem/ {print "Available:", $7}'
 ```
-
-**VMware — VM rightsizing:**
-```powershell
-# VMs with low memory usage
-Get-VM | Get-Stat -Stat mem.usage.average -MaxSamples 48 |
-  Group-Object Entity |
-  Select-Object Name, @{N='AvgMem%';E={($_.Group.Value | Measure-Object -Average).Average}} |
-  Where-Object 'AvgMem%' -lt 20
+┌───────────────────────────────── Performance — Resource Optimisation ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Optimisation: identify over-provisioned or idle resources and reduce waste          │   │
+│   │       Right-size VMs using 30-day p95 CPU/RAM; reclaim unused storage and old snapshots       │   │
+│   │    Test right-sizing in non-prod first; communicate with app owner before production change   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Identify Waste                │  │               Reclaim Actions               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           CPU < 10% avg: oversized           │  │              Reduce vCPU count              │   │
+│   │          RAM < 20% used: oversized           │  │            Reduce vRAM allocation           │   │
+│   │            Snapshots > 7 days old            │  │             Delete old snapshots            │   │
+│   │          Powered-off VMs > 30 days           │  │           Decommission or archive           │   │
+│   │            Unused datastores/LUNs            │  │            Reclaim after confirm            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Right-sizing = Match vCPU/vRAM to actual workload demand; reduces host overcommit ratio            │
+│    vCPU ratio   = Total vCPUs assigned / physical cores; > 4:1 can cause CPU ready contention         │
+│    Balloon      = VMware memory reclaim driver; active balloon means host is under memory pressure    │
+│    Thin-prov    = Disk allocated lazily; reclaim by deleting data and running a reclaim task          │
+│    Snapshot chain= Each snapshot added to chain; long chains slow reads; delete after use             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## AWS — Cost Optimization

@@ -33,34 +33,41 @@ awk -F',' 'NR>1 {
   if (days < 0) printf "EXPIRED: %s | %s | %d days ago | Owner: %s\n", $1, $2, -days, $5
 }' support-contracts.csv
 ```
-
-## Support Tier Reference
-
-| Tier | Response Time | Hours | Typical Use |
-|---|---|---|---|
-| 24×7 Critical | < 1 hour | 24×7×365 | Production storage, network core, DR systems |
-| 24×7 Standard | < 4 hours | 24×7×365 | Production compute, databases |
-| Business hours | Next business day | Mon–Fri 9–5 | Dev/test, non-critical systems |
-| Self-service | No SLA | Online portal | Internal tooling, low-risk systems |
-
-## Opening a Support Case
-
-```bash
-# Generic: note the following before calling/opening a ticket:
-# - Contract number / serial number
-# - Product version and build
-# - Affected hostname(s) and IPs
-# - Symptoms: what is failing and since when
-# - Logs: collect before calling (see platform-specific runbooks)
-
-# NetApp — collect AutoSupport bundle
-system node autosupport invoke -type all -message "Opening case XXXXX"
-
-# VMware — collect vm-support bundle
-vm-support -w /tmp -b
-
-# Cisco TAC — collect 'show tech-support' output
-# (varies by device — run before opening case)
+┌──────────────────────────────────── Inventory — Support Contracts ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Vendor support contract register: coverage level, expiry dates, escalation contacts      │   │
+│   │       Know before an incident: contract number, support level, and how to open a P1 case      │   │
+│   │           Renew 90 days before expiry; lapsed support = no access to updates or TAC           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Register Fields                │  │                Support Levels               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            Contract / case number            │  │            NBD: next business day           │   │
+│   │               Vendor + product               │  │           4h: 4-hour onsite parts           │   │
+│   │                Coverage level                │  │             24x7x4: critical SLA            │   │
+│   │                 Expiry date                  │  │            Software: patch + TAC            │   │
+│   │              TAC contact number              │  │            Premier: named support           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Level       │    Parts SLA     │   Support hours   │   Patch access   │     Use case     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       NBD        │   Next bus day   │   Business hours  │       Yes        │   Non-critical   │   │
+│   │    4h onsite     │     4 hours      │        24x7       │       Yes        │  Business crit   │   │
+│   │      24x7x4      │   4h + onsite    │      24x7x365     │       Yes        │   Mission crit   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    TAC          = Technical Assistance Centre; vendor support portal for raising cases                │
+│    NBD          = Next Business Day; parts dispatched by end of next working day                      │
+│    EOSL         = End of Service Life; after this date, contract cannot be renewed                    │
+│    Case number  = Reference for a support incident; keep for escalation and follow-up                 │
+│    SLA breach   = Vendor misses response time; escalate to account manager immediately                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Warranty / Support Status Checks

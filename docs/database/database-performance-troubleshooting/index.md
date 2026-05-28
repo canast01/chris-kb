@@ -10,42 +10,43 @@ vmstat 1 5        # check wa (I/O wait) column
 iostat -xz 1 5    # %util, await, r/s, w/s on DB disk
 free -h           # check swap usage — DB paging = critical
 ```
-
-| Symptom | Likely Cause |
-|---|---|
-| High CPU on DB server | Missing index / full table scan / too many connections |
-| High I/O wait | Buffer pool too small / no indexes / HDD not SSD |
-| High swap usage | Insufficient RAM for buffer pool |
-| Many blocked/waiting sessions | Table locks / long transactions |
-| Queries slow for specific tables | Table bloat / stale statistics / fragmented indexes |
-
-## PostgreSQL — Slow Query Analysis
-
-```sql
--- Currently running queries (sorted by duration)
-SELECT pid, now() - query_start AS duration, state, wait_event_type, wait_event, left(query,100)
-FROM pg_stat_activity
-WHERE state != 'idle'
-ORDER BY duration DESC;
-
--- Kill a long-running query
-SELECT pg_cancel_backend(<pid>);    -- sends SIGINT (graceful)
-SELECT pg_terminate_backend(<pid>); -- sends SIGTERM (immediate)
-
--- Top queries by total time (requires pg_stat_statements)
-SELECT left(query,80), calls, total_exec_time/1000 AS total_sec,
-       mean_exec_time AS mean_ms, rows
-FROM pg_stat_statements
-ORDER BY total_exec_time DESC LIMIT 20;
-
--- Missing indexes — sequential scans on large tables
-SELECT relname, seq_scan, idx_scan, n_live_tup
-FROM pg_stat_user_tables
-WHERE seq_scan > idx_scan AND n_live_tup > 10000
-ORDER BY seq_scan DESC;
-
--- Explain a slow query
-EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT) SELECT ...;
+┌─────────────────────────────── Database — Performance Troubleshooting ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Diagnose DB performance: slow queries, blocking chains, lock contention, I/O saturation    │   │
+│   │    Start with wait events to identify bottleneck type before looking at individual queries    │   │
+│   │    Use EXPLAIN ANALYZE to confirm query plan; index changes need testing before production    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Diagnose                   │  │                   Resolve                   │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           Identify wait event type           │  │           Kill blocking head query          │   │
+│   │           Find top CPU/IO queries            │  │          Add/rebuild missing index          │   │
+│   │          EXPLAIN ANALYZE slow query          │  │          Rewrite query (avoid N+1)          │   │
+│   │          Check index usage/missing           │  │          Increase work_mem / buffer         │   │
+│   │          Review I/O wait on storage          │  │          Partition or archive data          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │   Likely cause   │   Diagnose with   │    Resolution    │     Validate     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Slow SELECT    │  Missing index   │  EXPLAIN ANALYZE  │   CREATE INDEX   │ Query time drop  │   │
+│   │    High wait     │ Lock contention  │    pg_locks/DMV   │   Kill blocker   │   Wait clears    │   │
+│   │    I/O spike     │ Full table scan  │  iostat + EXPLAIN │Index + partition │  I/O normalises  │   │
+│   │    CPU spike     │  Bad query plan  │   AWR / top SQLs  │   Stats update   │    CPU drops     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Wait event    = Reason a DB session is idle; lock/IO/CPU waits indicate bottleneck type            │
+│    EXPLAIN ANALYZE= PostgreSQL; shows actual execution plan with row counts and timings               │
+│    N+1 problem   = Loop issuing one query per item instead of one bulk query; kills DB                │
+│    work_mem      = PostgreSQL per-sort memory; increase to avoid temp file disk spills                │
+│    DMV           = SQL Server Dynamic Management View; real-time query and session stats              │
+│    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## MySQL / MariaDB — Slow Query Analysis

@@ -53,60 +53,35 @@ FLOW:
 VM → pNIC1 or pNIC2 → Switch A or B → Core network
 → VPN Gateway → encrypted tunnel → AWS or Azure
 ```
-
----
-
-## VPN vs Direct Connect / ExpressRoute
-
-Two ways to connect on-premises to cloud. VPN uses the public internet (encrypted). Direct Connect / ExpressRoute is a dedicated private line.
-
-```text
-OPTION 1 — ON-PREMISES VPN (most common)
-
-ESXi Host
-   ├── pNIC1 ──► Physical Switch A  (your hardware)
-   └── pNIC2 ──► Physical Switch B  (your hardware)
-                        │
-                 Core Network          ← YOUR routers, switches
-                 (on-prem)               in YOUR datacenter
-                        │
-                 VPN Gateway           ← YOUR firewall/router
-                        │
-                PUBLIC INTERNET
-              ══════════════════
-              ║  VPN TUNNEL    ║
-              ══════════════════
-                        │
-                   AWS / AZURE
-
-─────────────────────────────────────────────────────
-
-OPTION 2 — AWS DIRECT CONNECT / AZURE EXPRESSROUTE
-           (rented dedicated private line — no public internet)
-
-ESXi Host
-   ├── pNIC1 ──► Physical Switch A
-   └── pNIC2 ──► Physical Switch B
-                        │
-                 Core Network
-                 (on-prem)
-                        │
-                 Dedicated Line        ← rented from a carrier
-                 (private circuit)       like AT&T, Verizon
-                        │
-              ══════════════════
-              ║ PRIVATE LINE   ║       ← never touches internet
-              ║ DIRECT CONNECT ║
-              ║ EXPRESSROUTE   ║
-              ══════════════════
-                        │
-                   AWS / AZURE
-
-COMPARISON:
-├── VPN tunnel     → uses public internet, encrypted, cheaper
-├── Direct Connect → private dedicated line, faster, more
-│                    reliable, more expensive
-└── Both can run   → VPN as backup if Direct Connect fails
+┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Outbound internet access: proxy config, allowed destinations, firewall rule requests     │   │
+│   │         Proxy: set http_proxy/https_proxy env vars; add no_proxy for internal subnets         │   │
+│   │  Document all outbound FW rules: source, destination, port, protocol, business justification  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Proxy Configuration              │  │            Firewall Rule Process            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         http_proxy=http://proxy:3128         │  │         Request: src/dst/port/proto         │   │
+│   │            https_proxy same value            │  │         Business justification reqd         │   │
+│   │        no_proxy=.internal,10.0.0.0/8         │  │           Change ticket + approval          │   │
+│   │           yum/apt: proxy in config           │  │          Test after implementation          │   │
+│   │          Container: env in compose           │  │              Annual rule review             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    http_proxy   = Environment variable; tool (curl, yum, apt) uses this for HTTP connections          │
+│    no_proxy     = Comma-separated list of hosts/CIDRs to bypass proxy; add all internal ranges        │
+│    Egress rule  = Outbound firewall rule; controls what the server can connect to externally          │
+│    FQDN filter  = Firewall rules by hostname instead of IP; needs DNS-aware inspection                │
+│    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -23,74 +23,43 @@ flowchart LR
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
 ```
-
----
-
-## Retention Schedule by Data Type
-
-| Data Type | Retention Period | Legal / Regulatory Basis | Storage Tier at Expiry | Deletion Method |
-|---|---|---|---|---|
-| Production system data (live) | Duration of business need | Business requirement | N/A — migrated or deleted on decommission | NIST 800-88 Clear/Purge |
-| VM backup — Tier 1 (critical systems) | 30 days daily + 12 monthly + 5 yearly GFS | Business continuity / RTO/RPO SLA | Archive before yearly expiry | Veeam / NBU automated purge |
-| VM backup — Tier 2 (standard systems) | 14 days daily + 4 weekly + 3 monthly GFS | Business continuity | Archive | Automated purge |
-| VM backup — Tier 3 (dev/test) | 7 days daily | Internal standard | No archive | Automated purge |
-| Application logs (app-level) | 1 year | Internal SLA / troubleshooting | Warm → Archive after 90 days | Log rotation + secure delete |
-| System logs (OS, syslog) | 1 year | Security baseline | Warm → Archive after 90 days | Log rotation |
-| Security / SIEM logs | 2 years online, 5 years archive | ISO 27001, SOC 2, PCI DSS | SIEM → cold storage | Automated policy |
-| Windows Event Logs | 1 year | Security baseline / SOC 2 | SIEM forwarded | WEF + SIEM retention |
-| Firewall / network logs | 1 year | PCI DSS Req. 10.7 / ISO 27001 | SIEM → cold | SIEM policy |
-| Email (internal / external) | 3 years standard; 7 years if financial content | GDPR Art. 5, Companies Act | M365 retention policy → archive | Purview auto-deletion |
-| Financial records (invoices, contracts) | 7 years | UK Companies Act 2006 / HMRC | Active → archive after year 1 | Secure shred / crypto-erase |
-| HR records (employee) | Duration of employment + 6 years | Employment Rights Act 1996 | HR system → archive | Secure delete |
-| HR records (recruitment — unsuccessful) | 6 months after decision | GDPR / data minimisation | HR system | Automated purge |
-| Customer PII | Duration of relationship + 6 years | GDPR Art. 5(1)(e), limitation periods | CRM → archive | Crypto-erase / anonymisation |
-| Audit records (access logs, change logs) | 6 years | ISO 27001 / SOC 2 / legal discoverability | SIEM → cold storage | Secure delete at expiry |
-| CCTV / physical security footage | 31 days standard (up to 90 days in sensitive areas) | GDPR / ICO guidance | On-prem NVR | Automated overwrite |
-| Incident response records | 5 years | ISO 22301 / internal audit | GRC system | Admin-approved delete |
-
----
-
-## Tiered Storage Implementation
-
-### Tier Definitions
-
-| Tier | Technology Examples | Access Latency | Cost | Use Case |
-|---|---|---|---|---|
-| Hot | NVMe SAN (PowerMax), All-Flash array (Pure, VMAX AFA) | < 1 ms | Highest | Active production data, frequent restore points |
-| Warm | SAS HDD NAS (Isilon/PowerScale), object storage (S3 Standard-IA) | 10–50 ms | Medium | Recent backups (7–30 days), infrequent access logs |
-| Cold | Object storage (S3 Glacier, Azure Archive), tape (LTO-8/9) | Minutes–hours | Low | Long-term backup retention, archived audit logs |
-| Archive | Offline tape (Iron Mountain vaulted), WORM object storage | Hours–days | Lowest | Regulatory archive, legal hold data, yearly GFS |
-
-### Veeam — Scale-Out Backup Repository with Tiering
-
-```yaml
-# Veeam Scale-Out Backup Repository Tiering Policy (reference — configured via GUI/PowerShell)
-# PowerShell equivalent:
-
-# Set capacity tier (cold object storage — e.g., S3)
-$s3cred = Get-VBRCredentials -Name "S3-Archive-Creds"
-Add-VBRObjectStorageRepository `
-    -Name "S3-ColdTier" `
-    -Type "AmazonS3Compatible" `
-    -ServicePoint "s3.corp-storage.local" `
-    -Credentials $s3cred `
-    -BucketName "veeam-archive-tier"
-
-# Attach capacity tier to SOBR and set tiering policy
-$sobr = Get-VBRScaleOutBackupRepository -Name "SOBR-Primary"
-Set-VBRScaleOutBackupRepository -ScaleOutBackupRepository $sobr `
-    -EnableCapacityTier $true `
-    -CapacityTierRepository (Get-VBRObjectStorageRepository -Name "S3-ColdTier") `
-    -MoveOffloadedBackupsAfterDays 14 `
-    -OverridePolicy $false
-
-# Veeam GFS retention policy on a backup job
-Set-VBRJobScheduleOptions -Job (Get-VBRJob -Name "BKP-SQL-PROD-01") `
-    -EnableRetentionPolicy $true `
-    -RetentionType Days `
-    -RetainDays 30
-
-# GFS (grandfather-father-son) configured separately per job advanced settings
+┌─────────────────────────────── Data Protection — Data Retention Policy ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Retention policy: minimum time data must be kept; maximum time before secure deletion     │   │
+│   │     Legal hold suspends all deletion for data subject to litigation or regulatory inquiry     │   │
+│   │        Verify deletions: cryptographic erasure or physical destruction with certificate       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Retention Schedules              │  │             Deletion Procedures             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Financial records: 7+ years          │  │          Check no active legal hold         │   │
+│   │         HR records: varies by region         │  │         Confirm retention period met        │   │
+│   │         Audit/security logs: 1-3 yr          │  │         Cryptographic erasure or DoD        │   │
+│   │          Email: 3-7 years (policy)           │  │          Certificate of destruction         │   │
+│   │            Backups: per RPO tier             │  │           Remove from all systems           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │    Data type     │    Min retain    │     Max retain    │    Regulation    │  Delete method   │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Financial     │     7 years      │      10 years     │    SOX/local     │   Secure erase   │   │
+│   │  Security logs   │      1 year      │      3 years      │    PCI / ISO     │    Log purge     │   │
+│   │   PII/personal   │     2 years      │      5 years      │       GDPR       │   Crypto erase   │   │
+│   │     Backups      │     Per RPO      │      90 days      │      Policy      │   Tape destroy   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Legal hold       = Suspend all deletion for data subject to litigation; placed by legal team       │
+│    Crypto erasure   = Delete encryption key so data is permanently unreadable without destruction     │
+│    DoD 5220.22-M    = US DoD secure wipe standard; multiple overwrite passes on magnetic media        │
+│    Retention period = Minimum time data must exist before deletion can be authorised                  │
+│    eDiscovery       = Search and collection of electronic data for legal proceedings                  │
+│    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Veeam GFS Retention (GUI-equivalent settings reference)

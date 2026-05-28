@@ -97,105 +97,41 @@ flowchart TD
     P --> Q[Runbook Updated if Required]
     Q --> R[Report Signed Off\nFiled in GRC System]
 ```
-
-### Pre-Test Phase (T-14 to T-1 days)
-
-- [ ] Define test scope, scenario, and success criteria
-- [ ] Identify test environment (isolated VLAN, isolated DR site segment)
-- [ ] Confirm backup restore points are available and within RPO window
-- [ ] Notify stakeholders: IT management, application owners, change management
-- [ ] Raise change request and obtain CAB approval
-- [ ] Assign roles: Test Lead, Backup Admin, Application Validator, Timekeeper
-- [ ] Confirm runbook version to be used (latest, reviewed within 90 days)
-- [ ] Prepare test result log sheet (timestamps, step number, outcome, notes)
-- [ ] Verify test environment network isolation is in place
-
-### During-Test Phase
-
-- [ ] Record exact start time
-- [ ] Follow runbook sequentially — no improvisation without logging deviation
-- [ ] Timekeeper records milestone timestamps (restore start, VM power-on, service available, app verified)
-- [ ] All deviations from runbook recorded with reason and outcome
-- [ ] Application owner validates business data is correct (not just that the system boots)
-- [ ] Capture screenshots or session recordings where required for audit trail
-
-### Post-Test Phase (T+1 to T+5 days)
-
-- [ ] Decommission test environment — remove VMs, revoke test credentials
-- [ ] Complete test result log
-- [ ] Calculate actual RTO and RPO, compare to targets
-- [ ] Hold debrief within 48 hours — mandatory attendees: Test Lead, application owner, backup admin
-- [ ] Draft test report within 5 business days
-- [ ] Log lessons learned in GRC system
-- [ ] Update runbook if gaps identified
-- [ ] Schedule re-test if critical failure occurred
-
----
-
-## Success Criteria and Metrics
-
-| Metric | Description | Target |
-|---|---|---|
-| RTO achieved | Actual restore time vs. documented RTO target | 100% of Tier 1 tests within RTO |
-| RPO achieved | Age of data at point of restore vs. RPO target | 100% of tests within RPO |
-| Data integrity | DBCC CHECKDB / file hash / row-count validation pass rate | 100% pass |
-| Runbook accuracy | Steps followed without deviation (unplanned improvisation) | < 2 unplanned deviations per test |
-| Test completion rate | Tests completed on schedule vs. annual plan | ≥ 95% on schedule |
-| Time to detect failure during test | How quickly test team identifies a failed step | < 15 minutes |
-| Post-test runbook update rate | Tests that identified runbook gaps and led to update | Track and trend |
-| Re-test rate | Tests requiring a re-test due to critical failure | Target: 0; > 2/year triggers process review |
-
----
-
-## Test Report Template
-
-```text
-RECOVERY TEST REPORT
-
-Test Reference:    RT-2026-006
-Test Date:         YYYY-MM-DD
-Test Type:         [Tabletop / Functional / Parallel DR / Full DR]
-Scenario:          [e.g., VM failure — SQL-PROD-01]
-Test Lead:         <name>
-Participants:      <names and roles>
-
-SCOPE
-  Systems in scope:    ____
-  Backup source:       ____  (tool, repository, restore point date/time)
-  Test environment:    ____  (isolated VLAN / DR site segment)
-
-TIMELINE
-  Test start:          HH:MM
-  First restore point mounted:  HH:MM
-  VM / service available:       HH:MM
-  Application validated:        HH:MM
-  Test environment cleaned up:  HH:MM
-  Test end:            HH:MM
-
-RESULTS
-  RTO target:          ____    Actual RTO:   ____    PASS / FAIL
-  RPO target:          ____    Actual RPO:   ____    PASS / FAIL
-  Data integrity:      PASS / FAIL    (method: ____)
-  All runbook steps completed without deviation: YES / NO
-
-  If NO — deviations:
-    Step #   Description   Reason   Outcome
-
-ISSUES ENCOUNTERED
-  [Describe any failures, unexpected behaviour, or delays]
-
-LESSONS LEARNED
-  [What gaps were identified? What would have prevented issues?]
-
-RUNBOOK CHANGES REQUIRED
-  YES / NO — If YES, reference change ticket: ____
-
-OVERALL RESULT:   PASS / CONDITIONAL PASS / FAIL
-
-SIGN-OFF
-  Test Lead:        ______________ Date: __________
-  IT Manager:       ______________ Date: __________
-  Application Owner:______________ Date: __________
+┌───────────────────────────────── Data Protection — Recovery Testing ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Recovery testing validates that backup data is restorable and DR procedures work       │   │
+│   │        Schedule: file restore monthly; VM restore quarterly; full DR exercise annually        │   │
+│   │        Always document: start time, end time, RTO/RPO achieved, issues found, sign-off        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Test Types         │  │          Scheduling         │  │      Evidence Required      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      File restore test      │  │           Monthly           │  │       File hash match       │   │
+│   │       VM restore test       │  │          Quarterly          │  │       VM boots; app OK      │   │
+│   │       DB restore test       │  │          Quarterly          │  │      Row count + query      │   │
+│   │       Full DR failover      │  │           Annually          │  │         RTO/RPO met         │   │
+│   │      Tabletop exercise      │  │           Annually          │  │       Actions recorded      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │    Test type     │       Freq       │  Success criteria │    RTO target    │  Documented by   │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   File restore   │     Monthly      │File matches source│       < 1h       │     Ops team     │   │
+│   │    VM restore    │    Quarterly     │ VM boots; app runs│       < 4h       │ Ops + app owner  │   │
+│   │   DR failover    │     Annually     │All svcs at DR site│     Per BCP      │  DR lead + mgmt  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Tabletop exercise = Walk through DR scenario verbally; identify gaps without production impact     │
+│    RTO tested        = Actual restore time measured during test; compared to RTO target               │
+│    RPO tested        = Latest recovery point verified; gap between backup and incident time           │
+│    Sign-off          = Manager/owner approval confirming test was successful and documented           │
+│    Restore report    = Formal record of test result; filed for audit evidence                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

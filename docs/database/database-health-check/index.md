@@ -20,30 +20,36 @@ systemctl status mssql-server   # Linux
 # Windows:
 Get-Service -Name MSSQLSERVER
 ```
-
-## PostgreSQL Health Checks
-
-```sql
--- Active connections vs max
-SELECT count(*) AS active, max_conn, max_conn - count(*) AS available
-FROM pg_stat_activity, (SELECT setting::int AS max_conn FROM pg_settings WHERE name='max_connections') s
-GROUP BY max_conn;
-
--- Long-running queries (> 60s)
-SELECT pid, now() - pg_stat_activity.query_start AS duration, query, state
-FROM pg_stat_activity
-WHERE state != 'idle' AND (now() - query_start) > interval '60 seconds'
-ORDER BY duration DESC;
-
--- Bloat / dead tuples
-SELECT relname, n_dead_tup, n_live_tup, last_autovacuum
-FROM pg_stat_user_tables
-ORDER BY n_dead_tup DESC LIMIT 10;
-
--- Replication lag (on primary)
-SELECT client_addr, state, sent_lsn, write_lsn, replay_lsn,
-       (sent_lsn - replay_lsn) AS replication_lag_bytes
-FROM pg_stat_replication;
+┌──────────────────────────────────── Database — Daily Health Check ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Daily DB health: connections, blocking queries, long-running txns, replication, logs     │   │
+│   │       Run each morning; alert on blocking > 5 min, connections > 80%, error log entries       │   │
+│   │      Document anomalies; escalate blocking chains that cannot be cleared within threshold     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Health Check Items              │  │               Alert Thresholds              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Active connections vs max           │  │         >80% connection pool = alert        │   │
+│   │        Blocking chains (head/waiters)        │  │           >5 min block = page DBA           │   │
+│   │          Long-running transactions           │  │          >30 min txn = investigate          │   │
+│   │         Error log: ORA-/FATAL/ERROR          │  │            Any ORA-600/4031 = P1            │   │
+│   │            Replication lag check             │  │            >30s lag = investigate           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Blocking chain  = Series of queries waiting on each other; head blocker holds the lock             │
+│    pg_stat_activity= PostgreSQL view; shows all active connections, state, and wait events            │
+│    sys.dm_exec_reqs= SQL Server DMV; lists active requests with wait type and blocking session        │
+│    INFORMATION_SCHEMA= Standard SQL views for connection and schema metadata                          │
+│    ORA-600         = Oracle internal error; always escalate; indicates potential corruption           │
+│    Wait event      = Reason a session is not running; categorised by type (I/O, lock, CPU, etc.)      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## MySQL / MariaDB Health Checks

@@ -27,15 +27,42 @@ update-ca-trust extract
 # Verify
 trust list | grep "internal-ca"
 ```
-
-## Add a CA Certificate — Windows
-
-```powershell
-# Import CA into Trusted Root store (machine level)
-Import-Certificate -FilePath "C:\certs\internal-ca.crt" -CertStoreLocation Cert:\LocalMachine\Root
-
-# Verify
-Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object { $_.Subject -like "*Internal CA*" }
+┌─────────────────────────────────── Integration — Certificate Trust ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Add CA certificates to trust stores so TLS connections to internal services succeed      │   │
+│   │           Linux: copy .crt to /etc/pki/ca-trust/source/anchors/ then update-ca-trust          │   │
+│   │          Windows: import to Trusted Root CA store; deploy via GPO for domain machines         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Linux Trust Store               │  │             Windows & Appliances            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           RHEL: /etc/pki/ca-trust/           │  │         MMC → Cert snap-in → import         │   │
+│   │         Ubuntu: /usr/local/share/ca/         │  │         GPO: Computer Config → Certs        │   │
+│   │            update-ca-trust (RHEL)            │  │         Appliance: upload via UI/API        │   │
+│   │         update-ca-certificates (Deb)         │  │            Java: keytool -import            │   │
+│   │        Verify: curl https://internal         │  │        Test: curl / PowerShell Invoke       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Platform     │  CA store path   │    Add command    │      Verify      │      Scope       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   RHEL/CentOS    │ /etc/pki/anchors │  update-ca-trust  │  curl https://   │   System-wide    │   │
+│   │  Ubuntu/Debian   │ /usr/local/share │  update-ca-certs  │  curl https://   │   System-wide    │   │
+│   │     Windows      │ Trusted Root CA  │   certlm.msc/GPO  │   IE/Edge/curl   │  Machine store   │   │
+│   │    Java apps     │   JRE cacerts    │  keytool -import  │ Java HTTPS call  │    JVM-scoped    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Root CA      = Top of certificate chain; self-signed; must be in trust store for chain to verify   │
+│    Intermediate = Signed by Root CA; signs end-entity certs; must be in cert bundle sent by server    │
+│    update-ca-trust= RHEL command; rebuilds the consolidated trust bundle from source anchors          │
+│    keytool      = Java utility; manages JVM trust store (cacerts); import with -importcert            │
+│    GPO          = Group Policy Object; deploys CA cert to all domain machines automatically           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Add a CA Certificate — Java

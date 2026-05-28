@@ -44,91 +44,42 @@ flowchart TD
     J -->|Yes| K["Pilot Light\n(scale up on failover)"]
     J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
 ```
-
-### Active-Active
-Both sites simultaneously serve production traffic. Load is distributed across sites (e.g., via GSLB — Global Server Load Balancing). Any single-site failure causes graceful degradation, not a recovery event.
-
-- Requires: synchronous replication (≤5 ms RTT between sites), stateless application design or distributed data layer, GSLB for client routing
-- Technology: vSAN Stretched Cluster, Dell EMC SRDF/S (synchronous), Oracle RAC Extended, NSX Federation
-- Cost: highest (100% over-provisioning at secondary site)
-- Best for: Tier 0 workloads where any recovery window is unacceptable
-
-### Warm Standby
-Secondary site is fully provisioned and VMs are running (or on hot standby). Replication is asynchronous with a short lag (minutes). Failover requires a manual or automated switchover, not a full rebuild.
-
-- Requires: dedicated compute at DR site, automated failover orchestration, pre-configured networking
-- Technology: Dell RecoverPoint for VMs, vSphere Replication (async), Zerto
-- Cost: moderate-high (DR site runs at reduced capacity until failover)
-- Best for: Tier 1 workloads with RTO 15 min – 2 hr
-
-### Pilot Light
-Core infrastructure (networking, AD, DNS) runs continuously at the DR site. Application servers are shut down but replicated. On failover, infrastructure is scaled up and VMs are powered on.
-
-- Requires: core services pre-running, automation scripts for scale-up, validated boot order
-- Technology: Veeam Backup & Replication, AWS CloudEndure, Azure Site Recovery
-- Cost: moderate (minimal steady-state footprint)
-- Best for: Tier 2 workloads with RTO 2–8 hr
-
-### Backup-Restore
-No live replication. Recovery relies entirely on restoring from the most recent backup. Acceptable only for non-time-sensitive workloads.
-
-- Requires: tested restore procedures, off-site backup copies, documented rebuild steps
-- Technology: Veeam, Commvault, AWS Backup, Azure Backup
-- Cost: lowest
-- Best for: Tier 3/4 workloads; also the fallback strategy for all tiers when primary DR mechanism fails
-
----
-
-## Replication Technology Selection
-
-| Technology | Vendor | Type | Granularity | Consistency | Typical RTO | Tier |
-|-----------|--------|------|------------|-------------|-------------|------|
-| SRDF/S (Synchronous) | Dell EMC | Array-level | LUN | Crash-consistent | <15 min | 0 |
-| SRDF/A (Asynchronous) | Dell EMC | Array-level | LUN | Crash-consistent | <1 hr | 1 |
-| RecoverPoint for VMs | Dell EMC | Hypervisor | VM | App-consistent (VSS) | <30 min | 1 |
-| vSphere Replication | VMware | Hypervisor | VM | Crash-consistent | 1–4 hr | 1/2 |
-| Zerto | Zerto/HPE | Hypervisor | VM / journal | Near-CDP, app-consistent | <15 min | 1 |
-| Veeam Backup & Replication | Veeam | Agent/proxy | VM / server | App-consistent (VSS/quiesce) | 1–4 hr | 2/3 |
-| Azure Site Recovery | Microsoft | Agent | VM | App-consistent | 1–2 hr | 2 |
-| AWS CloudEndure | AWS | Agent | Server | Crash-consistent | <1 hr | 1/2 |
-| Commvault IntelliSnap | Commvault | Array + agent | Volume / VM | App-consistent | 1–8 hr | 2/3 |
-
-Selection criteria:
-- **RPO drives replication type**: RPO=0 → synchronous array-level; RPO=minutes → journal-based or async with short cycle; RPO=hours → scheduled snapshot/backup
-- **Application consistency**: databases require application-quiesced snapshots (VSS on Windows, freeze/thaw on Linux) to recover cleanly
-- **Array vendor lock-in**: SRDF requires PowerMax/VMAX on both ends; RecoverPoint is flexible but requires the RecoverPoint appliance
-
----
-
-## DR Site Topology
-
-```mermaid
-graph TD
-    subgraph Primary_Site["Primary Site (DC1)"]
-        P_Core["Core Switch Pair\n(Cisco Nexus 9504 vPC)"]
-        P_Compute["vSphere Cluster\n6× ESXi hosts"]
-        P_Storage["Dell PowerMax\n(SRDF source)"]
-        P_FW["Firewall Pair\n(Palo Alto PA-5450 HA)"]
-        P_Edge["WAN Edge / MPLS PE"]
-    end
-
-    subgraph DR_Site["DR Site (DC2)"]
-        D_Core["Core Switch Pair\n(Cisco Nexus 9000 vPC)"]
-        D_Compute["vSphere Cluster\n4× ESXi hosts (Tier 0/1)"]
-        D_Storage["Dell PowerMax\n(SRDF target)"]
-        D_FW["Firewall Pair\n(Palo Alto PA-3450 HA)"]
-        D_Edge["WAN Edge / MPLS PE"]
-    end
-
-    subgraph Cloud_DR["Cloud DR (AWS / Azure)"]
-        C_Vault["Backup Vault\n(Veeam Cloud Connect)"]
-        C_ASR["Azure Site Recovery\n(Tier 2 VMs)"]
-    end
-
-    P_Edge <-->|"MPLS / DIA\n10 Gbps"| D_Edge
-    P_Storage <-->|"SRDF replication\n(dedicated DWDM link)"| D_Storage
-    P_Edge <-->|"Internet / ExpressRoute"| Cloud_DR
-    D_Edge <-->|"Internet"| Cloud_DR
+┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        DR design: select site topology and replication pattern to meet RPO/RTO targets        │   │
+│   │          Tiers: hot standby (< 1 min RTO), warm (< 4h), cold (> 4h, data only backup)         │   │
+│   │       Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   DR Tiers                   │  │             Replication Options             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │             Hot: always-on sync              │  │           Sync: zero RPO; ≤ 100km           │   │
+│   │            Warm: replicated async            │  │              Async: RPO minutes             │   │
+│   │              Cold: backup only               │  │             SRM / Zerto / vVols             │   │
+│   │             DR site sizing: N+x              │  │          Storage-level replication          │   │
+│   │            Test annually minimum             │  │           App-consistent snapshots          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Tier       │       RPO        │        RTO        │       Cost       │    Technology    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Hot standby    │    Near zero     │      < 15 min     │     Highest      │     Sync rep     │   │
+│   │   Warm standby   │     < 15 min     │     1-4 hours     │      Medium      │    Async rep     │   │
+│   │   Cold standby   │    < 24 hours    │     > 4 hours     │      Lowest      │   Backup/tape    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    RPO          = Recovery Point Objective; max acceptable data loss; drives replication freq         │
+│    RTO          = Recovery Time Objective; max acceptable downtime; drives DR tier selection          │
+│    Synchronous  = Write confirmed only after replica ACK; zero data loss; limited by distance         │
+│    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval        │
+│    SRM          = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites        │
+│    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Design decisions for DR site topology:**

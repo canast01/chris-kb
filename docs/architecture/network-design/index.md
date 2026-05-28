@@ -38,104 +38,36 @@ graph TD
     Access_A --> Hosts
     Access_B --> Hosts
 ```
-
-### Tier Responsibilities
-
-| Tier | Layer | Devices | Responsibilities |
-|------|-------|---------|-----------------|
-| Core | L3 | Nexus 9504, 9516, Catalyst 9600 | Default gateway for VLANs, inter-VLAN routing (SVIs), WAN edge handoff, BGP to firewalls |
-| Distribution | L2/L3 boundary | Nexus 9300, 9332, Catalyst 9300X | VLAN aggregation, access policy enforcement, QoS marking boundary |
-| Access / ToR | L2 | Nexus 93180YC-FX, 9236C, Catalyst 9200 | Host port provisioning, VLAN trunking, LACP port-channel to hosts |
-
-In spine-leaf designs (common in hyper-converged or cloud-native DCs), spines replace core+distribution. Every leaf connects to every spine; no leaf-to-leaf links exist. This provides uniform hop count and predictable latency across all server pairs.
-
----
-
-## VLAN Segmentation Strategy
-
-Traffic separation is a fundamental security and operational control. Mixing production VM traffic with storage or management traffic on the same VLAN creates broadcast domain pollution, reduces performance predictability, and creates security risks.
-
-| VLAN ID (Example) | Name | Traffic Type | MTU | Routing | Notes |
-|------------------|------|-------------|-----|---------|-------|
-| 10–99 | External / DMZ | Internet-facing services | 1500 | Routed via FW | ACL/FW policy enforced at ingress |
-| 100–199 | Production VMs | Application workloads | 1500 | Inter-VLAN via core SVI | Sub-divided by application (VLAN 100 = App1, 110 = App2) |
-| 200 | vMotion | VMware vMotion traffic | 9000 (jumbo) | Isolated; no external routing | Dedicated VMkernel port; low latency critical |
-| 300 | vSAN / iSCSI Storage | Hyperconverged storage traffic | 9000 (jumbo) | Isolated; no external routing | Must have jumbo MTU end-to-end; no firewall in path |
-| 310 | NFS Storage | NFS datastore traffic | 9000 (jumbo) | Routed to NAS only | Separate from iSCSI if both protocols used |
-| 400 | Management | ESXi mgmt, BMC/iDRAC, vCenter | 1500 | Restricted routing; VPN access only | Out-of-band BMC network preferred |
-| 500 | Backup | Veeam proxy traffic, backup jobs | 1500 | Routed to backup repository only | Isolate to prevent backup saturation affecting production |
-| 510 | Replication | SRDF, RecoverPoint, vSphere Replication | 9000 (jumbo) | WAN-bound via dedicated circuit | QoS prioritised; bandwidth-capped to protect production |
-| 600 | FT Logging | vSphere Fault Tolerance logging | 9000 (jumbo) | Isolated; host-local only | Must not share uplinks with vMotion |
-| 700 | Voice / Unified Comms | VoIP, video conferencing | 1500 | QoS DSCP EF marking | Separated from data VLANs for QoS |
-| 900 | OOB / IPMI | iDRAC, iLO, IPMI, console | 1500 | Strictly isolated; jump host access only | No routing to production; only via bastion host |
-
-**VLAN design rules:**
-- Never allow the default VLAN (VLAN 1) to carry production traffic
-- Prune VLANs on trunk ports — only allow the VLANs actually needed on each trunk
-- Use private VLANs (PVLAN) within the DMZ to prevent lateral movement between DMZ hosts
-- Document each VLAN in IPAM (e.g., Netbox) with owner, purpose, review date
-
----
-
-## Routing Design
-
-### Intra-DC Routing (OSPF)
-
-Use OSPF for intra-data-centre routing. It is mature, widely supported, and converges fast enough for most DC workloads.
-
-**OSPF area design:**
-
-| Area | Scope | Type |
-|------|-------|------|
-| Area 0 (backbone) | Core switches and distribution | Normal |
-| Area 1 | DC1 access layer | Stub or NSSA |
-| Area 2 | DC2 (DR site) access layer | Stub or NSSA |
-| Area 10 | DMZ / perimeter | NSSA (external routes injected by firewall) |
-
-Configure OSPF with BFD (Bidirectional Forwarding Detection) on all transit links for sub-second failure detection (BFD timers: 300 ms × 3 = 900 ms failover vs. OSPF dead interval default of 40 s).
-
-Use route redistribution carefully — redistribute only what is necessary between OSPF processes and into BGP. Summarise at area boundaries to keep the routing table clean.
-
-### WAN and Cloud Routing (BGP)
-
-Use BGP for all external routing: MPLS provider handoff, internet peering, and cloud connectivity (AWS Direct Connect / Azure ExpressRoute).
-
-**BGP design decisions:**
-
-| Decision | Recommendation |
-|---------|---------------|
-| AS numbering | Use a private ASN (64512–65534) for internal; obtain a public ASN if multihoming to multiple ISPs |
-| Route filtering | Apply strict prefix-lists inbound from provider — never accept a full internet table unless running a route reflector |
-| Default route | Accept a default route from MPLS provider and/or internet upstream; do not redistribute full BGP table into OSPF |
-| Communities | Use BGP communities to tag routes by site, priority, or traffic type for policy-based routing |
-| BFD | Enable BFD on BGP sessions for fast failure detection on point-to-point WAN links |
-
-### ECMP (Equal-Cost Multi-Path)
-
-Configure ECMP on core switches for load distribution across redundant uplinks. Cisco Nexus supports up to 64 ECMP paths. Use `ip load-sharing address source-dest-port` hashing for optimal distribution of TCP flows.
-
----
-
-## Redundancy Patterns
-
-### LACP Port-Channel (Host-to-Switch)
-
-All production servers and ESXi hosts connect to the network via LACP (802.3ad) port-channels, with one NIC port to each ToR switch. This provides:
-- Active-active bandwidth aggregation
-- Automatic failover on NIC or switch port failure (sub-second on modern hardware)
-- Simplified cabling and configuration compared to traditional NIC teaming
-
-**Configuration example (Cisco NX-OS):**
-```text
-interface port-channel 10
-  description ESXi-Host-01
-  switchport mode trunk
-  switchport trunk allowed vlan 100,200,300,400,500
-  vpc 10
-
-interface Ethernet1/1
-  description ESXi-Host-01 NIC1
-  channel-group 10 mode active
+┌──────────────────────────────────── Architecture — Network Design ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Enterprise network design: spine-leaf topology, L3 segmentation, security zones, BGP     │   │
+│   │         Spine-leaf: no STP; any leaf to any leaf = 2 hops; ECMP for load distribution         │   │
+│   │          Zones: untrusted → DMZ → internal → restricted; firewalls at zone boundaries         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Topology                   │  │                 Segmentation                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           Spine: 2+ core switches            │  │           VLANs per function/zone           │   │
+│   │              Leaf: ToR per rack              │  │             L3 boundary per zone            │   │
+│   │             ECMP load balancing              │  │               FW between zones              │   │
+│   │              BGP for DC routing              │  │               Micro-seg (NSX)               │   │
+│   │            Dual uplinks per leaf             │  │               ACL on VLAN SVIs              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Spine-leaf   = Two-tier DC fabric; spines interconnect all leaves; no STP; predictable latency     │
+│    ECMP         = Equal-Cost Multi-Path; traffic distributed across multiple equal-cost paths         │
+│    ToR          = Top of Rack switch; leaf switch physically mounted at top of server rack            │
+│    BGP          = Border Gateway Protocol; used for DC internal routing and WAN peering               │
+│    SVI          = Switched Virtual Interface; L3 gateway for a VLAN; ACLs applied here                │
+│    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 On the ESXi side, create a vDS uplink port group with **LACP Active** mode on each vDS uplink team.

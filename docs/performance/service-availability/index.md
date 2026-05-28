@@ -9,26 +9,41 @@ Availability % = (Total time - Downtime) / Total time × 100
 99.95% → 4.4 hours downtime/year (21.9 min/month)
 99.99% → 52 minutes downtime/year (4.4 min/month)
 ```
-
-## Synthetic Monitoring (External Probes)
-
-```bash
-# HTTP health check — confirm endpoint returns 200
-curl -o /dev/null -s -w "%{http_code} %{time_total}s\n" https://<app>/health
-
-# TCP port check
-nc -zv <host> 443 2>&1 | grep -E "succeeded|failed"
-
-# DNS resolution check
-dig +short <hostname> @8.8.8.8
-
-# Script: check multiple services
-for endpoint in "https://app1/health" "https://app2/health"; do
-    code=$(curl -o /dev/null -s -w "%{http_code}" "$endpoint")
-    if [ "$code" != "200" ]; then
-        echo "ALERT: $endpoint returned $code"
-    fi
-done
+┌───────────────────────────────── Performance — Service Availability ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Measure and report service availability; track downtime; compare against SLA targets     │   │
+│   │     Availability = (total time - downtime) / total time * 100; track per service per month    │   │
+│   │         Planned maintenance excluded from calculation if pre-approved and communicated        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Availability Tiers              │  │                 Measurement                 │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           99.9% = 8.7h/yr downtime           │  │           Monitor: synthetic check          │   │
+│   │               99.95% = 4.4h/yr               │  │          Log outage: start/end time         │   │
+│   │              99.99% = 52 min/yr              │  │          Calculate monthly percent          │   │
+│   │             99.999% = 5.2 min/yr             │  │            Report to stakeholders           │   │
+│   │           Target per service tier            │  │             Trend vs SLA target             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │   Availability   │   Downtime/yr    │    Downtime/mo    │       Tier       │     Example      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │      99.9%       │    8.7 hours     │      43.8 min     │     Standard     │     Dev/test     │   │
+│   │      99.95%      │    4.4 hours     │      21.9 min     │     Business     │  Internal apps   │   │
+│   │      99.99%      │      52 min      │      4.4 min      │     Critical     │  Prod services   │   │
+│   │     99.999%      │     5.2 min      │       26 sec      │     Mission      │    Core infra    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Synthetic check = Automated probe that tests service endpoint; detects outages before users        │
+│    Maintenance window= Planned downtime; communicated in advance; excluded from availability calc     │
+│    Error budget  = 1 - SLO; allowable downtime; consumed by incidents and planned maintenance         │
+│    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Uptime Monitoring Tools

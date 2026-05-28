@@ -23,32 +23,36 @@ nc -zv destination-host port
 telnet destination-host port
 ss -tulnp
 ```
-
-### Validation
-
-1. Confirm connection allowed
-2. Confirm application connectivity restored
-3. Document firewall change if required
-
-## Firewalls
-
-### Overview
-
-Firewalls control traffic between zones using rules, policies, NAT, and inspection profiles. In enterprise infrastructure, firewalls govern traffic between:
-- Production and management networks
-- On-premises and cloud
-- Internet egress
-- Storage replication paths across sites
-
-### Check Traffic Sessions
-
-```bash
-# Active sessions (Palo Alto / PAN-OS)
-show session all
-show session id <id>
-
-# Traffic logs
-show log traffic
+┌──────────────────────────────────── Networking — Network Security ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Network security: validate FW rules, confirm VPN tunnels, audit ACLs, review NAT       │   │
+│   │       FW validation: test required traffic with packet tracer; review deny logs for gaps      │   │
+│   │     VPN: check tunnel state, phase 1/2, SA lifetime, interesting traffic; test end-to-end     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Firewall Checks                │  │                  VPN & ACL                  │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │              Packet tracer test              │  │            show crypto isakmp sa            │   │
+│   │             Review deny log hits             │  │             show crypto ipsec sa            │   │
+│   │              Rule order matters              │  │            ACL: show access-list            │   │
+│   │            Check NAT translation             │  │            NAT: show ip nat trans           │   │
+│   │         Unused rules: review/remove          │  │             Test from both sides            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Packet tracer  = Cisco tool; simulates traffic through FW to determine permit/deny outcome         │
+│    IKE phase 1    = VPN control plane; authenticates peers; establishes management SA                 │
+│    IKE phase 2    = VPN data plane; negotiates IPsec SA for encrypting user traffic                   │
+│    Interesting traffic= VPN traffic selector; defines what source/dest pairs trigger the tunnel       │
+│    ACL            = Access Control List; permits or denies traffic by src/dst/port/protocol           │
+│    PAT            = Port Address Translation; maps multiple private IPs to one public IP+port         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### View Security Policy

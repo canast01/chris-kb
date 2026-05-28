@@ -16,5 +16,6 @@ from . import monitoring
 from . import tools
 from . import automation
 from . import ops
+from . import governance
 
 from ._core import DIAGRAMS

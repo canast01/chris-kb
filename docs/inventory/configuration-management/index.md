@@ -29,23 +29,36 @@ ansible-playbook -i inventory/ baseline-check.yml --check --diff
 # Show facts (current config state)
 ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 ```
-
-## AWS Config — Cloud Configuration Compliance
-
-```bash
-# List non-compliant resources
-aws configservice get-compliance-details-by-config-rule \
-  --config-rule-name restricted-ssh \
-  --compliance-types NON_COMPLIANT \
-  --query 'EvaluationResults[*].{Resource:EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId,Status:ComplianceType}'
-
-# Get all non-compliant resources across rules
-aws configservice describe-compliance-by-config-rule \
-  --compliance-types NON_COMPLIANT \
-  --query 'ComplianceByConfigRules[*].{Rule:ConfigRuleName,Compliance:Compliance.ComplianceType}'
-
-# Run evaluation on demand
-aws configservice start-config-rules-evaluation --config-rule-names restricted-ssh
+┌───────────────────────────── Inventory — Configuration Management (CMDB) ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       CMDB: central record of CIs (hardware, software, services) and their relationships      │   │
+│   │      CI relationships: server hosts VM → VM runs app → app depends on DB; impact analysis     │   │
+│   │       Change linkage: every change ticket updates affected CI state; audit trail in CMDB      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                CI Attributes                 │  │               CI Relationships              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │              Name, class, owner              │  │              Hosts / hosted on              │   │
+│   │           Status (active/retired)            │  │             Depends on / used by            │   │
+│   │            Location, environment             │  │            Connects to / cluster            │   │
+│   │             OS, software version             │  │             Impact analysis path            │   │
+│   │            Change/incident links             │  │             Business service map            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CI           = Configuration Item; any entity tracked in CMDB with attributes and history          │
+│    CI class     = Type of CI (Server, VM, Application, Network Device, Database, etc.)                │
+│    Relationship = Typed link between CIs; powers impact analysis and dependency maps                  │
+│    Impact analysis= Determine what is affected by a CI failure or change using relationships          │
+│    Discovery    = Automated CMDB population from network scanning or cloud APIs                       │
+│    Reconciliation= Compare discovered data vs CMDB; find stale or missing records                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Azure Policy — Resource Compliance

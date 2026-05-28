@@ -60,39 +60,38 @@ flowchart TD
     O -- No --> J
     P --> J
 ```
-
----
-
-## Policy Enforcement Mechanisms
-
-### Data Loss Prevention (DLP)
-
-DLP policies detect and block sensitive data exfiltration across channels.
-
-| Channel | DLP Tool | Policy Example |
-|---|---|---|
-| Email (Exchange Online) | Microsoft Purview DLP | Block send of messages containing UK National Insurance numbers or credit card patterns |
-| Endpoint file transfer | Purview Endpoint DLP / Symantec DLP | Alert when Restricted files are copied to USB or personal cloud storage |
-| SharePoint / OneDrive | Purview DLP | Block external sharing of Confidential-labelled documents without explicit approval |
-| Network egress | Palo Alto DLP / Forcepoint | Inspect outbound streams for PII patterns; block or quarantine |
-
-### Access Controls
-
-```powershell
-# Example: Apply RBAC on a Confidential data share via AD group
-# Create scoped AD security group
-New-ADGroup -Name "DL-FinanceData-ReadOnly" `
-    -GroupScope DomainLocal `
-    -GroupCategory Security `
-    -Path "OU=DataGroups,DC=corp,DC=local"
-
-# Assign group to NTFS ACL on file share
-$acl = Get-Acl "\\fileserver01\FinanceData"
-$rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
-    "CORP\DL-FinanceData-ReadOnly", "ReadAndExecute", "ContainerInherit,ObjectInherit", "None", "Allow"
-)
-$acl.AddAccessRule($rule)
-Set-Acl "\\fileserver01\FinanceData" $acl
+┌────────────────────────────────── Data Protection — Data Governance ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Data governance: define who owns data, who can access it, and how its use is audited     │   │
+│   │       Roles: owner (accountable) → steward (operational) → custodian (IT stores/secures)      │   │
+│   │      Aligned to regulations: GDPR (EU PII), HIPAA (PHI), SOX (financial), PCI DSS (cards)     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Data Ownership       │  │       Access Controls       │  │          Compliance         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Owner: BU lead       │  │      RBAC + least priv      │  │        GDPR — EU PII        │   │
+│   │      Steward: BU member     │  │     Quarterly access rev    │  │         HIPAA — PHI         │   │
+│   │      Custodian: IT/ops      │  │      JIT / PIM for priv     │  │       SOX — financial       │   │
+│   │      Processor: vendor      │  │     Audit log all access    │  │       PCI DSS — cards       │   │
+│   │        DPA agreements       │  │     Breach notification     │  │      Annual DPA review      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Data owner    = Business accountable for a dataset; approves access and classification             │
+│    Data steward  = Day-to-day oversight of data quality and policy compliance in a domain             │
+│    Data custodian= IT team responsible for storing, securing, and backing up the data                 │
+│    DPA           = Data Processing Agreement; contract with vendors who process personal data         │
+│    GDPR          = EU regulation; rights over personal data; 72h breach notification                  │
+│    JIT           = Just-In-Time access; privileged access granted for a time-limited session          │
+│    PIM           = Privileged Identity Management; Azure AD tool for JIT role activation              │
+│    Access review = Periodic check that all current permissions are still appropriate and needed       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### Privileged Access Management (PAM)

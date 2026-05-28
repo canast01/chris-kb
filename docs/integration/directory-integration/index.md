@@ -22,29 +22,36 @@ realm join -U administrator corp.example.com
 realm list
 id administrator@corp.example.com
 ```
-
-### SSSD Configuration
-
-```ini
-# /etc/sssd/sssd.conf
-[sssd]
-domains = corp.example.com
-config_file_version = 2
-services = nss, pam
-
-[domain/corp.example.com]
-ad_domain = corp.example.com
-krb5_realm = CORP.EXAMPLE.COM
-realmd_tags = manages-system joined-with-adcli
-cache_credentials = True
-id_provider = ad
-auth_provider = ad
-access_provider = ad
-krb5_store_password_if_offline = True
-default_shell = /bin/bash
-fallback_homedir = /home/%u@%d
-use_fully_qualified_names = False   # omit @domain suffix for local users
-ldap_id_mapping = True
+┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Integrate infrastructure services with Active Directory via LDAPS for authentication     │   │
+│   │      Service account: dedicated bind account; read-only to OU; password rotation tracked      │   │
+│   │        Required: LDAPS (port 636) only; import AD CA cert; test bind before production        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 LDAP Config                  │  │               Troubleshooting               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            Server: DC IP or FQDN             │  │             ldapsearch bind test            │   │
+│   │              Port: 636 (LDAPS)               │  │           Check CA in trust store           │   │
+│   │           Bind DN: svc-ldap@domain           │  │        Verify service acct not locked       │   │
+│   │          Base DN: DC=corp,DC=local           │  │         Check OU search permissions         │   │
+│   │            Group filter: memberOf            │  │           AD event log: 4771/4776           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Bind DN      = Distinguished Name of service account used to authenticate to LDAP                  │
+│    Base DN      = Search root in directory tree; e.g. DC=corp,DC=local for full domain                │
+│    LDAPS        = LDAP over TLS port 636; required; plain LDAP (389) transmits creds in clear         │
+│    memberOf     = AD attribute listing group DNs; used for group-based role mapping                   │
+│    ldapsearch   = CLI tool to test LDAP queries; confirm bind and attribute retrieval                 │
+│    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ```bash

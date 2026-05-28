@@ -74,36 +74,36 @@ flowchart TD
     A --> K{Archive or\ncloud tiering?}
     K -->|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]
 ```
-
----
-
-## Storage Network Design
-
-The storage network must be treated as a dedicated, isolated infrastructure component. Mixing storage traffic with VM production traffic causes I/O contention, inconsistent latency, and difficult-to-diagnose performance problems.
-
-### Dedicated Fabric for Fibre Channel
-
-FC SANs use a dedicated switching fabric completely separate from Ethernet.
-
-```mermaid
-graph TD
-    subgraph FC_Fabric_A["FC Fabric A"]
-        MDS_A["Cisco MDS 9396S\n(Fabric A)"]
-    end
-    subgraph FC_Fabric_B["FC Fabric B"]
-        MDS_B["Cisco MDS 9396S\n(Fabric B)"]
-    end
-    subgraph Array["Dell PowerMax 2500"]
-        SP_A["Storage Processor A"]
-        SP_B["Storage Processor B"]
-    end
-    H1_HBA_A["Host 1 HBA A"] --> MDS_A
-    H1_HBA_B["Host 1 HBA B"] --> MDS_B
-    H2_HBA_A["Host 2 HBA A"] --> MDS_A
-    H2_HBA_B["Host 2 HBA B"] --> MDS_B
-    MDS_A --> SP_A
-    MDS_B --> SP_B
-    SP_A <-->|"Array internal\ncrossbar"| SP_B
+┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Storage design: tier workloads by I/O profile; select protocol; plan redundancy        │   │
+│   │            Tiers: NVMe (< 0.1ms) → SSD (< 1ms) → SAS/NL-SAS (2-5ms) → archive/cloud           │   │
+│   │          Protocol: FC (SAN/high perf), iSCSI (SAN/cost), NFS/SMB (file), S3 (object)          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Design Considerations             │  │                  Redundancy                 │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │             Workload I/O profile             │  │           RAID 5/6 or erasure code          │   │
+│   │              Capacity now + 3yr              │  │               Dual controllers              │   │
+│   │              Protocol selection              │  │               Multipath (MPIO)              │   │
+│   │              Thin vs thick prov              │  │            Replication to DR site           │   │
+│   │              Encryption at rest              │  │               Snapshot policy               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    NVMe         = Non-Volatile Memory Express; PCIe-attached flash; lowest latency storage            │
+│    FC           = Fibre Channel; dedicated SAN fabric; high performance and reliability               │
+│    iSCSI        = SCSI over IP; block storage over Ethernet; lower cost than FC                       │
+│    Erasure code = Striping with parity across drives; space-efficient; used in scale-out arrays       │
+│    Thin prov    = Space allocated on-demand; must monitor actual usage vs overcommit                  │
+│    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 - Each host has HBAs connecting to both Fabric A and Fabric B — no single fabric failure takes down host access
