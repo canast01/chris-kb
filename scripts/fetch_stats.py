@@ -53,12 +53,6 @@ query Stats($accountTag: string!, $siteTag: string!, $start7: Time!, $start30: T
         orderBy: [count_DESC]
       ) { count dimensions { requestPath } }
 
-      topCountries: rumPageloadEventsAdaptiveGroups(
-        filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start30}, {datetime_leq: $end}]}
-        limit: 10
-        orderBy: [count_DESC]
-      ) { count dimensions { country } }
-
       topReferrers: rumPageloadEventsAdaptiveGroups(
         filter: {AND: [{siteTag: $siteTag}, {datetime_geq: $start30}, {datetime_leq: $end}]}
         limit: 10
@@ -132,7 +126,6 @@ def main():
     visits30 = sum(g['sum']['visits'] for g in acct['summary30'])
 
     top_pages = [(g['count'], g['dimensions']['requestPath']) for g in acct['topPages']]
-    top_countries = [(g['count'], g['dimensions']['country'] or '—') for g in acct['topCountries']]
     top_referrers = [(g['count'], g['dimensions']['refererHost'] or 'Direct') for g in acct['topReferrers']]
 
     # Remove empty/duplicate paths
@@ -144,7 +137,6 @@ def main():
             pages_deduped.append((count, path))
 
     max_pv = pages_deduped[0][0] if pages_deduped else 1
-    max_cv = top_countries[0][0] if top_countries else 1
     max_rv = top_referrers[0][0] if top_referrers else 1
 
     updated = now.strftime('%Y-%m-%d %H:%M UTC')
@@ -173,17 +165,6 @@ def main():
     for count, path in pages_deduped[:10]:
         b = bar(count, max_pv)
         lines.append(f'| `{count:,}` {b} | `{path}` |')
-
-    lines += [
-        '',
-        '## Top countries (30 days)',
-        '',
-        '| Views | Country |',
-        '|---|---|',
-    ]
-    for count, country in top_countries:
-        b = bar(count, max_cv)
-        lines.append(f'| `{count:,}` {b} | {country} |')
 
     lines += [
         '',
