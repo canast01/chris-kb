@@ -23,5 +23,11 @@ jobs:
       - name: Install dependencies
         run: pip install mkdocs-material
 
+      - name: Fetch site stats
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: python3 scripts/fetch_stats.py
+
       - name: Deploy
         run: mkdocs gh-deploy --force
