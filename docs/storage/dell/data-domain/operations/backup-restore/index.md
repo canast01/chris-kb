@@ -25,49 +25,40 @@ graph TD
     ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
     ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
 ```
-
-The Data Domain plays a passive role in backup and restore operations — it is the target that backup software writes to and reads from. Restore operations are always initiated from the backup application (Veeam, NetBackup, CommVault, etc.) or directly from an NFS/CIFS mount. This page covers: restore readiness validation, per-protocol restore procedures, performance expectations, configuration backup and recovery, and disaster recovery failover for backup data.
-
----
-
-## Restore Methods
-
-| Method | Protocol | Initiated From | When Used |
-|---|---|---|---|
-| DDBoost restore | DD Boost (IP or FC) | Backup application | NetBackup, Veeam, CommVault — fastest; application-aware |
-| NFS direct restore | NFS v3/v4 | Backup server or client | Any Linux/Unix client with NFS mount; granular file recovery |
-| CIFS direct restore | SMB | Windows client | Windows backup servers; granular file recovery from CIFS share |
-| VTL restore | Fibre Channel (emulated tape) | Backup media server | Tape-based backup software; NetBackup with VTL configuration |
-| FastCopy | DDOS internal | DD CLI | Efficient data movement within or between MTrees on the same DD |
-
----
-
-## Restore Readiness Validation
-
-Run these checks before initiating any restore. A restore against a degraded DD results in poor performance, incomplete data, or a failed recovery.
-
-```bash
-# 1. Filesystem is healthy and enabled
-filesys status
-
-# 2. No active hardware alerts
-alerts show current
-
-# 3. Confirm the target MTree has data and is accessible
-mtree list --verbose | grep <mtree-name>
-
-# 4. Check MTree quota — ensure quota is not exhausted
-mtree quota show | grep <mtree-name>
-
-# 5. Confirm NFS export or DDBoost storage unit is accessible
-nfs show exports | grep /data/col1/<mtree-name>
-ddboost storage-unit list | grep <storage-unit-name>
-
-# 6. Cleaning is not actively running during restore window
-filesys clean status
-
-# 7. Available bandwidth to the restore destination
-# (assess from backup server using iperf or review replication stats as a proxy)
+┌───────────────────────────────── Dell Data Domain Backup and Restore ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         DD stores backups from backup applications; restore = backup app reads from DD        │   │
+│   │       DR restore: backup app points to replicated DD at DR site; same restore procedure       │   │
+│   │        DD Boost allows backup apps to read directly; NFS mount for filesystem restores        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Primary Site Restore             │  │               DR Site Restore               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Backup app initiates restore         │  │          Point backup app to DR DD          │   │
+│   │         DD serves segments via Boost         │  │         DR DD is read-write replica         │   │
+│   │         Reassembles to original data         │  │           Same Boost/NFS procedure          │   │
+│   │           Verify restore integrity           │  │         Replication paused during DR        │   │
+│   │            Document recovery time            │  │          Resume rep after recovery          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                       # Verify MTree replication state before DR restore                      │   │
+│   │                  replication show all     — show replication contexts and lag                 │   │
+│   │               filesys show space       — confirm DR DD has sufficient free space              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DR DD            = Replicated Data Domain at DR site; exact copy of primary MTree data             │
+│    Read-write replica= After failover, DR DD MTree becomes writable for new backups                   │
+│    Replication pause = Stop replication before DR restore to prevent overwriting recovery data        │
+│    Resume rep       = After DR recovery, resume replication and resync from primary                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Note on filesystem cleaning during restores:** `filesys clean` is I/O intensive and competes with restore read traffic. If a major restore is scheduled, stop cleaning first:

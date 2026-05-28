@@ -27,36 +27,40 @@ graph TD
     dd --> proto
     dd --> enc
 ```
-
-This page documents the security hardening baseline for Dell Data Domain appliances running DDOS 7.x. These settings should be applied at initial commissioning and validated periodically. The goal is to reduce the attack surface, enforce least-privilege access, and ensure all administrative actions are auditable.
-
----
-
-## Hardening Checklist
-
-Apply these controls on every new Data Domain at commissioning. Use the checklist during quarterly security reviews.
-
-### Account and Credential Security
-
-- [ ] Change the default `sysadmin` password immediately on first access
-- [ ] Create named admin accounts — do not use `sysadmin` for day-to-day operations; keep it as a break-glass account
-- [ ] Configure LDAP or Active Directory authentication for all operational admin accounts
-- [ ] Set a minimum password length of 12 characters
-- [ ] Set a maximum password age of 90 days
-- [ ] Rotate DD Boost service account credentials on the same cycle as the password policy
-
-```bash
-# Change sysadmin password
-user change password sysadmin
-
-# Set password minimum length
-user password-policy set min-length 12
-
-# Set password maximum age (days)
-user password-policy set max-age 90
-
-# View current password policy
-user password-policy show
+┌───────────────────────────────────── Dell Data Domain Hardening ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Hardening: disable unused protocols, enforce TLS, LDAP auth, syslog, audit log        │   │
+│   │            Restrict management access to dedicated OOB network; enable login banner           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Disable / Restrict              │  │               Enable / Require              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Disable Telnet (default off)         │  │        Enable LDAP/AD authentication        │   │
+│   │          Disable older TLS versions          │  │            Enable syslog to SIEM            │   │
+│   │        Disable unused protocols (FTP)        │  │             Enable login banner             │   │
+│   │         Restrict SSH to OOB network          │  │             Enable audit logging            │   │
+│   │        Limit NFS export to backup IPs        │  │                 SNMP v3 only                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Control      │     Command      │      Standard     │      Verify      │    Frequency     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   TLS min 1.2    │ adminaccess set  │      Required     │     ssl show     │    Quarterly     │   │
+│   │   Login banner   │system banner set │      Required     │     SSH test     │      Annual      │   │
+│   │   Syslog/SIEM    │log enable syslog │      Required     │   SIEM verify    │    Quarterly     │   │
+│   │     SNMP v3      │snmp set version v│      Required     │    snmp show     │    Quarterly     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    adminaccess   = DDOS command namespace for restricting management protocols and TLS version        │
+│    Login banner  = Legal notice displayed at SSH/GUI login; required by many compliance standards     │
+│    OOB network   = Out-of-band management VLAN; DD management IP should only route from OOB           │
+│    Audit logging = DDOS logs all admin commands with user, timestamp, and command text                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### SSH and Remote Access

@@ -19,25 +19,40 @@ graph TD
     sisl --> nvramCache
     nvramCache --> ddfs
 ```
-
-## Veeam Backup & Replication (DD Boost for Veeam — DDVDP)
-
-Veeam integrates with Data Domain via the DD Boost for Veeam Data Domain Plugin (DDVDP). This enables source-side deduplication at the Veeam proxy, significantly reducing network traffic to the DD.
-
-**Setup steps:**
-
-1. Install the DDVDP plug-in on each Veeam proxy and repository server
-2. Create a DD Boost user on the DD: `ddboost user assign <username> role backup-operator`
-3. Create a storage unit on the DD mapped to the appropriate MTree
-4. In Veeam, add the DD as a backup repository — select "Dell EMC Data Domain" as the type
-5. Enter the DD hostname, DD Boost username, and password
-6. Configure repository settings: concurrent tasks, per-VM backup files
-
-**Verify:**
-
-```bash
-ddboost show clients  # Veeam proxy should appear as connected client
-ddboost show storage-units  # confirm storage unit is visible
+┌──────────────────────────────────── Dell Data Domain Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Data Domain integrates with major backup applications via DD Boost or NFS/CIFS        │   │
+│   │           DDMC (Data Domain Management Center) manages multiple DD systems centrally          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Backup Apps         │  │          Management         │  │        Cloud/Archive        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Dell Networker       │  │             DDMC            │  │        DD Cloud Tier        │   │
+│   │      Veritas NetBackup      │  │           CloudIQ           │  │            AWS S3           │   │
+│   │         Veeam Backup        │  │        Secure Connect       │  │          Azure Blob         │   │
+│   │         Dell Avamar         │  │         SNMP alerts         │  │        S3-compatible        │   │
+│   │          Commvault          │  │         Syslog/SIEM         │  │          ECS object         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │   Integration    │     Protocol     │      Feature      │      Config      │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Networker     │     DD Boost     │   App-side dedup  │   DDBDA plugin   │    Preferred     │   │
+│   │      Veeam       │     DD Boost     │   App-side dedup  │   Boost plugin   │      v9.5+       │   │
+│   │    NetBackup     │   OST/DD Boost   │   Optimised dup   │    OST plugin    │    Preferred     │   │
+│   │       DDMC       │      HTTPS       │    Central mgmt   │  Add DD to DDMC  │     Multi-DD     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DDBDA  = Dell Data Domain Boost for Backup Application; Networker integration library              │
+│    DDMC   = Data Domain Management Center; central web UI managing multiple DD systems                │
+│    OST    = OpenStorage Technology; NetBackup plugin enabling direct API integration with DD          │
+│    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## NetBackup (OST with DD Boost)

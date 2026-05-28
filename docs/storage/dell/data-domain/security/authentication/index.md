@@ -29,50 +29,41 @@ graph TD
     adminUser --> ddboostUser
     ddCLI --> auditLog
 ```
-
-DDOS 7.x supports local user accounts, LDAP directory integration, and Active Directory for management plane authentication. Service accounts for DD Boost use a separate credential mechanism (DD Boost users) that does not participate in AD/LDAP. This page covers all authentication configuration, session management, SSH key setup, and password policy.
-
----
-
-## Authentication Methods
-
-| Method | Scope | When to Use |
-|---|---|---|
-| Local accounts | DDOS management | Break-glass accounts only; all operational admins should use LDAP/AD |
-| LDAP | DDOS management | Centralised directory environments without AD |
-| Active Directory | DDOS management | Standard enterprise environments |
-| DD Boost users | DD Boost protocol only | Service accounts for backup software (Veeam, NetBackup, CommVault) |
-| SSH public key | SSH access | Automation and scripting; eliminates password exposure in scripts |
-
-The authentication method hierarchy: if LDAP/AD is configured, DDOS tries the directory first. If the directory is unreachable, local accounts serve as fallback. This fallback behaviour is critical for break-glass recovery.
-
----
-
-## LDAP Configuration
-
-LDAP integration maps directory group membership to DDOS roles. All management logins resolve against the configured LDAP server.
-
-```bash
-# Enable LDAP authentication
-authentication ldap enable
-
-# Set the LDAP server
-authentication ldap set server <ldap-server-ip>
-
-# Set the bind DN (service account for LDAP queries)
-authentication ldap set bind-dn "CN=svc-dd-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com"
-
-# Set the search base for user and group resolution
-authentication ldap set base-dn "DC=corp,DC=example,DC=com"
-
-# Optional: set the bind password for the service account
-authentication ldap set bind-password
-
-# Verify LDAP connectivity
-authentication ldap status
-
-# Test a specific user's authentication
-authentication ldap test user <username>
+┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               DD admin auth: LDAP/AD preferred; local admin as break-glass only               │   │
+│   │           SSH key authentication supported for CLI; disable password auth post-setup          │   │
+│   │             DDOS does not support native MFA; place jump server with MFA in front             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Admin Authentication             │  │                Configuration                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           LDAP/AD: primary method            │  │        authgroup add group-name role        │   │
+│   │        Local admin: break-glass only         │  │          auth ldap set server <IP>          │   │
+│   │           SSH key: scripted access           │  │             user ssh-pubkeys add            │   │
+│   │      Roles: admin, limited admin, user       │  │            Audit: log all logins            │   │
+│   │         Session timeout configurable         │  │           No shared admin accounts          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Method      │     Use case     │      Command      │     Standard     │     MFA path     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     LDAP/AD      │   Daily admin    │   auth ldap set   │     Required     │   Jump server    │   │
+│   │   Local admin    │   Break-glass    │    User add/mod   │    Vault only    │N/A (break-glass) │   │
+│   │     SSH key      │    Automation    │  ssh-pubkeys add  │     Required     │ Key + passphrase │   │
+│   │  DD Boost user   │    Backup app    │    ddboost user   │     Per app      │    App-level     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    authgroup  = LDAP/AD group mapped to DDOS admin role; members inherit role permissions             │
+│    Break-glass= Local admin account in vault; used only when LDAP unavailable                         │
+│    Jump server= Hardened host with MFA in front of DD; all SSH tunnels through jump server            │
+│    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### LDAP Configuration Options

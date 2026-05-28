@@ -18,47 +18,42 @@ flowchart TD
     K -->|No| M["support bundle generate\nEscalate to Dell"]
     D & F & H & J & L & M --> Z([Resolution])
 ```
-
-This page provides structured diagnostic procedures for the most common Data Domain failure scenarios. The approach is to gather evidence first, then act — avoid making configuration changes before understanding the root cause.
-
----
-
-## First-Response Command Set
-
-Run this command set when investigating any unspecified incident. Capture the output to a file for support handoff.
-
-```bash
-# System identity and version
-system show version
-net show hostname
-
-# Current system statistics
-system show stats
-
-# Active alerts (start here — alerts often explain everything)
-alerts show current
-alerts show history brief
-
-# Filesystem state and capacity
-filesys status
-filesys show space
-filesys show compression
-
-# Disk and hardware health
-disk show state
-enclosure show hardware
-
-# Replication health
-replication show
-replication status
-
-# DD Boost connectivity
-ddboost status
-ddboost show clients
-
-# Network interface state
-net show all
-net show stats
+┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │            Diagnose DD issues with DDOS CLI commands and support bundle collection            │   │
+│   │          support bundle save: bundles logs, config, and diagnostics for Dell support          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   # Step 1 — System overview                                  │   │
+│   │                       system show version      — DDOS version and serial                      │   │
+│   │                      system show hardware     — hardware components state                     │   │
+│   │                                                                                               │   │
+│   │                                # Step 2 — Filesystem and space                                │   │
+│   │                 filesys show space       — total/used/available + dedup ratio                 │   │
+│   │                      filesys show status      — filesystem health status                      │   │
+│   │                                                                                               │   │
+│   │                                     # Step 3 — Disk health                                    │   │
+│   │              disk show state          — show all disk states (OK/Unknown/Absent)              │   │
+│   │              disk show detailed-info  — S.M.A.R.T. data and error counts per disk             │   │
+│   │                                                                                               │   │
+│   │                                  # Step 4 — Alerts and events                                 │   │
+│   │                     alerts show current      — active alerts with severity                    │   │
+│   │                        alerts show history      — recent alert history                        │   │
+│   │                                                                                               │   │
+│   │                               # Step 5 — Collect support bundle                               │   │
+│   │                 support bundle save /data/col1/support/bundle-$(date +%F).tar                 │   │
+│   │                 # SCP bundle off DD to workstation for upload to Dell support                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    support bundle = Comprehensive DDOS diagnostic archive; always collect before calling Dell         │
+│    disk show state= Verify no drives in Unknown or Reconstructing state                               │
+│    alerts show    = Check for active hardware or software alerts; review before escalating            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Save the output before making any changes:

@@ -101,139 +101,41 @@ cd ~/Desktop
 chmod +x dd_health_check.sh
 DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_health_check.sh
 ```
-
-**What you should see**
-
-A series of sections separated by `========` lines: filesystem space usage, compression ratio, system uptime, replication state, and active alerts. The final line reads either `STATUS: OK — No active alerts.` or `STATUS: DEGRADED — X active alert(s) found.` If degraded, the script exits with a non-zero code.
-
----
-
-## Replication Lag Monitor
-
-SSH to a Data Domain appliance and parse `replication show` output. Extracts lag time per replication context and emits Nagios-compatible WARNING or CRITICAL output. Designed to be called directly by Icinga, Nagios, or a monitoring relay.
-
-~~~perl
-#!/usr/bin/env perl
-# dd_repl_monitor.pl — Data Domain replication lag monitor
-# Usage: DD_HOST=dd01 DD_USER=sysadmin WARN_MIN=30 CRIT_MIN=60 ./dd_repl_monitor.pl
-
-use strict;
-use warnings;
-
-my $dd_host  = $ENV{DD_HOST}  or die "ERROR: DD_HOST not set\n";
-my $dd_user  = $ENV{DD_USER}  || 'sysadmin';
-my $warn_min = $ENV{WARN_MIN} // 30;
-my $crit_min = $ENV{CRIT_MIN} // 60;
-
-# Fetch replication show output via SSH
-my $output = qx{ssh -o StrictHostKeyChecking=no -o BatchMode=yes ${dd_user}\@${dd_host} "replication show" 2>&1};
-if ($? != 0) {
-    print "UNKNOWN: SSH to $dd_host failed\n";
-    exit 3;
-}
-
-my @contexts;
-my $worst_state = 0;  # 0=OK 1=WARN 2=CRIT
-
-# Parse replication show output
-# Example line: ctx:1  source:mtree://dd01/data/col1/veeam  dest:mtree://dd02/...  state:Normal  lag:00:15:23
-for my $line (split /\n/, $output) {
-    next unless $line =~ /\bctx:/;
-
-    my ($ctx)   = $line =~ /ctx:(\S+)/;
-    my ($state) = $line =~ /state:(\S+)/;
-    my ($lag)   = $line =~ /lag:(\d+:\d+:\d+)/;
-
-    $ctx   //= 'unknown';
-    $state //= 'unknown';
-    $lag   //= '00:00:00';
-
-    # Convert lag HH:MM:SS to minutes
-    my ($hh, $mm, $ss) = split /:/, $lag;
-    my $lag_minutes = ($hh // 0) * 60 + ($mm // 0) + int(($ss // 0) / 60);
-
-    my $status = 'OK';
-    if ($lag_minutes >= $crit_min) {
-        $status      = 'CRITICAL';
-        $worst_state = 2 if $worst_state < 2;
-    } elsif ($lag_minutes >= $warn_min) {
-        $status      = 'WARNING';
-        $worst_state = 1 if $worst_state < 1;
-    }
-
-    push @contexts, {
-        ctx        => $ctx,
-        state      => $state,
-        lag        => $lag,
-        lag_min    => $lag_minutes,
-        status     => $status,
-    };
-}
-
-if (!@contexts) {
-    print "UNKNOWN: No replication contexts found in output\n";
-    exit 3;
-}
-
-# Print results table
-printf "%-6s  %-14s  %-10s  %8s  %s\n",
-    'CTX', 'STATE', 'LAG', 'LAG(min)', 'STATUS';
-printf "%s\n", '-' x 60;
-for my $c (@contexts) {
-    printf "%-6s  %-14s  %-10s  %8d  %s\n",
-        $c->{ctx}, $c->{state}, $c->{lag}, $c->{lag_min}, $c->{status};
-}
-
-# Exit with worst state
-if ($worst_state == 2) {
-    print "\nCRITICAL: One or more replication contexts exceed ${crit_min}-minute lag threshold.\n";
-    exit 2;
-} elsif ($worst_state == 1) {
-    print "\nWARNING: One or more replication contexts exceed ${warn_min}-minute lag threshold.\n";
-    exit 1;
-} else {
-    print "\nOK: All replication contexts within lag thresholds.\n";
-    exit 0;
-}
-~~~
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux/macOS computer or Windows with Git Bash and Strawberry Perl installed
-- SSH access to your Data Domain appliance
-- Strawberry Perl (Windows): download from strawberryperl.com — it is free and installs in a few clicks
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Name it `dd_repl_monitor.pl` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these values (or pass them as environment variables):
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `DD_HOST` | IP or hostname of your Data Domain | Ask your storage admin |
-| `DD_USER` | SSH username | Default is `sysadmin` |
-| `WARN_MIN` | Minutes of lag before WARNING | Default is `30` |
-| `CRIT_MIN` | Minutes of lag before CRITICAL | Default is `60` |
-
-**Step 3 — Open a terminal**
-
-- **For .pl (Perl):** Open Command Prompt. Install Strawberry Perl from strawberryperl.com if needed.
-
-**Step 4 — Run the script**
-
-```bash
-cd C:\Users\YourName\Desktop
-set DD_HOST=192.168.10.50
-set DD_USER=sysadmin
-perl dd_repl_monitor.pl
+┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Automate DD operations via SSH; DDOS CLI scriptable with ssh user@dd "command"        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         # Space utilisation report across multiple DDs                        │   │
+│   │                                 for DD in dd-primary dd-dr; do                                │   │
+│   │                      echo "=== $DD ==="; ssh admin@$DD "filesys show space"                   │   │
+│   │                                              done                                             │   │
+│   │                                                                                               │   │
+│   │                                  # Replication health report                                  │   │
+│   │           ssh admin@dd-primary "replication show all" | grep -E "Context|lag|state"           │   │
+│   │                                                                                               │   │
+│   │                                 # Check dedup ratio per MTree                                 │   │
+│   │                ssh admin@dd-primary "mtree list" | awk "{print \$1, \$3, \$4}"                │   │
+│   │                                                                                               │   │
+│   │                                  # Alert if filesystem > 80%                                  │   │
+│   │      PCT=$(ssh admin@dd-primary "filesys show space" | grep "Active" | awk "{print \$5}")     │   │
+│   │                                if [ "${PCT%\%}" -gt 80 ]; then                                │   │
+│   │            echo "ALERT: DD filesystem ${PCT} full" | mail -s "DD Alert" ops@corp.com          │   │
+│   │                                               fi                                              │   │
+│   │                                                                                               │   │
+│   │                                    # Collect support bundle                                   │   │
+│   │    ssh admin@dd-primary "support bundle save /data/col1/support/bundle-$(date +%Y%m%d).tar"   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SSH automation = DDOS allows non-interactive SSH commands; use key-based auth for scripts          │
+│    filesys show space= Returns Active tier: total, used, available, compression factor                │
+│    support bundle = DD diagnostic archive; ssh extraction copies to local filesystem                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **What you should see**

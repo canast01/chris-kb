@@ -44,46 +44,42 @@ flowchart TD
     L -->|Yes| N["Run test DDBoost backup\nConfirm job success"]
     N --> O([Close Window])
 ```
-
-Steps for planned maintenance on a Data Domain — schedule outside the backup window whenever possible.
-
-1. Confirm the maintenance window does not overlap with the backup window — check backup software schedules and confirm no jobs will run during the change
-2. Run `replication show` to note the current state of all contexts; if the change requires a replication pause, run `replication sync <context>` to bring the context to current before pausing
-3. Confirm no active backup sessions by checking backup software dashboards; wait for any running jobs to complete before starting
-4. If this is a DDOS upgrade: run `filesys clean start` and wait for it to complete before the upgrade to reduce post-upgrade clean time
-5. Export a configuration backup via System Manager before any upgrade or hardware change
-6. Perform the change per the approved runbook (DDOS upgrade, shelf expansion, or configuration change)
-7. After the change, run `filesys status`, `replication show`, and `alerts show current` to confirm all services are healthy
-8. Run a test DDBoost backup from at least one backup server and confirm the job completes successfully before closing the window
-
-## Post-Change Validation
-
-Run these checks after any change to confirm the Data Domain is healthy and backup services are restored.
-
-- [ ] `filesys status` — filesystem is `Enabled` and `Running`
-- [ ] `alerts show current` — no new alerts introduced by the change
-- [ ] `replication show` — all replication contexts back to `Normal` state; confirm lag has not grown during the change window
-- [ ] `ddboost show clients` — all backup servers reconnected and authenticated
-- [ ] `filesys show compression` — dedup ratio is consistent with the pre-change ratio; a significant drop post-change may indicate a configuration issue
-- [ ] Backup job success: confirm at least one DDBoost backup job completes successfully after the change
-- [ ] `system show` — confirms DDOS version (if this was an upgrade) and hardware health is clean
-- [ ] ESRS / CloudIQ shows no new proactive alerts after the change
-
-## MTree Management
-
-MTrees are the primary logical partitions on a Data Domain system. Each MTree maps to a directory under `/data/col1/` and can have independent quotas, replication, and retention lock settings.
-
-### Capacity and Usage
-
-```bash
-# List all MTrees with usage
-mtree list --verbose
-
-# Check MTree quota utilisation
-mtree quota show
-
-# Compare pre-compression vs post-compression per MTree
-filesys show compression | grep -B2 -A5 "mtree"
+┌───────────────────────────────────── Dell Data Domain Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Standard procedures: create MTree, configure replication, set quota, run cleaning       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      # Create a new MTree                                     │   │
+│   │                                mtree create /data/col1/mybackup                               │   │
+│   │            mtree modify /data/col1/mybackup quota soft-limit 10 TB hard-limit 12 TB           │   │
+│   │                                                                                               │   │
+│   │                                 # Create NFS export from MTree                                │   │
+│   │                        nfs add /data/col1/mybackup clients 10.0.0.0/24                        │   │
+│   │                                                                                               │   │
+│   │                                   # Configure DD Boost user                                   │   │
+│   │                           ddboost user assign myboostuser role admin                          │   │
+│   │                        ddboost storage-unit create /data/col1/mybackup                        │   │
+│   │                                                                                               │   │
+│   │                      # Configure replication context (MTree replication)                      │   │
+│   │                 replication add source mtree://dd-primary/data/col1/mybackup \                │   │
+│   │                           destination mtree://dd-dr/data/col1/mybackup                        │   │
+│   │                  replication initialize mtree://dd-primary/data/col1/mybackup                 │   │
+│   │                                                                                               │   │
+│   │                                     # Run manual cleaning                                     │   │
+│   │                                      filesys clean start                                      │   │
+│   │                             filesys clean show  # monitor progress                            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    mtree create      = Creates logical partition in DDOS; quota enforced per MTree                    │
+│    ddboost storage-unit= Registers MTree as DD Boost storage unit; backup app connects here           │
+│    replication initialize= Seeds initial MTree copy to DR DD; only sends unique segments              │
+│    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### MTree Space Actions

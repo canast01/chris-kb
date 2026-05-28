@@ -7922,3 +7922,918 @@ def dell_cod_ts_diag():
 
     lines.append('└' + '─' * W2 + '┘')
     return lines
+
+
+# ── Dell Data Domain sub-pages ────────────────────────────────────────────────
+
+@kb_diagram(
+    'dell-dd-arch',
+    'docs/storage/dell/data-domain/architecture/index.md',
+    'Dell Data Domain architecture overview — deduplication backup appliance',
+)
+def dell_dd_arch():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Architecture'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Data Domain: purpose-built deduplication backup appliance with DDOS; NAS/VTL front-end')))
+    lines.append(R(bMid(IV_L, IV_R, 'Inline deduplication and compression reduce backup storage by 10–55x typical ratios')))
+    lines.append(R(bMid(IV_L, IV_R, 'Protocols: NFS, CIFS/SMB, DD Boost (app-side dedup), VTL, OST (OpenStorage)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: DD Replicator sends only unique deduplicated data to DR site')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Backup app writes to DD via NFS/DD Boost → inline dedup → stored in DDOS filesystem'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Front-End Protocols'), bMid(B2_L, B2_R, 'DDOS Core'), bMid(B3_L, B3_R, 'Replication'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NFS (POSIX)'), bMid(B2_L, B2_R, 'Inline dedup'), bMid(B3_L, B3_R, 'DD Replicator'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CIFS / SMB'), bMid(B2_L, B2_R, 'Compression'), bMid(B3_L, B3_R, 'Collection rep'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DD Boost'), bMid(B2_L, B2_R, 'DDOS FS'), bMid(B3_L, B3_R, 'MTree rep'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'VTL (FC/iSCSI)'), bMid(B2_L, B2_R, 'RAID-6'), bMid(B3_L, B3_R, 'DD Cloud Tier'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DD OST'), bMid(B2_L, B2_R, 'Encryption'), bMid(B3_L, B3_R, 'Cascade rep'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Component', 'Model', 'Capacity', 'Throughput', 'Use case'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Entry', 'DD3300', 'Up to 96 TB', '5.4 TB/hr', 'Remote/ROBO'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Mid', 'DD6400', 'Up to 576 TB', '27 TB/hr', 'Mid datacenter'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['High', 'DD9900', 'Up to 1 PB+', '68.8 TB/hr', 'Large enterprise'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Virtual', 'DDVE', 'Up to 96 TB', 'Software', 'Cloud/hybrid'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Physical: head unit + expansion shelves; NVRAM write cache for inline dedup throughput'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DDOS         = Data Domain Operating System; purpose-built FS optimised for deduplication'))
+    lines.append(txt_row('  DD Boost     = Client-side library in Networker/Veeam/NBU; offloads dedup to backup client'))
+    lines.append(txt_row('  Inline dedup = Deduplication performed as data streams in; zero separate dedupe pass needed'))
+    lines.append(txt_row('  MTree        = Logical partition of DD storage; replication target; quota boundaries'))
+    lines.append(txt_row('  VTL          = Virtual Tape Library; emulates tape drives over FC or iSCSI'))
+    lines.append(txt_row('  DD Replicator= Asynchronous replication of deduplicated data; sends only unique segments'))
+    lines.append(txt_row('  Collection rep= Replicates entire DD filesystem; used for full system DR'))
+    lines.append(txt_row('  NVRAM        = Non-volatile RAM write cache; ensures dedup throughput without losing data'))
+    lines.append(txt_row('  RAID-6       = DDOS uses RAID-6 for data protection; tolerates 2 simultaneous drive failures'))
+    lines.append(txt_row('  DD Cloud Tier= Offloads inactive data from DD to object storage (AWS S3, Azure Blob, etc.)'))
+    lines.append(txt_row('  OST          = OpenStorage Technology; backup app plugin for direct data path to DD'))
+    lines.append(txt_row('  DDVE         = Data Domain Virtual Edition; software-only DD running on VMware/cloud'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-arch-design',
+    'docs/storage/dell/data-domain/architecture/design-standards/index.md',
+    'Dell Data Domain design standards — sizing, replication topology, MTree layout',
+)
+def dell_dd_arch_design():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Design Standards'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Size DD at 2× expected logical retention to account for dedup variation')))
+    lines.append(R(bMid(IV_L, IV_R, 'Separate MTrees per backup application or environment for quota control')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: active site primary → passive site DR; test restore quarterly')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Sizing Standards'), bMid(B2_L, B2_R, 'Layout Standards'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2× logical retention in raw'), bMid(B2_L, B2_R, 'MTree per app/env'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Plan for 10–30x dedup ratio'), bMid(B2_L, B2_R, 'MTree quotas enforced'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Leave 20% free headroom'), bMid(B2_L, B2_R, 'NFS exports per MTree'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DD Boost preferred protocol'), bMid(B2_L, B2_R, 'DD Boost users per app'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NVRAM: do not exceed 80%'), bMid(B2_L, B2_R, 'Replication per MTree'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Standard', 'Value', 'Reason', 'Owner', 'Review'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Raw headroom', '> 20%', 'Dedup overhead', 'Backup team', 'Monthly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['MTree quotas', 'Per environment', 'Prevent runaway', 'Backup team', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Rep schedule', '4-hour RPO max', 'DR target', 'Backup team', 'Annual'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Restore test', 'Quarterly', 'Verify DR', 'Backup team', 'Per test'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Dedup ratio      = Logical data stored ÷ physical space used; 10–30x typical for backup'))
+    lines.append(txt_row('  20% headroom     = DDOS performance degrades when filesystem > 80% full; always leave buffer'))
+    lines.append(txt_row('  MTree quota      = Soft/hard limits on MTree logical capacity; prevents one app starving others'))
+    lines.append(txt_row('  DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-arch-how',
+    'docs/storage/dell/data-domain/architecture/how-it-works/index.md',
+    'Dell Data Domain how it works — inline dedup pipeline, segment processing',
+)
+def dell_dd_arch_how():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain — How It Works'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Data Domain performs inline dedup: segments incoming data, hashes, checks index')))
+    lines.append(R(bMid(IV_L, IV_R, 'Unique segments written to DDOS; duplicates recorded as references only')))
+    lines.append(R(bMid(IV_L, IV_R, 'NVRAM buffers writes; segment index (fingerprint DB) held in RAM for speed')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Write path: data → segment → hash → index lookup → unique: write / dup: reference only'))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Write Path'), bMid(B2_L, B2_R, 'Read Path'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '1. Data enters via NFS/Boost/VTL'), bMid(B2_L, B2_R, '1. Restore request arrives'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '2. Chunked into variable segments'), bMid(B2_L, B2_R, '2. DDOS resolves segment refs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '3. SHA-1 fingerprint per segment'), bMid(B2_L, B2_R, '3. Segments read from disk'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '4. Index lookup in RAM/NVRAM'), bMid(B2_L, B2_R, '4. Reassembled in order'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '5. Unique: write to disk + index'), bMid(B2_L, B2_R, '5. Decompressed + delivered'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '6. Duplicate: metadata ref only'), bMid(B2_L, B2_R, '6. Data returned to client'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DD Boost: client-side library segments data before sending; reduces network by 50–90%')))
+    lines.append(R(bMid(IV_L, IV_R, 'Cleaning: DDOS garbage collects orphaned segments during off-hours (cron default)')))
+    lines.append(R(bMid(IV_L, IV_R, 'Replication: only sends unique new segments to DR DD; bandwidth-efficient')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Segment       = Variable-length data chunk (avg 8 KB); unit of deduplication'))
+    lines.append(txt_row('  Fingerprint   = SHA-1 hash of segment content; used as dedup index key'))
+    lines.append(txt_row('  Segment index = In-RAM hash table mapping fingerprints to disk locations'))
+    lines.append(txt_row('  NVRAM cache   = Incoming writes staged in NVRAM; protects against power loss mid-stream'))
+    lines.append(txt_row('  Cleaning      = Scheduled DDOS process removing segments no longer referenced'))
+    lines.append(txt_row('  DD Boost lib  = Plugin installed in backup app (NBU, Networker, Veeam); enables client dedup'))
+    lines.append(txt_row('  Reference     = Duplicate segment stored as pointer to existing segment; saves disk space'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-arch-int',
+    'docs/storage/dell/data-domain/architecture/integrations/index.md',
+    'Dell Data Domain integrations — Networker, Veeam, NetBackup, Avamar, DDMC',
+)
+def dell_dd_arch_int():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Integrations'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Data Domain integrates with major backup applications via DD Boost or NFS/CIFS')))
+    lines.append(R(bMid(IV_L, IV_R, 'DDMC (Data Domain Management Center) manages multiple DD systems centrally')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup Apps'), bMid(B2_L, B2_R, 'Management'), bMid(B3_L, B3_R, 'Cloud/Archive'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dell Networker'), bMid(B2_L, B2_R, 'DDMC'), bMid(B3_L, B3_R, 'DD Cloud Tier'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Veritas NetBackup'), bMid(B2_L, B2_R, 'CloudIQ'), bMid(B3_L, B3_R, 'AWS S3'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Veeam Backup'), bMid(B2_L, B2_R, 'Secure Connect'), bMid(B3_L, B3_R, 'Azure Blob'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Dell Avamar'), bMid(B2_L, B2_R, 'SNMP alerts'), bMid(B3_L, B3_R, 'S3-compatible'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Commvault'), bMid(B2_L, B2_R, 'Syslog/SIEM'), bMid(B3_L, B3_R, 'ECS object'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Integration', 'Protocol', 'Feature', 'Config', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Networker', 'DD Boost', 'App-side dedup', 'DDBDA plugin', 'Preferred'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Veeam', 'DD Boost', 'App-side dedup', 'Boost plugin', 'v9.5+'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['NetBackup', 'OST/DD Boost', 'Optimised dup', 'OST plugin', 'Preferred'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DDMC', 'HTTPS', 'Central mgmt', 'Add DD to DDMC', 'Multi-DD'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DDBDA  = Dell Data Domain Boost for Backup Application; Networker integration library'))
+    lines.append(txt_row('  DDMC   = Data Domain Management Center; central web UI managing multiple DD systems'))
+    lines.append(txt_row('  OST    = OpenStorage Technology; NetBackup plugin enabling direct API integration with DD'))
+    lines.append(txt_row('  Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-backup',
+    'docs/storage/dell/data-domain/operations/backup-restore/index.md',
+    'Dell Data Domain backup/restore — MTree backup, replicated copy restore',
+)
+def dell_dd_ops_backup():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Backup and Restore'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DD stores backups from backup applications; restore = backup app reads from DD')))
+    lines.append(R(bMid(IV_L, IV_R, 'DR restore: backup app points to replicated DD at DR site; same restore procedure')))
+    lines.append(R(bMid(IV_L, IV_R, 'DD Boost allows backup apps to read directly; NFS mount for filesystem restores')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Primary Site Restore'), bMid(B2_L, B2_R, 'DR Site Restore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup app initiates restore'), bMid(B2_L, B2_R, 'Point backup app to DR DD'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DD serves segments via Boost'), bMid(B2_L, B2_R, 'DR DD is read-write replica'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Reassembles to original data'), bMid(B2_L, B2_R, 'Same Boost/NFS procedure'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Verify restore integrity'), bMid(B2_L, B2_R, 'Replication paused during DR'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Document recovery time'), bMid(B2_L, B2_R, 'Resume rep after recovery'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Verify MTree replication state before DR restore')))
+    lines.append(R(bMid(IV_L, IV_R, 'replication show all     — show replication contexts and lag')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys show space       — confirm DR DD has sufficient free space')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DR DD            = Replicated Data Domain at DR site; exact copy of primary MTree data'))
+    lines.append(txt_row('  Read-write replica= After failover, DR DD MTree becomes writable for new backups'))
+    lines.append(txt_row('  Replication pause = Stop replication before DR restore to prevent overwriting recovery data'))
+    lines.append(txt_row('  Resume rep       = After DR recovery, resume replication and resync from primary'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-cli',
+    'docs/storage/dell/data-domain/operations/cli-reference/index.md',
+    'Dell Data Domain CLI reference — DDOS shell commands, filesys, replication, sysadmin',
+)
+def dell_dd_ops_cli():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain CLI Reference'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DDOS CLI accessed via SSH (admin user); all commands under hierarchical namespaces')))
+    lines.append(R(bMid(IV_L, IV_R, 'Tab completion available; "help <command>" or "<command> ?" for syntax')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Filesystem'), bMid(B2_L, B2_R, 'Replication'), bMid(B3_L, B3_R, 'System Admin'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'filesys show space'), bMid(B2_L, B2_R, 'replication show all'), bMid(B3_L, B3_R, 'sysadmin show'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'filesys show status'), bMid(B2_L, B2_R, 'replication resync'), bMid(B3_L, B3_R, 'system show version'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'mtree list'), bMid(B2_L, B2_R, 'replication throttle'), bMid(B3_L, B3_R, 'net show hostname'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'mtree show quota'), bMid(B2_L, B2_R, 'replication sync'), bMid(B3_L, B3_R, 'alerts show'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'filesys clean start'), bMid(B2_L, B2_R, 'replication show lag'), bMid(B3_L, B3_R, 'support bundle save'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys show space          — show total, used, available, dedup ratio')))
+    lines.append(R(bMid(IV_L, IV_R, 'replication show all        — show all replication contexts and state')))
+    lines.append(R(bMid(IV_L, IV_R, 'mtree list                  — list all MTrees with usage and quota')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys clean start         — manually start cleaning (garbage collect)')))
+    lines.append(R(bMid(IV_L, IV_R, 'support bundle save <path>  — collect diagnostic bundle for support')))
+    lines.append(R(bMid(IV_L, IV_R, 'system passphrase change     — change local admin password')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  filesys clean  = DDOS cleaning cycle; reclaims space from expired/deleted backup segments'))
+    lines.append(txt_row('  replication lag= Time delta between primary last write and replica last received'))
+    lines.append(txt_row('  support bundle = tar.gz of DDOS logs, config, and diagnostics; send to Dell support'))
+    lines.append(txt_row('  mtree quota    = Logical soft/hard limit per MTree; shown in filesys show space output'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-health',
+    'docs/storage/dell/data-domain/operations/health-checks/index.md',
+    'Dell Data Domain health checks — filesys, replication lag, disk health, cleaning',
+)
+def dell_dd_ops_health():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Health Checks'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Daily: filesys space < 80%, replication in sync, no disk faults, alerts clear')))
+    lines.append(R(bMid(IV_L, IV_R, 'Weekly: verify cleaning completed, check NVRAM, review dedup efficiency')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Daily Checks'), bMid(B2_L, B2_R, 'Weekly Checks'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'filesys show space < 80%'), bMid(B2_L, B2_R, 'Cleaning: completed this week'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Replication lag < 4 hours'), bMid(B2_L, B2_R, 'Dedup ratio not degrading'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No disk fault alerts'), bMid(B2_L, B2_R, 'NVRAM no errors'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Backup jobs succeeded'), bMid(B2_L, B2_R, 'Hardware health clean'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CloudIQ health score'), bMid(B2_L, B2_R, 'License utilisation'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Check', 'Command', 'Pass criteria', 'Fail action', 'Frequency'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FS space', 'filesys show space', '< 80% used', 'Expire backups', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Rep lag', 'replication show', '< 4 hr', 'Check WAN/link', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Disk health', 'disk show state', 'All OK', 'Replace disk', 'Daily'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Cleaning', 'filesys clean show', 'Ran this week', 'Manual trigger', 'Weekly'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  80% threshold  = DDOS performance degrades significantly above 80% full; expand or expire'))
+    lines.append(txt_row('  Cleaning cycle = Weekly automatic cleaning; reclaims space; takes 2–12 hours to complete'))
+    lines.append(txt_row('  Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-issues',
+    'docs/storage/dell/data-domain/operations/common-issues/index.md',
+    'Dell Data Domain operational common issues — space, replication, cleaning, performance',
+)
+def dell_dd_ops_issues():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Operational Issues'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Common operational issues: space full, replication lag, cleaning not completing')))
+    lines.append(R(bMid(IV_L, IV_R, 'Space: expire old backups; increase retention policy review cadence')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Space Issues'), bMid(B2_L, B2_R, 'Replication Issues'), bMid(B3_L, B3_R, 'Performance Issues'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Filesystem > 80%'), bMid(B2_L, B2_R, 'Replication lag'), bMid(B3_L, B3_R, 'Slow backup jobs'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cleaning blocked'), bMid(B2_L, B2_R, 'Context broken'), bMid(B3_L, B3_R, 'Slow restores'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MTree quota hit'), bMid(B2_L, B2_R, 'Bandwidth limit'), bMid(B3_L, B3_R, 'NVRAM errors'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Expired not freed'), bMid(B2_L, B2_R, 'WAN instability'), bMid(B3_L, B3_R, 'High dedupe miss'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No COD available'), bMid(B2_L, B2_R, 'Authentication'), bMid(B3_L, B3_R, 'Disk contention'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Issue', 'Root cause', 'Fix', 'Verify', 'Prevent'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FS full', 'Retention too long', 'Expire old data', 'Space recovers', 'Monitor < 80%'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Rep lag', 'WAN congestion', 'Throttle/time', 'Lag decreases', 'QoS WAN policy'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Cleaning stuck', 'Active writes', 'Run off-hours', 'Clean completes', 'Schedule cron'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Slow backup', 'Network/NVRAM', 'Check NVRAM', 'Throughput up', 'Health monitor'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Cleaning blocked = Active writes/replication prevent cleaning from completing; run off-hours'))
+    lines.append(txt_row('  High dedupe miss = New data with low dedup ratio arriving; check for new backup type or agent'))
+    lines.append(txt_row('  Context broken   = Replication context in error state; replication resync to re-establish'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-procedures',
+    'docs/storage/dell/data-domain/operations/procedures/index.md',
+    'Dell Data Domain procedures — MTree create, replication add, retention, cleaning',
+)
+def dell_dd_ops_procedures():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Procedures'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Standard procedures: create MTree, configure replication, set quota, run cleaning')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Create a new MTree')))
+    lines.append(R(bMid(IV_L, IV_R, 'mtree create /data/col1/mybackup')))
+    lines.append(R(bMid(IV_L, IV_R, 'mtree modify /data/col1/mybackup quota soft-limit 10 TB hard-limit 12 TB')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Create NFS export from MTree')))
+    lines.append(R(bMid(IV_L, IV_R, 'nfs add /data/col1/mybackup clients 10.0.0.0/24')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Configure DD Boost user')))
+    lines.append(R(bMid(IV_L, IV_R, 'ddboost user assign myboostuser role admin')))
+    lines.append(R(bMid(IV_L, IV_R, 'ddboost storage-unit create /data/col1/mybackup')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Configure replication context (MTree replication)')))
+    lines.append(R(bMid(IV_L, IV_R, 'replication add source mtree://dd-primary/data/col1/mybackup \\')))
+    lines.append(R(bMid(IV_L, IV_R, '  destination mtree://dd-dr/data/col1/mybackup')))
+    lines.append(R(bMid(IV_L, IV_R, 'replication initialize mtree://dd-primary/data/col1/mybackup')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Run manual cleaning')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys clean start')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys clean show  # monitor progress')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  mtree create      = Creates logical partition in DDOS; quota enforced per MTree'))
+    lines.append(txt_row('  ddboost storage-unit= Registers MTree as DD Boost storage unit; backup app connects here'))
+    lines.append(txt_row('  replication initialize= Seeds initial MTree copy to DR DD; only sends unique segments'))
+    lines.append(txt_row('  filesys clean     = Manually triggers cleaning cycle; normally automated off-peak'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ops-scripts',
+    'docs/storage/dell/data-domain/operations/scripts/index.md',
+    'Dell Data Domain scripts — space report, replication status, cleaning automation',
+)
+def dell_dd_ops_scripts():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Scripts'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Automate DD operations via SSH; DDOS CLI scriptable with ssh user@dd "command"')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Space utilisation report across multiple DDs')))
+    lines.append(R(bMid(IV_L, IV_R, 'for DD in dd-primary dd-dr; do')))
+    lines.append(R(bMid(IV_L, IV_R, '  echo "=== $DD ==="; ssh admin@$DD "filesys show space"')))
+    lines.append(R(bMid(IV_L, IV_R, 'done')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Replication health report')))
+    lines.append(R(bMid(IV_L, IV_R, 'ssh admin@dd-primary "replication show all" | grep -E "Context|lag|state"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Check dedup ratio per MTree')))
+    lines.append(R(bMid(IV_L, IV_R, 'ssh admin@dd-primary "mtree list" | awk "{print \$1, \$3, \$4}"')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Alert if filesystem > 80%')))
+    lines.append(R(bMid(IV_L, IV_R, 'PCT=$(ssh admin@dd-primary "filesys show space" | grep "Active" | awk "{print \$5}")')))
+    lines.append(R(bMid(IV_L, IV_R, 'if [ "${PCT%\\%}" -gt 80 ]; then')))
+    lines.append(R(bMid(IV_L, IV_R, '  echo "ALERT: DD filesystem ${PCT} full" | mail -s "DD Alert" ops@corp.com')))
+    lines.append(R(bMid(IV_L, IV_R, 'fi')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Collect support bundle')))
+    lines.append(R(bMid(IV_L, IV_R, 'ssh admin@dd-primary "support bundle save /data/col1/support/bundle-$(date +%Y%m%d).tar"')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  SSH automation = DDOS allows non-interactive SSH commands; use key-based auth for scripts'))
+    lines.append(txt_row('  filesys show space= Returns Active tier: total, used, available, compression factor'))
+    lines.append(txt_row('  support bundle = DD diagnostic archive; ssh extraction copies to local filesystem'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-sec-access',
+    'docs/storage/dell/data-domain/security/access-control/index.md',
+    'Dell Data Domain access control — MTree access, NFS client restriction, DD Boost users',
+)
+def dell_dd_sec_access():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Access Control'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DD access layers: NFS client IP restriction, CIFS ACLs, DD Boost user roles, CLI RBAC')))
+    lines.append(R(bMid(IV_L, IV_R, 'MTree access: NFS exports scoped by client IP; CIFS shares by AD group')))
+    lines.append(R(bMid(IV_L, IV_R, 'Admin access: local admin, LDAP/AD group mapping, role-based CLI access levels')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Data Access'), bMid(B2_L, B2_R, 'Admin Access'), bMid(B3_L, B3_R, 'DD Boost Access'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'NFS: IP allowlist'), bMid(B2_L, B2_R, 'Local admin user'), bMid(B3_L, B3_R, 'DD Boost username'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'CIFS: AD group'), bMid(B2_L, B2_R, 'LDAP/AD groups'), bMid(B3_L, B3_R, 'Storage unit bind'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MTree per app'), bMid(B2_L, B2_R, 'Roles: admin/user'), bMid(B3_L, B3_R, 'No direct FS access'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Deny by default'), bMid(B2_L, B2_R, 'SSH key auth'), bMid(B3_L, B3_R, 'Backup app creds'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'IP range restrict'), bMid(B2_L, B2_R, 'Audit log'), bMid(B3_L, B3_R, 'Encrypted channel'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Method', 'Scope', 'Default', 'Review'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['NFS export', 'Client IP list', 'Per MTree', 'Deny all', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['CIFS share', 'AD group', 'Per MTree', 'Deny all', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Admin CLI', 'LDAP role', 'System-wide', 'Local only', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DD Boost user', 'Named account', 'Per SU', 'Per app', 'Quarterly'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  MTree isolation = Each backup app has its own MTree; prevents cross-application data access'))
+    lines.append(txt_row('  NFS IP restrict = Export allows only backup media server IPs; block all other hosts'))
+    lines.append(txt_row('  DD Boost user   = Service account used by backup app to authenticate DD Boost connection'))
+    lines.append(txt_row('  Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-sec-auth',
+    'docs/storage/dell/data-domain/security/authentication/index.md',
+    'Dell Data Domain authentication — LDAP/AD, local admin, SSH keys, MFA',
+)
+def dell_dd_sec_auth():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Authentication'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DD admin auth: LDAP/AD preferred; local admin as break-glass only')))
+    lines.append(R(bMid(IV_L, IV_R, 'SSH key authentication supported for CLI; disable password auth post-setup')))
+    lines.append(R(bMid(IV_L, IV_R, 'DDOS does not support native MFA; place jump server with MFA in front')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Admin Authentication'), bMid(B2_L, B2_R, 'Configuration'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'LDAP/AD: primary method'), bMid(B2_L, B2_R, 'authgroup add group-name role'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Local admin: break-glass only'), bMid(B2_L, B2_R, 'auth ldap set server <IP>'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'SSH key: scripted access'), bMid(B2_L, B2_R, 'user ssh-pubkeys add'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Roles: admin, limited admin, user'), bMid(B2_L, B2_R, 'Audit: log all logins'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Session timeout configurable'), bMid(B2_L, B2_R, 'No shared admin accounts'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Method', 'Use case', 'Command', 'Standard', 'MFA path'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['LDAP/AD', 'Daily admin', 'auth ldap set', 'Required', 'Jump server'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Local admin', 'Break-glass', 'User add/mod', 'Vault only', 'N/A (break-glass)'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SSH key', 'Automation', 'ssh-pubkeys add', 'Required', 'Key + passphrase'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DD Boost user', 'Backup app', 'ddboost user', 'Per app', 'App-level'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  authgroup  = LDAP/AD group mapped to DDOS admin role; members inherit role permissions'))
+    lines.append(txt_row('  Break-glass= Local admin account in vault; used only when LDAP unavailable'))
+    lines.append(txt_row('  Jump server= Hardened host with MFA in front of DD; all SSH tunnels through jump server'))
+    lines.append(txt_row('  Session timeout= Idle CLI session terminates; default 10 min; configurable'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-sec-enc',
+    'docs/storage/dell/data-domain/security/encryption/index.md',
+    'Dell Data Domain encryption — data-at-rest encryption, in-transit TLS, key management',
+)
+def dell_dd_sec_enc():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Encryption'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'DD supports data-at-rest encryption (DAR) and in-transit encryption (TLS)')))
+    lines.append(R(bMid(IV_L, IV_R, 'DAR: AES-256-GCM; key managed internally (keystore) or externally (KMIP)')))
+    lines.append(R(bMid(IV_L, IV_R, 'In-transit: replication TLS, DD Boost over TLS, management HTTPS/SSH')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Data at Rest'), bMid(B2_L, B2_R, 'Data in Transit'), bMid(B3_L, B3_R, 'Key Management'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'AES-256-GCM'), bMid(B2_L, B2_R, 'Replication TLS'), bMid(B3_L, B3_R, 'Internal keystore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FIPS 140-2 mode'), bMid(B2_L, B2_R, 'DD Boost TLS'), bMid(B3_L, B3_R, 'KMIP external'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Filesystem level'), bMid(B2_L, B2_R, 'Mgmt HTTPS/SSH'), bMid(B3_L, B3_R, 'RSA/Thales/SafeNet'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'License required'), bMid(B2_L, B2_R, 'TLS 1.2+'), bMid(B3_L, B3_R, 'Key rotation'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Enable via GUI'), bMid(B2_L, B2_R, 'Certificate mgmt'), bMid(B3_L, B3_R, 'Backup key escrow'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Feature', 'Standard', 'Command', 'License', 'Notes'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['DAR', 'Enable at init', 'filesys encrypt', 'DD Encryption', 'One-time setup'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['KMIP', 'External KMS', 'kmip enable', 'DD Encryption', 'Venafi/SafeNet'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Rep TLS', 'Always on', 'Default', 'None', 'TLS 1.2+'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FIPS mode', 'Gov requirement', 'fips enable', 'FIPS license', 'Restrict ciphers'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  DAR          = Data At Rest encryption; encrypts DDOS filesystem on disk using AES-256-GCM'))
+    lines.append(txt_row('  KMIP         = Key Management Interoperability Protocol; external KMS for DD encryption keys'))
+    lines.append(txt_row('  FIPS 140-2   = US federal cryptographic standard; DD can enforce FIPS-approved cipher suites'))
+    lines.append(txt_row('  Key rotation = Periodic re-encryption with new key; online operation in newer DDOS versions'))
+    lines.append(txt_row('  Key escrow   = Backup copy of encryption key in separate secure vault; needed for recovery'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-sec-hard',
+    'docs/storage/dell/data-domain/security/hardening/index.md',
+    'Dell Data Domain hardening — CIS controls, banner, unused services, audit log',
+)
+def dell_dd_sec_hard():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Hardening'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardening: disable unused protocols, enforce TLS, LDAP auth, syslog, audit log')))
+    lines.append(R(bMid(IV_L, IV_R, 'Restrict management access to dedicated OOB network; enable login banner')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disable / Restrict'), bMid(B2_L, B2_R, 'Enable / Require'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disable Telnet (default off)'), bMid(B2_L, B2_R, 'Enable LDAP/AD authentication'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disable older TLS versions'), bMid(B2_L, B2_R, 'Enable syslog to SIEM'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disable unused protocols (FTP)'), bMid(B2_L, B2_R, 'Enable login banner'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Restrict SSH to OOB network'), bMid(B2_L, B2_R, 'Enable audit logging'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Limit NFS export to backup IPs'), bMid(B2_L, B2_R, 'SNMP v3 only'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Control', 'Command', 'Standard', 'Verify', 'Frequency'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['TLS min 1.2', 'adminaccess set', 'Required', 'ssl show', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Login banner', 'system banner set', 'Required', 'SSH test', 'Annual'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Syslog/SIEM', 'log enable syslog', 'Required', 'SIEM verify', 'Quarterly'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['SNMP v3', 'snmp set version v3', 'Required', 'snmp show', 'Quarterly'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  adminaccess   = DDOS command namespace for restricting management protocols and TLS version'))
+    lines.append(txt_row('  Login banner  = Legal notice displayed at SSH/GUI login; required by many compliance standards'))
+    lines.append(txt_row('  OOB network   = Out-of-band management VLAN; DD management IP should only route from OOB'))
+    lines.append(txt_row('  Audit logging = DDOS logs all admin commands with user, timestamp, and command text'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ts-issues',
+    'docs/storage/dell/data-domain/troubleshooting/common-issues/index.md',
+    'Dell Data Domain troubleshooting common issues — space, replication, restore, alerts',
+)
+def dell_dd_ts_issues():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 33
+    B2_L, B2_R = 36, 66
+    B3_L, B3_R = 69, 99
+    M1, M2, M3 = 18, 51, 84
+    PD1, PD2, PD3, PD4 = 22, 41, 61, 80
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Common Issues'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Top issues: filesystem full, replication broken, restore slow, backup job failures')))
+    lines.append(R(bMid(IV_L, IV_R, 'Most root-cause to space exhaustion, network issues, or credential expiry')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2, M3])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Space Issues'), bMid(B2_L, B2_R, 'Replication Issues'), bMid(B3_L, B3_R, 'Backup/Restore'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'FS > 80% full'), bMid(B2_L, B2_R, 'Context broken'), bMid(B3_L, B3_R, 'Backup fails'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cleaning not run'), bMid(B2_L, B2_R, 'Lag > 4 hours'), bMid(B3_L, B3_R, 'Restore slow'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'MTree quota hit'), bMid(B2_L, B2_R, 'Auth failure'), bMid(B3_L, B3_R, 'Cannot mount NFS'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'No space for rep'), bMid(B2_L, B2_R, 'Network packet drop'), bMid(B3_L, B3_R, 'Boost conn fail'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Cloud tier fail'), bMid(B2_L, B2_R, 'WAN bandwidth'), bMid(B3_L, B3_R, 'Corrupt backup'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
+    lines.append(txt_row())
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Problem', 'First check', 'Fix', 'Verify', 'Escalate if'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['─' * 16, '─' * 16, '─' * 17, '─' * 16, '─' * 18])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['FS full', 'filesys show space', 'Expire backups', 'Space freed', 'No space freed'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Rep broken', 'replication show', 'resync context', 'Lag drops', 'Persistent break'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Backup fail', 'Backup app logs', 'Check DD space', 'Job succeeds', 'Hardware fault'])))
+    lines.append(R(sections(IV_L, IV_R, [PD1, PD2, PD3, PD4], ['Slow restore', 'Disk show state', 'Check disks', 'Speed OK', 'NVRAM fault'])))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Context broken   = Replication context in error state; typically network or auth failure'))
+    lines.append(txt_row('  replication resync= Re-establish broken replication context without full reinitialisation'))
+    lines.append(txt_row('  Expire backups   = Delete old backup images via backup application; cleaning then frees space'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ts-diag',
+    'docs/storage/dell/data-domain/troubleshooting/diagnostics/index.md',
+    'Dell Data Domain diagnostics — support bundle, log collection, disk check',
+)
+def dell_dd_ts_diag():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Diagnostics'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Diagnose DD issues with DDOS CLI commands and support bundle collection')))
+    lines.append(R(bMid(IV_L, IV_R, 'support bundle save: bundles logs, config, and diagnostics for Dell support')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 1 — System overview')))
+    lines.append(R(bMid(IV_L, IV_R, 'system show version      — DDOS version and serial')))
+    lines.append(R(bMid(IV_L, IV_R, 'system show hardware     — hardware components state')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 2 — Filesystem and space')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys show space       — total/used/available + dedup ratio')))
+    lines.append(R(bMid(IV_L, IV_R, 'filesys show status      — filesystem health status')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 3 — Disk health')))
+    lines.append(R(bMid(IV_L, IV_R, 'disk show state          — show all disk states (OK/Unknown/Absent)')))
+    lines.append(R(bMid(IV_L, IV_R, 'disk show detailed-info  — S.M.A.R.T. data and error counts per disk')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 4 — Alerts and events')))
+    lines.append(R(bMid(IV_L, IV_R, 'alerts show current      — active alerts with severity')))
+    lines.append(R(bMid(IV_L, IV_R, 'alerts show history      — recent alert history')))
+    lines.append(R(bMid(IV_L, IV_R, '')))
+    lines.append(R(bMid(IV_L, IV_R, '# Step 5 — Collect support bundle')))
+    lines.append(R(bMid(IV_L, IV_R, 'support bundle save /data/col1/support/bundle-$(date +%F).tar')))
+    lines.append(R(bMid(IV_L, IV_R, '# SCP bundle off DD to workstation for upload to Dell support')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  support bundle = Comprehensive DDOS diagnostic archive; always collect before calling Dell'))
+    lines.append(txt_row('  disk show state= Verify no drives in Unknown or Reconstructing state'))
+    lines.append(txt_row('  alerts show    = Check for active hardware or software alerts; review before escalating'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'dell-dd-ts-esc',
+    'docs/storage/dell/data-domain/troubleshooting/escalation/index.md',
+    'Dell Data Domain escalation — SR creation, support bundle, hardware dispatch',
+)
+def dell_dd_ts_esc():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    IV_L, IV_R = 3, 99
+    B1_L, B1_R = 3, 50
+    B2_L, B2_R = 53, 99
+    M1, M2 = 26, 76
+    lines = []
+
+    lines.append(title_border(W2, 'Dell Data Domain Escalation'))
+    lines.append(txt_row())
+    lines.append(R(bTop(IV_L, IV_R)))
+    lines.append(R(bMid(IV_L, IV_R, 'Escalate to Dell Support with SR; attach support bundle and alert list')))
+    lines.append(R(bMid(IV_L, IV_R, 'Hardware faults (disk/NVRAM): Dell dispatches field engineer with parts')))
+    lines.append(R(bBot(IV_L, IV_R)))
+    lines.append(txt_row())
+    lines.append(R(arrow([M1, M2])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Before Escalating'), bMid(B2_L, B2_R, 'Escalation Steps'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────────────────────'), bMid(B2_L, B2_R, '─────────────────────────────────'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'DDOS version (system show version)'), bMid(B2_L, B2_R, 'Open SR at support.dell.com'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Support bundle collected'), bMid(B2_L, B2_R, 'Upload support bundle via SR'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Alert list (alerts show current)'), bMid(B2_L, B2_R, 'Describe exact error/symptom'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Service tag / serial number'), bMid(B2_L, B2_R, 'Request hardware dispatch'))))
+    lines.append(R(merge(bMid(B1_L, B1_R, 'Disk state (disk show state)'), bMid(B2_L, B2_R, 'Confirm maintenance window'))))
+    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R))))
+    lines.append(txt_row())
+    lines.append(txt_row('  Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('  Service tag    = Dell asset identifier; required for support case and warranty lookup'))
+    lines.append(txt_row('  Hardware dispatch= Dell field engineer brings replacement part (disk, NVRAM, PSU, etc.)'))
+    lines.append(txt_row('  Maintenance window= Coordinate hardware replacement with ops team; some replacements hot-swap'))
+    lines.append(txt_row())
+
+    lines.append('└' + '─' * W2 + '┘')
+    return lines

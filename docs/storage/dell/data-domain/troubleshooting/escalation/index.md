@@ -58,23 +58,32 @@ autosupport send <case-number>
 support bundle generate
 # Bundle is saved to /ddr/var/support/ — download via SCP or SFTP
 ```
-
-## AutoSupport
-
-AutoSupport is Dell's automated diagnostic collection mechanism. When correctly configured, it sends periodic telemetry and triggered diagnostics to Dell without manual intervention.
-
-```bash
-# Check AutoSupport status
-autosupport status
-
-# Enable AutoSupport (should be enabled at commissioning)
-autosupport enable
-
-# Send a manual AutoSupport bundle for an open case
-autosupport send <case-number>
-
-# Test AutoSupport connectivity
-autosupport test
+┌───────────────────────────────────── Dell Data Domain Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             Escalate to Dell Support with SR; attach support bundle and alert list            │   │
+│   │            Hardware faults (disk/NVRAM): Dell dispatches field engineer with parts            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Before Escalating               │  │               Escalation Steps              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │      DDOS version (system show version)      │  │         Open SR at support.dell.com         │   │
+│   │           Support bundle collected           │  │         Upload support bundle via SR        │   │
+│   │       Alert list (alerts show current)       │  │         Describe exact error/symptom        │   │
+│   │         Service tag / serial number          │  │          Request hardware dispatch          │   │
+│   │         Disk state (disk show state)         │  │          Confirm maintenance window         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Service tag    = Dell asset identifier; required for support case and warranty lookup              │
+│    Hardware dispatch= Dell field engineer brings replacement part (disk, NVRAM, PSU, etc.)            │
+│    Maintenance window= Coordinate hardware replacement with ops team; some replacements hot-swap      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 AutoSupport requires SCG (Secure Connect Gateway) registration or direct HTTPS outbound access to Dell's support endpoints.

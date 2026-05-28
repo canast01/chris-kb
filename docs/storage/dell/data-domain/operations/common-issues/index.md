@@ -20,51 +20,39 @@ flowchart TD
     I -->|No| K["Check backup app logs\nfor specific error code"]
     D & F & H & J & K --> L(["Open Dell support case\nif unresolved"])
 ```
-
-When backup jobs fail, replication falls behind, or DDBoost clients disconnect, work through this sequence first before diving into specific issues.
-
-- [ ] Run `alerts show current` — identify any active hardware or software alerts that correspond to the start of the incident
-- [ ] Run `filesys show space` — a filesystem at capacity (post-compression usage approaching 100%) will cause backup writes to fail; this is the most common cause of sudden backup failures
-- [ ] Run `replication show` — check whether any replication context has entered `Error` state or is accumulating lag; replication errors can signal network issues or a full filesystem on the destination
-- [ ] Run `ddboost show clients` — identify which DDBoost-connected backup servers are disconnected or reporting authentication errors
-- [ ] Check `filesys status` — if the filesystem is not `Running`, backup writes will fail regardless of capacity
-- [ ] Check disk health: `disk show state` — a faulted or absent disk reduces usable capacity and triggers alerts; do not replace a disk without a Dell support case
-- [ ] Review backup application logs for the specific error code reported by the backup job — DDBoost error codes map to specific DD conditions
-
-| Question | Answer |
-|---|---|
-| What is the current post-compression usage percentage? | |
-| Which replication contexts are in Error or lagging? | |
-| Which DDBoost clients are disconnected or erroring? | |
-| Is the filesystem status Enabled and Running? | |
-| Are there any faulted or absent disks? | |
-
----
-
-## Issue: Filesystem Full or Near-Full
-
-**Symptoms:** Backup jobs fail with "no space" errors; DDBoost writes rejected; `filesys show space` shows post-comp usage above 90–95%.
-
-**Causes:** Cleaning not running after backup expiry; faster-than-expected data growth; expired data not yet deleted by backup software; Cloud Tier not configured despite aged data accumulating.
-
-### Emergency Steps
-
-```bash
-# 1. Check current space
-filesys show space
-
-# 2. Is cleaning already running?
-filesys clean status
-
-# 3. If not running, start it
-filesys clean start
-
-# 4. Identify the largest MTrees (pre-comp column)
-mtree list
-
-# 5. Monitor clean progress (check every 30 minutes during a crisis)
-filesys clean status
-filesys show space
+┌───────────────────────────────── Dell Data Domain Operational Issues ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Common operational issues: space full, replication lag, cleaning not completing        │   │
+│   │              Space: expire old backups; increase retention policy review cadence              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Space Issues        │  │      Replication Issues     │  │      Performance Issues     │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       Filesystem > 80%      │  │       Replication lag       │  │       Slow backup jobs      │   │
+│   │       Cleaning blocked      │  │        Context broken       │  │        Slow restores        │   │
+│   │       MTree quota hit       │  │       Bandwidth limit       │  │         NVRAM errors        │   │
+│   │      Expired not freed      │  │       WAN instability       │  │       High dedupe miss      │   │
+│   │       No COD available      │  │        Authentication       │  │       Disk contention       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │      Issue       │    Root cause    │        Fix        │      Verify      │     Prevent      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     FS full      │Retention too long│  Expire old data  │  Space recovers  │  Monitor < 80%   │   │
+│   │     Rep lag      │  WAN congestion  │   Throttle/time   │  Lag decreases   │  QoS WAN policy  │   │
+│   │  Cleaning stuck  │  Active writes   │   Run off-hours   │ Clean completes  │  Schedule cron   │   │
+│   │   Slow backup    │  Network/NVRAM   │    Check NVRAM    │  Throughput up   │  Health monitor  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Cleaning blocked = Active writes/replication prevent cleaning from completing; run off-hours       │
+│    High dedupe miss = New data with low dedup ratio arriving; check for new backup type or agent      │
+│    Context broken   = Replication context in error state; replication resync to re-establish          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 If cleaning does not recover sufficient space:

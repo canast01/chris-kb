@@ -41,37 +41,37 @@
 replication disable <context>
 replication enable <context>
 ```
-
-## Low Dedup Ratio — Step-by-Step Investigation
-
-1. Run `filesys show compression` — note the global ratio and trend over time
-2. Run `mtree show compression mtree /data/col1/<mtree-name>` — identify which MTree has low ratio
-3. Determine the data type being backed up in that MTree:
-   - Encrypted databases or already-compressed files will not dedup well (this is expected)
-   - If it was previously deduping well and ratio dropped, a new data type may have been added
-4. Confirm DD Boost source-side dedup is enabled in the backup software for that MTree's application
-5. Confirm the backup job is not sending synthetic full backups (which may bypass DD Boost dedup)
-
-## Filesystem Full — Emergency Steps
-
-```bash
-# Check space immediately
-filesys show space
-
-# Check if cleaning is already running
-filesys clean status
-
-# If not running, start clean
-filesys clean start
-
-# Identify largest MTrees
-mtree list  # review Logical and Physical columns
-
-# If cleaning does not recover sufficient space:
-# — Ask backup team to expire and delete old backups
-# — After backup software deletes, run clean again
-# — Consider adding capacity (disk shelf expansion)
-
-# Monitor clean progress
-filesys clean status  # check every 30 minutes
+┌─────────────────────────────────── Dell Data Domain Common Issues ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Top issues: filesystem full, replication broken, restore slow, backup job failures      │   │
+│   │           Most root-cause to space exhaustion, network issues, or credential expiry           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Space Issues        │  │      Replication Issues     │  │        Backup/Restore       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        FS > 80% full        │  │        Context broken       │  │         Backup fails        │   │
+│   │       Cleaning not run      │  │        Lag > 4 hours        │  │         Restore slow        │   │
+│   │       MTree quota hit       │  │         Auth failure        │  │       Cannot mount NFS      │   │
+│   │       No space for rep      │  │     Network packet drop     │  │       Boost conn fail       │   │
+│   │       Cloud tier fail       │  │        WAN bandwidth        │  │        Corrupt backup       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     FS full      │filesys show space│   Expire backups  │   Space freed    │  No space freed  │   │
+│   │    Rep broken    │ replication show │   resync context  │    Lag drops     │ Persistent break │   │
+│   │   Backup fail    │ Backup app logs  │   Check DD space  │   Job succeeds   │  Hardware fault  │   │
+│   │   Slow restore   │ Disk show state  │    Check disks    │     Speed OK     │   NVRAM fault    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Context broken   = Replication context in error state; typically network or auth failure           │
+│    replication resync= Re-establish broken replication context without full reinitialisation          │
+│    Expire backups   = Delete old backup images via backup application; cleaning then frees space      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
