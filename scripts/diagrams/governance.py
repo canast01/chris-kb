@@ -2449,53 +2449,6 @@ def net_troubleshooting():
 
 # ── Singles (top-level pages) ─────────────────────────────────────────────────
 
-@kb_diagram(
-    'home',
-    'docs/index.md',
-    'KB home page — infrastructure engineering technical reference overview',
-)
-def kb_home():
-    W2 = 103
-    R, txt_row = make_helpers(W2)
-    IV_L, IV_R = 3, 99
-    B1_L, B1_R = 3, 33
-    B2_L, B2_R = 36, 66
-    B3_L, B3_R = 69, 99
-    M1, M2, M3 = 18, 51, 84
-    lines = []
-    lines.append(title_border(W2, 'Infrastructure Engineering Knowledge Base'))
-    lines.append(txt_row())
-    lines.append(R(bTop(IV_L, IV_R)))
-    lines.append(R(bMid(IV_L, IV_R, 'Technical reference across VMware virtualisation, enterprise storage, cloud,')))
-    lines.append(R(bMid(IV_L, IV_R, 'storage area networking, disaster recovery, security, and infrastructure operations')))
-    lines.append(R(bMid(IV_L, IV_R, 'Maintained by Christos Anastasiadis — Infrastructure Engineer')))
-    lines.append(R(bBot(IV_L, IV_R)))
-    lines.append(txt_row())
-    lines.append(R(arrow([M1, M2, M3])))
-    lines.append(txt_row())
-    lines.append(R(merge(bTop(B1_L, B1_R), bTop(B2_L, B2_R), bTop(B3_L, B3_R))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Virtualisation'), bMid(B2_L, B2_R, 'Storage & SAN'), bMid(B3_L, B3_R, 'Cloud & Ops'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, '─────────────────'), bMid(B2_L, B2_R, '─────────────────'), bMid(B3_L, B3_R, '─────────────────'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'VMware vSphere'), bMid(B2_L, B2_R, 'Dell / NetApp'), bMid(B3_L, B3_R, 'AWS / Azure'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'NSX / vSAN'), bMid(B2_L, B2_R, 'Pure / VxRail'), bMid(B3_L, B3_R, 'DR / Backup'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Aria / Horizon'), bMid(B2_L, B2_R, 'Brocade / Cisco'), bMid(B3_L, B3_R, 'Monitoring'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'Tanzu / SRM'), bMid(B2_L, B2_R, 'SANnav / DCNM'), bMid(B3_L, B3_R, 'Security'))))
-    lines.append(R(merge(bMid(B1_L, B1_R, 'VCF / VxRail'), bMid(B2_L, B2_R, 'ONTAP / FlashArray'), bMid(B3_L, B3_R, 'Automation'))))
-    lines.append(R(merge(bBot(B1_L, B1_R), bBot(B2_L, B2_R), bBot(B3_L, B3_R))))
-    lines.append(txt_row())
-    lines.append(txt_row('  Key terms:'))
-    lines.append(txt_row())
-    lines.append(txt_row('  vSphere      = VMware virtualisation platform: ESXi hypervisor + vCenter management'))
-    lines.append(txt_row('  NSX          = VMware network virtualisation: distributed firewall, micro-segmentation'))
-    lines.append(txt_row('  vSAN         = VMware hyper-converged storage: host-local disks pooled into shared datastore'))
-    lines.append(txt_row('  SRM          = Site Recovery Manager: orchestrates DR failover between vCenter sites'))
-    lines.append(txt_row('  VCF          = VMware Cloud Foundation: full SDDC stack (compute, network, storage)'))
-    lines.append(txt_row('  ONTAP        = NetApp storage OS for FAS/AFF arrays; NFS, SMB, FC, iSCSI, NVMe'))
-    lines.append(txt_row('  Brocade      = SAN switch vendor (now Broadcom); Fabric OS; SANnav for management'))
-    lines.append(txt_row('  FlashArray   = Pure Storage all-flash array; block storage; REST API management'))
-    lines.append(txt_row())
-    lines.append('└' + '─' * W2 + '┘')
-    return lines
 
 
 @kb_diagram(

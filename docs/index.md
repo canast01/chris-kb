@@ -5,40 +5,6 @@
     <p>Detailed technical notes and references across VMware virtualization, enterprise storage, cloud, storage area networking, and disaster recovery. Browse by topic above or start with the <a href="site-map/" style="color:#7dd3fc;">Site Map</a>.</p>
   </div>
 
-```
-┌────────────────────────────── Infrastructure Engineering Knowledge Base ──────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Technical reference across VMware virtualisation, enterprise storage, cloud,         │   │
-│   │      storage area networking, disaster recovery, security, and infrastructure operations      │   │
-│   │                 Maintained by Christos Anastasiadis — Infrastructure Engineer                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Virtualisation       │  │        Storage & SAN        │  │         Cloud & Ops         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        VMware vSphere       │  │        Dell / NetApp        │  │         AWS / Azure         │   │
-│   │          NSX / vSAN         │  │        Pure / VxRail        │  │         DR / Backup         │   │
-│   │        Aria / Horizon       │  │       Brocade / Cisco       │  │          Monitoring         │   │
-│   │         Tanzu / SRM         │  │        SANnav / DCNM        │  │           Security          │   │
-│   │         VCF / VxRail        │  │      ONTAP / FlashArray     │  │          Automation         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    vSphere      = VMware virtualisation platform: ESXi hypervisor + vCenter management                │
-│    NSX          = VMware network virtualisation: distributed firewall, micro-segmentation             │
-│    vSAN         = VMware hyper-converged storage: host-local disks pooled into shared datastore       │
-│    SRM          = Site Recovery Manager: orchestrates DR failover between vCenter sites               │
-│    VCF          = VMware Cloud Foundation: full SDDC stack (compute, network, storage)                │
-│    ONTAP        = NetApp storage OS for FAS/AFF arrays; NFS, SMB, FC, iSCSI, NVMe                     │
-│    Brocade      = SAN switch vendor (now Broadcom); Fabric OS; SANnav for management                  │
-│    FlashArray   = Pure Storage all-flash array; block storage; REST API management                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
   <div class="hero-name">
     <strong>Christos Anastasiadis</strong>
     <span>Infrastructure Engineer</span>
