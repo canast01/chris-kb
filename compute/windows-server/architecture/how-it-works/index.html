@@ -3264,50 +3264,50 @@
   class WS ctrl
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host</code></pre>
-┌──────────────────────────────────── Windows Server — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  Windows Server boot process, service management, and AD authentication flow.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Boot Sequence                 │  │              Kerberos Auth Flow             │   │
-│   │             UEFI/BIOS → bootmgr              │  │           User → AS request → TGT           │   │
-│   │          winload.exe → kernel load           │  │          TGT → TGS request → ticket         │   │
-│   │         Kernel init → HAL → drivers          │  │          Service ticket → resource          │   │
-│   │          Session 0: services start           │  │          PAC: user groups in ticket         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Boot completes before user logon; Kerberos tickets cached for session                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Group Policy Processing            │  │            File System Operations           │   │
-│   │            Machine GPO at startup            │  │          NTFS: journalled metadata          │   │
-│   │              User GPO at logon               │  │          Shadow Copy: VSS snapshots         │   │
-│   │           gpupdate /force: reapply           │  │          DFS: distributed namespace         │   │
-│   │        Loopback: machine applies user        │  │          BranchCache: WAN optimise          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical server · Domain Controllers · NTP source · storage                                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  bootmgr      = Windows Boot Manager; reads BCD store to select OS                                    │
-│  winload.exe  = OS loader; loads kernel, HAL, and boot drivers                                        │
-│  Session 0    = isolated service session; no interactive user access                                  │
-│  TGT          = Ticket Granting Ticket; obtained from KDC at logon                                    │
-│  TGS          = Ticket Granting Service; issues service-specific tickets                              │
-│  PAC          = Privilege Attribute Certificate; encodes group memberships                            │
-│  GPO          = Group Policy Object; settings applied at OU/domain level                              │
-│  Loopback     = GPO mode applying machine-linked user policy at logon                                 │
-│  VSS          = Volume Shadow Copy Service; creates consistent snapshots                              │
-│  DFS          = Distributed File System; namespace + replication for shares                           │
-│  BranchCache  = caches remote content at branch office; reduces WAN traffic                           │
-│  gpupdate     = triggers immediate GP refresh; /force reapplies all settings                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Windows Server — How It Works ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Windows Server boot process, service management, and AD authentication flow.                         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                Boot Sequence                 │  │              Kerberos Auth Flow             │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             UEFI/BIOS → bootmgr              │  │           User → AS request → TGT           │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          winload.exe → kernel load           │  │          TGT → TGS request → ticket         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │         Kernel init → HAL → drivers          │  │          Service ticket → resource          │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Session 0: services start           │  │          PAC: user groups in ticket         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Boot completes before user logon; Kerberos tickets cached for session                              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           Group Policy Processing            │  │            File System Operations           │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │            Machine GPO at startup            │  │          NTFS: journalled metadata          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │              User GPO at logon               │  │          Shadow Copy: VSS snapshots         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           gpupdate /force: reapply           │  │          DFS: distributed namespace         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        Loopback: machine applies user        │  │          BranchCache: WAN optimise          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Physical server · Domain Controllers · NTP source · storage                                          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  bootmgr      = Windows Boot Manager; reads BCD store to select OS                                    │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  winload.exe  = OS loader; loads kernel, HAL, and boot drivers                                        │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Session 0    = isolated service session; no interactive user access                                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  TGT          = Ticket Granting Ticket; obtained from KDC at logon                                    │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  TGS          = Ticket Granting Service; issues service-specific tickets                              │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  PAC          = Privilege Attribute Certificate; encodes group memberships                            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  GPO          = Group Policy Object; settings applied at OU/domain level                              │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Loopback     = GPO mode applying machine-linked user policy at logon                                 │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  VSS          = Volume Shadow Copy Service; creates consistent snapshots                              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  DFS          = Distributed File System; namespace + replication for shares                           │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  BranchCache  = caches remote content at branch office; reduces WAN traffic                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  gpupdate     = triggers immediate GP refresh; /force reapplies all settings                          │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 
 
 

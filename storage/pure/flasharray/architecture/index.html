@@ -3644,61 +3644,61 @@ Architecture reference for Pure Storage FlashArray. Covers the dual-controller H
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  Site A FlashArray ◄──── stretch pod ────► Site B FlashArray
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  (both sites serve I/O — mediator resolves split-brain)
 </code></pre></div>
-┌──────────────────────────────────── Pure FlashArray Architecture ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                     FlashArray Architecture — Purity//FA Operating System                     │   │
-│   │      Dual-controller HA: CT0 + CT1 active/active, NVRAM write mirroring, &lt; 1 ms write ACK     │   │
-│   │   NVMe flash shelves: DirectFlash modules eliminate SSD translation layer for lower latency   │   │
-│   │      Inline dedup + compression + thin provisioning applied before data hits flash media      │   │
-│   │  Scale-up: add flash shelves to existing array; scale-out via FlashArray//X and FlashArray//C │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Purity//FA manages the full data path from host I/O down to DirectFlash modules                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │         Controller Layer (CT0 / CT1)         │  │             Data Services Layer             │   │
-│   │        Active/active: both serve I/O         │  │       Inline dedup: global hash table       │   │
-│   │      NVRAM: mirror write buffer CT0-CT1      │  │      Compression: LZ4 + pattern detect      │   │
-│   │     Failover: &lt; 30 s automatic takeover      │  │     Thin provisioning: no pre-allocation    │   │
-│   │       FC / iSCSI / NVMe/FC host ports        │  │     Snapshots: read-only space-efficient    │   │
-│   │          Mgmt: REST API + GUI + CLI          │  │       Clones: writable snapshot copies      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Controllers handle protocol termination · Data services run inline on every I/O                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Controller HW   │  Flash Shelves   │     Protocols     │   Replication    │   HA Behavior    │   │
-│   │  Dual-port HBAs  │ DirectFlash DFM  │     FC: 16/32G    │ ActiveDR: async  │ CT failover &lt;30s │   │
-│   │  NVRAM modules   │  NVMe-attached   │   iSCSI: 10/25G   │ActiveCluster sync│  NVRAM protects  │   │
-│   │ 10/25G eth mgmt  │ No RAID overhead │   NVMe/FC ports   │   PG schedules   │   No data loss   │   │
-│   │ Out-of-band IPMI │  Hot-pluggable   │     NVMe/RoCE     │Cloud snap target │   Transparent    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  FlashArray chassis (//X, //C, //E) · DirectFlash Shelf · FC/iSCSI HBAs · SAN switches · dual PSU     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Purity//FA    = FlashArray OS; manages data services, protocols, and replication                     │
-│  CT0 / CT1     = Controller 0 and 1; active/active HA pair serving I/O simultaneously                 │
-│  NVRAM         = Non-volatile RAM write buffer; mirrored between controllers before host ACK          │
-│  DirectFlash   = Pure custom NVMe SSD (DFM); removes FTL layer for deterministic low latency          │
-│  Inline dedup  = Global deduplication run inline on every write; reduces effective flash usage        │
-│  ActiveCluster = Synchronous replication stretch cluster; zero RPO, zero RTO failover                 │
-│  ActiveDR      = Asynchronous replication; RPO measured in minutes; automated failover                │
-│  Protection Group= PG; set of volumes/hosts replicated together on a defined schedule                 │
-│  Snapshot      = Read-only, space-efficient point-in-time copy; metadata pointer only                 │
-│  Clone         = Writable copy from snapshot; instant, no data movement required                      │
-│  NVMe/RoCE     = NVMe over RDMA over Converged Ethernet; low-latency block over IP                    │
-│  SafeMode      = Immutable snapshot protection; delete operations require Pure Storage PIN            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Pure FlashArray Architecture ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                     FlashArray Architecture — Purity//FA Operating System                     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Dual-controller HA: CT0 + CT1 active/active, NVRAM write mirroring, &lt; 1 ms write ACK     │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   NVMe flash shelves: DirectFlash modules eliminate SSD translation layer for lower latency   │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      Inline dedup + compression + thin provisioning applied before data hits flash media      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │  Scale-up: add flash shelves to existing array; scale-out via FlashArray//X and FlashArray//C │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Purity//FA manages the full data path from host I/O down to DirectFlash modules                    │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Controller Layer (CT0 / CT1)         │  │             Data Services Layer             │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │        Active/active: both serve I/O         │  │       Inline dedup: global hash table       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      NVRAM: mirror write buffer CT0-CT1      │  │      Compression: LZ4 + pattern detect      │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │     Failover: &lt; 30 s automatic takeover      │  │     Thin provisioning: no pre-allocation    │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       FC / iSCSI / NVMe/FC host ports        │  │     Snapshots: read-only space-efficient    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Mgmt: REST API + GUI + CLI          │  │       Clones: writable snapshot copies      │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Controllers handle protocol termination · Data services run inline on every I/O                    │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │  Controller HW   │  Flash Shelves   │     Protocols     │   Replication    │   HA Behavior    │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │  Dual-port HBAs  │ DirectFlash DFM  │     FC: 16/32G    │ ActiveDR: async  │ CT failover &lt;30s │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │  NVRAM modules   │  NVMe-attached   │   iSCSI: 10/25G   │ActiveCluster sync│  NVRAM protects  │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │ 10/25G eth mgmt  │ No RAID overhead │   NVMe/FC ports   │   PG schedules   │   No data loss   │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │ Out-of-band IPMI │  Hot-pluggable   │     NVMe/RoCE     │Cloud snap target │   Transparent    │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                                                                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  FlashArray chassis (//X, //C, //E) · DirectFlash Shelf · FC/iSCSI HBAs · SAN switches · dual PSU     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Purity//FA    = FlashArray OS; manages data services, protocols, and replication                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  CT0 / CT1     = Controller 0 and 1; active/active HA pair serving I/O simultaneously                 │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  NVRAM         = Non-volatile RAM write buffer; mirrored between controllers before host ACK          │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  DirectFlash   = Pure custom NVMe SSD (DFM); removes FTL layer for deterministic low latency          │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Inline dedup  = Global deduplication run inline on every write; reduces effective flash usage        │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  ActiveCluster = Synchronous replication stretch cluster; zero RPO, zero RTO failover                 │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  ActiveDR      = Asynchronous replication; RPO measured in minutes; automated failover                │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Protection Group= PG; set of volumes/hosts replicated together on a defined schedule                 │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Snapshot      = Read-only, space-efficient point-in-time copy; metadata pointer only                 │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Clone         = Writable copy from snapshot; instant, no data movement required                      │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  NVMe/RoCE     = NVMe over RDMA over Converged Ethernet; low-latency block over IP                    │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  SafeMode      = Immutable snapshot protection; delete operations require Pure Storage PIN            │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│                                                                                                       │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 
 
 

@@ -3092,44 +3092,44 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Check label policy assignments</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-LabelPolicy</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Labels</span><span class="p">,</span> <span class="n">Users</span><span class="p">,</span> <span class="n">Workloads</span>
 </code></pre></div>
-┌──────────────────────────────── Data Protection — Data Classification ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Classification defines how sensitive information must be labelled, handled, and stored    │   │
-│   │       Four tiers: Public → Internal → Confidential → Restricted; each has handling rules      │   │
-│   │            Apply the highest classification that any data element in a set warrants           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │    Classification Levels    │  │    Labelling Requirements   │  │      Handling Controls      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │            Public           │  │        Optional label       │  │       No restrictions       │   │
-│   │           Internal          │  │     Header/footer label     │  │     Employee access only    │   │
-│   │         Confidential        │  │      MIP label required     │  │    Need-to-know; encrypt    │   │
-│   │      Restricted/PII/PHI     │  │     Purview sensitivity     │  │     Strict; audit logged    │   │
-│   │      Examples per level     │  │    Email + docs + storage   │  │       Encrypted volume      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │      Level       │     Examples     │      Storage      │      Email       │      Access      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │      Public      │    Marketing     │   No requirement  │     No label     │      Anyone      │   │
-│   │     Internal     │ Policies, plans  │    Standard ACL   │    Label only    │    Employees     │   │
-│   │   Confidential   │   Finance, HR    │   Encrypted vol   │   +encrypt ext   │   Need-to-know   │   │
-│   │    Restricted    │  PII, PCI, PHI   │     HSM-backed    │   +DLP policy    │  Strict + audit  │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Sensitivity label  = Tag applied to document/email; drives DLP and encryption policies             │
-│    MIP / Purview      = Microsoft tools for applying and enforcing sensitivity labels                 │
-│    Need-to-know       = Access granted only when required by job function; not role alone             │
-│    Data owner         = Business-unit leader accountable for a dataset and its classification         │
-│    DLP policy         = Enforces labelling rules; blocks transfer of classified data outside perimeter│
-│    Reclassification   = Formal review to raise or lower a classification based on changed context     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Data Protection — Data Classification ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     Classification defines how sensitive information must be labelled, handled, and stored    │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       Four tiers: Public → Internal → Confidential → Restricted; each has handling rules      │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Apply the highest classification that any data element in a set warrants           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │    Classification Levels    │  │    Labelling Requirements   │  │      Handling Controls      │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │            Public           │  │        Optional label       │  │       No restrictions       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           Internal          │  │     Header/footer label     │  │     Employee access only    │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Confidential        │  │      MIP label required     │  │    Need-to-know; encrypt    │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │      Restricted/PII/PHI     │  │     Purview sensitivity     │  │     Strict; audit logged    │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      Examples per level     │  │    Email + docs + storage   │  │       Encrypted volume      │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Level       │     Examples     │      Storage      │      Email       │      Access      │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │      Public      │    Marketing     │   No requirement  │     No label     │      Anyone      │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │     Internal     │ Policies, plans  │    Standard ACL   │    Label only    │    Employees     │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │   Confidential   │   Finance, HR    │   Encrypted vol   │   +encrypt ext   │   Need-to-know   │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │    Restricted    │  PII, PCI, PHI   │     HSM-backed    │   +DLP policy    │  Strict + audit  │   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Sensitivity label  = Tag applied to document/email; drives DLP and encryption policies             │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    MIP / Purview      = Microsoft tools for applying and enforcing sensitivity labels                 │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Need-to-know       = Access granted only when required by job function; not role alone             │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Data owner         = Business-unit leader accountable for a dataset and its classification         │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    DLP policy         = Enforces labelling rules; blocks transfer of classified data outside perimeter│
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Reclassification   = Formal review to raise or lower a classification based on changed context     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <h2 id="classification-workflow">Classification Workflow<a class="headerlink" href="#classification-workflow" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Identify</strong> — what type of data? Who created it? What system stores it?</li>
