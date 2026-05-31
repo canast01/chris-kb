@@ -35,6 +35,7 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 7. Release closure
    → RFC closed; release notes published; team briefed
 ```
+```text
 ┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

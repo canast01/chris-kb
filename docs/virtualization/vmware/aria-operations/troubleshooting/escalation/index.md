@@ -17,6 +17,7 @@ Always attach a support bundle when opening a case.
 ```text
 Administration > Support > Generate Support Bundle
 ```
+```text
 ┌───────────────────────────────────── Aria Operations Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │  SR process, P1/P2 severity definitions, and TAM engagement for Aria Operations.                      │

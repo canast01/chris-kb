@@ -27,6 +27,7 @@ VCF Authentication Flow
 │              │ │              │ │ on schedule       │
 └──────────────┘ └──────────────┘ └──────────────────┘
 ```
+```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
 │  VCF authentication flows through SDDC Manager (API token), vCenter SSO (per domain),                 │

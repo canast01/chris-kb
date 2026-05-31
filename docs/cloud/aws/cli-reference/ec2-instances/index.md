@@ -25,6 +25,7 @@ EC2 Instance CLI: State Management
   │  → key.pem      │    │                           │
   └─────────────────┘    └──────────────────────────┘
 ```
+```text
 ┌─────────────────────────────────────── AWS CLI — EC2 Instances ───────────────────────────────────────┐
 │                                                                                                       │
 │  EC2 instance CLI commands for lifecycle, metadata, connect, and troubleshooting.                     │

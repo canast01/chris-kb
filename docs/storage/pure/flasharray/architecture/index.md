@@ -23,6 +23,7 @@ ActiveCluster (sync replication, RPO=0):
   Site A FlashArray ◄──── stretch pod ────► Site B FlashArray
   (both sites serve I/O — mediator resolves split-brain)
 ```
+```text
 ┌──────────────────────────────────── Pure FlashArray Architecture ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

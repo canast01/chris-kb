@@ -44,6 +44,7 @@ flowchart TD
     J -->|Yes| K["Pilot Light\n(scale up on failover)"]
     J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
 ```
+```text
 ┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

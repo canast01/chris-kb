@@ -37,6 +37,7 @@ Aria Operations — Upgrade Paths
 │  ✔ Backup completed within last 24h                 │
 └─────────────────────────────────────────────────────┘
 ```
+```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  OVA/PAK deployment, node cluster setup, and upgrade for Aria Operations (vROps).                     │

@@ -19,6 +19,7 @@ graph LR
   class HA host
   class HB dr
 ```
+```text
 ┌──────────────────────────────────────── SRDF/S — How It Works ────────────────────────────────────────┐
 │                                                                                                       │
 │    SRDF/S data flow — from source to target through the protection pipeline:                          │

@@ -30,6 +30,7 @@ graph TB
   class ADMIN host
   class CLOUDS cloud
 ```
+```text
 ┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
