@@ -1,5 +1,5 @@
 # Automation
-```
+```text
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Automation: codifying repeatable infra operations into executable, version-controlled logic  │   │

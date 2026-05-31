@@ -1,6 +1,6 @@
 # AWS CloudWatch Logs
 
-```
+```text
 ┌────────────────────────────────── CloudWatch Logs — Log Management ───────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch Logs ingests, stores, and queries log data from AWS services and applications.            │

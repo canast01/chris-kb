@@ -1,6 +1,6 @@
 # Superna Eyeglass — Common Issues
 
-```
+```text
 ┌────────────────────────────────── Superna Eyeglass — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

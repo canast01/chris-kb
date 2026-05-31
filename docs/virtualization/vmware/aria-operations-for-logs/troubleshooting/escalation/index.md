@@ -1,6 +1,6 @@
 # Aria Ops for Logs — Escalation
 
-```
+```text
 ┌──────────────────────────────── Aria Operations for Logs — Escalation ────────────────────────────────┐
 │                                                                                                       │
 │  Escalate vRLI issues when log ingestion loss or corruption impacts operations and compliance.        │

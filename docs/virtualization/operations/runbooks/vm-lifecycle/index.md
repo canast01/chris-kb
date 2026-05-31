@@ -1,6 +1,6 @@
 # VM Lifecycle Runbook
 
-```
+```text
 ┌──────────────────────────────────────── VM Lifecycle Runbook ─────────────────────────────────────────┐
 │                                                                                                       │
 │    Standard steps for VM deploy, reconfigure, ownership review, and decommission                      │

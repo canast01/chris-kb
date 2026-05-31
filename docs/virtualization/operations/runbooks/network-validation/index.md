@@ -1,6 +1,6 @@
 # Virtualization Network Validation
 
-```
+```text
 ┌────────────────────────────── Virtualization Network Validation Runbook ──────────────────────────────┐
 │                                                                                                       │
 │    Use after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues         │

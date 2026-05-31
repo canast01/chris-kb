@@ -1,6 +1,6 @@
 # Virtualization Storage Path Validation
 
-```
+```text
 ┌─────────────────────────────────── Storage Path Validation Runbook ───────────────────────────────────┐
 │                                                                                                       │
 │    Use after SAN changes, storage maintenance, host work, or datastore alerts                         │

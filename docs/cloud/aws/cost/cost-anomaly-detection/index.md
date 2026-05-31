@@ -1,6 +1,6 @@
 # AWS Cost Anomaly Detection
 
-```
+```text
 ┌────────────────────────────────── AWS Cost — Cost Anomaly Detection ──────────────────────────────────┐
 │                                                                                                       │
 │  ML-based service detecting unexpected cost spikes across services, accounts, and tags.               │

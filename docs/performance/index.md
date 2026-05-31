@@ -3,7 +3,7 @@
 References for capacity planning, performance management, and reliability engineering.
 
 
-```
+```text
 ┌─────────────────────── Performance — Capacity, Baselining, Reliability & SLOs ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

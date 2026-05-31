@@ -1,6 +1,6 @@
 # AWS IAM Policies
 
-```
+```text
 ┌───────────────────────────────────── AWS Identity — IAM Policies ─────────────────────────────────────┐
 │                                                                                                       │
 │  IAM policy structure: Effect, Action, Resource, Condition — with evaluation logic.                   │

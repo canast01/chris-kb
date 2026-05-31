@@ -1,6 +1,6 @@
 # Aria Operations for Networks — Design Standards
 
-```
+```text
 ┌──────────────────────────────────────── vRNI Design Standards ────────────────────────────────────────┐
 │                                                                                                       │
 │  Sizing, collector placement, and data source standards for Aria Operations for Networks.             │

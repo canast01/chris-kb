@@ -1,7 +1,7 @@
 # GitHub Actions — Operations
 
 
-```
+```text
 ┌───────────────────────────────────── GitHub Actions — Operations ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  GitHub Actions operations: runner management, workflow monitoring, billing, secret rotation  │   │

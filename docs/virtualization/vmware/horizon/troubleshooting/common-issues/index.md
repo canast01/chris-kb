@@ -1,6 +1,6 @@
 # Horizon — Common Issues
 
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon issues: black screen, pool provisioning failure, Connection Server                    │

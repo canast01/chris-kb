@@ -1,6 +1,6 @@
 # AWS Instance Recovery
 
-```
+```text
 ┌─────────────────────────────────── AWS Compute — Instance Recovery ───────────────────────────────────┐
 │                                                                                                       │
 │  EC2 recovery mechanisms: CloudWatch alarm recovery, reboot, restore from AMI/snapshot.               │

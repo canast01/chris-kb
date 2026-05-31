@@ -4,7 +4,7 @@
 Azure cloud platform architecture — management hierarchy, hub-and-spoke networking, compute options, HA patterns, and identity with Entra ID.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── Azure Platform Architecture ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

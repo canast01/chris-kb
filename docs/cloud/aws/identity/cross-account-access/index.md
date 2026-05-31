@@ -1,6 +1,6 @@
 # AWS Cross-Account Access
 
-```
+```text
 ┌───────────────────────────────── AWS Identity — Cross-Account Access ─────────────────────────────────┐
 │                                                                                                       │
 │  Cross-account IAM role assumption enables multi-account access without static keys.                  │

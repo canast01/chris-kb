@@ -1,6 +1,6 @@
 # AWS EC2
 
-```
+```text
 ┌────────────────────────────────────────── AWS Compute — EC2 ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Elastic Compute Cloud: instance types, purchasing options, networking, and storage.                  │

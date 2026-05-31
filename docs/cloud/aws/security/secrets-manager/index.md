@@ -1,6 +1,6 @@
 # AWS Secrets Manager
 
-```
+```text
 ┌─────────────────────────────── Secrets Manager — Credential Lifecycle ────────────────────────────────┐
 │                                                                                                       │
 │  Secrets Manager stores, rotates, and distributes credentials without hardcoding secrets.             │

@@ -4,7 +4,7 @@
 Cisco DCNM 11.x is the last standalone SAN management appliance for Cisco MDS environments. Starting with version 12.0 (2022), it was renamed Nexus Dashboard Fabric Controller (NDFC) and now runs as an application on the Cisco Nexus Dashboard platform.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Cisco DCNM — Architecture ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM (Data Center Network Manager): centralised SAN + LAN management for Cisco MDS/Nexus.            │

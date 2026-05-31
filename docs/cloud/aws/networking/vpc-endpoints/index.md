@@ -1,6 +1,6 @@
 # AWS VPC Endpoints
 
-```
+```text
 ┌───────────────────────────── VPC Endpoints — Private AWS Service Access ──────────────────────────────┐
 │                                                                                                       │
 │  VPC Endpoints connect your VPC to AWS services privately without NAT, IGW, or internet.              │

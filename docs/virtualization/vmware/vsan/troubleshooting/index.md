@@ -4,7 +4,7 @@
 Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── vSAN — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

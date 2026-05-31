@@ -4,7 +4,7 @@
 Evergreen//One Storage-as-a-Service — Pure-owned and managed hardware on-premises or in colocation, with consumption-based billing, 99.9999% availability SLA, and performance guarantees. Covers architecture, operations, security, and troubleshooting.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Pure Evergreen//One ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

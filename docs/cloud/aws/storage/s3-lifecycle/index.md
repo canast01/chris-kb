@@ -1,6 +1,6 @@
 # AWS S3 Lifecycle
 
-```
+```text
 ┌────────────────────────────── S3 Lifecycle — Automated Tiering & Expiry ──────────────────────────────┐
 │                                                                                                       │
 │  S3 lifecycle rules automate transitioning objects to cheaper tiers and expiring old data.            │

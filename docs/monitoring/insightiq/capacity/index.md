@@ -1,6 +1,6 @@
 # InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring
 
-```
+```text
 ┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

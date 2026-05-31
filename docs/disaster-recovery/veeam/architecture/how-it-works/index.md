@@ -1,6 +1,6 @@
 # Veeam — How It Works
 
-```
+```text
 ┌──────────────────────────────────────── Veeam — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │    Veeam data flow — from source to target through the protection pipeline:                           │

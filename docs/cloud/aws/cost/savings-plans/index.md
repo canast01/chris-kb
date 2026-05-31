@@ -1,6 +1,6 @@
 # AWS Savings Plans
 
-```
+```text
 ┌────────────────────────────────────── AWS Cost — Savings Plans ───────────────────────────────────────┐
 │                                                                                                       │
 │  Savings Plans commit $/hour across EC2, Lambda, and Fargate for up to 66% savings.                   │

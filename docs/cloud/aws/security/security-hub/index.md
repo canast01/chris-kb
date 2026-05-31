@@ -1,6 +1,6 @@
 # AWS Security Hub
 
-```
+```text
 ┌───────────────────────────── Security Hub — Aggregated Security Posture ──────────────────────────────┐
 │                                                                                                       │
 │  Security Hub aggregates findings from AWS services and third parties into a central score.           │

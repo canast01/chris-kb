@@ -1,6 +1,6 @@
 # AWS IAM Roles
 
-```
+```text
 ┌────────────────────────────────────── AWS Identity — IAM Roles ───────────────────────────────────────┐
 │                                                                                                       │
 │  IAM roles provide temporary credentials for services, cross-account, and federation.                 │

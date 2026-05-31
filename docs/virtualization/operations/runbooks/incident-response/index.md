@@ -1,6 +1,6 @@
 # Incident Response Runbook
 
-```
+```text
 ┌────────────────────────────────────── Incident Response Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for any active VMware platform issue; follow phases in order                                   │

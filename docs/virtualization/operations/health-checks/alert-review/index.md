@@ -1,6 +1,6 @@
 # Alert Health Check
 
-```
+```text
 ┌────────────────────────────────── Alert Health Check — Review Flow ───────────────────────────────────┐
 │                                                                                                       │
 │    Review all active alerts every morning; triage by priority; assign or suppress                     │

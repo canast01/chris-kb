@@ -3,7 +3,7 @@
 Operational references for database health, maintenance, and troubleshooting.
 
 
-```
+```text
 ┌────────────────────────── Database — Health, Backup, Failover & Performance ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

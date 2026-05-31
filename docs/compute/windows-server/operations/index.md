@@ -1,7 +1,7 @@
 # Windows Server — Operations
 
 
-```
+```text
 ┌───────────────────────────────────── Windows Server — Operations ─────────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server day-to-day operations: patching, AD management, monitoring, and backups.              │

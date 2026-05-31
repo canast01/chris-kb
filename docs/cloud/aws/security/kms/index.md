@@ -1,6 +1,6 @@
 # AWS KMS
 
-```
+```text
 ┌──────────────────────────────────── KMS — Key Management Service ─────────────────────────────────────┐
 │                                                                                                       │
 │  KMS manages encryption keys used by AWS services; CMKs provide full customer control.                │

@@ -1,6 +1,6 @@
 # AWS Cost Explorer / Billing
 
-```
+```text
 ┌────────────────────────────────── AWS Cost — Cost Explorer Billing ───────────────────────────────────┐
 │                                                                                                       │
 │  Billing console: invoices, payment methods, tax settings, and consolidated billing.                  │

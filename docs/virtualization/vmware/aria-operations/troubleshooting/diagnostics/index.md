@@ -1,6 +1,6 @@
 # Aria Operations — Diagnostics
 
-```
+```text
 ┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Support bundle generation, log analysis, and REST API diagnostics for vROps.                         │

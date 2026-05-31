@@ -1,6 +1,6 @@
 # SRM — Common Issues
 
-```
+```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │

@@ -1,6 +1,6 @@
 # Nexus Dashboard — How It Works
 
-```
+```text
 ┌──────────────────────────────── Cisco Nexus Dashboard — How It Works ─────────────────────────────────┐
 │                                                                                                       │
 │  ND cluster discovers fabric sites, streams telemetry, and orchestrates multi-site policy.            │

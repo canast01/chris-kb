@@ -1,6 +1,6 @@
 # AWS Internet Gateway
 
-```
+```text
 ┌──────────────────────────── Internet Gateway — VPC Internet Connectivity ─────────────────────────────┐
 │                                                                                                       │
 │  IGW provides bidirectional internet access for public subnets; performs NAT for Elastic IPs.         │

@@ -1,6 +1,6 @@
 # AWS EventBridge
 
-```
+```text
 ┌──────────────────────────────── EventBridge — Event-Driven Automation ────────────────────────────────┐
 │                                                                                                       │
 │  EventBridge routes events from AWS services, custom apps, and SaaS to processing targets.            │

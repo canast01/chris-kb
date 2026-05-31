@@ -4,7 +4,7 @@
 Compute platform knowledge base covering Windows Server and Linux host operations. Includes architecture references, server build standards, operational procedures, CLI commands, patching and lifecycle management, performance troubleshooting, and security hardening guides.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Compute Platform Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

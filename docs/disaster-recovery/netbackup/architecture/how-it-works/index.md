@@ -1,6 +1,6 @@
 # NetBackup — How It Works
 
-```
+```text
 ┌────────────────────────────────────── NetBackup — How It Works ───────────────────────────────────────┐
 │                                                                                                       │
 │    NetBackup data flow — from source to target through the protection pipeline:                       │

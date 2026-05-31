@@ -1,6 +1,6 @@
 # AWS Certificate Manager
 
-```
+```text
 ┌────────────────────────────────────── ACM — Certificate Manager ──────────────────────────────────────┐
 │                                                                                                       │
 │  ACM provisions, manages, and renews TLS certificates for AWS services at no charge.                  │

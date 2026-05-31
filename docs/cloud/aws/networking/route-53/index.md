@@ -1,6 +1,6 @@
 # AWS Route 53
 
-```
+```text
 ┌────────────────────────────────── Route 53 — DNS & Traffic Routing ───────────────────────────────────┐
 │                                                                                                       │
 │  Route 53 provides authoritative DNS, health checks, and intelligent traffic routing policies.        │

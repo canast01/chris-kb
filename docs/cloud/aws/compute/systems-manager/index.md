@@ -1,6 +1,6 @@
 # AWS Systems Manager
 
-```
+```text
 ┌──────────────────────────────────── AWS Compute — Systems Manager ────────────────────────────────────┐
 │                                                                                                       │
 │  SSM provides fleet management: session access, patch, run-command, and parameter store.              │

@@ -1,6 +1,6 @@
 # Cisco DCNM — Access Control
 
-```
+```text
 ┌───────────────────────────────────── Cisco DCNM — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM access control: RBAC roles, ISE TACACS+, LDAP group mapping, API token scoping.                 │

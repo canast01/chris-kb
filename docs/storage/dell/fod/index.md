@@ -4,7 +4,7 @@
 Dell Flex on Demand — consumption-based capacity metering on PowerMax, PowerStore, and PowerScale. Covers architecture, operations, security, and troubleshooting for FOD subscription management.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Dell Features on Demand (FoD) ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

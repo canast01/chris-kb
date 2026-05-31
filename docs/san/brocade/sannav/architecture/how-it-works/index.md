@@ -1,6 +1,6 @@
 # SANnav — How It Works
 
-```
+```text
 ┌──────────────────────────────────── Brocade SANnav — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav discovers switches via SNMP/REST, aggregates MAPS events, manages zones centrally.            │

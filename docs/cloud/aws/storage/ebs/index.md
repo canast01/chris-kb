@@ -1,6 +1,6 @@
 # AWS EBS
 
-```
+```text
 ┌────────────────────────────────────── EBS — Elastic Block Store ──────────────────────────────────────┐
 │                                                                                                       │
 │  EBS provides persistent block storage for EC2; volume type determines performance tier.              │

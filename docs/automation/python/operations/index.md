@@ -1,7 +1,7 @@
 # Python Automation — Operations
 
 
-```
+```text
 ┌───────────────────────────────────────── Python — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Python operations: venv management, package updates, test runs, script deployment       │   │

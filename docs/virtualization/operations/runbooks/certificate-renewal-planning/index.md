@@ -1,6 +1,6 @@
 # VMware Certificate Renewal Runbook
 
-```
+```text
 ┌───────────────────────────────── VMware Certificate Renewal Runbook ──────────────────────────────────┐
 │                                                                                                       │
 │    Plan certificate renewals early; capture pre/post evidence; test all integrations                  │

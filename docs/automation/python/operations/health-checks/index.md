@@ -1,6 +1,6 @@
 # Python Automation — Health Checks
 
-```
+```text
 ┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Python health checks: verify interpreter version, venv, dependency currency, test pass rate  │   │

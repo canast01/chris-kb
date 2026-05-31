@@ -1,6 +1,6 @@
 # AWS EBS Snapshots
 
-```
+```text
 ┌───────────────────────────────── EBS Snapshots — Backup & Lifecycle ──────────────────────────────────┐
 │                                                                                                       │
 │  EBS snapshots are incremental S3-backed backups; DLM automates creation and retention.               │

@@ -14,7 +14,7 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 ## Quick Access
 
 
-```
+```text
 ┌───────────────────────────────── Start Here — How to Navigate the KB ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

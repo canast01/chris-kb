@@ -1,6 +1,6 @@
 # AWS Permission Review
 
-```
+```text
 ┌────────────────────────────────── AWS Identity — Permission Review ───────────────────────────────────┐
 │                                                                                                       │
 │  Quarterly IAM review: remove unused principals, trim over-privileged policies.                       │

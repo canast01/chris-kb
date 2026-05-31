@@ -1,6 +1,6 @@
 # AWS Subnets
 
-```
+```text
 ┌───────────────────────────────────── Subnets — VPC Subnet Design ─────────────────────────────────────┐
 │                                                                                                       │
 │  Subnets divide a VPC CIDR into segments per AZ; public or private determined by route table.         │

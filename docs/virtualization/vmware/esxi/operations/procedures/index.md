@@ -1,6 +1,6 @@
 # ESXi — Procedures
 
-```
+```text
 ┌───────────────────────────────────── ESXi — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Maintenance mode, change control, and host decommission standard procedures.                         │

@@ -1,6 +1,6 @@
 # AWS Inspector
 
-```
+```text
 ┌─────────────────────────────── AWS Inspector — Vulnerability Scanning ────────────────────────────────┐
 │                                                                                                       │
 │  Inspector continuously scans EC2, ECR container images, and Lambda for vulnerabilities.              │

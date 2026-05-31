@@ -3,7 +3,7 @@
 Cross-platform troubleshooting guides for common infrastructure issues.
 
 
-```
+```text
 ┌─────────────────────────────────── Cross-Platform Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,6 @@
 # AWS Tagging Standards
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Tagging Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Mandatory tag schema for cost allocation, compliance, ownership, and automation.                     │

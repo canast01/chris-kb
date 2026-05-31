@@ -1,7 +1,7 @@
 # Windows Server — Troubleshooting
 
 
-```
+```text
 ┌────────────────────────────── Windows Server — Troubleshooting Overview ──────────────────────────────┐
 │                                                                                                       │
 │  Structured troubleshooting: common issues first, diagnostics second, escalation when needed.         │

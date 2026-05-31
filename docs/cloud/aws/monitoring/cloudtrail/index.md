@@ -1,6 +1,6 @@
 # AWS CloudTrail
 
-```
+```text
 ┌─────────────────────────────────── CloudTrail — API Audit Logging ────────────────────────────────────┐
 │                                                                                                       │
 │  CloudTrail records all AWS API calls for governance, compliance, and security investigation.         │

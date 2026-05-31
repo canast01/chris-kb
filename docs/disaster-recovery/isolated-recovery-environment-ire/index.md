@@ -3,7 +3,7 @@
 Isolated Recovery Environment Ire operational notes and deep-dive references.
 
 
-```
+```text
 ┌──────────────────────────────────── Isolated Recovery Environment ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

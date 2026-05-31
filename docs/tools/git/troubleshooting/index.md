@@ -1,7 +1,7 @@
 # Git — Troubleshooting
 
 
-```
+```text
 ┌──────────────────────────────────────── Git — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │
 │  Git troubleshooting: merge conflicts, recovering lost commits, and common error patterns.            │

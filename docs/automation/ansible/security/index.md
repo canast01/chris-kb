@@ -1,7 +1,7 @@
 # Ansible — Security
 
 
-```
+```text
 ┌───────────────────────────────────────── Ansible — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible security: protect credentials, restrict execution, audit changes, harden control node │   │

@@ -1,6 +1,6 @@
 # AWS NAT Gateway
 
-```
+```text
 ┌──────────────────────────── NAT Gateway — Private Subnet Outbound Access ─────────────────────────────┐
 │                                                                                                       │
 │  NAT Gateway enables private subnet instances to reach the internet without being reachable.          │

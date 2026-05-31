@@ -1,6 +1,6 @@
 # Terraform — Escalation
 
-```
+```text
 ┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │

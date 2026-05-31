@@ -54,7 +54,7 @@ Runbook Selection Flow
 │    Planned work     = Scheduled change; requires approved change record before starting               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 ┌─────────────────────────────────────── Virtualization Runbooks ───────────────────────────────────────┐
 │                                                                                                       │
 │    Practical runbooks for incidents, maintenance, lifecycle work, and RCA follow-up                   │

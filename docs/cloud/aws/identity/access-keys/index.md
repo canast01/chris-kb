@@ -1,6 +1,6 @@
 # AWS Access Keys
 
-```
+```text
 ┌───────────────────────────────────── AWS Identity — Access Keys ──────────────────────────────────────┐
 │                                                                                                       │
 │  Long-term programmatic credentials: lifecycle, rotation, and replacement with roles.                 │

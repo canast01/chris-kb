@@ -1,6 +1,6 @@
 # AWS Network ACLs
 
-```
+```text
 ┌────────────────────────────── Network ACLs — Stateless Subnet Firewall ───────────────────────────────┐
 │                                                                                                       │
 │  Network ACLs provide stateless subnet-level traffic filtering; processed in rule-number order.       │

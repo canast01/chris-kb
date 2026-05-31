@@ -1,7 +1,7 @@
 # Data Protection
 
 
-```
+```text
 ┌───────────────── Data Protection — Classification, Encryption, Retention & Recovery ──────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

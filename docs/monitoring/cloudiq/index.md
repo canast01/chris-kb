@@ -4,7 +4,7 @@
 Dell CloudIQ cloud-based monitoring platform — architecture, health scoring, capacity forecasting, recommendations, and operational runbooks.
 </div>
 
-```
+```text
 ┌───────────────────────── CloudIQ — Dell Cloud-Based AI/ML Storage Monitoring ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

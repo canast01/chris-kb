@@ -1,6 +1,6 @@
 # ESXi Host Failure Runbook
 
-```
+```text
 ┌──────────────────────────────────── ESXi Host Evacuation Runbook ─────────────────────────────────────┐
 │                                                                                                       │
 │    Drain all VMs from a host before patching, hardware work, or decommission                          │

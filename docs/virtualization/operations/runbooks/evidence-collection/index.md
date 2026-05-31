@@ -1,6 +1,6 @@
 # Virtualization Evidence Collection
 
-```
+```text
 ┌───────────────────────────── Virtualization Evidence Collection Runbook ──────────────────────────────┐
 │                                                                                                       │
 │    Collect evidence before vendor escalation, RCA work, or major incident review                      │

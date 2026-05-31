@@ -1,6 +1,6 @@
 # AWS Compliance Review
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Compliance Review ──────────────────────────────────┐
 │                                                                                                       │
 │  Periodic compliance review using Security Hub, Audit Manager, and Config dashboards.                 │

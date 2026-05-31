@@ -1,7 +1,7 @@
 # Ansible — Troubleshooting
 
 
-```
+```text
 ┌────────────────────────────────────── Ansible — Troubleshooting ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Ansible troubleshooting: connectivity, variable resolution, module failures, AWX job issues  │   │

@@ -1,6 +1,6 @@
 # AWS Health
 
-```
+```text
 ┌──────────────────────────────── AWS Health — Service & Account Health ────────────────────────────────┐
 │                                                                                                       │
 │  AWS Health surfaces service events, scheduled maintenance, and account-specific issues.              │

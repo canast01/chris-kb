@@ -1,6 +1,6 @@
 # AWS S3
 
-```
+```text
 ┌───────────────────────────────────────── S3 — Object Storage ─────────────────────────────────────────┐
 │                                                                                                       │
 │  S3 stores objects in buckets; 11 nines durability; access controlled by policies and ACLs.           │

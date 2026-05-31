@@ -1,7 +1,7 @@
 # GitHub Actions — Troubleshooting
 
 
-```
+```text
 ┌────────────────────────────────── GitHub Actions — Troubleshooting ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Common GitHub Actions issues: runner offline, job queued but not starting, secret not found  │   │

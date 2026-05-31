@@ -1,6 +1,6 @@
 # AWS VPC Flow Logs
 
-```
+```text
 ┌─────────────────────────────── VPC Flow Logs — Network Traffic Capture ───────────────────────────────┐
 │                                                                                                       │
 │  VPC Flow Logs capture metadata about IP traffic to/from ENIs for security and troubleshooting.       │

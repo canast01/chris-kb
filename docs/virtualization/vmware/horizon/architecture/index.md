@@ -4,7 +4,7 @@
 VMware Horizon delivers virtual desktops and published applications through Connection Servers, Unified Access Gateways, and desktop pools backed by vSphere.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Horizon — Architecture ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

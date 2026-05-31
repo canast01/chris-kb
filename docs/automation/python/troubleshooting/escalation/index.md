@@ -1,6 +1,6 @@
 # Python Automation — Escalation
 
-```
+```text
 ┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Escalate Python issues: CPython bugs (bugs.python.org), library bugs (GitHub issues)     │   │

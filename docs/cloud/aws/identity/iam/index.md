@@ -4,7 +4,7 @@ title: AWS Identity — IAM
 
 # AWS Identity — IAM
 
-```
+```text
 ┌───────────────────────────────────────── AWS Identity — IAM ──────────────────────────────────────────┐
 │                                                                                                       │
 │  IAM: users, roles, groups, and policies controlling all AWS API access.                              │

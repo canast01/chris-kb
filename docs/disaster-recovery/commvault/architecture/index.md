@@ -4,7 +4,7 @@
 Commvault architecture reference — CommServe topology, MediaAgent deduplication, storage library types, multi-site design, and port requirements.
 </div>
 
-```
+```text
 ┌───────────────────────────── Commvault Architecture — Component Topology ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

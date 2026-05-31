@@ -1,7 +1,7 @@
 # PowerShell — Troubleshooting
 
 
-```
+```text
 ┌──────────────────────────────────── PowerShell — Troubleshooting ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell troubleshooting: execution errors, remoting failures, module issues, DSC drift   │   │

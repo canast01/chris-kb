@@ -1,6 +1,6 @@
 # VMware Backup Failure Runbook
 
-```
+```text
 ┌──────────────────────────────────── VMware Backup Failure Runbook ────────────────────────────────────┐
 │                                                                                                       │
 │    Identify failed VMs, diagnose the error, remediate, and verify before closing                      │

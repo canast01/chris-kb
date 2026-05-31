@@ -4,7 +4,7 @@
 Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Includes fabric architecture, zoning, CLI references, health checks, and troubleshooting guides for Cisco Fibre Channel environments.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────────── Cisco SAN Stack ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

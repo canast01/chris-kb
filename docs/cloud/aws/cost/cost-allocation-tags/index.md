@@ -1,6 +1,6 @@
 # AWS Cost Allocation Tags
 
-```
+```text
 ┌─────────────────────────────────── AWS Cost — Cost Allocation Tags ───────────────────────────────────┐
 │                                                                                                       │
 │  Cost allocation tags enable chargeback and showback by team, environment, and project.               │

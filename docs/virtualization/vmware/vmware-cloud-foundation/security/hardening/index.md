@@ -1,6 +1,6 @@
 # VCF — Hardening
 
-```
+```text
 ┌───────────────────────────────── VMware Cloud Foundation — Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │  VCF hardening follows the VMware Security Hardening Guide and VCF Security Config;                   │

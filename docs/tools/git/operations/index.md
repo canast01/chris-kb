@@ -1,7 +1,7 @@
 # Git — Operations
 
 
-```
+```text
 ┌────────────────────────────────────────── Git — Operations ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Day-to-day Git operations: procedures, backup, health, installs, scripts, CLI reference.             │

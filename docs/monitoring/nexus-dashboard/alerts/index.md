@@ -1,6 +1,6 @@
 # Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies
 
-```
+```text
 ┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

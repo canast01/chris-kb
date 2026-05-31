@@ -3,7 +3,7 @@
 Asset and configuration management references.
 
 
-```
+```text
 ┌────────────────── Inventory — Asset Tracking, CMDB, Lifecycle & License Management ───────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

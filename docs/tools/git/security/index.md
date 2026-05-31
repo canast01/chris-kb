@@ -1,7 +1,7 @@
 # Git — Security
 
 
-```
+```text
 ┌─────────────────────────────────────────── Git — Security ────────────────────────────────────────────┐
 │                                                                                                       │
 │  Git security: access control, commit signing, secret scanning, and branch protection.                │

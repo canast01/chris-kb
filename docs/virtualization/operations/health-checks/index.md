@@ -66,7 +66,7 @@ Health Check Flows
 │    Alarm      = vCenter triggered alert; P1=red critical, P2=yellow warning, P3=info                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 ┌──────────────────────────────────── Virtualization Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │    Structured checks across daily operations, capacity planning, and change management                │

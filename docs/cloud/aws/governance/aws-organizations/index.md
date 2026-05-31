@@ -1,6 +1,6 @@
 # AWS AWS Organizations
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — AWS Organizations ──────────────────────────────────┐
 │                                                                                                       │
 │  AWS Organizations manages multi-account hierarchy, SCPs, and consolidated billing.                   │

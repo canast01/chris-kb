@@ -1,6 +1,6 @@
 # AWS FSx
 
-```
+```text
 ┌───────────────────────────────── FSx — Managed File System Flavours ──────────────────────────────────┐
 │                                                                                                       │
 │  FSx provides fully managed file systems: Windows SMB, Lustre HPC, ONTAP, and OpenZFS.                │

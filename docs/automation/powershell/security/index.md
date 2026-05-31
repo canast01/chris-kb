@@ -1,7 +1,7 @@
 # PowerShell — Security
 
 
-```
+```text
 ┌──────────────────────────────────────── PowerShell — Security ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell security: execution policy, code signing, AMSI integration, script block logging  │   │

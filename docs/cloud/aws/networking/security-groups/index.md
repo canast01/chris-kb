@@ -1,6 +1,6 @@
 # AWS Security Groups
 
-```
+```text
 ┌──────────────────────────── Security Groups — Stateful Instance Firewall ─────────────────────────────┐
 │                                                                                                       │
 │  Security groups act as virtual firewalls for ENIs; stateful — return traffic is automatic.           │

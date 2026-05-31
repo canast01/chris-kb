@@ -4,7 +4,7 @@
 Nexus Dashboard integrates with ACI APIC, NX-OS fabrics, and MDS SAN switches via its hosted applications (NDFC, NDI, NDO). External integrations cover LDAP, TACACS+, syslog, and the Nexus Dashboard REST API.
 </div>
 
-```
+```text
 ┌───────────────────────────── Nexus Dashboard — Architecture Integrations ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

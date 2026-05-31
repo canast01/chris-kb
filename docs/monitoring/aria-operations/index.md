@@ -4,7 +4,7 @@
 VMware Aria Operations monitoring platform — architecture, health checks, capacity, alerting, dashboards, and operational runbooks.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Aria Operations — Platform Overview ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

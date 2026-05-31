@@ -1,6 +1,6 @@
 # AWS CloudWatch Alarms
 
-```
+```text
 ┌─────────────────────────────── CloudWatch Alarms — Threshold Alerting ────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch Alarms evaluate metrics against thresholds and trigger automated responses.               │

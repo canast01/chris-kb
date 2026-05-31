@@ -1,7 +1,7 @@
 # Ansible — Operations
 
 
-```
+```text
 ┌──────────────────────────────────────── Ansible — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Ansible operations: running playbooks, managing inventory, AWX job templates, upgrades    │   │

@@ -1,6 +1,6 @@
 # MDS — Escalation
 
-```
+```text
 ┌─────────────────────────────── Cisco MDS — Troubleshooting Escalation ────────────────────────────────┐
 │                                                                                                       │
 │  Escalation path for MDS issues: internal triage → Cisco TAC → hardware RMA process.                  │

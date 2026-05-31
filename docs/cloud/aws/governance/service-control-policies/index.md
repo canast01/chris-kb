@@ -1,6 +1,6 @@
 # AWS Service Control Policies
 
-```
+```text
 ┌────────────────────────────── AWS Governance — Service Control Policies ──────────────────────────────┐
 │                                                                                                       │
 │  SCPs define maximum permissions for OUs and accounts; deny by default override IAM.                  │

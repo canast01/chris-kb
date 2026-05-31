@@ -1,6 +1,6 @@
 # Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View
 
-```
+```text
 ┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

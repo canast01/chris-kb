@@ -1,6 +1,6 @@
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
-```
+```text
 ┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,6 @@
 # Maintenance Window Runbook
 
-```
+```text
 ┌───────────────────────────────────── Maintenance Window Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for all planned VMware work; follow pre/execute/post phases in order                           │

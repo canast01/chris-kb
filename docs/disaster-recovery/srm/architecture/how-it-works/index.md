@@ -1,6 +1,6 @@
 # SRM — How It Works
 
-```
+```text
 ┌───────────────────────────────────────── SRM — How It Works ──────────────────────────────────────────┐
 │                                                                                                       │
 │    SRM data flow — from source to target through the protection pipeline:                             │

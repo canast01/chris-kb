@@ -1,6 +1,6 @@
 # NetBackup — Backup & Restore
 
-```
+```text
 ┌──────────────────────────────────── NetBackup — Backup & Restore ─────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │

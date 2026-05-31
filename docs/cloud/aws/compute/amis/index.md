@@ -1,6 +1,6 @@
 # AWS AMIs
 
-```
+```text
 ┌───────────────────────────────────────── AWS Compute — AMIs ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Amazon Machine Images: golden image pipeline, lifecycle management, and sharing.                     │

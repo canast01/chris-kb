@@ -1,6 +1,6 @@
 # AWS EFS
 
-```
+```text
 ┌────────────────────────────────────── EFS — Elastic File System ──────────────────────────────────────┐
 │                                                                                                       │
 │  EFS provides shared NFS file storage for EC2 and Lambda; scales automatically to petabytes.          │

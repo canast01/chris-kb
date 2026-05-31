@@ -1,6 +1,6 @@
 # AWS AWS Config
 
-```
+```text
 ┌───────────────────────────────────── AWS Governance — AWS Config ─────────────────────────────────────┐
 │                                                                                                       │
 │  Config records resource inventory, tracks changes, and evaluates compliance rules.                   │

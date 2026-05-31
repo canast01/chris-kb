@@ -1,6 +1,6 @@
 # AWS Route Tables
 
-```
+```text
 ┌───────────────────────────────── Route Tables — VPC Traffic Routing ──────────────────────────────────┐
 │                                                                                                       │
 │  Route tables control how traffic is directed within a VPC; each subnet has one route table.          │

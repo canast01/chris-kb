@@ -1,6 +1,6 @@
 # AWS Elastic Load Balancer
 
-```
+```text
 ┌────────────────────────────── Elastic Load Balancer — ALB / NLB / GWLB ───────────────────────────────┐
 │                                                                                                       │
 │  ELB distributes inbound traffic across targets; ALB for HTTP, NLB for TCP, GWLB for appliances.      │

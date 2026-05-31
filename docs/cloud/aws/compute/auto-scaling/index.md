@@ -1,6 +1,6 @@
 # AWS Auto Scaling
 
-```
+```text
 ┌───────────────────────────────────── AWS Compute — Auto Scaling ──────────────────────────────────────┐
 │                                                                                                       │
 │  EC2 Auto Scaling adjusts fleet size based on demand using scaling policies and health.               │

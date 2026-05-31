@@ -4,7 +4,7 @@
 Azure Governance articles, operational checks, troubleshooting notes, and references.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Azure Governance Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,6 @@
 # AWS Lambda
 
-```
+```text
 ┌──────────────────────────────────────── AWS Compute — Lambda ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Serverless function execution: triggers, runtimes, concurrency, VPC, and observability.              │

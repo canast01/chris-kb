@@ -1,6 +1,6 @@
 # Aria Operations — Standards
 
-```
+```text
 ┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │  Node sizing, cluster topology, and policy design standards for Aria Operations (vROps).              │

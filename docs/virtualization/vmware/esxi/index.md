@@ -8,7 +8,7 @@ title: ESXi
 Technical and operational reference for VMware ESXi. Covers host architecture, networking, storage paths, patching, security hardening, and troubleshooting for ESXi hosts managed by vCenter.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────────── ESXi Host Stack ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

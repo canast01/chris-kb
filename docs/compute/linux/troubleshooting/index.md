@@ -1,7 +1,7 @@
 # Linux — Troubleshooting
 
 
-```
+```text
 ┌────────────────────────────────── Linux — Troubleshooting Overview ───────────────────────────────────┐
 │                                                                                                       │
 │  Structured approach to Linux problem diagnosis: common issues, diagnostics, escalation.              │

@@ -1,6 +1,6 @@
 # Cisco DCNM — How It Works
 
-```
+```text
 ┌────────────────────────────────────── Cisco DCNM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM discovers via SNMP, manages VSAN zones, pushes NX-OS configs, monitors performance.             │

@@ -1,6 +1,6 @@
 # AWS S3 Replication
 
-```
+```text
 ┌───────────────────────────────────── S3 Replication — CRR & SRR ──────────────────────────────────────┐
 │                                                                                                       │
 │  S3 replication copies objects asynchronously to destination buckets; versioning required.            │

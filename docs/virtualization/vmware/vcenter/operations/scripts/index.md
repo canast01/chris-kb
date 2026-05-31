@@ -1,6 +1,6 @@
 # vCenter — Scripts
 
-```
+```text
 ┌──────────────────────────────── vCenter Server — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI and govc scripts automate routine vCenter operations: VM reporting,                         │

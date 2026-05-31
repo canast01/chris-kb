@@ -1,6 +1,6 @@
 # AWS Cost Explorer
 
-```
+```text
 ┌────────────────────────────────────── AWS Cost — Cost Explorer ───────────────────────────────────────┐
 │                                                                                                       │
 │  Cost Explorer visualises and analyses AWS spend with filtering, grouping, and forecasts.             │

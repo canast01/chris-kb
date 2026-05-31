@@ -1,6 +1,6 @@
 # AWS Account Structure
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Account Structure ──────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account structure with OU hierarchy isolating workloads by env and function.                   │

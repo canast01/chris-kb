@@ -1,6 +1,6 @@
 # AWS CloudWatch
 
-```
+```text
 ┌─────────────────────────────── CloudWatch — Unified AWS Observability ────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch collects metrics, logs, and traces to provide observability across all AWS services.      │

@@ -1,7 +1,7 @@
 # Python Automation — Troubleshooting
 
 
-```
+```text
 ┌────────────────────────────────────── Python — Troubleshooting ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Python troubleshooting: import errors, type errors, dependency conflicts, API auth failures  │   │

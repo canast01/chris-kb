@@ -1,6 +1,6 @@
 # AWS Patch Manager
 
-```
+```text
 ┌───────────────────────────────────── AWS Compute — Patch Manager ─────────────────────────────────────┐
 │                                                                                                       │
 │  SSM Patch Manager automates OS patching across EC2 fleet using baselines and groups.                 │

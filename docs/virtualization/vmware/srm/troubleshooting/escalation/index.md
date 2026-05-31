@@ -1,6 +1,6 @@
 # SRM — Escalation
 
-```
+```text
 ┌─────────────────────────────────────── VMware SRM — Escalation ───────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate SRM issues to VMware GSS when failover fails, site pair cannot reconnect,                   │

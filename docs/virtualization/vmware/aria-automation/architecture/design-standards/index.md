@@ -1,6 +1,6 @@
 # Aria Automation — Standards
 
-```
+```text
 ┌───────────────────────────────── Aria Automation — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design patterns for projects, templates, naming, and governance in Aria Automation.                  │
