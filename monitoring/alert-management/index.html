@@ -3327,28 +3327,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#high-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Memory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#disk-space" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Disk Space
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#storage-latency-ontap" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3531,7 +3509,7 @@
 Alert Management reference covering Common Alert Sources, Alert Noise Reduction Checklist, Escalation Matrix (template).
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         Alert Management — Routing, Suppression, Escalation, and Notification Policies        │   │
@@ -3574,27 +3552,65 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h3 id="high-memory">High Memory<a class="headerlink" href="#high-memory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>free<span class="w"> </span>-h
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%mem<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check for swap usage</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>swapon<span class="w"> </span>--show
-</code></pre></div>
-<h3 id="disk-space">Disk Space<a class="headerlink" href="#disk-space" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$5+0 &gt; 75&#39;</span><span class="w">       </span><span class="c1"># filesystems over 75%</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
-</code></pre></div>
+┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Alert Management — Routing, Suppression, Escalation, and Notification Policies        │   │
+│   │      Alert sources: Aria Operations · CloudIQ · Dell AIOps · Nexus Dashboard NDI · Pure1      │   │
+│   │       Routing targets: email · SMTP relay · PagerDuty · ServiceNow ITSM · Slack webhooks      │   │
+│   │         Suppression rules: maintenance windows · severity thresholds · dedup intervals        │   │
+│   │          Escalation tiers: L1 auto-ticket → L2 paging → L3 vendor engage → P1 bridge          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Alert policies govern who is notified, how quickly, and what actions auto-trigger                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Alert Sources        │  │        Routing Rules        │  │          Escalation         │   │
+│   │       Aria Ops alerts       │  │       Severity filter       │  │       L1: auto-ticket       │   │
+│   │    CloudIQ health alerts    │  │      Object-type filter     │  │       L2: on-call page      │   │
+│   │      NDI anomaly alerts     │  │      Maintenance window     │  │        L3: vendor TAM       │   │
+│   │    Pure1 capacity alerts    │  │     Dedup interval 5 min    │  │     P1: war room bridge     │   │
+│   │     AIOps predicted fail    │  │     Correlated grouping     │  │     SLA: 15-min response    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  SMTP relay: on-prem MTA (Postfix/Exchange) · PagerDuty: SaaS · ServiceNow: on-prem or SaaS           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Severity          = Critical/Warning/Info classification applied to each alert                       │
+│  Suppression rule  = Policy silencing alerts during maintenance or known-issue windows                │
+│  Deduplication     = Preventing repeat notifications for the same active alert condition              │
+│  Escalation policy = Tiered response path: L1 auto-ticket → L2 page → L3 vendor → P1 bridge           │
+│  Maintenance window= Scheduled suppression period applied to specific objects or groups               │
+│  PagerDuty         = SaaS on-call paging platform; ingests alerts via API or email integration        │
+│  ServiceNow ITSM   = Incident and change management platform; receives alert-driven tickets           │
+│  SMTP relay        = Internal mail transfer agent routing notification emails                         │
+│  Correlated group  = Multiple alerts from different sources mapped to a single incident               │
+│  SLA               = Service Level Agreement; defines maximum acceptable response time                │
+│  P1 bridge         = Priority-1 war-room call convened when critical systems are impacted             │
+│  Alert fatigue     = Operator desensitisation caused by excessive or low-quality alerts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Disk Space
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>df -h | awk &#39;$5+0 &gt; 75&#39;       # filesystems over 75%
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>du -sh /var/* | sort -rh | head -10
+</code></pre></div></p>
 <h3 id="storage-latency-ontap">Storage Latency (ONTAP)<a class="headerlink" href="#storage-latency-ontap" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency<span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency<span class="w"> </span>-interval<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>latency<span class="w"> </span>show
 </code></pre></div>
 <h3 id="network-interface-errors">Network Interface Errors<a class="headerlink" href="#network-interface-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Cisco NX-OS</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w"> </span>errors
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Cisco NX-OS</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w"> </span>errors
 </code></pre></div>
 <h2 id="alert-noise-reduction-checklist">Alert Noise Reduction Checklist<a class="headerlink" href="#alert-noise-reduction-checklist" title="Permanent link">&para;</a></h2>
 <ul>

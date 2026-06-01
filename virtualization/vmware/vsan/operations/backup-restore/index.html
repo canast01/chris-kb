@@ -4807,65 +4807,66 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>         ▼
 <a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  VM powered on + validated
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── vSAN — Backup &amp; Restore ───────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  restore targets can be the same or a different datastore.                                            │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                Backup Methods                │  │              vSAN Config Backup             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         VADP: Veeam/Commvault/Avamar         │  │         vCenter backup includes vSAN        │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         CBT: incremental efficiency          │  │           Disk group config: in DB          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          HotAdd: proxy on same host          │  │           Storage policies: VC DB           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          NBD fallback if no HotAdd           │  │        Re-create diskgroup on restore       │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  HotAdd provides fastest backup throughput; NBD over 10GbE is fallback.                               │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Restore Procedure               │  │                 DR with vSAN                │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Restore from backup to vSAN DS        │  │            vSAN stretched: RPO=0            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Apply correct storage policy         │  │            SRM: vSAN replication            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Wait for resync if FTT&gt;0           │  │           vSAN HCI Mesh: xsite DS           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Validate policy compliance          │  │           vSphere Rep: per-VM RPO           │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Backup proxy VMs need access to vSAN datastore; HotAdd requires proxy on same cluster.               │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  VADP       = vStorage APIs for Data Protection; backup quiescing API                                 │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  CBT        = Changed Block Tracking; tracks changed sectors since last backup                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  HotAdd     = proxy VM on same host; attaches VMDK directly; fastest                                  │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  NBD        = Network Block Device; backup over TCP; slower fallback                                  │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Proxy      = backup VM; intermediary between vSAN VM and backup target                               │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Resync     = after restore, vSAN rebuilds missing replicas per policy                                │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Policy compliance= UI shows red/yellow if restored VM policy not met                                 │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SRM        = Site Recovery Manager; orchestrates vSAN failover                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vSphere Rep= vSphere Replication; per-VM async replication to DR site                                │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  HCI Mesh   = cross-cluster vSAN datastore sharing (vSAN 7.0+)                                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Stretched  = 2-site active-active; RPO=0; needs &gt;10ms RTT &lt;5ms preferred                             │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                                                                                       │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">**</span><span class="n">Reset</span> <span class="n">CBT</span> <span class="k">if</span> <span class="n">incremental</span> <span class="n">backups</span> <span class="n">are</span> <span class="n">failing</span><span class="p">:**</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">```</span><span class="n">bash</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># From PowerCLI — disable, snapshot, delete snapshot, re-enable</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">VirtualMachineConfigSpec</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">changeTrackingEnabled</span> <span class="p">=</span> <span class="nv">$false</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigVM</span><span class="p">(</span><span class="nv">$spec</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;CBT-Reset&quot;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Remove-Snapshot</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">$spec</span><span class="p">.</span><span class="n">changeTrackingEnabled</span> <span class="p">=</span> <span class="nv">$true</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">$vm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ReconfigVM</span><span class="p">(</span><span class="nv">$spec</span><span class="p">)</span>
+┌─────────────────────────────────────── vSAN — Backup &amp; Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │
+│  restore targets can be the same or a different datastore.                                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Backup Methods                │  │              vSAN Config Backup             │   │
+│   │         VADP: Veeam/Commvault/Avamar         │  │         vCenter backup includes vSAN        │   │
+│   │         CBT: incremental efficiency          │  │           Disk group config: in DB          │   │
+│   │          HotAdd: proxy on same host          │  │           Storage policies: VC DB           │   │
+│   │          NBD fallback if no HotAdd           │  │        Re-create diskgroup on restore       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  HotAdd provides fastest backup throughput; NBD over 10GbE is fallback.                               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │                 DR with vSAN                │   │
+│   │        Restore from backup to vSAN DS        │  │            vSAN stretched: RPO=0            │   │
+│   │         Apply correct storage policy         │  │            SRM: vSAN replication            │   │
+│   │           Wait for resync if FTT&gt;0           │  │           vSAN HCI Mesh: xsite DS           │   │
+│   │          Validate policy compliance          │  │           vSphere Rep: per-VM RPO           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Backup proxy VMs need access to vSAN datastore; HotAdd requires proxy on same cluster.               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP       = vStorage APIs for Data Protection; backup quiescing API                                 │
+│  CBT        = Changed Block Tracking; tracks changed sectors since last backup                        │
+│  HotAdd     = proxy VM on same host; attaches VMDK directly; fastest                                  │
+│  NBD        = Network Block Device; backup over TCP; slower fallback                                  │
+│  Proxy      = backup VM; intermediary between vSAN VM and backup target                               │
+│  Resync     = after restore, vSAN rebuilds missing replicas per policy                                │
+│  Policy compliance= UI shows red/yellow if restored VM policy not met                                 │
+│  SRM        = Site Recovery Manager; orchestrates vSAN failover                                       │
+│  vSphere Rep= vSphere Replication; per-VM async replication to DR site                                │
+│  HCI Mesh   = cross-cluster vSAN datastore sharing (vSAN 7.0+)                                        │
+│  Stretched  = 2-site active-active; RPO=0; needs &gt;10ms RTT &lt;5ms preferred                             │
+│  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```powershell
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Reset CBT if incremental backups are failing:**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># From PowerCLI — disable, snapshot, delete snapshot, re-enable
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$vm = Get-VM &lt;vmname&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>$spec = New-Object VMware.Vim.VirtualMachineConfigSpec
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>$spec.changeTrackingEnabled = $false
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>$vm.ExtensionData.ReconfigVM($spec)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>$snap = New-Snapshot -VM $vm -Name &quot;CBT-Reset&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Remove-Snapshot -Snapshot $snap -Confirm:$false
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>$spec.changeTrackingEnabled = $true
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>$vm.ExtensionData.ReconfigVM($spec)
 </code></pre></div></p>
 <h3 id="veeam-backup-replication">Veeam Backup &amp; Replication<a class="headerlink" href="#veeam-backup-replication" title="Permanent link">&para;</a></h3>
 <p>Veeam is the most widely deployed backup tool for vSAN environments. It uses VADP and supports vSAN-specific transport modes.</p>
@@ -4930,21 +4931,21 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </tbody>
 </table>
 <p><strong>Export storage policies via PowerCLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Export all storage policies to a text report</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Rules&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">AnyOfRuleSets</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AllOfRules</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Value</span> <span class="p">}</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;vsan_policies_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Export all storage policies to a text report</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Rules&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">AnyOfRuleSets</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">AllOfRules</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Value</span> <span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">}}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="p">|</span> <span class="nb">Out-File</span> <span class="s2">&quot;vsan_policies_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.json&quot;</span>
 </code></pre></div>
 <p><strong>VCSA File-Based Backup (recommended — schedule daily):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From VCSA shell — backup to SFTP target</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/usr/lib/applmgmt/backup_restore/py/vmwareappliance/backup.py<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--location<span class="w"> </span>sftp://backup-server/vcsa-backups<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--username<span class="w"> </span>backupuser<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--backuptype<span class="w"> </span>SEAT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--comment<span class="w"> </span><span class="s2">&quot;daily-backup&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From VCSA shell — backup to SFTP target</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/usr/lib/applmgmt/backup_restore/py/vmwareappliance/backup.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--location<span class="w"> </span>sftp://backup-server/vcsa-backups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--username<span class="w"> </span>backupuser<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--password<span class="w"> </span>&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--backuptype<span class="w"> </span>SEAT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--comment<span class="w"> </span><span class="s2">&quot;daily-backup&quot;</span>
 </code></pre></div>
 <p>Or configure the backup schedule via vSphere Client: <strong>vCenter → Administration → Backup → Schedule</strong></p>
 <hr />
@@ -4967,13 +4968,13 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </ol>
 <h3 id="restore-individual-vm-powercli-snapshot-rollback">Restore Individual VM (PowerCLI + Snapshot Rollback)<a class="headerlink" href="#restore-individual-vm-powercli-snapshot-rollback" title="Permanent link">&para;</a></h3>
 <p>Snapshot rollback is a short-term rollback mechanism, not a restore from backup. Only use this within hours of creating the snapshot.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Roll back to a snapshot</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-change-snapshot&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Roll back to a snapshot</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">&lt;</span><span class="n">vmname</span><span class="p">&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$snap</span> <span class="p">=</span> <span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Name</span> <span class="s2">&quot;pre-change-snapshot&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-Snapshot</span> <span class="nv">$snap</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>Remove all snapshots after rollback to avoid delta disk growth:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Remove-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="recover-vcenter-from-vcsa-backup">Recover vCenter from VCSA Backup<a class="headerlink" href="#recover-vcenter-from-vcsa-backup" title="Permanent link">&para;</a></h3>
 <p>If vCenter is lost (and therefore vSAN health monitoring is lost), existing VMs continue running — vSAN data plane is independent of vCenter. Recovering vCenter restores management plane access.</p>
@@ -4987,20 +4988,20 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </ol>
 <h3 id="rebuild-disk-group-after-drive-failure">Rebuild Disk Group After Drive Failure<a class="headerlink" href="#rebuild-disk-group-after-drive-failure" title="Permanent link">&para;</a></h3>
 <p>If a disk group has been lost due to cache SSD failure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Verify which disk group is affected</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Is SSD|Disk Group UUID|Is Capacity Tier&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Check object health — expect degraded components</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Remove the failed disk group (after hardware replacement)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Rebuild the disk group with new hardware</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 5. Monitor resync</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Verify which disk group is affected</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;naa\.|Is SSD|Disk Group UUID|Is Capacity Tier&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Check object health — expect degraded components</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>healthy
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Remove the failed disk group (after hardware replacement)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 4. Rebuild the disk group with new hardware</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>add<span class="w"> </span>-s<span class="w"> </span>&lt;new_ssd_naa&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa1&gt;<span class="w"> </span>-d<span class="w"> </span>&lt;capacity_naa2&gt;
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. Monitor resync</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
 <hr />
 <h2 id="backup-validation-and-testing">Backup Validation and Testing<a class="headerlink" href="#backup-validation-and-testing" title="Permanent link">&para;</a></h2>

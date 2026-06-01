@@ -3101,67 +3101,68 @@ Network troubleshooting knowledge base covering connectivity testing, packet los
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>@&lt;dns_server_ip&gt;<span class="w">    </span><span class="c1"># query a specific server directly</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Networking — Troubleshooting ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │         Network troubleshooting: work from layer 1 up; isolate the failure layer first        │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Tools: ping (L3 reachability), traceroute (path), tcpdump/Wireshark (packet capture)     │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │      Process: define symptom → test from multiple points → narrow to single failure point     │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │               Diagnostic Steps               │  │                Common Causes                │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           L1: link up? SFP seated?           │  │           FW rule blocking traffic          │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          L2: MAC learned? VLAN OK?           │  │           VLAN mismatch / missing           │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │           L3: ping gateway + dest            │  │          Routing missing/incorrect          │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │            Trace: traceroute path            │  │            MTU mismatch (DF bit)            │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           Capture: tcpdump src/dst           │  │           DNS: name not resolving           │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Layer       │      Check       │        Tool       │     Symptom      │  Fix direction   │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │   L1 Physical    │    Link state    │      show int     │   err-disabled   │    Cable/SFP     │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │   L2 Data link   │    MAC + VLAN    │      show mac     │   No L2 learn    │   VLAN config    │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │    L3 Network    │   Route + ping   │     traceroute    │   Unreachable    │     Route/FW     │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │     L4+ App      │   Port + cert    │    nc / curl -v   │   Conn refused   │    FW/app/TLS    │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    OSI model    = 7-layer reference model; troubleshoot from bottom up (L1 → L7)                      │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    MTU          = Maximum Transmission Unit; 1500B Ethernet; jumbo = 9000; mismatch = drops           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    DF bit       = Do Not Fragment; test MTU by pinging with DF set and large payload                  │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    tcpdump      = Packet capture on Linux; filter by host, port, protocol; save to pcap               │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    err-disabled = Switch port auto-disabled; cause: BPDU guard, port security, duplex mismatch        │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Asymmetric   = Forward and return path differ; FW stateful check fails; causes drops               │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">#### 3. Test DNS Server Reachability</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ping<span class="w"> </span>&lt;dns_server_ip&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nslookup<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>&lt;dns_server_ip&gt;
+┌──────────────────────────────────── Networking — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Network troubleshooting: work from layer 1 up; isolate the failure layer first        │   │
+│   │      Tools: ping (L3 reachability), traceroute (path), tcpdump/Wireshark (packet capture)     │   │
+│   │      Process: define symptom → test from multiple points → narrow to single failure point     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                Common Causes                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           L1: link up? SFP seated?           │  │           FW rule blocking traffic          │   │
+│   │          L2: MAC learned? VLAN OK?           │  │           VLAN mismatch / missing           │   │
+│   │           L3: ping gateway + dest            │  │          Routing missing/incorrect          │   │
+│   │            Trace: traceroute path            │  │            MTU mismatch (DF bit)            │   │
+│   │           Capture: tcpdump src/dst           │  │           DNS: name not resolving           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Layer       │      Check       │        Tool       │     Symptom      │  Fix direction   │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   L1 Physical    │    Link state    │      show int     │   err-disabled   │    Cable/SFP     │   │
+│   │   L2 Data link   │    MAC + VLAN    │      show mac     │   No L2 learn    │   VLAN config    │   │
+│   │    L3 Network    │   Route + ping   │     traceroute    │   Unreachable    │     Route/FW     │   │
+│   │     L4+ App      │   Port + cert    │    nc / curl -v   │   Conn refused   │    FW/app/TLS    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OSI model    = 7-layer reference model; troubleshoot from bottom up (L1 → L7)                      │
+│    MTU          = Maximum Transmission Unit; 1500B Ethernet; jumbo = 9000; mismatch = drops           │
+│    DF bit       = Do Not Fragment; test MTU by pinging with DF set and large payload                  │
+│    tcpdump      = Packet capture on Linux; filter by host, port, protocol; save to pcap               │
+│    err-disabled = Switch port auto-disabled; cause: BPDU guard, port security, duplex mismatch        │
+│    Asymmetric   = Forward and return path differ; FW stateful check fails; causes drops               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>#### 3. Test DNS Server Reachability
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ping &lt;dns_server_ip&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>nslookup &lt;hostname&gt; &lt;dns_server_ip&gt;
 </code></pre></div></p>
 <h4 id="4-forward-and-reverse-resolution">4. Forward and Reverse Resolution<a class="headerlink" href="#4-forward-and-reverse-resolution" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Forward: name → IP</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Reverse: IP → name (PTR)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dig<span class="w"> </span>-x<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>nslookup<span class="w"> </span>&lt;ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Forward: name → IP</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dig<span class="w"> </span>&lt;hostname&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Reverse: IP → name (PTR)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dig<span class="w"> </span>-x<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>nslookup<span class="w"> </span>&lt;ip&gt;
 </code></pre></div>
 <p>Missing PTR records cause Kerberos failures and NFS/CIFS auth issues.</p>
 <h4 id="5-flush-dns-cache">5. Flush DNS Cache<a class="headerlink" href="#5-flush-dns-cache" title="Permanent link">&para;</a></h4>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ipconfig /flushdns
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ipconfig /flushdns
 </code></pre></div></p>
 <p><strong>Linux (systemd-resolved):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>resolvectl<span class="w"> </span>flush-caches
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># or</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-resolved
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>resolvectl<span class="w"> </span>flush-caches
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># or</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-resolved
 </code></pre></div></p>
 <h4 id="6-test-from-multiple-systems">6. Test from Multiple Systems<a class="headerlink" href="#6-test-from-multiple-systems" title="Permanent link">&para;</a></h4>
 <p>If one server resolves but another doesn't, the issue is host-specific — wrong server configured, stale cache, or host firewall blocking UDP 53.</p>
@@ -3206,60 +3207,60 @@ Network troubleshooting knowledge base covering connectivity testing, packet los
 <p>Structured approach to diagnosing end-to-end connectivity failures.</p>
 <h3 id="layer-by-layer-triage">Layer-by-Layer Triage<a class="headerlink" href="#layer-by-layer-triage" title="Permanent link">&para;</a></h3>
 <h4 id="layer-1-physical">Layer 1 — Physical<a class="headerlink" href="#layer-1-physical" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux — check interface link state</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w">    </span><span class="c1"># speed, duplex, link detected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Linux — check interface link state</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ip<span class="w"> </span>link<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w">    </span><span class="c1"># speed, duplex, link detected</span>
 </code></pre></div>
 <h4 id="layer-2-switching">Layer 2 — Switching<a class="headerlink" href="#layer-2-switching" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check ARP table (confirm MAC resolved)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>arp<span class="w"> </span>-a
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>ip<span class="w"> </span>neigh<span class="w"> </span>show
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check interface is in correct VLAN</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># On switch: show interface status, show vlan brief</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check ARP table (confirm MAC resolved)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>arp<span class="w"> </span>-a
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ip<span class="w"> </span>neigh<span class="w"> </span>show
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check interface is in correct VLAN</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># On switch: show interface status, show vlan brief</span>
 </code></pre></div>
 <h4 id="layer-3-ip-routing">Layer 3 — IP / Routing<a class="headerlink" href="#layer-3-ip-routing" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Confirm IP configuration</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Confirm route exists</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination_ip&gt;
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Default gateway</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Confirm IP configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ip<span class="w"> </span>addr<span class="w"> </span>show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Confirm route exists</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span>&lt;destination_ip&gt;
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Default gateway</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ip<span class="w"> </span>route<span class="w"> </span>show<span class="w"> </span>default
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>ping<span class="w"> </span>&lt;gateway_ip&gt;
 </code></pre></div>
 <h4 id="layer-4-transport">Layer 4 — Transport<a class="headerlink" href="#layer-4-transport" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Test specific TCP port</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>telnet<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Check local firewall</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>firewall-cmd<span class="w"> </span>--list-all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Test specific TCP port</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>telnet<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Check local firewall</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>iptables<span class="w"> </span>-L<span class="w"> </span>-n<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>firewall-cmd<span class="w"> </span>--list-all
 </code></pre></div>
 <h3 id="path-tracing">Path Tracing<a class="headerlink" href="#path-tracing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux/Mac</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>mtr<span class="w"> </span>&lt;destination&gt;<span class="w">           </span><span class="c1"># continuous path trace</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>traceroute<span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># Linux/Mac</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>tracert<span class="w"> </span>&lt;destination&gt;<span class="w">       </span><span class="c1"># Windows</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>mtr<span class="w"> </span>&lt;destination&gt;<span class="w">           </span><span class="c1"># continuous path trace</span>
 </code></pre></div>
 <h3 id="common-connectivity-tests">Common Connectivity Tests<a class="headerlink" href="#common-connectivity-tests" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># ICMP ping</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;host&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># MTU test (verify no fragmentation)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">    </span><span class="c1"># Linux (1500 MTU = 1472 payload + 28 headers)</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">       </span><span class="c1"># Windows</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># DNS and then connect</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://&lt;fqdn&gt;/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># ICMP ping</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span>&lt;host&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># MTU test (verify no fragmentation)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">    </span><span class="c1"># Linux (1500 MTU = 1472 payload + 28 headers)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;host&gt;<span class="w">       </span><span class="c1"># Windows</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># DNS and then connect</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>curl<span class="w"> </span>-v<span class="w"> </span>https://&lt;fqdn&gt;/
 </code></pre></div>
 <h3 id="connectivity-from-windows">Connectivity from Windows<a class="headerlink" href="#connectivity-from-windows" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Test-NetConnection</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>    <span class="c"># ICMP test</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Test-NetConnection</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>    <span class="c"># ICMP test</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
 </code></pre></div>
 <h3 id="common-issues_1">Common Issues<a class="headerlink" href="#common-issues_1" title="Permanent link">&para;</a></h3>
 <table>
@@ -3307,51 +3308,51 @@ Network troubleshooting knowledge base covering connectivity testing, packet los
 <h2 id="packet-loss">Packet Loss<a class="headerlink" href="#packet-loss" title="Permanent link">&para;</a></h2>
 <p>Packet loss causes degraded application performance, storage I/O timeouts, replication lag, and vMotion failures.</p>
 <h3 id="identify-the-loss">Identify the Loss<a class="headerlink" href="#identify-the-loss" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Extended ping to observe loss pattern</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Continuous path trace with loss stats per hop</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>mtr<span class="w"> </span>&lt;destination&gt;
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Extended ping to observe loss pattern</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ping<span class="w"> </span>-c<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Continuous path trace with loss stats per hop</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>mtr<span class="w"> </span>&lt;destination&gt;
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">100</span><span class="w"> </span>&lt;destination&gt;
 </code></pre></div>
 <p><code>mtr</code> shows loss per hop — if loss appears at hop N but not N+1, it's ICMP de-prioritization by the router, not true loss. True loss appears at hop N and all subsequent hops.</p>
 <h3 id="interface-error-counters">Interface Error Counters<a class="headerlink" href="#interface-error-counters" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Linux</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Show interface errors</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>netstat<span class="w"> </span>-i
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Network interface stats</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>cat<span class="w"> </span>/proc/net/dev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Linux</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Show interface errors</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>netstat<span class="w"> </span>-i
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Network interface stats</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>cat<span class="w"> </span>/proc/net/dev
 </code></pre></div>
 <h3 id="duplex-speed-mismatch">Duplex / Speed Mismatch<a class="headerlink" href="#duplex-speed-mismatch" title="Permanent link">&para;</a></h3>
 <p>Half-duplex on a switch port causes severe packet loss under load:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ethtool<span class="w"> </span>&lt;interface&gt;
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Look for: Speed: 1000Mb/s, Duplex: Full</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ethtool<span class="w"> </span>&lt;interface&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Look for: Speed: 1000Mb/s, Duplex: Full</span>
 </code></pre></div>
 <p>On the switch:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Look for: duplex full, 1000 Mbps</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Look for: duplex full, 1000 Mbps</span>
 </code></pre></div></p>
 <h3 id="congestion-queue-drops">Congestion / Queue Drops<a class="headerlink" href="#congestion-queue-drops" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Linux — show interface TX/RX drops</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Linux — show interface TX/RX drops</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>&lt;interface&gt;
 </code></pre></div>
 <p>On the switch, check output drops:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w">    </span><span class="c1"># Cisco</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w">             </span><span class="c1"># look for output drops</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>counters<span class="w">    </span><span class="c1"># Cisco</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w">             </span><span class="c1"># look for output drops</span>
 </code></pre></div></p>
 <h3 id="physical-layer-checks">Physical Layer Checks<a class="headerlink" href="#physical-layer-checks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Check SFP/cable on the switch port</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>transceiver<span class="w">    </span><span class="c1"># Cisco</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Check Rx power — should be within spec</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Check SFP/cable on the switch port</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>show<span class="w"> </span>interface<span class="w"> </span>&lt;int&gt;<span class="w"> </span>transceiver<span class="w">    </span><span class="c1"># Cisco</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c1"># Check Rx power — should be within spec</span>
 </code></pre></div>
 <h3 id="mtu-issues-fragmentation">MTU Issues (Fragmentation)<a class="headerlink" href="#mtu-issues-fragmentation" title="Permanent link">&para;</a></h3>
 <p>Packet loss with large frames may be MTU-related:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># iSCSI/NFS MTU test (9000 bytes)</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># standard MTU test</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># iSCSI/NFS MTU test (9000 bytes)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1472</span><span class="w"> </span>&lt;destination&gt;<span class="w">    </span><span class="c1"># standard MTU test</span>
 </code></pre></div>
 <p>Any failure with do-not-fragment set indicates an MTU mismatch somewhere in the path.</p>
 <h3 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h3>

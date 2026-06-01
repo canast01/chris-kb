@@ -3483,62 +3483,63 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
     networkUnlock -- No --&gt; vmkRelease
     vmkRelease --&gt; fvekDecrypt --&gt; driveUnlocked
     recoveryPrompt --&gt; adEscrow --&gt; driveUnlocked</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Windows Server — Encryption ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Encryption at rest via BitLocker/EFS; in transit via TLS 1.2/1.3, WinRM HTTPS, IPsec.                │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Encryption at Rest              │  │            Encryption in Transit            │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        BitLocker: full-volume AES-256        │  │         TLS 1.2/1.3 on all services         │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         TPM 2.0 seals BitLocker key          │  │        WinRM: HTTPS only; cert bound        │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          Network unlock for DC boot          │  │          IPsec: transport mode AES          │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         EFS: per-file cert-based enc         │  │          SMB 3.x encryption enforce         │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │         Recovery key in AD BitLocker         │  │         Disable SSL 3.0/TLS 1.0/1.1         │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  BitLocker protects against physical theft; TLS/SMB encryption protects data in motion.               │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │                Key Management                │  │              Protocol Hardening             │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          AD MBAM for BitLocker keys          │  │            Disable RC4, 3DES, MD5           │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           PKI CA issues TLS certs            │  │         Cipher suite: AES-GCM first         │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        KMS / Azure Key Vault for apps        │  │          SCHANNEL reg hardening GPO         │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │           Auto-enroll cert renewal           │  │         IIS: TLS binding on port 443        │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │         HSM for CA root key protect          │  │           RDP: TLS + NLA required           │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  TPM 2.0 chip on server · HSM for CA keys · UEFI Secure Boot · SAS/NVMe storage                       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  BitLocker      = Windows full-volume encryption; AES-256-XTS; TPM-protected key                      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  TPM            = Trusted Platform Module; hardware security chip; seals BitLocker key                │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  EFS            = Encrypting File System; per-file NTFS encryption using user cert                    │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  MBAM           = Microsoft BitLocker Administration and Monitoring; key escrow to AD                 │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  TLS 1.3        = Transport Layer Security 1.3; forward secrecy; removes legacy ciphers               │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  IPsec          = IP Security; encrypts/authenticates IP packets; transport or tunnel mode            │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  SMB encryption = SMB 3.0+ per-share or per-server AES-GCM encryption                                 │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SCHANNEL       = Windows SSL/TLS implementation; configured via registry or GPO                      │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  NLA            = Network Level Authentication; pre-auth for RDP; requires Kerberos/NTLM              │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Cipher suite   = algorithm bundle: key exchange + auth + encryption + MAC                            │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  AES-GCM        = Advanced Encryption Standard Galois/Counter Mode; authenticated enc                 │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│                                                                                                       │
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c">### Enable BitLocker on Data Drives</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">```</span><span class="n">powershell</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Automatically unlock data drives when OS drive is unlocked</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Enable-BitLocker</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span> <span class="n">-EncryptionMethod</span> <span class="n">XtsAes256</span> <span class="n">-RecoveryPasswordProtector</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Enable-BitLockerAutoUnlock</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Verify auto-unlock is configured</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-BitLockerVolume</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VolumeStatus</span><span class="p">,</span> <span class="n">AutoUnlockEnabled</span>
+┌───────────────────────────────────── Windows Server — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│  Encryption at rest via BitLocker/EFS; in transit via TLS 1.2/1.3, WinRM HTTPS, IPsec.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Encryption at Rest              │  │            Encryption in Transit            │   │
+│   │        BitLocker: full-volume AES-256        │  │         TLS 1.2/1.3 on all services         │   │
+│   │         TPM 2.0 seals BitLocker key          │  │        WinRM: HTTPS only; cert bound        │   │
+│   │          Network unlock for DC boot          │  │          IPsec: transport mode AES          │   │
+│   │         EFS: per-file cert-based enc         │  │          SMB 3.x encryption enforce         │   │
+│   │         Recovery key in AD BitLocker         │  │         Disable SSL 3.0/TLS 1.0/1.1         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  BitLocker protects against physical theft; TLS/SMB encryption protects data in motion.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Management                │  │              Protocol Hardening             │   │
+│   │          AD MBAM for BitLocker keys          │  │            Disable RC4, 3DES, MD5           │   │
+│   │           PKI CA issues TLS certs            │  │         Cipher suite: AES-GCM first         │   │
+│   │        KMS / Azure Key Vault for apps        │  │          SCHANNEL reg hardening GPO         │   │
+│   │           Auto-enroll cert renewal           │  │         IIS: TLS binding on port 443        │   │
+│   │         HSM for CA root key protect          │  │           RDP: TLS + NLA required           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  TPM 2.0 chip on server · HSM for CA keys · UEFI Secure Boot · SAS/NVMe storage                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  BitLocker      = Windows full-volume encryption; AES-256-XTS; TPM-protected key                      │
+│  TPM            = Trusted Platform Module; hardware security chip; seals BitLocker key                │
+│  EFS            = Encrypting File System; per-file NTFS encryption using user cert                    │
+│  MBAM           = Microsoft BitLocker Administration and Monitoring; key escrow to AD                 │
+│  TLS 1.3        = Transport Layer Security 1.3; forward secrecy; removes legacy ciphers               │
+│  IPsec          = IP Security; encrypts/authenticates IP packets; transport or tunnel mode            │
+│  SMB encryption = SMB 3.0+ per-share or per-server AES-GCM encryption                                 │
+│  SCHANNEL       = Windows SSL/TLS implementation; configured via registry or GPO                      │
+│  NLA            = Network Level Authentication; pre-auth for RDP; requires Kerberos/NTLM              │
+│  Cipher suite   = algorithm bundle: key exchange + auth + encryption + MAC                            │
+│  AES-GCM        = Advanced Encryption Standard Galois/Counter Mode; authenticated enc                 │
+│  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
+│  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Enable BitLocker on Data Drives
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Automatically unlock data drives when OS drive is unlocked
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Enable-BitLocker -MountPoint &quot;D:&quot; -EncryptionMethod XtsAes256 -RecoveryPasswordProtector
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Enable-BitLockerAutoUnlock -MountPoint &quot;D:&quot;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Verify auto-unlock is configured
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-BitLockerVolume -MountPoint &quot;D:&quot; | Select-Object VolumeStatus, AutoUnlockEnabled
 </code></pre></div></p>
 <h3 id="active-directory-key-escrow">Active Directory Key Escrow<a class="headerlink" href="#active-directory-key-escrow" title="Permanent link">&para;</a></h3>
 <p>GPO path: Computer Configuration &gt; Administrative Templates &gt; Windows Components &gt; BitLocker Drive Encryption</p>
@@ -3564,26 +3565,26 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Manually back up an existing recovery key to AD</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># First get the key ID</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">(</span><span class="nb">Get-BitLockerVolume</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span><span class="p">).</span><span class="n">KeyProtector</span> <span class="p">|</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">KeyProtectorType</span> <span class="o">-eq</span> <span class="s2">&quot;RecoveryPassword&quot;</span> <span class="p">}</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Back up to AD (run on the server)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Backup-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-KeyProtectorId</span> <span class="s2">&quot;{GUID-from-above}&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># View BitLocker recovery keys stored in AD (run from AD management host)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;msFVE-RecoveryInformation&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  <span class="n">-Properties</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Manually back up an existing recovery key to AD</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># First get the key ID</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">(</span><span class="nb">Get-BitLockerVolume</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span><span class="p">).</span><span class="n">KeyProtector</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">KeyProtectorType</span> <span class="o">-eq</span> <span class="s2">&quot;RecoveryPassword&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Back up to AD (run on the server)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">Backup-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-KeyProtectorId</span> <span class="s2">&quot;{GUID-from-above}&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># View BitLocker recovery keys stored in AD (run from AD management host)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;msFVE-RecoveryInformation&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  <span class="n">-Properties</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <h3 id="retrieve-recovery-key-from-ad">Retrieve Recovery Key from AD<a class="headerlink" href="#retrieve-recovery-key-from-ad" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find a computer&#39;s BitLocker recovery key in AD</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$computer</span> <span class="p">=</span> <span class="nb">Get-ADComputer</span> <span class="s2">&quot;SERVER01&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-ADObject</span> <span class="n">-SearchBase</span> <span class="nv">$computer</span><span class="p">.</span><span class="n">DistinguishedName</span> <span class="p">`</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="n">-Filter</span> <span class="p">{</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;msFVE-RecoveryInformation&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  <span class="n">-Properties</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msFVE-RecoveryPassword</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find a computer&#39;s BitLocker recovery key in AD</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$computer</span> <span class="p">=</span> <span class="nb">Get-ADComputer</span> <span class="s2">&quot;SERVER01&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-ADObject</span> <span class="n">-SearchBase</span> <span class="nv">$computer</span><span class="p">.</span><span class="n">DistinguishedName</span> <span class="p">`</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  <span class="n">-Filter</span> <span class="p">{</span><span class="n">objectClass</span> <span class="o">-eq</span> <span class="s2">&quot;msFVE-RecoveryInformation&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  <span class="n">-Properties</span> <span class="n">msFVE-RecoveryPassword</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msFVE-RecoveryPassword</span>
 </code></pre></div>
 <h2 id="bitlocker-network-unlock">BitLocker Network Unlock<a class="headerlink" href="#bitlocker-network-unlock" title="Permanent link">&para;</a></h2>
 <p>Network Unlock allows domain-joined servers to automatically unlock at boot when connected to the corporate network (via WDS/DHCP). Eliminates need for a PIN on headless servers.</p>
@@ -3593,83 +3594,83 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 <li>Certificate with "Network Unlock" EKU deployed to the WDS server</li>
 <li>Group Policy configured</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># On the WDS server — install the Network Unlock feature</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">BitLocker-NetworkUnlock</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># GPO: Computer Configuration &gt; Administrative Templates &gt; Windows Components &gt;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c">#       BitLocker Drive Encryption &gt; OS Drive</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Setting: Allow Network Unlock at startup — Enabled</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># On the client server — add the Network Unlock protector</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Add-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-TpmNetworkKeyProtector</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># On the WDS server — install the Network Unlock feature</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">BitLocker-NetworkUnlock</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># GPO: Computer Configuration &gt; Administrative Templates &gt; Windows Components &gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c">#       BitLocker Drive Encryption &gt; OS Drive</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Setting: Allow Network Unlock at startup — Enabled</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># On the client server — add the Network Unlock protector</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Add-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-TpmNetworkKeyProtector</span>
 </code></pre></div>
 <h2 id="tls-hardening">TLS Hardening<a class="headerlink" href="#tls-hardening" title="Permanent link">&para;</a></h2>
 <p>Windows Server uses SChannel for TLS. Weak protocols and cipher suites should be disabled via registry or GPO.</p>
 <h3 id="disable-tls-10-and-11">Disable TLS 1.0 and 1.1<a class="headerlink" href="#disable-tls-10-and-11" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create registry structure for TLS 1.0 — disable for server and client</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$tls10</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># TLS 1.1 — same pattern</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nv">$tls11</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Server&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Client&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create registry structure for TLS 1.0 — disable for server and client</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$tls10</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls10\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;DisabledByDefault&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># TLS 1.1 — same pattern</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">$tls11</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Server&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Client&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls11\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
 </code></pre></div>
 <h3 id="enable-tls-13-windows-server-2022">Enable TLS 1.3 (Windows Server 2022+)<a class="headerlink" href="#enable-tls-13-windows-server-2022" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">$tls13</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3&quot;</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Server&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Client&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">$tls13</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.3&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Server&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Client&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$tls13\Client&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
 </code></pre></div>
 <h3 id="disable-weak-cipher-suites">Disable Weak Cipher Suites<a class="headerlink" href="#disable-weak-cipher-suites" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Use IIS Crypto or the following registry method</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Disable RC4</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$rc4</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">@(</span><span class="s2">&quot;RC4 128/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 64/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 56/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 40/128&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Disable DES and 3DES</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="p">@(</span><span class="s2">&quot;DES 56/56&quot;</span><span class="p">,</span><span class="s2">&quot;Triple DES 168&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="p">}</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># Set preferred cipher suite order (adjust for your requirements)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nv">$cipherOrder</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="s2">&quot;TLS_AES_256_GCM_SHA384&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="s2">&quot;TLS_AES_128_GCM_SHA256&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="s2">&quot;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="s2">&quot;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="p">)</span> <span class="n">-join</span> <span class="s2">&quot;,&quot;</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>  <span class="n">-Name</span> <span class="s2">&quot;Functions&quot;</span> <span class="n">-Value</span> <span class="nv">$cipherOrder</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Use IIS Crypto or the following registry method</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Disable RC4</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$rc4</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">@(</span><span class="s2">&quot;RC4 128/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 64/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 56/128&quot;</span><span class="p">,</span><span class="s2">&quot;RC4 40/128&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Disable DES and 3DES</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">@(</span><span class="s2">&quot;DES 56/56&quot;</span><span class="p">,</span><span class="s2">&quot;Triple DES 168&quot;</span><span class="p">)</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="nb">New-Item</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;$rc4\$_&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-Value</span> <span class="n">0</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># Set preferred cipher suite order (adjust for your requirements)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nv">$cipherOrder</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="s2">&quot;TLS_AES_256_GCM_SHA384&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="s2">&quot;TLS_AES_128_GCM_SHA256&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="s2">&quot;TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="s2">&quot;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="p">)</span> <span class="n">-join</span> <span class="s2">&quot;,&quot;</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Cryptography\Configuration\SSL\00010002&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>  <span class="n">-Name</span> <span class="s2">&quot;Functions&quot;</span> <span class="n">-Value</span> <span class="nv">$cipherOrder</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Verify TLS configuration (requires restart to take effect)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Tool: IIS Crypto (GUI) or nmap/openssl from another machine</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># nmap --script ssl-enum-ciphers -p 443 &lt;server-ip&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Verify TLS configuration (requires restart to take effect)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Tool: IIS Crypto (GUI) or nmap/openssl from another machine</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c"># nmap --script ssl-enum-ciphers -p 443 &lt;server-ip&gt;</span>
 </code></pre></div>
 <h2 id="smb-signing-and-encryption">SMB Signing and Encryption<a class="headerlink" href="#smb-signing-and-encryption" title="Permanent link">&para;</a></h2>
 <p>SMB signing prevents relay attacks. SMB encryption provides confidentiality for data in transit.</p>
 <h3 id="smb-signing">SMB Signing<a class="headerlink" href="#smb-signing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check current SMB signing configuration</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Require SMB signing on this server</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Require SMB signing from this client to all servers</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Set-SmbClientConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check current SMB signing configuration</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EnableSecuritySignature</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Require SMB signing on this server</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Require SMB signing from this client to all servers</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Set-SmbClientConfiguration</span> <span class="n">-RequireSecuritySignature</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <p>GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options</p>
 <table>
@@ -3691,67 +3692,67 @@ BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signin
 </tbody>
 </table>
 <h3 id="smb-encryption">SMB Encryption<a class="headerlink" href="#smb-encryption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Enable SMB encryption on the server (encrypts all SMB traffic to/from this server)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EncryptData</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Enable encryption on a specific share only</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Sensitive&quot;</span> <span class="n">-EncryptData</span> <span class="nv">$true</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># Verify</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EncryptData</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">EncryptData</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Enable SMB encryption on the server (encrypts all SMB traffic to/from this server)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-SmbServerConfiguration</span> <span class="n">-EncryptData</span> <span class="nv">$true</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Enable encryption on a specific share only</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Set-SmbShare</span> <span class="n">-Name</span> <span class="s2">&quot;Sensitive&quot;</span> <span class="n">-EncryptData</span> <span class="nv">$true</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Verify</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">EncryptData</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">Get-SmbShare</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">EncryptData</span>
 </code></pre></div>
 <h2 id="encrypting-file-system-efs">Encrypting File System (EFS)<a class="headerlink" href="#encrypting-file-system-efs" title="Permanent link">&para;</a></h2>
 <p>EFS provides per-file transparent encryption tied to a user certificate. Less commonly used on servers; prefer BitLocker for volume-level encryption.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Encrypt a folder (and all files in it)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">e</span> <span class="p">/</span><span class="n">s</span><span class="p">:</span><span class="s2">&quot;C:\Sensitive&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Decrypt</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">d</span> <span class="p">/</span><span class="n">s</span><span class="p">:</span><span class="s2">&quot;C:\Sensitive&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># View encryption status</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">u</span> <span class="p">/</span><span class="n">n</span>   <span class="c"># List all encrypted files on accessible drives</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c"># Back up the EFS certificate and key (critical — without this, encrypted files are lost)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">certmgr</span><span class="p">.</span><span class="n">msc</span> <span class="p">&gt;</span> <span class="n">Personal</span> <span class="p">&gt;</span> <span class="n">Certificates</span> <span class="p">&gt;</span> <span class="n">right-click</span> <span class="n">EFS</span> <span class="n">cert</span> <span class="p">&gt;</span> <span class="n">Export</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c"># Or:</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="n">certutil</span> <span class="n">-exportPFX</span> <span class="n">-p</span> <span class="s2">&quot;password&quot;</span> <span class="n">my</span> <span class="n">EFSCert</span><span class="p">.</span><span class="n">pfx</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Encrypt a folder (and all files in it)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">e</span> <span class="p">/</span><span class="n">s</span><span class="p">:</span><span class="s2">&quot;C:\Sensitive&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># Decrypt</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">d</span> <span class="p">/</span><span class="n">s</span><span class="p">:</span><span class="s2">&quot;C:\Sensitive&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># View encryption status</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">cipher</span> <span class="p">/</span><span class="n">u</span> <span class="p">/</span><span class="n">n</span>   <span class="c"># List all encrypted files on accessible drives</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c"># Back up the EFS certificate and key (critical — without this, encrypted files are lost)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="n">certmgr</span><span class="p">.</span><span class="n">msc</span> <span class="p">&gt;</span> <span class="n">Personal</span> <span class="p">&gt;</span> <span class="n">Certificates</span> <span class="p">&gt;</span> <span class="n">right-click</span> <span class="n">EFS</span> <span class="n">cert</span> <span class="p">&gt;</span> <span class="n">Export</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c"># Or:</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">certutil</span> <span class="n">-exportPFX</span> <span class="n">-p</span> <span class="s2">&quot;password&quot;</span> <span class="n">my</span> <span class="n">EFSCert</span><span class="p">.</span><span class="n">pfx</span>
 </code></pre></div>
 <h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># List certificates in the machine store</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="n">Issuer</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Find certificates expiring within 60 days</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">60</span><span class="p">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="nv">$cutoff</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c"># Request a certificate from the enterprise CA</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="n">certreq</span> <span class="n">-enroll</span> <span class="n">-machine</span> <span class="s2">&quot;WebServer&quot;</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c"># Check certificate trust chain</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="n">certutil</span> <span class="n">-verify</span> <span class="n">C</span><span class="p">:\</span><span class="n">path</span><span class="p">\</span><span class="n">to</span><span class="p">\</span><span class="n">cert</span><span class="p">.</span><span class="n">cer</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># List certificates in the machine store</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span><span class="p">,</span> <span class="n">Issuer</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Find certificates expiring within 60 days</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nv">$cutoff</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">60</span><span class="p">)</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="nv">$cutoff</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c"># Request a certificate from the enterprise CA</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">certreq</span> <span class="n">-enroll</span> <span class="n">-machine</span> <span class="s2">&quot;WebServer&quot;</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c"># Check certificate trust chain</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="n">certutil</span> <span class="n">-verify</span> <span class="n">C</span><span class="p">:\</span><span class="n">path</span><span class="p">\</span><span class="n">to</span><span class="p">\</span><span class="n">cert</span><span class="p">.</span><span class="n">cer</span>
 </code></pre></div>
 <h2 id="encryption-audit">Encryption Audit<a class="headerlink" href="#encryption-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Check BitLocker status on all volumes</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-BitLockerVolume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MountPoint</span><span class="p">,</span> <span class="n">VolumeStatus</span><span class="p">,</span> <span class="n">EncryptionMethod</span><span class="p">,</span> <span class="n">ProtectionStatus</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Confirm SMB signing is required</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EncryptData</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c"># Verify TLS 1.0/1.1 are disabled</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nv">$protocols</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;TLS 1.0&quot;</span><span class="p">,</span><span class="s2">&quot;TLS 1.1&quot;</span><span class="p">,</span><span class="s2">&quot;SSL 2.0&quot;</span><span class="p">,</span><span class="s2">&quot;SSL 3.0&quot;</span><span class="p">)</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$p</span> <span class="k">in</span> <span class="nv">$protocols</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$p\Server&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="nv">$enabled</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">).</span><span class="n">Enabled</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;$p Server Enabled: $enabled&quot;</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="p">}</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c"># Check certificates near expiry</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">90</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Check BitLocker status on all volumes</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-BitLockerVolume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">MountPoint</span><span class="p">,</span> <span class="n">VolumeStatus</span><span class="p">,</span> <span class="n">EncryptionMethod</span><span class="p">,</span> <span class="n">ProtectionStatus</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Confirm SMB signing is required</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Get-SmbServerConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RequireSecuritySignature</span><span class="p">,</span> <span class="n">EncryptData</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Verify TLS 1.0/1.1 are disabled</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nv">$protocols</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;TLS 1.0&quot;</span><span class="p">,</span><span class="s2">&quot;TLS 1.1&quot;</span><span class="p">,</span><span class="s2">&quot;SSL 2.0&quot;</span><span class="p">,</span><span class="s2">&quot;SSL 3.0&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$p</span> <span class="k">in</span> <span class="nv">$protocols</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\$p\Server&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="nv">$enabled</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;Enabled&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">).</span><span class="n">Enabled</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;$p Server Enabled: $enabled&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="p">}</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c"># Check certificates near expiry</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">90</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>  <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

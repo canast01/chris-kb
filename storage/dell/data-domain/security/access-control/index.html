@@ -4307,43 +4307,43 @@ Access Control reference covering RBAC — Role-Based Access Control, Audit Logg
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List current users and roles</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>user<span class="w"> </span>show
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Dell Data Domain Access Control ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     DD access layers: NFS client IP restriction, CIFS ACLs, DD Boost user roles, CLI RBAC     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │             MTree access: NFS exports scoped by client IP; CIFS shares by AD group            │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Admin access: local admin, LDAP/AD group mapping, role-based CLI access levels        │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │         Data Access         │  │         Admin Access        │  │       DD Boost Access       │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │      NFS: IP allowlist      │  │       Local admin user      │  │      DD Boost username      │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │        CIFS: AD group       │  │        LDAP/AD groups       │  │      Storage unit bind      │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        MTree per app        │  │      Roles: admin/user      │  │     No direct FS access     │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Deny by default       │  │         SSH key auth        │  │       Backup app creds      │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      IP range restrict      │  │          Audit log          │  │      Encrypted channel      │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Control      │      Method      │       Scope       │     Default      │      Review      │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │    NFS export    │  Client IP list  │     Per MTree     │     Deny all     │    Quarterly     │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │    CIFS share    │     AD group     │     Per MTree     │     Deny all     │    Quarterly     │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │    Admin CLI     │    LDAP role     │    System-wide    │    Local only    │    Quarterly     │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │  DD Boost user   │  Named account   │       Per SU      │     Per app      │    Quarterly     │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    MTree isolation = Each backup app has its own MTree; prevents cross-application data access        │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    NFS IP restrict = Export allows only backup media server IPs; block all other hosts                │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    DD Boost user   = Service account used by backup app to authenticate DD Boost connection           │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped            │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-```</p>
+┌─────────────────────────────────── Dell Data Domain Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     DD access layers: NFS client IP restriction, CIFS ACLs, DD Boost user roles, CLI RBAC     │   │
+│   │             MTree access: NFS exports scoped by client IP; CIFS shares by AD group            │   │
+│   │         Admin access: local admin, LDAP/AD group mapping, role-based CLI access levels        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Data Access         │  │         Admin Access        │  │       DD Boost Access       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      NFS: IP allowlist      │  │       Local admin user      │  │      DD Boost username      │   │
+│   │        CIFS: AD group       │  │        LDAP/AD groups       │  │      Storage unit bind      │   │
+│   │        MTree per app        │  │      Roles: admin/user      │  │     No direct FS access     │   │
+│   │       Deny by default       │  │         SSH key auth        │  │       Backup app creds      │   │
+│   │      IP range restrict      │  │          Audit log          │  │      Encrypted channel      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Control      │      Method      │       Scope       │     Default      │      Review      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    NFS export    │  Client IP list  │     Per MTree     │     Deny all     │    Quarterly     │   │
+│   │    CIFS share    │     AD group     │     Per MTree     │     Deny all     │    Quarterly     │   │
+│   │    Admin CLI     │    LDAP role     │    System-wide    │    Local only    │    Quarterly     │   │
+│   │  DD Boost user   │  Named account   │       Per SU      │     Per app      │    Quarterly     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    MTree isolation = Each backup app has its own MTree; prevents cross-application data access        │
+│    NFS IP restrict = Export allows only backup media server IPs; block all other hosts                │
+│    DD Boost user   = Service account used by backup app to authenticate DD Boost connection           │
+│    Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div></p>
 <p>Log entries include: user logins, configuration changes, retention lock events, filesystem operations, and administrative commands. The audit log should be forwarded to a SIEM that retains logs for at least 12 months.</p>
 <h2 id="network-access-control">Network Access Control<a class="headerlink" href="#network-access-control" title="Permanent link">&para;</a></h2>
 <ul>

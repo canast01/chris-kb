@@ -4163,28 +4163,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#ec2-images-volumes-snapshots" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EC2 — Images, Volumes &amp; Snapshots
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#s3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        S3
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vpc-networking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4418,7 +4396,7 @@
 AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes & Snapshots, S3, VPC & Networking, CloudWatch and 5 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                  AWS CLI — Command-Line Interface for AWS Service Management                  │   │
@@ -4473,194 +4451,231 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="ec2-images-volumes-snapshots">EC2 — Images, Volumes &amp; Snapshots<a class="headerlink" href="#ec2-images-volumes-snapshots" title="Permanent link">&para;</a></h2>
-<p>AMIs (Amazon Machine Images) are templates for launching instances. EBS (Elastic Block Store) volumes are persistent disks attached to instances. Snapshots are point-in-time backups of a volume.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># AMIs (Amazon Machine Images — instance templates)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-images<span class="w"> </span>--owners<span class="w"> </span>self
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-image<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;snapshot-</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>--no-reboot
+┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  AWS CLI — Command-Line Interface for AWS Service Management                  │   │
+│   │      Structured as: aws <service> <command> [--options] — e.g. aws ec2 describe-instances     │   │
+│   │        Auth: profiles in ~/.aws/credentials; assume-role; IAM Identity Center SSO login       │   │
+│   │          Output formats: --output json (default) | table | text | yaml | yaml-stream          │   │
+│   │       Pagination: --max-items / --starting-token; or --no-paginate for full result sets       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    AWS CLI organises commands by service — EC2, S3, IAM, RDS, EKS, SSM, CloudFormation, CloudWatch    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │     Compute (EC2/Lambda)    │  │     Storage (S3/EBS/EFS)    │  │      Identity (IAM/SSO)     │   │
+│   │    ec2 describe-instances   │  │    s3 ls / cp / sync / rm   │  │     iam list-users/roles    │   │
+│   │   ec2 start/stop-instances  │  │     ec2 describe-volumes    │  │   iam get-policy/document   │   │
+│   │     ec2 create-snapshot     │  │   ec2 create-volume/attach  │  │       sts assume-role       │   │
+│   │      lambda invoke/list     │  │   efs describe-filesystems  │  │      sso login / logout     │   │
+│   │      ssm start-session      │  │      s3api head-bucket      │  │    iam simulate-principal   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS                                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    EC2 / SSM     │        S3        │        IAM        │    RDS / EKS     │    CloudWatch    │   │
+│   │describe-instances│ s3 sync src dst  │     list-roles    │ rds describe-db  │ get-metric-data  │   │
+│   │ssm start-session │  s3api list-obj  │    assume-role    │  eks get-token   │ put-metric-alarm │   │
+│   │  run-instances   │  cp --recursive  │   create-policy   │eks list-clusters │ describe-alarms  │   │
+│   │   send-command   │    rb --force    │    delete-role    │ rds failover-db  │ logs filter-log  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · API endpoints (HTTPS) · IAM authentication layer · CloudShell or local workstation     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  AWS CLI v2     = Current CLI version; install via pip or official pkg; aws --version to verify       │
+│  Named profile  = ~/.aws/credentials named section; use --profile name or AWS_PROFILE env var         │
+│  assume-role    = sts assume-role --role-arn ... --role-session-name; exports temp credentials        │
+│  --query        = JMESPath filter on JSON output; e.g. --query "Instances[*].InstanceId"              │
+│  --filter       = Server-side filter; e.g. --filters "Name=tag:Env,Values=prod" on describe calls     │
+│  --output table = Formats JSON output as ASCII table for human-readable inspection in terminal        │
+│  aws configure  = Interactive setup; writes region, key ID, secret, and output format to ~/.aws       │
+│  sso login      = Initiates browser-based IAM Identity Center login; caches SSO token locally         │
+│  --dry-run      = Validates permissions without executing; useful for IAM policy troubleshooting      │
+│  CloudShell     = Browser-based shell in AWS console; pre-authenticated, no local install needed      │
+│  --no-paginate  = Retrieves all pages of a paginated result in a single command call                  │
+│  --region       = Overrides default region for a single command; or set AWS_DEFAULT_REGION env var    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## S3
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># EBS volumes (virtual disks attached to instances)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-volumes
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-volumes<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=attachment.instance-id,Values=&lt;id&gt;&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-volume<span class="w"> </span>--availability-zone<span class="w"> </span>us-east-1a<span class="w"> </span>--size<span class="w"> </span><span class="m">100</span><span class="w"> </span>--volume-type<span class="w"> </span>gp3
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-volume<span class="w"> </span>--device<span class="w"> </span>/dev/xvdf<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--volume-id<span class="w"> </span>&lt;vol_id&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>detach-volume<span class="w"> </span>--volume-id<span class="w"> </span>&lt;vol_id&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-volume<span class="w"> </span>--volume-id<span class="w"> </span>&lt;vol_id&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># EBS snapshots (point-in-time backups of a volume)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-snapshots<span class="w"> </span>--owner-ids<span class="w"> </span>self
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-snapshot<span class="w"> </span>--volume-id<span class="w"> </span>&lt;vol_id&gt;<span class="w"> </span>--description<span class="w"> </span><span class="s2">&quot;backup&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-snapshot<span class="w"> </span>--snapshot-id<span class="w"> </span>&lt;snap_id&gt;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>copy-snapshot<span class="w"> </span>--source-snapshot-id<span class="w"> </span>&lt;snap_id&gt;<span class="w"> </span>--source-region<span class="w"> </span>us-east-1<span class="w"> </span>--destination-region<span class="w"> </span>eu-west-1
-</code></pre></div>
-<hr />
-<h2 id="s3">S3<a class="headerlink" href="#s3" title="Permanent link">&para;</a></h2>
-<p>S3 (Simple Storage Service) is AWS's object storage — it stores files (objects) in containers (buckets). Unlike a filesystem, there are no folders — just keys (paths) that look like folder structures. S3 is extremely durable and cheap.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Buckets</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w">                          </span><span class="c1"># list all your buckets</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/<span class="w">           </span><span class="c1"># list contents of a bucket</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>aws<span class="w"> </span>s3<span class="w"> </span>mb<span class="w"> </span>s3://&lt;bucket&gt;<span class="w">            </span><span class="c1"># make bucket</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>aws<span class="w"> </span>s3<span class="w"> </span>rb<span class="w"> </span>s3://&lt;bucket&gt;<span class="w"> </span>--force<span class="w">    </span><span class="c1"># remove bucket (and all contents)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Objects (files)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>&lt;local_file&gt;<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;<span class="w">       </span><span class="c1"># upload</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;<span class="w"> </span>&lt;local_file&gt;<span class="w">       </span><span class="c1"># download</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>s3<span class="w"> </span>mv<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;<span class="w"> </span>s3://&lt;bucket&gt;/&lt;new_key&gt;
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>aws<span class="w"> </span>s3<span class="w"> </span>rm<span class="w"> </span>s3://&lt;bucket&gt;/&lt;key&gt;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>s3<span class="w"> </span>rm<span class="w"> </span>s3://&lt;bucket&gt;/&lt;prefix&gt;/<span class="w"> </span>--recursive<span class="w">    </span><span class="c1"># delete all objects under a path</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Sync (like rsync for S3 — only copies changed files)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>&lt;local_dir&gt;<span class="w"> </span>s3://&lt;bucket&gt;/&lt;prefix&gt;
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>s3://&lt;bucket&gt;/&lt;prefix&gt;<span class="w"> </span>&lt;local_dir&gt;
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>s3<span class="w"> </span>sync<span class="w"> </span>--delete<span class="w"> </span>s3://&lt;source&gt;<span class="w"> </span>s3://&lt;dest&gt;<span class="w">   </span><span class="c1"># mirror — deletes files not in source</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># S3 API (for versioning, policies, lifecycle rules)</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span>--versioning-configuration<span class="w"> </span><span class="nv">Status</span><span class="o">=</span>Enabled
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-policy<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>aws<span class="w"> </span>s3api<span class="w"> </span>list-object-versions<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-lifecycle-configuration<span class="w"> </span>--bucket<span class="w"> </span>&lt;bucket&gt;<span class="w"> </span>--lifecycle-configuration<span class="w"> </span>file://lifecycle.json
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>S3 (Simple Storage Service) is AWS&#39;s object storage — it stores files (objects) in containers (buckets). Unlike a filesystem, there are no folders — just keys (paths) that look like folder structures. S3 is extremely durable and cheap.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Buckets
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws s3 ls                          # list all your buckets
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws s3 ls s3://&lt;bucket&gt;/           # list contents of a bucket
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws s3 mb s3://&lt;bucket&gt;            # make bucket
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws s3 rb s3://&lt;bucket&gt; --force    # remove bucket (and all contents)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Objects (files)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>aws s3 cp &lt;local_file&gt; s3://&lt;bucket&gt;/&lt;key&gt;       # upload
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws s3 cp s3://&lt;bucket&gt;/&lt;key&gt; &lt;local_file&gt;       # download
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws s3 mv s3://&lt;bucket&gt;/&lt;key&gt; s3://&lt;bucket&gt;/&lt;new_key&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aws s3 rm s3://&lt;bucket&gt;/&lt;key&gt;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>aws s3 rm s3://&lt;bucket&gt;/&lt;prefix&gt;/ --recursive    # delete all objects under a path
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Sync (like rsync for S3 — only copies changed files)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>aws s3 sync &lt;local_dir&gt; s3://&lt;bucket&gt;/&lt;prefix&gt;
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>aws s3 sync s3://&lt;bucket&gt;/&lt;prefix&gt; &lt;local_dir&gt;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>aws s3 sync --delete s3://&lt;source&gt; s3://&lt;dest&gt;   # mirror — deletes files not in source
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># S3 API (for versioning, policies, lifecycle rules)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>aws s3api get-bucket-versioning --bucket &lt;bucket&gt;
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>aws s3api put-bucket-versioning --bucket &lt;bucket&gt; --versioning-configuration Status=Enabled
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>aws s3api get-bucket-policy --bucket &lt;bucket&gt;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>aws s3api list-object-versions --bucket &lt;bucket&gt;
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>aws s3api put-bucket-lifecycle-configuration --bucket &lt;bucket&gt; --lifecycle-configuration file://lifecycle.json
+</code></pre></div></p>
 <hr />
 <h2 id="vpc-networking">VPC &amp; Networking<a class="headerlink" href="#vpc-networking" title="Permanent link">&para;</a></h2>
 <p>VPC (Virtual Private Cloud) is your private network in AWS. Subnets divide the VPC into segments. Route tables control where traffic goes. Internet gateways provide internet access. Elastic IPs are static public IP addresses.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># VPCs (your isolated private network in AWS)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-vpc<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Subnets (segments of a VPC — typically split by AZ and public/private)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=vpc-id,Values=&lt;vpc_id&gt;&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>--availability-zone<span class="w"> </span>us-east-1a
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Route tables (rules for where network traffic should go)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span>&lt;rt_id&gt;<span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--gateway-id<span class="w"> </span>&lt;igw_id&gt;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Internet gateways (connects your VPC to the public internet)</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>&lt;igw_id&gt;<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;vpc_id&gt;
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Elastic IPs (static public IP addresses that persist independent of instances)</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-addresses
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-address<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># VPCs (your isolated private network in AWS)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpcs
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-vpc<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Subnets (segments of a VPC — typically split by AZ and public/private)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-subnets<span class="w"> </span>--filters<span class="w"> </span><span class="s2">&quot;Name=vpc-id,Values=&lt;vpc_id&gt;&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w"> </span>--availability-zone<span class="w"> </span>us-east-1a
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Route tables (rules for where network traffic should go)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-route-tables
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span>&lt;rt_id&gt;<span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--gateway-id<span class="w"> </span>&lt;igw_id&gt;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Internet gateways (connects your VPC to the public internet)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-internet-gateways
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--internet-gateway-id<span class="w"> </span>&lt;igw_id&gt;<span class="w"> </span>--vpc-id<span class="w"> </span>&lt;vpc_id&gt;
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Elastic IPs (static public IP addresses that persist independent of instances)</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-addresses
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-address<span class="w"> </span>--instance-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>aws<span class="w"> </span>ec2<span class="w"> </span>release-address<span class="w"> </span>--allocation-id<span class="w"> </span>&lt;eip_id&gt;
 </code></pre></div>
 <hr />
 <h2 id="cloudwatch">CloudWatch<a class="headerlink" href="#cloudwatch" title="Permanent link">&para;</a></h2>
 <p>CloudWatch is AWS's monitoring and observability service. Metrics are numeric measurements (e.g., CPU %). Alarms trigger actions when metrics cross thresholds. Log groups store application and service logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Alarms (trigger notifications or auto-scaling when a metric threshold is breached)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span>--state-value<span class="w"> </span>ALARM
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>set-alarm-state<span class="w"> </span>--alarm-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--state-value<span class="w"> </span>OK<span class="w"> </span>--state-reason<span class="w"> </span><span class="s2">&quot;manual reset&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Metrics (numeric measurements for AWS services and custom apps)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>list-metrics<span class="w"> </span>--namespace<span class="w"> </span>AWS/EC2
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EC2<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>InstanceId,Value<span class="o">=</span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Logs (centralized log storage for applications and AWS services)</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-groups
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-streams<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--log-stream-name<span class="w"> </span>&lt;stream&gt;
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>&lt;log_group&gt;<span class="w"> </span>--follow<span class="w">             </span><span class="c1"># live tail (like tail -f for cloud logs)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--filter-pattern<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Alarms (trigger notifications or auto-scaling when a metric threshold is breached)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span>--state-value<span class="w"> </span>ALARM
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>set-alarm-state<span class="w"> </span>--alarm-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--state-value<span class="w"> </span>OK<span class="w"> </span>--state-reason<span class="w"> </span><span class="s2">&quot;manual reset&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Metrics (numeric measurements for AWS services and custom apps)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>list-metrics<span class="w"> </span>--namespace<span class="w"> </span>AWS/EC2
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>get-metric-statistics<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EC2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>InstanceId,Value<span class="o">=</span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>--start-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;1 hour ago&#39;</span><span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--end-time<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%FT%TZ<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--statistics<span class="w"> </span>Average
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Logs (centralized log storage for applications and AWS services)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-groups
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>aws<span class="w"> </span>logs<span class="w"> </span>describe-log-streams<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>aws<span class="w"> </span>logs<span class="w"> </span>get-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--log-stream-name<span class="w"> </span>&lt;stream&gt;
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>&lt;log_group&gt;<span class="w"> </span>--follow<span class="w">             </span><span class="c1"># live tail (like tail -f for cloud logs)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>aws<span class="w"> </span>logs<span class="w"> </span>filter-log-events<span class="w"> </span>--log-group-name<span class="w"> </span>&lt;group&gt;<span class="w"> </span>--filter-pattern<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="cloudformation">CloudFormation<a class="headerlink" href="#cloudformation" title="Permanent link">&para;</a></h2>
 <p>CloudFormation is AWS's Infrastructure as Code service. You define your infrastructure in a YAML or JSON template, and CloudFormation creates, updates, or deletes the resources. A stack is one deployment of a template.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Stacks (a running deployment of a CloudFormation template)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>list-stacks
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stacks<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--template-body<span class="w"> </span>file://template.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">ParameterKey</span><span class="o">=</span>Env,ParameterValue<span class="o">=</span>prod
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>update-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>delete-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Stack status and events (useful for debugging failed deployments)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-events<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>stack-create-complete<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Validate a template before deploying (catches syntax errors)</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>validate-template<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Stacks (a running deployment of a CloudFormation template)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>list-stacks
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stacks<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>create-stack<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--template-body<span class="w"> </span>file://template.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">ParameterKey</span><span class="o">=</span>Env,ParameterValue<span class="o">=</span>prod
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>update-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>delete-stack<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Stack status and events (useful for debugging failed deployments)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>describe-stack-events<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>stack-create-complete<span class="w"> </span>--stack-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Validate a template before deploying (catches syntax errors)</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>aws<span class="w"> </span>cloudformation<span class="w"> </span>validate-template<span class="w"> </span>--template-body<span class="w"> </span>file://template.yaml
 </code></pre></div>
 <hr />
 <h2 id="rds">RDS<a class="headerlink" href="#rds" title="Permanent link">&para;</a></h2>
 <p>RDS (Relational Database Service) is AWS's managed database service. It runs PostgreSQL, MySQL, SQL Server, and other engines on instances that AWS manages — you get a database endpoint without managing the OS or database software.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Instances</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Start / stop / reboot</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>start-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>stop-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Snapshots (automated point-in-time backups)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-snapshots
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-snapshot<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>restore-db-instance-from-db-snapshot<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--db-instance-identifier<span class="w"> </span>&lt;new_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Instances</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Start / stop / reboot</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>aws<span class="w"> </span>rds<span class="w"> </span>start-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>stop-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Snapshots (automated point-in-time backups)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-snapshots
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-snapshot<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;id&gt;<span class="w"> </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>restore-db-instance-from-db-snapshot<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--db-instance-identifier<span class="w"> </span>&lt;new_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>--db-snapshot-identifier<span class="w"> </span>&lt;snap_name&gt;
 </code></pre></div>
 <hr />
 <h2 id="eks">EKS<a class="headerlink" href="#eks" title="Permanent link">&para;</a></h2>
 <p>EKS (Elastic Kubernetes Service) is AWS's managed Kubernetes service. It runs the Kubernetes control plane for you. You interact with EKS using the AWS CLI to manage clusters and node groups, and <code>kubectl</code> to manage workloads.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Clusters</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-clusters
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Update kubeconfig (configures kubectl to point to your EKS cluster)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--region<span class="w"> </span>&lt;region&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Node groups (the EC2 instances that run your Kubernetes workloads)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-nodegroups<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-nodegroup<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--nodegroup-name<span class="w"> </span>&lt;ng&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Clusters</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-clusters
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Update kubeconfig (configures kubectl to point to your EKS cluster)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-kubeconfig<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--region<span class="w"> </span>&lt;region&gt;
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Node groups (the EC2 instances that run your Kubernetes workloads)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-nodegroups<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-nodegroup<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--nodegroup-name<span class="w"> </span>&lt;ng&gt;
 </code></pre></div>
 <hr />
 <h2 id="systems-manager-ssm">Systems Manager (SSM)<a class="headerlink" href="#systems-manager-ssm" title="Permanent link">&para;</a></h2>
 <p>SSM lets you manage EC2 instances without SSH. Session Manager creates a shell session through the AWS API — no open ports needed. Run Command executes scripts on instances remotely. Parameter Store is a secure key-value store for configuration and secrets.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Session (interactive shell — no SSH, no open port 22 required)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;instance_id&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Run command (run a script on one or more instances)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;uptime&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>list-command-invocations<span class="w"> </span>--command-id<span class="w"> </span>&lt;cmd_id&gt;<span class="w"> </span>--details
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Parameter Store (secure key-value store for config and secrets)</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--with-decryption
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>aws<span class="w"> </span>ssm<span class="w"> </span>put-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--value<span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span>--type<span class="w"> </span>SecureString
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameters-by-path<span class="w"> </span>--path<span class="w"> </span>/my/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Session (interactive shell — no SSH, no open port 22 required)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span>&lt;instance_id&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Run command (run a script on one or more instances)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>aws<span class="w"> </span>ssm<span class="w"> </span>send-command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--document-name<span class="w"> </span><span class="s2">&quot;AWS-RunShellScript&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="nv">commands</span><span class="o">=</span><span class="s2">&quot;uptime&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>aws<span class="w"> </span>ssm<span class="w"> </span>list-command-invocations<span class="w"> </span>--command-id<span class="w"> </span>&lt;cmd_id&gt;<span class="w"> </span>--details
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Parameter Store (secure key-value store for config and secrets)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--with-decryption
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>aws<span class="w"> </span>ssm<span class="w"> </span>put-parameter<span class="w"> </span>--name<span class="w"> </span>/my/param<span class="w"> </span>--value<span class="w"> </span><span class="s2">&quot;value&quot;</span><span class="w"> </span>--type<span class="w"> </span>SecureString
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>aws<span class="w"> </span>ssm<span class="w"> </span>get-parameters-by-path<span class="w"> </span>--path<span class="w"> </span>/my/
 </code></pre></div>
 <hr />
 <h2 id="lambda">Lambda<a class="headerlink" href="#lambda" title="Permanent link">&para;</a></h2>
 <p>Lambda is AWS's serverless compute service. You upload code and Lambda runs it on demand without you managing any servers. Functions are invoked by events (HTTP requests, S3 events, schedules, etc.).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Functions</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>aws<span class="w"> </span>lambda<span class="w"> </span>get-function<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Invoke a function (synchronous — waits for result)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--payload<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span>response.json
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Deploy updated code (zip your code and upload)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-code<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--zip-file<span class="w"> </span>fileb://function.zip
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Logs (CloudWatch logs for Lambda executions)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>/aws/lambda/&lt;function_name&gt;<span class="w"> </span>--follow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Functions</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>aws<span class="w"> </span>lambda<span class="w"> </span>get-function<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Invoke a function (synchronous — waits for result)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>aws<span class="w"> </span>lambda<span class="w"> </span>invoke<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--payload<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span>response.json
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Deploy updated code (zip your code and upload)</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>aws<span class="w"> </span>lambda<span class="w"> </span>update-function-code<span class="w"> </span>--function-name<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--zip-file<span class="w"> </span>fileb://function.zip
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Logs (CloudWatch logs for Lambda executions)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>aws<span class="w"> </span>logs<span class="w"> </span>tail<span class="w"> </span>/aws/lambda/&lt;function_name&gt;<span class="w"> </span>--follow
 </code></pre></div>
 
 

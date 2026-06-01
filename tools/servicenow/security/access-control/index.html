@@ -3578,127 +3578,128 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                    ├── Record-level (specific conditions)
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                    └── Field-level (specific fields)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                      ACL Evaluation Order                                     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │            Deny-all default → explicit allow rules → role check → condition script            │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                     Evaluated: table ACL → field ACL → row-level condition                    │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                      Operations: read / write / create / delete / execute                     │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌──────────────────────────────────────────────┐                                                    │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │                Role Hierarchy                │                                                    │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │             admin (full access)              │                                                    │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │             itil (service desk)              │                                                    │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │          catalog (service catalog)           │                                                    │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          approver_user (approvals)           │                                                    │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   └──────────────────────────────────────────────┘                                                    │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                     ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│                                                     │              Group-Based Access             │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                     │           Users assigned to groups          │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                     │            Groups assigned roles            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                     │              LDAP/AD group sync             │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                     │          Dynamic groups via script          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                     └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  ServiceNow SaaS · LDAP servers for group sync · IdP for SSO role mapping                             │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  ACL        = Access Control List; rule on table/field controlling who can do what                    │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Role       = named permission set; assigned to users or groups                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  itil       = core service management role; access to incidents, problems, changes                    │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  admin      = full platform access; should be restricted to named individuals                         │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Group      = collection of users; roles assigned at group level for scale                            │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Condition  = ACL script returning true/false; allows row-level access logic                          │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Deny-all   = ServiceNow default; nothing accessible unless explicitly permitted                      │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  LDAP sync  = imports group membership from AD; keeps ServiceNow roles in sync                        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Row-level  = ACL condition evaluating current record fields; per-record access                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  execute    = ACL operation type for scripts and UI actions                                           │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  catalog    = role for self-service portal; can order items, view own requests                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>```javascript
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>// List members of a group
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>var groupName = &#39;SNOW-Administrators&#39;;
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>var groupRecord = new GlideRecord(&#39;sys_user_group&#39;);
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>groupRecord.addQuery(&#39;name&#39;, groupName);
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>groupRecord.query();
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>if (groupRecord.next()) {
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    var memberRec = new GlideRecord(&#39;sys_user_grmember&#39;);
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    memberRec.addQuery(&#39;group&#39;, groupRecord.sys_id);
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    memberRec.query();
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    while (memberRec.next()) {
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        gs.info(memberRec.user.name + &#39; (&#39; + memberRec.user.user_name + &#39;)&#39;);
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    }
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>}
+┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      ACL Evaluation Order                                     │   │
+│   │            Deny-all default → explicit allow rules → role check → condition script            │   │
+│   │                     Evaluated: table ACL → field ACL → row-level condition                    │   │
+│   │                      Operations: read / write / create / delete / execute                     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                Role Hierarchy                │                                                    │
+│   │             admin (full access)              │                                                    │
+│   │             itil (service desk)              │                                                    │
+│   │          catalog (service catalog)           │                                                    │
+│   │          approver_user (approvals)           │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │              Group-Based Access             │   │
+│                                                     │           Users assigned to groups          │   │
+│                                                     │            Groups assigned roles            │   │
+│                                                     │              LDAP/AD group sync             │   │
+│                                                     │          Dynamic groups via script          │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS · LDAP servers for group sync · IdP for SSO role mapping                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ACL        = Access Control List; rule on table/field controlling who can do what                    │
+│  Role       = named permission set; assigned to users or groups                                       │
+│  itil       = core service management role; access to incidents, problems, changes                    │
+│  admin      = full platform access; should be restricted to named individuals                         │
+│  Group      = collection of users; roles assigned at group level for scale                            │
+│  Condition  = ACL script returning true/false; allows row-level access logic                          │
+│  Deny-all   = ServiceNow default; nothing accessible unless explicitly permitted                      │
+│  LDAP sync  = imports group membership from AD; keeps ServiceNow roles in sync                        │
+│  Row-level  = ACL condition evaluating current record fields; per-record access                       │
+│  execute    = ACL operation type for scripts and UI actions                                           │
+│  catalog    = role for self-service portal; can order items, view own requests                        │
+│  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```javascript
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>// List members of a group
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>var groupName = &#39;SNOW-Administrators&#39;;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>var groupRecord = new GlideRecord(&#39;sys_user_group&#39;);
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>groupRecord.addQuery(&#39;name&#39;, groupName);
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>groupRecord.query();
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>if (groupRecord.next()) {
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    var memberRec = new GlideRecord(&#39;sys_user_grmember&#39;);
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    memberRec.addQuery(&#39;group&#39;, groupRecord.sys_id);
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    memberRec.query();
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    while (memberRec.next()) {
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        gs.info(memberRec.user.name + &#39; (&#39; + memberRec.user.user_name + &#39;)&#39;);
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    }
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>}
 </code></pre></div></p>
 <hr />
 <h2 id="access-control-lists-acls">Access Control Lists (ACLs)<a class="headerlink" href="#access-control-lists-acls" title="Permanent link">&para;</a></h2>
 <p>ACLs define who can perform which operations on which data. Navigate to: System Security → Access Control (ACL).</p>
 <h3 id="acl-structure">ACL Structure<a class="headerlink" href="#acl-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">&lt;operation&gt;_&lt;table&gt;_&lt;field&gt;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">Operation</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read, write, create, delete, execute</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">Object</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Table name (e.g., incident, change_request)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(all fields) or specific field name</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">Type</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">record (row-level) or field-level</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">&lt;operation&gt;_&lt;table&gt;_&lt;field&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Operation</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">read, write, create, delete, execute</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">Object</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">Table name (e.g., incident, change_request)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">Name</span><span class="p">:</span><span class="w">       </span><span class="err">*</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">(all fields) or specific field name</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">Type</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">record (row-level) or field-level</span>
 </code></pre></div>
 <h3 id="example-acl-configurations">Example ACL Configurations<a class="headerlink" href="#example-acl-configurations" title="Permanent link">&para;</a></h3>
 <p><strong>Restrict delete on Incidents to admins only:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// ACL Rule</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">// Name: delete_incident</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">// Operation: delete</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">// Table: incident</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">// Active: true</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">// Roles: admin, itil_admin</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">// Condition (Script):</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil_admin&#39;</span><span class="p">);</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">})()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// ACL Rule</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">// Name: delete_incident</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// Operation: delete</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// Table: incident</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">// Active: true</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">// Roles: admin, itil_admin</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">// Condition (Script):</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil_admin&#39;</span><span class="p">);</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">})()</span>
 </code></pre></div>
 <p><strong>Field-level ACL — hide salary field from non-HR:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Name: read_sys_user.salary</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// Operation: read</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// Table: sys_user</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">// Field: salary</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">// Roles: hr_admin, admin</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">// Condition:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;hr_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Name: read_sys_user.salary</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1">// Operation: read</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">// Table: sys_user</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">// Field: salary</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">// Roles: hr_admin, admin</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">// Condition:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;hr_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>Record-level ACL — users can only see their own requests:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Name: read_sc_request (self-only)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// Operation: read</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// Table: sc_request</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">// Condition script:</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">current</span><span class="p">.</span><span class="nx">requested_for</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getUserID</span><span class="p">()</span><span class="w"> </span><span class="o">||</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">           </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">           </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">);</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">})()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// Name: read_sc_request (self-only)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// Operation: read</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// Table: sc_request</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1">// Condition script:</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">current</span><span class="p">.</span><span class="nx">requested_for</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getUserID</span><span class="p">()</span><span class="w"> </span><span class="o">||</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">           </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">           </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">);</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">})()</span>
 </code></pre></div>
 <h3 id="auditing-acls">Auditing ACLs<a class="headerlink" href="#auditing-acls" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Script to list all ACLs granting admin access</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">aclRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_security_acl&#39;</span><span class="p">);</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nx">aclRec</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;admin_overrides&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nx">aclRec</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;ACL: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | Operation: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">operation</span><span class="p">);</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">// List ACLs with no role restriction (potentially open)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="kd">var</span><span class="w"> </span><span class="nx">openAcl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_security_acl&#39;</span><span class="p">);</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">addNullQuery</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">);</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;OPEN ACL: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">operation</span><span class="p">);</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Script to list all ACLs granting admin access</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">aclRec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_security_acl&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nx">aclRec</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;admin_overrides&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nx">aclRec</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;ACL: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | Operation: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">aclRec</span><span class="p">.</span><span class="nx">operation</span><span class="p">);</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">// List ACLs with no role restriction (potentially open)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="kd">var</span><span class="w"> </span><span class="nx">openAcl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_security_acl&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">addNullQuery</span><span class="p">(</span><span class="s1">&#39;roles&#39;</span><span class="p">);</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;active&#39;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nx">openAcl</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;OPEN ACL: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">openAcl</span><span class="p">.</span><span class="nx">operation</span><span class="p">);</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="data-segmentation">Data Segmentation<a class="headerlink" href="#data-segmentation" title="Permanent link">&para;</a></h2>
@@ -3709,21 +3710,21 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 <li>Each record belongs to a domain</li>
 <li>Users in a domain can only see records in their domain (and parent domains)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Verify domain separation is active</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;glide.sys.domain.access_check&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Verify domain separation is active</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;glide.sys.domain.access_check&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;true&#39;</span>
 </code></pre></div>
 <h3 id="assignment-group-visibility">Assignment Group Visibility<a class="headerlink" href="#assignment-group-visibility" title="Permanent link">&para;</a></h3>
 <p>Restrict which assignment groups can be seen by non-admins:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// ACL on sys_user_group — restrict group visibility</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1">// Only return groups where the user is a member or the group is marked public</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">member</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getUserID</span><span class="p">());</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">current</span><span class="p">.</span><span class="nx">sys_id</span><span class="p">);</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">member</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">})()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// ACL on sys_user_group — restrict group visibility</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1">// Only return groups where the user is a member or the group is marked public</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p">(</span><span class="kd">function</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;itil_admin&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">hasRole</span><span class="p">(</span><span class="s1">&#39;admin&#39;</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">member</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getUserID</span><span class="p">());</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">current</span><span class="p">.</span><span class="nx">sys_id</span><span class="p">);</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nx">member</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">member</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">})()</span>
 </code></pre></div>
 <hr />
 <h2 id="privileged-access-management">Privileged Access Management<a class="headerlink" href="#privileged-access-management" title="Permanent link">&para;</a></h2>
@@ -3736,15 +3737,15 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 <li>Scheduled job removes from group after approved duration</li>
 <li>All actions during temp access session logged to audit table</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Scheduled job: Remove expired temp admin access</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">tempAdmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group.name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SNOW-Temp-Admins&#39;</span><span class="p">);</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;u_expiry_date&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideDateTime</span><span class="p">());</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Removing temp admin: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">deleteRecord</span><span class="p">();</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// Scheduled job: Remove expired temp admin access</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">tempAdmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group.name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SNOW-Temp-Admins&#39;</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;u_expiry_date&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&lt;&#39;</span><span class="p">,</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideDateTime</span><span class="p">());</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s1">&#39;Removing temp admin: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">    </span><span class="nx">tempAdmin</span><span class="p">.</span><span class="nx">deleteRecord</span><span class="p">();</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="integration-access-control">Integration Access Control<a class="headerlink" href="#integration-access-control" title="Permanent link">&para;</a></h2>
@@ -3785,34 +3786,34 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Create a custom minimal role for an integration</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1">// System Definition → Roles → New</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1">// Name: svc_monitoring_role</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1">// Contains roles: (none)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1">// Then create ACLs granting only what this role needs:</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1">// read incident: role = svc_monitoring_role</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1">// read sys_user: role = svc_monitoring_role (name, email fields only)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Create a custom minimal role for an integration</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1">// System Definition → Roles → New</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1">// Name: svc_monitoring_role</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1">// Contains roles: (none)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1">// Then create ACLs granting only what this role needs:</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1">// read incident: role = svc_monitoring_role</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1">// read sys_user: role = svc_monitoring_role (name, email fields only)</span>
 </code></pre></div>
 <hr />
 <h2 id="access-review">Access Review<a class="headerlink" href="#access-review" title="Permanent link">&para;</a></h2>
 <h3 id="quarterly-access-review-script">Quarterly Access Review Script<a class="headerlink" href="#quarterly-access-review-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1">// Run in Script Editor — export admin group membership</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="kd">var</span><span class="w"> </span><span class="nx">adminGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group.name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SNOW-Administrators&#39;</span><span class="p">);</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">orderBy</span><span class="p">(</span><span class="s1">&#39;user.name&#39;</span><span class="p">);</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="nx">report</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">        </span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">user_name</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">        </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">        </span><span class="nx">lastLogin</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">last_login</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">        </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="p">});</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">}</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">// Run in Script Editor — export admin group membership</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="kd">var</span><span class="w"> </span><span class="nx">adminGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">GlideRecord</span><span class="p">(</span><span class="s1">&#39;sys_user_grmember&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">addQuery</span><span class="p">(</span><span class="s1">&#39;group.name&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;SNOW-Administrators&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">orderBy</span><span class="p">(</span><span class="s1">&#39;user.name&#39;</span><span class="p">);</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">next</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">    </span><span class="nx">report</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">        </span><span class="nx">user</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">user_name</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">        </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">        </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">        </span><span class="nx">lastLogin</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">last_login</span><span class="p">.</span><span class="nx">toString</span><span class="p">(),</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">        </span><span class="nx">active</span><span class="o">:</span><span class="w"> </span><span class="nx">adminGroup</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">toString</span><span class="p">()</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="p">}</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="mf">2</span><span class="p">));</span>
 </code></pre></div>
 <p><strong>Review checklist:</strong></p>
 <ul>

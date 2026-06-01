@@ -4730,118 +4730,119 @@ vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                    └── Data Encryption Key (DEK) — per disk group
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                            └── Encrypted data on disk
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  (ESA); both require an external KMS and use AES-256 with KEK/DEK hierarchy.                          │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           OSA Encryption (at-rest)           │  │            ESA Inline Encryption            │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │             Enabled per cluster              │  │           vSAN 8+ / all-NVMe only           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │               AES-256 XTS mode               │  │          Encrypts before disk write         │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            KEK from KMS wraps DEK            │  │           Lower overhead than OSA           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Re-key: rolling no outage           │  │             Same KMS integration            │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  OSA encrypts data at the disk layer; ESA encrypts inline before storage commit.                      │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              KMS Configuration               │  │              Key Management Ops             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          Add KMS cluster in vCenter          │  │          Re-key: new KEK, same DEKs         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Trust KMS cert in vCenter           │  │           Shred key: wipe cluster           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       Enable enc: Cluster &gt; Configure        │  │            Backup KMS: critical!            │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           Erase disks when removed           │  │             KMS HA: cluster pair            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  KMS must be highly available and reachable from all ESXi hosts; losing KMS                           │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  access prevents encrypted VM power-on.                                                               │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  OSA enc       = Original Storage Architecture encryption; data at rest                               │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  ESA inline    = Express Storage Architecture; encrypts before NVMe write                             │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  AES-256 XTS   = encryption algorithm; XTS mode for block storage                                     │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  DEK           = Data Encryption Key; per disk group; AES-256                                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  KEK           = Key Encryption Key; stored in KMS; wraps DEKs                                        │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Re-key        = rotate KEK from KMS; no downtime; existing DEKs unchanged                            │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Shred key     = destroy KEK in KMS; all data becomes unreadable                                      │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Erase disks   = secure wipe when decommissioning encrypted disks                                     │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  KMS backup    = critical; if KMS lost with no backup, data is gone                                   │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  KMS cluster   = HA pair; both nodes hold key copies                                                  │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">**</span><span class="n">From</span> <span class="n">vCenter</span> <span class="n">UI</span><span class="p">:**</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">vSphere</span> <span class="n">Client</span> <span class="err">→</span> <span class="n">vCenter</span> <span class="err">→</span> <span class="n">Configure</span> <span class="err">→</span> <span class="n">Key</span> <span class="n">Providers</span> <span class="err">→</span> <span class="n">Add</span> <span class="n">Standard</span> <span class="n">Key</span> <span class="n">Provider</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">**</span><span class="n">Required</span> <span class="n">KMS</span> <span class="n">configuration</span><span class="p">:**</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">1</span><span class="p">.</span> <span class="n">Create</span> <span class="n">a</span> <span class="n">KMIP</span> <span class="n">client</span> <span class="n">certificate</span> <span class="k">in</span> <span class="n">vCenter</span> <span class="p">(</span><span class="n">vCenter</span> <span class="err">→</span> <span class="n">Configure</span> <span class="err">→</span> <span class="n">Key</span> <span class="n">Providers</span> <span class="err">→</span> <span class="n">the</span> <span class="n">provider</span> <span class="err">→</span> <span class="n">Download</span> <span class="n">certificate</span><span class="p">).</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">2</span><span class="p">.</span> <span class="n">Import</span> <span class="n">that</span> <span class="n">certificate</span> <span class="n">into</span> <span class="n">the</span> <span class="n">KMS</span> <span class="n">as</span> <span class="n">a</span> <span class="n">trusted</span> <span class="n">client</span><span class="p">.</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">3</span><span class="p">.</span> <span class="n">Verify</span> <span class="n">the</span> <span class="n">trust</span><span class="p">:</span> <span class="k">in</span> <span class="n">vCenter</span><span class="p">,</span> <span class="n">the</span> <span class="n">KMS</span> <span class="n">status</span> <span class="n">shows</span> <span class="s2">&quot;Normal&quot;</span> <span class="p">(</span><span class="n">green</span> <span class="n">check</span><span class="p">).</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">**</span><span class="n">KMS</span> <span class="n">connectivity</span> <span class="n">requirements</span><span class="p">:**</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">|</span> <span class="n">Source</span> <span class="p">|</span> <span class="n">Destination</span> <span class="p">|</span> <span class="n">Port</span> <span class="p">|</span> <span class="n">Protocol</span> <span class="p">|</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">|---|---|---|---|</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">|</span> <span class="n">vCenter</span> <span class="p">|</span> <span class="n">KMS</span> <span class="p">|</span> <span class="n">5696</span> <span class="p">|</span> <span class="n">TCP</span> <span class="p">(</span><span class="n">KMIP</span><span class="p">/</span><span class="n">TLS</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">|</span> <span class="n">ESXi</span> <span class="n">hosts</span> <span class="p">|</span> <span class="n">KMS</span> <span class="p">|</span> <span class="n">5696</span> <span class="p">|</span> <span class="n">TCP</span> <span class="p">(</span><span class="n">KMIP</span><span class="p">/</span><span class="n">TLS</span><span class="p">)</span> <span class="err">—</span> <span class="n">required</span> <span class="n">at</span> <span class="n">startup</span> <span class="p">|</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">If</span> <span class="n">ESXi</span> <span class="n">hosts</span> <span class="n">cannot</span> <span class="n">reach</span> <span class="n">the</span> <span class="n">KMS</span> <span class="n">at</span> <span class="n">startup</span><span class="p">,</span> <span class="n">encrypted</span> <span class="n">disk</span> <span class="n">groups</span> <span class="n">cannot</span> <span class="n">be</span> <span class="n">mounted</span> <span class="n">and</span> <span class="n">VMs</span> <span class="n">will</span> <span class="n">not</span> <span class="n">power</span> <span class="n">on</span><span class="p">.</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c">### KMS Redundancy</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="n">A</span> <span class="n">single</span> <span class="n">KMS</span> <span class="n">server</span> <span class="n">is</span> <span class="n">a</span> <span class="n">critical</span> <span class="n">single</span> <span class="n">point</span> <span class="n">of</span> <span class="n">failure</span><span class="p">.</span> <span class="n">Always</span> <span class="n">configure</span><span class="p">:</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">-</span> <span class="p">**</span><span class="n">KMS</span> <span class="n">cluster</span><span class="p">:**</span> <span class="n">Minimum</span> <span class="n">two</span> <span class="n">KMS</span> <span class="n">nodes</span> <span class="n">with</span> <span class="n">active-active</span> <span class="n">or</span> <span class="n">active-passive</span> <span class="n">replication</span><span class="p">.</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">-</span> <span class="p">**</span><span class="n">Two</span> <span class="n">KMS</span> <span class="n">clusters</span> <span class="k">in</span> <span class="n">vCenter</span><span class="p">:**</span> <span class="n">Add</span> <span class="n">a</span> <span class="n">primary</span> <span class="n">and</span> <span class="n">a</span> <span class="n">secondary</span> <span class="n">KMS</span><span class="p">.</span> <span class="n">vCenter</span> <span class="n">will</span> <span class="n">fail</span> <span class="n">over</span> <span class="n">automatically</span><span class="p">.</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="p">-</span> <span class="p">**</span><span class="n">Key</span> <span class="n">backup</span><span class="p">:**</span> <span class="n">Export</span> <span class="n">and</span> <span class="n">securely</span> <span class="n">store</span> <span class="n">a</span> <span class="nb">copy </span><span class="n">of</span> <span class="n">all</span> <span class="n">KEKs</span> <span class="n">offline</span> <span class="n">per</span> <span class="n">vendor</span> <span class="n">procedure</span><span class="p">.</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="p">---</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c">## Enabling Data-at-Rest Encryption</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="p">**</span><span class="n">Prerequisites</span><span class="p">:**</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="p">-</span> <span class="n">KMS</span> <span class="n">is</span> <span class="n">configured</span> <span class="k">in</span> <span class="n">vCenter</span> <span class="n">and</span> <span class="n">showing</span> <span class="n">Normal</span> <span class="n">status</span><span class="p">.</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="p">-</span> <span class="n">All</span> <span class="n">hosts</span> <span class="k">in</span> <span class="n">the</span> <span class="n">cluster</span> <span class="n">are</span> <span class="n">running</span> <span class="n">ESXi</span> <span class="n">6</span><span class="p">.</span><span class="n">2</span> <span class="n">or</span> <span class="n">later</span><span class="p">.</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="p">-</span> <span class="n">vSAN</span> <span class="n">cluster</span> <span class="n">is</span> <span class="n">healthy</span> <span class="p">(</span><span class="n">no</span> <span class="n">degraded</span> <span class="n">objects</span><span class="p">,</span> <span class="n">no</span> <span class="n">active</span> <span class="n">resync</span><span class="p">).</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="p">-</span> <span class="n">Maintenance</span> <span class="n">window</span> <span class="n">is</span> <span class="n">scheduled</span> <span class="err">—</span> <span class="n">enabling</span> <span class="n">encryption</span> <span class="n">triggers</span> <span class="n">a</span> <span class="n">full</span> <span class="n">disk</span> <span class="n">format</span><span class="p">,</span> <span class="n">which</span> <span class="n">causes</span> <span class="n">all</span> <span class="n">disk</span> <span class="n">groups</span> <span class="n">to</span> <span class="n">be</span> <span class="n">rebuilt</span><span class="p">.</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="p">**</span><span class="n">Enabling</span> <span class="n">encryption</span> <span class="n">triggers</span> <span class="n">a</span> <span class="n">rolling</span> <span class="n">disk</span> <span class="nb">group </span><span class="n">reformat</span><span class="p">.**</span> <span class="n">All</span> <span class="n">data</span> <span class="n">is</span> <span class="n">evacuated</span> <span class="n">from</span> <span class="n">each</span> <span class="n">disk</span> <span class="nb">group </span><span class="n">before</span> <span class="n">it</span> <span class="n">is</span> <span class="n">reformatted</span> <span class="n">and</span> <span class="n">rebuilt</span><span class="p">.</span> <span class="n">This</span> <span class="n">is</span> <span class="n">equivalent</span> <span class="n">to</span> <span class="n">a</span> <span class="n">full</span> <span class="n">cluster</span> <span class="n">resync</span> <span class="n">and</span> <span class="n">can</span> <span class="n">take</span> <span class="n">several</span> <span class="n">hours</span> <span class="n">to</span> <span class="n">days</span> <span class="n">depending</span> <span class="n">on</span> <span class="n">cluster</span> <span class="n">size</span><span class="p">.</span> <span class="k">Do</span> <span class="n">not</span> <span class="n">enable</span> <span class="n">encryption</span> <span class="n">during</span> <span class="n">production</span> <span class="n">hours</span><span class="p">.</span>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="c">### Enable via vCenter UI</span>
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="n">1</span><span class="p">.</span> <span class="n">vSphere</span> <span class="n">Client</span> <span class="err">→</span> <span class="n">Cluster</span> <span class="err">→</span> <span class="n">Configure</span> <span class="err">→</span> <span class="n">vSAN</span> <span class="err">→</span> <span class="n">Services</span> <span class="err">→</span> <span class="n">Data</span> <span class="n">Services</span>
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="n">2</span><span class="p">.</span> <span class="n">Enable</span> <span class="p">**</span><span class="n">vSAN</span> <span class="n">Encryption</span><span class="p">**</span> <span class="err">→</span> <span class="nb">select </span><span class="n">the</span> <span class="n">KMS</span> <span class="n">cluster</span> <span class="err">→</span> <span class="n">click</span> <span class="n">Apply</span><span class="p">.</span>
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="n">3</span><span class="p">.</span> <span class="n">vCenter</span> <span class="n">initiates</span> <span class="n">the</span> <span class="n">rolling</span> <span class="n">disk</span> <span class="nb">group </span><span class="n">reformat</span><span class="p">.</span> <span class="n">Monitor</span> <span class="n">progress</span> <span class="k">in</span> <span class="n">Recent</span> <span class="n">Tasks</span><span class="p">.</span>
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a><span class="c">### Enable via PowerCLI</span>
-<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>
-<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="p">```</span><span class="n">powershell</span>
-<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-2-49" name="__codelineno-2-49" href="#__codelineno-2-49"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
-<a id="__codelineno-2-50" name="__codelineno-2-50" href="#__codelineno-2-50"></a><span class="nv">$kmsCluster</span> <span class="p">=</span> <span class="nb">Get-KeyManagementServer</span> <span class="n">-Name</span> <span class="s2">&quot;prod-kms&quot;</span>
-<a id="__codelineno-2-51" name="__codelineno-2-51" href="#__codelineno-2-51"></a>
-<a id="__codelineno-2-52" name="__codelineno-2-52" href="#__codelineno-2-52"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="p">`</span>
-<a id="__codelineno-2-53" name="__codelineno-2-53" href="#__codelineno-2-53"></a>    <span class="n">-Configuration</span> <span class="p">(</span><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-2-54" name="__codelineno-2-54" href="#__codelineno-2-54"></a>    <span class="n">-EncryptionEnabled</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-2-55" name="__codelineno-2-55" href="#__codelineno-2-55"></a>    <span class="n">-KmsCluster</span> <span class="nv">$kmsCluster</span>
+┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
+│  (ESA); both require an external KMS and use AES-256 with KEK/DEK hierarchy.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           OSA Encryption (at-rest)           │  │            ESA Inline Encryption            │   │
+│   │             Enabled per cluster              │  │           vSAN 8+ / all-NVMe only           │   │
+│   │               AES-256 XTS mode               │  │          Encrypts before disk write         │   │
+│   │            KEK from KMS wraps DEK            │  │           Lower overhead than OSA           │   │
+│   │          Re-key: rolling no outage           │  │             Same KMS integration            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  OSA encrypts data at the disk layer; ESA encrypts inline before storage commit.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              KMS Configuration               │  │              Key Management Ops             │   │
+│   │          Add KMS cluster in vCenter          │  │          Re-key: new KEK, same DEKs         │   │
+│   │          Trust KMS cert in vCenter           │  │           Shred key: wipe cluster           │   │
+│   │       Enable enc: Cluster &gt; Configure        │  │            Backup KMS: critical!            │   │
+│   │           Erase disks when removed           │  │             KMS HA: cluster pair            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  KMS must be highly available and reachable from all ESXi hosts; losing KMS                           │
+│  access prevents encrypted VM power-on.                                                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OSA enc       = Original Storage Architecture encryption; data at rest                               │
+│  ESA inline    = Express Storage Architecture; encrypts before NVMe write                             │
+│  AES-256 XTS   = encryption algorithm; XTS mode for block storage                                     │
+│  DEK           = Data Encryption Key; per disk group; AES-256                                         │
+│  KEK           = Key Encryption Key; stored in KMS; wraps DEKs                                        │
+│  Re-key        = rotate KEK from KMS; no downtime; existing DEKs unchanged                            │
+│  Shred key     = destroy KEK in KMS; all data becomes unreadable                                      │
+│  Erase disks   = secure wipe when decommissioning encrypted disks                                     │
+│  KMS backup    = critical; if KMS lost with no backup, data is gone                                   │
+│  KMS cluster   = HA pair; both nodes hold key copies                                                  │
+│  KMIP          = Key Management Interoperability Protocol; port 5696                                  │
+│  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```powershell
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**From vCenter UI:**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vSphere Client → vCenter → Configure → Key Providers → Add Standard Key Provider
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>**Required KMS configuration:**
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1. Create a KMIP client certificate in vCenter (vCenter → Configure → Key Providers → the provider → Download certificate).
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2. Import that certificate into the KMS as a trusted client.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>3. Verify the trust: in vCenter, the KMS status shows &quot;Normal&quot; (green check).
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>**KMS connectivity requirements:**
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Source | Destination | Port | Protocol |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|---|---|---|---|
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| vCenter | KMS | 5696 | TCP (KMIP/TLS) |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| ESXi hosts | KMS | 5696 | TCP (KMIP/TLS) — required at startup |
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>If ESXi hosts cannot reach the KMS at startup, encrypted disk groups cannot be mounted and VMs will not power on.
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>### KMS Redundancy
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>A single KMS server is a critical single point of failure. Always configure:
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>- **KMS cluster:** Minimum two KMS nodes with active-active or active-passive replication.
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>- **Two KMS clusters in vCenter:** Add a primary and a secondary KMS. vCenter will fail over automatically.
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>- **Key backup:** Export and securely store a copy of all KEKs offline per vendor procedure.
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>---
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>## Enabling Data-at-Rest Encryption
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>**Prerequisites:**
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>- KMS is configured in vCenter and showing Normal status.
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>- All hosts in the cluster are running ESXi 6.2 or later.
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>- vSAN cluster is healthy (no degraded objects, no active resync).
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>- Maintenance window is scheduled — enabling encryption triggers a full disk format, which causes all disk groups to be rebuilt.
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>**Enabling encryption triggers a rolling disk group reformat.** All data is evacuated from each disk group before it is reformatted and rebuilt. This is equivalent to a full cluster resync and can take several hours to days depending on cluster size. Do not enable encryption during production hours.
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>### Enable via vCenter UI
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>1. vSphere Client → Cluster → Configure → vSAN → Services → Data Services
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>2. Enable **vSAN Encryption** → select the KMS cluster → click Apply.
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>3. vCenter initiates the rolling disk group reformat. Monitor progress in Recent Tasks.
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>### Enable via PowerCLI
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>```powershell
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>Connect-VIServer &lt;vcenter&gt;
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>$cluster = Get-Cluster &quot;VSAN-LON-01&quot;
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>$kmsCluster = Get-KeyManagementServer -Name &quot;prod-kms&quot;
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>Set-VsanClusterConfiguration `
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>    -Configuration (Get-VsanClusterConfiguration -Cluster $cluster) `
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>    -EncryptionEnabled $true `
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>    -KmsCluster $kmsCluster
 </code></pre></div></p>
 <h3 id="verify-encryption-status">Verify Encryption Status<a class="headerlink" href="#verify-encryption-status" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From ESXi host — check disk group encryption status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or check LSOM encryption state</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vsish<span class="w"> </span>-e<span class="w"> </span>get<span class="w"> </span>/vmkModules/lsom/disks/&lt;disk_uuid&gt;/info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From ESXi host — check disk group encryption status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or check LSOM encryption state</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vsish<span class="w"> </span>-e<span class="w"> </span>get<span class="w"> </span>/vmkModules/lsom/disks/&lt;disk_uuid&gt;/info<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>encrypt
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — verify encryption is enabled</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Select </span><span class="n">EncryptionEnabled</span><span class="p">,</span> <span class="n">KmsCluster</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — verify encryption is enabled</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select </span><span class="n">EncryptionEnabled</span><span class="p">,</span> <span class="n">KmsCluster</span>
 </code></pre></div>
 <hr />
 <h2 id="enabling-data-in-transit-encryption">Enabling Data-in-Transit Encryption<a class="headerlink" href="#enabling-data-in-transit-encryption" title="Permanent link">&para;</a></h2>
@@ -4853,29 +4854,29 @@ vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE)
 <li>Enable <strong>vSAN Data-In-Transit Encryption</strong> → click Apply.</li>
 </ol>
 <h3 id="enable-via-powercli">Enable via PowerCLI<a class="headerlink" href="#enable-via-powercli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$config</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="p">`</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">-Configuration</span> <span class="nv">$config</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">-DataInTransitEncryptionEnabled</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$config</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Set-VsanClusterConfiguration</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Configuration</span> <span class="nv">$config</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">-DataInTransitEncryptionEnabled</span> <span class="nv">$true</span>
 </code></pre></div>
 <h3 id="verify-in-transit-encryption">Verify In-Transit Encryption<a class="headerlink" href="#verify-in-transit-encryption" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From ESXi host</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encryption&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check vSAN network config for encryption mode</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From ESXi host</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encryption&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check vSAN network config for encryption mode</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>network<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
 </code></pre></div>
 <hr />
 <h2 id="key-rotation">Key Rotation<a class="headerlink" href="#key-rotation" title="Permanent link">&para;</a></h2>
 <p>Regular key rotation limits exposure if keys are compromised. Rotate KEKs (not DEKs — DEK rotation would require full disk reformat).</p>
 <h3 id="rotate-keks">Rotate KEKs<a class="headerlink" href="#rotate-keks" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Trigger KEK rotation on the cluster</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Invoke-VsanClusterKeyRotation</span> <span class="n">-Configuration</span> <span class="nv">$vsanConfig</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Trigger KEK rotation on the cluster</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-LON-01&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$vsanConfig</span> <span class="p">=</span> <span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="nv">$cluster</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Invoke-VsanClusterKeyRotation</span> <span class="n">-Configuration</span> <span class="nv">$vsanConfig</span>
 </code></pre></div>
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
@@ -4901,8 +4902,8 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
 <p><strong>Mitigation:</strong> Always configure a clustered, redundant KMS with at least two nodes and a secondary KMS cluster in vCenter.</p>
 <h3 id="secure-drive-erase-on-disk-removal">Secure Drive Erase on Disk Removal<a class="headerlink" href="#secure-drive-erase-on-disk-removal" title="Permanent link">&para;</a></h3>
 <p>With vSAN D@RE enabled, removing a disk from the cluster does not require physical drive shredding. Destroying the DEK cryptographically erases all data on the disk — a process called crypto-erase.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Remove a disk group (DEK is destroyed, data is cryptographically erased)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;cache_ssd_naa&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Remove a disk group (DEK is destroyed, data is cryptographically erased)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>remove<span class="w"> </span>-s<span class="w"> </span>&lt;cache_ssd_naa&gt;
 </code></pre></div>
 <p>After DEK destruction, even if the physical drive is accessed directly, the encrypted data cannot be recovered without the DEK. This satisfies NIST 800-88 crypto-erase for drive decommission.</p>
 <h3 id="audit-and-compliance">Audit and Compliance<a class="headerlink" href="#audit-and-compliance" title="Permanent link">&para;</a></h3>
@@ -4949,11 +4950,11 @@ Cluster → Configure → vSAN → Services → Data Services → Rekey</p>
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check KMS connectivity from ESXi host</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>kms.example.com<span class="w"> </span><span class="m">5696</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check encryption-related errors in VMkernel log</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|kmip\|kms&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check KMS connectivity from ESXi host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>kms.example.com<span class="w"> </span><span class="m">5696</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check encryption-related errors in VMkernel log</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;encrypt\|kmip\|kms&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 
 

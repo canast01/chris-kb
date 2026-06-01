@@ -3561,67 +3561,68 @@ Run this check weekly or after any significant workload addition.
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>  │                fails — expand immediately           │
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>  └─────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│    Run weekly and after any significant workload addition; forecast 90 days ahead                     │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Resource     │      Green       │   Amber — action  │  Red — escalate  │    Frequency     │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │   CPU cluster    │    &lt; 70% avg     │   70-85% → plan   │  85%+ → P1 now   │  Daily + weekly  │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │   RAM balloon    │    0 balloon     │  Any → investig.  │  &gt; 0 swap → P1   │      Daily       │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │    Datastore     │    &lt; 75% used    │   75-85% → free   │  85%+ → expand   │      Daily       │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │  vSAN capacity   │    &lt; 70% used    │   70-80% → plan   │  80%+ → P1 now   │      Weekly      │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │    Licensing     │   All covered    │   Expiry &lt; 60 d   │  Expiry &lt; 30 d   │     Monthly      │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│    Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure            │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│    Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1                  │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│    Headroom   = Spare capacity after HA failover reservation is accounted for                         │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│    Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc            │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Forecast   = Project current growth rate 90 days; order hardware before hitting amber              │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Alert<span class="w"> </span>thresholds:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-<span class="w"> </span>&gt;<span class="w"> </span><span class="m">75</span>%<span class="w"> </span>used:<span class="w"> </span>review<span class="w"> </span>and<span class="w"> </span>plan<span class="w"> </span>expansion
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>-<span class="w"> </span>&gt;<span class="w"> </span><span class="m">85</span>%<span class="w"> </span>used:<span class="w"> </span>immediate<span class="w"> </span>action<span class="w"> </span>—<span class="w"> </span>thin<span class="w"> </span>provisioned<span class="w"> </span>disks<span class="w"> </span>may<span class="w"> </span>fail<span class="w"> </span>to<span class="w"> </span>inflate
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">## vSAN Capacity</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># On any cluster ESXi host</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>capacity<span class="w"> </span>get
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Via vCenter UI: vSAN cluster → Monitor → Capacity</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom</span>
+┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
+│                                                                                                       │
+│    Run weekly and after any significant workload addition; forecast 90 days ahead                     │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Resource     │      Green       │   Amber — action  │  Red — escalate  │    Frequency     │   │
+│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
+│   │   CPU cluster    │    &lt; 70% avg     │   70-85% → plan   │  85%+ → P1 now   │  Daily + weekly  │   │
+│   │   RAM balloon    │    0 balloon     │  Any → investig.  │  &gt; 0 swap → P1   │      Daily       │   │
+│   │    Datastore     │    &lt; 75% used    │   75-85% → free   │  85%+ → expand   │      Daily       │   │
+│   │  vSAN capacity   │    &lt; 70% used    │   70-80% → plan   │  80%+ → P1 now   │      Weekly      │   │
+│   │    Licensing     │   All covered    │   Expiry &lt; 60 d   │  Expiry &lt; 30 d   │     Monthly      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure            │
+│    Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1                  │
+│    Headroom   = Spare capacity after HA failover reservation is accounted for                         │
+│    Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc            │
+│    Forecast   = Project current growth rate 90 days; order hardware before hitting amber              │
+│    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Alert thresholds:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- &gt; 75% used: review and plan expansion
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- &gt; 85% used: immediate action — thin provisioned disks may fail to inflate
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## vSAN Capacity
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># On any cluster ESXi host
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli vsan storage capacity get
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Review: total capacity, used, free, and &quot;slack&quot; (reserved for rebuild)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Via vCenter UI: vSAN cluster → Monitor → Capacity
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Check &quot;Used Capacity&quot; — keep below 70% to allow object rebuild headroom
 </code></pre></div></p>
 <p>vSAN capacity thresholds:
 - &gt; 60% used: plan capacity expansion
 - &gt; 70% used: critical — rebuild operations may fail if a disk fails</p>
 <h2 id="snapshot-growth">Snapshot Growth<a class="headerlink" href="#snapshot-growth" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find VMs with large or old snapshots</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find VMs with large or old snapshots</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeMB</span> <span class="o">-gt</span> <span class="n">10240</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeMB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p>Action: snapshots older than 7 days should be reviewed with the VM owner; snapshots &gt; 50 GB should be removed if not actively in use.</p>
 <h2 id="thin-provisioning-risk">Thin Provisioning Risk<a class="headerlink" href="#thin-provisioning-risk" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">Datastore</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="n">CapacityGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">ProvisionedGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">OvercommitRatio</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">}</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">OvercommitRatio</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Compare provisioned vs. actual used space per datastore</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;VMFS&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$ds</span> <span class="p">=</span> <span class="nv">$_</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Datastore</span> <span class="nv">$ds</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nv">$provGB</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$vms</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CapacityGB</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">Datastore</span> <span class="p">=</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">CapacityGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">ProvisionedGB</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">OvercommitRatio</span> <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$provGB</span> <span class="p">/</span> <span class="nv">$ds</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">OvercommitRatio</span> <span class="n">-Descending</span>
 </code></pre></div>
 <p>Alert if overcommit ratio &gt; 2.0 on a datastore approaching 70% usage.</p>
 <h2 id="backup-repository-usage">Backup Repository Usage<a class="headerlink" href="#backup-repository-usage" title="Permanent link">&para;</a></h2>

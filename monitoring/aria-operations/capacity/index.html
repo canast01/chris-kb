@@ -4164,17 +4164,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#reclaim-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reclaim Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#capacity-planning-reports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4353,7 +4342,7 @@
 Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizing Recommendations, Reclaim Workflow, Capacity Planning Reports, Common Capacity Issues.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          Aria Operations Capacity Management — Forecasting, Right-Sizing, and What-If         │   │
@@ -4396,27 +4385,49 @@ Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizi
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="reclaim-workflow">Reclaim Workflow<a class="headerlink" href="#reclaim-workflow" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Navigate to <strong>Optimization &gt; Reclaim &gt; Powered Off VMs</strong>.</li>
-<li>Filter by last powered-on date and cost.</li>
-<li>Use <strong>Actions &gt; Powered Off VMs Report</strong> to export the list.</li>
-<li>Validate with VM owners before any deletion.</li>
-<li>Archive or snapshot before reclaiming storage.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List powered-off VMs via API with last-modified filter</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://aria-ops.example.com/suite-api/api/resources/query&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;adapterKind&quot;: [&quot;VMWARE&quot;],</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;resourceKind&quot;: [&quot;VirtualMachine&quot;],</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;propertyConditions&quot;: {</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      &quot;conditions&quot;: [{&quot;key&quot;: &quot;summary|runtime|powerState&quot;, &quot;operator&quot;: &quot;EQ&quot;, &quot;stringValue&quot;: &quot;powered_off&quot;}]</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    }</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[].resourceKey.name&#39;</span>
-</code></pre></div>
+┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Aria Operations Capacity Management — Forecasting, Right-Sizing, and What-If         │   │
+│   │      Capacity models: Demand model (usage trend) · Allocation model (provisioned CPU/mem)     │   │
+│   │                Forecast horizon: 30 / 60 / 90 days configurable per object type               │   │
+│   │           Right-sizing: oversized VMs flagged; reclaim CPU/mem/disk recommendations           │   │
+│   │                What-if: add N VMs and see projected impact on cluster headroom                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Run what-if analysis before any major workload migration to validate headroom                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Capacity Models       │  │         Forecasting         │  │         Right-Sizing        │   │
+│   │         Demand model        │  │        30-day horizon       │  │        Oversized VMs        │   │
+│   │       Allocation model      │  │        60-day horizon       │  │        Undersized VMs       │   │
+│   │        Custom buffers       │  │        90-day horizon       │  │       Reclaim CPU/mem       │   │
+│   │       Policy overrides      │  │       What-if: add VMs      │  │         Reclaim disk        │   │
+│   │      Per-cluster scope      │  │       Trend visualise       │  │         Batch action        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity analytics on Aria Ops master · data feeds: vCenter/vSAN/storage adapters                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Demand model      = Capacity model tracking actual usage trend over time                             │
+│  Allocation model  = Capacity model tracking provisioned (allocated) CPU and memory                   │
+│  Buffer            = Reserved headroom percentage excluded from usable capacity calc                  │
+│  Forecast horizon  = Number of days projected; longer = less accurate but more strategic              │
+│  What-if analysis  = Simulation adding/removing workloads to predict capacity impact                  │
+│  Right-sizing      = Recommendation to adjust vCPU/vMem to match actual usage patterns                │
+│  Reclaim           = Action recovering idle CPU, memory, or disk from oversized VMs                   │
+│  Oversized VM      = VM provisioned significantly above its measured peak utilisation                 │
+│  Undersized VM     = VM hitting its provisioned limits; causes performance degradation                │
+│  Batch action      = Applying right-size recommendations to multiple VMs simultaneously               │
+│  Policy override   = Cluster-specific capacity policy overriding global default settings              │
+│  Headroom          = Remaining available capacity before the configured utilisation limit             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="capacity-planning-reports">Capacity Planning Reports<a class="headerlink" href="#capacity-planning-reports" title="Permanent link">&para;</a></h2>
 <p>Run capacity planning reports to project future needs by cluster or datacenter.</p>
 <p>Navigation: <strong>Reports &gt; Report Templates &gt; Capacity Report</strong></p>

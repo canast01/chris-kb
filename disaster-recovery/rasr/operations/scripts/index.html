@@ -3909,17 +3909,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-rasrimageage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test-RASRImageAge
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#remove-oldrasrimages" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4252,376 +4241,379 @@ Scripts reference covering Script Inventory, New-RASRImage, Test-RASRImageAge, R
 <a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a><span class="c">#               -ShareUser &quot;CORP\svc-rasr&quot; `</span>
 <a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a><span class="c">#               -SharePassword &quot;S3cr3t!&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                   RASR — Automation Scripts                                   │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Always store credentials in vault (not in script); log all output               │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                 Test scripts in non-production before scheduling in production                │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │                        Scope scripts to least-privilege service account                       │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │           Job success rate report            │  │            Auto-expire old points           │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │               cybersense scan                │  │             vault lock / unlock             │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   RASR — Automation Scripts                                   │   │
+│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │               cybersense scan                │  │             vault lock / unlock             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Test-RASRImageAge
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Checks whether the most-recent RASR image on a share was created within a configurable maximum-age window. Returns a non-zero exit code and writes an event log entry if the latest image is stale.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>&lt;#
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>.SYNOPSIS
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    Checks whether the most-recent RASR image on a share is within the maximum age threshold.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>.PARAMETER SharePath
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    UNC path to the RASR image directory.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>.PARAMETER MaxAgeDays
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Maximum acceptable age (in days) for the most-recent image. Default: 1.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>.OUTPUTS
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    $true if image age is within threshold; $false (with event log warning) if stale or missing.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>#&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>function Test-RASRImageAge {
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    [CmdletBinding()]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    param(
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        [Parameter(Mandatory)]
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        [string]$SharePath,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        [int]$MaxAgeDays = 1
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    )
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    $images = Get-ChildItem -Path $SharePath -Filter &quot;*.rasr&quot; -ErrorAction Stop |
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>              Sort-Object LastWriteTime -Descending
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    if ($images.Count -eq 0) {
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        Write-Warning &quot;No RASR images found at $SharePath&quot;
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        Write-EventLog -LogName Application -Source &quot;RASR-Backup&quot; -EntryType Warning `
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>                       -EventId 9002 -Message &quot;No RASR images found at $SharePath&quot;
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>        return $false
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    }
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    $latest    = $images[0]
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    $ageDays   = ((Get-Date) - $latest.LastWriteTime).TotalDays
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    $threshold = $MaxAgeDays
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    if ($ageDays -gt $threshold) {
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>        $msg = &quot;RASR image age check FAILED: latest image &#39;$($latest.Name)&#39; is $([math]::Round($ageDays,1)) days old (threshold: $threshold days)&quot;
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>        Write-Warning $msg
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>        Write-EventLog -LogName Application -Source &quot;RASR-Backup&quot; -EntryType Warning `
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>                       -EventId 9003 -Message $msg
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        return $false
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    }
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    Write-Host &quot;RASR image age OK: &#39;$($latest.Name)&#39; is $([math]::Round($ageDays,2)) days old (threshold: $threshold days)&quot;
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    return $true
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>}
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a># Example:
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a># Test-RASRImageAge -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -MaxAgeDays 1
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a># if (-not (Test-RASRImageAge ...)) { Send-MailMessage ... }
 </code></pre></div></p>
 <hr />
-<h2 id="test-rasrimageage">Test-RASRImageAge<a class="headerlink" href="#test-rasrimageage" title="Permanent link">&para;</a></h2>
-<p>Checks whether the most-recent RASR image on a share was created within a configurable maximum-age window. Returns a non-zero exit code and writes an event log entry if the latest image is stale.</p>
+<h2 id="remove-oldrasrimages">Remove-OldRASRImages<a class="headerlink" href="#remove-oldrasrimages" title="Permanent link">&para;</a></h2>
+<p>Deletes RASR images on a share that exceed the configured retention count, keeping the most recent N images.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">&lt;#</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cm">    Checks whether the most-recent RASR image on a share is within the maximum age threshold.</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cm">    Removes RASR images from a share that exceed the retention count.</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="cm">    UNC path to the RASR image directory.</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="sd">.PARAMETER</span><span class="cm"> MaxAgeDays</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="cm">    Maximum acceptable age (in days) for the most-recent image. Default: 1.</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="sd">.OUTPUTS</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="cm">    $true if image age is within threshold; $false (with event log warning) if stale or missing.</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="sd">.PARAMETER</span><span class="cm"> RetentionCount</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="cm">    Number of most-recent images to keep. Images beyond this count are deleted.</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="sd">.PARAMETER</span><span class="cm"> WhatIf</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="cm">    Show which files would be deleted without actually deleting them.</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="cm">#&gt;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">function</span> <span class="nb">Test-RASRImageAge</span> <span class="p">{</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">function</span> <span class="nb">Remove-OldRASRImages</span> <span class="p">{</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">SupportsShouldProcess</span><span class="p">)]</span>
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="k">param</span><span class="p">(</span>
 <a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="no">[int]</span><span class="nv">$MaxAgeDays</span> <span class="p">=</span> <span class="n">1</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="no">[int]</span><span class="nv">$RetentionCount</span> <span class="p">=</span> <span class="n">4</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="p">)</span>
 <a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
 <a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span>
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>              <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span>
 <a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;No RASR images found at $SharePath&quot;</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="nb">Write-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s2">&quot;RASR-Backup&quot;</span> <span class="n">-EntryType</span> <span class="n">Warning</span> <span class="p">`</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>                       <span class="n">-EventId</span> <span class="n">9002</span> <span class="n">-Message</span> <span class="s2">&quot;No RASR images found at $SharePath&quot;</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="k">return</span> <span class="nv">$false</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    <span class="p">}</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-le</span> <span class="nv">$RetentionCount</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Nothing to remove: </span><span class="p">$(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) present, retention is $RetentionCount.&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>        <span class="k">return</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    <span class="p">}</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    <span class="nv">$toDelete</span> <span class="p">=</span> <span class="nv">$images</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Skip</span> <span class="nv">$RetentionCount</span>
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    <span class="nv">$latest</span>    <span class="p">=</span> <span class="nv">$images</span><span class="p">[</span><span class="n">0</span><span class="p">]</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>    <span class="nv">$ageDays</span>   <span class="p">=</span> <span class="p">((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$latest</span><span class="p">.</span><span class="n">LastWriteTime</span><span class="p">).</span><span class="n">TotalDays</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>    <span class="nv">$threshold</span> <span class="p">=</span> <span class="nv">$MaxAgeDays</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$ageDays</span> <span class="o">-gt</span> <span class="nv">$threshold</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>        <span class="nv">$msg</span> <span class="p">=</span> <span class="s2">&quot;RASR image age check FAILED: latest image &#39;</span><span class="p">$(</span><span class="nv">$latest</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&#39; is </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ageDays</span><span class="p">,</span><span class="n">1</span><span class="p">))</span><span class="s2"> days old (threshold: $threshold days)&quot;</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>        <span class="nb">Write-Warning</span> <span class="nv">$msg</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>        <span class="nb">Write-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s2">&quot;RASR-Backup&quot;</span> <span class="n">-EntryType</span> <span class="n">Warning</span> <span class="p">`</span>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>                       <span class="n">-EventId</span> <span class="n">9003</span> <span class="n">-Message</span> <span class="nv">$msg</span>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>        <span class="k">return</span> <span class="nv">$false</span>
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>    <span class="p">}</span>
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;RASR image age OK: &#39;</span><span class="p">$(</span><span class="nv">$latest</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&#39; is </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$ageDays</span><span class="p">,</span><span class="n">2</span><span class="p">))</span><span class="s2"> days old (threshold: $threshold days)&quot;</span>
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>    <span class="k">return</span> <span class="nv">$true</span>
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="p">}</span>
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
-<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="c"># Example:</span>
-<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="c"># Test-RASRImageAge -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -MaxAgeDays 1</span>
-<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="c"># if (-not (Test-RASRImageAge ...)) { Send-MailMessage ... }</span>
-</code></pre></div>
-<hr />
-<h2 id="remove-oldrasrimages">Remove-OldRASRImages<a class="headerlink" href="#remove-oldrasrimages" title="Permanent link">&para;</a></h2>
-<p>Deletes RASR images on a share that exceed the configured retention count, keeping the most recent N images.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cm">&lt;#</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="cm">    Removes RASR images from a share that exceed the retention count.</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="cm">    UNC path to the RASR image directory.</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd">.PARAMETER</span><span class="cm"> RetentionCount</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="cm">    Number of most-recent images to keep. Images beyond this count are deleted.</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="sd">.PARAMETER</span><span class="cm"> WhatIf</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="cm">    Show which files would be deleted without actually deleting them.</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="cm">#&gt;</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">function</span> <span class="nb">Remove-OldRASRImages</span> <span class="p">{</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">SupportsShouldProcess</span><span class="p">)]</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="no">[int]</span><span class="nv">$RetentionCount</span> <span class="p">=</span> <span class="n">4</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="p">)</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>              <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-le</span> <span class="nv">$RetentionCount</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Nothing to remove: </span><span class="p">$(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) present, retention is $RetentionCount.&quot;</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>        <span class="k">return</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    <span class="p">}</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>    <span class="nv">$toDelete</span> <span class="p">=</span> <span class="nv">$images</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Skip</span> <span class="nv">$RetentionCount</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$toDelete</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$PSCmdlet</span><span class="p">.</span><span class="n">ShouldProcess</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">,</span> <span class="s2">&quot;Delete old RASR image&quot;</span><span class="p">))</span> <span class="p">{</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>            <span class="nb">Remove-Item</span> <span class="n">-Path</span> <span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-Force</span>
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Deleted: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> (age: </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span><span class="n">1</span><span class="p">))</span><span class="s2"> days)&quot;</span>
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>        <span class="p">}</span>
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>    <span class="p">}</span>
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Retention cleanup complete. Kept $RetentionCount most-recent image(s).&quot;</span>
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="p">}</span>
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="c"># Example:</span>
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -RetentionCount 4</span>
-<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -WhatIf</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$toDelete</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$PSCmdlet</span><span class="p">.</span><span class="n">ShouldProcess</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">,</span> <span class="s2">&quot;Delete old RASR image&quot;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>            <span class="nb">Remove-Item</span> <span class="n">-Path</span> <span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-Force</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Deleted: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> (age: </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span><span class="n">1</span><span class="p">))</span><span class="s2"> days)&quot;</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>        <span class="p">}</span>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>    <span class="p">}</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Retention cleanup complete. Kept $RetentionCount most-recent image(s).&quot;</span>
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="p">}</span>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="c"># Example:</span>
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -RetentionCount 4</span>
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -WhatIf</span>
 </code></pre></div>
 <hr />
 <h2 id="test-rasrimageintegrity">Test-RASRImageIntegrity<a class="headerlink" href="#test-rasrimageintegrity" title="Permanent link">&para;</a></h2>
 <p>Iterates all RASR images on a share and runs <code>rasrutil.exe /verify</code> against each. Outputs a pass/fail report.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cm">&lt;#</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cm">    Verifies the integrity of all RASR images on a network share.</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cm">    UNC path to the image directory.</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">.PARAMETER</span><span class="cm"> ShareUser</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="cm">    Credential username.</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePassword</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="cm">    Credential password.</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="cm">#&gt;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">function</span> <span class="nb">Test-RASRImageIntegrity</span> <span class="p">{</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="no">[string]</span><span class="nv">$ShareUser</span><span class="p">,</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="no">[string]</span><span class="nv">$SharePassword</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="p">)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="nv">$RASRBin</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$ShareUser</span> <span class="o">-and</span> <span class="nv">$SharePassword</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        <span class="n">net</span> <span class="n">use</span> <span class="nv">$SharePath</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="nv">$ShareUser</span> <span class="nv">$SharePassword</span> <span class="n">2</span><span class="p">&gt;</span><span class="nv">$null</span> <span class="p">|</span> <span class="nb">Out-Null</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>    <span class="p">}</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;No images found in $SharePath&quot;</span>
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>        <span class="k">return</span>
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>    <span class="p">}</span>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$images</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Verifying: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ...&quot;</span>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>        <span class="nv">$proc</span> <span class="p">=</span> <span class="nb">Start-Process</span> <span class="n">-FilePath</span> <span class="nv">$RASRBin</span> <span class="p">`</span>
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>                              <span class="n">-ArgumentList</span> <span class="s2">&quot;/verify /source </span><span class="se">`&quot;</span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="se">`&quot;</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>                              <span class="n">-Wait</span> <span class="n">-PassThru</span> <span class="n">-NoNewWindow</span>
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>        <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>            <span class="n">ImageName</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>            <span class="n">SizeGB</span>     <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>            <span class="n">LastWrite</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
-<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>            <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL (code </span><span class="p">$(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>        <span class="p">}</span>
-<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>    <span class="p">}</span>
-<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>
-<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>    <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
-<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>    <span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) failed integrity check.&quot;</span>
-<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;All </span><span class="p">$(</span><span class="nv">$results</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) passed integrity check.&quot;</span>
-<a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>    <span class="p">}</span>
-<a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="p">}</span>
-<a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a>
-<a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="c"># Example:</span>
-<a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="c"># Test-RASRImageIntegrity -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; `</span>
-<a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="c">#                         -ShareUser &quot;CORP\svc-rasr&quot; -SharePassword &quot;S3cr3t!&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="cm">    Verifies the integrity of all RASR images on a network share.</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="cm">    UNC path to the image directory.</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd">.PARAMETER</span><span class="cm"> ShareUser</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="cm">    Credential username.</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePassword</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="cm">    Credential password.</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">function</span> <span class="nb">Test-RASRImageIntegrity</span> <span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="no">[string]</span><span class="nv">$ShareUser</span><span class="p">,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="no">[string]</span><span class="nv">$SharePassword</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="p">)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="nv">$RASRBin</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$ShareUser</span> <span class="o">-and</span> <span class="nv">$SharePassword</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>        <span class="n">net</span> <span class="n">use</span> <span class="nv">$SharePath</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="nv">$ShareUser</span> <span class="nv">$SharePassword</span> <span class="n">2</span><span class="p">&gt;</span><span class="nv">$null</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="p">}</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;No images found in $SharePath&quot;</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="k">return</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    <span class="p">}</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>    <span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$images</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Verifying: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ...&quot;</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>        <span class="nv">$proc</span> <span class="p">=</span> <span class="nb">Start-Process</span> <span class="n">-FilePath</span> <span class="nv">$RASRBin</span> <span class="p">`</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>                              <span class="n">-ArgumentList</span> <span class="s2">&quot;/verify /source </span><span class="se">`&quot;</span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="se">`&quot;</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>                              <span class="n">-Wait</span> <span class="n">-PassThru</span> <span class="n">-NoNewWindow</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>        <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>            <span class="n">ImageName</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>            <span class="n">SizeGB</span>     <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>            <span class="n">LastWrite</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>            <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL (code </span><span class="p">$(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>        <span class="p">}</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>    <span class="p">}</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>    <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>    <span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) failed integrity check.&quot;</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;All </span><span class="p">$(</span><span class="nv">$results</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) passed integrity check.&quot;</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a>    <span class="p">}</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="p">}</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a><span class="c"># Example:</span>
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a><span class="c"># Test-RASRImageIntegrity -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; `</span>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a><span class="c">#                         -ShareUser &quot;CORP\svc-rasr&quot; -SharePassword &quot;S3cr3t!&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="new-rasrscheduledtask">New-RASRScheduledTask<a class="headerlink" href="#new-rasrscheduledtask" title="Permanent link">&para;</a></h2>
 <p>Registers the RASR weekly backup task in Windows Task Scheduler. Idempotent — updates the task if it already exists.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">&lt;#</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="cm">    Creates or updates the RASR weekly backup scheduled task.</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="cm">    UNC path for backup destination (server-specific subdirectory).</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="sd">.PARAMETER</span><span class="cm"> ShareUser</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="cm">    Share authentication username.</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePassword</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="cm">    Share authentication password.</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="sd">.PARAMETER</span><span class="cm"> DayOfWeek</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="cm">    Day of week for the backup schedule.</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="sd">.PARAMETER</span><span class="cm"> StartTime</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="cm">    Time to run the backup.</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="cm">#&gt;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="k">function</span> <span class="nb">New-RASRScheduledTask</span> <span class="p">{</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>        <span class="no">[string]</span><span class="nv">$ShareUser</span><span class="p">,</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>        <span class="no">[string]</span><span class="nv">$SharePassword</span><span class="p">,</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        <span class="no">[System.DayOfWeek]</span><span class="nv">$DayOfWeek</span> <span class="p">=</span> <span class="no">[System.DayOfWeek]</span><span class="p">::</span><span class="n">Sunday</span><span class="p">,</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        <span class="no">[string]</span><span class="nv">$StartTime</span> <span class="p">=</span> <span class="s2">&quot;02:00&quot;</span>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    <span class="p">)</span>
-<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
-<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>    <span class="nv">$taskName</span>  <span class="p">=</span> <span class="s2">&quot;RASR Weekly Backup&quot;</span>
-<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    <span class="nv">$rasrBin</span>   <span class="p">=</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span>
-<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>    <span class="nv">$logPath</span>   <span class="p">=</span> <span class="s2">&quot;C:\Logs\RASR\rasr-scheduled.log&quot;</span>
-<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>    <span class="nv">$arguments</span> <span class="p">=</span> <span class="s2">&quot;/backup /dest </span><span class="se">`&quot;</span><span class="s2">$SharePath</span><span class="se">`&quot;</span><span class="s2"> /user $ShareUser /pass $SharePassword /compress /log </span><span class="se">`&quot;</span><span class="s2">$logPath</span><span class="se">`&quot;</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
-<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>    <span class="nv">$action</span>    <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="nv">$rasrBin</span> <span class="n">-Argument</span> <span class="nv">$arguments</span>
-<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>    <span class="nv">$trigger</span>   <span class="p">=</span> <span class="nb">New-ScheduledTaskTrigger</span> <span class="n">-Weekly</span> <span class="n">-DaysOfWeek</span> <span class="nv">$DayOfWeek</span> <span class="n">-At</span> <span class="nv">$StartTime</span>
-<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>    <span class="nv">$principal</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskPrincipal</span> <span class="n">-UserId</span> <span class="s2">&quot;SYSTEM&quot;</span> <span class="n">-LogonType</span> <span class="n">ServiceAccount</span> <span class="n">-RunLevel</span> <span class="n">Highest</span>
-<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    <span class="nv">$settings</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskSettingsSet</span> <span class="n">-ExecutionTimeLimit</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Hours</span> <span class="n">8</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>                                               <span class="n">-MultipleInstances</span> <span class="n">IgnoreNew</span>
-<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>
-<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>        <span class="nb">Set-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-Action</span> <span class="nv">$action</span> <span class="n">-Trigger</span> <span class="nv">$trigger</span> <span class="n">-Settings</span> <span class="nv">$settings</span>
-<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Updated existing scheduled task: $taskName&quot;</span>
-<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>        <span class="nb">Register-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-Action</span> <span class="nv">$action</span> <span class="n">-Trigger</span> <span class="nv">$trigger</span> <span class="p">`</span>
-<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>                               <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="n">-Settings</span> <span class="nv">$settings</span> <span class="p">`</span>
-<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>                               <span class="n">-Description</span> <span class="s2">&quot;Weekly RASR system image backup&quot;</span>
-<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Registered scheduled task: $taskName&quot;</span>
-<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>    <span class="p">}</span>
-<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a><span class="p">}</span>
-<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>
-<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a><span class="c"># Example:</span>
-<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a><span class="c"># New-RASRScheduledTask -SharePath &quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot; `</span>
-<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a><span class="c">#                       -ShareUser &quot;CORP\svc-rasr&quot; `</span>
-<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a><span class="c">#                       -SharePassword &quot;S3cr3t!&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cm">    Creates or updates the RASR weekly backup scheduled task.</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cm">    UNC path for backup destination (server-specific subdirectory).</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">.PARAMETER</span><span class="cm"> ShareUser</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="cm">    Share authentication username.</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePassword</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="cm">    Share authentication password.</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="sd">.PARAMETER</span><span class="cm"> DayOfWeek</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="cm">    Day of week for the backup schedule.</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="sd">.PARAMETER</span><span class="cm"> StartTime</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="cm">    Time to run the backup.</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="k">function</span> <span class="nb">New-RASRScheduledTask</span> <span class="p">{</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>        <span class="no">[string]</span><span class="nv">$ShareUser</span><span class="p">,</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>        <span class="no">[string]</span><span class="nv">$SharePassword</span><span class="p">,</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>        <span class="no">[System.DayOfWeek]</span><span class="nv">$DayOfWeek</span> <span class="p">=</span> <span class="no">[System.DayOfWeek]</span><span class="p">::</span><span class="n">Sunday</span><span class="p">,</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>        <span class="no">[string]</span><span class="nv">$StartTime</span> <span class="p">=</span> <span class="s2">&quot;02:00&quot;</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    <span class="p">)</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    <span class="nv">$taskName</span>  <span class="p">=</span> <span class="s2">&quot;RASR Weekly Backup&quot;</span>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>    <span class="nv">$rasrBin</span>   <span class="p">=</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>    <span class="nv">$logPath</span>   <span class="p">=</span> <span class="s2">&quot;C:\Logs\RASR\rasr-scheduled.log&quot;</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>    <span class="nv">$arguments</span> <span class="p">=</span> <span class="s2">&quot;/backup /dest </span><span class="se">`&quot;</span><span class="s2">$SharePath</span><span class="se">`&quot;</span><span class="s2"> /user $ShareUser /pass $SharePassword /compress /log </span><span class="se">`&quot;</span><span class="s2">$logPath</span><span class="se">`&quot;</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>    <span class="nv">$action</span>    <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="nv">$rasrBin</span> <span class="n">-Argument</span> <span class="nv">$arguments</span>
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>    <span class="nv">$trigger</span>   <span class="p">=</span> <span class="nb">New-ScheduledTaskTrigger</span> <span class="n">-Weekly</span> <span class="n">-DaysOfWeek</span> <span class="nv">$DayOfWeek</span> <span class="n">-At</span> <span class="nv">$StartTime</span>
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>    <span class="nv">$principal</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskPrincipal</span> <span class="n">-UserId</span> <span class="s2">&quot;SYSTEM&quot;</span> <span class="n">-LogonType</span> <span class="n">ServiceAccount</span> <span class="n">-RunLevel</span> <span class="n">Highest</span>
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>    <span class="nv">$settings</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskSettingsSet</span> <span class="n">-ExecutionTimeLimit</span> <span class="p">(</span><span class="nb">New-TimeSpan</span> <span class="n">-Hours</span> <span class="n">8</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>                                               <span class="n">-MultipleInstances</span> <span class="n">IgnoreNew</span>
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>    <span class="k">if</span> <span class="p">(</span><span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>        <span class="nb">Set-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-Action</span> <span class="nv">$action</span> <span class="n">-Trigger</span> <span class="nv">$trigger</span> <span class="n">-Settings</span> <span class="nv">$settings</span>
+<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Updated existing scheduled task: $taskName&quot;</span>
+<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>        <span class="nb">Register-ScheduledTask</span> <span class="n">-TaskName</span> <span class="nv">$taskName</span> <span class="n">-Action</span> <span class="nv">$action</span> <span class="n">-Trigger</span> <span class="nv">$trigger</span> <span class="p">`</span>
+<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>                               <span class="n">-Principal</span> <span class="nv">$principal</span> <span class="n">-Settings</span> <span class="nv">$settings</span> <span class="p">`</span>
+<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>                               <span class="n">-Description</span> <span class="s2">&quot;Weekly RASR system image backup&quot;</span>
+<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Registered scheduled task: $taskName&quot;</span>
+<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>    <span class="p">}</span>
+<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="p">}</span>
+<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>
+<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="c"># Example:</span>
+<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="c"># New-RASRScheduledTask -SharePath &quot;\\nas01\rasr-images\$env:COMPUTERNAME&quot; `</span>
+<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="c">#                       -ShareUser &quot;CORP\svc-rasr&quot; `</span>
+<a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="c">#                       -SharePassword &quot;S3cr3t!&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="invoke-postrestorevalidation">Invoke-PostRestoreValidation<a class="headerlink" href="#invoke-postrestorevalidation" title="Permanent link">&para;</a></h2>
 <p>Runs automated post-restore health checks and outputs a structured report. Designed to run immediately after a RASR restore completes and the server boots.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="cm">&lt;#</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="cm">    Performs automated post-restore validation checks on a recovered server.</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="sd">.PARAMETER</span><span class="cm"> ExpectedHostname</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="cm">    The expected hostname of the server (validates no accidental rename).</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="sd">.PARAMETER</span><span class="cm"> DomainName</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="cm">    FQDN of the domain the server should be joined to.</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="sd">.PARAMETER</span><span class="cm"> CriticalServices</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="cm">    Array of service names that must be in Running state.</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="cm">#&gt;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="k">function</span> <span class="nb">Invoke-PostRestoreValidation</span> <span class="p">{</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="no">[string]</span><span class="nv">$ExpectedHostname</span> <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span><span class="p">,</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>        <span class="no">[string]</span><span class="nv">$DomainName</span><span class="p">,</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        <span class="no">[string[]]</span><span class="nv">$CriticalServices</span> <span class="p">=</span> <span class="p">@(</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>            <span class="s2">&quot;W32Time&quot;</span><span class="p">,</span> <span class="s2">&quot;Netlogon&quot;</span><span class="p">,</span> <span class="s2">&quot;BITS&quot;</span><span class="p">,</span> <span class="s2">&quot;wuauserv&quot;</span><span class="p">,</span> <span class="s2">&quot;EventLog&quot;</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>        <span class="p">)</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="p">)</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>    <span class="nv">$checks</span> <span class="p">=</span> <span class="p">@()</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    <span class="c"># 1. Hostname check</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    <span class="nv">$hn</span> <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Hostname&quot;</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$hn</span> <span class="o">-eq</span> <span class="nv">$ExpectedHostname</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Got &#39;$hn&#39;, expected &#39;$ExpectedHostname&#39;&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>    <span class="p">}</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>    <span class="c"># 2. Domain membership</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>        <span class="nv">$cs</span>     <span class="p">=</span> <span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>        <span class="nv">$domain</span> <span class="p">=</span> <span class="nv">$cs</span><span class="p">.</span><span class="n">Domain</span>
-<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Domain Membership&quot;</span>
-<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$domain</span> <span class="o">-eq</span> <span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Domain is &#39;$domain&#39;, expected &#39;$DomainName&#39;&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>        <span class="p">}</span>
-<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a>    <span class="p">}</span>
-<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>
-<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>    <span class="c"># 3. Secure channel to DC</span>
-<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>        <span class="nv">$sc</span> <span class="p">=</span> <span class="nb">Test-ComputerSecureChannel</span>
-<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Secure Channel to DC&quot;</span>
-<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$sc</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Secure channel broken — run Test-ComputerSecureChannel -Repair&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a>        <span class="p">}</span>
-<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a>    <span class="p">}</span>
-<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a>
-<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a>    <span class="c"># 4. Critical services</span>
-<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="nv">$CriticalServices</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a>        <span class="nv">$s</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Service: $svc&quot;</span>
-<a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-and</span> <span class="nv">$s</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Status &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span><span class="s2">&#39;&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-56" name="__codelineno-6-56" href="#__codelineno-6-56"></a>        <span class="p">}</span>
-<a id="__codelineno-6-57" name="__codelineno-6-57" href="#__codelineno-6-57"></a>    <span class="p">}</span>
-<a id="__codelineno-6-58" name="__codelineno-6-58" href="#__codelineno-6-58"></a>
-<a id="__codelineno-6-59" name="__codelineno-6-59" href="#__codelineno-6-59"></a>    <span class="c"># 5. RASR Agent running</span>
-<a id="__codelineno-6-60" name="__codelineno-6-60" href="#__codelineno-6-60"></a>    <span class="nv">$rasrSvc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;DellRASR&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-6-61" name="__codelineno-6-61" href="#__codelineno-6-61"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-62" name="__codelineno-6-62" href="#__codelineno-6-62"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;RASR Agent Service&quot;</span>
-<a id="__codelineno-6-63" name="__codelineno-6-63" href="#__codelineno-6-63"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$rasrSvc</span> <span class="o">-and</span> <span class="nv">$rasrSvc</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: DellRASR not running&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-64" name="__codelineno-6-64" href="#__codelineno-6-64"></a>    <span class="p">}</span>
-<a id="__codelineno-6-65" name="__codelineno-6-65" href="#__codelineno-6-65"></a>
-<a id="__codelineno-6-66" name="__codelineno-6-66" href="#__codelineno-6-66"></a>    <span class="c"># 6. Network connectivity (ping default gateway)</span>
-<a id="__codelineno-6-67" name="__codelineno-6-67" href="#__codelineno-6-67"></a>    <span class="nv">$gw</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-NetRoute</span> <span class="n">-DestinationPrefix</span> <span class="s2">&quot;0.0.0.0/0&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">RouteMetric</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">NextHop</span>
-<a id="__codelineno-6-68" name="__codelineno-6-68" href="#__codelineno-6-68"></a>    <span class="nv">$ping</span> <span class="p">=</span> <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$gw</span> <span class="n">-Count</span> <span class="n">2</span> <span class="n">-Quiet</span>
-<a id="__codelineno-6-69" name="__codelineno-6-69" href="#__codelineno-6-69"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-70" name="__codelineno-6-70" href="#__codelineno-6-70"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Network (gateway ping)&quot;</span>
-<a id="__codelineno-6-71" name="__codelineno-6-71" href="#__codelineno-6-71"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$ping</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Cannot reach gateway $gw&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-72" name="__codelineno-6-72" href="#__codelineno-6-72"></a>    <span class="p">}</span>
-<a id="__codelineno-6-73" name="__codelineno-6-73" href="#__codelineno-6-73"></a>
-<a id="__codelineno-6-74" name="__codelineno-6-74" href="#__codelineno-6-74"></a>    <span class="c"># 7. System event log — critical errors in last 30 minutes</span>
-<a id="__codelineno-6-75" name="__codelineno-6-75" href="#__codelineno-6-75"></a>    <span class="nv">$since</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddMinutes</span><span class="p">(-</span><span class="n">30</span><span class="p">)</span>
-<a id="__codelineno-6-76" name="__codelineno-6-76" href="#__codelineno-6-76"></a>    <span class="nv">$errors</span> <span class="p">=</span> <span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">Warning</span> <span class="n">-After</span> <span class="nv">$since</span> <span class="p">`</span>
-<a id="__codelineno-6-77" name="__codelineno-6-77" href="#__codelineno-6-77"></a>                           <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span>
-<a id="__codelineno-6-78" name="__codelineno-6-78" href="#__codelineno-6-78"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-6-79" name="__codelineno-6-79" href="#__codelineno-6-79"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;System Event Log (last 30 min)&quot;</span>
-<a id="__codelineno-6-80" name="__codelineno-6-80" href="#__codelineno-6-80"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$errors</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;WARN: </span><span class="p">$(</span><span class="nv">$errors</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> error/warning events found&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-81" name="__codelineno-6-81" href="#__codelineno-6-81"></a>    <span class="p">}</span>
-<a id="__codelineno-6-82" name="__codelineno-6-82" href="#__codelineno-6-82"></a>
-<a id="__codelineno-6-83" name="__codelineno-6-83" href="#__codelineno-6-83"></a>    <span class="c"># Summary output</span>
-<a id="__codelineno-6-84" name="__codelineno-6-84" href="#__codelineno-6-84"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== Post-Restore Validation Report ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
-<a id="__codelineno-6-85" name="__codelineno-6-85" href="#__codelineno-6-85"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Server  : $env:COMPUTERNAME&quot;</span>
-<a id="__codelineno-6-86" name="__codelineno-6-86" href="#__codelineno-6-86"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Time    : </span><span class="p">$(</span><span class="nb">Get-Date</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-87" name="__codelineno-6-87" href="#__codelineno-6-87"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;======================================</span><span class="se">`n</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-88" name="__codelineno-6-88" href="#__codelineno-6-88"></a>    <span class="nv">$checks</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">Check</span><span class="p">,</span> <span class="n">Result</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-6-89" name="__codelineno-6-89" href="#__codelineno-6-89"></a>
-<a id="__codelineno-6-90" name="__codelineno-6-90" href="#__codelineno-6-90"></a>    <span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$checks</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-notlike</span> <span class="s2">&quot;PASS*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-91" name="__codelineno-6-91" href="#__codelineno-6-91"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-6-92" name="__codelineno-6-92" href="#__codelineno-6-92"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> check(s) require attention.&quot;</span>
-<a id="__codelineno-6-93" name="__codelineno-6-93" href="#__codelineno-6-93"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<a id="__codelineno-6-94" name="__codelineno-6-94" href="#__codelineno-6-94"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;All checks passed. Server is healthy.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
-<a id="__codelineno-6-95" name="__codelineno-6-95" href="#__codelineno-6-95"></a>    <span class="p">}</span>
-<a id="__codelineno-6-96" name="__codelineno-6-96" href="#__codelineno-6-96"></a>
-<a id="__codelineno-6-97" name="__codelineno-6-97" href="#__codelineno-6-97"></a>    <span class="k">return</span> <span class="nv">$checks</span>
-<a id="__codelineno-6-98" name="__codelineno-6-98" href="#__codelineno-6-98"></a><span class="p">}</span>
-<a id="__codelineno-6-99" name="__codelineno-6-99" href="#__codelineno-6-99"></a>
-<a id="__codelineno-6-100" name="__codelineno-6-100" href="#__codelineno-6-100"></a><span class="c"># Example:</span>
-<a id="__codelineno-6-101" name="__codelineno-6-101" href="#__codelineno-6-101"></a><span class="c"># Invoke-PostRestoreValidation -ExpectedHostname &quot;SERVER01&quot; `</span>
-<a id="__codelineno-6-102" name="__codelineno-6-102" href="#__codelineno-6-102"></a><span class="c">#                              -DomainName &quot;corp.example.com&quot; `</span>
-<a id="__codelineno-6-103" name="__codelineno-6-103" href="#__codelineno-6-103"></a><span class="c">#                              -CriticalServices @(&quot;W32Time&quot;,&quot;Netlogon&quot;,&quot;SQLServer&quot;)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="cm">    Performs automated post-restore validation checks on a recovered server.</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="sd">.PARAMETER</span><span class="cm"> ExpectedHostname</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="cm">    The expected hostname of the server (validates no accidental rename).</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="sd">.PARAMETER</span><span class="cm"> DomainName</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="cm">    FQDN of the domain the server should be joined to.</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="sd">.PARAMETER</span><span class="cm"> CriticalServices</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="cm">    Array of service names that must be in Running state.</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">function</span> <span class="nb">Invoke-PostRestoreValidation</span> <span class="p">{</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>        <span class="no">[string]</span><span class="nv">$ExpectedHostname</span> <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="no">[string]</span><span class="nv">$DomainName</span><span class="p">,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>        <span class="no">[string[]]</span><span class="nv">$CriticalServices</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="s2">&quot;W32Time&quot;</span><span class="p">,</span> <span class="s2">&quot;Netlogon&quot;</span><span class="p">,</span> <span class="s2">&quot;BITS&quot;</span><span class="p">,</span> <span class="s2">&quot;wuauserv&quot;</span><span class="p">,</span> <span class="s2">&quot;EventLog&quot;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>        <span class="p">)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="p">)</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    <span class="nv">$checks</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    <span class="c"># 1. Hostname check</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="nv">$hn</span> <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Hostname&quot;</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$hn</span> <span class="o">-eq</span> <span class="nv">$ExpectedHostname</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Got &#39;$hn&#39;, expected &#39;$ExpectedHostname&#39;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>    <span class="p">}</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>    <span class="c"># 2. Domain membership</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a>        <span class="nv">$cs</span>     <span class="p">=</span> <span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>        <span class="nv">$domain</span> <span class="p">=</span> <span class="nv">$cs</span><span class="p">.</span><span class="n">Domain</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Domain Membership&quot;</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$domain</span> <span class="o">-eq</span> <span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Domain is &#39;$domain&#39;, expected &#39;$DomainName&#39;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>        <span class="p">}</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>    <span class="p">}</span>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>    <span class="c"># 3. Secure channel to DC</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$DomainName</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>        <span class="nv">$sc</span> <span class="p">=</span> <span class="nb">Test-ComputerSecureChannel</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Secure Channel to DC&quot;</span>
+<a id="__codelineno-5-46" name="__codelineno-5-46" href="#__codelineno-5-46"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$sc</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Secure channel broken — run Test-ComputerSecureChannel -Repair&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-47" name="__codelineno-5-47" href="#__codelineno-5-47"></a>        <span class="p">}</span>
+<a id="__codelineno-5-48" name="__codelineno-5-48" href="#__codelineno-5-48"></a>    <span class="p">}</span>
+<a id="__codelineno-5-49" name="__codelineno-5-49" href="#__codelineno-5-49"></a>
+<a id="__codelineno-5-50" name="__codelineno-5-50" href="#__codelineno-5-50"></a>    <span class="c"># 4. Critical services</span>
+<a id="__codelineno-5-51" name="__codelineno-5-51" href="#__codelineno-5-51"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="nv">$CriticalServices</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-52" name="__codelineno-5-52" href="#__codelineno-5-52"></a>        <span class="nv">$s</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-5-53" name="__codelineno-5-53" href="#__codelineno-5-53"></a>        <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-54" name="__codelineno-5-54" href="#__codelineno-5-54"></a>            <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Service: $svc&quot;</span>
+<a id="__codelineno-5-55" name="__codelineno-5-55" href="#__codelineno-5-55"></a>            <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span> <span class="o">-and</span> <span class="nv">$s</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Status &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span><span class="s2">&#39;&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-56" name="__codelineno-5-56" href="#__codelineno-5-56"></a>        <span class="p">}</span>
+<a id="__codelineno-5-57" name="__codelineno-5-57" href="#__codelineno-5-57"></a>    <span class="p">}</span>
+<a id="__codelineno-5-58" name="__codelineno-5-58" href="#__codelineno-5-58"></a>
+<a id="__codelineno-5-59" name="__codelineno-5-59" href="#__codelineno-5-59"></a>    <span class="c"># 5. RASR Agent running</span>
+<a id="__codelineno-5-60" name="__codelineno-5-60" href="#__codelineno-5-60"></a>    <span class="nv">$rasrSvc</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;DellRASR&quot;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-5-61" name="__codelineno-5-61" href="#__codelineno-5-61"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-62" name="__codelineno-5-62" href="#__codelineno-5-62"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;RASR Agent Service&quot;</span>
+<a id="__codelineno-5-63" name="__codelineno-5-63" href="#__codelineno-5-63"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$rasrSvc</span> <span class="o">-and</span> <span class="nv">$rasrSvc</span><span class="p">.</span><span class="n">Status</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: DellRASR not running&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-64" name="__codelineno-5-64" href="#__codelineno-5-64"></a>    <span class="p">}</span>
+<a id="__codelineno-5-65" name="__codelineno-5-65" href="#__codelineno-5-65"></a>
+<a id="__codelineno-5-66" name="__codelineno-5-66" href="#__codelineno-5-66"></a>    <span class="c"># 6. Network connectivity (ping default gateway)</span>
+<a id="__codelineno-5-67" name="__codelineno-5-67" href="#__codelineno-5-67"></a>    <span class="nv">$gw</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-NetRoute</span> <span class="n">-DestinationPrefix</span> <span class="s2">&quot;0.0.0.0/0&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">RouteMetric</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">NextHop</span>
+<a id="__codelineno-5-68" name="__codelineno-5-68" href="#__codelineno-5-68"></a>    <span class="nv">$ping</span> <span class="p">=</span> <span class="nb">Test-Connection</span> <span class="n">-ComputerName</span> <span class="nv">$gw</span> <span class="n">-Count</span> <span class="n">2</span> <span class="n">-Quiet</span>
+<a id="__codelineno-5-69" name="__codelineno-5-69" href="#__codelineno-5-69"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-70" name="__codelineno-5-70" href="#__codelineno-5-70"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;Network (gateway ping)&quot;</span>
+<a id="__codelineno-5-71" name="__codelineno-5-71" href="#__codelineno-5-71"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$ping</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL: Cannot reach gateway $gw&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-72" name="__codelineno-5-72" href="#__codelineno-5-72"></a>    <span class="p">}</span>
+<a id="__codelineno-5-73" name="__codelineno-5-73" href="#__codelineno-5-73"></a>
+<a id="__codelineno-5-74" name="__codelineno-5-74" href="#__codelineno-5-74"></a>    <span class="c"># 7. System event log — critical errors in last 30 minutes</span>
+<a id="__codelineno-5-75" name="__codelineno-5-75" href="#__codelineno-5-75"></a>    <span class="nv">$since</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddMinutes</span><span class="p">(-</span><span class="n">30</span><span class="p">)</span>
+<a id="__codelineno-5-76" name="__codelineno-5-76" href="#__codelineno-5-76"></a>    <span class="nv">$errors</span> <span class="p">=</span> <span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">Warning</span> <span class="n">-After</span> <span class="nv">$since</span> <span class="p">`</span>
+<a id="__codelineno-5-77" name="__codelineno-5-77" href="#__codelineno-5-77"></a>                           <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Measure-Object</span>
+<a id="__codelineno-5-78" name="__codelineno-5-78" href="#__codelineno-5-78"></a>    <span class="nv">$checks</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-79" name="__codelineno-5-79" href="#__codelineno-5-79"></a>        <span class="n">Check</span>  <span class="p">=</span> <span class="s2">&quot;System Event Log (last 30 min)&quot;</span>
+<a id="__codelineno-5-80" name="__codelineno-5-80" href="#__codelineno-5-80"></a>        <span class="n">Result</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$errors</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;WARN: </span><span class="p">$(</span><span class="nv">$errors</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> error/warning events found&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-81" name="__codelineno-5-81" href="#__codelineno-5-81"></a>    <span class="p">}</span>
+<a id="__codelineno-5-82" name="__codelineno-5-82" href="#__codelineno-5-82"></a>
+<a id="__codelineno-5-83" name="__codelineno-5-83" href="#__codelineno-5-83"></a>    <span class="c"># Summary output</span>
+<a id="__codelineno-5-84" name="__codelineno-5-84" href="#__codelineno-5-84"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">=== Post-Restore Validation Report ===&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Cyan</span>
+<a id="__codelineno-5-85" name="__codelineno-5-85" href="#__codelineno-5-85"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Server  : $env:COMPUTERNAME&quot;</span>
+<a id="__codelineno-5-86" name="__codelineno-5-86" href="#__codelineno-5-86"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Time    : </span><span class="p">$(</span><span class="nb">Get-Date</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-87" name="__codelineno-5-87" href="#__codelineno-5-87"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;======================================</span><span class="se">`n</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-88" name="__codelineno-5-88" href="#__codelineno-5-88"></a>    <span class="nv">$checks</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">Check</span><span class="p">,</span> <span class="n">Result</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-5-89" name="__codelineno-5-89" href="#__codelineno-5-89"></a>
+<a id="__codelineno-5-90" name="__codelineno-5-90" href="#__codelineno-5-90"></a>    <span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$checks</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-notlike</span> <span class="s2">&quot;PASS*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-91" name="__codelineno-5-91" href="#__codelineno-5-91"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-92" name="__codelineno-5-92" href="#__codelineno-5-92"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> check(s) require attention.&quot;</span>
+<a id="__codelineno-5-93" name="__codelineno-5-93" href="#__codelineno-5-93"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-5-94" name="__codelineno-5-94" href="#__codelineno-5-94"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;All checks passed. Server is healthy.&quot;</span> <span class="n">-ForegroundColor</span> <span class="n">Green</span>
+<a id="__codelineno-5-95" name="__codelineno-5-95" href="#__codelineno-5-95"></a>    <span class="p">}</span>
+<a id="__codelineno-5-96" name="__codelineno-5-96" href="#__codelineno-5-96"></a>
+<a id="__codelineno-5-97" name="__codelineno-5-97" href="#__codelineno-5-97"></a>    <span class="k">return</span> <span class="nv">$checks</span>
+<a id="__codelineno-5-98" name="__codelineno-5-98" href="#__codelineno-5-98"></a><span class="p">}</span>
+<a id="__codelineno-5-99" name="__codelineno-5-99" href="#__codelineno-5-99"></a>
+<a id="__codelineno-5-100" name="__codelineno-5-100" href="#__codelineno-5-100"></a><span class="c"># Example:</span>
+<a id="__codelineno-5-101" name="__codelineno-5-101" href="#__codelineno-5-101"></a><span class="c"># Invoke-PostRestoreValidation -ExpectedHostname &quot;SERVER01&quot; `</span>
+<a id="__codelineno-5-102" name="__codelineno-5-102" href="#__codelineno-5-102"></a><span class="c">#                              -DomainName &quot;corp.example.com&quot; `</span>
+<a id="__codelineno-5-103" name="__codelineno-5-103" href="#__codelineno-5-103"></a><span class="c">#                              -CriticalServices @(&quot;W32Time&quot;,&quot;Netlogon&quot;,&quot;SQLServer&quot;)</span>
 </code></pre></div>
 
 

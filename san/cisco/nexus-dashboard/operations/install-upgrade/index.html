@@ -3836,100 +3836,101 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>acs<span class="w"> </span>health
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Wait until all nodes show Healthy</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────── Cisco Nexus Dashboard — Operations Install &amp; Upgrade ─────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Initial Install                │  │                Prerequisites                │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Deploy OVA/ISO: 3 node min          │  │          Hardware: 16 vCPU/64GB RAM         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Bootstrap: node 1 as primary         │  │         Storage: 500GB min per node         │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Join: nodes 2+3 to cluster          │  │          Network: OOB + data VLANs          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           Configure: IP, NTP, DNS            │  │          NTP: synced before install         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Install apps: NDFC/NDI/NDO          │  │          Cisco CCO: download images         │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Bootstrap node 1 first; other nodes join via cluster join token; apps installed last                 │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │            Backup: before upgrade            │  │         acs health: all nodes green         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Upload image: UI or CLI            │  │             Apps: verify running            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Rolling: one node at a time          │  │             Sites: all connected            │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            Duration: ~45 min/node            │  │          Telemetry: flowing to NDI          │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Apps auto-upgrade post-cluster        │  │           Rollback: restore backup          │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND nodes (UCS/VM) · management switch · NTP/DNS server · CCO download server                         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  OVA            = Open Virtualization Appliance; VMware VM image format for ND                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  ISO            = Disk image for bare-metal ND node installation                                      │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Bootstrap      = First-node initialization creating the cluster with initial config                  │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Cluster join token= One-time secret additional nodes use to securely join cluster                    │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Rolling upgrade= ND upgrades one node at a time; cluster stays available throughout                  │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  CCO            = Cisco Connection Online; software download portal                                   │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  App auto-upgrade= After cluster upgrade, apps detect new platform and self-upgrade                   │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  OOB VLAN       = Management VLAN on dedicated out-of-band network                                    │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Data VLAN      = In-band network VLAN used for site-to-ND app communication                          │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  NTP pre-sync   = NTP must be configured and synced before cluster forms                              │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  acs health     = Validates all nodes report green status after upgrade completes                     │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">After</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">48</span><span class="o">-</span><span class="n">hour</span><span class="w"> </span><span class="n">validation</span><span class="w"> </span><span class="n">window</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">issues</span><span class="p">:</span><span class="w"> </span><span class="k">delete</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="n">snapshots</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">upgrade</span><span class="p">.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">---</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">##</span><span class="w"> </span><span class="n">Upgrade</span><span class="w"> </span><span class="n">Applications</span><span class="w"> </span><span class="p">(</span><span class="n">NDFC</span><span class="p">,</span><span class="w"> </span><span class="n">NDI</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">After</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">ND</span><span class="w"> </span><span class="n">platform</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">confirmed</span><span class="w"> </span><span class="n">healthy</span><span class="p">,</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="n">installed</span><span class="w"> </span><span class="n">applications</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="mi">1</span><span class="p">.</span><span class="w"> </span><span class="n">Navigate</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="o">**</span><span class="k">Admin</span><span class="w"> </span><span class="n">Console</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">Apps</span><span class="o">**</span><span class="p">.</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="mi">2</span><span class="p">.</span><span class="w"> </span><span class="k">Select</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">application</span><span class="w"> </span><span class="p">(</span><span class="n">NDFC</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">NDI</span><span class="p">).</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="mi">3</span><span class="p">.</span><span class="w"> </span><span class="n">Click</span><span class="w"> </span><span class="o">**</span><span class="n">Upgrade</span><span class="o">**</span><span class="p">.</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="n">Upload</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">application</span><span class="w"> </span><span class="n">image</span><span class="p">.</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="mi">5</span><span class="p">.</span><span class="w"> </span><span class="n">Click</span><span class="w"> </span><span class="o">**</span><span class="k">Start</span><span class="w"> </span><span class="n">Upgrade</span><span class="o">**</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">application</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">briefly</span><span class="w"> </span><span class="n">unavailable</span><span class="w"> </span><span class="n">during</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">upgrade</span><span class="p">.</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="mi">6</span><span class="p">.</span><span class="w"> </span><span class="k">After</span><span class="w"> </span><span class="n">upgrade</span><span class="p">:</span><span class="w"> </span><span class="n">confirm</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="k">version</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">validate</span><span class="w"> </span><span class="n">core</span><span class="w"> </span><span class="n">functionality</span><span class="p">.</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">Upgrade</span><span class="w"> </span><span class="n">NDFC</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">NDI</span><span class="p">.</span><span class="w"> </span><span class="n">Validate</span><span class="w"> </span><span class="n">NDFC</span><span class="w"> </span><span class="n">functionality</span><span class="w"> </span><span class="p">(</span><span class="n">fabric</span><span class="w"> </span><span class="n">discovery</span><span class="p">,</span><span class="w"> </span><span class="k">zone</span><span class="w"> </span><span class="n">operations</span><span class="p">)</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">proceeding</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">NDI</span><span class="w"> </span><span class="n">upgrade</span><span class="p">.</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1">---</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="o">##</span><span class="w"> </span><span class="k">Rollback</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="k">If</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">ND</span><span class="w"> </span><span class="n">platform</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="n">causes</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">cluster</span><span class="o">-</span><span class="n">breaking</span><span class="w"> </span><span class="n">issue</span><span class="p">:</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="mi">1</span><span class="p">.</span><span class="w"> </span><span class="n">Power</span><span class="w"> </span><span class="k">off</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="n">ND</span><span class="w"> </span><span class="n">VMs</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">vCenter</span><span class="p">.</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="mi">2</span><span class="p">.</span><span class="w"> </span><span class="n">Revert</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="n">VMs</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">pre</span><span class="o">-</span><span class="n">upgrade</span><span class="w"> </span><span class="n">snapshot</span><span class="w"> </span><span class="n">simultaneously</span><span class="p">.</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="mi">3</span><span class="p">.</span><span class="w"> </span><span class="n">Power</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">three</span><span class="w"> </span><span class="n">VMs</span><span class="p">.</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="n">Verify</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="n">reforms</span><span class="p">:</span><span class="w"> </span><span class="o">`</span><span class="n">acs</span><span class="w"> </span><span class="n">health</span><span class="o">`</span><span class="w"> </span><span class="p">(</span><span class="n">takes</span><span class="w"> </span><span class="mi">5</span><span class="o">-</span><span class="mi">10</span><span class="w"> </span><span class="n">minutes</span><span class="p">).</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="mi">5</span><span class="p">.</span><span class="w"> </span><span class="n">Confirm</span><span class="w"> </span><span class="n">NDFC</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">NDI</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">running</span><span class="p">.</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="o">**</span><span class="n">Note</span><span class="p">:</span><span class="o">**</span><span class="w"> </span><span class="n">Snapshot</span><span class="w"> </span><span class="n">revert</span><span class="w"> </span><span class="n">restores</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">full</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">including</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">database</span><span class="p">.</span><span class="w"> </span><span class="k">Any</span><span class="w"> </span><span class="k">zone</span><span class="w"> </span><span class="n">changes</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">snapshot</span><span class="w"> </span><span class="p">(</span><span class="k">before</span><span class="w"> </span><span class="k">rollback</span><span class="p">)</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">lost</span><span class="p">.</span><span class="w"> </span><span class="n">Ensure</span><span class="w"> </span><span class="n">pre</span><span class="o">-</span><span class="n">upgrade</span><span class="w"> </span><span class="k">zone</span><span class="w"> </span><span class="n">exports</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">re</span><span class="o">-</span><span class="n">apply</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">needed</span><span class="p">.</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1">---</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="o">##</span><span class="w"> </span><span class="n">Adding</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="k">Existing</span><span class="w"> </span><span class="k">Cluster</span>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="k">To</span><span class="w"> </span><span class="k">scale</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">3</span><span class="o">-</span><span class="n">node</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">nodes</span><span class="p">:</span>
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="o">#</span><span class="w"> </span><span class="n">Deploy</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">additional</span><span class="w"> </span><span class="n">OVA</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">Step</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">above</span>
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="o">#</span><span class="w"> </span><span class="n">Configure</span><span class="w"> </span><span class="n">their</span><span class="w"> </span><span class="n">IPs</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">initialize</span><span class="w"> </span><span class="n">them</span>
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">primary</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">nodes</span>
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a><span class="n">acs</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="k">add</span><span class="o">-</span><span class="n">node</span><span class="w"> </span><span class="c1">--node-ip 10.10.5.24 --app-ip 192.168.100.4</span>
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a><span class="n">acs</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="k">add</span><span class="o">-</span><span class="n">node</span><span class="w"> </span><span class="c1">--node-ip 10.10.5.25 --app-ip 192.168.100.5</span>
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>
-<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a><span class="o">#</span><span class="w"> </span><span class="n">Monitor</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="n">expansion</span><span class="w"> </span><span class="p">(</span><span class="n">takes</span><span class="w"> </span><span class="mi">20</span><span class="o">-</span><span class="mi">40</span><span class="w"> </span><span class="n">minutes</span><span class="p">)</span>
-<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a><span class="n">acs</span><span class="w"> </span><span class="n">health</span>
-<a id="__codelineno-2-48" name="__codelineno-2-48" href="#__codelineno-2-48"></a><span class="n">acs</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="n">list</span>
+┌──────────────────────── Cisco Nexus Dashboard — Operations Install &amp; Upgrade ─────────────────────────┐
+│                                                                                                       │
+│  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Initial Install                │  │                Prerequisites                │   │
+│   │          Deploy OVA/ISO: 3 node min          │  │          Hardware: 16 vCPU/64GB RAM         │   │
+│   │         Bootstrap: node 1 as primary         │  │         Storage: 500GB min per node         │   │
+│   │          Join: nodes 2+3 to cluster          │  │          Network: OOB + data VLANs          │   │
+│   │           Configure: IP, NTP, DNS            │  │          NTP: synced before install         │   │
+│   │          Install apps: NDFC/NDI/NDO          │  │          Cisco CCO: download images         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Bootstrap node 1 first; other nodes join via cluster join token; apps installed last                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
+│   │            Backup: before upgrade            │  │         acs health: all nodes green         │   │
+│   │           Upload image: UI or CLI            │  │             Apps: verify running            │   │
+│   │         Rolling: one node at a time          │  │             Sites: all connected            │   │
+│   │            Duration: ~45 min/node            │  │          Telemetry: flowing to NDI          │   │
+│   │        Apps auto-upgrade post-cluster        │  │           Rollback: restore backup          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND nodes (UCS/VM) · management switch · NTP/DNS server · CCO download server                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA            = Open Virtualization Appliance; VMware VM image format for ND                        │
+│  ISO            = Disk image for bare-metal ND node installation                                      │
+│  Bootstrap      = First-node initialization creating the cluster with initial config                  │
+│  Cluster join token= One-time secret additional nodes use to securely join cluster                    │
+│  Rolling upgrade= ND upgrades one node at a time; cluster stays available throughout                  │
+│  CCO            = Cisco Connection Online; software download portal                                   │
+│  App auto-upgrade= After cluster upgrade, apps detect new platform and self-upgrade                   │
+│  OOB VLAN       = Management VLAN on dedicated out-of-band network                                    │
+│  Data VLAN      = In-band network VLAN used for site-to-ND app communication                          │
+│  NTP pre-sync   = NTP must be configured and synced before cluster forms                              │
+│  acs health     = Validates all nodes report green status after upgrade completes                     │
+│  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>---
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## Upgrade Applications (NDFC, NDI)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>After the ND platform upgrade is confirmed healthy, upgrade installed applications:
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>1. Navigate to **Admin Console &gt; Apps**.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>2. Select the application (NDFC or NDI).
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>3. Click **Upgrade**.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>4. Upload the new application image.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>5. Click **Start Upgrade**. The application is briefly unavailable during the upgrade.
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>6. After upgrade: confirm app version and validate core functionality.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Upgrade NDFC before NDI. Validate NDFC functionality (fabric discovery, zone operations) before proceeding to NDI upgrade.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>---
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>## Rollback
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>If a ND platform upgrade causes a cluster-breaking issue:
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>1. Power off all three ND VMs in vCenter.
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>2. Revert all three VMs to the pre-upgrade snapshot simultaneously.
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>3. Power on all three VMs.
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>4. Verify cluster reforms: `acs health` (takes 5-10 minutes).
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>5. Confirm NDFC and NDI are running.
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>**Note:** Snapshot revert restores the full VM state including the database. Any zone changes made after the snapshot (before rollback) will be lost. Ensure pre-upgrade zone exports are available to re-apply if needed.
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>---
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>## Adding a Node to an Existing Cluster
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>To scale a 3-node cluster to 5 nodes:
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>```bash
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># Deploy two additional OVA nodes as per Step 1 above
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a># Configure their IPs but do not initialize them
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a># From the primary node, add the new nodes
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>acs cluster add-node --node-ip 10.10.5.24 --app-ip 192.168.100.4
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>acs cluster add-node --node-ip 10.10.5.25 --app-ip 192.168.100.5
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a># Monitor cluster expansion (takes 20-40 minutes)
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>acs health
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>acs nodes list
 </code></pre></div></p>
 <hr />
 <h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>

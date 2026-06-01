@@ -3412,46 +3412,47 @@
     uiCheck --&gt;|"Need local iteration"| actLocal --&gt; identify
     uiCheck --&gt;|"Context issue"| dumpCtx --&gt; identify
     uiCheck --&gt;|"Logs clear"| runLogs --&gt; identify</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │GitHub Actions diagnostic sequence: enable debug → inspect logs → check runner → verify secrets│   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                Debug Logging                 │  │                  Log Access                 │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Set ACTIONS_STEP_DEBUG=true          │  │            gh run view --log &lt;id&gt;           │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        Set ACTIONS_RUNNER_DEBUG=true         │  │        gh run view --log-failed &lt;id&gt;        │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        Re-run with debug enabled (UI)        │  │           Download log ZIP from UI          │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │        Add: run: env (print env vars)        │  │        API: /repos/.../runs/{id}/logs       │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │   Debug secrets   = ACTIONS_STEP_DEBUG and ACTIONS_RUNNER_DEBUG are set as repo/env secrets   │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">##</span><span class="w"> </span><span class="n">Inspecting</span><span class="w"> </span><span class="n">Workflow</span><span class="w"> </span><span class="n">Runs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">#</span><span class="w"> </span><span class="n">List</span><span class="w"> </span><span class="n">recent</span><span class="w"> </span><span class="n">workflow</span><span class="w"> </span><span class="n">runs</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="c1">--repo owner/repo --limit 20</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">#</span><span class="w"> </span><span class="k">View</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">specific</span><span class="w"> </span><span class="n">run</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="k">view</span><span class="w"> </span><span class="mi">12345678</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="o">#</span><span class="w"> </span><span class="n">Watch</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nb">real</span><span class="w"> </span><span class="k">time</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">watch</span><span class="w"> </span><span class="mi">12345678</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">#</span><span class="w"> </span><span class="n">Download</span><span class="w"> </span><span class="n">logs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="n">run</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">download</span><span class="w"> </span><span class="mi">12345678</span><span class="w"> </span><span class="c1">--dir ./run-logs</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="o">#</span><span class="w"> </span><span class="n">Re</span><span class="o">-</span><span class="n">run</span><span class="w"> </span><span class="k">only</span><span class="w"> </span><span class="n">failed</span><span class="w"> </span><span class="n">jobs</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">rerun</span><span class="w"> </span><span class="mi">12345678</span><span class="w"> </span><span class="c1">--failed</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="o">#</span><span class="w"> </span><span class="n">Cancel</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="n">workflow</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">gh</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="n">cancel</span><span class="w"> </span><span class="mi">12345678</span>
+┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │GitHub Actions diagnostic sequence: enable debug → inspect logs → check runner → verify secrets│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Debug Logging                 │  │                  Log Access                 │   │
+│   │         Set ACTIONS_STEP_DEBUG=true          │  │            gh run view --log <id>           │   │
+│   │        Set ACTIONS_RUNNER_DEBUG=true         │  │        gh run view --log-failed <id>        │   │
+│   │        Re-run with debug enabled (UI)        │  │           Download log ZIP from UI          │   │
+│   │        Add: run: env (print env vars)        │  │        API: /repos/.../runs/{id}/logs       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Debug secrets   = ACTIONS_STEP_DEBUG and ACTIONS_RUNNER_DEBUG are set as repo/env secrets   │   │
+│   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
+│   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```sql
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Inspecting Workflow Runs
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># List recent workflow runs
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>gh run list --repo owner/repo --limit 20
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># View a specific run
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>gh run view 12345678
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Watch a run in real time
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>gh run watch 12345678
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Download logs from a failed run
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>gh run download 12345678 --dir ./run-logs
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Re-run only failed jobs
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>gh run rerun 12345678 --failed
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Cancel a running workflow
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>gh run cancel 12345678
 </code></pre></div></p>
 
 

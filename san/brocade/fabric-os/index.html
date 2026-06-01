@@ -2949,39 +2949,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-commands-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key Commands Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning — Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#platform-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3149,7 +3116,7 @@
 Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, ports, firmware, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          Fabric OS (FOS): Brocade switch OS for FC SAN — zoning, routing, management          │   │
@@ -3202,135 +3169,59 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="key-commands-reference">Key Commands Reference<a class="headerlink" href="#key-commands-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Switch status</td>
-<td><code>switchshow</code></td>
-<td>All ports, states, speeds, connected WWNs</td>
-</tr>
-<tr>
-<td>Switch health</td>
-<td><code>switchstatusshow</code></td>
-<td>Overall switch health (HEALTHY/MARGINAL/DOWN)</td>
-</tr>
-<tr>
-<td>Fabric</td>
-<td><code>fabricshow</code></td>
-<td>All switches in fabric, domain IDs, principal</td>
-</tr>
-<tr>
-<td>ISL</td>
-<td><code>islshow</code></td>
-<td>ISL port states and throughput</td>
-</tr>
-<tr>
-<td>ISL trunks</td>
-<td><code>trunkshow</code></td>
-<td>Trunk group membership and status</td>
-</tr>
-<tr>
-<td>Name server</td>
-<td><code>nsshow</code></td>
-<td>All logged-in hosts and storage targets</td>
-</tr>
-<tr>
-<td>Zoning</td>
-<td><code>cfgshow</code></td>
-<td>Full zone database — active config, zones, aliases</td>
-</tr>
-<tr>
-<td>Errors</td>
-<td><code>errshow</code></td>
-<td>Switch error log</td>
-</tr>
-<tr>
-<td>Port detail</td>
-<td><code>portshow &lt;port&gt;</code></td>
-<td>Single-port detail — state, speed, connected WWN</td>
-</tr>
-<tr>
-<td>Port errors</td>
-<td><code>porterrshow</code></td>
-<td>Error counter summary across all ports</td>
-</tr>
-<tr>
-<td>Diagnostics</td>
-<td><code>supportshow</code></td>
-<td>Full diagnostic bundle for TAC cases</td>
-</tr>
-<tr>
-<td>Firmware</td>
-<td><code>firmwareshow</code></td>
-<td>Current and backup firmware versions</td>
-</tr>
-<tr>
-<td>Config backup</td>
-<td><code>configupload</code></td>
-<td>Upload switch config to FTP/SCP server</td>
-</tr>
-<tr>
-<td>SFP health</td>
-<td><code>sfpshow</code></td>
-<td>SFP optical power levels and alarm thresholds</td>
-</tr>
-<tr>
-<td>Performance</td>
-<td><code>portperfshow</code></td>
-<td>Real-time per-port throughput</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="upgrade-workflow">Upgrade Workflow<a class="headerlink" href="#upgrade-workflow" title="Permanent link">&para;</a></h2>
-<p>Firmware upgrades are applied one fabric at a time. Fabric B is upgraded first, then Fabric A after validation.</p>
-<ol>
-<li>Confirm both fabrics are healthy: <code>switchstatusshow</code> and <code>fabricshow</code> on all switches</li>
-<li>Back up all switch configurations: <code>configupload -all scp://&lt;user&gt;@&lt;server&gt;/&lt;path&gt;/&lt;switch&gt;.cfg</code></li>
-<li>Verify HCL compatibility for the target FOS version against all connected HBAs and arrays</li>
-<li>Stage firmware on the upgrade server — confirm MD5 checksum matches Broadcom release notes</li>
-<li>Upgrade Fabric B switches (one switch at a time for fixed-form; non-disruptive on directors):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>firmwaredownload<span class="w"> </span>-s<span class="w"> </span>-b<span class="w"> </span>&lt;server_ip&gt;<span class="w"> </span>&lt;path/to/fos.bin&gt;<span class="w"> </span>&lt;username&gt;<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>firmwaredownloadstatus<span class="w">    </span><span class="c1"># monitor until complete</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>version<span class="w">                   </span><span class="c1"># confirm new version active</span>
-</code></pre></div></li>
-<li>Validate Fabric B is healthy: <code>switchshow</code>, <code>fabricshow</code>, <code>islshow</code>, <code>porterrshow</code></li>
-<li>Confirm host multipath is balanced across both fabrics before touching Fabric A</li>
-<li>Repeat steps 5–6 for Fabric A switches</li>
-<li>Confirm all switches in both fabrics are on the same FOS version: <code>version</code></li>
-</ol>
-<hr />
-<h2 id="zoning-quick-reference">Zoning — Quick Reference<a class="headerlink" href="#zoning-quick-reference" title="Permanent link">&para;</a></h2>
-<p>Zoning is the primary access control mechanism in a Brocade fabric. The preferred model is <strong>single-initiator, WWN-based</strong> zoning using aliases.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cfgshow<span class="w">          </span><span class="c1"># Full database: zone sets, zones, aliases</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>zoneshow<span class="w">         </span><span class="c1"># Active zone configuration only</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>alishow<span class="w">          </span><span class="c1"># All defined aliases</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nsshow<span class="w">           </span><span class="c1"># All logged-in devices</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create aliases (human-readable names for WWPNs)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>alicreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:c9:12:34:56&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:93:7c:00:00:00:01&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Create zone (one initiator + one or more targets)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi01_hba0__pure_ct0_p0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0; pure_ct0_p0&quot;</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Add zone to active zone set and activate</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>cfgadd<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi01_hba0__pure_ct0_p0&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>cfgenable<span class="w"> </span><span class="s2">&quot;dc1-fabA-prod&quot;</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Always save after activating — otherwise change is lost on reboot</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>cfgsave
-</code></pre></div>
+┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Fabric OS (FOS): Brocade switch OS for FC SAN — zoning, routing, management          │   │
+│   │           Runs on all Brocade FC switches (G630, G720, G730, X7 director platforms)           │   │
+│   │             Core services: FCNS (name server), FCSM, zone management, ISL trunking            │   │
+│   │         Management interfaces: CLI (SSH), REST API (FOS 8.2+), SANnav GUI integration         │   │
+│   │     Fabric-wide config distribution: zone DB, fabric parameters, principal switch election    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Core OS services -&gt; fabric-level functions -&gt; management and integration layer                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         FC Services         │  │         Fabric Layer        │  │          Management         │   │
+│   │       FCNS name server      │  │         Zone DB sync        │  │         CLI via SSH         │   │
+│   │      Port login (FLOGI)     │  │         ISL trunking        │  │           REST API          │   │
+│   │      FC routing (FSPF)      │  │       Principal switch      │  │          SANnav GUI         │   │
+│   │        FCSM security        │  │        Fabric params        │  │         SNMP/syslog         │   │
+│   │       RAS/diagnostics       │  │        Domain ID mgmt       │  │          LDAP auth          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Zone changes replicated across fabric; principal switch coordinates domain IDs                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │       Role       │      Protocol     │     Version      │      Notes       │   │
+│   │       FCNS       │   Name server    │       FC-GS       │      FOS 6+      │  Per-fabric DB   │   │
+│   │       FSPF       │    FC routing    │       FC-SW       │      FOS 6+      │ Least-cost path  │   │
+│   │     REST API     │  Mgmt interface  │       HTTPS       │     FOS 8.2+     │     JSON/XML     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Brocade G630/G720/G730 switches · X7-8/X7-4 directors · FC SFP optics · ISL cables       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Fabric OS      = Brocade proprietary OS running on all Brocade FC switch hardware                  │
+│    FCNS           = Fibre Channel Name Server; maps WWN to N_Port ID within the fabric                │
+│    FSPF           = Fabric Shortest Path First; FC link-state routing protocol                        │
+│    FLOGI          = Fabric Login; HBA registers with fabric and obtains FC address (FCID)             │
+│    FCSM           = FC Security Manager; enforces DH-CHAP switch authentication                       │
+│    Zone DB        = Fabric-wide zone configuration replicated to all switches in fabric               │
+│    ISL trunk      = Multiple ISLs bundled for bandwidth aggregation between switches                  │
+│    Principal switch = Elected switch managing domain ID assignments for the fabric                    │
+│    Domain ID      = Unique numeric identifier for each switch in the fabric (1-239)                   │
+│    REST API       = FOS 8.2+ HTTP management interface; JSON/XML payloads over HTTPS                  │
+│    MAPS           = Monitoring and Alerting Policy Suite; FOS threshold alert engine                  │
+│    portcfg        = FOS CLI command to configure port speed, mode, and behaviour                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="platform-summary">Platform Summary<a class="headerlink" href="#platform-summary" title="Permanent link">&para;</a></h2>
 <table>

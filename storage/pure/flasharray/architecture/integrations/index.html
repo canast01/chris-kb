@@ -3467,36 +3467,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3753,63 +3723,81 @@ Integrations reference covering VMware Integration, Backup Integration, Pure1 Mo
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  API token     = Authentication credential for REST and automation; scoped to array user role         │
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashArray Integration Ecosystem — VMware, Kubernetes, Backup, Cloud, Automation       │   │
+│   │          VMware: VASA/VAAI plugin · vVols datastore · SPBM policy-driven provisioning         │   │
+│   │        Kubernetes: Pure Service Orchestrator (PSO) / Portworx; dynamic PVC provisioning       │   │
+│   │           Backup: Veeam, Commvault, Veritas via snapshot-based offload via Pure APIs          │   │
+│   │       Automation: Ansible collection, Terraform provider, REST API v2 for all operations      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Pure REST API v2 is the integration backbone — all plugins and tools consume it                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      VMware Integration     │  │   Kubernetes / Containers   │  │     Backup + Automation     │   │
+│   │  VASA: storage policy mgmt  │  │  PSO: dynamic PVC on-demand │  │  Veeam: snap-based offload  │   │
+│   │   VAAI: HW-accelerated ops  │  │ CSI driver: standard K8s API│  │  Commvault: snap management │   │
+│   │    vVols: per-VM volumes    │  │Portworx: data services layer│  │    purestorage.flasharray   │   │
+│   │   SPBM: QoS per datastore   │  │ StatefulSet persistent store│  │ Terraform: volume lifecycle │   │
+│   │   SRM: site recovery plans  │  │  Multi-attach: RWX volumes  │  │  REST v2: token auth + JSON │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All integrations leverage REST API · VMware via VASA/VAAI · K8s via CSI/PSO                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   VMware Setup   │    K8s Setup     │   Backup Config   │     REST API     │    Automation    │   │
+│   │Install VASA plug │ Deploy PSO helm  │ Register array IP │   GET /arrays    │  ansible-galaxy  │   │
+│   │Create vVol store │Set storage class │  API token creds  │  POST /volumes   │  terraform init  │   │
+│   │SPBM policy assign│ Test dynamic PVC │ Snapshot schedule │   PATCH /hosts   │ pureuser API add │   │
+│   │SRM plugin config │  Verify PV bind  │   Offload verify  │ DELETE /volumes  │ Idempotent runs  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  FlashArray controllers · ESXi hosts · K8s worker nodes · Backup media server · IP/FC SAN fabric      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VASA          = vSphere API for Storage Awareness; allows vSphere to query array capabilities        │
+│  VAAI          = vSphere API for Array Integration; offloads clone, zero, lock ops to array HW        │
+│  vVols         = Virtual Volumes; per-VM volume objects managed directly by FlashArray                │
+│  SPBM          = Storage Policy-Based Management; assigns QoS and protection to VMs by policy         │
+│  PSO           = Pure Service Orchestrator; Kubernetes dynamic storage provisioner for Pure arrays    │
+│  CSI           = Container Storage Interface; standard Kubernetes block/file storage API              │
+│  Portworx      = Pure-owned container data platform; distributed storage layer for K8s workloads      │
+│  SRM           = Site Recovery Manager; VMware DR orchestration using Pure replication snapshots      │
+│  REST v2       = Pure FlashArray REST API version 2; JSON, token auth, full CRUD for all objects      │
+│  Ansible coll  = purestorage.flasharray Galaxy collection; modules for volumes, hosts, PGs            │
+│  Terraform     = HashiCorp IaC; purestorage/flasharray provider for declarative volume management     │
+│  API token     = Authentication credential for REST and automation; scoped to array user role         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Generate an API token for a service account:**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># On the array CLI
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pureadmin create --role array_admin svc-monitoring
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pureadmin apitoken create svc-monitoring
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Copy the token and store in a secrets manager
 </code></pre></div></p>
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p><strong>Active Directory (AD):</strong></p>
-<ol>
-<li>Join the FlashArray to AD: <code>puredirectoryservice setattr --base-dn &lt;base_dn&gt; --bind-user &lt;user&gt; --bind-password &lt;pwd&gt; --domain &lt;domain&gt; --uri ldaps://&lt;dc_ip&gt;</code></li>
-<li>Create admin groups in AD mapped to FlashArray roles (e.g., <code>purearray-admins</code> → <code>array_admin</code>)</li>
-<li>Test AD login with a domain account before removing local accounts</li>
-<li>Configure the group-to-role mapping: <code>pureadmin setattr --role array_admin --group &lt;ad_group&gt;</code></li>
-</ol>
-<p><strong>LDAP (non-AD):</strong></p>
-<ul>
-<li>Configure LDAP URI, base DN, bind credentials, and user/group attribute mapping under Directory Service settings</li>
-<li>Supports OpenLDAP, Red Hat Directory Server, and similar LDAP providers</li>
-</ul>
-<p><strong>SAML SSO:</strong></p>
-<ul>
-<li>Supported on Purity//FA 6.x and later</li>
-<li>Configure the FlashArray as a SAML Service Provider in your IdP (Okta, Azure AD, ADFS)</li>
-<li>Export the FlashArray SP metadata and import into the IdP</li>
-<li>Set <code>puredirectoryservice saml</code> configuration with IdP metadata URL and certificate</li>
-</ul>
-<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<p><strong>Base URL:</strong> <code>https://&lt;array_management_ip&gt;/api/&lt;version&gt;/</code></p>
-<p>Current API version: <code>2.x</code> (Purity//FA 6.x uses API 2.x; legacy 1.x also supported for compatibility)</p>
-<p><strong>Authentication:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Obtain an API token (requires local account or AD account with API access)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;pureuser&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-c<span class="w"> </span>/tmp/fa_cookies.txt
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Use the session cookie for subsequent requests</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/2.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-b<span class="w"> </span>/tmp/fa_cookies.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Alternatively, use an API token directly (recommended for automation)</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-k<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://&lt;array_ip&gt;/api/2.x/arrays&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;x-auth-token: &lt;api_token&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-</code></pre></div>
-<p><strong>Generate an API token for a service account:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the array CLI</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span>svc-monitoring
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Copy the token and store in a secrets manager</span>
-</code></pre></div>
 <p><strong>Common API calls:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get array status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>GET<span class="w"> </span>/api/2.x/arrays
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List volumes</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>GET<span class="w"> </span>/api/2.x/volumes
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List active alerts</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>GET<span class="w"> </span>/api/2.x/alerts?filter<span class="o">=</span>state%3D%27open%27
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Get array capacity</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>GET<span class="w"> </span>/api/2.x/arrays?space<span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get array status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>GET<span class="w"> </span>/api/2.x/arrays
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List volumes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>GET<span class="w"> </span>/api/2.x/volumes
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List active alerts</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>GET<span class="w"> </span>/api/2.x/alerts?filter<span class="o">=</span>state%3D%27open%27
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Get array capacity</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>GET<span class="w"> </span>/api/2.x/arrays?space<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <p>Full API reference: <a href="https://support.purestorage.com/bundle/m_fa_rest_api">Pure Storage API documentation</a></p>
 

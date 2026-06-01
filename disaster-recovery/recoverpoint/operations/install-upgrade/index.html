@@ -4290,72 +4290,73 @@
     class storA,storB storage
     class hA,hB host
     class spA,spB splitter</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── RecoverPoint — Install &amp; Upgrade ───────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │Install order: deploy RPA OVF → configure network → pair sites → install splitter on ESXi hosts│   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       Pre-req: vCenter credentials, management VLAN, replication VLAN, journal datastore      │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │      Upgrade: rolling RPA upgrade (one node at a time); CGs remain active during upgrade      │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Splitter upgrade: done via VIB update on ESXi; requires host maintenance mode         │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Deploy RPA OVF ──► network config ──► site pairing ──► install splitter ──► create CGs             │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │          1. Deploy RPA OVF per site          │  │          1. Download new RPA image          │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          2. Configure mgmt/repl IPs          │  │            2. Upload to Unisphere           │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          3. Pair protected/recovery          │  │           3. Rolling node upgrade           │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         4. Install ESXi splitter VIB         │  │           4. Upgrade splitter VIBs          │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         5. Create consistency groups         │  │          5. Validate all CGs active         │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Physical: RPA VMs need 4 vCPU, 8 GB RAM, 3 vNICs (mgmt, replication, data); use anti-affinity rules│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    OVF deploy       = Deploy RPA as virtual appliance from OVF template in vCenter                    │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Site pairing     = Connect protected site RPA cluster to recovery site RPA cluster over IP         │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    Splitter VIB     = VMware Installation Bundle; installed on ESXi via esxcli software vib install   │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    Management IP    = RPA vNIC for Unisphere access and admin CLI; on management VLAN                 │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Replication IP   = RPA vNIC for site-to-site journal replication traffic; on replication VLAN      │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Data IP          = RPA vNIC for write split data from ESXi splitter to RPA; on storage VLAN        │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Rolling upgrade  = Upgrade one RPA node at a time; surviving node handles all CGs during upgrade   │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    VIB update       = ESXi host in maintenance mode; esxcli updates splitter kernel module            │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Post-upgrade     = Verify all CGs Active; check lag; confirm splitter version per host             │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│    License          = Apply RP4VM licence in Unisphere before creating first CG                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Compatibility    = Check RP4VM compatibility matrix; ESXi version must match supported list        │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Splitter Types
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>RecoverPoint uses a write-splitter to intercept host I/O and send a copy to the RPA for journal-based replication. Three splitter architectures are supported:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### Array-Based Splitter (PowerMax / Unity / VNX)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>The array firmware natively splits writes inside the storage controller. No host-side software is required.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Array | Splitter Type | Configuration Method |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|---|---|---|
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Dell PowerMax | Embedded SRDF/RP splitter (microcode) | Enabled via PowerMax Service; zone RPAs to array |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Dell Unity | Embedded splitter | Enabled in Unity management via RecoverPoint registration |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Dell VNX/VNXe | Embedded CLARiiON splitter | Enabled via Navisphere; legacy — EOS |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Dell SC Series | Embedded splitter | Enabled via Dell Storage Manager |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>**PowerMax array-based splitter workflow:**
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>```text
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>1. RPAs zoned to PowerMax fabric zone.
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>2. RPA WWNs added to a storage group via Unisphere.
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>3. RecoverPoint Deployment Manager registers the array.
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>4. PowerMax microcode activates the RP splitter for designated volumes.
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>5. No host agent or driver changes required.
+┌────────────────────────────────── RecoverPoint — Install &amp; Upgrade ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Install order: deploy RPA OVF → configure network → pair sites → install splitter on ESXi hosts│   │
+│   │       Pre-req: vCenter credentials, management VLAN, replication VLAN, journal datastore      │   │
+│   │      Upgrade: rolling RPA upgrade (one node at a time); CGs remain active during upgrade      │   │
+│   │         Splitter upgrade: done via VIB update on ESXi; requires host maintenance mode         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Deploy RPA OVF ──► network config ──► site pairing ──► install splitter ──► create CGs             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
+│   │          1. Deploy RPA OVF per site          │  │          1. Download new RPA image          │   │
+│   │          2. Configure mgmt/repl IPs          │  │            2. Upload to Unisphere           │   │
+│   │          3. Pair protected/recovery          │  │           3. Rolling node upgrade           │   │
+│   │         4. Install ESXi splitter VIB         │  │           4. Upgrade splitter VIBs          │   │
+│   │         5. Create consistency groups         │  │          5. Validate all CGs active         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPA VMs need 4 vCPU, 8 GB RAM, 3 vNICs (mgmt, replication, data); use anti-affinity rules│
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OVF deploy       = Deploy RPA as virtual appliance from OVF template in vCenter                    │
+│    Site pairing     = Connect protected site RPA cluster to recovery site RPA cluster over IP         │
+│    Splitter VIB     = VMware Installation Bundle; installed on ESXi via esxcli software vib install   │
+│    Management IP    = RPA vNIC for Unisphere access and admin CLI; on management VLAN                 │
+│    Replication IP   = RPA vNIC for site-to-site journal replication traffic; on replication VLAN      │
+│    Data IP          = RPA vNIC for write split data from ESXi splitter to RPA; on storage VLAN        │
+│    Rolling upgrade  = Upgrade one RPA node at a time; surviving node handles all CGs during upgrade   │
+│    VIB update       = ESXi host in maintenance mode; esxcli updates splitter kernel module            │
+│    Post-upgrade     = Verify all CGs Active; check lag; confirm splitter version per host             │
+│    License          = Apply RP4VM licence in Unisphere before creating first CG                       │
+│    Compatibility    = Check RP4VM compatibility matrix; ESXi version must match supported list        │
+│    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>---
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>## Splitter Types
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>RecoverPoint uses a write-splitter to intercept host I/O and send a copy to the RPA for journal-based replication. Three splitter architectures are supported:
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>### Array-Based Splitter (PowerMax / Unity / VNX)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>The array firmware natively splits writes inside the storage controller. No host-side software is required.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Array | Splitter Type | Configuration Method |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>|---|---|---|
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Dell PowerMax | Embedded SRDF/RP splitter (microcode) | Enabled via PowerMax Service; zone RPAs to array |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Dell Unity | Embedded splitter | Enabled in Unity management via RecoverPoint registration |
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Dell VNX/VNXe | Embedded CLARiiON splitter | Enabled via Navisphere; legacy — EOS |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Dell SC Series | Embedded splitter | Enabled via Dell Storage Manager |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>**PowerMax array-based splitter workflow:**
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>```text
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>1. RPAs zoned to PowerMax fabric zone.
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>2. RPA WWNs added to a storage group via Unisphere.
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>3. RecoverPoint Deployment Manager registers the array.
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>4. PowerMax microcode activates the RP splitter for designated volumes.
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>5. No host agent or driver changes required.
 </code></pre></div></p>
 <h3 id="vplex-based-splitter">VPLEX-Based Splitter<a class="headerlink" href="#vplex-based-splitter" title="Permanent link">&para;</a></h3>
 <p>Used when hosts access storage through VPLEX (the VPLEX director intercepts the write and forwards a copy to the RPA cluster).</p>
@@ -4376,9 +4377,9 @@
 <li>VPLEX virtual volumes (not backend volumes) are the RP source volumes</li>
 <li>VPLEX splitter is configured automatically when the RPA cluster discovers the VPLEX management station</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify VPLEX splitter registration from boxmgmt</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected output shows VPLEX splitter entries with status &quot;Connected&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify VPLEX splitter registration from boxmgmt</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected output shows VPLEX splitter entries with status &quot;Connected&quot;</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">VPLEX Splitter Auto-Attach</p>
@@ -4413,34 +4414,34 @@
 </tbody>
 </table>
 <p>Installing the ESXi splitter VIB:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Method 1 — via ESXCLI on the ESXi host</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-*.vib<span class="w"> </span>--no-sig-check
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Method 2 — via vCenter (preferred for scale)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Use vSphere Lifecycle Manager baseline with the RP VIB URL</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># URL format: https://&lt;vRPA-cluster-IP&gt;/splitter_vib/vmware/RecoverPoint-*.vib</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Verify VIB installation</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Method 1 — via ESXCLI on the ESXi host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-*.vib<span class="w"> </span>--no-sig-check
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Method 2 — via vCenter (preferred for scale)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Use vSphere Lifecycle Manager baseline with the RP VIB URL</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># URL format: https://&lt;vRPA-cluster-IP&gt;/splitter_vib/vmware/RecoverPoint-*.vib</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Verify VIB installation</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
 </code></pre></div>
 <p>After VIB installation, trust the splitter from the vRPA cluster UI or via REST API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From vRPA management (REST API example)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vRPA-IP&gt;/api/splitters/trust&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;esxiHost&quot;: &quot;&lt;ESXi-FQDN&gt;&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From vRPA management (REST API example)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vRPA-IP&gt;/api/splitters/trust&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;esxiHost&quot;: &quot;&lt;ESXi-FQDN&gt;&quot;}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="consistency-group-configuration">Consistency Group Configuration<a class="headerlink" href="#consistency-group-configuration" title="Permanent link">&para;</a></h2>
 <p>After splitters are configured, create Consistency Groups (CGs) to define what is replicated and how:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. Unisphere for RecoverPoint → Add Consistency Group
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>2. Name: CG-&lt;app&gt;-&lt;source-site&gt;-&lt;target-site&gt; (e.g., CG-ORACLE-DC1-DC2)
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>3. Replication set: select source volumes (PowerMax LUNs or vRPA VMDKs)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>4. Add target copy: select target site cluster and target volumes
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>5. Journal: assign pre-created journal volume(s) at both source and target
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>6. Replication mode: CDP (synchronous) or CRR/CLR (asynchronous)
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>7. RPO target: set in seconds (0 for CDP; 30–900 seconds for async)
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>8. Enable CG — verify state transitions to &quot;Enabled / Replicating&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Unisphere for RecoverPoint → Add Consistency Group
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Name: CG-&lt;app&gt;-&lt;source-site&gt;-&lt;target-site&gt; (e.g., CG-ORACLE-DC1-DC2)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Replication set: select source volumes (PowerMax LUNs or vRPA VMDKs)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Add target copy: select target site cluster and target volumes
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. Journal: assign pre-created journal volume(s) at both source and target
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>6. Replication mode: CDP (synchronous) or CRR/CLR (asynchronous)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>7. RPO target: set in seconds (0 for CDP; 30–900 seconds for async)
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>8. Enable CG — verify state transitions to &quot;Enabled / Replicating&quot;
 </code></pre></div>
 <hr />
 <h2 id="upgrade-procedure">Upgrade Procedure<a class="headerlink" href="#upgrade-procedure" title="Permanent link">&para;</a></h2>
@@ -4456,11 +4457,11 @@
 <li>[ ] Notify application owners of the maintenance window</li>
 <li>[ ] Confirm WAN bandwidth is not saturated (replicated backlog = 0)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Pre-upgrade health checks from boxmgmt</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pre-upgrade health checks from boxmgmt</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
 </code></pre></div>
 <h3 id="rolling-upgrade-sequence">Rolling Upgrade Sequence<a class="headerlink" href="#rolling-upgrade-sequence" title="Permanent link">&para;</a></h3>
 <p>RecoverPoint upgrades use EasyInstaller and are performed in a rolling fashion — one RPA node at a time within each cluster, maintaining replication continuity throughout.</p>
@@ -4501,21 +4502,21 @@
 <p><strong>Array-based (PowerMax):</strong> The splitter is embedded in the array microcode. It updates automatically when the PowerMaxOS is upgraded. No manual step is required, but verify RPA-to-array connectivity after the array upgrade.</p>
 <p><strong>VPLEX-based:</strong> Upgrade the GeoSynchrony code as a separate VPLEX upgrade. Coordinate with the VPLEX upgrade window.</p>
 <p><strong>Host-based (RP4VM VIB):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Upgrade VIB on a single ESXi host</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Step 1 — vMotion all VMs off the host</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Step 2 — Put host in maintenance mode</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Step 3 — Remove old VIB</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>RecoverPoint-splitter
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Step 4 — Install new VIB</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-&lt;new-version&gt;.vib<span class="w"> </span>--no-sig-check
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Step 5 — Exit maintenance mode</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Step 6 — Re-trust the splitter from vRPA UI</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Upgrade VIB on a single ESXi host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 1 — vMotion all VMs off the host</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Step 2 — Put host in maintenance mode</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Step 3 — Remove old VIB</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>-n<span class="w"> </span>RecoverPoint-splitter
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Step 4 — Install new VIB</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>install<span class="w"> </span>-v<span class="w"> </span>/tmp/RecoverPoint-&lt;new-version&gt;.vib<span class="w"> </span>--no-sig-check
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Step 5 — Exit maintenance mode</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Step 6 — Re-trust the splitter from vRPA UI</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Minimum Splitter Redundancy</p>
@@ -4523,23 +4524,23 @@
 </div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Verify RPA software versions</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>version
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. Check cluster health</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 3. List all CGs and confirm state</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 4. Verify each CG is replicating with healthy RPO</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># 5. Check journal utilisation</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># 6. Confirm splitter connectivity</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Verify RPA software versions</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>version
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Check cluster health</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>status
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. List all CGs and confirm state</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>boxmgmt<span class="w"> </span>list<span class="w"> </span>cg
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Verify each CG is replicating with healthy RPO</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># 5. Check journal utilisation</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>boxmgmt<span class="w"> </span>journal<span class="w"> </span>check_all
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># 6. Confirm splitter connectivity</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
 </code></pre></div>
 <p>Validation checklist after upgrade:</p>
 <ul>
@@ -4551,11 +4552,11 @@
 <li>[ ] No active alerts in Unisphere for RecoverPoint</li>
 <li>[ ] Run test image access on at least one Tier 1 CG to confirm failover image is recoverable</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Enable image access for a test (non-disruptive — creates a point-in-time snapshot mount)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>latest
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify image is accessible, then disable</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>disable_image_access<span class="w"> </span>&lt;CG-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable image access for a test (non-disruptive — creates a point-in-time snapshot mount)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>latest
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify image is accessible, then disable</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>disable_image_access<span class="w"> </span>&lt;CG-name&gt;
 </code></pre></div>
 <hr />
 <h2 id="refresh-planning">Refresh Planning<a class="headerlink" href="#refresh-planning" title="Permanent link">&para;</a></h2>

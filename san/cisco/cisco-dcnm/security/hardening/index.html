@@ -3688,89 +3688,90 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Disable the default &#39;dcnm&#39; local OS account if not needed</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>usermod<span class="w"> </span>-L<span class="w"> </span>dcnm<span class="w">   </span><span class="c1"># lock (disable password login)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM hardening: disable defaults, enforce ISE TACACS+, TLS, RBAC, patch management.                  │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Platform Hardening              │  │               Access Hardening              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Change default admin password         │  │          ISE TACACS+: no local use          │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Disable HTTP; HTTPS only           │  │           RBAC: operator read-only          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Firewall: port 443 only            │  │          API IP whitelist: restrict         │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         TLS 1.2+ only; disable older         │  │           Session timeout: 30 min           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Disable unused OS services          │  │               MFA via SAML SSO              │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Change defaults day 1; restrict API; enforce ISE TACACS+ before production use.                      │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         Monitoring &amp; Alert Hardening         │  │               Patch Management              │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Audit log: all actions logged         │  │            Quarterly DCNM upgrade           │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Failed logins: SIEM alert           │  │          Cisco PSIRT: check monthly         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Config change: diff + alert          │  │          OS patches: monthly cycle          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │             API token expiry: 8h             │  │            Backup before upgrade            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         Cert expiry: 60-day warning          │  │            Test in staging first            │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DCNM Linux VM · vSphere host · management-only VLAN · Cisco ISE appliance                            │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  ISE TACACS+     = Cisco ISE centralised CLI auth; all admin actions audited                          │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  IP whitelist    = restrict DCNM REST API to known source IP ranges                                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SAML SSO        = DCNM integrates with IdP; MFA enforced at identity provider                        │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  API token expiry= JWT expires after configurable period; 8h default                                  │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Cisco PSIRT     = Product Security Incident Response; Cisco security advisories                      │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Audit log       = all DCNM GUI and API calls logged with user and timestamp                          │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Config diff     = DCNM detects out-of-band zone changes and sends alert                              │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Configure SSH login banner</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="err">```</span><span class="l l-Scalar l-Scalar-Plain">bash</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="l l-Scalar l-Scalar-Plain">cat &gt; /etc/issue.net &lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">WARNING</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">This system is for authorized use only.</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="l l-Scalar l-Scalar-Plain">All connections are monitored and recorded.</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="l l-Scalar l-Scalar-Plain">Unauthorized access or use is prohibited.</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="l l-Scalar l-Scalar-Plain">EOF</span>
+┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
+│                                                                                                       │
+│  DCNM hardening: disable defaults, enforce ISE TACACS+, TLS, RBAC, patch management.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Hardening              │  │               Access Hardening              │   │
+│   │        Change default admin password         │  │          ISE TACACS+: no local use          │   │
+│   │           Disable HTTP; HTTPS only           │  │           RBAC: operator read-only          │   │
+│   │           Firewall: port 443 only            │  │          API IP whitelist: restrict         │   │
+│   │         TLS 1.2+ only; disable older         │  │           Session timeout: 30 min           │   │
+│   │          Disable unused OS services          │  │               MFA via SAML SSO              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Change defaults day 1; restrict API; enforce ISE TACACS+ before production use.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Monitoring &amp; Alert Hardening         │  │               Patch Management              │   │
+│   │        Audit log: all actions logged         │  │            Quarterly DCNM upgrade           │   │
+│   │          Failed logins: SIEM alert           │  │          Cisco PSIRT: check monthly         │   │
+│   │         Config change: diff + alert          │  │          OS patches: monthly cycle          │   │
+│   │             API token expiry: 8h             │  │            Backup before upgrade            │   │
+│   │         Cert expiry: 60-day warning          │  │            Test in staging first            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM Linux VM · vSphere host · management-only VLAN · Cisco ISE appliance                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
+│  ISE TACACS+     = Cisco ISE centralised CLI auth; all admin actions audited                          │
+│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
+│  IP whitelist    = restrict DCNM REST API to known source IP ranges                                   │
+│  SAML SSO        = DCNM integrates with IdP; MFA enforced at identity provider                        │
+│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
+│  API token expiry= JWT expires after configurable period; 8h default                                  │
+│  Cisco PSIRT     = Product Security Incident Response; Cisco security advisories                      │
+│  Audit log       = all DCNM GUI and API calls logged with user and timestamp                          │
+│  Config diff     = DCNM detects out-of-band zone changes and sends alert                              │
+│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
+│  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```yaml
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Configure SSH login banner:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>cat &gt; /etc/issue.net &lt;&lt; &#39;EOF&#39;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>WARNING: This system is for authorized use only.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>All connections are monitored and recorded.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Unauthorized access or use is prohibited.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>EOF
 </code></pre></div></p>
 <hr />
 <h2 id="4-os-patching">4. OS Patching<a class="headerlink" href="#4-os-patching" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check available security updates</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Apply security patches</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Reboot if kernel update was applied</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>needs-restarting<span class="w"> </span>-r<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># After reboot, verify DCNM services restarted</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check available security updates</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Apply security patches</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Reboot if kernel update was applied</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>needs-restarting<span class="w"> </span>-r<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;No reboot needed&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Reboot required&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># After reboot, verify DCNM services restarted</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
 </code></pre></div>
 <p>Apply OS security patches monthly. DCNM application upgrades follow Cisco's release schedule independently.</p>
 <hr />
 <h2 id="5-disable-unused-services">5. Disable Unused Services<a class="headerlink" href="#5-disable-unused-services" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all active services</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>active
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable services not required for DCNM</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>avahi-daemon
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>cups
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>postfix<span class="w">   </span><span class="c1"># DCNM uses its own SMTP configuration</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify DCNM services are unaffected</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all active services</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span>--state<span class="o">=</span>active
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable services not required for DCNM</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>avahi-daemon
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>cups
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>bluetooth
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>postfix<span class="w">   </span><span class="c1"># DCNM uses its own SMTP configuration</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify DCNM services are unaffected</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>/usr/local/cisco/dcm/dcnm/sbin/dcnm-server<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="6-dcnm-application-hardening">6. DCNM Application Hardening<a class="headerlink" href="#6-dcnm-application-hardening" title="Permanent link">&para;</a></h2>
@@ -3790,44 +3791,44 @@
 3. Document the break-glass account password storage location.</p>
 <h3 id="snmpv3-on-dcnms-own-snmp-engine">SNMPv3 on DCNM's Own SNMP Engine<a class="headerlink" href="#snmpv3-on-dcnms-own-snmp-engine" title="Permanent link">&para;</a></h3>
 <p>If DCNM itself is monitored via SNMP from an NMS:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On DCNM appliance, configure SNMPv3 for inbound NMS polling</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># (DCNM acts as an SNMP agent for its own health)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Navigate to Administration &gt; SNMP Credentials</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set: Auth protocol SHA, Priv protocol AES-128</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Remove any v1/v2c community strings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On DCNM appliance, configure SNMPv3 for inbound NMS polling</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># (DCNM acts as an SNMP agent for its own health)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Navigate to Administration &gt; SNMP Credentials</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set: Auth protocol SHA, Priv protocol AES-128</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Remove any v1/v2c community strings</span>
 </code></pre></div>
 <h3 id="disable-http-redirect-only">Disable HTTP Redirect Only<a class="headerlink" href="#disable-http-redirect-only" title="Permanent link">&para;</a></h3>
 <p>Ensure DCNM does not serve plaintext HTTP. Port 80 should redirect to 443 only:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify no plaintext content is served on port 80</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{redirect_url}&quot;</span><span class="w"> </span>http://dcnm-dc1.corp.example.com/
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: redirect to https://...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify no plaintext content is served on port 80</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{redirect_url}&quot;</span><span class="w"> </span>http://dcnm-dc1.corp.example.com/
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Expected: redirect to https://...</span>
 </code></pre></div>
 <hr />
 <h2 id="7-ntp-configuration">7. NTP Configuration<a class="headerlink" href="#7-ntp-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify NTP</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Expected: synchronized: yes</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Configure NTP if not set</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>vi<span class="w"> </span>/etc/chrony.conf
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># server 10.10.0.10 prefer</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># server 10.10.0.11</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Expect: reference from NTP server, offset &lt; 50ms</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify NTP</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Expected: synchronized: yes</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Configure NTP if not set</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vi<span class="w"> </span>/etc/chrony.conf
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># server 10.10.0.10 prefer</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># server 10.10.0.11</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expect: reference from NTP server, offset &lt; 50ms</span>
 </code></pre></div>
 <hr />
 <h2 id="8-syslog-and-audit-logging">8. Syslog and Audit Logging<a class="headerlink" href="#8-syslog-and-audit-logging" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Forward DCNM OS syslog to SIEM</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-siem.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="s">*.* @@10.10.3.50:514    # TCP syslog to SIEM</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s">EOF</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Test</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>logger<span class="w"> </span>-t<span class="w"> </span>dcnm-test<span class="w"> </span><span class="s2">&quot;Syslog forwarding test message&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Forward DCNM OS syslog to SIEM</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/rsyslog.d/dcnm-siem.conf<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="s">*.* @@10.10.3.50:514    # TCP syslog to SIEM</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">EOF</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Test</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>logger<span class="w"> </span>-t<span class="w"> </span>dcnm-test<span class="w"> </span><span class="s2">&quot;Syslog forwarding test message&quot;</span>
 </code></pre></div>
 <p>DCNM application audit log: <strong>Administration &gt; Logs &gt; Audit Logs &gt; Export</strong>. Schedule a monthly audit log export to the SIEM if DCNM does not forward directly.</p>
 <hr />

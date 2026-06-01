@@ -4357,38 +4357,38 @@ This page covers common operational problems with Dell AIOps: AI alert false pos
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;reason&quot;: &quot;FALSE_POSITIVE&quot;, &quot;comment&quot;: &quot;Weekly backup job 22:00–02:00, expected anomaly&quot;}&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │            Adapter Not Collecting            │  │               Platform Issues               │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │               Check credential               │  │             Check /api/v1/health            │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Verify network reach             │  │               Restart services              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              Review adapter log              │  │               Check disk space              │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │               Re-save adapter                │  │             Time-series DB check            │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                Check firewall                │  │            Collect support bundle           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Logs: /var/log/aiops/ on each node · support bundle via aiops-admin support collect                  │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Adapter log = Per-adapter log in /var/log/aiops/adapters/; shows collection errors                   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Health endpoint = GET /api/v1/health returns status of all AIOps services                            │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Re-save adapter = Resaving adapter config resets its state; often fixes transient errors             │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Disk space = Time-series DB fills disk over time; monitor and archive/purge old data                 │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Time-series DB = Check DB health with aiops-admin db status                                          │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Support bundle = aiops-admin support collect creates compressed log archive                          │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Service restart = aiops-admin service restart &lt;name&gt; to recover failed service                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Firewall = Check management host can reach infrastructure API ports (443, 8080)                      │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Credential = Wrong or expired password causes No Data state; update in adapter settings              │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Network reach = Test from AIOps host: curl -k https://&lt;array&gt;:443/api/types                          │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Log level = Increase to DEBUG in adapter settings for detailed collection tracing                    │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Dell support = Open case at support.dell.com; attach support bundle                                  │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-```</p>
+┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Adapter Not Collecting            │  │               Platform Issues               │   │
+│   │               Check credential               │  │             Check /api/v1/health            │   │
+│   │             Verify network reach             │  │               Restart services              │   │
+│   │              Review adapter log              │  │               Check disk space              │   │
+│   │               Re-save adapter                │  │             Time-series DB check            │   │
+│   │                Check firewall                │  │            Collect support bundle           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Logs: /var/log/aiops/ on each node · support bundle via aiops-admin support collect                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter log = Per-adapter log in /var/log/aiops/adapters/; shows collection errors                   │
+│  Health endpoint = GET /api/v1/health returns status of all AIOps services                            │
+│  Re-save adapter = Resaving adapter config resets its state; often fixes transient errors             │
+│  Disk space = Time-series DB fills disk over time; monitor and archive/purge old data                 │
+│  Time-series DB = Check DB health with aiops-admin db status                                          │
+│  Support bundle = aiops-admin support collect creates compressed log archive                          │
+│  Service restart = aiops-admin service restart <name> to recover failed service                       │
+│  Firewall = Check management host can reach infrastructure API ports (443, 8080)                      │
+│  Credential = Wrong or expired password causes No Data state; update in adapter settings              │
+│  Network reach = Test from AIOps host: curl -k https://<array>:443/api/types                          │
+│  Log level = Increase to DEBUG in adapter settings for detailed collection tracing                    │
+│  Dell support = Open case at support.dell.com; attach support bundle                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div></p>
 <h2 id="common-troubleshooting-reference">Common Troubleshooting Reference<a class="headerlink" href="#common-troubleshooting-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

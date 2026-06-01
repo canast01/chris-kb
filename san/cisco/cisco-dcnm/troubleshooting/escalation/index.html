@@ -3684,109 +3684,110 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># 5. OS-level resource snapshot</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/top-snapshot-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM escalation: internal L2/L3 → Cisco TAC with log bundle, case severity, remote.                  │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           Internal Escalation Path           │  │             Cisco TAC Escalation            │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         L1 → L2: basic checks + logs         │  │            Open case: TAC portal            │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          L2 → L3: logs + show-tech           │  │           DCNM version + NX-OS ver          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         L3 → TAC: full data package          │  │           Sev-1: fabric management          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Incident bridge for Sev-1           │  │           Remote: TAC SSH to DCNM           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        No config changes during inc.         │  │           RCA expected post-close           │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Collect DCNM logs and MDS show tech-support before opening a Cisco TAC case.                         │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Escalation Data Package            │  │           Severity Classification           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          DCNM logs: journalctl dump          │  │           Sev-1: DCNM down; fabric          │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          appmgr status + db-status           │  │           Sev-2: zone push failing          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          show tech-support: per MDS          │  │          Sev-3: partial monitoring          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │             Audit log CSV export             │  │           Sev-4: general question           │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Timeline: events before issue         │  │            CSAT after case close            │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DCNM VM · management Ethernet · Cisco TAC upload portal · serial console access                      │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  journalctl dump = full DCNM service log; gzip and share to Cisco TAC                                 │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  appmgr status   = DCNM VM CLI; service health output for TAC review                                  │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  show tech-support= NX-OS MDS full diagnostic bundle; one per affected switch                         │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Audit log CSV   = DCNM action log export; shows what changed before incident                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Sev-1           = DCNM completely down; fabric management unavailable                                │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Sev-2           = DCNM partially working; zone changes or discovery failing                          │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Cisco TAC       = Technical Assistance Center; opened at tools.cisco.com                             │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  TAC remote      = Cisco engineer SSHs into DCNM VM with customer permission                          │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  RCA             = Root Cause Analysis; Cisco provides after Sev-1 case closure                       │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  CSAT            = Customer Satisfaction survey; sent after TAC case closure                          │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Incident bridge = conference call coordinating all responders during Sev-1                           │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  No config changes= freeze all DCNM and MDS changes during active incident                            │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">###</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="n">Performance</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">DB</span><span class="w"> </span><span class="n">Issues</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">#</span><span class="w"> </span><span class="k">Database</span><span class="w"> </span><span class="k">diagnostics</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">psql</span><span class="w"> </span><span class="o">-</span><span class="n">U</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="n">sane</span><span class="w"> </span><span class="o">-</span><span class="k">c</span><span class="w"> </span><span class="ss">&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="ss">SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="ss">FROM pg_catalog.pg_statio_user_tables</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="ss">ORDER BY pg_relation_size(relid) DESC</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="ss">LIMIT 20;&quot;</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">db</span><span class="o">-</span><span class="n">sizes</span><span class="o">-</span><span class="err">$</span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="o">+%</span><span class="n">Y</span><span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">d</span><span class="p">).</span><span class="n">txt</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">psql</span><span class="w"> </span><span class="o">-</span><span class="n">U</span><span class="w"> </span><span class="n">postgres</span><span class="w"> </span><span class="o">-</span><span class="k">c</span><span class="w"> </span><span class="ss">&quot;SELECT pg_size_pretty(pg_database_size(&#39;sane&#39;)), pg_size_pretty(pg_database_size(&#39;pmdb&#39;));&quot;</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">db</span><span class="o">-</span><span class="n">sizes</span><span class="o">-</span><span class="err">$</span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="o">+%</span><span class="n">Y</span><span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">d</span><span class="p">).</span><span class="n">txt</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="o">#</span><span class="w"> </span><span class="mi">10</span><span class="o">-</span><span class="k">minute</span><span class="w"> </span><span class="n">resource</span><span class="w"> </span><span class="n">collection</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="err">{</span><span class="mi">1</span><span class="p">..</span><span class="mi">10</span><span class="err">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="n">echo</span><span class="w"> </span><span class="ss">&quot;=== $(date) ===&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="k">free</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="p">;</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">-</span><span class="n">h</span><span class="w"> </span><span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">pgsql</span><span class="p">;</span><span class="w"> </span><span class="n">uptime</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="n">sleep</span><span class="w"> </span><span class="mi">60</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">done</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">dcnm</span><span class="o">-</span><span class="n">perf</span><span class="o">-</span><span class="err">$</span><span class="p">(</span><span class="nb">date</span><span class="w"> </span><span class="o">+%</span><span class="n">Y</span><span class="o">%</span><span class="n">m</span><span class="o">%</span><span class="n">d</span><span class="p">).</span><span class="n">txt</span>
+┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
+│                                                                                                       │
+│  DCNM escalation: internal L2/L3 → Cisco TAC with log bundle, case severity, remote.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Escalation Path           │  │             Cisco TAC Escalation            │   │
+│   │         L1 → L2: basic checks + logs         │  │            Open case: TAC portal            │   │
+│   │          L2 → L3: logs + show-tech           │  │           DCNM version + NX-OS ver          │   │
+│   │         L3 → TAC: full data package          │  │           Sev-1: fabric management          │   │
+│   │          Incident bridge for Sev-1           │  │           Remote: TAC SSH to DCNM           │   │
+│   │        No config changes during inc.         │  │           RCA expected post-close           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect DCNM logs and MDS show tech-support before opening a Cisco TAC case.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Escalation Data Package            │  │           Severity Classification           │   │
+│   │          DCNM logs: journalctl dump          │  │           Sev-1: DCNM down; fabric          │   │
+│   │          appmgr status + db-status           │  │           Sev-2: zone push failing          │   │
+│   │          show tech-support: per MDS          │  │          Sev-3: partial monitoring          │   │
+│   │             Audit log CSV export             │  │           Sev-4: general question           │   │
+│   │        Timeline: events before issue         │  │            CSAT after case close            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · management Ethernet · Cisco TAC upload portal · serial console access                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  journalctl dump = full DCNM service log; gzip and share to Cisco TAC                                 │
+│  appmgr status   = DCNM VM CLI; service health output for TAC review                                  │
+│  show tech-support= NX-OS MDS full diagnostic bundle; one per affected switch                         │
+│  Audit log CSV   = DCNM action log export; shows what changed before incident                         │
+│  Sev-1           = DCNM completely down; fabric management unavailable                                │
+│  Sev-2           = DCNM partially working; zone changes or discovery failing                          │
+│  Cisco TAC       = Technical Assistance Center; opened at tools.cisco.com                             │
+│  TAC remote      = Cisco engineer SSHs into DCNM VM with customer permission                          │
+│  RCA             = Root Cause Analysis; Cisco provides after Sev-1 case closure                       │
+│  CSAT            = Customer Satisfaction survey; sent after TAC case closure                          │
+│  Incident bridge = conference call coordinating all responders during Sev-1                           │
+│  No config changes= freeze all DCNM and MDS changes during active incident                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### For Performance / DB Issues
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Database diagnostics
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>psql -U postgres sane -c &quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>FROM pg_catalog.pg_statio_user_tables
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ORDER BY pg_relation_size(relid) DESC
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>LIMIT 20;&quot; &gt; /tmp/db-sizes-$(date +%Y%m%d).txt
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>psql -U postgres -c &quot;SELECT pg_size_pretty(pg_database_size(&#39;sane&#39;)), pg_size_pretty(pg_database_size(&#39;pmdb&#39;));&quot; &gt;&gt; /tmp/db-sizes-$(date +%Y%m%d).txt
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># 10-minute resource collection
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>for i in {1..10}; do
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  echo &quot;=== $(date) ===&quot;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  free -h; df -h /var/lib/pgsql; uptime
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  sleep 60
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>done &gt; /tmp/dcnm-perf-$(date +%Y%m%d).txt
 </code></pre></div></p>
 <h3 id="for-upgrade-failures">For Upgrade Failures<a class="headerlink" href="#for-upgrade-failures" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Upgrade log</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>/var/log/dcnm/install.log<span class="w"> </span>/tmp/
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Current and previous DCNM version</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat<span class="w"> </span>/var/dcnm/version
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Include in case: source version, target version, and exact error message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Upgrade log</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cp<span class="w"> </span>/var/log/dcnm/install.log<span class="w"> </span>/tmp/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Current and previous DCNM version</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cat<span class="w"> </span>/var/dcnm/version
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Include in case: source version, target version, and exact error message</span>
 </code></pre></div>
 <hr />
 <h2 id="support-case-description-template">Support Case Description Template<a class="headerlink" href="#support-case-description-template" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">Product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cisco Data Center Network Manager (DCNM)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11.x.x (from /var/dcnm/version)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">Deployment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Standalone / Native HA</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">Hypervisor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMware ESXi 7.0 U3 (or KVM)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">Managed switches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">MDS 9710 x2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">MDS 9396T x4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">NX-OS 8.4(2a)</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">Problem description</span><span class="p">:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p p-Indicator">[</span><span class="nv">Concise description of the symptom — what is broken or degraded</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nt">Business impact</span><span class="p">:</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Zone</span><span class="nv"> </span><span class="s">changes</span><span class="nv"> </span><span class="s">cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">pushed</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">fabric;</span><span class="nv"> </span><span class="s">fabric</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">operational</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">no</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w"> </span><span class="s">configuration</span><span class="nv"> </span><span class="s">changes</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">made</span><span class="nv"> </span><span class="s">via</span><span class="nv"> </span><span class="s">DCNM&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nt">When did the issue start</span><span class="p">:</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p p-Indicator">[</span><span class="nv">Date and time — what was happening at that time</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nt">What changed before the issue</span><span class="p">:</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;DCNM</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">upgraded</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">11.4.1</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">11.5.4</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">2026-05-06</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">14:00</span><span class="nv"> </span><span class="s">UTC&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="nt">Steps taken to troubleshoot</span><span class="p">:</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="l l-Scalar l-Scalar-Plain">1. [what was checked]</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="l l-Scalar l-Scalar-Plain">2. [what was tried]</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="l l-Scalar l-Scalar-Plain">3. [result]</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="nt">Attachments</span><span class="p">:</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcnm-support-20260507.tar.gz (support bundle)</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery-issue.log</span>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh-test.txt / snmp-test.txt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cisco Data Center Network Manager (DCNM)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">11.x.x (from /var/dcnm/version)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">Deployment</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Standalone / Native HA</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">Hypervisor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMware ESXi 7.0 U3 (or KVM)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">Managed switches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">MDS 9710 x2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">MDS 9396T x4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">NX-OS 8.4(2a)</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">Problem description</span><span class="p">:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p p-Indicator">[</span><span class="nv">Concise description of the symptom — what is broken or degraded</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nt">Business impact</span><span class="p">:</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Zone</span><span class="nv"> </span><span class="s">changes</span><span class="nv"> </span><span class="s">cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">pushed</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">fabric;</span><span class="nv"> </span><span class="s">fabric</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">operational</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">no</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w"> </span><span class="s">configuration</span><span class="nv"> </span><span class="s">changes</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">made</span><span class="nv"> </span><span class="s">via</span><span class="nv"> </span><span class="s">DCNM&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nt">When did the issue start</span><span class="p">:</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p p-Indicator">[</span><span class="nv">Date and time — what was happening at that time</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="nt">What changed before the issue</span><span class="p">:</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;DCNM</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">upgraded</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">11.4.1</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">11.5.4</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">2026-05-06</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">14:00</span><span class="nv"> </span><span class="s">UTC&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nt">Steps taken to troubleshoot</span><span class="p">:</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="l l-Scalar l-Scalar-Plain">1. [what was checked]</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="l l-Scalar l-Scalar-Plain">2. [what was tried]</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="l l-Scalar l-Scalar-Plain">3. [result]</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="nt">Attachments</span><span class="p">:</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dcnm-support-20260507.tar.gz (support bundle)</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery-issue.log</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ssh-test.txt / snmp-test.txt</span>
 </code></pre></div>
 <hr />
 <h2 id="escalation-path-within-cisco-tac">Escalation Path Within Cisco TAC<a class="headerlink" href="#escalation-path-within-cisco-tac" title="Permanent link">&para;</a></h2>

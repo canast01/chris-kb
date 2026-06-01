@@ -3472,105 +3472,106 @@
     G --&gt;|No| I[--step\nInteractive task walkthrough]
     H --&gt; J[Resolved]
     I --&gt; J</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │   Ansible diagnostic sequence: verify connectivity → check variables → inspect module output  │   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   Increase verbosity progressively: -v (task results), -vv (input), -vvv (SSH debug), -vvvv   │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       AWX diagnostics: job event log, activity stream, kubectl logs for pod-level errors      │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │               CLI Diagnostics                │  │               AWX Diagnostics               │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          ansible host -m ping -vvv           │  │             Job → Event log tab             │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       ansible-playbook --syntax-check        │  │          Settings → Activity stream         │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │         ansible -m debug -a &quot;var=x&quot;          │  │           kubectl logs -n awx task          │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │       ANSIBLE_DEBUG=1 ansible-play...        │  │             awx jobs stdout &lt;id&gt;            │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │       ansible-inventory --list --yaml        │  │           AWX: Support bundle zip           │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │ Activity stream    = AWX audit log; records every API call with user, timestamp, change detail│   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         ANSIBLE_DEBUG=1    = env var enabling maximum debug output from Ansible itself        │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">## Variable Inspection</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sb">```</span>yaml
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Print a variable value mid-play</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-<span class="w"> </span>name:<span class="w"> </span>Debug<span class="w"> </span>variable
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>ansible.builtin.debug:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>var:<span class="w"> </span>nginx_port
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Print multiple variables</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>-<span class="w"> </span>name:<span class="w"> </span>Debug<span class="w"> </span>connection<span class="w"> </span>info
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>ansible.builtin.debug:
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>msg:<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span>Host:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>inventory_hostname<span class="w"> </span><span class="o">}}</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span>IP:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>ansible_host<span class="w"> </span><span class="o">}}</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span>User:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>ansible_user<span class="w"> </span><span class="o">}}</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span>OS:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>ansible_distribution<span class="w"> </span><span class="o">}}</span><span class="w"> </span><span class="o">{{</span><span class="w"> </span>ansible_distribution_major_version<span class="w"> </span><span class="o">}}</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span>Python:<span class="w"> </span><span class="o">{{</span><span class="w"> </span>ansible_python_interpreter<span class="w"> </span><span class="o">}}</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Print all vars for a host</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>-<span class="w"> </span>name:<span class="w"> </span>Dump<span class="w"> </span>all<span class="w"> </span>variables
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>ansible.builtin.debug:
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span>var:<span class="w"> </span>hostvars<span class="o">[</span>inventory_hostname<span class="o">]</span>
+┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible diagnostic sequence: verify connectivity → check variables → inspect module output  │   │
+│   │   Increase verbosity progressively: -v (task results), -vv (input), -vvv (SSH debug), -vvvv   │   │
+│   │       AWX diagnostics: job event log, activity stream, kubectl logs for pod-level errors      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               CLI Diagnostics                │  │               AWX Diagnostics               │   │
+│   │          ansible host -m ping -vvv           │  │             Job → Event log tab             │   │
+│   │       ansible-playbook --syntax-check        │  │          Settings → Activity stream         │   │
+│   │         ansible -m debug -a "var=x"          │  │           kubectl logs -n awx task          │   │
+│   │       ANSIBLE_DEBUG=1 ansible-play...        │  │             awx jobs stdout <id>            │   │
+│   │       ansible-inventory --list --yaml        │  │           AWX: Support bundle zip           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Activity stream    = AWX audit log; records every API call with user, timestamp, change detail│   │
+│   │         ANSIBLE_DEBUG=1    = env var enabling maximum debug output from Ansible itself        │   │
+│   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```bash
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Variable Inspection
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```yaml
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Print a variable value mid-play
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- name: Debug variable
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  ansible.builtin.debug:
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    var: nginx_port
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Print multiple variables
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>- name: Debug connection info
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  ansible.builtin.debug:
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    msg: |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>      Host: {{ inventory_hostname }}
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>      IP: {{ ansible_host }}
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>      User: {{ ansible_user }}
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>      OS: {{ ansible_distribution }} {{ ansible_distribution_major_version }}
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>      Python: {{ ansible_python_interpreter }}
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Print all vars for a host
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>- name: Dump all variables
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>  ansible.builtin.debug:
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    var: hostvars[inventory_hostname]
 </code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From command line — show all facts for a host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Filter facts by prefix</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_network*&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_os_family&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From command line — show all facts for a host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Filter facts by prefix</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_network*&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.setup<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;filter=ansible_os_family&quot;</span>
 </code></pre></div>
 <h2 id="ssh-connectivity-diagnostics">SSH Connectivity Diagnostics<a class="headerlink" href="#ssh-connectivity-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test raw SSH as ansible user</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ansible_ed25519<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>ansible@web01.example.com<span class="w"> </span><span class="s2">&quot;echo OK&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Test with verbose SSH</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ssh<span class="w"> </span>-vvv<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ansible_ed25519<span class="w"> </span>ansible@web01.example.com
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check if Python exists on target</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.raw<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;which python3; python3 --version&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Check sudo works</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.command<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;sudo -l&quot;</span><span class="w"> </span>--become-user<span class="w"> </span>root
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test raw SSH as ansible user</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ansible_ed25519<span class="w"> </span>-o<span class="w"> </span><span class="nv">BatchMode</span><span class="o">=</span>yes<span class="w"> </span>ansible@web01.example.com<span class="w"> </span><span class="s2">&quot;echo OK&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test with verbose SSH</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>-vvv<span class="w"> </span>-i<span class="w"> </span>~/.ssh/ansible_ed25519<span class="w"> </span>ansible@web01.example.com
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check if Python exists on target</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.raw<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;which python3; python3 --version&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check sudo works</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;sudo -l&quot;</span><span class="w"> </span>--become-user<span class="w"> </span>root
 </code></pre></div>
 <h2 id="module-execution-diagnostics">Module Execution Diagnostics<a class="headerlink" href="#module-execution-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Run a single module ad-hoc</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.service<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;name=nginx state=started&quot;</span><span class="w"> </span>--check
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Run with environment dumped</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.command<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;env&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run a single module ad-hoc</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.service<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;name=nginx state=started&quot;</span><span class="w"> </span>--check
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Run with environment dumped</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ansible<span class="w"> </span>web01<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.command<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;env&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>path
 </code></pre></div>
 <h2 id="fact-caching-issues">Fact Caching Issues<a class="headerlink" href="#fact-caching-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Clear stale fact cache</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/tmp/ansible_facts/
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Force fact regather (ignore cache)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;gather_facts=true&quot;</span><span class="w"> </span>--flush-cache
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check when facts were last gathered</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ls<span class="w"> </span>-la<span class="w"> </span>/tmp/ansible_facts/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Clear stale fact cache</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/tmp/ansible_facts/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Force fact regather (ignore cache)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;gather_facts=true&quot;</span><span class="w"> </span>--flush-cache
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check when facts were last gathered</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>ls<span class="w"> </span>-la<span class="w"> </span>/tmp/ansible_facts/
 </code></pre></div>
 <h2 id="awx-aap-job-diagnostics">AWX / AAP Job Diagnostics<a class="headerlink" href="#awx-aap-job-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get job stdout via API</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/1234/stdout/?format=txt&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Get job events (individual task results)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/1234/job_events/?page_size=50&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check recently failed jobs</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/?status=failed&amp;page_size=10&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get job stdout via API</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/1234/stdout/?format=txt&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Get job events (individual task results)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/1234/job_events/?page_size=50&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check recently failed jobs</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="s2">&quot;https://awx.example.com/api/v2/jobs/?status=failed&amp;page_size=10&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="common-error-patterns">Common Error Patterns<a class="headerlink" href="#common-error-patterns" title="Permanent link">&para;</a></h2>
 <table>
@@ -3625,16 +3626,16 @@
 </tbody>
 </table>
 <h2 id="log-analysis">Log Analysis<a class="headerlink" href="#log-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># ansible.cfg — enable logging</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="o">[</span>defaults<span class="o">]</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">log_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/var/log/ansible/ansible.log
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Grep for failures</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED\|UNREACHABLE\|ERROR&quot;</span><span class="w"> </span>/var/log/ansible/ansible.log
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Count failures by host</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span>/var/log/ansible/ansible.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>grep<span class="w"> </span>-oP<span class="w"> </span><span class="s1">&#39;FAILED \[.*?\]&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># ansible.cfg — enable logging</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="o">[</span>defaults<span class="o">]</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">log_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>/var/log/ansible/ansible.log
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Grep for failures</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED\|UNREACHABLE\|ERROR&quot;</span><span class="w"> </span>/var/log/ansible/ansible.log
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Count failures by host</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span>/var/log/ansible/ansible.log<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span>grep<span class="w"> </span>-oP<span class="w"> </span><span class="s1">&#39;FAILED \[.*?\]&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
 </code></pre></div>
 
 

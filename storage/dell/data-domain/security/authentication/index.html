@@ -4425,111 +4425,112 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
     adminUser --&gt; ldap &amp; localFallback
     adminUser --&gt; ddboostUser
     ddCLI --&gt; auditLog</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │               DD admin auth: LDAP/AD preferred; local admin as break-glass only               │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           SSH key authentication supported for CLI; disable password auth post-setup          │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             DDOS does not support native MFA; place jump server with MFA in front             │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │             Admin Authentication             │  │                Configuration                │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           LDAP/AD: primary method            │  │        authgroup add group-name role        │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │        Local admin: break-glass only         │  │          auth ldap set server &lt;IP&gt;          │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           SSH key: scripted access           │  │             user ssh-pubkeys add            │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      Roles: admin, limited admin, user       │  │            Audit: log all logins            │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         Session timeout configurable         │  │           No shared admin accounts          │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Method      │     Use case     │      Command      │     Standard     │     MFA path     │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │     LDAP/AD      │   Daily admin    │   auth ldap set   │     Required     │   Jump server    │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │   Local admin    │   Break-glass    │    User add/mod   │    Vault only    │N/A (break-glass) │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │     SSH key      │    Automation    │  ssh-pubkeys add  │     Required     │ Key + passphrase │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │  DD Boost user   │    Backup app    │    ddboost user   │     Per app      │    App-level     │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    authgroup  = LDAP/AD group mapped to DDOS admin role; members inherit role permissions             │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Break-glass= Local admin account in vault; used only when LDAP unavailable                         │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Jump server= Hardened host with MFA in front of DD; all SSH tunnels through jump server            │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### LDAP Role Mapping
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>After LDAP is configured, map LDAP groups to DDOS roles:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Map an LDAP group to the admin role
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>authentication roles assign role admin group &lt;ldap-group-storage-admins&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Map an LDAP group to the backup-operator role (for monitoring/reporting users)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>authentication roles assign role user group &lt;ldap-group-storage-readonly&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># List current role-to-group mappings
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>authentication roles show
+┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               DD admin auth: LDAP/AD preferred; local admin as break-glass only               │   │
+│   │           SSH key authentication supported for CLI; disable password auth post-setup          │   │
+│   │             DDOS does not support native MFA; place jump server with MFA in front             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Admin Authentication             │  │                Configuration                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           LDAP/AD: primary method            │  │        authgroup add group-name role        │   │
+│   │        Local admin: break-glass only         │  │          auth ldap set server <IP>          │   │
+│   │           SSH key: scripted access           │  │             user ssh-pubkeys add            │   │
+│   │      Roles: admin, limited admin, user       │  │            Audit: log all logins            │   │
+│   │         Session timeout configurable         │  │           No shared admin accounts          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Method      │     Use case     │      Command      │     Standard     │     MFA path     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     LDAP/AD      │   Daily admin    │   auth ldap set   │     Required     │   Jump server    │   │
+│   │   Local admin    │   Break-glass    │    User add/mod   │    Vault only    │N/A (break-glass) │   │
+│   │     SSH key      │    Automation    │  ssh-pubkeys add  │     Required     │ Key + passphrase │   │
+│   │  DD Boost user   │    Backup app    │    ddboost user   │     Per app      │    App-level     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    authgroup  = LDAP/AD group mapped to DDOS admin role; members inherit role permissions             │
+│    Break-glass= Local admin account in vault; used only when LDAP unavailable                         │
+│    Jump server= Hardened host with MFA in front of DD; all SSH tunnels through jump server            │
+│    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### LDAP Role Mapping
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>After LDAP is configured, map LDAP groups to DDOS roles:
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Map an LDAP group to the admin role
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>authentication roles assign role admin group &lt;ldap-group-storage-admins&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Map an LDAP group to the backup-operator role (for monitoring/reporting users)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>authentication roles assign role user group &lt;ldap-group-storage-readonly&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># List current role-to-group mappings
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>authentication roles show
 </code></pre></div></p>
 <hr />
 <h2 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h2>
 <p>For environments using Microsoft AD, DDOS can join the domain directly. This eliminates the need to configure a separate LDAP bind account in most cases.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable Active Directory authentication</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>auth<span class="w"> </span>add<span class="w"> </span>active-directory<span class="w"> </span>&lt;domain.example.com&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show current AD/LDAP authentication configuration</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>auth<span class="w"> </span>show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test AD authentication for a specific user</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>ldap<span class="w"> </span>server<span class="w"> </span>&lt;ad-domain-controller-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable Active Directory authentication</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>auth<span class="w"> </span>add<span class="w"> </span>active-directory<span class="w"> </span>&lt;domain.example.com&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show current AD/LDAP authentication configuration</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>auth<span class="w"> </span>show
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Test AD authentication for a specific user</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>auth<span class="w"> </span><span class="nb">test</span><span class="w"> </span>ldap<span class="w"> </span>server<span class="w"> </span>&lt;ad-domain-controller-ip&gt;
 </code></pre></div>
 <p>When joined to AD:
 - Users log in with <code>DOMAIN\username</code> or <code>username@domain.example.com</code>
 - Group membership drives DDOS role assignment, same as LDAP
 - The DDOS clock must be synchronised with the AD domain (NTP to the same source) — a time skew greater than 5 minutes will cause Kerberos authentication failures</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify NTP is synchronised (prerequisite for AD auth)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ntp<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add domain controller as NTP source if needed</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ntp<span class="w"> </span>add<span class="w"> </span>timeserver<span class="w"> </span>&lt;domain-controller-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify NTP is synchronised (prerequisite for AD auth)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ntp<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add domain controller as NTP source if needed</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ntp<span class="w"> </span>add<span class="w"> </span>timeserver<span class="w"> </span>&lt;domain-controller-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="disable-local-admin-when-ldapad-is-operational">Disable Local Admin When LDAP/AD Is Operational<a class="headerlink" href="#disable-local-admin-when-ldapad-is-operational" title="Permanent link">&para;</a></h2>
 <p>Once LDAP or AD authentication is confirmed working, reduce reliance on local accounts. The <code>sysadmin</code> local account should be reserved for break-glass recovery only.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Force management access through LDAP/AD groups</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>admin-auth-method<span class="w"> </span>ldap
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm sysadmin local login is disabled for normal use</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># (keep the password documented in your secure password vault — CyberArk, Vault, etc.)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify authentication method</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>auth-method
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Force management access through LDAP/AD groups</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>admin-auth-method<span class="w"> </span>ldap
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm sysadmin local login is disabled for normal use</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># (keep the password documented in your secure password vault — CyberArk, Vault, etc.)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify authentication method</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>auth-method
 </code></pre></div>
 <p><strong>Break-glass procedure:</strong> if LDAP/AD is unavailable and the sysadmin account is needed, use the local console (iDRAC / physical serial) to authenticate with the local sysadmin credentials. Do not store sysadmin credentials on shared workstations.</p>
 <hr />
 <h2 id="local-user-management">Local User Management<a class="headerlink" href="#local-user-management" title="Permanent link">&para;</a></h2>
 <p>Local accounts are created for break-glass recovery and in environments that do not use a directory service. Minimise the number of local accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all local users with roles and last login</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>user<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show detail for a specific user</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>user<span class="w"> </span>show<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Create a new local user with a specific role</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>user<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>role<span class="w"> </span>admin
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Change a user&#39;s password</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Delete a user (remove when no longer needed)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>user<span class="w"> </span>del<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Lock a user account (disable without deleting)</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>user<span class="w"> </span>modify<span class="w"> </span>&lt;username&gt;<span class="w"> </span>disable
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all local users with roles and last login</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>user<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show detail for a specific user</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>user<span class="w"> </span>show<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Create a new local user with a specific role</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>user<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>role<span class="w"> </span>admin
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Change a user&#39;s password</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Delete a user (remove when no longer needed)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>user<span class="w"> </span>del<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Lock a user account (disable without deleting)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>user<span class="w"> </span>modify<span class="w"> </span>&lt;username&gt;<span class="w"> </span>disable
 </code></pre></div>
 <h3 id="ddos-user-roles">DDOS User Roles<a class="headerlink" href="#ddos-user-roles" title="Permanent link">&para;</a></h3>
 <table>
@@ -4576,29 +4577,29 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 <hr />
 <h2 id="password-policy">Password Policy<a class="headerlink" href="#password-policy" title="Permanent link">&para;</a></h2>
 <p>Enforce a consistent password policy for all local accounts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View current password policy</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Minimum password length (characters)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-length<span class="w"> </span><span class="m">12</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Maximum password age (days; 0 = no expiry)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-age<span class="w"> </span><span class="m">90</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Minimum password age (days; prevents immediate re-use)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-age<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Number of previous passwords remembered</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">history</span><span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Maximum failed login attempts before account lockout</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-failure<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Lockout duration (minutes)</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>lockout-duration<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># View updated policy</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View current password policy</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Minimum password length (characters)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-length<span class="w"> </span><span class="m">12</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Maximum password age (days; 0 = no expiry)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-age<span class="w"> </span><span class="m">90</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Minimum password age (days; prevents immediate re-use)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-age<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Number of previous passwords remembered</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">history</span><span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Maximum failed login attempts before account lockout</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-failure<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Lockout duration (minutes)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>user<span class="w"> </span>password-policy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>lockout-duration<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># View updated policy</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>user<span class="w"> </span>password-policy<span class="w"> </span>show
 </code></pre></div>
 <p><strong>Recommended policy settings:</strong></p>
 <table>
@@ -4638,17 +4639,17 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 <hr />
 <h2 id="ssh-public-key-authentication">SSH Public Key Authentication<a class="headerlink" href="#ssh-public-key-authentication" title="Permanent link">&para;</a></h2>
 <p>SSH key-based authentication eliminates password exposure in automation scripts and enables non-interactive management access.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show authorised SSH keys for a user</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>show<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Add an SSH public key for a user (paste the full public key string)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA... comment&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Add an RSA key</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span><span class="s2">&quot;ssh-rsa AAAA... comment&quot;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Remove a specific SSH key by ID</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>del<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span>&lt;key-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show authorised SSH keys for a user</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>show<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Add an SSH public key for a user (paste the full public key string)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span><span class="s2">&quot;ssh-ed25519 AAAA... comment&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Add an RSA key</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span><span class="s2">&quot;ssh-rsa AAAA... comment&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Remove a specific SSH key by ID</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>user<span class="w"> </span>ssh-keys<span class="w"> </span>del<span class="w"> </span>&lt;username&gt;<span class="w"> </span>key<span class="w"> </span>&lt;key-id&gt;
 </code></pre></div>
 <p><strong>Key type guidance:</strong></p>
 <table>
@@ -4688,64 +4689,64 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 </tbody>
 </table>
 <p>Generate keys on the admin workstation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate an Ed25519 key pair on your workstation</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;admin@dd01-mgmt&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/dd01_ed25519
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Display the public key for addition to the DD</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>cat<span class="w"> </span>~/.ssh/dd01_ed25519.pub
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate an Ed25519 key pair on your workstation</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;admin@dd01-mgmt&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/dd01_ed25519
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Display the public key for addition to the DD</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>cat<span class="w"> </span>~/.ssh/dd01_ed25519.pub
 </code></pre></div>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
 <h3 id="view-active-sessions">View Active Sessions<a class="headerlink" href="#view-active-sessions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List active login sessions on the DD</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>user<span class="w"> </span>login<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List active login sessions on the DD</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>user<span class="w"> </span>login<span class="w"> </span>show
 </code></pre></div>
 <h3 id="terminate-a-session">Terminate a Session<a class="headerlink" href="#terminate-a-session" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Terminate a specific active session by session ID</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>user<span class="w"> </span>login<span class="w"> </span>terminate<span class="w"> </span>&lt;session-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Terminate a specific active session by session ID</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>user<span class="w"> </span>login<span class="w"> </span>terminate<span class="w"> </span>&lt;session-id&gt;
 </code></pre></div>
 <h3 id="idle-session-timeout">Idle Session Timeout<a class="headerlink" href="#idle-session-timeout" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Set idle timeout (minutes; 0 = never timeout — not recommended)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>idle-timeout<span class="w"> </span><span class="m">15</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>idle-timeout
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Set idle timeout (minutes; 0 = never timeout — not recommended)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>idle-timeout<span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>adminaccess<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>idle-timeout
 </code></pre></div>
 <hr />
 <h2 id="dd-boost-authentication">DD Boost Authentication<a class="headerlink" href="#dd-boost-authentication" title="Permanent link">&para;</a></h2>
 <p>DD Boost uses a separate user credential mechanism. DD Boost users authenticate backup software; they are not DDOS management accounts and do not participate in LDAP/AD.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># List DD Boost users</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ddboost<span class="w"> </span>user<span class="w"> </span>list
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Create a DD Boost user (role must be backup-operator)</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>user<span class="w"> </span>add<span class="w"> </span>&lt;ddboost-username&gt;<span class="w"> </span>role<span class="w"> </span>backup-operator
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>ddboost<span class="w"> </span>user<span class="w"> </span>assign<span class="w"> </span>&lt;ddboost-username&gt;
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># Change a DD Boost user password (update backup software immediately after)</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>ddboost<span class="w"> </span>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;ddboost-username&gt;
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c1"># Remove a DD Boost user</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ddboost<span class="w"> </span>user<span class="w"> </span>del<span class="w"> </span>&lt;ddboost-username&gt;
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># Verify which DD Boost user is assigned to which storage unit</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># List DD Boost users</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ddboost<span class="w"> </span>user<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Create a DD Boost user (role must be backup-operator)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>user<span class="w"> </span>add<span class="w"> </span>&lt;ddboost-username&gt;<span class="w"> </span>role<span class="w"> </span>backup-operator
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ddboost<span class="w"> </span>user<span class="w"> </span>assign<span class="w"> </span>&lt;ddboost-username&gt;
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Change a DD Boost user password (update backup software immediately after)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>ddboost<span class="w"> </span>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;ddboost-username&gt;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Remove a DD Boost user</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>ddboost<span class="w"> </span>user<span class="w"> </span>del<span class="w"> </span>&lt;ddboost-username&gt;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Verify which DD Boost user is assigned to which storage unit</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
 </code></pre></div>
 <p><strong>DD Boost user naming convention:</strong> <code>ddboost-&lt;backup-tool&gt;</code> — e.g., <code>ddboost-veeam</code>, <code>ddboost-netbackup</code>. One user per backup application, never shared across tools.</p>
 <hr />
 <h2 id="authentication-audit-logging">Authentication Audit Logging<a class="headerlink" href="#authentication-audit-logging" title="Permanent link">&para;</a></h2>
 <p>All login attempts, successes, and failures are written to the DDOS audit log.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># View authentication events in the audit log</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>log<span class="w"> </span>view<span class="w"> </span>audit
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Filter for failed logins</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>log<span class="w"> </span>view<span class="w"> </span>audit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|denied\|invalid&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Filter for successful logins</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>log<span class="w"> </span>view<span class="w"> </span>audit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;logged in\|authenticated&quot;</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Export audit log to syslog server (configure once — persists)</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>log<span class="w"> </span>host<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># View authentication events in the audit log</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>log<span class="w"> </span>view<span class="w"> </span>audit
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Filter for failed logins</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>log<span class="w"> </span>view<span class="w"> </span>audit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;fail\|denied\|invalid&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Filter for successful logins</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>log<span class="w"> </span>view<span class="w"> </span>audit<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;logged in\|authenticated&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Export audit log to syslog server (configure once — persists)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>log<span class="w"> </span>host<span class="w"> </span>add<span class="w"> </span>&lt;syslog-server-ip&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>log<span class="w"> </span>host<span class="w"> </span>show
 </code></pre></div>
 <p>Forward the audit log to a SIEM with at minimum 12 months of retention. Authentication log analysis should include:
 - Failed login patterns (potential brute force)

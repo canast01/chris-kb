@@ -3327,28 +3327,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#journald-retention" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        journald Retention
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#centralised-log-retention-siem-graylog-splunk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Centralised Log Retention (SIEM / Graylog / Splunk)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#archive-to-object-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3509,7 +3487,7 @@
 Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation Checklist.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Log Retention — Policies, Storage Tiers, and Compliance Requirements             │   │
@@ -3552,52 +3530,82 @@ Log Retention Policy reference covering journald Retention, Centralised Log Rete
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="journald-retention">journald Retention<a class="headerlink" href="#journald-retention" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Current disk usage</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>journalctl<span class="w"> </span>--disk-usage
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set retention in /etc/systemd/journald.conf:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># SystemMaxUse=2G</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># MaxRetentionSec=90day</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Apply immediately</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-journald
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Manual vacuum</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>journalctl<span class="w"> </span>--vacuum-time<span class="o">=</span>90d
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>2G
-</code></pre></div>
-<h2 id="centralised-log-retention-siem-graylog-splunk">Centralised Log Retention (SIEM / Graylog / Splunk)<a class="headerlink" href="#centralised-log-retention-siem-graylog-splunk" title="Permanent link">&para;</a></h2>
-<p><strong>Graylog:</strong>
-- Set index retention policy: Admin → System → Indices → Index set → Max retention
-- Configure message TTL per stream for fine-grained control</p>
-<p><strong>Splunk:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set retention per index in indexes.conf</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">[</span>main<span class="o">]</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">frozenTimePeriodInSecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">7776000</span><span class="w">   </span><span class="c1"># 90 days</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">maxTotalDataSizeMB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500000</span>
+┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Log Retention — Policies, Storage Tiers, and Compliance Requirements             │   │
+│   │       Log types: syslog · vCenter events · API audit · security audit · performance data      │   │
+│   │     Tiers: hot (NFS/local, 30 days) · warm (object store, 90 days) · cold (archive, 1 yr)     │   │
+│   │           Compliance: SOC2/ISO27001 require 12-month minimum for security audit logs          │   │
+│   │           Tools: Aria Log Insight · rsyslog · Splunk forward · S3-compatible archive          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Retention tiers balance query speed vs. storage cost — hot for ops, cold for compliance            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Hot Tier (30 days)     │  │     Warm Tier (90 days)     │  │     Cold Tier (1 year+)     │   │
+│   │       NFS or local SSD      │  │      Object store (S3)      │  │     Glacier/deep archive    │   │
+│   │       Full-text search      │  │       Compressed gzip       │  │      Encrypted at rest      │   │
+│   │       Sub-second query      │  │      Index retained 30d     │  │      Restore: 4-hr SLA      │   │
+│   │      Log Insight bucket     │  │       Policy-auto-move      │  │       Legal hold flag       │   │
+│   │      Syslog stream live     │  │     Security audit logs     │  │       Compliance audit      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Aria Log Insight VM on vSphere · NFS datastore for hot tier · MinIO/S3 for warm/cold tiers           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Hot tier          = Fast-access storage for recent logs; supports real-time search                   │
+│  Warm tier         = Compressed object storage; slower but cost-efficient for 30-90 day range         │
+│  Cold tier         = Deep archive; minimal cost; long restore times; used for compliance              │
+│  Retention policy  = Rule defining how long a log type is kept and when it transitions tiers          │
+│  Log Insight       = VMware Aria Log Insight; on-prem log aggregation and search platform             │
+│  rsyslog           = Linux syslog daemon; ingests and forwards RFC-5424 syslog messages               │
+│  Legal hold        = Flag preventing log deletion regardless of retention policy expiry               │
+│  SOC2              = Service Organization Control 2; audit framework requiring log retention          │
+│  ISO 27001         = Information security management standard with log evidence requirements          │
+│  Gzip compression  = Lossless compression reducing warm-tier storage by 60-80%                        │
+│  Object store      = S3-compatible storage backend for warm/cold log archiving                        │
+│  Auto-move policy  = Lifecycle rule automatically migrating logs between tiers on schedule            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Centralised Log Retention (SIEM / Graylog / Splunk)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Graylog:**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Set index retention policy: Admin → System → Indices → Index set → Max retention
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Configure message TTL per stream for fine-grained control
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Splunk:**
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>```bash
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Set retention per index in indexes.conf
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>[main]
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>frozenTimePeriodInSecs = 7776000   # 90 days
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>maxTotalDataSizeMB = 500000
 </code></pre></div></p>
 <p><strong>Elasticsearch (ELK):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Index Lifecycle Management (ILM) — set delete phase</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>PUT<span class="w"> </span>_ilm/policy/infra-logs-policy
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="o">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s2">&quot;policy&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="s2">&quot;phases&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="s2">&quot;min_age&quot;</span>:<span class="w"> </span><span class="s2">&quot;90d&quot;</span>,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="s2">&quot;actions&quot;</span>:<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="o">}</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="o">}</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="o">}</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="o">}</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Index Lifecycle Management (ILM) — set delete phase</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>PUT<span class="w"> </span>_ilm/policy/infra-logs-policy
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="s2">&quot;policy&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="s2">&quot;phases&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="s2">&quot;min_age&quot;</span>:<span class="w"> </span><span class="s2">&quot;90d&quot;</span>,
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="s2">&quot;actions&quot;</span>:<span class="w"> </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;delete&quot;</span>:<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="o">}</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="o">}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="o">}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="o">}</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">}</span>
 </code></pre></div></p>
 <h2 id="archive-to-object-storage">Archive to Object Storage<a class="headerlink" href="#archive-to-object-storage" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Compress and upload old logs (AWS S3 example)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/archive/<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Compress and upload old logs (AWS S3 example)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>/var/log/archive/<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>/tmp/logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m<span class="k">)</span>.tar.gz<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>s3<span class="w"> </span>ls<span class="w"> </span>s3://&lt;bucket&gt;/logs/<span class="k">$(</span>hostname<span class="k">)</span>/
 </code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>

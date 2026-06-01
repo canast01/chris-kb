@@ -3021,62 +3021,63 @@ Validates that infrastructure is prepared to receive a new workload, application
     F --&gt; G{All checks\npassing?}
     G --&gt;|Yes| H[Ready — proceed\nwith onboarding]
     G --&gt;|No| I[Remediate blockers\nbefore proceeding]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Environment readiness: verify capacity, connectivity, dependencies, and credentials      │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Complete readiness checklist before any deployment or major change starts           │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Infrastructure Readiness           │  │             Dependency Readiness            │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │         Storage: capacity available          │  │            DNS resolves correctly           │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │          Compute: CPU/RAM headroom           │  │            Network paths verified           │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          No active alarms on target          │  │            Auth/credentials ready           │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Backup current before deploy         │  │           Downstream deps notified          │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            Monitoring configured             │  │           Firewall rules in place           │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      Check       │      Method      │        Pass       │   Fail action    │      Owner       │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │   Storage cap    │    Array GUI     │     &gt; 20% free    │   Expand first   │      Infra       │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │   Compute cap    │  vCenter/Hyp-V   │     &gt; 20% free    │   Resize first   │      Infra       │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │   Network conn   │   Ping + trace   │    All paths OK   │   Fix network    │   Network team   │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │       Auth       │    Test login    │      Success      │    Fix creds     │      Infra       │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    Headroom      = Free compute/storage capacity above the deployment requirement; 20% minimum        │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    Downstream deps= Services or systems that depend on the environment being deployed to              │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c">## 2. Network Readiness</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">```</span><span class="n">bash</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Confirm VLAN exists on target switch/fabric</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">show</span> <span class="n">vlan</span> <span class="n">id</span> <span class="p">&lt;</span><span class="n">vlan_id</span><span class="p">&gt;</span>                 <span class="c"># Cisco</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-VDSwitch</span> <span class="n">vDS-Prod</span>     <span class="c"># VMware distributed switch</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Confirm IP address allocated and not in use</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">ping</span> <span class="n">-c</span> <span class="n">1</span> <span class="p">&lt;</span><span class="n">planned-ip</span><span class="p">&gt;</span> <span class="p">&amp;&amp;</span> <span class="nb">echo </span><span class="s2">&quot;IP IN USE&quot;</span> <span class="p">||</span> <span class="nb">echo </span><span class="s2">&quot;IP available&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">nmap</span> <span class="n">-sn</span> <span class="p">&lt;</span><span class="n">planned-ip</span><span class="p">&gt;</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># DNS A record created</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">nslookup</span> <span class="p">&lt;</span><span class="n">planned-hostname</span><span class="p">&gt;.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">dig</span> <span class="p">+</span><span class="n">short</span> <span class="p">&lt;</span><span class="n">planned-hostname</span><span class="p">&gt;.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c"># Firewall rules in place (test from source to destination)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="p">&lt;</span><span class="n">destination-ip</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="p">-</span><span class="n">-connect-timeout</span> <span class="n">5</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">destination</span><span class="p">&gt;:&lt;</span><span class="n">port</span><span class="p">&gt;/</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c"># NTP reachability</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">chronyc</span> <span class="n">sources</span> <span class="n">-v</span> <span class="p">|</span> <span class="n">grep</span> <span class="s2">&quot;^*&quot;</span>        <span class="c"># confirm preferred source</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="n">ntpdate</span> <span class="n">-q</span> <span class="n">ntp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Environment readiness: verify capacity, connectivity, dependencies, and credentials      │   │
+│   │           Complete readiness checklist before any deployment or major change starts           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Infrastructure Readiness           │  │             Dependency Readiness            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Storage: capacity available          │  │            DNS resolves correctly           │   │
+│   │          Compute: CPU/RAM headroom           │  │            Network paths verified           │   │
+│   │          No active alarms on target          │  │            Auth/credentials ready           │   │
+│   │         Backup current before deploy         │  │           Downstream deps notified          │   │
+│   │            Monitoring configured             │  │           Firewall rules in place           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │      Method      │        Pass       │   Fail action    │      Owner       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Storage cap    │    Array GUI     │     &gt; 20% free    │   Expand first   │      Infra       │   │
+│   │   Compute cap    │  vCenter/Hyp-V   │     &gt; 20% free    │   Resize first   │      Infra       │   │
+│   │   Network conn   │   Ping + trace   │    All paths OK   │   Fix network    │   Network team   │   │
+│   │       Auth       │    Test login    │      Success      │    Fix creds     │      Infra       │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Headroom      = Free compute/storage capacity above the deployment requirement; 20% minimum        │
+│    Downstream deps= Services or systems that depend on the environment being deployed to              │
+│    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## 2. Network Readiness
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Confirm VLAN exists on target switch/fabric
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>show vlan id &lt;vlan_id&gt;                 # Cisco
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-VDPortgroup -VDSwitch vDS-Prod     # VMware distributed switch
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Confirm IP address allocated and not in use
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ping -c 1 &lt;planned-ip&gt; &amp;&amp; echo &quot;IP IN USE&quot; || echo &quot;IP available&quot;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>nmap -sn &lt;planned-ip&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># DNS A record created
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>nslookup &lt;planned-hostname&gt;.example.com
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>dig +short &lt;planned-hostname&gt;.example.com
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Firewall rules in place (test from source to destination)
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>nc -zv &lt;destination-ip&gt; &lt;port&gt;
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>curl -sk --connect-timeout 5 https://&lt;destination&gt;:&lt;port&gt;/
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># NTP reachability
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>chronyc sources -v | grep &quot;^*&quot;        # confirm preferred source
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>ntpdate -q ntp.example.com
 </code></pre></div></p>
 <table>
 <thead>
@@ -3121,21 +3122,21 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="3-security-readiness">3. Security Readiness<a class="headerlink" href="#3-security-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm CyberArk PAM account created for server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CyberArk: Accounts → Add Account → Managed System: &lt;hostname&gt;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check SSH hardening baseline</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PermitRootLogin|PasswordAuthentication|MaxAuthTries|Protocol&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># SELinux / AppArmor enforcing</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>getenforce<span class="w">                         </span><span class="c1"># should return &quot;Enforcing&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>aa-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;profiles in enforce&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check OS baseline applied</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>oscap<span class="w"> </span>xccdf<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--profile<span class="w"> </span>xccdf_org.ssgproject.content_profile_cis_server_l1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--results<span class="w"> </span>/tmp/oscap-results.xml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>/usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm CyberArk PAM account created for server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># CyberArk: Accounts → Add Account → Managed System: &lt;hostname&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SSH hardening baseline</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;PermitRootLogin|PasswordAuthentication|MaxAuthTries|Protocol&quot;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># SELinux / AppArmor enforcing</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>getenforce<span class="w">                         </span><span class="c1"># should return &quot;Enforcing&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aa-status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;profiles in enforce&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check OS baseline applied</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>oscap<span class="w"> </span>xccdf<span class="w"> </span><span class="nb">eval</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--profile<span class="w"> </span>xccdf_org.ssgproject.content_profile_cis_server_l1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--results<span class="w"> </span>/tmp/oscap-results.xml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>/usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 </code></pre></div>
 <table>
 <thead>
@@ -3176,18 +3177,18 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="4-monitoring-readiness">4. Monitoring Readiness<a class="headerlink" href="#4-monitoring-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install and verify Prometheus node_exporter</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>node_exporter
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_uname_info&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Confirm host visible in Prometheus/Grafana</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;host&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;])&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Windows — confirm monitoring agent</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Prometheus Windows Exporter&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># or for Zabbix / SCOM</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Zabbix Agent&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install and verify Prometheus node_exporter</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>node_exporter
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;node_uname_info&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Confirm host visible in Prometheus/Grafana</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;http://prometheus:9090/api/v1/query?query=up{instance=&#39;&lt;host&gt;:9100&#39;}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;data&#39;][&#39;result&#39;])&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Windows — confirm monitoring agent</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Prometheus Windows Exporter&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># or for Zabbix / SCOM</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Get-Service<span class="w"> </span><span class="s2">&quot;Zabbix Agent&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Status
 </code></pre></div>
 <table>
 <thead>
@@ -3224,15 +3225,15 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="5-backup-readiness">5. Backup Readiness<a class="headerlink" href="#5-backup-readiness" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Veeam — confirm backup job exists and targets new VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Get-VBRJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GetObjectsInJob<span class="o">()</span>.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*HOSTNAME*&quot;</span><span class="o">}</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Commvault — confirm client registered</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>HOSTNAME
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Run first backup and verify</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>Get-VBRSession<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>JobName<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*Production VMs*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Veeam — confirm backup job exists and targets new VM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-VBRJob<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.GetObjectsInJob<span class="o">()</span>.Name<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*HOSTNAME*&quot;</span><span class="o">}</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Commvault — confirm client registered</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>qlist<span class="w"> </span>client<span class="w"> </span>-name<span class="w"> </span>HOSTNAME
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Run first backup and verify</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Get-VBRSession<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span>JobName<span class="w"> </span>-like<span class="w"> </span><span class="s2">&quot;*Production VMs*&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-Last<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3265,11 +3266,11 @@ Validates that infrastructure is prepared to receive a new workload, application
 </tbody>
 </table>
 <h2 id="6-documentation-and-cmdb">6. Documentation and CMDB<a class="headerlink" href="#6-documentation-and-cmdb" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Items to complete before handover</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># → CMDB entry created with: hostname, IP, owner, location, specs, environment</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># → Run book / system overview doc drafted</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># → Support contact assigned</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># → Patch schedule assigned</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Items to complete before handover</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># → CMDB entry created with: hostname, IP, owner, location, specs, environment</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># → Run book / system overview doc drafted</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># → Support contact assigned</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># → Patch schedule assigned</span>
 </code></pre></div>
 <table>
 <thead>

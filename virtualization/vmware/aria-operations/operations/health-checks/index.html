@@ -4771,76 +4771,101 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Watch: OFFLINE · DEGRADED · SYNCING                │
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└──────────────────────┬──────────────────────────────┘
 </code></pre></div>
-                       │
-          ┌────────────┼────────────────────┐
-          ▼            ▼                    ▼
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────┐ ┌──────────────┐ ┌─────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│ Adapter      │ │ Disk         │ │ Service           │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│ Health       │ │ Health       │ │ Health            │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│              │ │              │ │                   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│ Admin        │ │ /storage/db  │ │ systemctl         │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│ → Solutions  │ │ warn: 70%    │ │ list-units        │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│              │ │ crit: 80%    │ │ &#39;vmware-*&#39;        │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│ vracli       │ │              │ │                   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│ adapter list │ │ /storage/log │ │ analytics         │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│              │ │ warn: 75%    │ │ cassandra         │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│ Expected:    │ │ crit: 85%    │ │ gemfire           │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│ Collecting   │ │              │ │ casa / nginx      │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│ &lt; 5 min ago  │ │ check inodes │ │ watchdog          │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>└──────────────┘ └──────────────┘ └─────────────────┘
-</code></pre></div>
-          │
-          ▼
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>
+┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Cluster Node Health              │  │                Adapter Health               │   │
+│   │         Admin &gt; Cluster: all green?          │  │           Data Sources: all green?          │   │
+│   │            Master: ONLINE status             │  │          Last collection &lt; 10 min?          │   │
+│   │         Data nodes: ONLINE + joined          │  │           Adapter logs: no errors?          │   │
+│   │         Collector: COLLECTING status         │  │          Object count as expected?          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Node and adapter health are primary checks; collection status confirms data flow.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Collection Status Checks           │  │           Platform Resource Checks          │   │
+│   │           Alerts firing normally?            │  │           Disk: /storage/db &lt; 80%?          │   │
+│   │           Dashboards loading data?           │  │           RAM usage within sizing?          │   │
+│   │          Capacity data up to date?           │  │                NTP: in sync?                │   │
+│   │            Reports generating OK?            │  │              Cert: not expired?             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster on vSphere; SSD-backed datastore; NTP server; SMTP for alert delivery                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cluster Status      = vROps Admin UI showing all node roles and health states                        │
+│  ONLINE Status       = Node is fully joined, serving requests, and collecting data                    │
+│  COLLECTING Status   = Remote collector actively sending metrics to master cluster                    │
+│  Adapter Green       = Data source collecting without errors in last 10 minutes                       │
+│  Last Collection     = Timestamp of most recent successful adapter data pull                          │
+│  Object Count        = Expected number of monitored resources; drop = issue                           │
+│  /storage/db         = vROps metric database path; monitor disk consumption                           │
+│  Alert Firing        = Verify known issue triggers alert; confirms policy active                      │
+│  Dashboard Data      = Widgets show current metrics; blank = collection problem                       │
+│  Capacity Freshness  = Capacity model updates every cycle; stale = issue                              │
+│  NTP Sync            = Required for accurate metric timestamps and alert timing                       │
+│  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>          │
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>          ▼
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
 </code></pre></div>
 ┌─────────────────────────────────────────────────────┐
 │  NTP Health (all nodes must be &lt; 1 second drift)    │
 │  chronyc tracking (per node)                        │
 │  chronyc makestep (force sync if drifted)           │
 └─────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│                                                                                                       │
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   │             Cluster Node Health              │  │                Adapter Health               │   │
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   │         Admin &gt; Cluster: all green?          │  │           Data Sources: all green?          │   │
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   │            Master: ONLINE status             │  │          Last collection &lt; 10 min?          │   │
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   │         Data nodes: ONLINE + joined          │  │           Adapter logs: no errors?          │   │
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   │         Collector: COLLECTING status         │  │          Object count as expected?          │   │
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│                                                                                                       │
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│  Node and adapter health are primary checks; collection status confirms data flow.                    │
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│                                                                                                       │
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│                                                                                                       │
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│   │           Collection Status Checks           │  │           Platform Resource Checks          │   │
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   │           Alerts firing normally?            │  │           Disk: /storage/db &lt; 80%?          │   │
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│   │           Dashboards loading data?           │  │           RAM usage within sizing?          │   │
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│   │          Capacity data up to date?           │  │                NTP: in sync?                │   │
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│   │            Reports generating OK?            │  │              Cert: not expired?             │   │
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│                                                                                                       │
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>│  vROps cluster on vSphere; SSD-backed datastore; NTP server; SMTP for alert delivery                  │
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│                                                                                                       │
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>│                                                                                                       │
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>│  Cluster Status      = vROps Admin UI showing all node roles and health states                        │
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>│  ONLINE Status       = Node is fully joined, serving requests, and collecting data                    │
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>│  COLLECTING Status   = Remote collector actively sending metrics to master cluster                    │
-<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>│  Adapter Green       = Data source collecting without errors in last 10 minutes                       │
-<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>│  Last Collection     = Timestamp of most recent successful adapter data pull                          │
-<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>│  Object Count        = Expected number of monitored resources; drop = issue                           │
-<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>│  /storage/db         = vROps metric database path; monitor disk consumption                           │
-<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>│  Alert Firing        = Verify known issue triggers alert; confirms policy active                      │
-<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>│  Dashboard Data      = Widgets show current metrics; blank = collection problem                       │
-<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>│  Capacity Freshness  = Capacity model updates every cycle; stale = issue                              │
-<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>│  NTP Sync            = Required for accurate metric timestamps and alert timing                       │
-<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>│  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
-<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>│                                                                                                       │
-<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │             Cluster Node Health              │  │                Adapter Health               │   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │         Admin &gt; Cluster: all green?          │  │           Data Sources: all green?          │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │            Master: ONLINE status             │  │          Last collection &lt; 10 min?          │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │         Data nodes: ONLINE + joined          │  │           Adapter logs: no errors?          │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │         Collector: COLLECTING status         │  │          Object count as expected?          │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│                                                                                                       │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│  Node and adapter health are primary checks; collection status confirms data flow.                    │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│                                                                                                       │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                                                                                                       │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   │           Collection Status Checks           │  │           Platform Resource Checks          │   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │           Alerts firing normally?            │  │           Disk: /storage/db &lt; 80%?          │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │           Dashboards loading data?           │  │           RAM usage within sizing?          │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │          Capacity data up to date?           │  │                NTP: in sync?                │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │            Reports generating OK?            │  │              Cert: not expired?             │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│                                                                                                       │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  vROps cluster on vSphere; SSD-backed datastore; NTP server; SMTP for alert delivery                  │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│                                                                                                       │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Cluster Status      = vROps Admin UI showing all node roles and health states                        │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│  ONLINE Status       = Node is fully joined, serving requests, and collecting data                    │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  COLLECTING Status   = Remote collector actively sending metrics to master cluster                    │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  Adapter Green       = Data source collecting without errors in last 10 minutes                       │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  Last Collection     = Timestamp of most recent successful adapter data pull                          │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  Object Count        = Expected number of monitored resources; drop = issue                           │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  /storage/db         = vROps metric database path; monitor disk consumption                           │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  Alert Firing        = Verify known issue triggers alert; confirms policy active                      │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  Dashboard Data      = Widgets show current metrics; blank = collection problem                       │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  Capacity Freshness  = Capacity model updates every cycle; stale = issue                              │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  NTP Sync            = Required for accurate metric timestamps and alert timing                       │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│                                                                                                       │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
 <h2 id="adapter-health">Adapter Health<a class="headerlink" href="#adapter-health" title="Permanent link">&para;</a></h2>
@@ -4849,32 +4874,32 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 <li>Confirm each adapter shows <strong>Collection State: Collecting</strong></li>
 <li>Last collection time should be within 5 minutes</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List adapters with verbose collection state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check the collector service log for adapter errors</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Restart an adapter that is stuck in &quot;Not Collecting&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># UI: Administration → Solutions → select adapter → Restart Instance</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Or via API:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters/&lt;adapter-id&gt;/monitoringstatedescriptor&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;collectorId&quot;: &quot;&lt;collector-id&gt;&quot;, &quot;resourceKindKey&quot;: &quot;ADAPTER&quot;, &quot;adapterKindKey&quot;: &quot;VMWARE&quot;}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List adapters with verbose collection state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check the collector service log for adapter errors</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>tail<span class="w"> </span>-200<span class="w"> </span>/data/vcops/log/collector.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|exception\|fail&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Restart an adapter that is stuck in &quot;Not Collecting&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># UI: Administration → Solutions → select adapter → Restart Instance</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Or via API:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/adapters/&lt;adapter-id&gt;/monitoringstatedescriptor&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;collectorId&quot;: &quot;&lt;collector-id&gt;&quot;, &quot;resourceKindKey&quot;: &quot;ADAPTER&quot;, &quot;adapterKindKey&quot;: &quot;VMWARE&quot;}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="disk-and-storage-health">Disk and Storage Health<a class="headerlink" href="#disk-and-storage-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check disk usage on primary node</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Check Cassandra data directory sizes (main metrics store)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/*
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check available inodes — can cause &quot;disk full&quot; errors even with space remaining</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>df<span class="w"> </span>-i<span class="w"> </span>/storage/db
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>admin@vrops-prod-01.example.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check disk usage on primary node</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>df<span class="w"> </span>-h<span class="w"> </span>/storage/db<span class="w"> </span>/storage/log<span class="w"> </span>/storage/core
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Check Cassandra data directory sizes (main metrics store)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/storage/db/cassandra/data/*
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check available inodes — can cause &quot;disk full&quot; errors even with space remaining</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>df<span class="w"> </span>-i<span class="w"> </span>/storage/db
 </code></pre></div>
 <p>Thresholds:</p>
 <table>
@@ -4909,50 +4934,50 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 </table>
 <hr />
 <h2 id="service-health-commands">Service Health Commands<a class="headerlink" href="#service-health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check all vmware services on the primary node</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>active
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check a specific service that appears failed</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-analytics
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Key services and expected states</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># vmware-vcops-analytics   — active (running)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># vmware-vcops-cassandra   — active (running)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># vmware-vcops-postgres    — active (running)</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># vmware-vcops-gemfire     — active (running)</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># vmware-casa              — active (running)</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># nginx                    — active (running)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># vmware-vcops-watchdog    — active (running)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check all vmware services on the primary node</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-*&#39;</span><span class="w"> </span>--state<span class="o">=</span>active
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check a specific service that appears failed</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>vmware-vcops-analytics
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vcops-analytics<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Key services and expected states</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># vmware-vcops-analytics   — active (running)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># vmware-vcops-cassandra   — active (running)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># vmware-vcops-postgres    — active (running)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># vmware-vcops-gemfire     — active (running)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># vmware-casa              — active (running)</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># nginx                    — active (running)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># vmware-vcops-watchdog    — active (running)</span>
 </code></pre></div>
 <hr />
 <h2 id="ntp-and-time-sync">NTP and Time Sync<a class="headerlink" href="#ntp-and-time-sync" title="Permanent link">&para;</a></h2>
 <p>Time drift causes SSO token validation failures and certificate errors across all Aria Suite products. All cluster nodes must be synchronised.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NTP sync on each cluster node</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01<span class="w"> </span>vrops-prod-02<span class="w"> </span>vrops-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local&quot;</span><span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">done</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Force sync if drift is detected</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>chronyc<span class="w"> </span>makestep
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Verify NTP sources</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NTP sync on each cluster node</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">for</span><span class="w"> </span>node<span class="w"> </span><span class="k">in</span><span class="w"> </span>vrops-prod-01<span class="w"> </span>vrops-prod-02<span class="w"> </span>vrops-prod-03<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local: &quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>ssh<span class="w"> </span>admin@<span class="s2">&quot;</span><span class="nv">$node</span><span class="s2">.example.local&quot;</span><span class="w"> </span><span class="s2">&quot;chronyc tracking 2&gt;/dev/null | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">done</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Force sync if drift is detected</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>chronyc<span class="w"> </span>makestep
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Verify NTP sources</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
 </code></pre></div>
 <p>Acceptable drift: &lt; 1 second within the cluster. LCM pre-checks fail if drift exceeds 5 seconds on the LCM appliance.</p>
 <hr />
 <h2 id="alert-summary-health-check">Alert Summary Health Check<a class="headerlink" href="#alert-summary-health-check" title="Permanent link">&para;</a></h2>
 <p>Regularly review the alert landscape to identify noise and catch real problems:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Get all active alerts grouped by criticality via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})&#39;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Get all CRITICAL alerts with their object and alert name</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&amp;criticality=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Get all active alerts grouped by criticality via API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})&#39;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Get all CRITICAL alerts with their object and alert name</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&amp;criticality=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="pre-upgrade-health-gate">Pre-Upgrade Health Gate<a class="headerlink" href="#pre-upgrade-health-gate" title="Permanent link">&para;</a></h2>
@@ -4971,10 +4996,10 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 <hr />
 <h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
 <h3 id="capacity-review">Capacity Review<a class="headerlink" href="#capacity-review" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check cluster-level capacity summary via API</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check cluster-level capacity summary via API</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.resourceList[] | {name: .resourceKey.name}&#39;</span>
 </code></pre></div>
 <p>Via UI: <strong>Optimize → Capacity Overview</strong> — review which clusters or datastores are approaching capacity limits. Investigate any resource that shows a time remaining of less than 60 days.</p>
 <h3 id="report-review">Report Review<a class="headerlink" href="#report-review" title="Permanent link">&para;</a></h3>
@@ -4984,7 +5009,7 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 </ul>
 <h3 id="alert-policy-review">Alert Policy Review<a class="headerlink" href="#alert-policy-review" title="Permanent link">&para;</a></h3>
 <p>Review alert policies monthly and tune noisy alert definitions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Administration → Alert Settings → Alert Definitions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Administration → Alert Settings → Alert Definitions
 </code></pre></div>
 <ul>
 <li>Sort by <strong>Alert Count (Last 30 Days)</strong> — investigate any alert firing more than 10 times per day with no action being taken</li>

@@ -3064,92 +3064,93 @@
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>           ▼
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  Confirm with owner; clear monitoring alert
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">┌──────────────────────────────────────</span> <span class="n">Runbook</span> <span class="err">—</span> <span class="n">Service</span> <span class="n">Restart</span> <span class="err">──────────────────────────────────────┐</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">Restart</span> <span class="n">services</span> <span class="k">in</span> <span class="n">dependency</span> <span class="n">order</span><span class="p">;</span> <span class="n">verify</span> <span class="n">each</span> <span class="n">layer</span> <span class="n">before</span> <span class="n">proceeding</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">Always</span> <span class="n">stop</span> <span class="n">dependants</span> <span class="n">first</span><span class="p">;</span> <span class="nb">start </span><span class="n">dependencies</span> <span class="n">first</span> <span class="n">on</span> <span class="n">the</span> <span class="n">way</span> <span class="n">back</span> <span class="n">up</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="err">│</span>   <span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="err">│</span>                          <span class="err">▼</span>                                                 <span class="err">▼</span>                          <span class="err">│</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="err">│</span>   <span class="err">│</span>              <span class="n">Linux</span> <span class="p">(</span><span class="n">systemctl</span><span class="p">)</span>               <span class="err">│</span>  <span class="err">│</span>             <span class="n">Windows</span> <span class="p">(</span><span class="n">PowerShell</span><span class="p">)</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="err">│</span>   <span class="err">│</span>      <span class="err">─────────────────────────────────</span>       <span class="err">│</span>  <span class="err">│</span>      <span class="err">─────────────────────────────────</span>      <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">systemctl</span> <span class="n">status</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>            <span class="err">│</span>  <span class="err">│</span>              <span class="nb">Get-Service</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>              <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="err">│</span>   <span class="err">│</span>             <span class="n">systemctl</span> <span class="n">stop</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>             <span class="err">│</span>  <span class="err">│</span>              <span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>             <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">systemctl</span> <span class="nb">start </span><span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>             <span class="err">│</span>  <span class="err">│</span>             <span class="nb">Start-Service</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>             <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">systemctl</span> <span class="n">restart</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>            <span class="err">│</span>  <span class="err">│</span>            <span class="nb">Restart-Service</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">journalctl</span> <span class="n">-u</span> <span class="p">&lt;</span><span class="n">svc</span><span class="p">&gt;</span> <span class="o">-f</span>            <span class="err">│</span>  <span class="err">│</span>          <span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">App</span>          <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="err">│</span>   <span class="err">│</span>                               <span class="n">Order</span> <span class="k">for</span> <span class="n">dependent</span> <span class="n">stack</span> <span class="n">restart</span><span class="p">:</span>                              <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="err">│</span>   <span class="err">│</span>                     <span class="n">STOP</span><span class="p">:</span>  <span class="n">app-tier</span> <span class="err">→</span> <span class="n">middleware</span> <span class="err">→</span> <span class="n">database</span> <span class="err">→</span> <span class="n">storage-mount</span>                   <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="err">│</span>   <span class="err">│</span>                     <span class="n">START</span><span class="p">:</span> <span class="n">storage-mount</span> <span class="err">→</span> <span class="n">database</span> <span class="err">→</span> <span class="n">middleware</span> <span class="err">→</span> <span class="n">app-tier</span>                   <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="err">│</span>   <span class="err">│</span>                  <span class="n">Verify</span> <span class="n">each</span> <span class="n">layer</span> <span class="n">healthy</span> <span class="n">before</span> <span class="n">starting</span> <span class="n">the</span> <span class="n">next</span> <span class="n">layer</span> <span class="n">up</span>                  <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="err">│</span>   <span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="err">│</span>    <span class="n">Key</span> <span class="n">terms</span><span class="p">:</span>                                                                                         <span class="err">│</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="err">│</span>    <span class="n">Dependency</span> <span class="n">order</span><span class="p">=</span> <span class="n">Services</span> <span class="n">depend</span> <span class="n">on</span> <span class="n">each</span> <span class="n">other</span><span class="p">;</span> <span class="n">wrong</span> <span class="n">stop</span><span class="p">/</span><span class="nb">start </span><span class="n">order</span> <span class="n">causes</span> <span class="n">cascading</span> <span class="n">fails</span>     <span class="err">│</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="err">│</span>    <span class="n">Graceful</span> <span class="n">stop</span>   <span class="p">=</span> <span class="n">SIGTERM</span> <span class="n">before</span> <span class="n">SIGKILL</span><span class="p">;</span> <span class="n">lets</span> <span class="n">service</span> <span class="n">flush</span> <span class="n">buffers</span> <span class="n">and</span> <span class="n">close</span> <span class="n">connections</span>         <span class="err">│</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="err">│</span>    <span class="n">journalctl</span> <span class="o">-f</span>   <span class="p">=</span> <span class="n">Follow</span> <span class="n">live</span> <span class="n">service</span> <span class="n">log</span><span class="p">;</span> <span class="n">monitor</span> <span class="k">for</span> <span class="n">errors</span> <span class="n">during</span> <span class="n">restart</span>                       <span class="err">│</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="err">│</span>    <span class="n">Health</span> <span class="n">check</span>    <span class="p">=</span> <span class="n">HTTP</span> <span class="n">endpoint</span> <span class="n">or</span> <span class="n">service-level</span> <span class="n">test</span> <span class="n">confirming</span> <span class="n">service</span> <span class="n">is</span> <span class="n">accepting</span> <span class="n">traffic</span>      <span class="err">│</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>**Stop<span class="w"> </span>here<span class="w"> </span><span class="k">if</span>**<span class="w"> </span>logs<span class="w"> </span>show<span class="w"> </span>a<span class="w"> </span>configuration<span class="w"> </span>error<span class="w"> </span>or<span class="w"> </span>missing<span class="w"> </span>dependency<span class="w"> </span>—<span class="w"> </span>fix<span class="w"> </span>the<span class="w"> </span>root<span class="w"> </span>cause<span class="w"> </span>before<span class="w"> </span>restarting,<span class="w"> </span>otherwise<span class="w"> </span>the<span class="w"> </span>service<span class="w"> </span>will<span class="w"> </span>fail<span class="w"> </span>again<span class="w"> </span>immediately.
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">## Step 2 — Attempt Config Reload (preferred — no downtime)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># If the service supports reload (nginx, apache, haproxy, etc.)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+┌────────────────────────────────────── Runbook — Service Restart ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Restart services in dependency order; verify each layer before proceeding           │   │
+│   │           Always stop dependants first; start dependencies first on the way back up           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Linux (systemctl)               │  │             Windows (PowerShell)            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            systemctl status <svc>            │  │              Get-Service <svc>              │   │
+│   │             systemctl stop <svc>             │  │              Stop-Service <svc>             │   │
+│   │            systemctl start <svc>             │  │             Start-Service <svc>             │   │
+│   │           systemctl restart <svc>            │  │            Restart-Service <svc>            │   │
+│   │            journalctl -u <svc> -f            │  │          Get-EventLog -LogName App          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Order for dependent stack restart:                              │   │
+│   │                     STOP:  app-tier → middleware → database → storage-mount                   │   │
+│   │                     START: storage-mount → database → middleware → app-tier                   │   │
+│   │                  Verify each layer healthy before starting the next layer up                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dependency order= Services depend on each other; wrong stop/start order causes cascading fails     │
+│    Graceful stop   = SIGTERM before SIGKILL; lets service flush buffers and close connections         │
+│    journalctl -f   = Follow live service log; monitor for errors during restart                       │
+│    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Stop here if** logs show a configuration error or missing dependency — fix the root cause before restarting, otherwise the service will fail again immediately.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Step 2 — Attempt Config Reload (preferred — no downtime)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># If the service supports reload (nginx, apache, haproxy, etc.)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>systemctl reload &lt;service&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>systemctl status &lt;service&gt;
 </code></pre></div></p>
 <p>Only proceed to a full restart if reload is not supported or did not resolve the issue.</p>
 <h2 id="step-3-full-restart">Step 3 — Full Restart<a class="headerlink" href="#step-3-full-restart" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Preferred: explicit stop then start (cleaner than restart for some services)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sleep<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Or combined</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Preferred: explicit stop then start (cleaner than restart for some services)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sleep<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Or combined</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>&lt;service&gt;
 </code></pre></div>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span> <span class="n">-Force</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Start-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># or</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Restart-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Stop-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span> <span class="n">-Force</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Start-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># or</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Restart-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>
 </code></pre></div></p>
 <h2 id="step-4-validate">Step 4 — Validate<a class="headerlink" href="#step-4-validate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Service status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Listening on expected port</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ss<span class="w"> </span>-tnlp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># No errors in recent logs</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;5 minutes ago&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Service status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>&lt;service&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Listening on expected port</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ss<span class="w"> </span>-tnlp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># No errors in recent logs</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>&lt;service&gt;<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>--no-pager<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;5 minutes ago&quot;</span>
 </code></pre></div>
 <p><strong>Application-level check:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-host&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>OK
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://&lt;app-host&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>OK
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;host&gt;<span class="w"> </span>&lt;port&gt;
 </code></pre></div></p>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>    <span class="c"># should show: Running</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-Source</span> <span class="s1">&#39;Service Control Manager&#39;</span> <span class="n">-Newest</span> <span class="n">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-Service</span> <span class="p">&lt;</span><span class="n">service</span><span class="p">&gt;</span>    <span class="c"># should show: Running</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-Source</span> <span class="s1">&#39;Service Control Manager&#39;</span> <span class="n">-Newest</span> <span class="n">10</span>
 </code></pre></div></p>
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>If the restart made things worse (e.g., bad config loaded on start):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Restore previous config from backup</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;/&lt;service&gt;.conf.bak<span class="w"> </span>/etc/&lt;service&gt;/&lt;service&gt;.conf
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Validate config before starting</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>&lt;service&gt;<span class="w"> </span>-t<span class="w">                  </span><span class="c1"># nginx, apache</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Restore previous config from backup</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cp<span class="w"> </span>/etc/&lt;service&gt;/&lt;service&gt;.conf.bak<span class="w"> </span>/etc/&lt;service&gt;/&lt;service&gt;.conf
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Validate config before starting</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>&lt;service&gt;<span class="w"> </span>-t<span class="w">                  </span><span class="c1"># nginx, apache</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>start<span class="w"> </span>&lt;service&gt;
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

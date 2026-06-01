@@ -3459,128 +3459,129 @@ DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restri
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># SGID on a directory — new files inherit group</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>chmod<span class="w"> </span><span class="m">2775</span><span class="w"> </span>/opt/projects
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">┌───────────────────────────────────────</span> <span class="n">Linux</span> <span class="err">—</span> <span class="n">Access</span> <span class="n">Control</span> <span class="err">────────────────────────────────────────┐</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">│</span>  <span class="n">Access</span> <span class="n">control</span> <span class="n">on</span> <span class="n">Linux</span><span class="p">:</span> <span class="n">DAC</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">SELinux</span> <span class="n">MAC</span><span class="p">,</span> <span class="n">ACLs</span><span class="p">,</span> <span class="n">and</span> <span class="n">sudo</span> <span class="n">delegation</span><span class="p">.</span>                    <span class="err">│</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">DAC</span> <span class="err">—</span> <span class="n">File</span> <span class="n">Permissions</span>            <span class="err">│</span>  <span class="err">│</span>                <span class="n">MAC</span> <span class="err">—</span> <span class="n">SELinux</span>                <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="err">│</span>   <span class="err">│</span>          <span class="n">rwx</span> <span class="n">per</span> <span class="n">owner</span><span class="p">/</span><span class="n">group</span><span class="p">/</span><span class="n">other</span>           <span class="err">│</span>  <span class="err">│</span>          <span class="n">Labels</span><span class="p">:</span> <span class="n">user</span><span class="p">:</span><span class="n">role</span><span class="p">:</span><span class="n">type</span><span class="p">:</span><span class="n">lvl</span>         <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">chmod</span><span class="p">:</span> <span class="n">numeric</span><span class="p">/</span><span class="n">symbolic</span>            <span class="err">│</span>  <span class="err">│</span>            <span class="n">enforcing</span> <span class="p">/</span> <span class="n">permissive</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">chown</span><span class="p">:</span> <span class="n">owner</span><span class="p">,</span> <span class="n">chgrp</span><span class="p">:</span> <span class="n">grp</span>           <span class="err">│</span>  <span class="err">│</span>            <span class="n">restorecon</span><span class="p">:</span> <span class="n">fix</span> <span class="n">labels</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">umask</span><span class="p">:</span> <span class="k">default</span> <span class="n">new</span> <span class="n">perms</span>           <span class="err">│</span>  <span class="err">│</span>            <span class="n">semanage</span><span class="p">:</span> <span class="n">policy</span> <span class="n">mgmt</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">SUID</span><span class="p">/</span><span class="n">SGID</span><span class="p">/</span><span class="n">sticky</span> <span class="n">bits</span>             <span class="err">│</span>  <span class="err">│</span>          <span class="n">audit2allow</span><span class="p">:</span> <span class="n">custom</span> <span class="n">rules</span>          <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">ACLs</span> <span class="err">—</span> <span class="n">Extended</span> <span class="n">Perms</span>             <span class="err">│</span>  <span class="err">│</span>         <span class="n">sudo</span> <span class="err">—</span> <span class="n">Privilege</span> <span class="n">Delegation</span>         <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">setfacl</span> <span class="n">-m</span> <span class="n">u</span><span class="p">:</span><span class="n">user</span><span class="p">:</span><span class="n">rwx</span>             <span class="err">│</span>  <span class="err">│</span>            <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">sudoers</span> <span class="p">+</span> <span class="n">visudo</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="err">│</span>   <span class="err">│</span>              <span class="n">getfacl</span><span class="p">:</span> <span class="n">view</span> <span class="n">ACL</span>               <span class="err">│</span>  <span class="err">│</span>              <span class="n">User</span><span class="p">/</span><span class="nb">Group </span><span class="n">aliases</span>             <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">mask</span><span class="p">:</span> <span class="n">effective</span> <span class="n">limit</span>             <span class="err">│</span>  <span class="err">│</span>            <span class="n">NOPASSWD</span><span class="p">:</span> <span class="n">passwordless</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="err">│</span>   <span class="err">│</span>             <span class="k">default</span> <span class="n">ACL</span> <span class="n">on</span> <span class="n">dirs</span>              <span class="err">│</span>  <span class="err">│</span>            <span class="n">Cmnd_Alias</span><span class="p">:</span> <span class="n">cmd</span> <span class="n">groups</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="err">│</span>   <span class="err">│</span>              <span class="n">inheritance</span> <span class="n">rules</span>               <span class="err">│</span>  <span class="err">│</span>            <span class="n">sudo</span> <span class="n">-l</span><span class="p">:</span> <span class="n">list</span> <span class="n">allowed</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="err">│</span>  <span class="n">Physical</span> <span class="n">Infrastructure</span> <span class="p">(</span><span class="n">the</span> <span class="n">hardware</span> <span class="n">everything</span> <span class="n">above</span> <span class="n">runs</span> <span class="n">on</span><span class="p">):</span>                                     <span class="err">│</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="err">│</span>  <span class="n">x86</span><span class="p">-</span><span class="n">64</span> <span class="n">servers</span> <span class="err">·</span> <span class="n">filesystem</span> <span class="n">with</span> <span class="n">ACL</span> <span class="n">support</span> <span class="p">(</span><span class="n">ext4</span><span class="p">/</span><span class="n">xfs</span><span class="p">)</span> <span class="err">·</span> <span class="n">LDAP</span><span class="p">/</span><span class="n">AD</span> <span class="k">for</span> <span class="nb">group </span><span class="n">info</span>                     <span class="err">│</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="err">│</span>  <span class="n">Key</span> <span class="n">terms</span><span class="p">:</span>                                                                                           <span class="err">│</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="err">│</span>  <span class="n">DAC</span>         <span class="p">=</span> <span class="n">Discretionary</span> <span class="n">AC</span><span class="p">;</span> <span class="n">owner</span> <span class="n">discretion</span> <span class="n">controls</span> <span class="n">who</span> <span class="n">accesses</span> <span class="n">a</span> <span class="n">file</span>                        <span class="err">│</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="err">│</span>  <span class="n">MAC</span>         <span class="p">=</span> <span class="k">Mandatory</span> <span class="n">AC</span><span class="p">;</span> <span class="n">kernel-enforced</span> <span class="n">policy</span> <span class="n">independent</span> <span class="n">of</span> <span class="n">owner</span> <span class="n">wishes</span>                       <span class="err">│</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="err">│</span>  <span class="n">umask</span>       <span class="p">=</span> <span class="k">Default</span> <span class="n">permission</span> <span class="n">mask</span> <span class="n">applied</span> <span class="n">when</span> <span class="n">creating</span> <span class="n">new</span> <span class="n">files</span><span class="p">/</span><span class="n">directories</span>                    <span class="err">│</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="err">│</span>  <span class="n">SUID</span>        <span class="p">=</span> <span class="nb">Set-UID</span><span class="p">:</span> <span class="n">run</span> <span class="n">executable</span> <span class="n">as</span> <span class="n">its</span> <span class="n">owner</span> <span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span> <span class="n">passwd</span> <span class="n">runs</span> <span class="n">as</span> <span class="n">root</span><span class="p">)</span>                        <span class="err">│</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="err">│</span>  <span class="n">SGID</span>        <span class="p">=</span> <span class="nb">Set-GID</span><span class="p">:</span> <span class="n">run</span> <span class="n">as</span> <span class="n">group</span><span class="p">,</span> <span class="n">or</span> <span class="n">inherit</span> <span class="nb">group </span><span class="n">on</span> <span class="n">new</span> <span class="n">files</span> <span class="k">in</span> <span class="n">directory</span>                      <span class="err">│</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="err">│</span>  <span class="n">sticky</span> <span class="n">bit</span>  <span class="p">=</span> <span class="n">Only</span> <span class="n">owner</span> <span class="n">can</span> <span class="n">delete</span> <span class="n">their</span> <span class="n">files</span> <span class="k">in</span> <span class="n">shared</span> <span class="nb">dir </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">g</span><span class="p">.</span> <span class="p">/</span><span class="n">tmp</span><span class="p">)</span>                            <span class="err">│</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="err">│</span>  <span class="n">ACL</span> <span class="n">mask</span>    <span class="p">=</span> <span class="n">Maximum</span> <span class="n">effective</span> <span class="n">permission</span> <span class="k">for</span> <span class="n">named</span> <span class="n">users</span><span class="p">/</span><span class="n">groups</span> <span class="k">in</span> <span class="n">ACL</span>                             <span class="err">│</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="err">│</span>  <span class="n">setfacl</span>     <span class="p">=</span> <span class="nb">Set </span><span class="n">file</span> <span class="n">ACL</span> <span class="n">entries</span> <span class="n">beyond</span> <span class="n">standard</span> <span class="n">rwx</span> <span class="n">triplet</span>                                       <span class="err">│</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="err">│</span>  <span class="n">SELinux</span> <span class="n">ctx</span> <span class="p">=</span> <span class="n">Security</span> <span class="n">context</span><span class="p">:</span> <span class="n">user</span><span class="p">:</span><span class="n">role</span><span class="p">:</span><span class="n">type</span><span class="p">:</span><span class="n">sensitivity</span> <span class="n">label</span> <span class="n">on</span> <span class="n">every</span> <span class="n">object</span>                     <span class="err">│</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="err">│</span>  <span class="n">restorecon</span>  <span class="p">=</span> <span class="n">Restore</span> <span class="k">default</span> <span class="n">SELinux</span> <span class="n">file</span> <span class="n">context</span> <span class="n">from</span> <span class="n">policy</span> <span class="n">database</span>                              <span class="err">│</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="err">│</span>  <span class="n">audit2allow</span> <span class="p">=</span> <span class="n">Generate</span> <span class="n">SELinux</span> <span class="n">allow</span> <span class="n">rule</span> <span class="n">from</span> <span class="n">audit</span> <span class="n">denial</span> <span class="n">log</span> <span class="n">entries</span>                              <span class="err">│</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="err">│</span>  <span class="n">visudo</span>      <span class="p">=</span> <span class="n">Safe</span> <span class="n">editor</span> <span class="k">for</span> <span class="n">sudoers</span><span class="p">;</span> <span class="n">validates</span> <span class="n">syntax</span> <span class="n">before</span> <span class="n">saving</span>                                <span class="err">│</span>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## Mandatory Access Control — SELinux (RHEL)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>### SELinux MAC Decision Flow
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>```mermaid
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>flowchart TD
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    subject[&quot;Subject\nProcess with SELinux label\ne.g. httpd_t&quot;]
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    dacCheck{&quot;DAC Check\nUnix permissions allow?&quot;}
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    dacDeny[&quot;DENY\n(DAC blocks)&quot;]
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    selinuxCheck{&quot;SELinux Policy\nallow rule exists?&quot;}
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    audit[&quot;AVC Denial logged\n/var/log/audit/audit.log&quot;]
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    allow[&quot;ALLOW\nAccess granted to object&quot;]
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    object[&quot;Object\nFile / Socket / Port\ne.g. httpd_sys_content_t&quot;]
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    subject --&gt; dacCheck
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    dacCheck -- No --&gt; dacDeny
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    dacCheck -- Yes --&gt; selinuxCheck
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    selinuxCheck -- No --&gt; audit --&gt; dacDeny
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    selinuxCheck -- Yes --&gt; allow --&gt; object
+┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│  Access control on Linux: DAC permissions, SELinux MAC, ACLs, and sudo delegation.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            DAC — File Permissions            │  │                MAC — SELinux                │   │
+│   │          rwx per owner/group/other           │  │          Labels: user:role:type:lvl         │   │
+│   │           chmod: numeric/symbolic            │  │            enforcing / permissive           │   │
+│   │           chown: owner, chgrp: grp           │  │            restorecon: fix labels           │   │
+│   │           umask: default new perms           │  │            semanage: policy mgmt            │   │
+│   │            SUID/SGID/sticky bits             │  │          audit2allow: custom rules          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            ACLs — Extended Perms             │  │         sudo — Privilege Delegation         │   │
+│   │            setfacl -m u:user:rwx             │  │            /etc/sudoers + visudo            │   │
+│   │              getfacl: view ACL               │  │              User/Group aliases             │   │
+│   │            mask: effective limit             │  │            NOPASSWD: passwordless           │   │
+│   │             default ACL on dirs              │  │            Cmnd_Alias: cmd groups           │   │
+│   │              inheritance rules               │  │            sudo -l: list allowed            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · filesystem with ACL support (ext4/xfs) · LDAP/AD for group info                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DAC         = Discretionary AC; owner discretion controls who accesses a file                        │
+│  MAC         = Mandatory AC; kernel-enforced policy independent of owner wishes                       │
+│  umask       = Default permission mask applied when creating new files/directories                    │
+│  SUID        = Set-UID: run executable as its owner (e.g. passwd runs as root)                        │
+│  SGID        = Set-GID: run as group, or inherit group on new files in directory                      │
+│  sticky bit  = Only owner can delete their files in shared dir (e.g. /tmp)                            │
+│  ACL mask    = Maximum effective permission for named users/groups in ACL                             │
+│  setfacl     = Set file ACL entries beyond standard rwx triplet                                       │
+│  SELinux ctx = Security context: user:role:type:sensitivity label on every object                     │
+│  restorecon  = Restore default SELinux file context from policy database                              │
+│  audit2allow = Generate SELinux allow rule from audit denial log entries                              │
+│  visudo      = Safe editor for sudoers; validates syntax before saving                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Mandatory Access Control — SELinux (RHEL)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### SELinux MAC Decision Flow
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```mermaid
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>flowchart TD
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    subject[&quot;Subject\nProcess with SELinux label\ne.g. httpd_t&quot;]
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    dacCheck{&quot;DAC Check\nUnix permissions allow?&quot;}
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    dacDeny[&quot;DENY\n(DAC blocks)&quot;]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    selinuxCheck{&quot;SELinux Policy\nallow rule exists?&quot;}
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    audit[&quot;AVC Denial logged\n/var/log/audit/audit.log&quot;]
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    allow[&quot;ALLOW\nAccess granted to object&quot;]
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    object[&quot;Object\nFile / Socket / Port\ne.g. httpd_sys_content_t&quot;]
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    subject --&gt; dacCheck
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    dacCheck -- No --&gt; dacDeny
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    dacCheck -- Yes --&gt; selinuxCheck
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    selinuxCheck -- No --&gt; audit --&gt; dacDeny
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    selinuxCheck -- Yes --&gt; allow --&gt; object
 </code></pre></div></p>
 <h3 id="selinux-modes">SELinux Modes<a class="headerlink" href="#selinux-modes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check current mode</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>getenforce<span class="w">        </span><span class="c1"># Enforcing / Permissive / Disabled</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sestatus<span class="w">          </span><span class="c1"># Detailed status including policy type</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Temporarily set to permissive (survives until reboot)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>setenforce<span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Permanently set mode in /etc/selinux/config</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># SELINUX=enforcing   (enforcing | permissive | disabled)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Requires reboot to take effect when changing disabled &lt;-&gt; enforcing</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current mode</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>getenforce<span class="w">        </span><span class="c1"># Enforcing / Permissive / Disabled</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sestatus<span class="w">          </span><span class="c1"># Detailed status including policy type</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Temporarily set to permissive (survives until reboot)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>setenforce<span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Permanently set mode in /etc/selinux/config</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># SELINUX=enforcing   (enforcing | permissive | disabled)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Requires reboot to take effect when changing disabled &lt;-&gt; enforcing</span>
 </code></pre></div>
 <h3 id="context-management">Context Management<a class="headerlink" href="#context-management" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View file context</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ls<span class="w"> </span>-Z<span class="w"> </span>/var/www/html/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View process context</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ps<span class="w"> </span>-eZ<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>httpd
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># View user context</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>id<span class="w"> </span>-Z
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Change file context</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>chcon<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span>/opt/webapp/public/
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Restore to policy default</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Make a context change permanent (survives restorecon)</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>semanage<span class="w"> </span>fcontext<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span><span class="s2">&quot;/opt/webapp/public(/.*)?&quot;</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View file context</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>-Z<span class="w"> </span>/var/www/html/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># View process context</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ps<span class="w"> </span>-eZ<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>httpd
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># View user context</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>id<span class="w"> </span>-Z
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Change file context</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>chcon<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span>/opt/webapp/public/
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Restore to policy default</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Make a context change permanent (survives restorecon)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>semanage<span class="w"> </span>fcontext<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span>httpd_sys_content_t<span class="w"> </span><span class="s2">&quot;/opt/webapp/public(/.*)?&quot;</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>restorecon<span class="w"> </span>-Rv<span class="w"> </span>/opt/webapp/public/
 </code></pre></div>
 <h3 id="boolean-switches">Boolean Switches<a class="headerlink" href="#boolean-switches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List all booleans</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>getsebool<span class="w"> </span>-a
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Common web server booleans</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>getsebool<span class="w"> </span>httpd_can_network_connect
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>httpd_can_network_connect<span class="w"> </span>on<span class="w">   </span><span class="c1"># -P = persistent</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Allow services to use NFS home directories</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>use_nfs_home_dirs<span class="w"> </span>on
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Allow SSSD to use LDAP</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>sssd_use_ldap<span class="w"> </span>on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all booleans</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>getsebool<span class="w"> </span>-a
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Common web server booleans</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>getsebool<span class="w"> </span>httpd_can_network_connect
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>httpd_can_network_connect<span class="w"> </span>on<span class="w">   </span><span class="c1"># -P = persistent</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Allow services to use NFS home directories</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>use_nfs_home_dirs<span class="w"> </span>on
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Allow SSSD to use LDAP</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>setsebool<span class="w"> </span>-P<span class="w"> </span>sssd_use_ldap<span class="w"> </span>on
 </code></pre></div>
 <h3 id="troubleshooting-denials">Troubleshooting Denials<a class="headerlink" href="#troubleshooting-denials" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># View recent AVC denials</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>audit2why
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Generate a permissive policy module from denials (for testing)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>audit2allow<span class="w"> </span>-M<span class="w"> </span>mypolicy
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>semodule<span class="w"> </span>-i<span class="w"> </span>mypolicy.pp
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check SELinux denials in journal</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SELinux is preventing&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># sealert (setroubleshoot-server package) — human-readable denial explanations</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>sealert<span class="w"> </span>-a<span class="w"> </span>/var/log/audit/audit.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View recent AVC denials</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>audit2why
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Generate a permissive policy module from denials (for testing)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>avc<span class="w"> </span>--start<span class="w"> </span>recent<span class="w"> </span><span class="p">|</span><span class="w"> </span>audit2allow<span class="w"> </span>-M<span class="w"> </span>mypolicy
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>semodule<span class="w"> </span>-i<span class="w"> </span>mypolicy.pp
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check SELinux denials in journal</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;SELinux is preventing&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># sealert (setroubleshoot-server package) — human-readable denial explanations</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>sealert<span class="w"> </span>-a<span class="w"> </span>/var/log/audit/audit.log
 </code></pre></div>
 <h2 id="mandatory-access-control-apparmor-ubuntudebian">Mandatory Access Control — AppArmor (Ubuntu/Debian)<a class="headerlink" href="#mandatory-access-control-apparmor-ubuntudebian" title="Permanent link">&para;</a></h2>
 <h3 id="apparmor-mac-decision-flow">AppArmor MAC Decision Flow<a class="headerlink" href="#apparmor-mac-decision-flow" title="Permanent link">&para;</a></h3>
@@ -3601,137 +3602,137 @@ DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restri
     enforce -- Enforce --&gt; policyCheck
     policyCheck -- Match --&gt; allowed
     policyCheck -- No match (enforce) --&gt; denied</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aa-status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List loaded profiles and their modes</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>aa-status<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;enforce|complain&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Set a profile to enforce mode</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>aa-enforce<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Set a profile to complain (audit only, no blocking)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>aa-complain<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Reload a profile after editing</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>apparmor_parser<span class="w"> </span>-r<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># View denials</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DENIED&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor=\&quot;DENIED\&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aa-status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List loaded profiles and their modes</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>aa-status<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;enforce|complain&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Set a profile to enforce mode</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>aa-enforce<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Set a profile to complain (audit only, no blocking)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>aa-complain<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Reload a profile after editing</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>apparmor_parser<span class="w"> </span>-r<span class="w"> </span>/etc/apparmor.d/usr.sbin.nginx
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># View denials</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>journalctl<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DENIED&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;apparmor=\&quot;DENIED\&quot;&quot;</span>
 </code></pre></div>
 <h3 id="apparmor-profile-structure">AppArmor Profile Structure<a class="headerlink" href="#apparmor-profile-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /etc/apparmor.d/usr.local.bin.myapp</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/local/bin/myapp<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="c1"># Allow read on config directory</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>/etc/myapp/**<span class="w"> </span>r,
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="c1"># Allow read/write on data directory</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>/var/lib/myapp/**<span class="w"> </span>rw,
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="c1"># Allow write on log file</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>/var/log/myapp.log<span class="w"> </span>w,
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="c1"># Allow network (TCP)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>network<span class="w"> </span>tcp,
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="c1"># Deny everything else implicitly</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/apparmor.d/usr.local.bin.myapp</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>/usr/local/bin/myapp<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="c1"># Allow read on config directory</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>/etc/myapp/**<span class="w"> </span>r,
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="c1"># Allow read/write on data directory</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>/var/lib/myapp/**<span class="w"> </span>rw,
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="c1"># Allow write on log file</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>/var/log/myapp.log<span class="w"> </span>w,
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="c1"># Allow network (TCP)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>network<span class="w"> </span>tcp,
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="c1"># Deny everything else implicitly</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="o">}</span>
 </code></pre></div>
 <h2 id="sudo-access-control">sudo Access Control<a class="headerlink" href="#sudo-access-control" title="Permanent link">&para;</a></h2>
 <p>See also: <a href="../authentication/#sudo-configuration">Authentication — sudo configuration</a></p>
 <h3 id="principle-of-least-privilege-in-sudoers">Principle of Least Privilege in Sudoers<a class="headerlink" href="#principle-of-least-privilege-in-sudoers" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>visudo<span class="w">   </span><span class="c1"># Always use visudo — validates syntax on save</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>visudo<span class="w">   </span><span class="c1"># Always use visudo — validates syntax on save</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Separate duty: backup operator — only rsync and tar</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>%backupops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Separate duty: backup operator — only rsync and tar</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>%backupops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Developers — restart application services only</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>%developers<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>restart<span class="w"> </span>app-*,<span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>status<span class="w"> </span>app-*
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Network team — only network-related commands</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>%netops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/sbin/ip,<span class="w"> </span>/usr/sbin/ss,<span class="w"> </span>/usr/sbin/tcpdump
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Deny a specific command even within a permitted group</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>jsmith<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL,<span class="w"> </span>!/bin/su,<span class="w"> </span>!/usr/bin/passwd<span class="w"> </span>root
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Audit who has sudo access</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^#]&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Defaults&quot;</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Developers — restart application services only</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>%developers<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>restart<span class="w"> </span>app-*,<span class="w"> </span>/usr/bin/systemctl<span class="w"> </span>status<span class="w"> </span>app-*
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Network team — only network-related commands</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>%netops<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/sbin/ip,<span class="w"> </span>/usr/sbin/ss,<span class="w"> </span>/usr/sbin/tcpdump
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Deny a specific command even within a permitted group</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>jsmith<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL,<span class="w"> </span>!/bin/su,<span class="w"> </span>!/usr/bin/passwd<span class="w"> </span>root
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Audit who has sudo access</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^#]&quot;</span><span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/sudoers.d/*<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^Defaults&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check a specific user&#39;s sudo permissions</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>jsmith
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check a specific user&#39;s sudo permissions</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>jsmith
 </code></pre></div>
 <h2 id="etcsecurityaccessconf">/etc/security/access.conf<a class="headerlink" href="#etcsecurityaccessconf" title="Permanent link">&para;</a></h2>
 <p>Restricts which users or groups can log in from which origins. Processed by <code>pam_access.so</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/security/access.conf format:</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># permission : users/groups : origins</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># + = allow, - = deny</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Allow root only from console and specific management host</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>+<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>LOCAL<span class="w"> </span><span class="m">10</span>.10.10.5
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>-<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>ALL
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Allow domain admin group from anywhere on the corporate network</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>.example.local
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span>LOCAL
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Allow all users from internal networks</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>+<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="m">192</span>.168.0.0/16
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># Deny all others</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>-<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span>ALL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># /etc/security/access.conf format:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># permission : users/groups : origins</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># + = allow, - = deny</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Allow root only from console and specific management host</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>+<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>LOCAL<span class="w"> </span><span class="m">10</span>.10.10.5
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>-<span class="w"> </span>:<span class="w"> </span>root<span class="w"> </span>:<span class="w"> </span>ALL
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Allow domain admin group from anywhere on the corporate network</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span>.example.local
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>+<span class="w"> </span>:<span class="w"> </span>@linuxadmins<span class="w"> </span>:<span class="w"> </span>LOCAL
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Allow all users from internal networks</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>+<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span><span class="m">10</span>.0.0.0/8<span class="w"> </span><span class="m">192</span>.168.0.0/16
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># Deny all others</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>-<span class="w"> </span>:<span class="w"> </span>ALL<span class="w"> </span>:<span class="w"> </span>ALL
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># /etc/pam.d/system-auth — enable pam_access</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>account<span class="w">     </span>required<span class="w">      </span>pam_access.so
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/pam.d/system-auth — enable pam_access</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>account<span class="w">     </span>required<span class="w">      </span>pam_access.so
 </code></pre></div>
 <h2 id="file-attributes-chattr">File Attributes (chattr)<a class="headerlink" href="#file-attributes-chattr" title="Permanent link">&para;</a></h2>
 <p>Immutable flag prevents modification even by root — useful for protecting log files or configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Make a file immutable</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>chattr<span class="w"> </span>+i<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Remove immutable flag</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>chattr<span class="w"> </span>-i<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Make a file append-only (useful for log files)</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>chattr<span class="w"> </span>+a<span class="w"> </span>/var/log/secure
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># View attributes</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>lsattr<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>lsattr<span class="w"> </span>/var/log/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Make a file immutable</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>chattr<span class="w"> </span>+i<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Remove immutable flag</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>chattr<span class="w"> </span>-i<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Make a file append-only (useful for log files)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>chattr<span class="w"> </span>+a<span class="w"> </span>/var/log/secure
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># View attributes</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>lsattr<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>lsattr<span class="w"> </span>/var/log/
 </code></pre></div>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
 <p>Capabilities allow processes to have specific elevated privileges without full root.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># View capabilities on a binary</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>getcap<span class="w"> </span>/usr/bin/ping
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>getcap<span class="w"> </span>/usr/sbin/tcpdump
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="c1"># Grant a capability (instead of setuid root)</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>setcap<span class="w"> </span>cap_net_raw+ep<span class="w"> </span>/usr/sbin/tcpdump
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c1"># Remove all capabilities</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>setcap<span class="w"> </span>-r<span class="w"> </span>/usr/sbin/tcpdump
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c1"># View all binaries with capabilities</span>
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>getcap<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>
-<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="c1"># View capabilities of a running process</span>
-<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>cat<span class="w"> </span>/proc/&lt;pid&gt;/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Cap
-<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>capsh<span class="w"> </span>--decode<span class="o">=</span>&lt;hex-value&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View capabilities on a binary</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>getcap<span class="w"> </span>/usr/bin/ping
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>getcap<span class="w"> </span>/usr/sbin/tcpdump
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Grant a capability (instead of setuid root)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>setcap<span class="w"> </span>cap_net_raw+ep<span class="w"> </span>/usr/sbin/tcpdump
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Remove all capabilities</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>setcap<span class="w"> </span>-r<span class="w"> </span>/usr/sbin/tcpdump
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="c1"># View all binaries with capabilities</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>getcap<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="c1"># View capabilities of a running process</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>cat<span class="w"> </span>/proc/&lt;pid&gt;/status<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Cap
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>capsh<span class="w"> </span>--decode<span class="o">=</span>&lt;hex-value&gt;
 </code></pre></div>
 <h2 id="access-control-audit">Access Control Audit<a class="headerlink" href="#access-control-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Find world-writable files outside /tmp (should be none)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-0002<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/tmp/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Find setuid binaries</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-4000<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Find setgid binaries</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-2000<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Find files with no owner (orphaned)</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-nouser<span class="w"> </span>-o<span class="w"> </span>-nogroup<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Check /etc/passwd for accounts with UID 0 (should only be root)</span>
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 == 0 { print $1 }&#39;</span><span class="w"> </span>/etc/passwd
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Check for accounts with empty passwords</span>
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$2 == &quot;&quot; { print $1 }&#39;</span><span class="w"> </span>/etc/shadow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Find world-writable files outside /tmp (should be none)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-0002<span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/tmp/*&quot;</span><span class="w"> </span>-not<span class="w"> </span>-path<span class="w"> </span><span class="s2">&quot;/proc/*&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Find setuid binaries</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-4000<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Find setgid binaries</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-perm<span class="w"> </span>-2000<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Find files with no owner (orphaned)</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>find<span class="w"> </span>/<span class="w"> </span>-xdev<span class="w"> </span>-nouser<span class="w"> </span>-o<span class="w"> </span>-nogroup<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Check /etc/passwd for accounts with UID 0 (should only be root)</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 == 0 { print $1 }&#39;</span><span class="w"> </span>/etc/passwd
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="c1"># Check for accounts with empty passwords</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$2 == &quot;&quot; { print $1 }&#39;</span><span class="w"> </span>/etc/shadow
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

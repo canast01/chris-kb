@@ -4599,75 +4599,114 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 <p>TLS Encryption Path: Client to Desktop
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
-┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
-│  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
-│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server           │
-│  (external)  │             └───────────┘             └──────────────────┘
-└──────────────┘                                                 │
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>                                                        TLS / Blast AES-256
-</code></pre></div>
-┌──────────────┐  Blast AES  ┌───────────┐                      ▼
-│  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
-│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
-│  (Blast)     │             └───────────┘              │  (Blast agent)   │
-└──────────────┘                                        └──────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  is TLS 1.2+; VM disk encryption is handled by vSphere/vSAN layer.                                    │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                                                                                                       │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │              Session Encryption              │  │            Management Encryption            │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │           Blast Extreme: TLS + AES           │  │              CS to CS: TLS 1.2+             │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │             PCoIP: AES-256 + UDP             │  │              CS to vCenter: TLS             │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │          HTML Access: WebSocket TLS          │  │                CS to UAG: TLS               │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │         USB redirection: TLS tunnel          │  │              REST API: TLS 1.2+             │   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  All Horizon traffic is encrypted; PCoIP UDP uses AES-256 even without TLS wrapper.                   │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │            Certificate Management            │  │                 Data at Rest                │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │         CS cert: replace in Windows          │  │            Desktop VMDK: vSAN enc           │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │           UAG cert: import via UI            │  │            Profile share: SMB enc           │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │           TLS 1.2 minimum: enforce           │  │          BitLocker: full clone VMs          │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │          Cert expiry: monitor 30d+           │  │          AppStack: enc on datastore         │   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│                                                                                                       │
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  Certificate replacement on CS triggers IIS restart; brief service interruption;                      │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  UAG cert import via admin UI on port 9443 (no restart needed).                                       │
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  Blast Extreme = VMware display protocol; TLS 1.2+ with AES-256                                       │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  PCoIP         = Teradici protocol; AES-256; UDP-based                                                │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  HTML Access   = WebSocket over HTTPS; TLS-protected Blast                                            │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  TLS 1.2+      = minimum for all Horizon management traffic                                           │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  UAG cert      = public cert on UAG; presented to external clients                                    │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  CS cert       = Windows cert store on Connection Server                                              │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  IIS restart   = required after cert replace on CS; brief downtime                                    │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  vSAN enc      = disk-level AES-256; transparent to Horizon                                           │
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  BitLocker     = Windows full-disk encryption on persistent VMs                                       │
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  SMB enc       = encryption on CIFS profile shares                                                    │
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  AppStack      = App Volumes VMDK; encrypt at vSAN/datastore level                                    │
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │
+│  is TLS 1.2+; VM disk encryption is handled by vSphere/vSAN layer.                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Session Encryption              │  │            Management Encryption            │   │
+│   │           Blast Extreme: TLS + AES           │  │              CS to CS: TLS 1.2+             │   │
+│   │             PCoIP: AES-256 + UDP             │  │              CS to vCenter: TLS             │   │
+│   │          HTML Access: WebSocket TLS          │  │                CS to UAG: TLS               │   │
+│   │         USB redirection: TLS tunnel          │  │              REST API: TLS 1.2+             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All Horizon traffic is encrypted; PCoIP UDP uses AES-256 even without TLS wrapper.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │                 Data at Rest                │   │
+│   │         CS cert: replace in Windows          │  │            Desktop VMDK: vSAN enc           │   │
+│   │           UAG cert: import via UI            │  │            Profile share: SMB enc           │   │
+│   │           TLS 1.2 minimum: enforce           │  │          BitLocker: full clone VMs          │   │
+│   │          Cert expiry: monitor 30d+           │  │          AppStack: enc on datastore         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Certificate replacement on CS triggers IIS restart; brief service interruption;                      │
+│  UAG cert import via admin UI on port 9443 (no restart needed).                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Blast Extreme = VMware display protocol; TLS 1.2+ with AES-256                                       │
+│  PCoIP         = Teradici protocol; AES-256; UDP-based                                                │
+│  HTML Access   = WebSocket over HTTPS; TLS-protected Blast                                            │
+│  TLS 1.2+      = minimum for all Horizon management traffic                                           │
+│  UAG cert      = public cert on UAG; presented to external clients                                    │
+│  CS cert       = Windows cert store on Connection Server                                              │
+│  IIS restart   = required after cert replace on CS; brief downtime                                    │
+│  vSAN enc      = disk-level AES-256; transparent to Horizon                                           │
+│  BitLocker     = Windows full-disk encryption on persistent VMs                                       │
+│  SMB enc       = encryption on CIFS profile shares                                                    │
+│  AppStack      = App Volumes VMDK; encrypt at vSAN/datastore level                                    │
+│  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────┐  Blast AES  ┌───────────┐                      ▼
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  (Blast)     │             └───────────┘              │  (Blast agent)   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└──────────────┘                                        └──────────────────┘
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>```text
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│  is TLS 1.2+; VM disk encryption is handled by vSphere/vSAN layer.                                    │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │              Session Encryption              │  │            Management Encryption            │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           Blast Extreme: TLS + AES           │  │              CS to CS: TLS 1.2+             │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │             PCoIP: AES-256 + UDP             │  │              CS to vCenter: TLS             │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │          HTML Access: WebSocket TLS          │  │                CS to UAG: TLS               │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         USB redirection: TLS tunnel          │  │              REST API: TLS 1.2+             │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  All Horizon traffic is encrypted; PCoIP UDP uses AES-256 even without TLS wrapper.                   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                                                                       │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │            Certificate Management            │  │                 Data at Rest                │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │         CS cert: replace in Windows          │  │            Desktop VMDK: vSAN enc           │   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   │           UAG cert: import via UI            │  │            Profile share: SMB enc           │   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │           TLS 1.2 minimum: enforce           │  │          BitLocker: full clone VMs          │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │          Cert expiry: monitor 30d+           │  │          AppStack: enc on datastore         │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Certificate replacement on CS triggers IIS restart; brief service interruption;                      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  UAG cert import via admin UI on port 9443 (no restart needed).                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                                                                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Blast Extreme = VMware display protocol; TLS 1.2+ with AES-256                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  PCoIP         = Teradici protocol; AES-256; UDP-based                                                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  HTML Access   = WebSocket over HTTPS; TLS-protected Blast                                            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  TLS 1.2+      = minimum for all Horizon management traffic                                           │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  UAG cert      = public cert on UAG; presented to external clients                                    │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  CS cert       = Windows cert store on Connection Server                                              │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  IIS restart   = required after cert replace on CS; brief downtime                                    │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  vSAN enc      = disk-level AES-256; transparent to Horizon                                           │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  BitLocker     = Windows full-disk encryption on persistent VMs                                       │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  SMB enc       = encryption on CIFS profile shares                                                    │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  AppStack      = App Volumes VMDK; encrypt at vSAN/datastore level                                    │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
 <h2 id="uag-certificate">UAG Certificate<a class="headerlink" href="#uag-certificate" title="Permanent link">&para;</a></h2>
 <p>UAG serves the HTTPS termination point for external connections. Replace the self-signed cert:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Upload PKCS12 (.pfx) or PEM (cert + key)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Option 2: Via UAG REST API</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://uag.example.local:9443/rest/v1/config/certs/ssl&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/uag.pfx&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;password=pfxpassword&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Upload PKCS12 (.pfx) or PEM (cert + key)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Option 2: Via UAG REST API</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="s2">&quot;https://uag.example.local:9443/rest/v1/config/certs/ssl&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/uag.pfx&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;password=pfxpassword&quot;</span>
 </code></pre></div>
 <p>UAG requires separate certificates for:
 - HTTPS admin interface (port 9443)
@@ -4675,21 +4714,21 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 <hr />
 <h2 id="clipboard-encryption-and-control">Clipboard Encryption and Control<a class="headerlink" href="#clipboard-encryption-and-control" title="Permanent link">&para;</a></h2>
 <p>Clipboard direction can be restricted via GPO to prevent data exfiltration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="l l-Scalar l-Scalar-Plain">Group Policy → Computer Configuration → Policies → VMware Blast</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Clipboard Redirection</span><span class="p p-Indicator">:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Disabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no clipboard between client and desktop</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Client to Agent only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paste from client → desktop, not reverse</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Agent to Client only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paste from desktop → client, not reverse</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Enabled (bidirectional)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default — not recommended for sensitive data</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">Group Policy → Computer Configuration → Policies → VMware Blast</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Clipboard Redirection</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Disabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no clipboard between client and desktop</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Client to Agent only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paste from client → desktop, not reverse</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Agent to Client only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">paste from desktop → client, not reverse</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Enabled (bidirectional)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default — not recommended for sensitive data</span>
 </code></pre></div>
 <p>For high-security environments: set to "Client to Agent only" — users can copy instructions into the desktop but cannot exfiltrate data by copying out.</p>
 <hr />
 <h2 id="usb-redirection-encryption">USB Redirection Encryption<a class="headerlink" href="#usb-redirection-encryption" title="Permanent link">&para;</a></h2>
 <p>USB traffic is tunneled through the Blast or PCoIP protocol connection (encrypted). Restrict USB device types via policy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Group Policy → User Configuration → VMware Horizon Client Configuration → USB
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Allow USB Redirection: Enabled
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Allow specific VID/PID: &lt;CAC reader VID:PID&gt; (allow smart card readers only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Group Policy → User Configuration → VMware Horizon Client Configuration → USB
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Allow USB Redirection: Enabled
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Allow specific VID/PID: &lt;CAC reader VID:PID&gt; (allow smart card readers only)
 </code></pre></div>
 <hr />
 <h2 id="persistent-disk-encryption">Persistent Disk Encryption<a class="headerlink" href="#persistent-disk-encryption" title="Permanent link">&para;</a></h2>
@@ -4702,21 +4741,21 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 <p>App Volumes writable volumes (VHD/VMDK files on a datastore) are not encrypted by default — protect via vSAN or datastore encryption.</p>
 <hr />
 <h2 id="tls-version-enforcement-on-connection-server">TLS Version Enforcement on Connection Server<a class="headerlink" href="#tls-version-enforcement-on-connection-server" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Restrict TLS on Connection Server to 1.2 and 1.3 only</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Edit locked.properties file:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$lockedProps</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\sslgateway\conf\locked.properties&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">sslprotocols=TLSv1.2,TLSv1.3&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Restart Connection Server service</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Restart-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Restrict TLS on Connection Server to 1.2 and 1.3 only</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># Edit locked.properties file:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$lockedProps</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\sslgateway\conf\locked.properties&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">sslprotocols=TLSv1.2,TLSv1.3&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Add-Content</span> <span class="nv">$lockedProps</span> <span class="s2">&quot;enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Restart Connection Server service</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Restart-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="drive-mapping-encryption">Drive Mapping Encryption<a class="headerlink" href="#drive-mapping-encryption" title="Permanent link">&para;</a></h2>
 <p>Drive redirection (mapping client drives in the desktop) goes through the encrypted display protocol tunnel. To disable drive mapping entirely for compliance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Group Policy → Computer Configuration → VMware Horizon Agent
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Drive Redirection: Disabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Group Policy → Computer Configuration → VMware Horizon Agent
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Drive Redirection: Disabled
 </code></pre></div>
 
 

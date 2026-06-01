@@ -3040,105 +3040,106 @@ Ensure consistent, accurate time across all infrastructure systems. Time drift c
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Show recent drift history</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>chronyc<span class="w"> </span>tracking<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;offset|frequency|drift&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Integration — Time Synchronization (NTP) ───────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │        Accurate time is critical: Kerberos (5 min skew max), TLS certs, log correlation       │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Hierarchy: external NTP (stratum 1/2) → internal NTP servers → all infra clients       │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Alert: offset &gt; 100ms; drift &gt; 50ms/s; stratum 16 = unsynchronised = investigate       │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                  NTP Config                  │  │               Troubleshooting               │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           Linux: /etc/chrony.conf            │  │          chronyc tracking (offset)          │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │            Windows: w32tm /config            │  │              timedatectl status             │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            ESXi: host NTP config             │  │             w32tm /query /status            │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         Appliance: NTP server in UI          │  │             Stratum 16 = no sync            │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           Firewall: UDP 123 to NTP           │  │            Check FW UDP 123 open            │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Stratum      = Distance from reference clock; 0 = atomic; infra uses stratum 2-3                   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Offset       = Difference between client time and server time; &lt; 100ms is normal                   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Drift        = Rate at which clock gains/loses time; chrony compensates automatically              │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Stratum 16   = NTP &quot;not synchronised&quot; state; Kerberos will fail within 5 min                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    chronyc      = Chrony client tool; tracking, sources, makestep commands                            │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    w32tm        = Windows NTP tool; /query /status shows source, stratum, offset                      │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## ntpd (Legacy)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Status</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ntpq<span class="w"> </span>-p<span class="w">          </span><span class="c1"># show peers and offsets</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ntpq<span class="w"> </span>-c<span class="w"> </span>rv<span class="w">       </span><span class="c1"># show system variables including offset and jitter</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>timedatectl<span class="w">      </span><span class="c1"># OS-level time status</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Force sync (ntpdate, legacy one-shot)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>pool.ntp.org
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Restart ntpd</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>ntpd
+┌────────────────────────────── Integration — Time Synchronization (NTP) ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Accurate time is critical: Kerberos (5 min skew max), TLS certs, log correlation       │   │
+│   │        Hierarchy: external NTP (stratum 1/2) → internal NTP servers → all infra clients       │   │
+│   │        Alert: offset &gt; 100ms; drift &gt; 50ms/s; stratum 16 = unsynchronised = investigate       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  NTP Config                  │  │               Troubleshooting               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           Linux: /etc/chrony.conf            │  │          chronyc tracking (offset)          │   │
+│   │            Windows: w32tm /config            │  │              timedatectl status             │   │
+│   │            ESXi: host NTP config             │  │             w32tm /query /status            │   │
+│   │         Appliance: NTP server in UI          │  │             Stratum 16 = no sync            │   │
+│   │           Firewall: UDP 123 to NTP           │  │            Check FW UDP 123 open            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Stratum      = Distance from reference clock; 0 = atomic; infra uses stratum 2-3                   │
+│    Offset       = Difference between client time and server time; &lt; 100ms is normal                   │
+│    Drift        = Rate at which clock gains/loses time; chrony compensates automatically              │
+│    Stratum 16   = NTP "not synchronised" state; Kerberos will fail within 5 min                       │
+│    chronyc      = Chrony client tool; tracking, sources, makestep commands                            │
+│    w32tm        = Windows NTP tool; /query /status shows source, stratum, offset                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## ntpd (Legacy)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Status
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ntpq -p          # show peers and offsets
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ntpq -c rv       # show system variables including offset and jitter
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>timedatectl      # OS-level time status
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Force sync (ntpdate, legacy one-shot)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ntpdate -u pool.ntp.org
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Restart ntpd
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>systemctl restart ntpd
 </code></pre></div></p>
 <h2 id="systemd-timesyncd-lightweight-ubuntu-default">systemd-timesyncd (Lightweight — Ubuntu default)<a class="headerlink" href="#systemd-timesyncd-lightweight-ubuntu-default" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Status</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>timedatectl<span class="w"> </span>show-timesync
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Configuration</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># /etc/systemd/timesyncd.conf</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="o">[</span>Time<span class="o">]</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">NTP</span><span class="o">=</span>ntp1.corp.example.com<span class="w"> </span>ntp2.corp.example.com
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">FallbackNTP</span><span class="o">=</span>pool.ntp.org
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">RootDistanceMaxSec</span><span class="o">=</span><span class="m">5</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">PollIntervalMinSec</span><span class="o">=</span><span class="m">32</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">PollIntervalMaxSec</span><span class="o">=</span><span class="m">2048</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-timesyncd
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>timedatectl<span class="w"> </span>show-timesync
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Configuration</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># /etc/systemd/timesyncd.conf</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">[</span>Time<span class="o">]</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">NTP</span><span class="o">=</span>ntp1.corp.example.com<span class="w"> </span>ntp2.corp.example.com
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">FallbackNTP</span><span class="o">=</span>pool.ntp.org
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">RootDistanceMaxSec</span><span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nv">PollIntervalMinSec</span><span class="o">=</span><span class="m">32</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">PollIntervalMaxSec</span><span class="o">=</span><span class="m">2048</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>systemd-timesyncd
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
 <h2 id="windows-time-service-w32tm">Windows Time Service (w32tm)<a class="headerlink" href="#windows-time-service-w32tm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check sync status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Force resync</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Configure NTP source (on domain member — should use DC)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Members sync from DC automatically; configure DC:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp1.corp.example.com,0x8 ntp2.corp.example.com,0x8&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">net</span> <span class="n">stop</span> <span class="n">w32tm</span> <span class="p">&amp;&amp;</span> <span class="n">net</span> <span class="nb">start </span><span class="n">w32tm</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Diagnose</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">stripchart</span> <span class="p">/</span><span class="n">computer</span><span class="p">:&lt;</span><span class="n">ntp-server</span><span class="p">&gt;</span> <span class="p">/</span><span class="n">dataonly</span> <span class="p">/</span><span class="n">samples</span><span class="p">:</span><span class="n">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check sync status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Force resync</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Configure NTP source (on domain member — should use DC)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Members sync from DC automatically; configure DC:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">config</span> <span class="p">/</span><span class="n">manualpeerlist</span><span class="p">:</span><span class="s2">&quot;ntp1.corp.example.com,0x8 ntp2.corp.example.com,0x8&quot;</span> <span class="p">/</span><span class="n">syncfromflags</span><span class="p">:</span><span class="n">manual</span> <span class="p">/</span><span class="n">reliable</span><span class="p">:</span><span class="n">yes</span> <span class="p">/</span><span class="n">update</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">net</span> <span class="n">stop</span> <span class="n">w32tm</span> <span class="p">&amp;&amp;</span> <span class="n">net</span> <span class="nb">start </span><span class="n">w32tm</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Diagnose</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">stripchart</span> <span class="p">/</span><span class="n">computer</span><span class="p">:&lt;</span><span class="n">ntp-server</span><span class="p">&gt;</span> <span class="p">/</span><span class="n">dataonly</span> <span class="p">/</span><span class="n">samples</span><span class="p">:</span><span class="n">5</span>
 </code></pre></div>
 <h2 id="monitoring-time-drift">Monitoring Time Drift<a class="headerlink" href="#monitoring-time-drift" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Prometheus node_exporter exposes:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># node_timex_offset_seconds — current NTP offset (alert if &gt; 1s)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># node_timex_sync_status — 1 = synced, 0 = not synced</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Alert rule example (Prometheus)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># - alert: NTPNotSynchronised</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1">#   expr: node_timex_sync_status != 1</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1">#   for: 5m</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Quick check across multiple hosts</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">for</span><span class="w"> </span>h<span class="w"> </span><span class="k">in</span><span class="w"> </span>web-01<span class="w"> </span>web-02<span class="w"> </span>db-01<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$h</span><span class="s2">: &quot;</span><span class="p">;</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$h</span><span class="w"> </span><span class="s2">&quot;chronyc tracking | grep &#39;System time&#39;&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Prometheus node_exporter exposes:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># node_timex_offset_seconds — current NTP offset (alert if &gt; 1s)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># node_timex_sync_status — 1 = synced, 0 = not synced</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Alert rule example (Prometheus)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># - alert: NTPNotSynchronised</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1">#   expr: node_timex_sync_status != 1</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#   for: 5m</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Quick check across multiple hosts</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">for</span><span class="w"> </span>h<span class="w"> </span><span class="k">in</span><span class="w"> </span>web-01<span class="w"> </span>web-02<span class="w"> </span>db-01<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$h</span><span class="s2">: &quot;</span><span class="p">;</span><span class="w"> </span>ssh<span class="w"> </span><span class="nv">$h</span><span class="w"> </span><span class="s2">&quot;chronyc tracking | grep &#39;System time&#39;&quot;</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">done</span>
 </code></pre></div>
 <h2 id="ntp-hierarchy-for-on-premises">NTP Hierarchy for On-Premises<a class="headerlink" href="#ntp-hierarchy-for-on-premises" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Internet NTP (pool.ntp.org, time.cloudflare.com)
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>        ↓
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Internal NTP relay servers (2× for redundancy)
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        ↓
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  All servers, VMs, network devices
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Internet NTP (pool.ntp.org, time.cloudflare.com)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>        ↓
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Internal NTP relay servers (2× for redundancy)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        ↓
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  All servers, VMs, network devices
 </code></pre></div>
 <ul>
 <li>Domain Controllers should be configured as authoritative time sources for Windows AD environments</li>
@@ -3146,17 +3147,17 @@ Ensure consistent, accurate time across all infrastructure systems. Time drift c
 <li>Network devices (switches, routers) should sync from same internal NTP sources</li>
 </ul>
 <h2 id="time-zone-management">Time Zone Management<a class="headerlink" href="#time-zone-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Set system timezone (Linux)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>Europe/London
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>UTC<span class="w">    </span><span class="c1"># preferred for servers</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>date
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Windows</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>Set-TimeZone<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;GMT Standard Time&quot;</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Get-TimeZone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set system timezone (Linux)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>Europe/London
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>timedatectl<span class="w"> </span>set-timezone<span class="w"> </span>UTC<span class="w">    </span><span class="c1"># preferred for servers</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>date
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Windows</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>Set-TimeZone<span class="w"> </span>-Id<span class="w"> </span><span class="s2">&quot;GMT Standard Time&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Get-TimeZone
 </code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>

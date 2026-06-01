@@ -4693,91 +4693,88 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 <p>SRM Upgrade Sequence (strictly ordered)
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
-         │
-         ▼
-  After each step: verify site pairing still Connected before proceeding</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── VMware SRM — Install &amp; Upgrade ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SRM is installed on Windows Server VMs with SQL Server; both sites must have                         │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  compatible versions before pairing; upgrade both sites together.                                     │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Pre-Install Requirements           │  │                Install Steps                │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Windows Server 2019/2022           │  │           Install SQL Server first          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          SQL Server: 2016/2019/2022          │  │              Install SRM Server             │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        vCenter registered: both sites        │  │            Register with vCenter            │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Certs: valid on both sites          │  │           Pair the two SRM Servers          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Both sites must be installed and registered with vCenter before pairing.                             │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Upgrade Procedure               │  │              Post-Upgrade Steps             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Snapshot SRM VMs both sites          │  │         Verify site pair: Connected         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Upgrade protected site first         │  │           Check replication status          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Upgrade recovery site next          │  │            Test one recovery plan           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Upgrade SRA if applicable           │  │               Delete snapshots              │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  SRM Server VMs need 4 vCPU / 16GB RAM; SQL Server needs 8 vCPU / 32GB RAM;                           │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  SQL can be local or remote; dedicated SQL recommended for large deployments.                         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SRM Server    = Windows VM; hosts SRM application and vSphere Client plugin                          │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SQL Server    = SRM configuration database; must be 2016 or newer                                    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vCenter registration= SRM registered as extension in vCenter                                         │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Site pair     = bidirectional trust; established after both sides installed                          │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SRA           = Storage Replication Adapter; upgrade matches SRM version                             │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Protected site= upgrade first; recovery site must match version                                      │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Version match = both SRM Servers must be same version to pair                                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Snapshot      = pre-upgrade safety net; remove after success                                         │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SQL AlwaysOn  = SQL HA; SRM DB fails over automatically                                              │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  vCenter plugin= SRM UI embedded in vSphere Client; updates with SRM                                  │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Local SQL     = SQL on same VM; small deployments; simpler backup                                    │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Remote SQL    = dedicated SQL Server; supports AlwaysOn HA                                           │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<p>Pair VRA appliances:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter (Protected) → Site Recovery → New Site Pair
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Remote vCenter: vcenter-recovery.example.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Remote VRA: vra-recovery.example.local
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Accept certificate thumbprint
+┌─────────────────────────────────── VMware SRM — Install &amp; Upgrade ────────────────────────────────────┐
+│                                                                                                       │
+│  SRM is installed on Windows Server VMs with SQL Server; both sites must have                         │
+│  compatible versions before pairing; upgrade both sites together.                                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Pre-Install Requirements           │  │                Install Steps                │   │
+│   │           Windows Server 2019/2022           │  │           Install SQL Server first          │   │
+│   │          SQL Server: 2016/2019/2022          │  │              Install SRM Server             │   │
+│   │        vCenter registered: both sites        │  │            Register with vCenter            │   │
+│   │          Certs: valid on both sites          │  │           Pair the two SRM Servers          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Both sites must be installed and registered with vCenter before pairing.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Upgrade Procedure               │  │              Post-Upgrade Steps             │   │
+│   │         Snapshot SRM VMs both sites          │  │         Verify site pair: Connected         │   │
+│   │         Upgrade protected site first         │  │           Check replication status          │   │
+│   │          Upgrade recovery site next          │  │            Test one recovery plan           │   │
+│   │          Upgrade SRA if applicable           │  │               Delete snapshots              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Server VMs need 4 vCPU / 16GB RAM; SQL Server needs 8 vCPU / 32GB RAM;                           │
+│  SQL can be local or remote; dedicated SQL recommended for large deployments.                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM Server    = Windows VM; hosts SRM application and vSphere Client plugin                          │
+│  SQL Server    = SRM configuration database; must be 2016 or newer                                    │
+│  vCenter registration= SRM registered as extension in vCenter                                         │
+│  Site pair     = bidirectional trust; established after both sides installed                          │
+│  SRA           = Storage Replication Adapter; upgrade matches SRM version                             │
+│  Protected site= upgrade first; recovery site must match version                                      │
+│  Version match = both SRM Servers must be same version to pair                                        │
+│  Snapshot      = pre-upgrade safety net; remove after success                                         │
+│  SQL AlwaysOn  = SQL HA; SRM DB fails over automatically                                              │
+│  vCenter plugin= SRM UI embedded in vSphere Client; updates with SRM                                  │
+│  Local SQL     = SQL on same VM; small deployments; simpler backup                                    │
+│  Remote SQL    = dedicated SQL Server; supports AlwaysOn HA                                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Pair VRA appliances:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```text
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vCenter (Protected) → Site Recovery → New Site Pair
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Remote vCenter: vcenter-recovery.example.local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Remote VRA: vra-recovery.example.local
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Accept certificate thumbprint
 </code></pre></div></p>
 <hr />
 <h2 id="sra-installation">SRA Installation<a class="headerlink" href="#sra-installation" title="Permanent link">&para;</a></h2>
 <p>Storage Replication Adapters (SRAs) are provided by storage array vendors:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Example: Pure Storage SRA</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Download from: support.purestorage.com → Downloads → SRA for SRM</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Copy installer to SRM Server</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Install SRA on BOTH SRM Servers (protected AND recovery):</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">Pure_Storage_SRA_</span><span class="p">&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># After install, register SRA in SRM:</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Site Recovery → Storage → Storage Adapters → Configure Adapter</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Select: Pure Storage FlashArray</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Credentials: FlashArray management IP + API token</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Example: Pure Storage SRA</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Download from: support.purestorage.com → Downloads → SRA for SRM</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># Copy installer to SRM Server</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Install SRA on BOTH SRM Servers (protected AND recovery):</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">Pure_Storage_SRA_</span><span class="p">&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># After install, register SRA in SRM:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Site Recovery → Storage → Storage Adapters → Configure Adapter</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Select: Pure Storage FlashArray</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># Credentials: FlashArray management IP + API token</span>
 </code></pre></div>
 <hr />
 <h2 id="site-pairing">Site Pairing<a class="headerlink" href="#site-pairing" title="Permanent link">&para;</a></h2>
 <p>After SRM is installed on both sites and VRA/SRA is deployed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter (Protected Site) → Site Recovery → New Site Pair
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Remote vCenter: vcenter-recovery.example.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Site Recovery Manager: srm-recovery.example.local
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Credentials: administrator@vsphere.local on remote vCenter
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Accept certificate thumbprints from both SRM servers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter (Protected Site) → Site Recovery → New Site Pair
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Remote vCenter: vcenter-recovery.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Site Recovery Manager: srm-recovery.example.local
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Credentials: administrator@vsphere.local on remote vCenter
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Accept certificate thumbprints from both SRM servers
 </code></pre></div>
 <p>After pairing, configure inventory mappings:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Site Recovery → Site Pair → Configure → Inventory Mappings
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Network mappings: protected networks → recovery networks
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Resource mappings: protected cluster/RP → recovery cluster/RP
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Folder mappings: protected VM folders → recovery VM folders
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Storage policy mappings (if applicable)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site Recovery → Site Pair → Configure → Inventory Mappings
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Network mappings: protected networks → recovery networks
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Resource mappings: protected cluster/RP → recovery cluster/RP
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Folder mappings: protected VM folders → recovery VM folders
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  Storage policy mappings (if applicable)
 </code></pre></div></p>
 <hr />
 <h2 id="upgrade-order">Upgrade Order<a class="headerlink" href="#upgrade-order" title="Permanent link">&para;</a></h2>
@@ -4789,29 +4786,29 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 <li><strong>SRA</strong> — upgrade on both SRM Servers (check vendor release notes for SRA/SRM compat)</li>
 <li><strong>vSphere Replication Appliance</strong> — upgrade both VRAs (upgrade protected site VRA first)</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Take a snapshot of SRM Server VM before upgrade</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;srm-protected&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Pre-Upgrade-SRM-8.x&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Run new SRM installer (in-place upgrade)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">VMware-srm</span><span class="p">-&lt;</span><span class="nb">new-version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Verify service after upgrade:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Check site pairing health:</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c"># vCenter → Site Recovery → Summary → both sites Connected</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Take a snapshot of SRM Server VM before upgrade</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="s2">&quot;srm-protected&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;Pre-Upgrade-SRM-8.x&quot;</span> <span class="n">-Memory</span> <span class="nv">$false</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Run new SRM installer (in-place upgrade)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">VMware-srm</span><span class="p">-&lt;</span><span class="nb">new-version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Verify service after upgrade:</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Check site pairing health:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># vCenter → Site Recovery → Summary → both sites Connected</span>
 </code></pre></div>
 <hr />
 <h2 id="post-install-verification">Post-Install Verification<a class="headerlink" href="#post-install-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Connect to SRM via PowerCLI</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Recovery Plans found: </span><span class="p">$(</span><span class="nv">$plans</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Run a pre-check on each Recovery Plan</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="s2">&quot;PRECHECK_ONLY&quot;</span><span class="p">)</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Connect to SRM via PowerCLI</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$srm</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Recovery Plans found: </span><span class="p">$(</span><span class="nv">$plans</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Run a pre-check on each Recovery Plan</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$plan</span> <span class="k">in</span> <span class="nv">$plans</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="nv">$plan</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="s2">&quot;PRECHECK_ONLY&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
 </code></pre></div>
 
 

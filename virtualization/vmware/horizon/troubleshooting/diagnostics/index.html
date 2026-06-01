@@ -4557,140 +4557,141 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="err">│</span>  <span class="err">└────────────────────────────┘</span>   <span class="err">└────────────────────────┘</span> <span class="err">│</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="err">└──────────────────────────────────────────────────────────────┘</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  and desktop agent logs to identify root causes of session and provisioning failures.                 │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Connection Server Logs            │  │                  Agent Logs                 │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          C:\ProgramData\VMware\VDM           │  │          C:\ProgramData\VMware\VDM          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           debug-*.log: main broker           │  │          debug-*.log on desktop VM          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           vlsi-*.log: vCenter ops            │  │           wsnm_*.log: display path          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          support bundle: zip via UI          │  │            Event log: Windows App           │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Start with CS debug log; if session connects but black screen, check agent logs.                     │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Admin UI Diagnostics             │  │               UAG Diagnostics               │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           Horizon Admin: Dashboard           │  │              UAG admin UI: 9443             │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Events: filter by severity          │  │           /rest/healthcheck: 200?           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Pool: provisioning errors           │  │           UAG log: /opt/vmware/etc          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Sessions: filter by state           │  │          Cert: check UAG cert date          │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Collect CS support bundle via Horizon Admin UI; agent logs from desktop VM;                          │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  UAG logs via SSH to UAG appliance.                                                                   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  debug-*.log   = CS main log; broker decisions, auth, pool operations                                 │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  vlsi-*.log    = vCenter API interaction log; provisioning details                                    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  wsnm_*.log    = agent display protocol log; Blast/PCoIP session                                      │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  ProgramData   = Windows hidden folder; Horizon stores logs here                                      │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Support bundle= Horizon Admin UI &gt; Support &gt; Generate Bundle                                         │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Horizon Admin = web UI for Horizon management; port 443 on CS                                        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Events tab    = Horizon UI event log; filter by error/warning                                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  UAG admin     = port 9443; cert, edge service, health config                                         │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  /rest/healthcheck= UAG health endpoint; returns 200 OK if healthy                                    │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  UAG log       = /opt/vmware/etc/esmanager/; edge service logs                                        │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Windows App log= Windows Event Viewer; Horizon Agent events here                                     │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Pool error    = UI shows red error; hover for provisioning reason                                    │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">---</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c">## Windows Event Log (Connection Server)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">```</span><span class="n">powershell</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Horizon-specific event sources:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span> 
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*VMware*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c"># VMware Horizon LDAP service (ADAM/AD LDS) errors:</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;ADAM (VMwareVDMDS)&quot;</span> <span class="n">-MaxEvents</span> <span class="n">20</span>
+┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │
+│  and desktop agent logs to identify root causes of session and provisioning failures.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Connection Server Logs            │  │                  Agent Logs                 │   │
+│   │          C:\ProgramData\VMware\VDM           │  │          C:\ProgramData\VMware\VDM          │   │
+│   │           debug-<em>.log: main broker           │  │          debug-</em>.log on desktop VM          │   │
+│   │           vlsi-<em>.log: vCenter ops            │  │           wsnm_</em>.log: display path          │   │
+│   │          support bundle: zip via UI          │  │            Event log: Windows App           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Start with CS debug log; if session connects but black screen, check agent logs.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Admin UI Diagnostics             │  │               UAG Diagnostics               │   │
+│   │           Horizon Admin: Dashboard           │  │              UAG admin UI: 9443             │   │
+│   │          Events: filter by severity          │  │           /rest/healthcheck: 200?           │   │
+│   │          Pool: provisioning errors           │  │           UAG log: /opt/vmware/etc          │   │
+│   │          Sessions: filter by state           │  │          Cert: check UAG cert date          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Collect CS support bundle via Horizon Admin UI; agent logs from desktop VM;                          │
+│  UAG logs via SSH to UAG appliance.                                                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  debug-<em>.log   = CS main log; broker decisions, auth, pool operations                                 │
+│  vlsi-</em>.log    = vCenter API interaction log; provisioning details                                    │
+│  wsnm_*.log    = agent display protocol log; Blast/PCoIP session                                      │
+│  ProgramData   = Windows hidden folder; Horizon stores logs here                                      │
+│  Support bundle= Horizon Admin UI &gt; Support &gt; Generate Bundle                                         │
+│  Horizon Admin = web UI for Horizon management; port 443 on CS                                        │
+│  Events tab    = Horizon UI event log; filter by error/warning                                        │
+│  UAG admin     = port 9443; cert, edge service, health config                                         │
+│  /rest/healthcheck= UAG health endpoint; returns 200 OK if healthy                                    │
+│  UAG log       = /opt/vmware/etc/esmanager/; edge service logs                                        │
+│  Windows App log= Windows Event Viewer; Horizon Agent events here                                     │
+│  Pool error    = UI shows red error; hover for provisioning reason                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```powershell
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Windows Event Log (Connection Server)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Horizon-specific event sources:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Get-WinEvent -LogName &quot;Application&quot; -MaxEvents 50 | 
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  Where-Object { $_.ProviderName -like &quot;*VMware*&quot; } |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  Select-Object TimeCreated, LevelDisplayName, Message
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># VMware Horizon LDAP service (ADAM/AD LDS) errors:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Get-WinEvent -LogName &quot;ADAM (VMwareVDMDS)&quot; -MaxEvents 20
 </code></pre></div></p>
 <hr />
 <h2 id="horizon-agent-logs-in-guest-vm">Horizon Agent Logs in Guest VM<a class="headerlink" href="#horizon-agent-logs-in-guest-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Inside the desktop VM:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">C</span><span class="p">:\</span><span class="n">ProgramData</span><span class="p">\</span><span class="n">VMware</span><span class="p">\</span><span class="n">VDM</span><span class="p">\</span><span class="n">logs</span><span class="p">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Or via Event Viewer in the guest:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-vm-ip</span><span class="p">&gt;</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*Horizon*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*VMware*&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c"># Check Horizon Agent service</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-vm-ip</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Agent&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Inside the desktop VM:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">C</span><span class="p">:\</span><span class="n">ProgramData</span><span class="p">\</span><span class="n">VMware</span><span class="p">\</span><span class="n">VDM</span><span class="p">\</span><span class="n">logs</span><span class="p">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Or via Event Viewer in the guest:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Application&quot;</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-vm-ip</span><span class="p">&gt;</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*Horizon*&quot;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ProviderName</span> <span class="o">-like</span> <span class="s2">&quot;*VMware*&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Check Horizon Agent service</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-vm-ip</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Agent&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="uag-log-collection">UAG Log Collection<a class="headerlink" href="#uag-log-collection" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to UAG appliance</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>root@uag.example.local
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Log locations:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>/opt/vmware/gateway/logs/esmanager.log<span class="w">    </span><span class="c1"># Edge Service Manager</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/opt/vmware/gateway/logs/gateway.log<span class="w">      </span><span class="c1"># Main gateway log</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>/var/log/messages<span class="w">                          </span><span class="c1"># OS syslog</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Collect UAG log bundle via REST API:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://uag.example.local:9443/rest/v1/config/logs/collect&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-o<span class="w"> </span>uag-logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.zip
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to UAG appliance</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>root@uag.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Log locations:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/opt/vmware/gateway/logs/esmanager.log<span class="w">    </span><span class="c1"># Edge Service Manager</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/opt/vmware/gateway/logs/gateway.log<span class="w">      </span><span class="c1"># Main gateway log</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>/var/log/messages<span class="w">                          </span><span class="c1"># OS syslog</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Collect UAG log bundle via REST API:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://uag.example.local:9443/rest/v1/config/logs/collect&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span>-o<span class="w"> </span>uag-logs-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.zip
 </code></pre></div>
 <hr />
 <h2 id="test-display-protocol-connectivity">Test Display Protocol Connectivity<a class="headerlink" href="#test-display-protocol-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From a client machine — test Blast port:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">8443</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test PCoIP:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">4172</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Test HTTPS tunnel:</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Trace the path to UAG:</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>traceroute<span class="w"> </span>uag.example.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From a client machine — test Blast port:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">8443</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test PCoIP:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">4172</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test HTTPS tunnel:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nc<span class="w"> </span>-vz<span class="w"> </span>uag.example.local<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Trace the path to UAG:</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>traceroute<span class="w"> </span>uag.example.local
 </code></pre></div>
 <hr />
 <h2 id="session-diagnostics-with-vdmadmin">Session Diagnostics with vdmadmin<a class="headerlink" href="#session-diagnostics-with-vdmadmin" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># vdmadmin.exe is in C:\Program Files\VMware\VMware View\Server\tools\bin\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># List active sessions</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe&quot;</span> <span class="n">-L</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># List user assignments</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">&amp;</span> <span class="s2">&quot;vdmadmin.exe&quot;</span> <span class="n">-A</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># List all Connection Servers</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">&amp;</span> <span class="s2">&quot;vdmadmin.exe&quot;</span> <span class="n">-S</span> <span class="n">-list</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># vdmadmin.exe is in C:\Program Files\VMware\VMware View\Server\tools\bin\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># List active sessions</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\VMware\VMware View\Server\tools\bin\vdmadmin.exe&quot;</span> <span class="n">-L</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># List user assignments</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">&amp;</span> <span class="s2">&quot;vdmadmin.exe&quot;</span> <span class="n">-A</span> <span class="n">-d</span> <span class="p">&lt;</span><span class="n">pool-name</span><span class="p">&gt;</span> <span class="n">-list</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># List all Connection Servers</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">&amp;</span> <span class="s2">&quot;vdmadmin.exe&quot;</span> <span class="n">-S</span> <span class="n">-list</span>
 </code></pre></div>
 <hr />
 <h2 id="horizon-rest-api-diagnostics">Horizon REST API Diagnostics<a class="headerlink" href="#horizon-rest-api-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Authenticate to Horizon REST API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://horizon-cs01.example.local/rest/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin).get(&#39;access_token&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Get Connection Server health</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>https://horizon-cs01.example.local/rest/monitor/connection-servers<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Get pool summary</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>https://horizon-cs01.example.local/rest/inventory/v1/desktop-pools<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authenticate to Horizon REST API</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://horizon-cs01.example.local/rest/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import json,sys; print(json.load(sys.stdin).get(&#39;access_token&#39;,&#39;&#39;))&quot;</span><span class="k">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Get Connection Server health</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>https://horizon-cs01.example.local/rest/monitor/connection-servers<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Get pool summary</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>https://horizon-cs01.example.local/rest/inventory/v1/desktop-pools<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <hr />
 <h2 id="horizon-performance-tracker">Horizon Performance Tracker<a class="headerlink" href="#horizon-performance-tracker" title="Permanent link">&para;</a></h2>
 <p>For diagnosing in-session performance (latency, frame rate, bandwidth):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Inside a Blast session: Ctrl+Alt+Shift+P → opens Performance Tracker overlay
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Displays: frames per second, bandwidth, latency, packet loss
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Inside a Blast session: Ctrl+Alt+Shift+P → opens Performance Tracker overlay
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Displays: frames per second, bandwidth, latency, packet loss
 </code></pre></div>
 <p>High latency (&gt;50ms) → check network path between client and UAG, or UAG and desktop.
 Low frame rate → check vGPU allocation, ESXi CPU contention, or display protocol settings.</p>

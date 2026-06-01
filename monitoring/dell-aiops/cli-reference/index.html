@@ -4389,62 +4389,63 @@ Dell AIOps does not provide a dedicated CLI tool. All interaction is via the Clo
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=</span><span class="si">${</span><span class="nv">CLIENT_ID</span><span class="si">}</span><span class="s2">&amp;client_secret=</span><span class="si">${</span><span class="nv">CLIENT_SECRET</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.access_token&#39;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Dell AIOps — CLI and API Reference ──────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                     AIOps REST API — Base URL: https://&lt;aiops-host&gt;/api/v1                    │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │                          Auth: POST /api/v1/auth/login → Bearer token                         │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                  Alerts: GET /api/v1/alerts?status=open — list active alerts                  │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                  Systems: GET /api/v1/systems — list monitored infrastructure                 │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              Metrics: GET /api/v1/metrics/{system_id}?metric=latency_ms&amp;range=1h              │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                 Recommendations: GET /api/v1/recommendations?priority=critical                │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  REST API on AIOps master node TCP 443 · CLI scripts run from any mgmt host                           │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Bearer token = Short-lived auth credential from /auth/login; include in Authorization header         │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  status=open = Filter returning only unresolved alerts                                                │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  system_id = Unique identifier for a monitored infrastructure component in AIOps                      │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  metric param = Name of the metric to retrieve (latency_ms, iops, throughput_mb)                      │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  range param = Time window for metric data (1h, 24h, 7d)                                              │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  priority filter = Filter recommendations by Critical/High/Medium/Low                                 │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Pagination = Use limit/offset params; default 100 records per page                                   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Webhook test = POST /api/v1/webhooks/{id}/test — verify webhook delivery                             │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Health check = GET /api/v1/health — confirm AIOps services are running                               │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Admin CLI = aiops-admin tool on host; used for backup, config, and service restart                   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  JSON response = All API responses in JSON format; parse with jq                                      │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Rate limit = API enforces per-client limits; retry with exponential backoff on 429                   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">### Anomalies</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List active anomalies</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=state%20eq%20&#39;ACTIVE&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id,system_name,metric,detected_at}&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Anomalies in last 24 hours</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">SINCE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>-v-1d<span class="w"> </span>+<span class="s2">&quot;%Y-%m-%dT%H:%M:%SZ&quot;</span><span class="k">)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=created_at%20gt%20&#39;</span><span class="si">${</span><span class="nv">SINCE</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results | length&#39;</span>
+┌───────────────────────────────── Dell AIOps — CLI and API Reference ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                     AIOps REST API — Base URL: https://<aiops-host>/api/v1                    │   │
+│   │                          Auth: POST /api/v1/auth/login → Bearer token                         │   │
+│   │                  Alerts: GET /api/v1/alerts?status=open — list active alerts                  │   │
+│   │                  Systems: GET /api/v1/systems — list monitored infrastructure                 │   │
+│   │              Metrics: GET /api/v1/metrics/{system_id}?metric=latency_ms&amp;range=1h              │   │
+│   │                 Recommendations: GET /api/v1/recommendations?priority=critical                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  REST API on AIOps master node TCP 443 · CLI scripts run from any mgmt host                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Bearer token = Short-lived auth credential from /auth/login; include in Authorization header         │
+│  status=open = Filter returning only unresolved alerts                                                │
+│  system_id = Unique identifier for a monitored infrastructure component in AIOps                      │
+│  metric param = Name of the metric to retrieve (latency_ms, iops, throughput_mb)                      │
+│  range param = Time window for metric data (1h, 24h, 7d)                                              │
+│  priority filter = Filter recommendations by Critical/High/Medium/Low                                 │
+│  Pagination = Use limit/offset params; default 100 records per page                                   │
+│  Webhook test = POST /api/v1/webhooks/{id}/test — verify webhook delivery                             │
+│  Health check = GET /api/v1/health — confirm AIOps services are running                               │
+│  Admin CLI = aiops-admin tool on host; used for backup, config, and service restart                   │
+│  JSON response = All API responses in JSON format; parse with jq                                      │
+│  Rate limit = API enforces per-client limits; retry with exponential backoff on 429                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Anomalies
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># List active anomalies
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=state%20eq%20&#39;ACTIVE&#39;&quot; \
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq &#39;.results[] | {id,system_name,metric,detected_at}&#39;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Anomalies in last 24 hours
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>SINCE=$(date -u -v-1d +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl -s &quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/anomalies?filter=created_at%20gt%20&#39;${SINCE}&#39;&quot; \
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -H &quot;Authorization: Bearer ${TOKEN}&quot; | jq &#39;.results | length&#39;
 </code></pre></div></p>
 <h3 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all active alerts</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20&#39;ACTIVE&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id,name,severity,system_name}&#39;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Alerts for a specific system</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=system_id%20eq%20&#39;</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name,severity,created_at}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all active alerts</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=state%20eq%20&#39;ACTIVE&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id,name,severity,system_name}&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Alerts for a specific system</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/alerts?filter=system_id%20eq%20&#39;</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {name,severity,created_at}&#39;</span>
 </code></pre></div>
 <h3 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Capacity data for a specific system</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{used_bytes,total_bytes,days_until_full}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Capacity data for a specific system</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/systems/</span><span class="si">${</span><span class="nv">SYSTEM_ID</span><span class="si">}</span><span class="s2">/capacity&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{used_bytes,total_bytes,days_until_full}&#39;</span>
 </code></pre></div>
 <h2 id="endpoint-summary">Endpoint Summary<a class="headerlink" href="#endpoint-summary" title="Permanent link">&para;</a></h2>
 <table>
@@ -4500,14 +4501,14 @@ Dell AIOps does not provide a dedicated CLI tool. All interaction is via the Clo
 </table>
 <h2 id="filtering-and-pagination">Filtering and Pagination<a class="headerlink" href="#filtering-and-pagination" title="Permanent link">&para;</a></h2>
 <p>The CloudIQ API supports OData-style filters and pagination via <code>limit</code> and <code>offset</code> parameters:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Paginated request — first 50 results</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?limit=50&amp;offset=0&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{total: .total_results, count: (.results | length)}&#39;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Combined filter</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">filter=severity%20eq%20&#39;High&#39;%20and%20state%20eq%20&#39;ACTIVE&#39;&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id,title,system_name}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Paginated request — first 50 results</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?limit=50&amp;offset=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;{total: .total_results, count: (.results | length)}&#39;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Combined filter</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">filter=severity%20eq%20&#39;High&#39;%20and%20state%20eq%20&#39;ACTIVE&#39;&amp;limit=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.results[] | {id,title,system_name}&#39;</span>
 </code></pre></div>
 <p>Full API documentation: <a href="https://developer.dell.com/cloudiq">developer.dell.com/cloudiq</a></p>
 

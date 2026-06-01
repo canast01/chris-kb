@@ -4164,28 +4164,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#notification-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notification Policies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alert-suppression-during-maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alert Suppression During Maintenance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#common-alert-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4353,7 +4331,7 @@
 Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies reference covering Acknowledging Alerts, Notification Policies, Alert Suppression During Maintenance, Common Alert Issues.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │             NDI Alert Categories             │                 Alert Actions                  │   │
@@ -4384,57 +4362,37 @@ Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Poli
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="notification-policies">Notification Policies<a class="headerlink" href="#notification-policies" title="Permanent link">&para;</a></h2>
-<p>Nexus Dashboard can send alert notifications via email or syslog.</p>
-<p>Navigation: <strong>Nexus Dashboard &gt; Admin &gt; Notifications &gt; Alert Notification</strong></p>
-<table>
-<thead>
-<tr>
-<th>Notification Channel</th>
-<th>Configuration Path</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Email</td>
-<td>Admin &gt; Notifications &gt; Email</td>
-<td>On-call engineer alerts</td>
-</tr>
-<tr>
-<td>Syslog</td>
-<td>Admin &gt; Notifications &gt; Syslog</td>
-<td>SIEM ingestion</td>
-</tr>
-<tr>
-<td>REST webhook</td>
-<td>(via third-party integration)</td>
-<td>ServiceNow, PagerDuty</td>
-</tr>
-</tbody>
-</table>
-<p>Email notification configuration:
-1. Navigate to <strong>Admin &gt; System Settings &gt; Notifications</strong>.
-2. Click <strong>+ Add Email Receiver</strong>.
-3. Set SMTP server, port, sender address.
-4. Define a notification rule: minimum severity, fabric scope.
-5. Test with <strong>Send Test Email</strong>.</p>
-<h2 id="alert-suppression-during-maintenance">Alert Suppression During Maintenance<a class="headerlink" href="#alert-suppression-during-maintenance" title="Permanent link">&para;</a></h2>
-<p>For planned maintenance windows, suppress alerts to avoid notification fatigue:</p>
-<p>Navigation: <strong>Insights &gt; Alerts &gt; Suppress Alerts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a suppression window via API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/suppressions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;name&quot;: &quot;fabric-upgrade-window&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;fabricName&quot;: &quot;prod-aci-fabric&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;startTime&quot;: &quot;2026-05-10T22:00:00Z&quot;,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;endTime&quot;: &quot;2026-05-11T04:00:00Z&quot;,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">    &quot;reason&quot;: &quot;Planned firmware upgrade&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
+┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             NDI Alert Categories             │                 Alert Actions                  │   │
+│   │            Anomaly: ML deviation             │               Acknowledge: seen                │   │
+│   │         Compliance: policy mismatch          │              Assign: to engineer               │   │
+│   │            Health: score degraded            │             Suppress: known issue              │   │
+│   │          Bug: known Cisco SW defect          │               Create ITSM ticket               │   │
+│   │            Delta: config changed             │                Export for audit                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  NDI generates alerts from telemetry · delivered via ND console, email, webhook                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Anomaly = NDI ML deviation from baseline; may indicate failure or misconfiguration                   │
+│  Compliance = ACI EPG/contract or NX-OS configuration deviating from verified state                   │
+│  Health alert = NDI site/fabric health score dropping below threshold                                 │
+│  Bug = NDI matching observed symptoms to Cisco known defect database                                  │
+│  Delta = Change event; NDI showing what configuration changed and when                                │
+│  Acknowledge = Engineer marks alert as seen; stops re-notification                                    │
+│  Suppress = Muting known benign alert for a defined period                                            │
+│  ITSM ticket = ServiceNow incident created from NDI alert via webhook                                 │
+│  Severity = Critical/Major/Minor/Warning; routes to different teams                                   │
+│  Affected epoch = NDI time window during which anomaly was detected                                   │
+│  Impact = NDI assessment of scope (how many objects affected)                                         │
+│  Root cause = NDI correlation linking symptom to underlying network event                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="common-alert-issues">Common Alert Issues<a class="headerlink" href="#common-alert-issues" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

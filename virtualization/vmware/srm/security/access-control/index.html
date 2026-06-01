@@ -4581,57 +4581,58 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Rotate: array API token ──► update in SRM ──► delete old    │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└──────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── VMware SRM — Access Control ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SRM access control uses vCenter SSO roles; SRM Administrator for full control,                       │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  SRM Recovery Plan Admin for plan-only access, and read-only for auditors.                            │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                  SRM Roles                   │  │               Role Assignments              │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          SRM Administrator: all ops          │  │           Apply at SRM root level           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Recovery Plan Admin: plans          │  │              AD groups → roles              │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          View Inventory: read-only           │  │           Both sites: same groups           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Integrate with vCenter SSO          │  │           No cross-site escalation          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  SRM Administrator role should be restricted to DR team; plan testers get Plan Admin.                 │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          Failover Approval Control           │  │              Audit &amp; Compliance             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          Planned failover: DR lead           │  │              Log: all plan runs             │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Disaster: break-glass proc          │  │            Events: vCenter + SRM            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Approver: separate from runner        │  │              Review: quarterly              │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │        Dual-person: critical failover        │  │            Evidence: test results           │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  SRM Server uses vCenter SSO for auth; AD must be reachable from both SRM Servers;                    │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  all failover actions are logged in vCenter event database.                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SRM Administrator= full control; site pair, protection, plan management                              │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Recovery Plan Admin= can run and manage plans; cannot change protection                              │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  View Inventory = read-only; for monitoring teams                                                     │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  vCenter SSO   = SRM inherits vCenter identity and authentication                                     │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  AD group      = map Active Directory group to SRM role                                               │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Break-glass   = emergency failover procedure; elevated access                                        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Dual-person   = two named people required to approve real failover                                   │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DR lead       = designated approver for planned failover operations                                  │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Plan run log  = SRM records who ran each plan and when                                               │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Quarterly audit= review SRM role assignments; remove stale users                                     │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Evidence      = test results stored in SRM DB for compliance                                         │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  No cross-site  = SRM roles are per-site; no admin across both sites                                  │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Rotate</span><span class="w"> </span><span class="n">SRA</span><span class="w"> </span><span class="n">credentials</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">```</span><span class="nb">text</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="mi">1</span><span class="p">.</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">storage</span><span class="w"> </span><span class="nb">array</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="mi">2</span><span class="p">.</span><span class="w"> </span><span class="n">Site</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">Storage</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="nb">Array</span><span class="w"> </span><span class="n">Pairs</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="n">pair</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Edit</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">credentials</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="mi">3</span><span class="p">.</span><span class="w"> </span><span class="k">Delete</span><span class="w"> </span><span class="k">old</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="nb">array</span>
+┌───────────────────────────────────── VMware SRM — Access Control ─────────────────────────────────────┐
+│                                                                                                       │
+│  SRM access control uses vCenter SSO roles; SRM Administrator for full control,                       │
+│  SRM Recovery Plan Admin for plan-only access, and read-only for auditors.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SRM Roles                   │  │               Role Assignments              │   │
+│   │          SRM Administrator: all ops          │  │           Apply at SRM root level           │   │
+│   │          Recovery Plan Admin: plans          │  │              AD groups → roles              │   │
+│   │          View Inventory: read-only           │  │           Both sites: same groups           │   │
+│   │          Integrate with vCenter SSO          │  │           No cross-site escalation          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SRM Administrator role should be restricted to DR team; plan testers get Plan Admin.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Failover Approval Control           │  │              Audit &amp; Compliance             │   │
+│   │          Planned failover: DR lead           │  │              Log: all plan runs             │   │
+│   │          Disaster: break-glass proc          │  │            Events: vCenter + SRM            │   │
+│   │        Approver: separate from runner        │  │              Review: quarterly              │   │
+│   │        Dual-person: critical failover        │  │            Evidence: test results           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Server uses vCenter SSO for auth; AD must be reachable from both SRM Servers;                    │
+│  all failover actions are logged in vCenter event database.                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM Administrator= full control; site pair, protection, plan management                              │
+│  Recovery Plan Admin= can run and manage plans; cannot change protection                              │
+│  View Inventory = read-only; for monitoring teams                                                     │
+│  vCenter SSO   = SRM inherits vCenter identity and authentication                                     │
+│  AD group      = map Active Directory group to SRM role                                               │
+│  Break-glass   = emergency failover procedure; elevated access                                        │
+│  Dual-person   = two named people required to approve real failover                                   │
+│  DR lead       = designated approver for planned failover operations                                  │
+│  Plan run log  = SRM records who ran each plan and when                                               │
+│  Quarterly audit= review SRM role assignments; remove stale users                                     │
+│  Evidence      = test results stored in SRM DB for compliance                                         │
+│  No cross-site  = SRM roles are per-site; no admin across both sites                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Rotate SRA credentials:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>```text
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Create new API token on storage array
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. Site Recovery → Storage → Array Pairs → [pair] → Edit → update credentials
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Delete old API token from array
 </code></pre></div></p>
 <hr />
 <h2 id="separation-of-duties-for-recovery">Separation of Duties for Recovery<a class="headerlink" href="#separation-of-duties-for-recovery" title="Permanent link">&para;</a></h2>
@@ -4680,7 +4681,7 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
 <hr />
 <h2 id="audit-trail">Audit Trail<a class="headerlink" href="#audit-trail" title="Permanent link">&para;</a></h2>
 <p>SRM logs all actions to vCenter events:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Monitor → Events → filter by &quot;drm&quot; (Site Recovery events prefix)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vCenter → Monitor → Events → filter by &quot;drm&quot; (Site Recovery events prefix)
 </code></pre></div></p>
 <p>Key events to monitor:
 - Recovery Plan started (type, who initiated)

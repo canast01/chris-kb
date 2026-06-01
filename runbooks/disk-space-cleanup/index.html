@@ -3072,97 +3072,98 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>           ▼
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  Document what was removed; close ticket
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Runbook — Disk Space Cleanup ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │          Free disk space: identify large files, clear logs/temp, delete old snapshots         │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Alert threshold: &gt; 80% full; critical &gt; 90%; action required before writes fail        │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            Linux            │  │           Windows           │  │            VMware           │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │        df -h / lsblk        │  │       WinDirStat / DU       │  │       Datastore report      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │     du -sh /* | sort -rh    │  │       C:\Windows\Temp       │  │       Delete snapshots      │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │     journalctl --vacuum     │  │      Disk Cleanup util      │  │         Remove ISOs         │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │     find /tmp -mtime +7     │  │        C:\Logs rotate       │  │        Thin provision       │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         logrotate -f        │  │       WER dumps delete      │  │       Storage vMotion       │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │                            # Linux: find top 10 largest directories                           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │                    du -ah / --max-depth=3 2&gt;/dev/null | sort -rh | head -10                   │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │                             # Clear journal logs older than 7 days                            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │                                  journalctl --vacuum-time=7d                                  │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │                                       # Find core dumps                                       │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │                        find /var/core /tmp -name &quot;core.*&quot; -mtime +1 -ls                       │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    journalctl vacuum= Deletes old systemd journal logs; use --vacuum-time or --vacuum-size            │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    WER dumps        = Windows Error Reporting crash dumps in C:\ProgramData\Microsoft\Windows\WER     │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Snapshot cleanup = Old VM snapshots accumulate delta VMDKs; delete via vCenter snapshot manager    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                                                                                       │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Step 3 — Package Cache</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># RHEL / CentOS / Rocky</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>dnf<span class="w"> </span>clean<span class="w"> </span>all
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Ubuntu / Debian</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>apt-get<span class="w"> </span>clean
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>apt-get<span class="w"> </span>autoremove<span class="w"> </span>--purge
+┌──────────────────────────────────── Runbook — Disk Space Cleanup ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Free disk space: identify large files, clear logs/temp, delete old snapshots         │   │
+│   │        Alert threshold: &gt; 80% full; critical &gt; 90%; action required before writes fail        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Linux            │  │           Windows           │  │            VMware           │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        df -h / lsblk        │  │       WinDirStat / DU       │  │       Datastore report      │   │
+│   │     du -sh /<em> | sort -rh    │  │       C:\Windows\Temp       │  │       Delete snapshots      │   │
+│   │     journalctl --vacuum     │  │      Disk Cleanup util      │  │         Remove ISOs         │   │
+│   │     find /tmp -mtime +7     │  │        C:\Logs rotate       │  │        Thin provision       │   │
+│   │         logrotate -f        │  │       WER dumps delete      │  │       Storage vMotion       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            # Linux: find top 10 largest directories                           │   │
+│   │                    du -ah / --max-depth=3 2&gt;/dev/null | sort -rh | head -10                   │   │
+│   │                             # Clear journal logs older than 7 days                            │   │
+│   │                                  journalctl --vacuum-time=7d                                  │   │
+│   │                                       # Find core dumps                                       │   │
+│   │                        find /var/core /tmp -name "core.</em>" -mtime +1 -ls                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    journalctl vacuum= Deletes old systemd journal logs; use --vacuum-time or --vacuum-size            │
+│    WER dumps        = Windows Error Reporting crash dumps in C:\ProgramData\Microsoft\Windows\WER     │
+│    Snapshot cleanup = Old VM snapshots accumulate delta VMDKs; delete via vCenter snapshot manager    │
+│    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Step 3 — Package Cache
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># RHEL / CentOS / Rocky
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>dnf clean all
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Ubuntu / Debian
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>apt-get clean
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>apt-get autoremove --purge
 </code></pre></div></p>
 <h2 id="step-4-old-kernels-linux">Step 4 — Old Kernels (Linux)<a class="headerlink" href="#step-4-old-kernels-linux" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List installed kernels — always keep current + one previous</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rpm<span class="w"> </span>-q<span class="w"> </span>kernel<span class="w">                          </span><span class="c1"># RHEL</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>dpkg<span class="w"> </span>--list<span class="w"> </span><span class="s1">&#39;linux-image*&#39;</span><span class="w">             </span><span class="c1"># Ubuntu</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Remove old kernels (keep 2)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>dnf<span class="w"> </span>remove<span class="w"> </span>--oldinstallonly<span class="w"> </span>--setopt<span class="w"> </span><span class="nv">installonly_limit</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>kernel<span class="w">    </span><span class="c1"># RHEL</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List installed kernels — always keep current + one previous</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rpm<span class="w"> </span>-q<span class="w"> </span>kernel<span class="w">                          </span><span class="c1"># RHEL</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>dpkg<span class="w"> </span>--list<span class="w"> </span><span class="s1">&#39;linux-image*&#39;</span><span class="w">             </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Remove old kernels (keep 2)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>dnf<span class="w"> </span>remove<span class="w"> </span>--oldinstallonly<span class="w"> </span>--setopt<span class="w"> </span><span class="nv">installonly_limit</span><span class="o">=</span><span class="m">2</span><span class="w"> </span>kernel<span class="w">    </span><span class="c1"># RHEL</span>
 </code></pre></div>
 <h2 id="step-5-temp-files-and-core-dumps">Step 5 — Temp Files and Core Dumps<a class="headerlink" href="#step-5-temp-files-and-core-dumps" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Preview before deleting</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>find<span class="w"> </span>/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-ls
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>find<span class="w"> </span>/var/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-ls
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>find<span class="w"> </span>/var/crash<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-ls
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>find<span class="w"> </span>/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Delete</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>find<span class="w"> </span>/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>find<span class="w"> </span>/var/crash<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Preview before deleting</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>find<span class="w"> </span>/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-ls
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>find<span class="w"> </span>/var/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-ls
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>find<span class="w"> </span>/var/crash<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-ls
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>find<span class="w"> </span>/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;core&quot;</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-ls<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Delete</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>find<span class="w"> </span>/tmp<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>find<span class="w"> </span>/var/crash<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-delete
 </code></pre></div>
 <h2 id="windows-disk-cleanup">Windows Disk Cleanup<a class="headerlink" href="#windows-disk-cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Show disk usage by volume</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystemLabel</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreePct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span><span class="p">*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Windows Update cache</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Stop-Service</span> <span class="n">wuauserv</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Remove-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">SoftwareDistribution</span><span class="p">\</span><span class="n">Download</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Start-Service</span> <span class="n">wuauserv</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># User temp files</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">Remove-Item</span> <span class="nv">$env:TEMP</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Remove-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">Temp</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c"># IIS logs older than 30 days</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="nb">Get-ChildItem</span> <span class="n">C</span><span class="p">:\</span><span class="n">inetpub</span><span class="p">\</span><span class="n">logs</span> <span class="n">-Recurse</span> <span class="n">-Include</span> <span class="p">*.</span><span class="n">log</span> <span class="p">|</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastWriteTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">30</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="nb">Remove-Item</span> <span class="n">-Force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Show disk usage by volume</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystemLabel</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreePct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeRemaining</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">Size</span><span class="p">*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Windows Update cache</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Stop-Service</span> <span class="n">wuauserv</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Remove-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">SoftwareDistribution</span><span class="p">\</span><span class="n">Download</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nb">Start-Service</span> <span class="n">wuauserv</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># User temp files</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Remove-Item</span> <span class="nv">$env:TEMP</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Remove-Item</span> <span class="n">C</span><span class="p">:\</span><span class="n">Windows</span><span class="p">\</span><span class="n">Temp</span><span class="p">\*</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c"># IIS logs older than 30 days</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="nb">Get-ChildItem</span> <span class="n">C</span><span class="p">:\</span><span class="n">inetpub</span><span class="p">\</span><span class="n">logs</span> <span class="n">-Recurse</span> <span class="n">-Include</span> <span class="p">*.</span><span class="n">log</span> <span class="p">|</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastWriteTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">30</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="nb">Remove-Item</span> <span class="n">-Force</span>
 </code></pre></div>
 <h2 id="step-6-validate">Step 6 — Validate<a class="headerlink" href="#step-6-validate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h<span class="w">                              </span><span class="c1"># confirm free space improved</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ls<span class="w"> </span>-lt<span class="w"> </span>/var/log/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">        </span><span class="c1"># confirm logs still present and current</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span>--failed<span class="w">                 </span><span class="c1"># confirm no services broken by cleanup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>df<span class="w"> </span>-h<span class="w">                              </span><span class="c1"># confirm free space improved</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ls<span class="w"> </span>-lt<span class="w"> </span>/var/log/<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20<span class="w">        </span><span class="c1"># confirm logs still present and current</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>--failed<span class="w">                 </span><span class="c1"># confirm no services broken by cleanup</span>
 </code></pre></div>
 <h2 id="safety-rules">Safety Rules<a class="headerlink" href="#safety-rules" title="Permanent link">&para;</a></h2>
 <table>

@@ -3036,50 +3036,51 @@ Cryptographic key lifecycle management — generation, storage, distribution, ro
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Cancel deletion</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>aws<span class="w"> </span>kms<span class="w"> </span>cancel-key-deletion<span class="w"> </span>--key-id<span class="w"> </span>&lt;key-id&gt;
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Data Protection — Key Management ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │          Key management: generate, store, rotate, and retire encryption keys securely         │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │             Envelope encryption: DEK encrypts data; KEK (in KMS/HSM) wraps the DEK            │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Rotation: annual minimum; immediate on suspected compromise; automate in KMS         │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                Key Lifecycle                 │  │               HSM &amp; Cloud KMS               │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           1. Generate (KMS or HSM)           │  │           AWS KMS: CMK / data keys          │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           2. Activate + distribute           │  │        Azure Key Vault: keys/secrets        │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            3. Rotate on schedule             │  │         HashiCorp Vault: transit eng        │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │           4. Revoke on compromise            │  │          BYOK: import customer key          │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           5. Archive then destroy            │  │           HSM: FIPS 140-2 Level 3           │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    DEK          = Data Encryption Key; AES-256 key that encrypts actual data blocks                   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    KEK          = Key Encryption Key; wraps the DEK; stored in HSM or KMS; not exported               │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Envelope enc = Encrypt DEK with KEK; only KEK needs HSM protection; scales efficiently             │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    CMK          = Customer Master Key (AWS); top-level KMS key used to derive data keys               │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    BYOK         = Bring Your Own Key; customer generates key material and imports to cloud KMS        │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    FIPS 140-2   = US standard for cryptographic module security; Level 3 = HSM tamper-evident         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Key rotation = Generate new key version; re-encrypt new data; retain old to decrypt existing       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Transit eng  = Vault secrets engine; encrypts/decrypts via API without exposing key material       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## ONTAP Key Manager
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>```bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Check key manager status
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>security key-manager show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># Query encryption keys
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>security key-manager key query
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a># Check volume encryption state
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>volume show -fields encryption-state
+┌────────────────────────────────── Data Protection — Key Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Key management: generate, store, rotate, and retire encryption keys securely         │   │
+│   │             Envelope encryption: DEK encrypts data; KEK (in KMS/HSM) wraps the DEK            │   │
+│   │          Rotation: annual minimum; immediate on suspected compromise; automate in KMS         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Lifecycle                 │  │               HSM &amp; Cloud KMS               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           1. Generate (KMS or HSM)           │  │           AWS KMS: CMK / data keys          │   │
+│   │           2. Activate + distribute           │  │        Azure Key Vault: keys/secrets        │   │
+│   │            3. Rotate on schedule             │  │         HashiCorp Vault: transit eng        │   │
+│   │           4. Revoke on compromise            │  │          BYOK: import customer key          │   │
+│   │           5. Archive then destroy            │  │           HSM: FIPS 140-2 Level 3           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DEK          = Data Encryption Key; AES-256 key that encrypts actual data blocks                   │
+│    KEK          = Key Encryption Key; wraps the DEK; stored in HSM or KMS; not exported               │
+│    Envelope enc = Encrypt DEK with KEK; only KEK needs HSM protection; scales efficiently             │
+│    CMK          = Customer Master Key (AWS); top-level KMS key used to derive data keys               │
+│    BYOK         = Bring Your Own Key; customer generates key material and imports to cloud KMS        │
+│    FIPS 140-2   = US standard for cryptographic module security; Level 3 = HSM tamper-evident         │
+│    Key rotation = Generate new key version; re-encrypt new data; retain old to decrypt existing       │
+│    Transit eng  = Vault secrets engine; encrypts/decrypts via API without exposing key material       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## ONTAP Key Manager
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Check key manager status
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>security key-manager show
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Query encryption keys
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>security key-manager key query
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Check volume encryption state
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>volume show -fields encryption-state
 </code></pre></div></p>
 <h2 id="key-management-checklist">Key Management Checklist<a class="headerlink" href="#key-management-checklist" title="Permanent link">&para;</a></h2>
 <ul>

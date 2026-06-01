@@ -3580,51 +3580,52 @@ Run this check weekly to confirm all management endpoints are reachable and acce
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  │  └─ Hardware     No disk / NIC / PSU alerts         │
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  └─────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│                                                                                                       │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        Check Sequence (per endpoint)         │  │             Endpoints to Verify             │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            1. DNS resolves FQDN?             │  │             vCenter FQDN (HTTPS)            │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            FAIL → check DNS / HOSTS          │  │               └─ SSO login test             │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │         2. HTTPS port 443 reachable?         │  │               └─ VAMI port 5480             │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │           FAIL → check firewall rule         │  │               NSX Manager FQDN              │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │              3. Login succeeds?              │  │             Backup console FQDN             │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           FAIL → check SSO / AD bind         │  │             Monitoring dashboard            │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        4. Session timeout acceptable?        │  │              Storage array FQDN             │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │           FAIL → check session policy        │  │              vSAN Witness host              │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                                                                       │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│    FQDN    = Fully Qualified Domain Name; must resolve in DNS; e.g. vcenter.corp.local                │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    SSO     = vCenter Single Sign-On; authentication service; default domain: vsphere.local            │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    VAMI    = vCenter Appliance Management Interface; port 5480; cert and patch management             │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    AD bind = LDAP/LDAPS connection from SSO to Active Directory; check if login fails                 │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Timeout = Session idle timeout; check if users report being logged out too quickly                 │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Checks to perform in vCenter UI:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- [ ] vCenter SSO Health: Administration → Single Sign On → Diagnostics → Diagnostic Site Connectivity
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- [ ] Identity sources: Administration → Single Sign On → Configuration → Identity Sources — all should show Connected
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- [ ] System health: Administration → Deployments → System Configuration — all services green
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>## NSX Manager Access
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>```bash
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a># Verify NSX Manager cluster health (SSH to NSX Manager)
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>get cluster status   # Should show: STABLE
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>get services         # All critical services should show: running
+┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
+│                                                                                                       │
+│    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Check Sequence (per endpoint)         │  │             Endpoints to Verify             │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │            1. DNS resolves FQDN?             │  │             vCenter FQDN (HTTPS)            │   │
+│   │            FAIL → check DNS / HOSTS          │  │               └─ SSO login test             │   │
+│   │         2. HTTPS port 443 reachable?         │  │               └─ VAMI port 5480             │   │
+│   │           FAIL → check firewall rule         │  │               NSX Manager FQDN              │   │
+│   │              3. Login succeeds?              │  │             Backup console FQDN             │   │
+│   │           FAIL → check SSO / AD bind         │  │             Monitoring dashboard            │   │
+│   │        4. Session timeout acceptable?        │  │              Storage array FQDN             │   │
+│   │           FAIL → check session policy        │  │              vSAN Witness host              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FQDN    = Fully Qualified Domain Name; must resolve in DNS; e.g. vcenter.corp.local                │
+│    SSO     = vCenter Single Sign-On; authentication service; default domain: vsphere.local            │
+│    VAMI    = vCenter Appliance Management Interface; port 5480; cert and patch management             │
+│    AD bind = LDAP/LDAPS connection from SSO to Active Directory; check if login fails                 │
+│    Timeout = Session idle timeout; check if users report being logged out too quickly                 │
+│    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Checks to perform in vCenter UI:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- [ ] vCenter SSO Health: Administration → Single Sign On → Diagnostics → Diagnostic Site Connectivity
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- [ ] Identity sources: Administration → Single Sign On → Configuration → Identity Sources — all should show Connected
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- [ ] System health: Administration → Deployments → System Configuration — all services green
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## NSX Manager Access
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Verify NSX Manager cluster health (SSH to NSX Manager)
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>get cluster status   # Should show: STABLE
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>get services         # All critical services should show: running
 </code></pre></div></p>
 <h2 id="sddc-manager-access-vcf">SDDC Manager Access (VCF)<a class="headerlink" href="#sddc-manager-access-vcf" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SDDC Manager API health check</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin@local:password<span class="w"> </span>https://sddc-manager.example.local/v1/health-summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SDDC Manager API health check</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>admin@local:password<span class="w"> </span>https://sddc-manager.example.local/v1/health-summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="aria-operations-access">Aria Operations Access<a class="headerlink" href="#aria-operations-access" title="Permanent link">&para;</a></h2>
 <p>Confirm Aria Ops is receiving telemetry:
@@ -3632,10 +3633,10 @@ Run this check weekly to confirm all management endpoints are reachable and acce
 2. Environment → Object Browser → confirm vCenter adapter shows <code>Collection State: OK</code>
 3. Check last collection time — should be within the last 5 minutes</p>
 <h2 id="adldap-identity-source-health">AD/LDAP Identity Source Health<a class="headerlink" href="#adldap-identity-source-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test LDAP connectivity (run from a Linux admin host)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc1.example.local:636<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;cn=svc_vcenter,ou=service_accounts,dc=corp,dc=local&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=admin)&quot;</span><span class="w"> </span>sAMAccountName
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Should return at least one result</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test LDAP connectivity (run from a Linux admin host)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc1.example.local:636<span class="w"> </span>-D<span class="w"> </span><span class="s2">&quot;cn=svc_vcenter,ou=service_accounts,dc=corp,dc=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=local&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=admin)&quot;</span><span class="w"> </span>sAMAccountName
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Should return at least one result</span>
 </code></pre></div>
 <h2 id="access-control-review">Access Control Review<a class="headerlink" href="#access-control-review" title="Permanent link">&para;</a></h2>
 <p>Run monthly (in addition to weekly connectivity checks):</p>
@@ -3648,9 +3649,9 @@ Run this check weekly to confirm all management endpoints are reachable and acce
 <li>[ ] Check break-glass accounts: password still in vault; access log reviewed</li>
 </ul>
 <h2 id="failed-login-monitoring">Failed Login Monitoring<a class="headerlink" href="#failed-login-monitoring" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check vCenter SSO audit log for failed logins</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /storage/log/vmware/sso/vmware-sts-idmd.log on vCenter appliance</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>grep<span class="w"> </span><span class="s2">&quot;AuthenticationException\|failed.*login\|InvalidCredentials&quot;</span><span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check vCenter SSO audit log for failed logins</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /storage/log/vmware/sso/vmware-sts-idmd.log on vCenter appliance</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span><span class="s2">&quot;AuthenticationException\|failed.*login\|InvalidCredentials&quot;</span><span class="w"> </span>/var/log/vmware/sso/vmware-sts-idmd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <p>Alert on &gt; 5 failed logins for any account in a 15-minute window.</p>
 

@@ -4657,39 +4657,7 @@
 Health Checks reference covering Health Checklist.
 </div>
 
-<p>ESXi Health Check — Decision Flow
-                           │
-           ┌───────────────▼───────────────┐
-           │  Host Connection State?        │
-           │  Get-VMHost | Select ...       │
-           └──────┬──────────────┬─────────┘
-                  │ Connected    │ Disconnected / NotResponding
-                  │              └──► restart hostd/vpxa or IPMI
-           ┌──────▼──────────────────────┐
-           │  Hardware Health?           │
-           │  esxcli hardware health get │
-           └──────┬──────────────────────┘
-                  │ Green        │ Warning/Error → alert ticket
-           ┌──────▼──────────────────────┐
-           │  Storage Paths?             │
-           │  esxcli storage core path   │
-           │  list | grep dead           │
-           └──────┬──────────────────────┘
-                  │ 0 dead paths │ Dead paths → rescan / escalate
-           ┌──────▼──────────────────────┐
-           │  NTP Running &amp; Synced?      │
-           │  esxcli system ntp get      │
-           └──────┬──────────────────────┘
-                  │ Running=true │ Not synced → fix NTP config
-           ┌──────▼──────────────────────┐
-           │  vmnic Uplinks Up?          │
-           │  esxcli network nic list    │
-           └──────┬──────────────────────┘
-                  │ All up       │ Down links → check switch/cable
-           ┌──────▼──────────────┐
-           │  PASS — host healthy │
-           └─────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
@@ -4734,6 +4702,84 @@ Health Checks reference covering Health Checklist.
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  BMC      = Baseboard Management Controller; embedded OOB management chip                             │
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+ESXi Health Check — Decision Flow
+                           │
+           ┌───────────────▼───────────────┐
+           │  Host Connection State?        │
+           │  Get-VMHost | Select ...       │
+           └──────┬──────────────┬─────────┘
+                  │ Connected    │ Disconnected / NotResponding
+                  │              └──► restart hostd/vpxa or IPMI
+           ┌──────▼──────────────────────┐
+           │  Hardware Health?           │
+           │  esxcli hardware health get │
+           └──────┬──────────────────────┘
+                  │ Green        │ Warning/Error → alert ticket
+           ┌──────▼──────────────────────┐
+           │  Storage Paths?             │
+           │  esxcli storage core path   │
+           │  list | grep dead           │
+           └──────┬──────────────────────┘
+                  │ 0 dead paths │ Dead paths → rescan / escalate
+           ┌──────▼──────────────────────┐
+           │  NTP Running &amp; Synced?      │
+           │  esxcli system ntp get      │
+           └──────┬──────────────────────┘
+                  │ Running=true │ Not synced → fix NTP config
+           ┌──────▼──────────────────────┐
+           │  vmnic Uplinks Up?          │
+           │  esxcli network nic list    │
+           └──────┬──────────────────────┘
+                  │ All up       │ Down links → check switch/cable
+           ┌──────▼──────────────┐
+           │  PASS — host healthy │
+           └─────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Hardware Health                │  │            vSphere Cluster Health           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           IPMI/iDRAC sensor status           │  │          HA master elected &amp; green          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            CPU/mem/fan/PSU alarms            │  │            DRS balance score &lt; 2            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           esxcli hardware ipmi sdr           │  │          vMotion network reachable          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            HBA/NIC link state up             │  │            No disconnected hosts            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         Boot media health S.M.A.R.T.         │  │             EVC mode consistent             │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Hardware sensors → vSphere alarms → storage health → capacity review.                                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                Storage Health                │  │               Capacity Review               │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           All paths active per LUN           │  │           Host CPU util &lt; 70% avg           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           No APD/PDL events today            │  │           Host mem util &lt; 80% avg           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │             Datastore free &gt; 20%             │  │             VM balloon/swap = 0             │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          VMFS no ATS heartbeat err           │  │           vSAN disk capacity &lt; 70%          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            vSAN health: all green            │  │          Trend forecast 30/60 days          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  x86 hosts with IPMI/iDRAC BMC, SAN/NAS/vSAN storage, 10/25 GbE NICs                                  │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  IPMI     = Intelligent Platform Mgmt Interface; OOB hardware sensor access                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  iDRAC    = Dell Remote Access Controller; OOB management BMC                                         │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  S.M.A.R.T = Self-Monitoring Analysis; disk health from boot media                                    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  APD      = All Paths Down; storage unreachable but PDL not declared                                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  PDL      = Permanent Device Loss; device signals loss is permanent                                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  ATS      = Atomic Test &amp; Set; VMFS locking primitive; heartbeat mechanism                            │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  DRS score= 1-5 imbalance rating; 1=balanced, 5=critical imbalance                                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Balloon  = VMware memory mgmt; guest driver returns idle pages to host                               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  EVC      = Enhanced vMotion Compat; consistent CPU flags across cluster                              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  fdm      = Fault Domain Manager; HA agent; must run on all hosts                                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  vSAN health = Skyline Health dashboard in vCenter; 60+ automated checks                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  BMC      = Baseboard Management Controller; embedded OOB management chip                             │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <h2 id="health-checklist">Health Checklist<a class="headerlink" href="#health-checklist" title="Permanent link">&para;</a></h2>
 <ul>

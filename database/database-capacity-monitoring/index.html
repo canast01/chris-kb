@@ -3048,63 +3048,64 @@ Track database storage growth, identify capacity risks early, and plan expansion
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_indexes</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="n">indexname</span><span class="p">::</span><span class="n">regclass</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │     Alert at 75% usage; plan expansion at 85%; emergency at 90%; autogrow is a safety net     │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Monitor: data files, log files, temp/undo space, index fragmentation, row growth rate     │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │               Current Capacity               │  │              Growth Forecasting             │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │            PG: pg_database_size()            │  │          Trend: 30/60/90 day growth         │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │         MSSQL: sys.dm_db_file_space          │  │          Forecast to 90% threshold          │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │          MySQL: information_schema           │  │         Alert: % full + growth rate         │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Log space: VLF / undo seg           │  │          Capacity request lead time         │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Temp: active session usage          │  │         Archive + partition old data        │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Tablespace   = Named storage container for database objects; monitored per datafile                │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    VLF          = Virtual Log File (SQL Server); fragmented log slows backup and recovery             │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Autogrow     = Auto-expand datafile; emergency safety net — not a capacity management plan         │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Undo segment = Oracle/MySQL space for rolled-back transactions; ORA-01555 on shortage              │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    pg_database_size= PostgreSQL function returning total size of named database in bytes              │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Filesystem / Volume Capacity</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Database data directories</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/var/lib/postgresql<span class="w"> </span>/var/lib/mysql<span class="w"> </span>/var/opt/mssql
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># inode usage (log files can exhaust inodes before disk is full)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>df<span class="w"> </span>-i<span class="w"> </span>/var/lib/postgresql
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Identify large files</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/postgresql/data/*
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/mysql/*
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># WAL / binary log space (PostgreSQL)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/postgresql/data/pg_wal/
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># MySQL binary logs</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/lib/mysql/mysql-bin.*
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW BINARY LOGS;&quot;</span>
+┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
+│   │     Alert at 75% usage; plan expansion at 85%; emergency at 90%; autogrow is a safety net     │   │
+│   │     Monitor: data files, log files, temp/undo space, index fragmentation, row growth rate     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Current Capacity               │  │              Growth Forecasting             │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            PG: pg_database_size()            │  │          Trend: 30/60/90 day growth         │   │
+│   │         MSSQL: sys.dm_db_file_space          │  │          Forecast to 90% threshold          │   │
+│   │          MySQL: information_schema           │  │         Alert: % full + growth rate         │   │
+│   │          Log space: VLF / undo seg           │  │          Capacity request lead time         │   │
+│   │          Temp: active session usage          │  │         Archive + partition old data        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Tablespace   = Named storage container for database objects; monitored per datafile                │
+│    VLF          = Virtual Log File (SQL Server); fragmented log slows backup and recovery             │
+│    Autogrow     = Auto-expand datafile; emergency safety net — not a capacity management plan         │
+│    Undo segment = Oracle/MySQL space for rolled-back transactions; ORA-01555 on shortage              │
+│    pg_database_size= PostgreSQL function returning total size of named database in bytes              │
+│    Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Filesystem / Volume Capacity
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Database data directories
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>df -h /var/lib/postgresql /var/lib/mysql /var/opt/mssql
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># inode usage (log files can exhaust inodes before disk is full)
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>df -i /var/lib/postgresql
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Identify large files
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>du -sh /var/lib/postgresql/data/*
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>du -sh /var/lib/mysql/*
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># WAL / binary log space (PostgreSQL)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>du -sh /var/lib/postgresql/data/pg_wal/
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># MySQL binary logs
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>du -sh /var/lib/mysql/mysql-bin.*
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>mysql -u root -e &quot;SHOW BINARY LOGS;&quot;
 </code></pre></div></p>
 <h2 id="growth-trending-30-day-estimate">Growth Trending (30-day estimate)<a class="headerlink" href="#growth-trending-30-day-estimate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Weekly snapshots — capture to track growth</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Atc<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;mydb&#39;);&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/db-size-mydb.log
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Simple growth rate from log</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1{print ($1-prev)/1024/1024 &quot; MB added since last check&quot;; prev=$1} NR==1{prev=$1}&#39;</span><span class="w"> </span>/var/log/db-size-mydb.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Weekly snapshots — capture to track growth</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-Atc<span class="w"> </span><span class="s2">&quot;SELECT pg_database_size(&#39;mydb&#39;);&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/db-size-mydb.log
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Simple growth rate from log</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1{print ($1-prev)/1024/1024 &quot; MB added since last check&quot;; prev=$1} NR==1{prev=$1}&#39;</span><span class="w"> </span>/var/log/db-size-mydb.log
 </code></pre></div>
 <h2 id="capacity-thresholds">Capacity Thresholds<a class="headerlink" href="#capacity-thresholds" title="Permanent link">&para;</a></h2>
 <table>
@@ -3138,21 +3139,21 @@ Track database storage growth, identify capacity risks early, and plan expansion
 </tbody>
 </table>
 <h2 id="capacity-reduction-quick-wins">Capacity Reduction — Quick Wins<a class="headerlink" href="#capacity-reduction-quick-wins" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- PostgreSQL: reclaim dead tuple space</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">VACUUM</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">&gt;</span><span class="p">;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">-- Full reclaim (locks table briefly)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">VACUUM</span><span class="w"> </span><span class="k">FULL</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">&gt;</span><span class="p">;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">-- PostgreSQL: drop unused indexes</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">indexname</span><span class="p">,</span><span class="w"> </span><span class="n">idx_scan</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_indexes</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">idx_scan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="n">indexname</span><span class="p">::</span><span class="n">regclass</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1">-- MySQL: purge old binary logs</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">PURGE</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">LOGS</span><span class="w"> </span><span class="k">BEFORE</span><span class="w"> </span><span class="n">DATE_SUB</span><span class="p">(</span><span class="n">NOW</span><span class="p">(),</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">DAY</span><span class="p">);</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1">-- SQL Server: shrink log file (use sparingly — not routine maintenance)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="n">USE</span><span class="w"> </span><span class="n">mydb</span><span class="p">;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">SHRINKFILE</span><span class="w"> </span><span class="p">(</span><span class="n">mydb_log</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span><span class="w">  </span><span class="c1">-- 1024 MB target</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- PostgreSQL: reclaim dead tuple space</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">VACUUM</span><span class="w"> </span><span class="k">ANALYZE</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">-- Full reclaim (locks table briefly)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">VACUUM</span><span class="w"> </span><span class="k">FULL</span><span class="w"> </span><span class="o">&lt;</span><span class="k">schema</span><span class="o">&gt;</span><span class="p">.</span><span class="o">&lt;</span><span class="k">table</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1">-- PostgreSQL: drop unused indexes</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">indexname</span><span class="p">,</span><span class="w"> </span><span class="n">idx_scan</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_user_indexes</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">idx_scan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">pg_relation_size</span><span class="p">(</span><span class="n">indexname</span><span class="p">::</span><span class="n">regclass</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">-- MySQL: purge old binary logs</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">PURGE</span><span class="w"> </span><span class="nb">BINARY</span><span class="w"> </span><span class="n">LOGS</span><span class="w"> </span><span class="k">BEFORE</span><span class="w"> </span><span class="n">DATE_SUB</span><span class="p">(</span><span class="n">NOW</span><span class="p">(),</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">DAY</span><span class="p">);</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">-- SQL Server: shrink log file (use sparingly — not routine maintenance)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">USE</span><span class="w"> </span><span class="n">mydb</span><span class="p">;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">DBCC</span><span class="w"> </span><span class="n">SHRINKFILE</span><span class="w"> </span><span class="p">(</span><span class="n">mydb_log</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">);</span><span class="w">  </span><span class="c1">-- 1024 MB target</span>
 </code></pre></div>
 <h2 id="capacity-monitoring-checklist">Capacity Monitoring Checklist<a class="headerlink" href="#capacity-monitoring-checklist" title="Permanent link">&para;</a></h2>
 <ul>

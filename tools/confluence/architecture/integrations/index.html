@@ -3545,67 +3545,68 @@ Confluence integrates with a wide range of external systems. This page covers th
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Confluence Admin URL:
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  https://confluence.example.com/admin/applinks/listApplicationLinks.action
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                Confluence Integration Landscape                               │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Atlassian application links: Confluence ↔ Jira for cross-product macro rendering       │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                 Directory: LDAP/AD user sync; SAML SSO via Okta/AD FS/Ping IdP                │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              REST API: v2 endpoints for spaces, pages, content; PAT or Basic auth             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Webhooks: HTTP POST events on page create/update/delete to external systems          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Integrations connect Confluence outward to auth, issue tracking, and automation systems            │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │       Directory &amp; Auth      │  │     Atlassian Ecosystem     │  │       External Systems      │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │    LDAP: user/group sync    │  │     Jira: app link OAuth    │  │     REST API: automation    │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │     SAML SSO: Okta/ADFS     │  │    Jira macro: issue list   │  │    Webhooks: CI/CD events   │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │      Crowd: SSO for DC      │  │    Bamboo: build results    │  │     Slack: notifications    │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │      MFA: TOTP via Okta     │  │    Bitbucket: code macro    │  │      Email: SMTP alerts     │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │   Local accounts: fallback  │  │   Atlassian Access: audit   │  │   PDF export: server-side   │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  LDAP/AD DC servers · IdP (Okta/AD FS) · SMTP relay · network connectivity to Jira/Bitbucket          │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  App link     = Atlassian trusted relationship between two products enabling OAuth and macros         │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Crowd        = Atlassian SSO server; centralises auth for Confluence, Jira, Bitbucket                │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  SAML SSO     = Confluence acts as Service Provider; IdP handles credential validation                │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  LDAP sync    = Confluence polls LDAP on a schedule to import users and group memberships             │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Webhook      = outbound HTTP POST triggered by Confluence page events                                │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Jira macro   = {jira} macro embeds live issue data from linked Jira instance                         │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  PAT          = Personal Access Token; recommended over Basic auth for REST API access                │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Atlassian Access = cloud governance layer for audit log, mobile policies, user provisioning          │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  PDF export   = Confluence server-side render; requires matching CSS for accurate output              │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SMTP relay   = outbound mail for page notifications, comment alerts, admin emails                    │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  OAuth        = app link uses OAuth 1.0a or OAuth 2.0 for cross-product API trust                     │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">For</span><span class="w"> </span><span class="n">live</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="n">content</span><span class="p">,</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="o">**</span><span class="n">Bitbucket</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Confluence</span><span class="o">**</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="p">(</span><span class="n">Marketplace</span><span class="p">)</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">renders</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="n">files</span><span class="w"> </span><span class="n">inline</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">diffs</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">blame</span><span class="w"> </span><span class="n">views</span><span class="p">.</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">###</span><span class="w"> </span><span class="n">Webhook</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">GitHub</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">Confluence</span><span class="w"> </span><span class="p">(</span><span class="n">Custom</span><span class="w"> </span><span class="n">Integration</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">If</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">REST</span><span class="w"> </span><span class="n">API</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">auto</span><span class="o">-</span><span class="k">update</span><span class="w"> </span><span class="n">pages</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">push</span><span class="p">:</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">```</span><span class="n">mermaid</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">sequenceDiagram</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">participant</span><span class="w"> </span><span class="n">GH</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">GitHub</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="n">participant</span><span class="w"> </span><span class="n">MW</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Middleware</span><span class="w"> </span><span class="p">(</span><span class="n">Lambda</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">webhook</span><span class="w"> </span><span class="k">handler</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="n">participant</span><span class="w"> </span><span class="n">CF</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">Confluence</span><span class="w"> </span><span class="n">REST</span><span class="w"> </span><span class="n">API</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="n">GH</span><span class="o">-&gt;&gt;</span><span class="n">MW</span><span class="p">:</span><span class="w"> </span><span class="n">POST</span><span class="w"> </span><span class="o">/</span><span class="n">webhook</span><span class="w"> </span><span class="p">(</span><span class="n">push</span><span class="w"> </span><span class="n">event</span><span class="p">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="n">MW</span><span class="o">-&gt;&gt;</span><span class="n">CF</span><span class="p">:</span><span class="w"> </span><span class="k">GET</span><span class="w"> </span><span class="o">/</span><span class="n">rest</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="err">{</span><span class="n">id</span><span class="err">}</span><span class="w"> </span><span class="p">(</span><span class="k">fetch</span><span class="w"> </span><span class="k">current</span><span class="w"> </span><span class="k">version</span><span class="p">)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="n">CF</span><span class="c1">--&gt;&gt;MW: 200 { version.number, body }</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="n">MW</span><span class="o">-&gt;&gt;</span><span class="n">CF</span><span class="p">:</span><span class="w"> </span><span class="n">PUT</span><span class="w"> </span><span class="o">/</span><span class="n">rest</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="err">{</span><span class="n">id</span><span class="err">}</span><span class="w"> </span><span class="p">(</span><span class="k">update</span><span class="w"> </span><span class="n">page</span><span class="w"> </span><span class="n">body</span><span class="p">)</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="n">CF</span><span class="c1">--&gt;&gt;MW: 200 OK</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="n">MW</span><span class="c1">--&gt;&gt;GH: 200 Accepted</span>
+┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Confluence Integration Landscape                               │   │
+│   │        Atlassian application links: Confluence ↔ Jira for cross-product macro rendering       │   │
+│   │                 Directory: LDAP/AD user sync; SAML SSO via Okta/AD FS/Ping IdP                │   │
+│   │              REST API: v2 endpoints for spaces, pages, content; PAT or Basic auth             │   │
+│   │          Webhooks: HTTP POST events on page create/update/delete to external systems          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Integrations connect Confluence outward to auth, issue tracking, and automation systems            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Directory &amp; Auth      │  │     Atlassian Ecosystem     │  │       External Systems      │   │
+│   │    LDAP: user/group sync    │  │     Jira: app link OAuth    │  │     REST API: automation    │   │
+│   │     SAML SSO: Okta/ADFS     │  │    Jira macro: issue list   │  │    Webhooks: CI/CD events   │   │
+│   │      Crowd: SSO for DC      │  │    Bamboo: build results    │  │     Slack: notifications    │   │
+│   │      MFA: TOTP via Okta     │  │    Bitbucket: code macro    │  │      Email: SMTP alerts     │   │
+│   │   Local accounts: fallback  │  │   Atlassian Access: audit   │  │   PDF export: server-side   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LDAP/AD DC servers · IdP (Okta/AD FS) · SMTP relay · network connectivity to Jira/Bitbucket          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  App link     = Atlassian trusted relationship between two products enabling OAuth and macros         │
+│  Crowd        = Atlassian SSO server; centralises auth for Confluence, Jira, Bitbucket                │
+│  SAML SSO     = Confluence acts as Service Provider; IdP handles credential validation                │
+│  LDAP sync    = Confluence polls LDAP on a schedule to import users and group memberships             │
+│  Webhook      = outbound HTTP POST triggered by Confluence page events                                │
+│  Jira macro   = {jira} macro embeds live issue data from linked Jira instance                         │
+│  PAT          = Personal Access Token; recommended over Basic auth for REST API access                │
+│  Atlassian Access = cloud governance layer for audit log, mobile policies, user provisioning          │
+│  PDF export   = Confluence server-side render; requires matching CSS for accurate output              │
+│  SMTP relay   = outbound mail for page notifications, comment alerts, admin emails                    │
+│  OAuth        = app link uses OAuth 1.0a or OAuth 2.0 for cross-product API trust                     │
+│  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Webhook from GitHub to Confluence (Custom Integration)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>If using the REST API to auto-update pages on push:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```mermaid
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>sequenceDiagram
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    participant GH as GitHub
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    participant MW as Middleware (Lambda / webhook handler)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    participant CF as Confluence REST API
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    GH-&gt;&gt;MW: POST /webhook (push event)
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    MW-&gt;&gt;CF: GET /rest/api/content/{id} (fetch current version)
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    CF--&gt;&gt;MW: 200 { version.number, body }
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    MW-&gt;&gt;CF: PUT /rest/api/content/{id} (update page body)
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    CF--&gt;&gt;MW: 200 OK
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    MW--&gt;&gt;GH: 200 Accepted
 </code></pre></div></p>
 <hr />
 <h2 id="ldap-active-directory-authentication">LDAP / Active Directory Authentication<a class="headerlink" href="#ldap-active-directory-authentication" title="Permanent link">&para;</a></h2>
@@ -3665,13 +3666,13 @@ Confluence integrates with a wide range of external systems. This page covers th
 </tbody>
 </table>
 <h3 id="sync-control">Sync Control<a class="headerlink" href="#sync-control" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Trigger an immediate sync via the admin UI:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Admin &gt; User management &gt; User Directories &gt; [Directory] &gt; Synchronise</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or via REST (requires admin credentials):</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/user-directory/{directoryId}/sync&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Trigger an immediate sync via the admin UI:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Admin &gt; User management &gt; User Directories &gt; [Directory] &gt; Synchronise</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or via REST (requires admin credentials):</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/user-directory/{directoryId}/sync&quot;</span>
 </code></pre></div>
 <h3 id="nested-groups">Nested Groups<a class="headerlink" href="#nested-groups" title="Permanent link">&para;</a></h3>
 <p>Enable <strong>Nested Groups</strong> if AD groups contain other groups as members. This has a performance cost on large directories — set a sync interval accordingly and consider flattening the group tree where possible.</p>
@@ -3714,26 +3715,26 @@ Confluence integrates with a wide range of external systems. This page covers th
 </tbody>
 </table>
 <h3 id="test-smtp-from-cli">Test SMTP from CLI<a class="headerlink" href="#test-smtp-from-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Quick connectivity test</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Send a test email via Python (run on the Confluence server)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">import smtplib</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">from email.message import EmailMessage</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">msg = EmailMessage()</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">msg[&#39;Subject&#39;] = &#39;Confluence SMTP Test&#39;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">msg[&#39;From&#39;] = &#39;confluence@example.com&#39;</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">msg[&#39;To&#39;] = &#39;admin@example.com&#39;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">msg.set_content(&#39;SMTP test from Confluence server.&#39;)</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">with smtplib.SMTP(&#39;smtp.example.com&#39;, 587) as s:</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">    s.starttls()</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s2">    s.login(&#39;svc-confluence-mail@example.com&#39;, &#39;PASSWORD&#39;)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s2">    s.send_message(msg)</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s2">    print(&#39;Sent OK&#39;)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Quick connectivity test</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Send a test email via Python (run on the Confluence server)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">import smtplib</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">from email.message import EmailMessage</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">msg = EmailMessage()</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">msg[&#39;Subject&#39;] = &#39;Confluence SMTP Test&#39;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">msg[&#39;From&#39;] = &#39;confluence@example.com&#39;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">msg[&#39;To&#39;] = &#39;admin@example.com&#39;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">msg.set_content(&#39;SMTP test from Confluence server.&#39;)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">with smtplib.SMTP(&#39;smtp.example.com&#39;, 587) as s:</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">    s.starttls()</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s2">    s.login(&#39;svc-confluence-mail@example.com&#39;, &#39;PASSWORD&#39;)</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s2">    s.send_message(msg)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s2">    print(&#39;Sent OK&#39;)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="notification-troubleshooting">Notification Troubleshooting<a class="headerlink" href="#notification-troubleshooting" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3781,31 +3782,31 @@ Confluence integrates with a wide range of external systems. This page covers th
 </tbody>
 </table>
 <h3 id="webhook-payload-structure">Webhook Payload Structure<a class="headerlink" href="#webhook-payload-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1715170800000</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_updated&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&quot;userKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user:abc123&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;98304&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Runbook&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;spaceKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://confluence.example.com/display/OPS/Deployment+Runbook&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nt">&quot;number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">      </span><span class="nt">&quot;by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chris.a&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="nt">&quot;when&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T09:00:00.000Z&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1715170800000</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;page_updated&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;userKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;user:abc123&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;98304&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Deployment Runbook&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">&quot;spaceKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://confluence.example.com/display/OPS/Deployment+Runbook&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">&quot;number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">&quot;by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chris.a&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nt">&quot;when&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-08T09:00:00.000Z&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="webhook-secret-verification-hmac">Webhook Secret Verification (HMAC)<a class="headerlink" href="#webhook-secret-verification-hmac" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span><span class="o">,</span><span class="w"> </span><span class="nn">hmac</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">verify_confluence_webhook</span><span class="p">(</span><span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">expected</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">secret</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">payload</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">signature_header</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span><span class="o">,</span><span class="w"> </span><span class="nn">hmac</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">verify_confluence_webhook</span><span class="p">(</span><span class="n">secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature_header</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">expected</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="n">secret</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">payload</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="n">signature_header</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="rest-api-overview">REST API Overview<a class="headerlink" href="#rest-api-overview" title="Permanent link">&para;</a></h2>
@@ -3892,22 +3893,22 @@ Confluence integrates with a wide range of external systems. This page covers th
 </tbody>
 </table>
 <h3 id="authentication-personal-access-tokens-pat">Authentication — Personal Access Tokens (PAT)<a class="headerlink" href="#authentication-personal-access-tokens-pat" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate a PAT: Profile &gt; Settings &gt; Personal Access Tokens</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Use in API calls</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;PAT&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/space&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate a PAT: Profile &gt; Settings &gt; Personal Access Tokens</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Use in API calls</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;PAT&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/space&quot;</span>
 </code></pre></div>
 <h3 id="cql-confluence-query-language">CQL (Confluence Query Language)<a class="headerlink" href="#cql-confluence-query-language" title="Permanent link">&para;</a></h3>
 <p>CQL is analogous to Jira's JQL for searching content:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pages modified in the last 7 days in the OPS space</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page<span class="w"> </span>AND<span class="w"> </span>lastModified<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;-7d&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Pages containing specific text created by a user</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>text<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;runbook&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;chris.a&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># All blog posts in any space</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>blogpost<span class="w"> </span>ORDER<span class="w"> </span>BY<span class="w"> </span>created<span class="w"> </span>DESC
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Pages modified in the last 7 days in the OPS space</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">space</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;OPS&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page<span class="w"> </span>AND<span class="w"> </span>lastModified<span class="w"> </span>&gt;<span class="o">=</span><span class="w"> </span><span class="s2">&quot;-7d&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Pages containing specific text created by a user</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>text<span class="w"> </span>~<span class="w"> </span><span class="s2">&quot;runbook&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">creator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;chris.a&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>page
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># All blog posts in any space</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>blogpost<span class="w"> </span>ORDER<span class="w"> </span>BY<span class="w"> </span>created<span class="w"> </span>DESC
 </code></pre></div>
 
 

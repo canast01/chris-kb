@@ -4869,53 +4869,54 @@ Backup and Restore reference covering What Is Backed Up, Config Export via UI, C
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── vRNI Backup &amp; Restore ────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Configuration export via REST API and full restore steps for Aria Operations for Networks.           │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               What to Back Up                │  │                Backup Method                │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         Data source configs (creds)          │  │         REST API: GET /data-sources         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            Alert rule definitions            │  │          REST API: GET /alert-rules         │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Custom dashboards / pinboards         │  │           REST API: GET /pinboards          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │       Application definitions (groups)       │  │         REST API: GET /applications         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Export config JSON via REST; snapshot VM for full appliance backup before upgrades.                  │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              Restore Procedure               │  │              Appliance Snapshot             │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             1. Deploy fresh OVA              │  │          Snapshot VM before upgrade         │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          2. POST /data-sources JSON          │  │          Revert snapshot on failure         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          3. POST /alert-rules JSON           │  │         Snapshot: quiesced preferred        │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          4. POST /applications JSON          │  │          Flow data: not restorable          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRNI platform VM on vSphere; vSphere snapshots for appliance; S3/NFS for JSON exports                │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  REST API            = vRNI northbound API; used for config export and import                         │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Data Source         = vRNI connection object (vCenter, NSX, switch) with credentials                 │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Alert Rule          = Threshold-based rule triggering notifications on flow anomalies                │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Pinboard            = vRNI custom dashboard saved by user; exportable as JSON                        │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Application         = Named group of VMs/IPs in vRNI for flow filtering and mapping                  │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  OVA                 = Open Virtualization Appliance; vRNI deployment package                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Quiesced Snapshot   = VM snapshot with guest OS file system flushed; preferred for DBs               │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Flow Data           = Historical flow records; not included in config backup/restore                 │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  API Token           = Bearer token used to authenticate REST API backup calls                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  JSON Export         = Machine-readable config dump for data sources, rules, dashboards               │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  PAK File            = vRNI upgrade bundle; snapshot before applying                                  │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>```bash
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a># crontab entry — runs daily at 02:00
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>0 2 * * * /usr/local/bin/aon-backup.sh &gt;&gt; /var/log/aon-backup.log 2&gt;&amp;1
+┌──────────────────────────────────────── vRNI Backup &amp; Restore ────────────────────────────────────────┐
+│                                                                                                       │
+│  Configuration export via REST API and full restore steps for Aria Operations for Networks.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Backup Method                │   │
+│   │         Data source configs (creds)          │  │         REST API: GET /data-sources         │   │
+│   │            Alert rule definitions            │  │          REST API: GET /alert-rules         │   │
+│   │        Custom dashboards / pinboards         │  │           REST API: GET /pinboards          │   │
+│   │       Application definitions (groups)       │  │         REST API: GET /applications         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Export config JSON via REST; snapshot VM for full appliance backup before upgrades.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │              Appliance Snapshot             │   │
+│   │             1. Deploy fresh OVA              │  │          Snapshot VM before upgrade         │   │
+│   │          2. POST /data-sources JSON          │  │          Revert snapshot on failure         │   │
+│   │          3. POST /alert-rules JSON           │  │         Snapshot: quiesced preferred        │   │
+│   │          4. POST /applications JSON          │  │          Flow data: not restorable          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM on vSphere; vSphere snapshots for appliance; S3/NFS for JSON exports                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  REST API            = vRNI northbound API; used for config export and import                         │
+│  Data Source         = vRNI connection object (vCenter, NSX, switch) with credentials                 │
+│  Alert Rule          = Threshold-based rule triggering notifications on flow anomalies                │
+│  Pinboard            = vRNI custom dashboard saved by user; exportable as JSON                        │
+│  Application         = Named group of VMs/IPs in vRNI for flow filtering and mapping                  │
+│  OVA                 = Open Virtualization Appliance; vRNI deployment package                         │
+│  Quiesced Snapshot   = VM snapshot with guest OS file system flushed; preferred for DBs               │
+│  Flow Data           = Historical flow records; not included in config backup/restore                 │
+│  API Token           = Bearer token used to authenticate REST API backup calls                        │
+│  JSON Export         = Machine-readable config dump for data sources, rules, dashboards               │
+│  PAK File            = vRNI upgrade bundle; snapshot before applying                                  │
+│  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># crontab entry — runs daily at 02:00
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>0 2 * * * /usr/local/bin/aon-backup.sh &gt;&gt; /var/log/aon-backup.log 2&gt;&amp;1
 </code></pre></div></p>
 <h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-deploy-fresh-platform-vm-ova">Step 1: Deploy Fresh Platform VM OVA<a class="headerlink" href="#step-1-deploy-fresh-platform-vm-ova" title="Permanent link">&para;</a></h3>
@@ -4931,18 +4932,18 @@ Backup and Restore reference covering What Is Backed Up, Config Export via UI, C
 2. Restore data sources, applications, user accounts, notifications
 3. Re-generate collector pairing keys (Collectors must re-pair)</p>
 <p>Restore via REST API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon-new.example.local&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;NEWPASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/settings/restore&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/aon-backup-20260101-020001.tar.gz&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>-o<span class="w"> </span>/tmp/restore-response.json
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>cat<span class="w"> </span>/tmp/restore-response.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">PLATFORM</span><span class="o">=</span><span class="s2">&quot;https://aon-new.example.local&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;NEWPASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">PLATFORM</span><span class="si">}</span><span class="s2">/api/ni/settings/restore&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/aon-backup-20260101-020001.tar.gz&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-o<span class="w"> </span>/tmp/restore-response.json
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>cat<span class="w"> </span>/tmp/restore-response.json
 </code></pre></div>
 <h3 id="step-3-re-pair-collectors">Step 3: Re-Pair Collectors<a class="headerlink" href="#step-3-re-pair-collectors" title="Permanent link">&para;</a></h3>
 <p>After a restore to a new Platform VM, all Collectors must re-pair:</p>
@@ -4950,12 +4951,12 @@ Backup and Restore reference covering What Is Backed Up, Config Export via UI, C
 <li>In the AON UI: Settings → Accounts and Data Sources → Collectors → Select Collector → Get Pairing Key</li>
 <li>SSH to each Collector VM:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ubuntu@10.10.10.51<span class="w">    </span><span class="c1"># Collector VM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># On Collector VM:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Enter Platform VM FQDN when prompted</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Enter new pairing key when prompted</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ubuntu@10.10.10.51<span class="w">    </span><span class="c1"># Collector VM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># On Collector VM:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Enter Platform VM FQDN when prompted</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Enter new pairing key when prompted</span>
 </code></pre></div>
 <ol>
 <li>Verify Collector appears as Connected in the UI within 2–3 minutes.</li>
@@ -5007,19 +5008,19 @@ Backup and Restore reference covering What Is Backed Up, Config Export via UI, C
 <li>Snapshots taken while the Platform VM is running are <strong>crash-consistent</strong>, not application-consistent. Cassandra and Elasticsearch may require recovery on first startup after snapshot revert.</li>
 <li>On revert from snapshot, run:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Check Cassandra status</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>cassandra
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># If Cassandra failed to start (likely after unclean shutdown):</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>cassandra
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>sudo<span class="w"> </span>find<span class="w"> </span>/var/lib/cassandra<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span>-delete
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>cassandra
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>cassandra
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check all platform services</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Check Cassandra status</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>cassandra
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># If Cassandra failed to start (likely after unclean shutdown):</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>cassandra
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>sudo<span class="w"> </span>find<span class="w"> </span>/var/lib/cassandra<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.tmp&quot;</span><span class="w"> </span>-delete
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>cassandra
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>cassandra
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Check all platform services</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
 </code></pre></div>
 <ul>
 <li>If services do not recover automatically after snapshot revert, contact VMware Support with the support bundle before attempting further manual recovery.</li>

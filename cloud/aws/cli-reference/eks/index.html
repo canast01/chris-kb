@@ -4422,155 +4422,156 @@ EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access 
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>         │proxy   │   │         │   │            │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>         └────────┘   └─────────┘   └────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">┌────────────────────────────────────────────</span> <span class="n">AWS</span> <span class="nb">CLI </span><span class="err">—</span> <span class="n">EKS</span> <span class="err">────────────────────────────────────────────┐</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">│</span>  <span class="n">EKS</span> <span class="nb">CLI </span><span class="n">commands</span> <span class="k">for</span> <span class="n">cluster</span> <span class="n">management</span><span class="p">,</span> <span class="n">node</span> <span class="n">groups</span><span class="p">,</span> <span class="nb">add-ons</span><span class="p">,</span> <span class="n">and</span> <span class="n">kubeconfig</span><span class="p">.</span>                       <span class="err">│</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="err">│</span>   <span class="err">│</span>              <span class="n">Cluster</span> <span class="n">Operations</span>              <span class="err">│</span>  <span class="err">│</span>            <span class="n">Node</span> <span class="nb">Group </span><span class="n">Operations</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="err">│</span>   <span class="err">│</span>          <span class="n">create-cluster</span><span class="p">:</span> <span class="n">provision</span>           <span class="err">│</span>  <span class="err">│</span>               <span class="n">create-nodegroup</span>              <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">describe-cluster</span><span class="p">:</span> <span class="n">status</span>           <span class="err">│</span>  <span class="err">│</span>              <span class="n">describe-nodegroup</span>             <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="err">│</span>   <span class="err">│</span>         <span class="n">list-clusters</span><span class="p">:</span> <span class="n">all</span> <span class="k">in</span> <span class="n">region</span>         <span class="err">│</span>  <span class="err">│</span>           <span class="nb">update-nodegroup</span><span class="n">-config</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="err">│</span>   <span class="err">│</span>       <span class="nb">update-cluster</span><span class="n">-version</span><span class="p">:</span> <span class="n">upgrade</span>        <span class="err">│</span>  <span class="err">│</span>           <span class="nb">update-nodegroup</span><span class="n">-version</span>          <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">delete-cluster</span><span class="p">:</span> <span class="n">teardown</span>           <span class="err">│</span>  <span class="err">│</span>               <span class="n">delete-nodegroup</span>              <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="err">│</span>  <span class="n">Cluster</span> <span class="n">upgraded</span> <span class="n">first</span><span class="p">;</span> <span class="n">then</span> <span class="n">node</span> <span class="n">groups</span> <span class="n">updated</span> <span class="n">to</span> <span class="n">matching</span> <span class="n">Kubernetes</span> <span class="n">version</span>                      <span class="err">│</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="err">│</span>                          <span class="err">▼</span>                                                 <span class="err">▼</span>                          <span class="err">│</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="err">│</span>   <span class="err">│</span>               <span class="n">Access</span> <span class="n">and</span> <span class="n">Auth</span>                <span class="err">│</span>  <span class="err">│</span>                   <span class="nb">Add-ons</span>                   <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="err">│</span>   <span class="err">│</span>           <span class="nb">update-kubeconfig</span><span class="p">:</span> <span class="n">merge</span>           <span class="err">│</span>  <span class="err">│</span>            <span class="n">create-addon</span><span class="p">:</span> <span class="n">install</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="err">│</span>   <span class="err">│</span>         <span class="n">create-access-entry</span><span class="p">:</span> <span class="n">IAM</span> <span class="n">map</span>         <span class="err">│</span>  <span class="err">│</span>           <span class="n">describe-addon</span><span class="p">:</span> <span class="n">version</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">associate-access-policy</span>            <span class="err">│</span>  <span class="err">│</span>            <span class="nb">update-addon</span><span class="p">:</span> <span class="n">upgrade</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="err">│</span>   <span class="err">│</span>             <span class="n">list-access-entries</span>              <span class="err">│</span>  <span class="err">│</span>             <span class="n">delete-addon</span><span class="p">:</span> <span class="n">remove</span>            <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="err">│</span>   <span class="err">│</span>            <span class="n">create-fargate-profile</span>            <span class="err">│</span>  <span class="err">│</span>           <span class="n">describe-addon-versions</span>           <span class="err">│</span>   <span class="err">│</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="err">│</span>  <span class="n">Physical</span> <span class="n">Infrastructure</span> <span class="p">(</span><span class="n">the</span> <span class="n">hardware</span> <span class="n">everything</span> <span class="n">above</span> <span class="n">runs</span> <span class="n">on</span><span class="p">):</span>                                     <span class="err">│</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="err">│</span>  <span class="n">EKS</span> <span class="n">control</span> <span class="n">plane</span> <span class="p">(</span><span class="n">AWS-managed</span><span class="p">)</span> <span class="err">·</span> <span class="n">EC2</span> <span class="n">worker</span> <span class="n">nodes</span> <span class="err">·</span> <span class="n">VPC</span> <span class="err">·</span> <span class="n">IAM</span> <span class="err">·</span> <span class="n">EBS</span><span class="p">/</span><span class="n">EFS</span> <span class="n">storage</span>                     <span class="err">│</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="err">│</span>  <span class="n">Key</span> <span class="n">terms</span><span class="p">:</span>                                                                                           <span class="err">│</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="err">│</span>  <span class="n">EKS</span>             <span class="p">=</span> <span class="n">Elastic</span> <span class="n">Kubernetes</span> <span class="n">Service</span><span class="p">;</span> <span class="n">managed</span> <span class="n">Kubernetes</span> <span class="n">control</span> <span class="n">plane</span>                       <span class="err">│</span>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="err">│</span>  <span class="n">Node</span> <span class="nb">group </span>     <span class="p">=</span> <span class="n">Managed</span> <span class="nb">group </span><span class="n">of</span> <span class="n">EC2</span> <span class="n">worker</span> <span class="n">nodes</span><span class="p">;</span> <span class="n">auto-scaling</span> <span class="n">enabled</span>                            <span class="err">│</span>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="err">│</span>  <span class="nb">update-kubeconfig</span><span class="p">=</span> <span class="n">Adds</span> <span class="n">EKS</span> <span class="n">cluster</span> <span class="n">to</span> <span class="n">local</span> <span class="p">~/.</span><span class="n">kube</span><span class="p">/</span><span class="n">config</span> <span class="k">for</span> <span class="n">kubectl</span> <span class="n">access</span>                       <span class="err">│</span>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="err">│</span>  <span class="n">Access</span> <span class="n">entry</span>    <span class="p">=</span> <span class="n">EKS</span> <span class="n">API</span> <span class="n">method</span> <span class="n">mapping</span> <span class="n">IAM</span> <span class="n">principal</span> <span class="n">to</span> <span class="n">Kubernetes</span> <span class="n">RBAC</span> <span class="n">role</span>                       <span class="err">│</span>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="err">│</span>  <span class="n">Associate</span> <span class="n">policy</span><span class="p">=</span> <span class="n">Binds</span> <span class="n">a</span> <span class="n">predefined</span> <span class="n">EKS</span> <span class="n">access</span> <span class="n">policy</span> <span class="n">to</span> <span class="n">an</span> <span class="n">access</span> <span class="n">entry</span>                            <span class="err">│</span>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="err">│</span>  <span class="nb">Add-on</span>          <span class="p">=</span> <span class="n">Managed</span> <span class="n">EKS</span> <span class="n">component</span><span class="p">:</span> <span class="n">CoreDNS</span><span class="p">,</span> <span class="n">kube-proxy</span><span class="p">,</span> <span class="n">VPC</span> <span class="n">CNI</span><span class="p">,</span> <span class="n">EBS</span> <span class="n">CSI</span>                       <span class="err">│</span>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="err">│</span>  <span class="n">Fargate</span> <span class="n">profile</span> <span class="p">=</span> <span class="n">Runs</span> <span class="n">pods</span> <span class="n">serverlessly</span> <span class="n">without</span> <span class="n">managing</span> <span class="n">EC2</span> <span class="n">node</span> <span class="n">groups</span>                            <span class="err">│</span>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="err">│</span>  <span class="nb">update-cluster</span><span class="n">-version</span><span class="p">=</span> <span class="n">Upgrades</span> <span class="n">EKS</span> <span class="n">control</span> <span class="n">plane</span> <span class="n">to</span> <span class="n">next</span> <span class="n">minor</span> <span class="n">version</span>                             <span class="err">│</span>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="err">│</span>  <span class="nb">update-nodegroup</span><span class="n">-version</span><span class="p">=</span> <span class="n">Replaces</span> <span class="n">node</span> <span class="nb">group </span><span class="n">nodes</span> <span class="n">with</span> <span class="n">new</span> <span class="n">Kubernetes</span> <span class="n">AMI</span> <span class="n">version</span>                  <span class="err">│</span>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="err">│</span>  <span class="n">VPC</span> <span class="n">CNI</span>         <span class="p">=</span> <span class="n">AWS</span> <span class="n">VPC</span> <span class="n">Container</span> <span class="n">Network</span> <span class="n">Interface</span> <span class="n">plugin</span><span class="p">;</span> <span class="n">assigns</span> <span class="n">pod</span> <span class="n">IPs</span> <span class="n">from</span> <span class="n">VPC</span>               <span class="err">│</span>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="err">│</span>  <span class="n">EBS</span> <span class="n">CSI</span> <span class="n">driver</span>  <span class="p">=</span> <span class="n">Kubernetes</span> <span class="n">CSI</span> <span class="n">driver</span> <span class="k">for</span> <span class="n">provisioning</span> <span class="n">EBS</span> <span class="n">volumes</span> <span class="n">as</span> <span class="n">PVs</span>                          <span class="err">│</span>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="err">│</span>  <span class="n">IRSA</span>            <span class="p">=</span> <span class="n">IAM</span> <span class="n">Roles</span> <span class="k">for</span> <span class="n">Service</span> <span class="n">Accounts</span><span class="p">;</span> <span class="n">pods</span> <span class="n">assume</span> <span class="n">IAM</span> <span class="n">roles</span> <span class="n">via</span> <span class="n">OIDC</span>                     <span class="err">│</span>
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">##</span><span class="w"> </span><span class="n">Fargate</span><span class="w"> </span><span class="n">Profiles</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">#</span><span class="w"> </span><span class="n">List</span><span class="w"> </span><span class="n">Fargate</span><span class="w"> </span><span class="n">profiles</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="n">list</span><span class="o">-</span><span class="n">fargate</span><span class="o">-</span><span class="n">profiles</span><span class="w"> </span><span class="c1">--cluster-name &lt;cluster&gt;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">#</span><span class="w"> </span><span class="k">Describe</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">profile</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">fargate</span><span class="o">-</span><span class="n">profile</span><span class="w"> </span><span class="err">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="c1">--cluster-name &lt;cluster&gt; \</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="c1">--fargate-profile-name &lt;profile&gt;</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">#</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Fargate</span><span class="w"> </span><span class="n">profile</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="k">create</span><span class="o">-</span><span class="n">fargate</span><span class="o">-</span><span class="n">profile</span><span class="w"> </span><span class="err">\</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="c1">--cluster-name &lt;cluster&gt; \</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="c1">--fargate-profile-name &lt;profile&gt; \</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="c1">--pod-execution-role-arn arn:aws:iam::&lt;account_id&gt;:role/&lt;FargatePodExecutionRole&gt; \</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="c1">--selectors namespace=&lt;namespace&gt;</span>
+┌──────────────────────────────────────────── AWS CLI — EKS ────────────────────────────────────────────┐
+│                                                                                                       │
+│  EKS CLI commands for cluster management, node groups, add-ons, and kubeconfig.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Cluster Operations              │  │            Node Group Operations            │   │
+│   │          create-cluster: provision           │  │               create-nodegroup              │   │
+│   │           describe-cluster: status           │  │              describe-nodegroup             │   │
+│   │         list-clusters: all in region         │  │           update-nodegroup-config           │   │
+│   │       update-cluster-version: upgrade        │  │           update-nodegroup-version          │   │
+│   │           delete-cluster: teardown           │  │               delete-nodegroup              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster upgraded first; then node groups updated to matching Kubernetes version                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Access and Auth                │  │                   Add-ons                   │   │
+│   │           update-kubeconfig: merge           │  │            create-addon: install            │   │
+│   │         create-access-entry: IAM map         │  │           describe-addon: version           │   │
+│   │           associate-access-policy            │  │            update-addon: upgrade            │   │
+│   │             list-access-entries              │  │             delete-addon: remove            │   │
+│   │            create-fargate-profile            │  │           describe-addon-versions           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EKS control plane (AWS-managed) · EC2 worker nodes · VPC · IAM · EBS/EFS storage                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EKS             = Elastic Kubernetes Service; managed Kubernetes control plane                       │
+│  Node group      = Managed group of EC2 worker nodes; auto-scaling enabled                            │
+│  update-kubeconfig= Adds EKS cluster to local ~/.kube/config for kubectl access                       │
+│  Access entry    = EKS API method mapping IAM principal to Kubernetes RBAC role                       │
+│  Associate policy= Binds a predefined EKS access policy to an access entry                            │
+│  Add-on          = Managed EKS component: CoreDNS, kube-proxy, VPC CNI, EBS CSI                       │
+│  Fargate profile = Runs pods serverlessly without managing EC2 node groups                            │
+│  update-cluster-version= Upgrades EKS control plane to next minor version                             │
+│  update-nodegroup-version= Replaces node group nodes with new Kubernetes AMI version                  │
+│  VPC CNI         = AWS VPC Container Network Interface plugin; assigns pod IPs from VPC               │
+│  EBS CSI driver  = Kubernetes CSI driver for provisioning EBS volumes as PVs                          │
+│  IRSA            = IAM Roles for Service Accounts; pods assume IAM roles via OIDC                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Fargate Profiles
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># List Fargate profiles
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws eks list-fargate-profiles --cluster-name &lt;cluster&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Describe a profile
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws eks describe-fargate-profile \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  --cluster-name &lt;cluster&gt; \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  --fargate-profile-name &lt;profile&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Create a Fargate profile
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>aws eks create-fargate-profile \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  --cluster-name &lt;cluster&gt; \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  --fargate-profile-name &lt;profile&gt; \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  --pod-execution-role-arn arn:aws:iam::&lt;account_id&gt;:role/&lt;FargatePodExecutionRole&gt; \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  --selectors namespace=&lt;namespace&gt;
 </code></pre></div></p>
 <h2 id="iam-oidc-provider">IAM OIDC Provider<a class="headerlink" href="#iam-oidc-provider" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if an OIDC provider is already associated</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;cluster.identity.oidc.issuer&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Associate an IAM OIDC provider with the cluster (requires eksctl)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>eksctl<span class="w"> </span>utils<span class="w"> </span>associate-iam-oidc-provider<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--cluster<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--region<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--approve
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># List existing OIDC providers in the account</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-open-id-connect-providers
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if an OIDC provider is already associated</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;cluster.identity.oidc.issuer&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Associate an IAM OIDC provider with the cluster (requires eksctl)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>eksctl<span class="w"> </span>utils<span class="w"> </span>associate-iam-oidc-provider<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--cluster<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>--region<span class="w"> </span>&lt;region&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--approve
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># List existing OIDC providers in the account</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-open-id-connect-providers
 </code></pre></div>
 <h2 id="access-entries-and-auth-mode">Access Entries and Auth Mode<a class="headerlink" href="#access-entries-and-auth-mode" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get the current authentication mode</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;cluster.accessConfig.authenticationMode&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Update cluster to use API auth mode (enables access entries)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-cluster-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>--access-config<span class="w"> </span><span class="nv">authenticationMode</span><span class="o">=</span>API_AND_CONFIG_MAP
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List access entries</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-access-entries<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Create an access entry for an IAM principal</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-access-entry<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span>--principal-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Associate an access policy with an entry</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>aws<span class="w"> </span>eks<span class="w"> </span>associate-access-policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--principal-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>--access-scope<span class="w"> </span><span class="nv">type</span><span class="o">=</span>cluster
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get the current authentication mode</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-cluster<span class="w"> </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">&quot;cluster.accessConfig.authenticationMode&quot;</span><span class="w"> </span>--output<span class="w"> </span>text
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Update cluster to use API auth mode (enables access entries)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-cluster-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>--access-config<span class="w"> </span><span class="nv">authenticationMode</span><span class="o">=</span>API_AND_CONFIG_MAP
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># List access entries</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-access-entries<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Create an access entry for an IAM principal</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-access-entry<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--principal-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Associate an access policy with an entry</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>aws<span class="w"> </span>eks<span class="w"> </span>associate-access-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--principal-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>--access-scope<span class="w"> </span><span class="nv">type</span><span class="o">=</span>cluster
 </code></pre></div>
 <h2 id="add-ons">Add-ons<a class="headerlink" href="#add-ons" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List available add-ons for a cluster version</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon-versions<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.29
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># List installed add-ons</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-addons<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Describe an installed add-on</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--addon-name<span class="w"> </span>vpc-cni
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Install an add-on</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-addon<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--addon-name<span class="w"> </span>coredns<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--resolve-conflicts<span class="w"> </span>OVERWRITE
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Update an add-on to a specific version</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-addon<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--addon-name<span class="w"> </span>vpc-cni<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">  </span>--addon-version<span class="w"> </span>v1.18.0-eksbuild.1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span>--resolve-conflicts<span class="w"> </span>OVERWRITE
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Delete an add-on</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>aws<span class="w"> </span>eks<span class="w"> </span>delete-addon<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--addon-name<span class="w"> </span>coredns
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List available add-ons for a cluster version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon-versions<span class="w"> </span>--kubernetes-version<span class="w"> </span><span class="m">1</span>.29
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List installed add-ons</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-addons<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Describe an installed add-on</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-addon<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--addon-name<span class="w"> </span>vpc-cni
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Install an add-on</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-addon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>--addon-name<span class="w"> </span>coredns<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>--resolve-conflicts<span class="w"> </span>OVERWRITE
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Update an add-on to a specific version</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>aws<span class="w"> </span>eks<span class="w"> </span>update-addon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">  </span>--addon-name<span class="w"> </span>vpc-cni<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--addon-version<span class="w"> </span>v1.18.0-eksbuild.1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--resolve-conflicts<span class="w"> </span>OVERWRITE
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Delete an add-on</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>aws<span class="w"> </span>eks<span class="w"> </span>delete-addon<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span>--addon-name<span class="w"> </span>coredns
 </code></pre></div>
 <h2 id="pod-identity-associations">Pod Identity Associations<a class="headerlink" href="#pod-identity-associations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List pod identity associations for a cluster</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-pod-identity-associations<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Describe a specific association</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-pod-identity-association<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--association-id<span class="w"> </span>&lt;association_id&gt;
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Create a pod identity association</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-pod-identity-association<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span>--service-account<span class="w"> </span>&lt;service_account_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span>--role-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Delete a pod identity association</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>aws<span class="w"> </span>eks<span class="w"> </span>delete-pod-identity-association<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--association-id<span class="w"> </span>&lt;association_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List pod identity associations for a cluster</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>eks<span class="w"> </span>list-pod-identity-associations<span class="w"> </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Describe a specific association</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>aws<span class="w"> </span>eks<span class="w"> </span>describe-pod-identity-association<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--association-id<span class="w"> </span>&lt;association_id&gt;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Create a pod identity association</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>aws<span class="w"> </span>eks<span class="w"> </span>create-pod-identity-association<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>--namespace<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--service-account<span class="w"> </span>&lt;service_account_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>--role-arn<span class="w"> </span>arn:aws:iam::&lt;account_id&gt;:role/&lt;RoleName&gt;
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Delete a pod identity association</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>aws<span class="w"> </span>eks<span class="w"> </span>delete-pod-identity-association<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--cluster-name<span class="w"> </span>&lt;cluster&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">  </span>--association-id<span class="w"> </span>&lt;association_id&gt;
 </code></pre></div>
 
 

@@ -4280,17 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transport-zones" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Transport Zones
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#tier-0-gateways" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4677,7 +4666,7 @@
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       NSX design standards: transport zones, T0/T1 gateway tiers, Edge sizing, IP pools       │   │
@@ -4730,18 +4719,66 @@ Design Standards reference covering Segments (Logical Switches), Design Rules, C
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p>VLAN-backed segments (for management or underlay traffic) should include the VLAN ID:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Format: seg-vlan-&lt;vlan_id&gt;-&lt;function&gt;
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Example: seg-vlan-100-management
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>         seg-vlan-200-tep
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>         seg-vlan-300-edge-uplink
-</code></pre></div>
-<h3 id="transport-zones">Transport Zones<a class="headerlink" href="#transport-zones" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Format: tz-&lt;type&gt;-&lt;scope&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Example: tz-overlay-compute
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>         tz-vlan-edge
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>         tz-overlay-edge
-</code></pre></div>
+┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       NSX design standards: transport zones, T0/T1 gateway tiers, Edge sizing, IP pools       │   │
+│   │       Two transport zones: VLAN TZ (N-S Edge uplinks) + Overlay TZ (E-W tenant segments)      │   │
+│   │          T0 per environment (provider); T1 per tenant or application group (consumer)         │   │
+│   │        Edge clusters: min 2 Edge Nodes for HA; bare-metal for high-throughput workloads       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Transport Zone design → Gateway tier → Edge cluster → IP pool → segment naming                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Transport Zones       │  │        Gateway Design       │  │         Edge Sizing         │   │
+│   │          Overlay TZ         │  │         T0: provider        │  │         Small: 2vCPU        │   │
+│   │           VLAN TZ           │  │        T1: per tenant       │  │        Medium: 4vCPU        │   │
+│   │         No cross-TZ         │  │         T0 BGP ECMP         │  │         Large: 8vCPU        │   │
+│   │        Host TZ attach       │  │        T1 static/OSPF       │  │        Bare-metal max       │   │
+│   │        Multi-TZ Edge        │  │         NAT on T1 SR        │  │        Min 2 per site       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    TEP pool: /24 minimum; no overlap with VM or management networks; MTU 1600+ on pNIC                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Design area    │     Standard     │        Why        │      Verify      │      Notes       │   │
+│   │     TEP pool     │ /24 non-overlap  │     No routing    │    Ping TEPs     │     MTU 1600     │   │
+│   │     Edge HA      │   2 nodes min    │    SR failover    │    BFD state     │    A/S or A/A    │   │
+│   │    T0 uplinks    │    2 per Edge    │     ECMP / HA     │    BGP peers     │     VLAN TZ      │   │
+│   │    Seg naming    │   <env>-<app>    │    Readability    │      Audit       │    No spaces     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: pNIC MTU ≥ 1600 for Geneve · dedicated TEP VLAN · ToR BGP peer config                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Overlay TZ    = Transport Zone spanning all hosts; carries Geneve-encapsulated E-W traffic         │
+│    VLAN TZ       = Transport Zone for Edge uplinks; carries native VLAN traffic to physical           │
+│    TEP pool      = IP pool assigned to hosts for Geneve src/dst; one IP per host TEP vmknic           │
+│    T0 gateway    = Provider Logical Router; BGP to physical; ECMP over multiple Edge uplinks          │
+│    T1 gateway    = Tenant Logical Router; connects segments upstream to T0                            │
+│    Edge cluster  = Group of Edge Nodes hosting Service Routers; provides N-S HA                       │
+│    BFD           = Bidirectional Forwarding Detection; fast failover between Edge uplinks             │
+│    ECMP          = Equal-Cost Multi-Path; distributes N-S traffic across multiple Edge uplinks        │
+│    Active/Standby = SR runs on one Edge; fails to standby if primary fails                            │
+│    Active/Active  = Two SRs active; stateless traffic only; requires external LB for SPI              │
+│    MTU 1600      = Minimum pNIC MTU for Geneve (50-byte overhead) + standard 1500 payload             │
+│    Seg naming    = Consistent segment naming prevents confusion in large environments                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Transport Zones
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Format: tz-&lt;type&gt;-&lt;scope&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Example: tz-overlay-compute
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>         tz-vlan-edge
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>         tz-overlay-edge
+</code></pre></div></p>
 <table>
 <thead>
 <tr>
@@ -4769,43 +4806,43 @@ Design Standards reference covering Segments (Logical Switches), Design Rules, C
 </tbody>
 </table>
 <h3 id="tier-0-gateways">Tier-0 Gateways<a class="headerlink" href="#tier-0-gateways" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Format: t0-&lt;site&gt;-&lt;function&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Example: t0-lon-prod
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>         t0-lon-dmz
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         t0-ams-prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Format: t0-&lt;site&gt;-&lt;function&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Example: t0-lon-prod
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>         t0-lon-dmz
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>         t0-ams-prod
 </code></pre></div>
 <p>Separate T0 gateways for production and DMZ allow independent routing table management and security policy.</p>
 <h3 id="tier-1-gateways">Tier-1 Gateways<a class="headerlink" href="#tier-1-gateways" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Format: t1-&lt;environment&gt;-&lt;tenant_or_application&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Example: t1-prod-frontend
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>         t1-prod-database
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>         t1-dev-platform
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Format: t1-&lt;environment&gt;-&lt;tenant_or_application&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Example: t1-prod-frontend
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>         t1-prod-database
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>         t1-dev-platform
 </code></pre></div>
 <p>Each T1 maps to a logical application boundary. A single T1 can connect multiple segments that share the same routing domain.</p>
 <h3 id="edge-nodes-and-edge-clusters">Edge Nodes and Edge Clusters<a class="headerlink" href="#edge-nodes-and-edge-clusters" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Format: edge-&lt;site&gt;-&lt;nn&gt;
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>         edge-cluster-&lt;site&gt;-&lt;purpose&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Example: edge-lon-01, edge-lon-02
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>         edge-cluster-lon-prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Format: edge-&lt;site&gt;-&lt;nn&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>         edge-cluster-&lt;site&gt;-&lt;purpose&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Example: edge-lon-01, edge-lon-02
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>         edge-cluster-lon-prod
 </code></pre></div>
 <p>Edge nodes must be deployed in pairs for HA. The edge cluster contains the pair.</p>
 <h3 id="dfw-policies-and-rules">DFW Policies and Rules<a class="headerlink" href="#dfw-policies-and-rules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>DFW Category order (NSX-T built-in, top to bottom):
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Ethernet      — L2 rules
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Emergency     — Break-glass block rules
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Infrastructure — Management/monitoring allow rules
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  Environment   — Inter-zone rules
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Application   — Application-specific micro-segmentation
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Policy name format: &lt;category&gt;-&lt;application&gt;-&lt;purpose&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>Example: Application-Web-Tier
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>         Environment-PCI-Isolation
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>         Infrastructure-Monitoring-Allow
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>Rule name format: &lt;action&gt;-&lt;source&gt;-to-&lt;dest&gt;-&lt;service&gt;
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Example: Allow-Web-to-App-HTTPS
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>         Deny-Dev-to-Prod-Any
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>         Allow-Monitoring-to-Any-SNMP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>DFW Category order (NSX-T built-in, top to bottom):
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Ethernet      — L2 rules
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Emergency     — Break-glass block rules
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Infrastructure — Management/monitoring allow rules
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  Environment   — Inter-zone rules
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  Application   — Application-specific micro-segmentation
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Policy name format: &lt;category&gt;-&lt;application&gt;-&lt;purpose&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>Example: Application-Web-Tier
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>         Environment-PCI-Isolation
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>         Infrastructure-Monitoring-Allow
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>Rule name format: &lt;action&gt;-&lt;source&gt;-to-&lt;dest&gt;-&lt;service&gt;
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Example: Allow-Web-to-App-HTTPS
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>         Deny-Dev-to-Prod-Any
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>         Allow-Monitoring-to-Any-SNMP
 </code></pre></div>
 <hr />
 <h2 id="design-rules">Design Rules<a class="headerlink" href="#design-rules" title="Permanent link">&para;</a></h2>
@@ -5089,12 +5126,12 @@ Design Standards reference covering Segments (Logical Switches), Design Rules, C
 </tbody>
 </table>
 <p>All NSX configuration changes must be captured in the backup immediately after completion:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Trigger immediate backup via API</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/backups/create&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Trigger immediate backup via API</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/backups/create&quot;</span>
 </code></pre></div>
 
 

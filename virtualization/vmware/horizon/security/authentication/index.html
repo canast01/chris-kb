@@ -4338,17 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#two-factor-authentication-radius-rsa-securid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two-Factor Authentication (RADIUS / RSA SecurID)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#saml-authentication-workspace-one-vidm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4680,28 +4669,64 @@ Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurI
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  OTP           = One-Time Password; from hardware or soft token                                       │
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<hr />
-<h2 id="two-factor-authentication-radius-rsa-securid">Two-Factor Authentication (RADIUS / RSA SecurID)<a class="headerlink" href="#two-factor-authentication-radius-rsa-securid" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  2-Factor Authentication: RADIUS
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Authentication Module: RadiusAuthModule
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Hostname: radius.example.local
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Port: 1812
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Shared Secret: &lt;radius secret&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  Username Hint: Use UPN (user@corp.local) or sAMAccountName
 </code></pre></div>
-<p>For RSA SecurID (hardware token):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>  2-Factor Authentication: SecurID
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Load RSA sdconf.rec (downloaded from RSA Authentication Manager)
+┌─────────────────────────────────── VMware Horizon — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  Horizon authenticates users via AD; external users authenticate through UAG with                     │
+│  optional MFA (RADIUS/RSA); smart card and SAML federation are also supported.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Internal Auth Flow              │  │              External Auth Flow             │   │
+│   │          Client → Connection Server          │  │           Client → UAG (internet)           │   │
+│   │         CS validates AD credentials          │  │              UAG → optional MFA             │   │
+│   │            Kerberos or NTLM to AD            │  │               UAG → SAML to CS              │   │
+│   │             Session token issued             │  │             CS validates with AD            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Internal flow is direct to CS; external flow proxies through UAG with optional MFA.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 MFA Options                  │  │             Passwordless Options            │   │
+│   │              RADIUS: OTP token               │  │             Smart card: PIV/CAC             │   │
+│   │              RSA SecurID token               │  │         Kerberos SSO: domain joined         │   │
+│   │              Duo: RADIUS proxy               │  │          SAML: Workspace ONE Access         │   │
+│   │              Configured on UAG               │  │            Windows Hello: W1 UEM            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AD DCs must be reachable from Connection Servers on management network;                              │
+│  RADIUS server reachable from UAG; smart card reader at physical endpoint.                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  AD auth       = Kerberos (domain joined) or NTLM to AD DC                                            │
+│  RADIUS        = MFA protocol; UAG sends credentials to RADIUS server                                 │
+│  RSA SecurID   = OTP hardware token; RADIUS integration                                               │
+│  Duo           = cloud MFA; accessed via RADIUS proxy from UAG                                        │
+│  SAML          = federated auth; Workspace ONE Access as IdP                                          │
+│  Smart card    = PIV/CAC cert-based login; AD smart card auth                                         │
+│  Kerberos SSO  = domain-joined client gets desktop without re-auth                                    │
+│  UAG           = Unified Access Gateway; handles external MFA flow                                    │
+│  CS            = Connection Server; final auth validator with AD                                      │
+│  Windows Hello = biometric/PIN auth; requires Workspace ONE UEM                                       │
+│  Session token = issued by CS after successful auth; used for session                                 │
+│  OTP           = One-Time Password; from hardware or soft token                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>For RSA SecurID (hardware token):
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```text
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  2-Factor Authentication: SecurID
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Load RSA sdconf.rec (downloaded from RSA Authentication Manager)
 </code></pre></div></p>
 <hr />
 <h2 id="saml-authentication-workspace-one-vidm">SAML Authentication (Workspace ONE / vIDM)<a class="headerlink" href="#saml-authentication-workspace-one-vidm" title="Permanent link">&para;</a></h2>
 <p>SAML enables IdP-initiated SSO — users authenticate to Workspace ONE/vIDM and are passed to Horizon:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Delegation of Authentication to VMware Identity Manager: Allowed or Required
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  vIDM URL: https://vidm.example.local
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Token TTL: 300 seconds
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Delegation of Authentication to VMware Identity Manager: Allowed or Required
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  vIDM URL: https://vidm.example.local
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Token TTL: 300 seconds
 </code></pre></div>
 <p>SAML is required for:
 - Passwordless authentication
@@ -4709,48 +4734,48 @@ Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurI
 - True SSO (certificate-based silent desktop login)</p>
 <hr />
 <h2 id="smart-card-certificate-authentication">Smart Card / Certificate Authentication<a class="headerlink" href="#smart-card-certificate-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Smart Card Authentication: Required or Optional
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Certificate Revocation: Use CRL / OCSP (recommended)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  Certificate Revocation URL: http://pki.example.local/crl/corp-ca.crl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Smart Card Authentication: Required or Optional
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Certificate Revocation: Use CRL / OCSP (recommended)
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Certificate Revocation URL: http://pki.example.local/crl/corp-ca.crl
 </code></pre></div>
 <p>Smart card authentication works with CAC, PIV, and software certificates. The client OS must have the certificate in the user's personal certificate store.</p>
 <hr />
 <h2 id="true-sso">True SSO<a class="headerlink" href="#true-sso" title="Permanent link">&para;</a></h2>
 <p>True SSO eliminates the password prompt for desktop login after initial UAG authentication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">Requirements</span><span class="p">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Microsoft Enterprise CA</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enrollment Server role (installed on same or separate Windows Server)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SAML authentication configured</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Certificate template: Horizon Enrollment (key usage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digital Signature, Key Encipherment)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="l l-Scalar l-Scalar-Plain">Horizon Console → Settings → True SSO</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enable True SSO</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enrollment Server</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;FQDN of Enrollment Server&gt;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Template</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Horizon</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">Requirements</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Microsoft Enterprise CA</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enrollment Server role (installed on same or separate Windows Server)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SAML authentication configured</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Certificate template: Horizon Enrollment (key usage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Digital Signature, Key Encipherment)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="l l-Scalar l-Scalar-Plain">Horizon Console → Settings → True SSO</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enable True SSO</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Enrollment Server</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;FQDN of Enrollment Server&gt;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Template</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Horizon</span>
 </code></pre></div>
 <p>When enabled: user authenticates once at UAG (AD/SAML/RADIUS), receives short-lived cert, desktop logs in automatically.</p>
 <hr />
 <h2 id="unauthenticated-access-kiosk-mode">Unauthenticated Access (Kiosk Mode)<a class="headerlink" href="#unauthenticated-access-kiosk-mode" title="Permanent link">&para;</a></h2>
 <p>For kiosk/shared terminals with no personal authentication:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Allow Unauthenticated Access: Enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Horizon Console → Settings → Servers → Connection Servers → [CS] → Edit → Authentication
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  Allow Unauthenticated Access: Enabled
 </code></pre></div>
 <p>Assign kiosk desktops to a dedicated pool with restricted internet access and no persistent profiles.</p>
 <hr />
 <h2 id="session-timeout-and-reauthentication">Session Timeout and Reauthentication<a class="headerlink" href="#session-timeout-and-reauthentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Horizon Console → Settings → Global Settings → General
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Session Timeout: 600 minutes (10 hours — adjust per policy)
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Disconnected Session Timeout: 60 minutes (log off disconnected sessions)
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Reauthentication on Reconnect: Enabled (require new auth after disconnect)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Horizon Console → Settings → Global Settings → General
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Session Timeout: 600 minutes (10 hours — adjust per policy)
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Disconnected Session Timeout: 60 minutes (log off disconnected sessions)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Reauthentication on Reconnect: Enabled (require new auth after disconnect)
 </code></pre></div>
 <p>For high-security environments: set Reauthentication = Always and reduce timeout to 4 hours.</p>
 <hr />
 <h2 id="uag-identity-bridging">UAG Identity Bridging<a class="headerlink" href="#uag-identity-bridging" title="Permanent link">&para;</a></h2>
 <p>UAG can perform identity bridging for applications that require Kerberos authentication internally when users are authenticating externally via SAML:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>UAG Admin UI → Edge Service Settings → Horizon → Advanced
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Identity Bridging: Enable
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Principal Name: UPN (user@corp.local)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>UAG Admin UI → Edge Service Settings → Horizon → Advanced
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Identity Bridging: Enable
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Principal Name: UPN (user@corp.local)
 </code></pre></div>
 <h2 id="this-allows-external-saml-authenticated-users-to-transparently-access-kerberos-protected-intranet-applications-through-the-desktop">This allows external SAML-authenticated users to transparently access Kerberos-protected intranet applications through the desktop.<a class="headerlink" href="#this-allows-external-saml-authenticated-users-to-transparently-access-kerberos-protected-intranet-applications-through-the-desktop" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

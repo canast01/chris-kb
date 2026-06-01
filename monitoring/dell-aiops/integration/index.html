@@ -4372,43 +4372,44 @@ Dell AIOps Integration reference covering Overview, CloudIQ / SCG (Inbound Telem
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>CloudIQ portal &gt; Assets &gt; [System] — check &quot;Last Seen&quot; timestamp
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>SCG admin UI &gt; Systems &gt; [System] &gt; Connection Status
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │               ITSM Integration               │  │             Observability Stack             │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │              ServiceNow webhook              │  │             Grafana data source             │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Auto incident create             │  │              Splunk HEC forward             │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                CMDB CI update                │  │             Elastic integration             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              PagerDuty routing               │  │              Custom REST client             │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │              Jira issue create               │  │             Prometheus exporter             │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  AIOps on-prem · outbound TCP 443 to ITSM/SaaS targets · no inbound connections required              │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  ServiceNow webhook = AIOps POST to ServiceNow event endpoint on alert fire                           │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  CMDB CI = Configuration Item in ServiceNow matched to AIOps monitored system                         │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Auto incident = ServiceNow incident created automatically from AIOps alert payload                   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  PagerDuty = On-call routing; AIOps sends Events API v2 payload for escalation                        │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Jira issue = AIOps creates Jira bug/task for recommendation tracking in dev teams                    │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Grafana data source = AIOps REST API configured as Grafana JSON data source                          │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Splunk HEC = HTTP Event Collector; AIOps forwards alerts as events for SIEM correlation              │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Prometheus exporter = AIOps /metrics endpoint scraped by Prometheus                                  │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Elastic integration = AIOps alert forwarded to Elasticsearch for log analytics                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">##</span><span class="w"> </span><span class="n">SIEM</span><span class="w"> </span><span class="n">Integration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">AIOps</span><span class="w"> </span><span class="n">audit</span><span class="w"> </span><span class="n">events</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">available</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">CloudIQ</span><span class="w"> </span><span class="n">audit</span><span class="w"> </span><span class="n">log</span><span class="p">.</span><span class="w"> </span><span class="n">Export</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">SIEM</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">long</span><span class="o">-</span><span class="n">term</span><span class="w"> </span><span class="n">retention</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">correlation</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="k">security</span><span class="w"> </span><span class="n">events</span><span class="p">.</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">```</span><span class="nb">text</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">#</span><span class="w"> </span><span class="n">Automated</span><span class="w"> </span><span class="n">audit</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="n">export</span><span class="w"> </span><span class="p">(</span><span class="n">weekly</span><span class="p">):</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">GET</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">api</span><span class="p">.</span><span class="n">cloudiq</span><span class="p">.</span><span class="n">dell</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">cloudiq</span><span class="o">/</span><span class="n">rest</span><span class="o">/</span><span class="n">v1</span><span class="o">/</span><span class="n">audit</span><span class="o">-</span><span class="n">logs</span><span class="o">?</span><span class="n">filter</span><span class="o">=</span><span class="n">created_at</span><span class="w"> </span><span class="n">gt</span><span class="w"> </span><span class="o">&lt;</span><span class="k">timestamp</span><span class="o">&gt;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">Authorization</span><span class="p">:</span><span class="w"> </span><span class="n">Bearer</span><span class="w"> </span><span class="o">&lt;</span><span class="n">token</span><span class="o">&gt;</span>
+┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │             Observability Stack             │   │
+│   │              ServiceNow webhook              │  │             Grafana data source             │   │
+│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+│   │                CMDB CI update                │  │             Elastic integration             │   │
+│   │              PagerDuty routing               │  │              Custom REST client             │   │
+│   │              Jira issue create               │  │             Prometheus exporter             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on-prem · outbound TCP 443 to ITSM/SaaS targets · no inbound connections required              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = AIOps POST to ServiceNow event endpoint on alert fire                           │
+│  CMDB CI = Configuration Item in ServiceNow matched to AIOps monitored system                         │
+│  Auto incident = ServiceNow incident created automatically from AIOps alert payload                   │
+│  PagerDuty = On-call routing; AIOps sends Events API v2 payload for escalation                        │
+│  Jira issue = AIOps creates Jira bug/task for recommendation tracking in dev teams                    │
+│  Grafana data source = AIOps REST API configured as Grafana JSON data source                          │
+│  Splunk HEC = HTTP Event Collector; AIOps forwards alerts as events for SIEM correlation              │
+│  Prometheus exporter = AIOps /metrics endpoint scraped by Prometheus                                  │
+│  Elastic integration = AIOps alert forwarded to Elasticsearch for log analytics                       │
+│  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## SIEM Integration
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>AIOps audit events are available from the CloudIQ audit log. Export to SIEM for long-term retention and correlation with security events.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Automated audit log export (weekly):
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>GET https://api.cloudiq.dell.com/cloudiq/rest/v1/audit-logs?filter=created_at gt &lt;timestamp&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Authorization: Bearer &lt;token&gt;
 </code></pre></div></p>
 <p>Forward the export to Splunk or Elastic via the existing log pipeline.</p>
 <h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
@@ -4460,10 +4461,10 @@ Dell AIOps Integration reference covering Overview, CloudIQ / SCG (Inbound Telem
 </table>
 <h2 id="integration-health-checks">Integration Health Checks<a class="headerlink" href="#integration-health-checks" title="Permanent link">&para;</a></h2>
 <p>Verify all integrations are functional as part of the monthly ops review:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>- ServiceNow: trigger a test notification and confirm ticket creation
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- PagerDuty: verify the integration key is current and test alert fires correctly
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Aria Operations CloudIQ MP: confirm adapter is in Collecting state
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- SIEM: confirm audit log export job completed successfully
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>- ServiceNow: trigger a test notification and confirm ticket creation
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- PagerDuty: verify the integration key is current and test alert fires correctly
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Aria Operations CloudIQ MP: confirm adapter is in Collecting state
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- SIEM: confirm audit log export job completed successfully
 </code></pre></div>
 
 

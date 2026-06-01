@@ -3499,63 +3499,64 @@ Ansible is an agentless IT automation engine that automates provisioning, config
     CN --&gt;|WinRM or SSH| MN3[Windows Host]
     CN --&gt;|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN --&gt;|SSH| MN5[Linux Host]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────<span class="w"> </span>Ansible<span class="w"> </span>—<span class="w"> </span>How<span class="w"> </span>It<span class="w"> </span>Works<span class="w"> </span>────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│<span class="w">   </span>│<span class="w">  </span>Execution<span class="w"> </span>flow:<span class="w"> </span>ansible-playbook<span class="w"> </span>reads<span class="w"> </span>inventory<span class="w"> </span>+<span class="w"> </span>playbook<span class="w"> </span>→<span class="w"> </span>connects<span class="w"> </span>to<span class="w"> </span>hosts<span class="w"> </span>→<span class="w"> </span>runs<span class="w"> </span>tasks<span class="w"> </span>│<span class="w">   </span>│
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│<span class="w">   </span>│<span class="w">      </span>Each<span class="w"> </span>task<span class="w"> </span>calls<span class="w"> </span>a<span class="w"> </span>module<span class="p">;</span><span class="w"> </span>module<span class="w"> </span>code<span class="w"> </span>is<span class="w"> </span>transferred<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>remote<span class="w"> </span>host<span class="w"> </span>and<span class="w"> </span>executed<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│<span class="w">   </span>│<span class="w">  </span>Results<span class="w"> </span>returned<span class="w"> </span>as<span class="w"> </span>JSON<span class="p">;</span><span class="w"> </span>Ansible<span class="w"> </span>evaluates<span class="w"> </span>changed/ok/failed<span class="p">;</span><span class="w"> </span>handlers<span class="w"> </span>notified<span class="w"> </span>on<span class="w"> </span>changed<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│<span class="w">   </span>│<span class="w">       </span>AWX<span class="w"> </span>wraps<span class="w"> </span>this:<span class="w"> </span>stores<span class="w"> </span>credentials,<span class="w"> </span>queues<span class="w"> </span>jobs,<span class="w"> </span>streams<span class="w"> </span>events<span class="w"> </span>to<span class="w"> </span>UI<span class="w"> </span><span class="k">in</span><span class="w"> </span>real<span class="w"> </span><span class="nb">time</span><span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│<span class="w">   </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">   </span>│<span class="w">        </span>Step<span class="w"> </span><span class="m">1</span>:<span class="w"> </span>Parse<span class="w">        </span>│<span class="w">  </span>│<span class="w">       </span>Step<span class="w"> </span><span class="m">2</span>:<span class="w"> </span>Connect<span class="w">       </span>│<span class="w">  </span>│<span class="w">       </span>Step<span class="w"> </span><span class="m">3</span>:<span class="w"> </span>Execute<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">   </span>│<span class="w">        </span>Load<span class="w"> </span>inventory<span class="w">       </span>│<span class="w">  </span>│<span class="w">        </span>SSH/WinRM<span class="w"> </span>open<span class="w">       </span>│<span class="w">  </span>│<span class="w">     </span>Module<span class="w"> </span>runs<span class="w"> </span>on<span class="w"> </span>host<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">   </span>│<span class="w">     </span>Parse<span class="w"> </span>playbook<span class="w"> </span>YAML<span class="w">     </span>│<span class="w">  </span>│<span class="w">     </span>Gather<span class="w"> </span>facts<span class="w"> </span><span class="o">(</span>setup<span class="o">)</span><span class="w">    </span>│<span class="w">  </span>│<span class="w">     </span>JSON<span class="w"> </span>result<span class="w"> </span>returned<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>│<span class="w">      </span>Resolve<span class="w"> </span>variables<span class="w">      </span>│<span class="w">  </span>│<span class="w">     </span>Multiplexed<span class="w"> </span>SSH<span class="w"> </span>conn<span class="w">    </span>│<span class="w">  </span>│<span class="w">    </span>changed<span class="w"> </span>/<span class="w"> </span>ok<span class="w"> </span>/<span class="w"> </span>failed<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>│<span class="w">     </span>Apply<span class="w"> </span>filters/limits<span class="w">    </span>│<span class="w">  </span>│<span class="w">    </span>Fork<span class="w"> </span>N<span class="w"> </span>hosts<span class="w"> </span>parallel<span class="w">    </span>│<span class="w">  </span>│<span class="w">      </span>Handlers<span class="w"> </span>triggered<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">   </span>Gather<span class="w"> </span><span class="nv">facts</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>module:<span class="w"> </span>setup<span class="p">;</span><span class="w"> </span>collects<span class="w"> </span>OS,<span class="w"> </span>IP,<span class="w"> </span>memory,<span class="w"> </span>disk,<span class="w"> </span>fqdn<span class="w"> </span><span class="k">for</span><span class="w"> </span>use<span class="w"> </span><span class="k">in</span><span class="w"> </span>templates<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">        </span>Check<span class="w"> </span><span class="nv">mode</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>--check<span class="w"> </span>flag<span class="p">;</span><span class="w"> </span>simulates<span class="w"> </span>without<span class="w"> </span>applying<span class="p">;</span><span class="w"> </span>modules<span class="w"> </span>report<span class="w"> </span>changes<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">    </span>Diff<span class="w"> </span><span class="nv">mode</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>--diff<span class="w"> </span>flag<span class="p">;</span><span class="w"> </span>shows<span class="w"> </span>before/after<span class="w"> </span><span class="k">for</span><span class="w"> </span>file<span class="w"> </span>edits<span class="p">;</span><span class="w"> </span>combine<span class="w"> </span>with<span class="w"> </span>--check<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>│<span class="w">  </span><span class="nv">Fork</span><span class="w">             </span><span class="o">=</span><span class="w"> </span>max<span class="w"> </span>parallel<span class="w"> </span>host<span class="w"> </span>connections<span class="p">;</span><span class="w"> </span>default<span class="w"> </span><span class="m">5</span><span class="p">;</span><span class="w"> </span>increase<span class="w"> </span><span class="k">for</span><span class="w"> </span>large<span class="w"> </span>inventories<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>│<span class="w"> </span><span class="nv">Serial</span><span class="w">           </span><span class="o">=</span><span class="w"> </span>limit<span class="w"> </span>hosts<span class="w"> </span>per<span class="w"> </span>batch<span class="w"> </span><span class="k">in</span><span class="w"> </span>rolling<span class="w"> </span>update<span class="p">;</span><span class="w"> </span>e.g.<span class="w"> </span>serial:<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>canary<span class="w"> </span>deploys<span class="w"> </span>│<span class="w">   </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">       </span><span class="nv">delegate_to</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>run<span class="w"> </span>task<span class="w"> </span>on<span class="w"> </span>a<span class="w"> </span>different<span class="w"> </span>host<span class="w"> </span><span class="o">(</span>e.g.<span class="w"> </span>register<span class="w"> </span>DNS<span class="w"> </span>on<span class="w"> </span>a<span class="w"> </span>jump<span class="w"> </span>host<span class="o">)</span><span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>│<span class="w">        </span><span class="nv">when</span><span class="w">             </span><span class="o">=</span><span class="w"> </span>conditional<span class="w"> </span>expression<span class="p">;</span><span class="w"> </span>task<span class="w"> </span>skipped<span class="w"> </span>when<span class="w"> </span>condition<span class="w"> </span>is<span class="w"> </span>False<span class="w">        </span>│<span class="w">   </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Module Execution
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Ansible transfers a Python script (or PowerShell for Windows) to the managed node, executes it, collects the JSON output, and removes it.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```mermaid
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sequenceDiagram
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    participant CN as Control Node
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    participant MN as Managed Node
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    CN-&gt;&gt;MN: SSH connect
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    CN-&gt;&gt;MN: Transfer module (Python + args JSON)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    MN-&gt;&gt;MN: Execute module
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    MN--&gt;&gt;CN: Return JSON result {changed, rc, stdout}
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    CN-&gt;&gt;MN: Remove module temp files
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    CN-&gt;&gt;MN: SSH disconnect
+┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │
+│   │      Each task calls a module; module code is transferred to the remote host and executed     │   │
+│   │  Results returned as JSON; Ansible evaluates changed/ok/failed; handlers notified on changed  │   │
+│   │       AWX wraps this: stores credentials, queues jobs, streams events to UI in real time      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Step 1: Parse        │  │       Step 2: Connect       │  │       Step 3: Execute       │   │
+│   │        Load inventory       │  │        SSH/WinRM open       │  │     Module runs on host     │   │
+│   │     Parse playbook YAML     │  │     Gather facts (setup)    │  │     JSON result returned    │   │
+│   │      Resolve variables      │  │     Multiplexed SSH conn    │  │    changed / ok / failed    │   │
+│   │     Apply filters/limits    │  │    Fork N hosts parallel    │  │      Handlers triggered     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Gather facts     = module: setup; collects OS, IP, memory, disk, fqdn for use in templates  │   │
+│   │        Check mode    = --check flag; simulates without applying; modules report changes       │   │
+│   │    Diff mode        = --diff flag; shows before/after for file edits; combine with --check    │   │
+│   │  Fork             = max parallel host connections; default 5; increase for large inventories  │   │
+│   │ Serial           = limit hosts per batch in rolling update; e.g. serial: 1 for canary deploys │   │
+│   │       delegate_to      = run task on a different host (e.g. register DNS on a jump host)      │   │
+│   │        when             = conditional expression; task skipped when condition is False        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>---
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>## Module Execution
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Ansible transfers a Python script (or PowerShell for Windows) to the managed node, executes it, collects the JSON output, and removes it.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```mermaid
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sequenceDiagram
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    participant CN as Control Node
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    participant MN as Managed Node
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    CN-&gt;&gt;MN: SSH connect
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    CN-&gt;&gt;MN: Transfer module (Python + args JSON)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    MN-&gt;&gt;MN: Execute module
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    MN--&gt;&gt;CN: Return JSON result {changed, rc, stdout}
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    CN-&gt;&gt;MN: Remove module temp files
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    CN-&gt;&gt;MN: SSH disconnect
 </code></pre></div></p>
 <hr />
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
 <p>Roles provide a structured, reusable packaging format bundling tasks, handlers, variables, templates, and files.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>roles/
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>└── nginx/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ├── defaults/main.yml
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    ├── vars/main.yml
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    ├── tasks/main.yml
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    ├── handlers/main.yml
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    ├── templates/
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    ├── files/
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    ├── meta/main.yml
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    └── molecule/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>roles/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>└── nginx/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    ├── defaults/main.yml
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    ├── vars/main.yml
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    ├── tasks/main.yml
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    ├── handlers/main.yml
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    ├── templates/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    ├── files/
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    ├── meta/main.yml
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    └── molecule/
 </code></pre></div>
 <hr />
 <h2 id="collections">Collections<a class="headerlink" href="#collections" title="Permanent link">&para;</a></h2>
@@ -3671,13 +3672,13 @@ Ansible is an agentless IT automation engine that automates provisioning, config
 <hr />
 <h2 id="execution-environments">Execution Environments<a class="headerlink" href="#execution-environments" title="Permanent link">&para;</a></h2>
 <p>Since Ansible Automation Platform 2.0, Ansible runs inside container images called Execution Environments (EEs). EEs bundle ansible-core, Python dependencies, and collection dependencies into an immutable image.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ansible-navigator<span class="w"> </span>run<span class="w"> </span>site.yml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--eei<span class="w"> </span>registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel9:latest<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--mode<span class="w"> </span>stdout
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ansible-builder<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--file<span class="w"> </span>execution-environment.yml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>--tag<span class="w"> </span>my-org/custom-ee:1.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ansible-navigator<span class="w"> </span>run<span class="w"> </span>site.yml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--eei<span class="w"> </span>registry.redhat.io/ansible-automation-platform-24/ee-supported-rhel9:latest<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--mode<span class="w"> </span>stdout
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ansible-builder<span class="w"> </span>build<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--file<span class="w"> </span>execution-environment.yml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--tag<span class="w"> </span>my-org/custom-ee:1.0
 </code></pre></div>
 
 

@@ -3509,55 +3509,56 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
     N1 --&gt; NFS
     N2 --&gt; NFS
     N3 --&gt; NFS</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Jira — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                   Jira Request and Data Flow                                  │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Browser → LB → Tomcat (Jira app) → DB read/write; attachments via NFS             │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Issue create: HTTP POST → workflow engine → DB insert → Lucene index update          │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          JQL search: parse query → Lucene search → fetch issue data from DB → render          │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │            Notifications: issue event → notification scheme → email via SMTP relay            │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Jira processes issue events synchronously; indexing and notifications are async                    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │          HTTP Flow          │  │       Workflow Engine       │  │         Search Flow         │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         Browser → LB        │  │      Transition trigger     │  │          JQL parse          │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         LB → Tomcat         │  │       Condition check       │  │         Lucene query        │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Auth check         │  │        Validator run        │  │        Fetch from DB        │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        DB query/write       │  │        Post function        │  │      Permission filter      │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │         Lucene index        │  │        Status update        │  │       Response render       │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │       Notify via SMTP       │  │       Assign / comment      │  │          Pagination         │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Tomcat JVM VMs · PostgreSQL VM · NFS home · SMTP relay for notifications                             │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Workflow engine = Jira state machine; processes transitions, conditions, validators, post functions  │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Transition      = workflow step moving issue from one status to another                              │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Condition       = rule checked before transition is allowed (e.g. user must be assignee)             │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Validator       = checks field values before transition executes                                     │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Post function   = action executed after transition (e.g. assign to role, fire webhook)               │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  JQL             = Jira Query Language; parsed to Lucene query for issue search                       │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Lucene index    = inverted index of issue fields; stored on NFS shared home                          │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Permission filter = search results filtered by current user project/issue permissions                │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Notification scheme = defines which events trigger email and to which recipients                     │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SMTP relay      = outgoing mail server; Jira sends notifications via configured relay                │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Ehcache         = distributed cache; stores resolved permissions and issue data                      │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>NFS<span class="w"> </span>mount<span class="w"> </span>options:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sb">```</span>text
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>nfs-server:/jira-shared<span class="w"> </span>/var/atlassian/application-data/jira/shared<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>nfs4<span class="w"> </span>rw,sync,hard,intr,noatime,rsize<span class="o">=</span><span class="m">131072</span>,wsize<span class="o">=</span><span class="m">131072</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+┌───────────────────────────────────────── Jira — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Jira Request and Data Flow                                  │   │
+│   │             Browser → LB → Tomcat (Jira app) → DB read/write; attachments via NFS             │   │
+│   │          Issue create: HTTP POST → workflow engine → DB insert → Lucene index update          │   │
+│   │          JQL search: parse query → Lucene search → fetch issue data from DB → render          │   │
+│   │            Notifications: issue event → notification scheme → email via SMTP relay            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Jira processes issue events synchronously; indexing and notifications are async                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          HTTP Flow          │  │       Workflow Engine       │  │         Search Flow         │   │
+│   │         Browser → LB        │  │      Transition trigger     │  │          JQL parse          │   │
+│   │         LB → Tomcat         │  │       Condition check       │  │         Lucene query        │   │
+│   │          Auth check         │  │        Validator run        │  │        Fetch from DB        │   │
+│   │        DB query/write       │  │        Post function        │  │      Permission filter      │   │
+│   │         Lucene index        │  │        Status update        │  │       Response render       │   │
+│   │       Notify via SMTP       │  │       Assign / comment      │  │          Pagination         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Tomcat JVM VMs · PostgreSQL VM · NFS home · SMTP relay for notifications                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Workflow engine = Jira state machine; processes transitions, conditions, validators, post functions  │
+│  Transition      = workflow step moving issue from one status to another                              │
+│  Condition       = rule checked before transition is allowed (e.g. user must be assignee)             │
+│  Validator       = checks field values before transition executes                                     │
+│  Post function   = action executed after transition (e.g. assign to role, fire webhook)               │
+│  JQL             = Jira Query Language; parsed to Lucene query for issue search                       │
+│  Lucene index    = inverted index of issue fields; stored on NFS shared home                          │
+│  Permission filter = search results filtered by current user project/issue permissions                │
+│  Notification scheme = defines which events trigger email and to which recipients                     │
+│  SMTP relay      = outgoing mail server; Jira sends notifications via configured relay                │
+│  Ehcache         = distributed cache; stores resolved permissions and issue data                      │
+│  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```bash
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>NFS mount options:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```text
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  nfs4 rw,sync,hard,intr,noatime,rsize=131072,wsize=131072 0 0
 </code></pre></div></p>
 <h3 id="distributed-cache-hazelcast">Distributed Cache (Hazelcast)<a class="headerlink" href="#distributed-cache-hazelcast" title="Permanent link">&para;</a></h3>
 <p>Jira Data Center uses Hazelcast for in-cluster cache invalidation and distributed locking.</p>
@@ -3582,17 +3583,17 @@ How It Works reference covering Deployment Models, Data Center Reference Archite
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /var/atlassian/application-data/jira/cluster.properties</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">jira.node.id</span><span class="o">=</span><span class="s">jira-app-01</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">jira.shared.home</span><span class="o">=</span><span class="s">/var/atlassian/application-data/jira/shared</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /var/atlassian/application-data/jira/cluster.properties</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="na">jira.node.id</span><span class="o">=</span><span class="s">jira-app-01</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="na">jira.shared.home</span><span class="o">=</span><span class="s">/var/atlassian/application-data/jira/shared</span>
 </code></pre></div>
 <hr />
 <h2 id="clustering">Clustering<a class="headerlink" href="#clustering" title="Permanent link">&para;</a></h2>
 <h3 id="node-registration">Node Registration<a class="headerlink" href="#node-registration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Check active cluster nodes</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">node_name</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">last_heartbeat</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">clusternodeinfo</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">last_heartbeat</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Check active cluster nodes</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">node_id</span><span class="p">,</span><span class="w"> </span><span class="n">node_name</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">last_heartbeat</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">clusternodeinfo</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">last_heartbeat</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="cluster-traffic-flow">Cluster Traffic Flow<a class="headerlink" href="#cluster-traffic-flow" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>sequenceDiagram

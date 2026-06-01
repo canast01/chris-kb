@@ -4633,62 +4633,99 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 <p>Protected Site                        Recovery Site
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
-┌─────────────────────┐               ┌─────────────────────┐
-│  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
-│  SRM Server         │◄──── TCP 9086 ─►│  SRM Server         │
-│  ESXi Hosts         │               │  ESXi Hosts         │
-│  Production VMs     │               │  Placeholder VMs    │
-│  Storage Array A    │               │  Storage Array B    │
-└─────────────────────┘               └─────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
-</code></pre></div>
-         │                                      │
-         └──── Replication (ABR or VR) ─────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  SRM orchestrates VM failover between a protected site and recovery site using                        │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  replication (vSphere Replication or array-based) and recovery plans.                                 │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                                                                                                       │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │                Protected Site                │  │                Recovery Site                │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │             SRM Server: primary              │  │             SRM Server: recovery            │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │           VMs: production running            │  │            Replicas: powered off            │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │           Replication: vSR or ABR            │  │           Recovery plan: failover           │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │           Site pair: bidirectional           │  │          Test: no production impact         │   │
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  Site pair connects two SRM servers; recovery plans define failover order and steps.                  │
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │           Recovery Plan Execution            │  │              Replication Types              │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │        Test: isolated bubble network         │  │           vSR: vSphere Replication          │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │          Planned: graceful failover          │  │           ABR: array-based SAN rep          │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │          Disaster: forced failover           │  │              RPO: vSR 5min–24h              │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │          Failback: reprotect + run           │  │              ABR: near-zero RPO             │   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│                                                                                                       │
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  SRM Servers run as Windows VMs on vCenter; replication traffic uses dedicated network                │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  or SAN replication; sites connected by WAN/MPLS/dark fibre.                                          │
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  SRM Server    = Windows VM; Horizon-like broker for DR orchestration                                 │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  Site pair     = bidirectional connection between two SRM servers                                     │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  Recovery plan = ordered list of VMs + steps for failover                                             │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  vSR           = vSphere Replication; host-based async replication                                    │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  ABR           = Array-Based Replication; SAN-level sync/async                                        │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  RPO           = Recovery Point Objective; max data age at recovery                                   │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  Test failover = runs in bubble network; does not impact production                                   │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  Planned failover= graceful; sync replication, then failover                                          │
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  Disaster failover= forced; uses last available replica state                                         │
-<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  Failback      = reprotect recovery site as new protected site                                        │
-<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  Bubble network= isolated test network; no production routing                                         │
-<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  Reprotect     = reverse replication direction after failover                                         │
-<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
-<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM orchestrates VM failover between a protected site and recovery site using                        │
+│  replication (vSphere Replication or array-based) and recovery plans.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Protected Site                │  │                Recovery Site                │   │
+│   │             SRM Server: primary              │  │             SRM Server: recovery            │   │
+│   │           VMs: production running            │  │            Replicas: powered off            │   │
+│   │           Replication: vSR or ABR            │  │           Recovery plan: failover           │   │
+│   │           Site pair: bidirectional           │  │          Test: no production impact         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Site pair connects two SRM servers; recovery plans define failover order and steps.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Recovery Plan Execution            │  │              Replication Types              │   │
+│   │        Test: isolated bubble network         │  │           vSR: vSphere Replication          │   │
+│   │          Planned: graceful failover          │  │           ABR: array-based SAN rep          │   │
+│   │          Disaster: forced failover           │  │              RPO: vSR 5min–24h              │   │
+│   │          Failback: reprotect + run           │  │              ABR: near-zero RPO             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Servers run as Windows VMs on vCenter; replication traffic uses dedicated network                │
+│  or SAN replication; sites connected by WAN/MPLS/dark fibre.                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM Server    = Windows VM; Horizon-like broker for DR orchestration                                 │
+│  Site pair     = bidirectional connection between two SRM servers                                     │
+│  Recovery plan = ordered list of VMs + steps for failover                                             │
+│  vSR           = vSphere Replication; host-based async replication                                    │
+│  ABR           = Array-Based Replication; SAN-level sync/async                                        │
+│  RPO           = Recovery Point Objective; max data age at recovery                                   │
+│  Test failover = runs in bubble network; does not impact production                                   │
+│  Planned failover= graceful; sync replication, then failover                                          │
+│  Disaster failover= forced; uses last available replica state                                         │
+│  Failback      = reprotect recovery site as new protected site                                        │
+│  Bubble network= isolated test network; no production routing                                         │
+│  Reprotect     = reverse replication direction after failover                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>         │                                      │
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>         └──── Replication (ABR or VR) ─────────┘
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  SRM orchestrates VM failover between a protected site and recovery site using                        │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  replication (vSphere Replication or array-based) and recovery plans.                                 │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │                Protected Site                │  │                Recovery Site                │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │             SRM Server: primary              │  │             SRM Server: recovery            │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │           VMs: production running            │  │            Replicas: powered off            │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │           Replication: vSR or ABR            │  │           Recovery plan: failover           │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           Site pair: bidirectional           │  │          Test: no production impact         │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Site pair connects two SRM servers; recovery plans define failover order and steps.                  │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│                                                                                                       │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Recovery Plan Execution            │  │              Replication Types              │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │        Test: isolated bubble network         │  │           vSR: vSphere Replication          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Planned: graceful failover          │  │           ABR: array-based SAN rep          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │          Disaster: forced failover           │  │              RPO: vSR 5min–24h              │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │          Failback: reprotect + run           │  │              ABR: near-zero RPO             │   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  SRM Servers run as Windows VMs on vCenter; replication traffic uses dedicated network                │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  or SAN replication; sites connected by WAN/MPLS/dark fibre.                                          │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                                                                       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SRM Server    = Windows VM; Horizon-like broker for DR orchestration                                 │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Site pair     = bidirectional connection between two SRM servers                                     │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Recovery plan = ordered list of VMs + steps for failover                                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  vSR           = vSphere Replication; host-based async replication                                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  ABR           = Array-Based Replication; SAN-level sync/async                                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  RPO           = Recovery Point Objective; max data age at recovery                                   │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Test failover = runs in bubble network; does not impact production                                   │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Planned failover= graceful; sync replication, then failover                                          │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Disaster failover= forced; uses last available replica state                                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Failback      = reprotect recovery site as new protected site                                        │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Bubble network= isolated test network; no production routing                                         │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Reprotect     = reverse replication direction after failover                                         │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│                                                                                                       │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 ```</p>
 <p><strong>Per-VM customization</strong> — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.</p>

@@ -4660,58 +4660,59 @@ ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Tro
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  └── DS Latency   &lt; 10ms  │ &gt; 20ms → investigate         │
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└──────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            /var/log/vmkernel.log             │  │             esxcli system stats             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              /var/log/hostd.log              │  │           esxcli network stat get           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │              /var/log/vpxa.log               │  │           esxcli storage core path          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            /var/log/fdm.log (HA)             │  │            esxcli vm process list           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            /scratch/log (SD/USB)             │  │            esxcli system process            │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Logs → esxcli live state → esxtop performance → support bundle for GSS.                              │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              esxtop Performance              │  │                Support Bundle               │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │            esxtop interactive TUI            │  │          vm-support -w /tmp/bundle          │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │             c=CPU, m=mem, d=disk             │  │           vCenter: Export Support           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            n=network, i=interrupt            │  │           Includes logs + configs           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │             batch mode: -b -n 5              │  │             Upload to VMware SR             │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │             DAVG &gt; 25ms = issue              │  │             Keep for 30 days min            │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  x86 hosts, SAN/NAS storage, management network, syslog server for logs                               │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  vmkernel.log = main ESXi kernel log; storage/network/crash events                                    │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  hostd.log   = host daemon log; VM operations, config changes                                         │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vpxa.log    = vCenter agent log; connection issues to vCenter                                        │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  fdm.log     = HA agent log; cluster membership and failover events                                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  esxtop      = real-time performance tool; CPU/mem/disk/net metrics                                   │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  DAVG        = device average latency; &gt; 25ms indicates storage issue                                 │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  KAVG        = kernel average latency; VMkernel queue delay                                           │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vm-support  = CLI tool to create ESXi diagnostic bundle                                              │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SR          = Service Request; VMware GSS support ticket                                             │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  /scratch    = persistent log path; on SD/USB hosts may be volatile                                   │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  batch mode  = esxtop -b -n N; captures N iterations non-interactively                                │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>### Collect Support Bundle
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>```bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vm-support -n -w /tmp/
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a># Or: vSphere Client → Host → Actions → Export System Logs
+┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
+│   │            /var/log/vmkernel.log             │  │             esxcli system stats             │   │
+│   │              /var/log/hostd.log              │  │           esxcli network stat get           │   │
+│   │              /var/log/vpxa.log               │  │           esxcli storage core path          │   │
+│   │            /var/log/fdm.log (HA)             │  │            esxcli vm process list           │   │
+│   │            /scratch/log (SD/USB)             │  │            esxcli system process            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Logs → esxcli live state → esxtop performance → support bundle for GSS.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              esxtop Performance              │  │                Support Bundle               │   │
+│   │            esxtop interactive TUI            │  │          vm-support -w /tmp/bundle          │   │
+│   │             c=CPU, m=mem, d=disk             │  │           vCenter: Export Support           │   │
+│   │            n=network, i=interrupt            │  │           Includes logs + configs           │   │
+│   │             batch mode: -b -n 5              │  │             Upload to VMware SR             │   │
+│   │             DAVG &gt; 25ms = issue              │  │             Keep for 30 days min            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS storage, management network, syslog server for logs                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmkernel.log = main ESXi kernel log; storage/network/crash events                                    │
+│  hostd.log   = host daemon log; VM operations, config changes                                         │
+│  vpxa.log    = vCenter agent log; connection issues to vCenter                                        │
+│  fdm.log     = HA agent log; cluster membership and failover events                                   │
+│  esxtop      = real-time performance tool; CPU/mem/disk/net metrics                                   │
+│  DAVG        = device average latency; &gt; 25ms indicates storage issue                                 │
+│  KAVG        = kernel average latency; VMkernel queue delay                                           │
+│  vm-support  = CLI tool to create ESXi diagnostic bundle                                              │
+│  SR          = Service Request; VMware GSS support ticket                                             │
+│  /scratch    = persistent log path; on SD/USB hosts may be volatile                                   │
+│  batch mode  = esxtop -b -n N; captures N iterations non-interactively                                │
+│  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Collect Support Bundle
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>vm-support -n -w /tmp/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Output: /tmp/esx-&lt;hostname&gt;-&lt;date&gt;.tgz
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Or: vSphere Client → Host → Actions → Export System Logs
 </code></pre></div></p>
 <h2 id="performance-troubleshooting">Performance Troubleshooting<a class="headerlink" href="#performance-troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="common-symptoms">Common Symptoms<a class="headerlink" href="#common-symptoms" title="Permanent link">&para;</a></h3>
@@ -4761,15 +4762,15 @@ ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Tro
 </tbody>
 </table>
 <h3 id="esxtop">esxtop<a class="headerlink" href="#esxtop" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxtop
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxtop
 </code></pre></div>
 <p>Interactive mode keys:
 - <code>c</code> — CPU view
 - <code>m</code> — Memory view
 - <code>d</code> — Disk view
 - <code>n</code> — Network view</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Batch capture (60 seconds, 2-second intervals)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Batch capture (60 seconds, 2-second intervals)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop.csv
 </code></pre></div>
 <h3 id="first-actions">First Actions<a class="headerlink" href="#first-actions" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4807,9 +4808,9 @@ ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Tro
 <li>Isolate the failing dependency (DNS, NTP, certificate, storage)</li>
 <li>Apply fix or escalate with evidence</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Restart management agents if host is accessible via SSH or console</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restart management agents if host is accessible via SSH or console</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>/etc/init.d/vpxa<span class="w"> </span>restart
 </code></pre></div>
 <h2 id="maintenance-mode-validation">Maintenance Mode Validation<a class="headerlink" href="#maintenance-mode-validation" title="Permanent link">&para;</a></h2>
 <p>Use before placing a host into maintenance mode and before returning it to service.</p>

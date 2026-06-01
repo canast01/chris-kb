@@ -3590,63 +3590,64 @@
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Any changes made before the issue (upgrade, configuration change, network change)</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Steps already taken to troubleshoot</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────── Brocade SANnav — Troubleshooting Escalation ─────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SANnav escalation: internal L2/L3 → Broadcom TAC with log bundle, case, and access.                  │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           Internal Escalation Path           │  │           Broadcom TAC Escalation           │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          L1 → L2: basic checks done          │  │         Open case: support.broadcom         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        L2 → L3: log bundle + timeline        │  │          Provide: SANnav + FOS vers         │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         L3 → TAC: full data package          │  │          Sev-1: SANnav unreachable          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Incident bridge for Sev-1           │  │          Remote: TAC SSH to SANnav          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          No changes during incident          │  │           RCA expected after close          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Collect SANnav logs and switch supportsave before contacting Broadcom TAC.                           │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Escalation Data Package            │  │           Severity Classification           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         SANnav logs: journalctl dump         │  │          Sev-1: SANnav down; fabric         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         DB status: sannav-admin out          │  │           Sev-2: zone push failing          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            FOS version per switch            │  │          Sev-3: monitoring partial          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │        supportsave from all switches         │  │         Sev-4: question/enhancement         │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            Audit log export: CSV             │  │          CSAT survey after closure          │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  SANnav VM · management Ethernet · serial console access · Broadcom upload endpoint                   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  journalctl dump = full SANnav service log export; share compressed to TAC                            │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  sannav-admin    = SANnav VM CLI; db-status and status output needed for TAC                          │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  supportsave     = FOS diagnostic bundle; one per switch in the affected fabric                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Audit log CSV   = SANnav action log export; shows what changed before incident                       │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Sev-1           = SANnav completely down; fabric management unavailable                              │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Sev-2           = SANnav partially working; zone changes or discovery failing                        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  TAC remote      = Broadcom engineer SSHs into SANnav VM with customer permission                     │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  RCA             = Root Cause Analysis document; Broadcom provides after Sev-1 close                  │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  CSAT            = Customer Satisfaction survey; sent by Broadcom after case closure                  │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  FOS version     = Fabric OS version; compatibility matrix needed for SANnav match                    │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Incident bridge = conference call with all responders during active Sev-1 event                      │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  No changes      = freeze all fabric and SANnav changes during active incident                        │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">### For Performance Issues</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Collect resource stats over 10 minutes</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..10<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>free<span class="w"> </span>-h
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>df<span class="w"> </span>-h<span class="w"> </span>/opt/sannav
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>uptime
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>sleep<span class="w"> </span><span class="m">60</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">done</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/sannav-perf-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+┌───────────────────────────── Brocade SANnav — Troubleshooting Escalation ─────────────────────────────┐
+│                                                                                                       │
+│  SANnav escalation: internal L2/L3 → Broadcom TAC with log bundle, case, and access.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Escalation Path           │  │           Broadcom TAC Escalation           │   │
+│   │          L1 → L2: basic checks done          │  │         Open case: support.broadcom         │   │
+│   │        L2 → L3: log bundle + timeline        │  │          Provide: SANnav + FOS vers         │   │
+│   │         L3 → TAC: full data package          │  │          Sev-1: SANnav unreachable          │   │
+│   │          Incident bridge for Sev-1           │  │          Remote: TAC SSH to SANnav          │   │
+│   │          No changes during incident          │  │           RCA expected after close          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect SANnav logs and switch supportsave before contacting Broadcom TAC.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Escalation Data Package            │  │           Severity Classification           │   │
+│   │         SANnav logs: journalctl dump         │  │          Sev-1: SANnav down; fabric         │   │
+│   │         DB status: sannav-admin out          │  │           Sev-2: zone push failing          │   │
+│   │            FOS version per switch            │  │          Sev-3: monitoring partial          │   │
+│   │        supportsave from all switches         │  │         Sev-4: question/enhancement         │   │
+│   │            Audit log export: CSV             │  │          CSAT survey after closure          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SANnav VM · management Ethernet · serial console access · Broadcom upload endpoint                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  journalctl dump = full SANnav service log export; share compressed to TAC                            │
+│  sannav-admin    = SANnav VM CLI; db-status and status output needed for TAC                          │
+│  supportsave     = FOS diagnostic bundle; one per switch in the affected fabric                       │
+│  Audit log CSV   = SANnav action log export; shows what changed before incident                       │
+│  Sev-1           = SANnav completely down; fabric management unavailable                              │
+│  Sev-2           = SANnav partially working; zone changes or discovery failing                        │
+│  TAC remote      = Broadcom engineer SSHs into SANnav VM with customer permission                     │
+│  RCA             = Root Cause Analysis document; Broadcom provides after Sev-1 close                  │
+│  CSAT            = Customer Satisfaction survey; sent by Broadcom after case closure                  │
+│  FOS version     = Fabric OS version; compatibility matrix needed for SANnav match                    │
+│  Incident bridge = conference call with all responders during active Sev-1 event                      │
+│  No changes      = freeze all fabric and SANnav changes during active incident                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### For Performance Issues
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Collect resource stats over 10 minutes
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>for i in {1..10}; do
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  echo &quot;=== $(date) ===&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  free -h
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  df -h /opt/sannav
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  uptime
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  sleep 60
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>done &gt; /tmp/sannav-perf-$(date +%Y%m%d).txt
 </code></pre></div></p>
 <hr />
 <h2 id="engaging-broadcom-tac-effectively">Engaging Broadcom TAC Effectively<a class="headerlink" href="#engaging-broadcom-tac-effectively" title="Permanent link">&para;</a></h2>
@@ -3669,30 +3670,30 @@
 <hr />
 <h2 id="common-support-case-information-template">Common Support Case Information Template<a class="headerlink" href="#common-support-case-information-template" title="Permanent link">&para;</a></h2>
 <p>Use the following template as the case description when opening a new SANnav support case:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SANnav Management Portal</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.x.x (sannav version output)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">Hypervisor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMware ESXi 7.0 U3</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">Managed switches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">list models and FOS versions</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">Problem description</span><span class="p">:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p p-Indicator">[</span><span class="nv">Concise description of the symptom — what is broken</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">what error message is shown</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">Business impact</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Unable</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">zone</span><span class="nv"> </span><span class="s">changes;</span><span class="nv"> </span><span class="s">fabric</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">operational</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">no</span><span class="nv"> </span><span class="s">zoning</span><span class="nv"> </span><span class="s">operations</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">performed&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nt">When did the issue start</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p p-Indicator">[</span><span class="nv">Date and time; what was happening at that time</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nt">What changed before the issue</span><span class="p">:</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SANnav</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">upgraded</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">2.3.0</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">2.4.0</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">14:00</span><span class="nv"> </span><span class="s">UTC</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">2026-05-06&quot;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nt">Steps taken</span><span class="p">:</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="l l-Scalar l-Scalar-Plain">1. [what was tried]</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="l l-Scalar l-Scalar-Plain">2. [what was tried]</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="nt">Attachments</span><span class="p">:</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sannav-diag-20260507.tar.gz (support bundle)</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery-issue.log</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SANnav Management Portal</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.x.x (sannav version output)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">Hypervisor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMware ESXi 7.0 U3</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">Managed switches</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">list models and FOS versions</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nt">Problem description</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p p-Indicator">[</span><span class="nv">Concise description of the symptom — what is broken</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">what error message is shown</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">Business impact</span><span class="p">:</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Unable</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">zone</span><span class="nv"> </span><span class="s">changes;</span><span class="nv"> </span><span class="s">fabric</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">operational</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">no</span><span class="nv"> </span><span class="s">zoning</span><span class="nv"> </span><span class="s">operations</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">performed&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nt">When did the issue start</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p p-Indicator">[</span><span class="nv">Date and time; what was happening at that time</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nt">What changed before the issue</span><span class="p">:</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p p-Indicator">[</span><span class="nv">e.g.</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;SANnav</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">upgraded</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">2.3.0</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">2.4.0</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">14:00</span><span class="nv"> </span><span class="s">UTC</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">2026-05-06&quot;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nt">Steps taken</span><span class="p">:</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="l l-Scalar l-Scalar-Plain">1. [what was tried]</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="l l-Scalar l-Scalar-Plain">2. [what was tried]</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nt">Attachments</span><span class="p">:</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sannav-diag-20260507.tar.gz (support bundle)</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">discovery-issue.log</span>
 </code></pre></div>
 
 

@@ -4365,53 +4365,53 @@ EC2 — Images, Volumes & Snapshots reference.
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                                        │  (cross-region)  │
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                        └──────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── AWS CLI — EC2 Storage ────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  EBS volume and snapshot CLI commands for provisioning, attaching, and DR operations.                 │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Volume Operations               │  │              Volume Inspection              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           create-volume: provision           │  │            describe-volumes: list           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         attach-volume: mount to EC2          │  │            describe-volume-status           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │            detach-volume: unmount            │  │          describe-volume-attribute          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          modify-volume: resize/type          │  │        describe-volumes-modifications       │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            delete-volume: remove             │  │          enable-volume-io: recover          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Volumes created and attached; modify-volume resizes without downtime on Nitro                        │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Snapshot Operations              │  │                  Encryption                 │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        create-snapshot: point-in-time        │  │          create-volume --encrypted          │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           describe-snapshots: list           │  │         copy-snapshot: encrypt copy         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         copy-snapshot: cross-region          │  │        modify-ebs-default-encryption        │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            delete-snapshot: purge            │  │          --kms-key-id: specify CMK          │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         restore-snapshot-tier: thaw          │  │       describe-ebs-encryption-default       │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  EBS storage hardware · Nitro hypervisor · KMS HSM · S3 (snapshot storage)                            │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  EBS             = Elastic Block Store; persistent block storage for EC2                              │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  modify-volume   = Online resize or type change; no detach needed on Nitro instances                  │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  enable-volume-io= Re-enables I/O on a volume after a potential data inconsistency                    │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Snapshot        = Incremental backup of EBS volume stored in S3                                      │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  copy-snapshot   = Copies snapshot to another region for DR                                           │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  restore-snapshot-tier= Restores archived snapshot from S3 Glacier to standard tier                   │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  CMK             = Customer-Managed Key in KMS; used to encrypt EBS volumes                           │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  modify-ebs-default-encryption= Sets account-level default to encrypt all new volumes                 │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Volume type     = gp3 (general), io2 (IOPS), st1 (throughput), sc1 (cold)                            │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  gp3             = Default SSD volume; baseline 3000 IOPS, 125 MB/s throughput                        │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  io2             = High-performance SSD; up to 64,000 IOPS; provisioned IOPS                          │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Nitro           = AWS hypervisor; allows online volume modifications without reboot                  │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-```</p>
+┌──────────────────────────────────────── AWS CLI — EC2 Storage ────────────────────────────────────────┐
+│                                                                                                       │
+│  EBS volume and snapshot CLI commands for provisioning, attaching, and DR operations.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Volume Operations               │  │              Volume Inspection              │   │
+│   │           create-volume: provision           │  │            describe-volumes: list           │   │
+│   │         attach-volume: mount to EC2          │  │            describe-volume-status           │   │
+│   │            detach-volume: unmount            │  │          describe-volume-attribute          │   │
+│   │          modify-volume: resize/type          │  │        describe-volumes-modifications       │   │
+│   │            delete-volume: remove             │  │          enable-volume-io: recover          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Volumes created and attached; modify-volume resizes without downtime on Nitro                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Snapshot Operations              │  │                  Encryption                 │   │
+│   │        create-snapshot: point-in-time        │  │          create-volume --encrypted          │   │
+│   │           describe-snapshots: list           │  │         copy-snapshot: encrypt copy         │   │
+│   │         copy-snapshot: cross-region          │  │        modify-ebs-default-encryption        │   │
+│   │            delete-snapshot: purge            │  │          --kms-key-id: specify CMK          │   │
+│   │         restore-snapshot-tier: thaw          │  │       describe-ebs-encryption-default       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EBS storage hardware · Nitro hypervisor · KMS HSM · S3 (snapshot storage)                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EBS             = Elastic Block Store; persistent block storage for EC2                              │
+│  modify-volume   = Online resize or type change; no detach needed on Nitro instances                  │
+│  enable-volume-io= Re-enables I/O on a volume after a potential data inconsistency                    │
+│  Snapshot        = Incremental backup of EBS volume stored in S3                                      │
+│  copy-snapshot   = Copies snapshot to another region for DR                                           │
+│  restore-snapshot-tier= Restores archived snapshot from S3 Glacier to standard tier                   │
+│  CMK             = Customer-Managed Key in KMS; used to encrypt EBS volumes                           │
+│  modify-ebs-default-encryption= Sets account-level default to encrypt all new volumes                 │
+│  Volume type     = gp3 (general), io2 (IOPS), st1 (throughput), sc1 (cold)                            │
+│  gp3             = Default SSD volume; baseline 3000 IOPS, 125 MB/s throughput                        │
+│  io2             = High-performance SSD; up to 64,000 IOPS; provisioned IOPS                          │
+│  Nitro           = AWS hypervisor; allows online volume modifications without reboot                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div></p>
 
 
 
