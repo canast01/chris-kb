@@ -111,7 +111,50 @@ while (gr.next()) {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## 2. MID Server Disconnected
+
+### Symptoms
+
+- MID Server record in ServiceNow shows **Down** or **Validated: No**
+- ECC Queue Input records accumulating with no processing
+- Discovery jobs or IntegrationHub spokes failing with "No MID Server available"
+- Alert emails from ServiceNow: "MID Server is not responding"
+
+### Common Root Causes
+
+| Cause | Indicator |
+|---|---|
+| MID Server service stopped | Host-level process check: no `agent.jar` process |
+| Network block added | Outbound HTTPS to instance URL blocked at firewall |
+| Expired MID credentials | `wrapper.log` shows 401 Unauthorized from instance |
+| JVM out of memory | Heap OOM in `wrapper.log`; service crash loop |
+| Instance URL changed | `config.xml` still points to old URL |
+
+### Diagnostic Steps
+
+```bash
+# Linux — check if MID service is running
+systemctl status mid-server
+journalctl -u mid-server -n 50
+
+# Check wrapper.log for auth or connectivity errors
+tail -100 /opt/servicenow/mid/agent/logs/wrapper.log | grep -i "error\|warn\|401\|connect"
+
+# Verify connectivity to instance
+curl -sk https://<instance>.service-now.com/api/now/table/sys_user?sysparm_limit=1 -o /dev/null -w "%{http_code}\n"
+```
+
 ```powershell
+# Windows — check service
+Get-Service -Name "snc_mid" | Select-Object Status, StartType
+Start-Service -Name "snc_mid"
+
+# View recent log lines
+Get-Content "C:\ServiceNow\MID Server\agent\logs\wrapper.log" -Tail 50 | Select-String "ERROR|WARN|401"
+```
 
 ### Resolution
 

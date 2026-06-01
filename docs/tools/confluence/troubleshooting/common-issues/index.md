@@ -102,7 +102,26 @@ jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+
+---
+
+## 2. Slow Page Performance
+
+**Symptoms**
+
+- Pages take > 5 seconds to load; `pageload` timer in browser > 5 000 ms
+- PostgreSQL slow query log shows queries > 1 s on Confluence tables
+- JVM GC log shows frequent GC pauses (> 500 ms)
+- High CPU on Confluence host during page renders
+
+**Common Root Causes**
+
+| Cause | Check |
+|---|---|
+| Missing DB index on a Confluence table | `pg_stat_activity` slow queries; `EXPLAIN ANALYZE` |
+| JQL macro fetching large result sets | Edit page → inspect Jira Issues macros; reduce row limit |
+| JVM heap too small → GC pressure | GC log pause frequency; increase `-Xmx` in `setenv.sh` |
+| Macro performance warning suppressed | Enable `com.atlassian.confluence.macro = WARN` in logging |
 
 **Fix**
 

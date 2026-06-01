@@ -141,7 +141,63 @@ function New-RASRImage {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## Test-RASRImageAge
+
+Checks whether the most-recent RASR image on a share was created within a configurable maximum-age window. Returns a non-zero exit code and writes an event log entry if the latest image is stale.
+
 ```powershell
+<#
+.SYNOPSIS
+    Checks whether the most-recent RASR image on a share is within the maximum age threshold.
+.PARAMETER SharePath
+    UNC path to the RASR image directory.
+.PARAMETER MaxAgeDays
+    Maximum acceptable age (in days) for the most-recent image. Default: 1.
+.OUTPUTS
+    $true if image age is within threshold; $false (with event log warning) if stale or missing.
+#>
+function Test-RASRImageAge {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$SharePath,
+
+        [int]$MaxAgeDays = 1
+    )
+
+    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" -ErrorAction Stop |
+              Sort-Object LastWriteTime -Descending
+
+    if ($images.Count -eq 0) {
+        Write-Warning "No RASR images found at $SharePath"
+        Write-EventLog -LogName Application -Source "RASR-Backup" -EntryType Warning `
+                       -EventId 9002 -Message "No RASR images found at $SharePath"
+        return $false
+    }
+
+    $latest    = $images[0]
+    $ageDays   = ((Get-Date) - $latest.LastWriteTime).TotalDays
+    $threshold = $MaxAgeDays
+
+    if ($ageDays -gt $threshold) {
+        $msg = "RASR image age check FAILED: latest image '$($latest.Name)' is $([math]::Round($ageDays,1)) days old (threshold: $threshold days)"
+        Write-Warning $msg
+        Write-EventLog -LogName Application -Source "RASR-Backup" -EntryType Warning `
+                       -EventId 9003 -Message $msg
+        return $false
+    }
+
+    Write-Host "RASR image age OK: '$($latest.Name)' is $([math]::Round($ageDays,2)) days old (threshold: $threshold days)"
+    return $true
+}
+
+# Example:
+# Test-RASRImageAge -SharePath "\\nas01\rasr-images\SERVER01" -MaxAgeDays 1
+# if (-not (Test-RASRImageAge ...)) { Send-MailMessage ... }
+```
 
 ---
 
@@ -192,7 +248,7 @@ function Remove-OldRASRImages {
 # Example:
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -RetentionCount 4
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -WhatIf
-
+```
 
 ---
 

@@ -22,7 +22,7 @@ done
 
 echo
 echo "Checking required files..."
-for f in mkdocs.yml docs/index.md docs/assets/stylesheets/extra.css; do
+for f in mkdocs.yml docs/index.md docs/stylesheets/extra.css; do
   if [ -f "$f" ]; then
     echo "OK: $f"
   else
