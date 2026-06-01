@@ -1,4 +1,4 @@
-# Dell AIOps Scripts
+# Dell AIOps — Scripts
 
 <div class="kb-summary">
 Dell AIOps Scripts reference covering Authentication, Forward Critical Recommendations to ServiceNow, Weekly Health Score Report, Script Inventory.

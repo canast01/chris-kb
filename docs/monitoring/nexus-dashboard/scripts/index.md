@@ -1,4 +1,4 @@
-# Nexus Dashboard Scripts
+# Nexus Dashboard — Monitoring Scripts
 
 <div class="kb-summary">
 Nexus Dashboard Scripts reference covering Authentication, Fabric Fault Export, ACI Fault Summary (via APIC), Forward P1/P2 Faults to ServiceNow, Script Inventory.

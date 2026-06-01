@@ -1,4 +1,4 @@
-# InsightIQ Scripts
+# InsightIQ — Scripts
 
 <div class="kb-summary">
 InsightIQ Scripts reference covering Authentication, Threshold Alert Forwarding (SNMP), Automated Weekly Report Generation, Script Inventory, OneFS Performance Query (Direct API).

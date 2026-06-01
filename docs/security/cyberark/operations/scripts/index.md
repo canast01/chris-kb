@@ -1,4 +1,4 @@
-# CyberArk Scripts
+# CyberArk — Scripts
 
 
 <div class="kb-summary">

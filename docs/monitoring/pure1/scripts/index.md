@@ -1,4 +1,4 @@
-# Pure1 Scripts
+# Pure1 — Scripts
 
 <div class="kb-summary">
 Pure1 Scripts reference covering Authentication, Active Alert Export, Pure1 Meta Anomaly Query, Exponential Backoff for Rate Limiting, Script Inventory.

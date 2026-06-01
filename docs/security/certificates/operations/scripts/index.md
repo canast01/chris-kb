@@ -1,4 +1,4 @@
-# Certificates Scripts
+# Certificates — Scripts
 
 
 <div class="kb-summary">

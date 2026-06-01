@@ -1,4 +1,4 @@
-# CloudIQ Scripts
+# CloudIQ — Monitoring Scripts
 
 <div class="kb-summary">
 CloudIQ Scripts reference covering Authentication, Capacity Trend Query, Create ServiceNow Incident on CRITICAL Alert (Event-Driven), Script Inventory, Rate Limiting.

@@ -1,4 +1,4 @@
-# Aria Operations Scripts
+# Aria Operations — Monitoring Scripts
 
 <div class="kb-summary">
 Aria Operations Scripts reference covering Authentication, Push Custom Metric, Script Inventory, Token Refresh.
