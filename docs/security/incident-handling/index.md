@@ -164,15 +164,15 @@ Incident Report (template):
 - Remediation items (with owners and due dates):
 ```
 
-## Escalation Contacts (fill in)
+## Escalation Contacts
 
 | Role | Contact | When to Escalate |
 |---|---|---|
-| Security Lead | | Any P1/P2 |
-| CISO | | P1 — confirmed breach |
-| Legal / Compliance | | Any data exfiltration risk |
-| PR / Comms | | External disclosure required |
-| Vendor TAC | | Platform-specific technical response |
+| Security Lead | _fill in_ | Any P1/P2 |
+| CISO | _fill in_ | P1 — confirmed breach |
+| Legal / Compliance | _fill in_ | Any data exfiltration risk |
+| PR / Comms | _fill in_ | External disclosure required |
+| Vendor TAC | _fill in_ | Platform-specific technical response |
 
 ## Key Notification Requirements
 
