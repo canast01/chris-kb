@@ -39,7 +39,6 @@ Capacity Check Flow
   │                fails — expand immediately           │
   └─────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
 │                                                                                                       │
 │    Run weekly and after any significant workload addition; forecast 90 days ahead                     │

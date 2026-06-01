@@ -20,7 +20,6 @@ Hierarchy:
       └── Space Permissions (who can access and edit within a space)
               └── Page Restrictions (who can view/edit a specific page)
 ```
-```text
 ┌───────────────────────────────────── Confluence — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

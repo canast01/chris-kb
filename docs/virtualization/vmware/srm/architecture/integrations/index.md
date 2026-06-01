@@ -60,28 +60,51 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### SRA for Pure Storage
-
-Pure Storage FlashArray SRA is available from Pure Storage support portal.
-
-**Installation (SRM appliance):**
-
-```bash
-# Download SRA bundle from Pure Storage portal
-# File: pure-sra-<version>-vmware.tar.gz
-
-# Upload to SRM appliance and install
-scp pure-sra-4.0.0-vmware.tar.gz root@srm-appliance:/tmp/
-
-ssh root@srm-appliance
-cd /tmp
-tar xzf pure-sra-4.0.0-vmware.tar.gz
-./install.sh
-# Installs SRA to /opt/vmware/srm/storage/sra/Pure/
-
-# Restart SRM service to detect new SRA
-systemctl restart vmware-dr
+┌────────────────────────────────────── VMware SRM — Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM integrates with vCenter, vSphere Replication, storage arrays, NSX for network                    │
+│  remapping, and Aria Operations for DR health monitoring.                                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             vCenter Integration              │  │           Replication Integration           │   │
+│   │            Registered per vCenter            │  │         vSphere Replication: native         │   │
+│   │        VM inventory: protection grps         │  │              SRA: array plug-in             │   │
+│   │         vCenter events: failover log         │  │           Dell EMC: SRA available           │   │
+│   │           Alarms: DR plan test due           │  │            NetApp: SnapMirror SRA           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SRA enables array-based replication; without it, only vSphere Replication is available.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Network Integration              │  │            Monitoring Integration           │   │
+│   │             NSX: network mapping             │  │            Aria Ops: SRM adapter            │   │
+│   │         IP customisation: re-IP VMs          │  │           Compliance: test alerts           │   │
+│   │           vDS: port group mapping            │  │         Email: plan run notification        │   │
+│   │            Stretched L2: no re-IP            │  │         CMDB: CI update on failover         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  WAN link between sites carries replication traffic; network mapping ensures VMs                      │
+│  connect to correct networks after failover.                                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRA           = Storage Replication Adapter; array vendor plug-in for SRM                            │
+│  vSphere Rep   = host-based replication; native SRM integration                                       │
+│  SnapMirror SRA= NetApp SRA; uses SnapMirror for array replication                                    │
+│  Network mapping= map protected-site portgroup to recovery-site portgroup                             │
+│  IP customisation= script to re-IP VMs after failover to recovery site                                │
+│  Stretched L2  = same subnet both sites; no IP change needed                                          │
+│  vDS port group= vSphere Distributed Switch segment; mapped in SRM                                    │
+│  NSX segment   = overlay network; SRM can map NSX segments                                            │
+│  Aria Ops      = monitors SRM compliance and last test date                                           │
+│  CMDB          = Configuration Management DB; update CI on failover                                   │
+│  Protection group= set of VMs protected by same replication and plan                                  │
+│  Test due alarm = SRM reminds when DR test is overdue                                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Array Manager configuration for Pure:**

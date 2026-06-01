@@ -154,7 +154,6 @@ Set these as environment variables before running:
 ```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 ```
-```powershell
 ┌─────────────────────────────────────── RecoverPoint — Scripts ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

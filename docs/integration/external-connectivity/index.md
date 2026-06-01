@@ -56,7 +56,6 @@ FLOW:
 VM → pNIC1 or pNIC2 → Switch A or B → Core network
 → VPN Gateway → encrypted tunnel → AWS or Azure
 ```
-```text
 ┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

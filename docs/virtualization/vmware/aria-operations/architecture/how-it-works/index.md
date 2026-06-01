@@ -5,6 +5,51 @@
 How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, Core Internal Services and 3 more sections.
 </div>
 
+```
+┌────────────────────────────────────── How Aria Operations Works ──────────────────────────────────────┐
+│                                                                                                       │
+│  Metric collection via adapters, analytics engine processing, and dashboard rendering.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Collection Layer               │  │                Adapter Types                │   │
+│   │        Adapters poll sources via API         │  │          vSphere adapter (built-in)         │   │
+│   │          Collection interval: 5 min          │  │             vSAN management pack            │   │
+│   │        Remote collector offloads WAN         │  │             NSX management pack             │   │
+│   │          Push adapters via webhook           │  │           AWS/Azure cloud adapters          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Adapters collect; analytics engine correlates; dashboards and alerts surface insights.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Analytics Engine               │  │             Dashboards & Alerts             │   │
+│   │        Dynamic thresholds per object         │  │        Pre-built dashboards per role        │   │
+│   │          Capacity forecasting model          │  │            Custom widget builder            │   │
+│   │         Rightsizing recommendations          │  │          Alert: email/SNMP/webhook          │   │
+│   │         Compliance benchmark checks          │  │          Report: schedule + export          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster on vSphere; remote collectors per site; vCenter/NSX as metric sources                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter             = Plugin that polls a specific source (vCenter, NSX, cloud)                      │
+│  Collection Interval = Frequency of metric polling; default 5 minutes for vSphere                     │
+│  Remote Collector    = Lightweight vROps VM forwarding metrics from remote sites                      │
+│  Dynamic Threshold   = Self-learned baseline; alerts only on genuine anomalies                        │
+│  Capacity Forecast   = Time-series projection of when resources will be exhausted                     │
+│  Rightsizing         = Recommendation to reclaim idle CPU/RAM from over-provisioned VMs               │
+│  Compliance Benchmark= Policy check vs CIS/DISA/custom standard                                       │
+│  Dashboard           = Visual collection of widgets showing metric trends and alerts                  │
+│  Widget              = Individual chart or table on a dashboard; drag-and-drop layout                 │
+│  Alert               = Fired when symptom conditions in a policy are met                              │
+│  Webhook             = HTTP push notification from vROps to external ITSM or chat                     │
+│  Report              = Scheduled PDF/HTML export of dashboard or capacity data                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── How Aria Operations Works ──────────────────────────────────────┐
 │                                                                                                       │

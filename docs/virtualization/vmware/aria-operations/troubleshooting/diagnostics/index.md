@@ -5,6 +5,51 @@
 Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Reports, Related Sections.
 </div>
 
+```
+┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  Support bundle generation, log analysis, and REST API diagnostics for vROps.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Log File Diagnostics             │  │          REST API Diagnostic Checks         │   │
+│   │            /var/log/vmware/vcops/            │  │          GET /suite-api/api/health          │   │
+│   │         analytics.log: engine issues         │  │          GET /api/resources: count          │   │
+│   │        collector.log: adapter errors         │  │         GET /api/alerts: active list        │   │
+│   │         grep ERROR | tail to narrow          │  │         Compare before/after counts         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Logs reveal internal errors; REST API checks confirm cluster and collection health.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Support Bundle Generation           │  │             Cluster Diagnostics             │   │
+│   │            SSH: vcops-support gen            │  │          VAMI: Cluster status page          │   │
+│   │            VAMI: Admin > Support             │  │           cluster-mgmt-cli status           │   │
+│   │          Download ZIP from VAMI UI           │  │           Check node role + state           │   │
+│   │               Attach to GSS SR               │  │           Verify replica heartbeat          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster nodes on vSphere; SSH jump host; VAMI browser access on port 5480                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  analytics.log       = Engine log; check for out-of-memory or processing errors                       │
+│  collector.log       = Adapter log; records collection attempts and failures                          │
+│  vcops-support       = CLI command to generate full support bundle ZIP                                │
+│  Support Bundle      = Compressed log + config archive; mandatory for GSS SR                          │
+│  GET /health         = REST endpoint; returns cluster component health summary                        │
+│  GET /resources      = Returns monitored object count; drop indicates issue                           │
+│  GET /alerts         = Returns active alert list; useful for volume diagnosis                         │
+│  cluster-mgmt-cli    = SSH CLI tool showing node roles and cluster join state                         │
+│  Replica Heartbeat   = Periodic signal from replica to master; loss = HA risk                         │
+│  VAMI Support Page   = Browser interface to download bundle without SSH                               │
+│  grep ERROR          = First-pass log scan to identify exceptions quickly                             │
+│  GSS SR              = Support case; attach bundle and describe issue timeline                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

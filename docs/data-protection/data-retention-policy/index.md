@@ -26,7 +26,6 @@ flowchart LR
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
 ```
-```text
 ┌─────────────────────────────── Data Protection — Data Retention Policy ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

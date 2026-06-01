@@ -25,7 +25,6 @@ graph LR
     envVars --> tfProvider
     tfProvider --> cloudAPI
 ```
-```text
 ┌───────────────────────────────────── Terraform — Authentication ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform provider authentication: OIDC (CI), IAM instance profile (EC2), CLI profile (local) │   │

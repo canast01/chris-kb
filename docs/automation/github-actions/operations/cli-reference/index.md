@@ -30,7 +30,6 @@ apt update && apt install gh -y
 gh --version
 gh auth login
 ```
-```text
 ┌─────────────────────────────────── GitHub Actions — CLI Reference ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   GitHub CLI (gh) is the primary tool for interacting with GitHub Actions from the terminal   │   │

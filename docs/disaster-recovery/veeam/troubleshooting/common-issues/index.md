@@ -33,7 +33,6 @@ flowchart TD
     class q1,snapQ decision
     class fail terminal
 ```
-```powershell
 ┌──────────────────────────────────────── Veeam — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

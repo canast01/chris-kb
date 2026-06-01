@@ -49,7 +49,6 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
-```text
 ┌───────────────────────────────────────── Terraform — Scripts ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Terraform utility scripts: drift report, stale lock check, state backup, plan summary     │   │

@@ -28,7 +28,6 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 # Run Policy Analyzer (GUI tool) — compare live settings vs. baseline
 # PolicyAnalyzer.exe from SCT
 ```
-```text
 ┌───────────────────────────────────── Windows Server — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  OS hardening: CIS Benchmark baseline, GPO policies, attack surface reduction, Defender.              │

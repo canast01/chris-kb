@@ -23,7 +23,6 @@ graph TD
     svcAccount --> auditLog
     iamRole --> auditLog
 ```
-```text
 ┌─────────────────────────────────────── Python — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python access control: who can run scripts, API auth, file permissions, repo branch protection│   │

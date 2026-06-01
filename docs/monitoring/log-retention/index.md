@@ -49,23 +49,48 @@ Log Retention Policy reference covering journald Retention, Centralised Log Rete
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## journald Retention
-
-```bash
-# Current disk usage
-journalctl --disk-usage
-
-# Set retention in /etc/systemd/journald.conf:
-# SystemMaxUse=2G
-# MaxRetentionSec=90day
-
-# Apply immediately
-systemctl restart systemd-journald
-
-# Manual vacuum
-journalctl --vacuum-time=90d
-journalctl --vacuum-size=2G
+┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Log Retention — Policies, Storage Tiers, and Compliance Requirements             │   │
+│   │       Log types: syslog · vCenter events · API audit · security audit · performance data      │   │
+│   │     Tiers: hot (NFS/local, 30 days) · warm (object store, 90 days) · cold (archive, 1 yr)     │   │
+│   │           Compliance: SOC2/ISO27001 require 12-month minimum for security audit logs          │   │
+│   │           Tools: Aria Log Insight · rsyslog · Splunk forward · S3-compatible archive          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Retention tiers balance query speed vs. storage cost — hot for ops, cold for compliance            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Hot Tier (30 days)     │  │     Warm Tier (90 days)     │  │     Cold Tier (1 year+)     │   │
+│   │       NFS or local SSD      │  │      Object store (S3)      │  │     Glacier/deep archive    │   │
+│   │       Full-text search      │  │       Compressed gzip       │  │      Encrypted at rest      │   │
+│   │       Sub-second query      │  │      Index retained 30d     │  │      Restore: 4-hr SLA      │   │
+│   │      Log Insight bucket     │  │       Policy-auto-move      │  │       Legal hold flag       │   │
+│   │      Syslog stream live     │  │     Security audit logs     │  │       Compliance audit      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Aria Log Insight VM on vSphere · NFS datastore for hot tier · MinIO/S3 for warm/cold tiers           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Hot tier          = Fast-access storage for recent logs; supports real-time search                   │
+│  Warm tier         = Compressed object storage; slower but cost-efficient for 30-90 day range         │
+│  Cold tier         = Deep archive; minimal cost; long restore times; used for compliance              │
+│  Retention policy  = Rule defining how long a log type is kept and when it transitions tiers          │
+│  Log Insight       = VMware Aria Log Insight; on-prem log aggregation and search platform             │
+│  rsyslog           = Linux syslog daemon; ingests and forwards RFC-5424 syslog messages               │
+│  Legal hold        = Flag preventing log deletion regardless of retention policy expiry               │
+│  SOC2              = Service Organization Control 2; audit framework requiring log retention          │
+│  ISO 27001         = Information security management standard with log evidence requirements          │
+│  Gzip compression  = Lossless compression reducing warm-tier storage by 60-80%                        │
+│  Object store      = S3-compatible storage backend for warm/cold log archiving                        │
+│  Auto-move policy  = Lifecycle rule automatically migrating logs between tiers on schedule            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Centralised Log Retention (SIEM / Graylog / Splunk)

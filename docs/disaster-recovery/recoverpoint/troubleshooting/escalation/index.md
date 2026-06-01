@@ -5,6 +5,47 @@
 RecoverPoint — Escalation reference.
 </div>
 
+```
+┌────────────────────────────────────── RecoverPoint — Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 RecoverPoint — Escalation Path                                │   │
+│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
+│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
+│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
+│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Information to Collect Before Escalating                           │   │
+│   │            Product version: RecoverPoint version string from About / version command          │   │
+│   │                           Full log bundle: image access enable/disable                        │   │
+│   │                     Symptom timeline: when first occurred; any changes made                   │   │
+│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
+│   │                    Error codes: exact error messages and exit codes from logs                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPA           = RecoverPoint Appliance — virtual appliance managing journal and replication          │
+│  Splitter      = intercepts host I/O at hypervisor or array level; sends copy to RPA                  │
+│  Journal       = write-order-consistent storage capturing all writes for point-in-time access         │
+│  Consistency Group= set of volumes protected together; writes are applied in order across all         │
+│  Bookmark      = named marker in journal; enables deterministic recovery to a known state             │
+│  Image Access  = mounting a journal point-in-time image to a host for testing or recovery             │
+│  Failover      = activating the replica at the recovery site; breaks replication relationship         │
+│  Test Copy     = non-disruptive image access for validation without breaking replication              │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; CDP = near-zero          │
+│  RTO           = Recovery Time Objective; time from failover to service restored                      │
+│  Reverse       = after failover, replicates from recovery site back to re-sync production             │
+│  Splitter Lag  = delay between host write and journal commit; monitor for replication health          │
+│  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
+│  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── RecoverPoint — Escalation ──────────────────────────────────────┐
 │                                                                                                       │

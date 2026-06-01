@@ -38,7 +38,6 @@ supportsave
 # - Port statistics
 # - SNMP trap history
 ```
-```text
 ┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
 │                                                                                                       │
 │  Escalation path: internal SAN team → Broadcom TAC with supportshow bundle and timeline.              │

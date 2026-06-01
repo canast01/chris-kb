@@ -46,7 +46,6 @@ sudo systemctl reload nginx
 openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1.corp.example.com \
   </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
 ```
-```text
 ┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav encryption: TLS 1.2/1.3 for all management traffic; DB and log encryption at rest.            │

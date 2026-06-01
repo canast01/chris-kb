@@ -4,6 +4,50 @@
 Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery across CDP, CRR, and CLR modes.
 </div>
 
+```
+┌─────────────────────────────────────── RecoverPoint — Overview ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Dell RecoverPoint for VMs (RP4VM): Continuous Data Protection for VMware environments     │   │
+│   │  Intercepts every write via a splitter; journals writes to enable any-point-in-time recovery  │   │
+│   │   Supports local protection, remote replication (single/multi-site), and cascade topologies   │   │
+│   │              RPO: seconds (CDP journal); RTO: minutes (image access or failover)              │   │
+│   │          Core objects: RPA cluster, splitter, consistency group, journal volume, copy         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Protected Site ──splitter intercepts──► RPA Cluster ──journal replication──► Recovery RPA          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Protected Site Components           │  │           Recovery Site Components          │   │
+│   │         RPA cluster (2–8 appliances)         │  │         RPA cluster (matching count)        │   │
+│   │        ESXi splitter (vSphere plugin)        │  │            Remote journal volumes           │   │
+│   │       Production VMs (consistency grp)       │  │         Remote copy (replica disks)         │   │
+│   │         Local journal volumes (CDP)          │  │       vCenter (image access/failover)       │   │
+│   │            vCenter + RP4VM plugin            │  │           Network replication link          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPAs are VMs or appliances; journal vols on shared datastore; replication IP             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    RPA              = RecoverPoint Appliance; manages replication, journaling, and failover logic     │
+│    Splitter         = Write-interceptor at ESXi kernel or array layer; splits I/O to journal          │
+│    Journal          = Sequential write log on target side; enables any-point-in-time image access     │
+│    Consistency Group= Named set of VMs/volumes that fail over and recover together atomically         │
+│    Copy             = A replication destination (local or remote); each CG has ≥1 copy                │
+│    Bookmark         = Named point-in-time marker in the journal; used for crash-consistent recovery   │
+│    CDP              = Continuous Data Protection; every write captured; journal depth = RPO window    │
+│    Image Access     = Mount a journal image as read/write VM without committing to production         │
+│    Failover         = Activate remote copy; production traffic moves to recovery site                 │
+│    Failback         = Reverse replication; sync changes back; cut over to original production         │
+│    Test Copy        = Non-disruptive test failover; recovery VMs isolated on bubble network           │
+│    RPO              = Recovery Point Objective; max acceptable data loss (seconds with CDP)           │
+│    RTO              = Recovery Time Objective; time to restore service after declaring failover       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌─────────────────────────────────────── RecoverPoint — Overview ───────────────────────────────────────┐
 │                                                                                                       │

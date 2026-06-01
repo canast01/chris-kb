@@ -24,7 +24,6 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 │  └──────────────────────────────────────────────────────┘     │
 └───────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
 │  SRM encrypts management traffic via TLS; replication traffic encryption depends on                   │

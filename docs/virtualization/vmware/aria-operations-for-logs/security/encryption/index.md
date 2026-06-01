@@ -14,7 +14,6 @@ Aria Operations for Logs ships with a self-signed certificate. Replace it with a
 ```text
 Administration → SSL → Replace Certificate
 ```
-```text
 ┌──────────────────────────────── Aria Operations for Logs — Encryption ────────────────────────────────┐
 │                                                                                                       │
 │  vRLI encrypts log transport (TLS 6514) and UI/API access (TLS 443); storage uses vSAN D@RE.          │

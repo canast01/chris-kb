@@ -28,7 +28,6 @@ authentication roles assign role backup-operator group <ldap-group-name>
 # List current users and roles
 user show
 ```
-```text
 ┌─────────────────────────────────── Dell Data Domain Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

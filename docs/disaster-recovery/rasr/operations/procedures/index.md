@@ -34,7 +34,6 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 ```
-```text
 ┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

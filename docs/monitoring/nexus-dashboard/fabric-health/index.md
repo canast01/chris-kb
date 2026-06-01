@@ -37,36 +37,36 @@ Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Endpoint reachability states:
-
-| State | Meaning |
-|---|---|
-| Reachable | Endpoint responding and fabric path intact |
-| Unreachable | No ICMP response or ARP not resolved |
-| Moved | Endpoint detected on different leaf/port |
-| Stale | Last seen > configurable threshold ago |
-
-## Flow Telemetry
-
-Nexus Dashboard Insights collects NetFlow/sFlow data to provide per-flow visibility including source, destination, protocol, and latency.
-
-Navigation: **Insights > Flow Analytics**
-
-```bash
-# Query top flows by byte count
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/flows/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "filter": {
-      "fabricName": "prod-aci-fabric",
-      "timeRange": {"start": "2026-05-07T00:00:00Z", "end": "2026-05-07T23:59:59Z"}
-    },
-    "sort": [{"field": "bytes", "order": "desc"}],
-    "limit": 20
-  }'
+┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      NDI Fabric Health Score: 0-100 composite per site from telemetry and event analysis      │   │
+│   │          Input categories: endpoints, nodes, interfaces, tunnels, services, resources         │   │
+│   │                    Score 91-100: Healthy · 81-90: Warning · 0-80: Critical                    │   │
+│   │                  Trend: improving/steady/degrading over last collection epoch                 │   │
+│   │          Anomaly drill-down: click score to see contributing issues ranked by impact          │   │
+│   │             Historical view: 30-day score trend per site and per fabric component             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Health computed in NDI from MDT/APIC data · updated every 15 minutes · stored in ND DB               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Site = Single ACI or DCNM/NDFC fabric registered in ND; health score per site                        │
+│  Epoch = NDI analysis time window (15-minute snapshot); health computed per epoch                     │
+│  Endpoint = VM, bare-metal, or container connected to fabric leaf switch                              │
+│  Node = Spine or leaf switch; node health input covers CPU, memory, and error counters                │
+│  Interface = Physical or logical port; errors and drops contribute to interface health                │
+│  Tunnel = VXLAN or GRE overlay; tunnel health reflects underlay reachability                          │
+│  Resources = ACI fabric resources: EPG, BD, contract counts approaching capacity                      │
+│  Services = Layer-4 to -7 services: load balancers, firewalls inserted in fabric                      │
+│  Anomaly impact = NDI score for each anomaly showing how much it reduces site health                  │
+│  Critical score = Below 81; immediate investigation required; page on-call network team               │
+│  Healthy score = 91-100; normal operation; review weekly for trend changes                            │
+│  Drill-down = NDI UI allows clicking from site score to node to interface level                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Flow telemetry fields:

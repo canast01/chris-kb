@@ -24,7 +24,6 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │            └─────────────────────┘                          │
 └─────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │

@@ -5,6 +5,59 @@
 Operations Common Issues reference covering Overview, Switch Not Appearing After Discovery, Zone Change Does Not Take Effect, Firmware Upgrade Reported as Complete but Switch Still on Old Version, Alert Emails Not Being Received and 3 more sections.
 </div>
 
+```
+┌─────────────────────────────────────── SANnav — Common Issues ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Common SANnav operational issues with diagnosis and resolution paths             │   │
+│   │     Discovery failures: unreachable switch, wrong credentials, SNMP not enabled on switch     │   │
+│   │      Login issues: LDAP misconfiguration, session timeout, certificate expired on SANnav      │   │
+│   │     Stale inventory: switch not re-polled after config change; trigger manual re-discovery    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Discovery issues → login/auth issues → inventory staleness → alert volume issues                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          Discovery          │  │         Auth / Login        │  │          Inventory          │   │
+│   │      Switch unreachable     │  │      LDAP config error      │  │        Stale topology       │   │
+│   │       Wrong SSH creds       │  │       Session timeout       │  │        Missing ports        │   │
+│   │        SNMP disabled        │  │         Cert expired        │  │        Old zone data        │   │
+│   │       FW incompatible       │  │       Password locked       │  │         Counter gap         │   │
+│   │        TCP 22 blocked       │  │           SSO fail          │  │         Alert storm         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Escalate to SANnav logs at /var/log/sannav/ and Brocade TAC if issue persists                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Issue       │     Symptom      │     Root cause    │    Resolution    │    Prevention    │   │
+│   │  Discovery fail  │  Switch offline  │    SSH blocked    │   Check TCP 22   │  Firewall rule   │   │
+│   │    Stale data    │ Old zones shown  │   Poll interval   │Manual rediscover │   Shorten poll   │   │
+│   │   Alert storm    │ Hundreds alerts  │   Threshold low   │ Tune thresholds  │  Baseline first  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: network path SANnav → switch management port; SNMP UDP 161 must be open                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Discovery fail = SANnav cannot reach or authenticate to a switch; shows as offline in UI           │
+│    SNMP v3       = SANnav uses SNMPv3 for trap reception; must be enabled on each switch              │
+│    Stale topo    = SANnav topology not updated after a switch change; trigger re-discovery            │
+│    Manual rediscover = SANnav UI action to force immediate poll of a switch or fabric                 │
+│    Alert storm   = Flood of threshold alerts; caused by misconfigured thresholds or port flap         │
+│    Threshold tune = Adjust alert trigger values to match expected baseline traffic levels             │
+│    Cert expired  = SANnav HTTPS cert; renew via admin console; causes browser login failure           │
+│    LDAP config   = SANnav LDAP settings; test with known user before saving changes                   │
+│    SSH creds     = Per-switch admin username/password stored in SANnav credential store               │
+│    Poll interval = Frequency SANnav polls switches for counters and state; default 5 minutes          │
+│    FW compat     = SANnav has minimum FabricOS version requirements per switch model                  │
+│    Log location  = /var/log/sannav/ on SANnav VM; review sannav.log and discovery.log                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────────── SANnav — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │

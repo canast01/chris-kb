@@ -22,7 +22,6 @@ vCenter (Key Management Service client)
                     └── Data Encryption Key (DEK) — per disk group
                             └── Encrypted data on disk
 ```
-```text
 ┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │

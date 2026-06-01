@@ -8,13 +8,51 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
   TLS Encryption Path: Client to Desktop
 ```text
 ```
-┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
-│  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
-│  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server           │
-│  (external)  │             └───────────┘             └──────────────────┘
-└──────────────┘                                                 │
-```text
-                                                        TLS / Blast AES-256
+┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │
+│  is TLS 1.2+; VM disk encryption is handled by vSphere/vSAN layer.                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Session Encryption              │  │            Management Encryption            │   │
+│   │           Blast Extreme: TLS + AES           │  │              CS to CS: TLS 1.2+             │   │
+│   │             PCoIP: AES-256 + UDP             │  │              CS to vCenter: TLS             │   │
+│   │          HTML Access: WebSocket TLS          │  │                CS to UAG: TLS               │   │
+│   │         USB redirection: TLS tunnel          │  │              REST API: TLS 1.2+             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All Horizon traffic is encrypted; PCoIP UDP uses AES-256 even without TLS wrapper.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │                 Data at Rest                │   │
+│   │         CS cert: replace in Windows          │  │            Desktop VMDK: vSAN enc           │   │
+│   │           UAG cert: import via UI            │  │            Profile share: SMB enc           │   │
+│   │           TLS 1.2 minimum: enforce           │  │          BitLocker: full clone VMs          │   │
+│   │          Cert expiry: monitor 30d+           │  │          AppStack: enc on datastore         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Certificate replacement on CS triggers IIS restart; brief service interruption;                      │
+│  UAG cert import via admin UI on port 9443 (no restart needed).                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Blast Extreme = VMware display protocol; TLS 1.2+ with AES-256                                       │
+│  PCoIP         = Teradici protocol; AES-256; UDP-based                                                │
+│  HTML Access   = WebSocket over HTTPS; TLS-protected Blast                                            │
+│  TLS 1.2+      = minimum for all Horizon management traffic                                           │
+│  UAG cert      = public cert on UAG; presented to external clients                                    │
+│  CS cert       = Windows cert store on Connection Server                                              │
+│  IIS restart   = required after cert replace on CS; brief downtime                                    │
+│  vSAN enc      = disk-level AES-256; transparent to Horizon                                           │
+│  BitLocker     = Windows full-disk encryption on persistent VMs                                       │
+│  SMB enc       = encryption on CIFS profile shares                                                    │
+│  AppStack      = App Volumes VMDK; encrypt at vSAN/datastore level                                    │
+│  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────┐  Blast AES  ┌───────────┐                      ▼
 │  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐

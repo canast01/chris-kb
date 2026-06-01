@@ -61,31 +61,60 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## EC2 — Images, Volumes & Snapshots
-
-AMIs (Amazon Machine Images) are templates for launching instances. EBS (Elastic Block Store) volumes are persistent disks attached to instances. Snapshots are point-in-time backups of a volume.
-
-```bash
-# AMIs (Amazon Machine Images — instance templates)
-aws ec2 describe-images --owners self
-aws ec2 create-image --instance-id <id> --name "snapshot-$(date +%F)" --no-reboot
-
-# EBS volumes (virtual disks attached to instances)
-aws ec2 describe-volumes
-aws ec2 describe-volumes --filters "Name=attachment.instance-id,Values=<id>"
-aws ec2 create-volume --availability-zone us-east-1a --size 100 --volume-type gp3
-aws ec2 attach-volume --device /dev/xvdf --instance-id <id> --volume-id <vol_id>
-aws ec2 detach-volume --volume-id <vol_id>
-aws ec2 delete-volume --volume-id <vol_id>
-
-# EBS snapshots (point-in-time backups of a volume)
-aws ec2 describe-snapshots --owner-ids self
-aws ec2 create-snapshot --volume-id <vol_id> --description "backup"
-aws ec2 delete-snapshot --snapshot-id <snap_id>
-aws ec2 copy-snapshot --source-snapshot-id <snap_id> --source-region us-east-1 --destination-region eu-west-1
+┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  AWS CLI — Command-Line Interface for AWS Service Management                  │   │
+│   │      Structured as: aws <service> <command> [--options] — e.g. aws ec2 describe-instances     │   │
+│   │        Auth: profiles in ~/.aws/credentials; assume-role; IAM Identity Center SSO login       │   │
+│   │          Output formats: --output json (default) | table | text | yaml | yaml-stream          │   │
+│   │       Pagination: --max-items / --starting-token; or --no-paginate for full result sets       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    AWS CLI organises commands by service — EC2, S3, IAM, RDS, EKS, SSM, CloudFormation, CloudWatch    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │     Compute (EC2/Lambda)    │  │     Storage (S3/EBS/EFS)    │  │      Identity (IAM/SSO)     │   │
+│   │    ec2 describe-instances   │  │    s3 ls / cp / sync / rm   │  │     iam list-users/roles    │   │
+│   │   ec2 start/stop-instances  │  │     ec2 describe-volumes    │  │   iam get-policy/document   │   │
+│   │     ec2 create-snapshot     │  │   ec2 create-volume/attach  │  │       sts assume-role       │   │
+│   │      lambda invoke/list     │  │   efs describe-filesystems  │  │      sso login / logout     │   │
+│   │      ssm start-session      │  │      s3api head-bucket      │  │    iam simulate-principal   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS                                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    EC2 / SSM     │        S3        │        IAM        │    RDS / EKS     │    CloudWatch    │   │
+│   │describe-instances│ s3 sync src dst  │     list-roles    │ rds describe-db  │ get-metric-data  │   │
+│   │ssm start-session │  s3api list-obj  │    assume-role    │  eks get-token   │ put-metric-alarm │   │
+│   │  run-instances   │  cp --recursive  │   create-policy   │eks list-clusters │ describe-alarms  │   │
+│   │   send-command   │    rb --force    │    delete-role    │ rds failover-db  │ logs filter-log  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Regions · API endpoints (HTTPS) · IAM authentication layer · CloudShell or local workstation     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  AWS CLI v2     = Current CLI version; install via pip or official pkg; aws --version to verify       │
+│  Named profile  = ~/.aws/credentials named section; use --profile name or AWS_PROFILE env var         │
+│  assume-role    = sts assume-role --role-arn ... --role-session-name; exports temp credentials        │
+│  --query        = JMESPath filter on JSON output; e.g. --query "Instances[*].InstanceId"              │
+│  --filter       = Server-side filter; e.g. --filters "Name=tag:Env,Values=prod" on describe calls     │
+│  --output table = Formats JSON output as ASCII table for human-readable inspection in terminal        │
+│  aws configure  = Interactive setup; writes region, key ID, secret, and output format to ~/.aws       │
+│  sso login      = Initiates browser-based IAM Identity Center login; caches SSO token locally         │
+│  --dry-run      = Validates permissions without executing; useful for IAM policy troubleshooting      │
+│  CloudShell     = Browser-based shell in AWS console; pre-authenticated, no local install needed      │
+│  --no-paginate  = Retrieves all pages of a paginated result in a single command call                  │
+│  --region       = Overrides default region for a single command; or set AWS_DEFAULT_REGION env var    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

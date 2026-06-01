@@ -5,6 +5,30 @@
 Escalation reference covering Escalation Workflow, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation.
 </div>
 
+```
+┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Escalate Python issues: CPython bugs (bugs.python.org), library bugs (GitHub issues)     │   │
+│   │     boto3/botocore issues: github.com/boto/boto3; include AWS region, service, error code     │   │
+│   │   Internal escalation: infra team for network/SSL issues; security team for secret exposure   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │         Dependency CVE found in prod         │  │               pip list output               │   │
+│   │          CPython segfault or crash           │  │              python3 --version              │   │
+│   │        API returning unexpected data         │  │         Full traceback + request log        │   │
+│   │      Secret potentially exposed in log       │  │        Affected secret names + scope        │   │
+│   │          SSL broken after OS update          │  │            openssl version output           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ CVE response  = rotate affected secret immediately; audit access logs for the exposure window │   │
+│   │    CPython bugs  = bugs.python.org; include minimal reproducible script and Python version    │   │
+│   │  boto3 issues  = github.com/boto/boto3/issues; label: needs-triage; include service + region  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

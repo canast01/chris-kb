@@ -30,7 +30,6 @@ Create an object permission policy:
 ```text
 Administration → Access Control → Object Permissions → Add Permission
 ```
-```powershell
 ┌─────────────────────────────────── Aria Operations Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │  Admin, Content Admin, General User, and Read-only roles with group mapping.                          │

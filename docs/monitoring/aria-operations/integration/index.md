@@ -19,7 +19,6 @@ Admin > Solutions > VMware vCenter > Configure
 - Collection interval: 5 minutes (default)
 - Advanced: enable object tagging collection for custom group membership
 ```
-```text
 ┌─────────────────────────────────── Aria Operations — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

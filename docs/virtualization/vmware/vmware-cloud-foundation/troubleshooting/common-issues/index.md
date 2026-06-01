@@ -35,7 +35,6 @@ VCF Common Failure Points — Quick Reference
 │                            proxy/firewall check      │
 └─────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────── VMware Cloud Foundation — Common Issues ───────────────────────────────┐
 │                                                                                                       │
 │  Common VCF issues: upgrade task failures, credential rotation stuck, domain                          │

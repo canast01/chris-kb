@@ -47,7 +47,6 @@ Morning Check Sequence
   │    All success? ├─── OK ──►  DONE — record results
   └─────────────────┘
 ```
-```text
 ┌──────────────────────────────── Daily Health Check — Morning Sequence ────────────────────────────────┐
 │                                                                                                       │
 │    Run every morning; target completion under 15 minutes; document failures in the change log         │

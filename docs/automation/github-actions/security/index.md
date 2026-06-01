@@ -6,6 +6,30 @@
 GitHub Actions — Security reference.
 </div>
 
+```
+┌────────────────────────────────────── GitHub Actions — Security ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  GitHub Actions security: prevent secret exposure, supply chain attacks, privilege escalation │   │
+│   │  Supply chain: pin all third-party actions by full SHA; review action source code before use  │   │
+│   │         Secrets: never echo; use ${{ secrets.X }} syntax; masked automatically in logs        │   │
+│   │     GITHUB_TOKEN: default permissions read-only; grant write only where explicitly needed     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Supply Chain        │  │       Secrets & Tokens      │  │       Runner Security       │   │
+│   │     Pin by SHA, not tag     │  │    OIDC over stored keys    │  │      Ephemeral runners      │   │
+│   │     Audit action updates    │  │     Minimal token perms     │  │       Isolated network      │   │
+│   │    Allowed action policy    │  │      No secrets in env:     │  │      No shared runners      │   │
+│   │    CodeQL for action scan   │  │   Rotate secrets quarterly  │  │    Label per environment    │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Allowed actions = org setting; restrict to own, GitHub-verified, or allowed-list only     │   │
+│   │     Script injection = fork PR can inject code into ${{ github.event.pull_request.title }}    │   │
+│   │ pull_request_target    = runs with write perms even from forks — review carefully before using│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── GitHub Actions — Security ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

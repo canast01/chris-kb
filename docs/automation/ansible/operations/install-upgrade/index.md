@@ -26,7 +26,6 @@ dnf install -y ansible         # full community package
 
 ansible --version
 ```
-```text
 ┌───────────────────────────────────── Ansible — Install & Upgrade ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible core: install via pip (recommended) or OS package manager; pin version in requirements│   │

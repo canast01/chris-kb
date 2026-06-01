@@ -4,6 +4,36 @@
 Cluster sizing, form factor selection, IP addressing, naming conventions, and configuration baselines for Cisco Nexus Dashboard deployments.
 </div>
 
+```
+┌───────────────────────────────── Nexus Dashboard — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Cluster Standards               │  │            Operational Standards            │   │
+│   │             3 physical nodes min             │  │            All fabrics onboarded            │   │
+│   │             SSD 500 GB+ per node             │  │             MDT on all switches             │   │
+│   │            Separate mgmt+data net            │  │                Alerts to ITSM               │   │
+│   │            Backup config nightly             │  │             Weekly health review            │   │
+│   │              NTP and DNS config              │  │           Dedicated read-only acct          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  3 physical x86 or VM nodes · SSD storage · dual-homed to mgmt and data networks                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Physical nodes minimum = Bare metal preferred for production; 3 for quorum                           │
+│  SSD 500 GB = Flash required for streaming telemetry time-series write performance                    │
+│  Separate networks = ND requires dedicated management and data network interfaces                     │
+│  MDT on all switches = Model-Driven Telemetry enabled on every monitored switch                       │
+│  All fabrics onboarded = Every ACI and NX-OS fabric registered in ND                                  │
+│  ITSM alert = Every NDI event/anomaly routed to ServiceNow via webhook                                │
+│  Read-only account = Dedicated APIC user with Observer role for NDI                                   │
+│  NTP consistency = ND and all switches must use same NTP source for telemetry alignment               │
+│  Weekly health review = Scheduled review of NDI health scores and open anomalies                      │
+│  Backup = ND config backup nightly; stored externally on NFS or SCP target                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌───────────────────────────────── Nexus Dashboard — Design Standards ──────────────────────────────────┐
 │                                                                                                       │

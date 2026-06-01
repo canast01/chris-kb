@@ -6,6 +6,29 @@
 Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
 
+```
+┌──────────────────────────────────────── Ansible — Operations ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Ansible operations: running playbooks, managing inventory, AWX job templates, upgrades    │   │
+│   │ Day-to-day: add/remove hosts from inventory, update group_vars, trigger jobs via AWX UI or API│   │
+│   │   Health checks: AWX service status, job success rate, credential expiry, EE image currency   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        CLI Operations       │  │        AWX Operations       │  │         Maintenance         │   │
+│   │     ansible-playbook run    │  │     Job template launch     │  │         Upgrade AWX         │   │
+│   │   ansible-inventory --list  │  │        Inventory sync       │  │       Update EE images      │   │
+│   │     ansible -m ping all     │  │     Credential rotation     │  │      Rotate Vault keys      │   │
+│   │     ansible-vault rekey     │  │     RBAC team assignment    │  │      Purge old job data     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Job template    = saved configuration: playbook + inventory + credentials + extra vars in AWX │   │
+│   │     Inventory sync  = pull current host list from dynamic source (cloud, Netbox) into AWX     │   │
+│   │EE              = Execution Environment; OCI container with Ansible + collections + Python deps│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────────────────── Ansible — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

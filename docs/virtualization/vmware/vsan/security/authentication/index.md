@@ -23,7 +23,6 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
                 ├── Active Directory (LDAP / Integrated Windows Auth)
                 └── OpenLDAP
 ```
-```text
 ┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │

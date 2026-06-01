@@ -26,7 +26,6 @@ curl -u user:token \
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
 ```
-```powershell
 ┌──────────────────────────────────── Confluence — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

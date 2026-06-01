@@ -14,23 +14,49 @@ Aria Operations — Backup Architecture
 │  └──────────┘  └──────────┘  └────────────────┘     │
 └──────────────────────┬──────────────────────────────┘
 ```
-                       │ file-based backup
-                       │ (config only — not metric data)
-                       ▼
-```text
-┌─────────────────────────────────────────────────────┐
-│  Backup Target                                      │
-│  NFS: nas-01.example.local:/aria-ops-backups           │
-│  SFTP: backup-srv.example.local (port 22)              │
-│                                                     │
-│  What IS backed up:                                 │
-│    alert definitions · dashboards · user accounts   │
-│    adapter configs (not credentials) · policies     │
-│                                                     │
-│  What is NOT backed up:                             │
-│    metric time-series data · alert history          │
-│    log data                                         │
-└──────────────────────┬──────────────────────────────┘
+┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
+│                                                                                                       │
+│  Backup CaSA store and configuration; restore steps for Aria Operations (vROps).                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Backup Method                │   │
+│   │            CaSA store (config DB)            │  │           VAMI: Backup > NFS/SFTP           │   │
+│   │          Custom dashboards/policies          │  │            Schedule daily backup            │   │
+│   │              Alert definitions               │  │          Snapshot VM before upgrade         │   │
+│   │           User accounts and roles            │  │            Retain last 3+ backups           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  CaSA backup covers config; VM snapshot covers full appliance state for rollback.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │           Post-Restore Validation           │   │
+│   │             1. Deploy fresh OVA              │  │           Adapters: green status?           │   │
+│   │         2. VAMI: Restore from backup         │  │             Dashboards: loaded?             │   │
+│   │          3. Select backup file path          │  │          Alerts: firing correctly?          │   │
+│   │         4. Join nodes after restore          │  │            Users: login working?            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps VMs on vSphere; NFS/SFTP backup target; vSphere snapshots for upgrade rollback                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CaSA Store          = Configuration and Support Archive; vROps internal config DB                    │
+│  VAMI Backup         = Built-in vROps backup UI at port 5480; targets NFS or SFTP                     │
+│  NFS Backup Target   = Network file share where vROps writes backup archive files                     │
+│  SFTP Backup Target  = Secure FTP target; alternative to NFS for backup storage                       │
+│  Scheduled Backup    = Automated daily CaSA backup; recommended for production                        │
+│  VM Snapshot         = vSphere checkpoint of full vROps appliance; use pre-upgrade                    │
+│  Restore             = VAMI-driven process to load CaSA data from backup archive                      │
+│  Adapter Config      = Stored in CaSA; restored with backup including credentials                     │
+│  Dashboard           = Custom views restored with CaSA; verify after restore                          │
+│  Alert Definition    = Alert and symptom configs; included in CaSA backup                             │
+│  Node Rejoin         = After restore, data/replica nodes re-join the master                           │
+│  Metric Data         = Historical metrics NOT in CaSA backup; starts fresh on restore                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
                        │ restore
                        ▼

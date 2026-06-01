@@ -5,6 +5,60 @@
 Standards reference covering Naming Conventions, Sizing and Path Count Model, Build and Deployment Baseline, Configuration Checklist.
 </div>
 
+```
+┌──────────────────────────── Dell PowerPath Architecture Design Standards ─────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Design standards: minimum 2 HBAs per host on separate fabrics; 4+ paths per LUN for HA    │   │
+│   │     Policy: CLAROpt for Unity/VNX; Optimized for PowerMax; Adaptive for mixed environments    │   │
+│   │    Path count rule: 4 paths minimum (2 per fabric); 8 paths for business-critical workloads   │   │
+│   │          Mandatory: powermt save after config; failover test per LUN after deployment         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    HBA sizing → SAN zoning → PowerPath install → policy set → save config → failover test             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Path Standards       │  │       Policy Standards      │  │      Testing Standards      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       2+ HBAs per host      │  │      Match array class      │  │        Fail each path       │   │
+│   │       Separate fabrics      │  │       CLAROpt → Unity       │  │       Verify I/O cont.      │   │
+│   │       4 paths minimum       │  │       Optimized → PMAX      │  │       Confirm recovery      │   │
+│   │      8 paths for crit.      │  │       Adaptive → mixed      │  │       powermt save req      │   │
+│   │       No single fabric      │  │       Per-LUN override      │  │        Annual retest        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Design verified → failover test every path → powermt save → document path topology                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │     Standard     │     Minimum      │    Recommended    │   Anti-pattern   │       Risk       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       HBAs       │    2 per host    │     4 per host    │    1 HBA only    │Single point fail │   │
+│   │      Paths       │    4 per LUN     │     8 per LUN     │  2 same fabric   │   Fabric SPOF    │   │
+│   │      Policy      │  Array-matched   │    Per workload   │    Basic all     │  No LB benefit   │   │
+│   │     Failover     │  Test all paths  │   Quarterly test  │   No test done   │Untested failover │   │
+│                                                                                                       │
+│    Physical: dual-fabric SAN (A+B fabric); HBA 0 → Fabric A; HBA 1 → Fabric B per host                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SPOF           = Single Point of Failure; eliminated by dual HBA / dual fabric design              │
+│    CLAROpt policy = Optimal for CLARiiON-class arrays (Unity, VNX); array-aware balancing             │
+│    Optimized policy= Best for PowerMax; uses array preferred path information for I/O routing         │
+│    Adaptive policy = Generic round-robin; suitable when array class is mixed or unknown               │
+│    Per-LUN override= Set different policy on a specific device: powermt set policy=X dev=hdisk2       │
+│    Fabric A/B     = Two independent FC fabrics; host HBAs split across both for redundancy            │
+│    Path failover  = Automatic reroute of I/O when path goes down; no manual intervention needed       │
+│    powermt save   = Writes current config to /etc/powermt.custom; survives reboot if used             │
+│    Dead path poll = PowerPath probes dead paths at configurable interval to detect recovery           │
+│    4-path rule    = Ensures one path loss from each fabric still leaves 2 active paths per LUN        │
+│    Annual retest  = Periodic failover test to confirm path recovery still works in production         │
+│    No single fabric= Both fabrics must carry paths; single-fabric design fails on ISL outage          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────── Dell PowerPath Architecture Design Standards ─────────────────────────────┐
 │                                                                                                       │

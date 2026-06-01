@@ -5,6 +5,47 @@
 Veeam — Escalation reference.
 </div>
 
+```
+┌───────────────────────────────────────── Veeam — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    Veeam — Escalation Path                                    │   │
+│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
+│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
+│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
+│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Information to Collect Before Escalating                           │   │
+│   │                Product version: Veeam version string from About / version command             │   │
+│   │                           Full log bundle: Start-VBRInstantVMRecovery                         │   │
+│   │                     Symptom timeline: when first occurred; any changes made                   │   │
+│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
+│   │                    Error codes: exact error messages and exit codes from logs                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌───────────────────────────────────────── Veeam — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │

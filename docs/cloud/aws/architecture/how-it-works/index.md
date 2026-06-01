@@ -28,7 +28,6 @@ graph TB
   class VPC,PUB,PRIV net
   class IGW,TGW cloud
 ```
-```text
 ┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account org: management root governs OUs; workload accounts isolated by purpose.               │

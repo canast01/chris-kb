@@ -61,35 +61,61 @@ Troubleshooting guide for VxRail in the VMware product context. Covers VxRail pl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### VxRail Plugin Not Loading in vCenter
-
-1. Verify the VxRail Manager VM is powered on and reachable from vCenter
-2. SSH to VxRail Manager and check services (above)
-3. In vCenter: **Administration → Client Plugins** — verify the VxRail plugin is enabled and not in an error state
-4. If the plugin is in error state, re-register it:
-   - SSH to VxRail Manager
-   - Run the plugin registration script (location varies by version — check Dell documentation for the VxRail version)
-
-### Re-register vCenter Credentials in VxRail Manager
-
-If VxRail Manager loses its connection to vCenter (e.g., after vCenter password change):
-
-**VxRail Plugin → System → vCenter Credentials → Update**
-
-Or via API:
-
-```bash
-curl -sk -X PUT \
-  -H "Authorization: Basic $(echo -n 'mystic:password' | base64)" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "vc_admin_user": {
-      "username": "administrator@vsphere.local",
-      "password": "vCenterPassword!"
-    }
-  }' \
-  "https://<vxrail-manager-ip>/rest/vxm/v1/system/initialize/vcenter"
+┌────────────────────────────────────── VxRail — Troubleshooting ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          VxRail plugin unavailable in vCenter; LCM pre-check failure blocking upgrade         │   │
+│   │              vSAN object degraded or resync stuck; iDRAC hardware alert on a node             │   │
+│   │  Node not rejoining cluster after maintenance; network mismatch causing VxRail Manager issues │   │
+│   │        Diagnostics: VxRail API debug, LCM logs, vSAN health UI, iDRAC system event log        │   │
+│   │    Escalation: support bundle export, Dell GSS P1, TAM contact, log archive for ProSupport    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues define triage path · diagnostics isolate root cause · escalation engages Dell support│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
+│   │        Plugin unavail       │  │       VxRail API debug      │  │         VxRail bndl         │   │
+│   │       LCM pre-chk fail      │  │        LCM log files        │  │      Dell support case      │   │
+│   │        vSAN degraded        │  │        vSAN health UI       │  │        GSS escalation       │   │
+│   │         iDRAC alert         │  │       iDRAC sys event       │  │         TAM contact         │   │
+│   │       Node not rejoin       │  │       get-tech-support      │  │       P1 Dell ProSupp       │   │
+│   │         Net mismatch        │  │       vm-support bndl       │  │         Log archive         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Common issues guide triage · diagnostics pinpoint root cause · escalation gets Dell support engaged│
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Issues      │   Diagnostics    │     Log Paths     │    Escalation    │     Recovery     │   │
+│   │  Plugin unavail  │  VxRail API dbg  │  VxRail Mgr logs  │  Bundle export   │  Restart VxRail  │   │
+│   │ LCM pre-chk fail │  LCM log files   │  /var/log/vmware  │   Dell support   │   Fix + retry    │   │
+│   │  vSAN degraded   │  vSAN health UI  │   /var/log/vsan   │   GSS P1 case    │   Replace disk   │   │
+│   │ Node not rejoin  │  iDRAC sys evt   │     iDRAC /log    │   TAM contact    │   Re-add node    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Dell PowerEdge servers · NVMe/SSD/HDD · iDRAC OOB · 25GbE NICs · ToR switches                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VxRail plugin     = vCenter plugin provided by VxRail Manager; shows cluster health and LCM status   │
+│  LCM pre-check     = Validation run before upgrade; fails if vSAN resync, network, or health issues   │
+│  vSAN object health = vSAN tracks each VM object; degraded = FTT violated; resync = rebuilding copies │
+│  iDRAC SEL         = System Event Log on iDRAC; hardware faults (disk, PSU, fan, NIC) recorded here   │
+│  get-tech-support  = VxRail CLI command collecting full diagnostic bundle for Dell GSS cases          │
+│  Support bundle    = Compressed log archive from VxRail Manager, ESXi hosts, and iDRAC for escalation │
+│  TAM               = Technical Account Manager; Dell named support contact for critical escalations   │
+│  Dell ProSupport   = Dell premium support tier; P1 = production down, response in under 4 hours       │
+│  Node rejoin       = Process of ESXi host re-entering vSAN cluster after maintenance or failure       │
+│  Network mismatch  = VLAN or MTU misconfiguration preventing VxRail Manager from reaching ESXi hosts  │
+│  VxRail Mgr restart = Restarting Mystic service on VxRail Manager VM to recover plugin or API issues  │
+│  GSS escalation    = Global Support Services; Dell/VMware support organisation for P1/P2 incidents    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -5,6 +5,60 @@
 Health Checks reference covering Daily Checks, Health Check Checklist, Post-Change Validation.
 </div>
 
+```
+┌────────────────────────────────── Brocade Fabric OS — Health Checks ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Daily FOS health checks: switch state, port errors, SFP optics, MAPS alerts          │   │
+│   │            switchshow: verify all ports Online; check switch health state (Healthy)           │   │
+│   │      porterrshow: review CRC, LOS, LOSync counters; nonzero values require investigation      │   │
+│   │             sfpshow: review Tx/Rx power dBm; compare against SFP vendor thresholds            │   │
+│   │          MAPS dashboard: check active alert policy; review mapsDb for rule violations         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Switch state -> port errors -> SFP optics -> MAPS alerts -> fabric topology review                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Switch Health        │  │         Port Health         │  │         SFP / Optics        │   │
+│   │          switchshow         │  │         porterrshow         │  │           sfpshow           │   │
+│   │       switchstatusshow      │  │        portstatsclear       │  │         Tx power dBm        │   │
+│   │        MAPS dashboard       │  │         CRC counter         │  │         Rx power dBm        │   │
+│   │        Fan/PSU status       │  │        Loss of Signal       │  │         Temperature         │   │
+│   │          fabricshow         │  │         Loss of Sync        │  │        Vendor limits        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Clear error counters only after investigating and resolving the underlying cause                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Check       │     Command      │     Frequency     │    Threshold     │      Action      │   │
+│   │   Switch state   │    switchshow    │       Daily       │    All Online    │Investigate faults│   │
+│   │   Port errors    │   porterrshow    │       Daily       │     Zero CRC     │Replace cable/SFP │   │
+│   │    SFP power     │     sfpshow      │       Weekly      │   Vendor range   │   Replace SFP    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FC switches · SFP transceivers · ISL cables · console/mgmt access                        │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    switchshow     = Lists all ports with state (Online/Offline/Faulty) and connected device WWN       │
+│    porterrshow    = Displays error counters per port: CRC, LOS, LOSync, ITW, Enc_in                   │
+│    portstatsclear = Resets error counters to zero; use only after resolving the issue                 │
+│    sfpshow        = Displays SFP diagnostics: Tx/Rx power, temperature, voltage                       │
+│    switchstatusshow = Summary health status of switch: Healthy, Marginal, or Down                     │
+│    fabricshow     = Lists all switches in fabric with domain IDs and WWNs                             │
+│    MAPS dashboard = SANnav MAPS view showing active policy and current rule violations                │
+│    CRC error      = Cyclic Redundancy Check error; indicates corrupt FC frame; cable/SFP issue        │
+│    Loss of Signal = LOS: no optical signal detected; SFP or cable failure                             │
+│    Loss of Sync   = LOSync: signal present but frame sync lost; speed mismatch or noise               │
+│    Tx/Rx power    = SFP optical power in dBm; each SFP type has defined acceptable range              │
+│    MAPS alert     = Automated rule-based alert when metric breaches configured threshold              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────── Brocade Fabric OS — Health Checks ──────────────────────────────────┐
 │                                                                                                       │

@@ -35,7 +35,6 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
-```powershell
 ┌────────────────────────────────────── PowerShell — Integrations ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell integrates with Microsoft ecosystem and infrastructure platforms via modules    │   │

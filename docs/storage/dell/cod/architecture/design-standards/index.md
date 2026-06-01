@@ -5,6 +5,42 @@
 Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation Checklist.
 </div>
 
+```
+┌────────────────────────────────────── Dell COD Design Standards ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      COD design: order COD with initial array purchase; size for 18-month growth horizon      │   │
+│   │        Document licensed vs unlocked capacity; track activation dates and remaining COD       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Ordering Standards              │  │            Operational Standards            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Order with initial purchase          │  │       Track COD in CMDB/asset register      │   │
+│   │           Size for 18-month growth           │  │         Store license keys in vault         │   │
+│   │          COD up to max chassis cap           │  │         Review remaining COD monthly        │   │
+│   │             Document at purchase             │  │          Activate via change ticket         │   │
+│   │         Verify hardware at delivery          │  │          Alert at 20% COD remaining         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Standard     │   Requirement    │       Reason      │      Owner       │      Review      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    CMDB track    │  All COD units   │   Capacity mgmt   │   Storage team   │     Monthly      │   │
+│   │   Key storage    │  Password vault  │  License security │   Storage team   │      Annual      │   │
+│   │  Activation CHG  │  Change ticket   │    Auditability   │    Change mgr    │    Per event     │   │
+│   │   30-day alert   │   20% COD left   │   Avoid shortage  │    Monitoring    │    Automated     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    18-month horizon = Plan COD to cover growth without frequent re-orders or lead time risk           │
+│    CMDB tracking    = Record array serial, COD TB ordered, TB activated, TB remaining per system      │
+│    Vault            = Secure credential/key store (CyberArk or similar) for license keys              │
+│    Change ticket    = COD activation via formal change management; document before/after capacity     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── Dell COD Design Standards ──────────────────────────────────────┐
 │                                                                                                       │

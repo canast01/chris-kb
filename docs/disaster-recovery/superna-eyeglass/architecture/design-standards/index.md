@@ -12,7 +12,6 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 ```text
 <source-cluster>-<target-cluster>-<zone-or-path>
 ```
-```powershell
 ┌───────────────────────────────── Superna Eyeglass — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

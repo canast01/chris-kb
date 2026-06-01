@@ -28,7 +28,6 @@ provider "aws" {
   # Never: hardcoded credentials in .tf files
 }
 ```
-```text
 ┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform integrates with CI/CD, secret managers, monitoring, and ITSM via providers and APIs │   │

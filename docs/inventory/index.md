@@ -5,6 +5,39 @@
 Asset and configuration management references.
 </div>
 
+```
+┌────────────────── Inventory — Asset Tracking, CMDB, Lifecycle & License Management ───────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Inventory: know what assets exist, their state, owners, location, and support status     │   │
+│   │      CMDB: track CI relationships and change history; feeds incident and change processes     │   │
+│   │      Lifecycle: EOL dates drive refresh planning; licence counts prevent compliance gaps      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        Asset & Config       │  │          Lifecycle          │  │     Licenses & Contracts    │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Hardware asset reg     │  │       EOL/EOS tracking      │  │      License inventory      │   │
+│   │       CMDB CI records       │  │       Refresh planning      │  │       Compliance count      │   │
+│   │     Environment mapping     │  │      Decommission proc      │  │       Renewal calendar      │   │
+│   │       System inventory      │  │      Migration tracking     │  │       Vendor contacts       │   │
+│   │      Rack/rack-unit map     │  │      HW lifecycle state     │  │        Support levels       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CMDB         = Configuration Management Database; stores CIs and their relationships               │
+│    CI           = Configuration Item; any asset tracked in CMDB with attributes and relations         │
+│    EOL          = End of Life; vendor no longer sells the product; EOS = end of support               │
+│    Asset register= Authoritative list of all hardware: serial, location, owner, lifecycle state       │
+│    Refresh plan = Scheduled replacement of assets approaching EOL; budgeted in advance                │
+│    SAM          = Software Asset Management; tracks licence entitlements vs actual usage              │
+│    Support contract= Vendor SLA for hardware; coverage level (NBD/4h/24x7); expiry date               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────── Inventory — Asset Tracking, CMDB, Lifecycle & License Management ───────────────────┐
 │                                                                                                       │

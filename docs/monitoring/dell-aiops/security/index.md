@@ -27,7 +27,6 @@ CloudIQ portal > Settings > Identity Providers > Add
 - Attribute mapping: email → user account, group claim → Admin/Viewer role
 - Enable JIT provisioning for automatic account creation from IdP groups
 ```
-```text
 ┌──────────────────────────────────────── Dell AIOps — Security ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

@@ -28,7 +28,6 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │  └───────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │

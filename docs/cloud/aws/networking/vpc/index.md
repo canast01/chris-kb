@@ -15,33 +15,6 @@ AWS VPC — Virtual Private Cloud
 │     routing, and security
                                           │
 ```
-┌─────────────────────────────────────────┐
-│           AWS VPC                       │
-│           (Virtual Private Cloud)       │
-│           IP range: 172.16.0.0/16       │
-│                                         │
-│  ┌──────────────┐  ┌──────────────┐     │
-│  │ Public       │  │ Private      │     │
-│  │ Subnet       │  │ Subnet       │     │
-│  │              │  │              │     │
-│  │ ├── Load     │  │ ├── EC2      │     │
-│  │ │   Balancer │  │ │   Instance │     │
-│  │ └── Bastion  │  │ │   (VM)     │     │
-│  │     Host     │  │ │            │     │
-│  │              │  │ ├── EBS      │     │
-│  │  faces       │  │ │   Volume   │     │
-│  │  internet    │  │ │   (disk)   │     │
-│  │              │  │ │            │     │
-│  │              │  │ └── RDS      │     │
-│  │              │  │     Database │     │
-│  └──────────────┘  └──────────────┘     │
-│           │                │            │
-│     Internet           VPN Gateway      │
-│     Gateway            (connects back   │
-│     (public            to on-prem)      │
-│      traffic)                           │
-└─────────────────────────────────────────┘
-```text
 ┌───────────────────────────────────── VPC — Virtual Private Cloud ─────────────────────────────────────┐
 │                                                                                                       │
 │  VPC is an isolated virtual network within AWS; you control CIDR, subnets, and routing.               │

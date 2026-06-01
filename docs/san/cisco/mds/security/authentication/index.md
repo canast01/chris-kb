@@ -53,7 +53,6 @@ flowchart TD
   class REJECT badNode
   class AAA,FCSP decisionNode
 ```
-```text
 ┌───────────────────────────────── Cisco MDS — Security Authentication ─────────────────────────────────┐
 │                                                                                                       │
 │  Multi-layer authentication covering management plane, fabric login, and data-plane security.         │

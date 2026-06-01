@@ -17,7 +17,6 @@ Verify collection status:
 CloudIQ portal > Assets > [System] — check "Last Seen" timestamp
 SCG admin UI > Systems > [System] > Connection Status
 ```
-```text
 ┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

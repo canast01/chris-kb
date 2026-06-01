@@ -34,7 +34,6 @@ ansible-project/
 │   └── postgresql/
 └── molecule/
 ```
-```text
 ┌───────────────────────────────────── Ansible — Design Standards ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Ansible design standards enforce consistency, security, and maintainability across playbooks │   │

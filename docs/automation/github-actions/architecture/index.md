@@ -4,6 +4,28 @@
 Event-driven CI/CD platform embedded in GitHub repositories; workflows defined in YAML trigger on push, PR, schedule, or API call; jobs run in parallel on hosted or self-hosted runners; artifacts and outputs bridge job data.
 </div>
 
+```
+┌──────────────────────────────────── GitHub Actions — Architecture ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     GitHub Actions architecture: GitHub.com hosts the control plane; runners execute jobs     │   │
+│   │       Self-hosted runners poll GitHub Actions API over HTTPS — no inbound port required       │   │
+│   │       Runner groups: org or repo-level; assign self-hosted runners to specific workflows      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 How It Works                 │  │               Design Standards              │   │
+│   │          Push → trigger → queue job          │  │              Pin actions to SHA             │   │
+│   │         Runner picks up job via poll         │  │         Minimal permissions in token        │   │
+│   │          Steps execute sequentially          │  │          Use environments for prod          │   │
+│   │        Results reported to GitHub UI         │  │           Cache deps, not secrets           │   │
+│   │           Logs streamed live to UI           │  │         Matrix over copy-paste jobs         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Physical: GitHub-hosted runners are ephemeral VMs; self-hosted are VMs or bare-metal on-prem │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────────────── GitHub Actions — Architecture ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

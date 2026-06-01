@@ -28,7 +28,6 @@ graph LR
     installPkgs --> runScript
     runScript --> deactivate
 ```
-```text
 ┌────────────────────────────────────────── Python — Scripts ───────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │Python utility scripts for infrastructure automation: AWS reporting, storage health, AD queries│   │

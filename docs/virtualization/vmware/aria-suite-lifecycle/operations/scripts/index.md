@@ -26,7 +26,6 @@ Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, B
 │  API base: https://<lcm>/lcm/lcmservice/api/v2                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────────── Aria Suite LCM Scripts ────────────────────────────────────────┐
 │                                                                                                       │
 │  REST API scripts for LCM environment management, product queries, and cert actions.                  │

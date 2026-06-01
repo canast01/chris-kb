@@ -49,7 +49,6 @@ Post-Change Validation Flow
                 ▼
          CLOSE CHANGE RECORD
 ```
-```text
 ┌─────────────────────────────────────── Post-Change Validation ────────────────────────────────────────┐
 │                                                                                                       │
 │    Run after any change — maintenance, upgrade, patch, or config modification                         │

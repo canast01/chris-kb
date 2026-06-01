@@ -31,7 +31,6 @@ vCenter CLI Interfaces
   │  └──────────────────────┘   │           │                          │
   └─────────────────────────────┘           └──────────────────────────┘
 ```
-```powershell
 ┌─────────────────────────────────── vCenter Server — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter is primarily managed via the HTML5 UI, but PowerCLI, govc, and the                           │

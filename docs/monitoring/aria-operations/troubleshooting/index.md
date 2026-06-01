@@ -24,7 +24,6 @@ curl -sk -X GET \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
 ```
-```text
 ┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

@@ -5,6 +5,53 @@
 AWS Cost Explorer / Billing reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
+```
+┌────────────────────────────────── AWS Cost — Cost Explorer Billing ───────────────────────────────────┐
+│                                                                                                       │
+│  Billing console: invoices, payment methods, tax settings, and consolidated billing.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Billing Console                │  │             Consolidated Billing            │   │
+│   │          Invoices: monthly PDF/CSV           │  │          Org: single payer account          │   │
+│   │           Payment: credit card/ACH           │  │           Volume discounts: pooled          │   │
+│   │            Tax: VAT/GST settings             │  │         RI sharing: across accounts         │   │
+│   │           Credits: applied balance           │  │             SP sharing: org-wide            │   │
+│   │           Free tier: usage tracker           │  │         Billing entity: per account         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Management account pays consolidated bill; member accounts see their own usage                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Cost and Usage Report             │  │               FinOps Practices              │   │
+│   │          CUR: granular billing CSV           │  │          Monthly review: all teams          │   │
+│   │          S3 bucket: daily delivery           │  │        Chargeback: tag-based billing        │   │
+│   │          Parquet: Athena-optimised           │  │        Forecasting: budget vs actual        │   │
+│   │            Resource IDs: enabled             │  │        Unit economics: cost per unit        │   │
+│   │         Versioning: overwrite/create         │  │        Waste: delete unused resources       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS Billing service · S3 (CUR) · Athena · management account payment rails                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CUR             = Cost and Usage Report; most granular billing data available                        │
+│  Consolidated billing= Single monthly invoice for all org accounts via management account             │
+│  RI sharing      = Reserved instances purchased in one account benefit all org accounts               │
+│  SP sharing      = Savings Plans apply to any account in the org by default                           │
+│  Volume discount = AWS applies tiered pricing based on total org usage                                │
+│  Chargeback      = Internally billing teams for their AWS spend via cost allocation                   │
+│  Unit economics  = Cost per transaction, per user, or per API call                                    │
+│  Free tier tracker= Billing console shows how close each service is to free tier limit                │
+│  Tax settings    = VAT/GST registration applied to invoices by region                                 │
+│  Credits         = AWS promotional credits applied before charging payment method                     │
+│  Parquet format  = Columnar CUR format; faster Athena queries and lower S3 cost                       │
+│  Resource IDs    = CUR option adding AWS resource ARN to each billing line item                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────── AWS Cost — Cost Explorer Billing ───────────────────────────────────┐
 │                                                                                                       │

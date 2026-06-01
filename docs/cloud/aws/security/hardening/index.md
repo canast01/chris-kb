@@ -37,7 +37,6 @@ aws iam get-account-summary \
 
 # MFA for root must be enabled via Console — cannot be set via CLI
 ```
-```text
 ┌──────────────────────────────── AWS Security Hardening — CIS Baseline ────────────────────────────────┐
 │                                                                                                       │
 │  Account and resource hardening following CIS AWS Benchmark and AWS Security Best Practices.          │

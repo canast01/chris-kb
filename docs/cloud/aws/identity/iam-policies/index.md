@@ -5,6 +5,53 @@
 AWS IAM Policies reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
+```
+┌───────────────────────────────────── AWS Identity — IAM Policies ─────────────────────────────────────┐
+│                                                                                                       │
+│  IAM policy structure: Effect, Action, Resource, Condition — with evaluation logic.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Policy Structure               │  │               Policy Elements               │   │
+│   │             Version: 2012-10-17              │  │            Effect: Allow or Deny            │   │
+│   │          Statement: array of rules           │  │             Action: s3:GetObject            │   │
+│   │           Sid: optional identifier           │  │              Resource: ARN or *             │   │
+│   │        Principal: who (resource pol)         │  │         Condition: context key check        │   │
+│   │        NotAction/NotResource: invert         │  │        Multiple statements: all eval        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All statements evaluated; explicit deny in any statement wins over any allow                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Common Conditions               │  │               Policy Examples               │   │
+│   │          aws:MultiFactorAuthPresent          │  │         S3 read-only: s3:Get* on ARN        │   │
+│   │             aws:RequestedRegion              │  │         EC2 start/stop: specific IDs        │   │
+│   │              aws:PrincipalOrgID              │  │          Require tag: StringEquals          │   │
+│   │           aws:SourceIp: CIDR check           │  │          Deny if no MFA: condition          │   │
+│   │          aws:TagKeys: enforce tags           │  │         Region lock: NotAction+Deny         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  IAM policy engine (global) · STS context · CloudTrail · IAM Access Analyzer                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Statement       = Single permission rule with Effect, Action, Resource, Condition                    │
+│  Action          = AWS API call: s3:PutObject, ec2:DescribeInstances                                  │
+│  Resource ARN    = Amazon Resource Name identifying specific resource                                 │
+│  Condition block = Optional; adds context constraints to when policy applies                          │
+│  StringEquals    = Condition operator for exact string match                                          │
+│  NotAction       = Matches every action except those listed; use carefully                            │
+│  aws:PrincipalOrgID= Condition key matching requesting account org membership                         │
+│  aws:SourceIp    = Condition key matching caller IP; only works for direct calls                      │
+│  aws:VpcSourceIp = Condition key matching caller IP when going through VPC endpoint                   │
+│  IAM Access Analyzer= Scans policies for external access and validates syntax                         │
+│  Policy simulator= IAM console tool testing policy effect on specific API calls                       │
+│  Version 2012-10-17= Current policy language version; always include this                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── AWS Identity — IAM Policies ─────────────────────────────────────┐
 │                                                                                                       │

@@ -29,7 +29,6 @@ Runbook Selection Flow
                                     ├─ Network change    ──► Network Validation
                                     └─ Scheduled window  ──► Maintenance Window
 ```
-```text
 ┌─────────────────────────────────────── Virtualization Runbooks ───────────────────────────────────────┐
 │                                                                                                       │
 │    Practical runbooks for incidents, maintenance, lifecycle work, and RCA follow-up                   │

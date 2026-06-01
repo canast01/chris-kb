@@ -5,6 +5,38 @@
 How It Works reference covering Deployment Architecture, Component Roles, Data Collection, Storage and Retention, Sizing Guidelines and 3 more sections.
 </div>
 
+```
+┌────────────────────────────────────── InsightIQ — How It Works ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Step 1: Cluster Registration — add PowerScale cluster IP and PAPI credentials to InsightIQ  │   │
+│   │    Step 2: Collection — InsightIQ polls PAPI every 30 seconds for all performance counters    │   │
+│   │   Step 3: Storage — raw samples stored in PostgreSQL; older data rolled up to 5-min averages  │   │
+│   │           Step 4: Analysis — UI queries DB to render dashboards and charts on demand          │   │
+│   │         Step 5: Reporting — user builds or schedules reports; PDF/CSV export available        │   │
+│   │     Step 6: Alert — threshold breach triggers email notification to configured recipients     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM on management cluster · PAPI from VM to cluster SmartConnect IP                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cluster registration = Adding cluster access zone IP and PAPI user to InsightIQ                      │
+│  SmartConnect = PowerScale DNS load-balancing for PAPI connections across nodes                       │
+│  PAPI credentials = Read-only admin user on PowerScale; InsightIQ uses for all polls                  │
+│  Raw sample = 30-second metric reading stored at full resolution                                      │
+│  Rollup = Aggregation process compressing old raw samples into hourly averages                        │
+│  Dashboard = Pre-built or custom view of metrics over selected time range                             │
+│  Report = Scheduled or on-demand document with metric tables and charts                               │
+│  Threshold alert = Email sent when metric exceeds configured limit                                    │
+│  SmartConnect zone = PowerScale DNS name resolving to available node IPs                              │
+│  PostgreSQL = On-appliance DB; grows at ~10 GB/year per cluster at 30-sec interval                    │
+│  PDF export = Formatted report for management sharing                                                 │
+│  CSV export = Raw data download for spreadsheet or BI analysis                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌────────────────────────────────────── InsightIQ — How It Works ───────────────────────────────────────┐
 │                                                                                                       │

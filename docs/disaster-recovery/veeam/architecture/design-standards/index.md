@@ -5,6 +5,50 @@
 Standards reference covering Job Naming Convention, Retention Schedule, Backup Job Configuration Standards, Encryption Standard, Proxy Standards and 3 more sections.
 </div>
 
+```
+┌────────────────────────────────────── Veeam — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 9419 (Veeam REST API) · 6160 (Veeam Agent) · 443 (vCenter)                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  Standard Veeam Design Rules                                  │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │    Encryption: AES-256 backup (key in Veeam DB); TLS on all management; WORM repo supported   │   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Windows Server (Backup Server) · Proxy VMs on ESXi · Backup storage (NAS/SAN) · Management LAN       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Backup Server = central Veeam component: scheduler, job engine, catalog, REST API                    │
+│  Backup Proxy  = data mover between vSphere and repository; runs in virtual-appliance mode or H       │
+│  CBT           = Changed Block Tracking; VMware VADP mechanism to track changed disk sectors          │
+│  VADP          = VMware vSphere APIs for Data Protection; enables agentless VM backup                 │
+│  SOBR          = Scale-Out Backup Repository; tiers extents; moves cold data to object storage        │
+│  Instant Recovery= mounts VM disks from backup directly to ESXi; VM live in seconds                   │
+│  SureBackup    = automated backup verification; test-restores VM in isolated virtual lab              │
+│  Replication   = creates VM replica at DR site; enables failover without full restore time            │
+│  GFS Retention = Grandfather-Father-Son retention: daily, weekly, monthly, yearly restore points      │
+│  Immutable Repo= object storage (S3 WORM) or Linux XFS (immutable flag) repo; ransomware protec       │
+│  Mount Server  = Windows host presenting backup as iSCSI/NFS datastore for instant recovery           │
+│  VeeamZIP      = ad-hoc compressed portable backup of a single VM; no job required                    │
+│  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
+│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌────────────────────────────────────── Veeam — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │

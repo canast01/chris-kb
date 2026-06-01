@@ -73,7 +73,6 @@ curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n
 ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
 ```
-```text
 ┌─────────────────────────────────────── vRNI Install & Upgrade ────────────────────────────────────────┐
 │                                                                                                       │
 │  OVA deployment, PAK upgrade process, and pre-requisites for Aria Operations for Networks.            │

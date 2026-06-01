@@ -12,7 +12,6 @@ Quick reference for common problems and resolutions.
 ```text
 Symptom: Switch shows "Unreachable" in Fabric → Switches
 ```
-```powershell
 ┌─────────────────────────────── Cisco DCNM — Common Operational Issues ────────────────────────────────┐
 │                                                                                                       │
 │  Common DCNM issues: switch unreachable, zone push fail, auth error, stale data, UI slow.             │

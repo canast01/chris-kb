@@ -24,7 +24,6 @@ copy running-config tftp://<server>/<filename>
 # Display full running config (for manual capture)
 show running-config
 ```
-```text
 ┌───────────────────────────────── Cisco MDS 9000 — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │  MDS backup: running-config, zone set, startup-config to SCP/TFTP; restore sequence.                  │

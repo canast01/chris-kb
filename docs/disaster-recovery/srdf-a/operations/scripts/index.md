@@ -119,7 +119,6 @@ Pass as environment variables when running, or set defaults in the script:
 chmod +x srdf-cycle-time-monitor.sh
 SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
 ```
-```text
 ┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

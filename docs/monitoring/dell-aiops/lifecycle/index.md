@@ -37,7 +37,6 @@ SCG admin UI > System Settings > About
 Note the installed version and compare to the latest on Dell Support Portal:
 support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 ```
-```text
 ┌────────────────────────────────── Dell AIOps — Lifecycle Management ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

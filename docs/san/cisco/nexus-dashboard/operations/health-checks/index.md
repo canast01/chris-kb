@@ -43,7 +43,6 @@ acs apps status
 kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 # Zero output = all pods healthy; any output needs investigation
 ```
-```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Health Checks ───────────────────────────┐
 │                                                                                                       │
 │  Routine health verification covering cluster nodes, hosted apps, and connected sites.                │

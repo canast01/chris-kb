@@ -4,6 +4,60 @@
 Dell ECS — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
 
+```
+┌──────────────────────────────────────── Dell ECS — Operations ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     ECS operations: capacity monitoring, replication health, node maintenance, and alerts     │   │
+│   │      Capacity: monitor per-VDC usage, erasure coding overhead, and project growth trends      │   │
+│   │      Replication: check geo replication lag, RPO status, and recovery point across sites      │   │
+│   │   Maintenance: rolling node updates, drive replacement, disk rebuild monitoring, log review   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Daily health check → capacity review → replication status → node health → alert triage             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Capacity Ops        │  │       Replication Ops       │  │           Node Ops          │   │
+│   │          VDC usage          │  │        Repl lag check       │  │        Rolling update       │   │
+│   │         EC overhead         │  │          RPO status         │  │        Drive replace        │   │
+│   │       Growth forecast       │  │        Bandwidth util       │  │       Rebuild monitor       │   │
+│   │        Bucket quotas        │  │        Site failover        │  │          Log review         │   │
+│   │          ILM review         │  │         Policy check        │  │          PSU / fan          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    ECS Portal provides cluster-wide metrics; CLI (ecscli) available for scripted health checks        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Frequency     │       Task       │       Owner       │       Tool       │      Output      │   │
+│   │      Daily       │   Health check   │    Storage ops    │    ECS Portal    │    Alert log     │   │
+│   │      Weekly      │Replication check │    Storage ops    │    ECS Portal    │    RPO report    │   │
+│   │     Monthly      │ Capacity review  │    Storage lead   │   ECS reports    │  Forecast plan   │   │
+│   │    On-demand     │  Drive replace   │    Storage eng.   │    ECS Portal    │   Rebuild done   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: ECS nodes on 10/25 GbE switch; separate management network; nodes same rack or spread    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VDC            = Virtual Data Center; ECS logical group of nodes within one physical site          │
+│    EC overhead    = Erasure coding adds ~33-50% storage overhead (12+4 EC = 1.33x raw data)           │
+│    Bucket quota   = Per-bucket capacity limit; enforces fair use in multi-tenant environments         │
+│    ILM review     = Check that Information Lifecycle Management policies expire data as expected      │
+│    Repl lag       = Delay between object write and geo replication completion; monitor per-pair       │
+│    RPO            = Recovery Point Objective; maximum data loss if site fails; tied to repl lag       │
+│    Site failover  = Redirect client access to secondary site when primary is unreachable              │
+│    Rolling update = ECS firmware/software update applied node by node; no cluster downtime            │
+│    Drive replace  = Hot-swap failed drive; ECS auto-starts rebuild; monitor rebuild % in Portal       │
+│    Rebuild monitor = Track erasure coding rebuild progress after drive failure; avoid adding load     │
+│    ecscli         = ECS command-line tool for scripted health checks, bucket queries, and exports     │
+│    Growth forecast = ECS capacity trend used to plan node addition before capacity is exhausted       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────────────────── Dell ECS — Operations ────────────────────────────────────────┐
 │                                                                                                       │

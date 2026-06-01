@@ -91,7 +91,6 @@ Open a terminal on the Solutions Enabler host (Linux).
 chmod +x cod_capacity_report.sh
 SID=000123456789 ./cod_capacity_report.sh
 ```
-```bash
 ┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

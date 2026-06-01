@@ -24,7 +24,6 @@ foreach ($p in $ProfilePaths) {
     }
 }
 ```
-```powershell
 ┌──────────────────────────────────── PowerShell — Backup & Restore ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell script backup: store all .ps1/.psm1/.psd1 in git — git is the source of truth   │   │

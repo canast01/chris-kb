@@ -87,7 +87,6 @@ curl -sk -b dcnm-cookie.txt -X POST \
     ]
   }' | python3 -m json.tool
 ```
-```bash
 ┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  DCNM day-2 procedures: zone changes, switch adds, firmware upgrades, health monitoring.              │

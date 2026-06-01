@@ -12,17 +12,51 @@ VCF Bring-Up and Lifecycle Flow
 │  reads deployment parameter workbook                 │
 └──────────────────────┬───────────────────────────────┘
 ```
-                       │ deploys
-                       ▼
-```text
-┌──────────────────────────────────────────────────────┐
-│  SDDC Manager (management domain)                    │
-│                                                      │
-│  ┌──────────┐  ┌────────────┐  ┌──────────────────┐  │
-│  │ vCenter  │  │ NSX Mgr    │  │  vSAN datastore  │  │
-│  │ (mgmt)   │  │ 3-node     │  │  (mgmt VMs)      │  │
-│  └──────────┘  └────────────┘  └──────────────────┘  │
-└─────────┬────────────────────────────────────────────┘
+┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
+│                                                                                                       │
+│  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │
+│  automates lifecycle, domain creation, and cluster expansion.                                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 SDDC Manager                 │  │                 Domain Model                │   │
+│   │           Lifecycle management hub           │  │         Management domain: ops stack        │   │
+│   │         Deploys vCenter + NSX + vSAN         │  │           Workload domains: tenant          │   │
+│   │            Certificate management            │  │           VI domain: vSphere+vSAN           │   │
+│   │        Password rotation: all stacks         │  │          NSX: shared or per-domain          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  SDDC Manager orchestrates all operations; management domain deploys first.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Bring-Up Process               │  │              Cluster Expansion              │   │
+│   │        Cloud Builder: initial deploy         │  │               Add host to pool              │   │
+│   │            Validates HW readiness            │  │           SDDC Mgr: expand cluster          │   │
+│   │          Deploys mgmt domain stack           │  │            Create workload domain           │   │
+│   │         JSON spec: all config values         │  │            Hosts: from free pool            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  VCF requires VMware-compatible servers on the VCF HCL; minimum 4 hosts for                           │
+│  management domain; 25GbE+ network with defined VLAN layout.                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SDDC Manager  = VCF automation and lifecycle engine; manages all components                          │
+│  Cloud Builder = initial deployment tool; validates and bootstraps VCF                                │
+│  Management domain= first domain; runs SDDC Mgr, vCenter, NSX, vSAN                                   │
+│  Workload domain= tenant cluster; separate vCenter + NSX per domain                                   │
+│  VI domain     = vSphere+vSAN workload domain; most common type                                       │
+│  NSX shared    = single NSX manager serves multiple workload domains                                  │
+│  Free pool     = unallocated hosts available for domain creation                                      │
+│  JSON spec     = configuration file passed to Cloud Builder for bringup                               │
+│  Bring-up      = process to deploy management domain from scratch                                     │
+│  HCL           = Hardware Compatibility List; VCF-specific list                                       │
+│  vLCM          = vSphere Lifecycle Manager; manages ESXi patching in VCF                              │
+│  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
           │ LCM orchestrates upgrades in BOM order
           ▼

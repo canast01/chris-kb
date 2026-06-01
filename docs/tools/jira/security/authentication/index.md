@@ -55,7 +55,6 @@ Administration → User Management → User Directories → Add Directory → Mi
   <attribute name="ldap.usessl" value="true"/>
 </directory>
 ```
-```text
 ┌──────────────────────────────────────── Jira — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

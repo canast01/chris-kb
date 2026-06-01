@@ -6,6 +6,39 @@
 Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 </div>
 
+```
+┌───────────────────────────────────── Windows Server — Operations ─────────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server day-to-day operations: patching, AD management, monitoring, and backups.              │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Patch Management      │  │        AD Operations        │  │          Monitoring         │   │
+│   │     WSUS / Intune / MECM    │  │    User / group lifecycle   │  │     Event Viewer alerts     │   │
+│   │    Patch Tuesday cadence    │  │   GPO create + test + link  │  │     Performance Monitor     │   │
+│   │     WSFC: rolling update    │  │  OU delegation: least priv  │  │     Task Scheduler jobs     │   │
+│   │    Test in non-prod first   │  │   AD recycle bin: restore   │  │      SNMP / WMI / WinRM     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · Domain Controllers · WSUS server · backup storage                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  WSUS         = Windows Server Update Services; on-prem patch distribution                            │
+│  MECM         = Microsoft Endpoint Configuration Manager; enterprise patching                         │
+│  Patch Tuesday= second Tuesday of month; Microsoft releases cumulative updates                        │
+│  WSFC         = Windows Server Failover Cluster; rolling update with CAU                              │
+│  CAU          = Cluster Aware Updating; non-disruptive patch application                              │
+│  AD Recycle Bin= restore deleted objects within tombstone lifetime (default 180d)                     │
+│  OU delegation= grant specific permissions on OU without Domain Admin                                 │
+│  WMI          = Windows Management Instrumentation; query system state                                │
+│  Task Scheduler= built-in job scheduler; XML-based task definitions                                   │
+│  Event Viewer = Windows event log GUI; filter by ID/source/level                                      │
+│  Performance Monitor= real-time/historical counter data; PerfMon.exe                                  │
+│  SNMP         = network monitoring protocol; available via Windows feature                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── Windows Server — Operations ─────────────────────────────────────┐
 │                                                                                                       │

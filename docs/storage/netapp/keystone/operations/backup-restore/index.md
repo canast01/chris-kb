@@ -27,7 +27,6 @@ scp admin@<keystone-collector-ip>:/tmp/ks-config-$(date +%Y%m%d).tar.gz ./
 # Verify configuration is parseable
 tar -tzf ks-config-<date>.tar.gz
 ```
-```powershell
 ┌─────────────────────────── NetApp Keystone — Operations: Backup & Restore ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

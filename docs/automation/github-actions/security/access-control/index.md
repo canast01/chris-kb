@@ -24,7 +24,6 @@ flowchart TD
     orgSecret --> secretCtx
     secretCtx --> step
 ```
-```text
 ┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     GitHub Actions access: who can trigger workflows, approve deployments, manage secrets     │   │

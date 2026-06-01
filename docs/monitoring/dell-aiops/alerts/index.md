@@ -37,25 +37,36 @@ Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference co
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Correlation benefits:
-
-| Without Correlation | With Correlation |
-|---|---|
-| 15 individual alerts for a failing node | 1 grouped alert: "Node degradation detected" |
-| Separate notifications per symptom | Single notification with full context |
-| Manual investigation to find root cause | Suggested root cause included |
-
-## Predicted Failure Alerts
-
-Predictive alerts are generated when component health indicators (SMART data for drives, thermal trends, error counters) match patterns associated with historical failures in the Dell telemetry dataset.
-
-```bash
-# Query predicted failure alerts
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alerts?filter=type%20eq%20%27PREDICTED_FAILURE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {system_name, component, predicted_failure_within_days}'
+┌───────────────────────────────────────── Dell AIOps — Alerts ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                 Alert Types                  │                Alert Lifecycle                 │   │
+│   │        Threshold: static metric limit        │              Open: condition met               │   │
+│   │        Anomaly: ML baseline deviation        │          Acknowledged: engineer seen           │   │
+│   │         Predictive: failure forecast         │           In Progress: being worked            │   │
+│   │           Capacity: fill date near           │          Resolved: condition cleared           │   │
+│   │          Hardware: component fault           │           Dismissed: false positive            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in AIOps engine · delivered via console, email, webhook, and ITSM                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Threshold alert = Fires when metric exceeds static limit (e.g., utilisation > 85%)                   │
+│  Anomaly alert = Fires when ML model detects unusual pattern outside learned baseline                 │
+│  Predictive alert = Fires when model forecasts failure or capacity exhaustion within horizon          │
+│  Capacity alert = Fires when forecast horizon drops below threshold (e.g., 90 days)                   │
+│  Hardware alert = Propagated from array firmware; component failure detected                          │
+│  Acknowledge = Engineer marks alert as seen; stops re-notification                                    │
+│  In Progress = Status indicating active remediation in progress                                       │
+│  Resolved = Alert auto-closes when triggering condition no longer detected                            │
+│  Dismissed = Alert closed as false-positive; reason required                                          │
+│  Severity = Critical / Warning / Informational; routes to different notification targets              │
+│  Alert context = Related metrics, affected objects, and recommendation attached to alert              │
+│  Noise reduction = Correlation grouping related alerts into single actionable incident                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Acknowledging and Dismissing AI Alerts

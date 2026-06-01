@@ -27,7 +27,6 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 │  Locker Master Password → offline vault (required for restore)  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────── Aria Suite LCM Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  LCM database backup, logscraper archive, and environment product backup steps.                       │

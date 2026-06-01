@@ -5,6 +5,38 @@
 Pure1 Vendor Support reference.
 </div>
 
+```
+┌─────────────────────────────────────── Pure1 — Vendor Support ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                      Support Model — Pure Storage Evergreen All-Inclusive                     │   │
+│   │           Pure1 included with every FlashArray and FlashBlade Evergreen subscription          │   │
+│   │             Auto-cases opened by Pure1 before customer impact; no action required             │   │
+│   │            Manual case: support.purestorage.com — 24x7 for Sev-1 production issues            │   │
+│   │               Pure1 API support: developer.purestorage.com for API documentation              │   │
+│   │            Community: community.purestorage.com — forums, code, and best practices            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Pure cloud hosted · support portal at support.purestorage.com · 24x7 for Sev-1                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Evergreen = All-inclusive subscription: support, upgrades, and hardware refresh                      │
+│  All-inclusive = No per-incident charges; unlimited cases with Evergreen                              │
+│  Auto-case = Pure1 ML opening case proactively; target is zero-touch resolution                       │
+│  Severity 1 = Production array down or data unavailable; 24x7 phone response                          │
+│  Severity 2 = Performance degraded or component failed; 4-hour response                               │
+│  Severity 3 = Non-critical advisory; best-effort response                                             │
+│  developer.purestorage.com = API documentation and py-pure-client reference                           │
+│  Community = Pure Storage user community; code exchange and troubleshooting tips                      │
+│  Pure1 feedback = Feedback link in Pure1 UI for feature requests                                      │
+│  TAM = Technical Account Manager; proactive guidance for large Pure fleets                            │
+│  Remote assist = Pure engineer accessing array via Pure1 secure tunnel for support                    │
+│  Evergreen expiry = Subscription renewal required; Pure1 access may lapse if expired                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────────── Pure1 — Vendor Support ────────────────────────────────────────┐
 │                                                                                                       │

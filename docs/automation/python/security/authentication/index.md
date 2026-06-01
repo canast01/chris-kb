@@ -26,7 +26,6 @@ graph TD
     apiKey --> bearerHeader
     bearerHeader --> apiEndpoint
 ```
-```text
 ┌─────────────────────────────────────── Python — Authentication ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Python authentication: boto3 credential chain, paramiko SSH key, requests auth classes    │   │

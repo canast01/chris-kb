@@ -42,7 +42,6 @@ sannav version
 # Show license summary
 sannav license
 ```
-```text
 ┌─────────────────────────────────── Brocade SANnav — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav management CLI: sannav-admin for system tasks; FOS CLI for fabric operations.                 │

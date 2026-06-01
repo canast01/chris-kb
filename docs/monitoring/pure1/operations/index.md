@@ -5,6 +5,36 @@
 Pure1 Operations reference.
 </div>
 
+```
+┌───────────────────────────────────────── Pure1 — Operations ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Daily            │  │            Weekly           │  │           Monthly           │   │
+│   │      Check fleet health     │  │      Review open alerts     │  │      Capacity planning      │   │
+│   │       Phonehome status      │  │       Review forecasts      │  │       Purity versions       │   │
+│   │        Active alerts        │  │         Update ITSM         │  │        Access review        │   │
+│   │       TAC case status       │  │      Performance check      │  │        Report to mgmt       │   │
+│   │       Degraded arrays       │  │      Dismiss false pos      │  │        Evergreen plan       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Operations entirely via pure1.purestorage.com browser UI · REST API for automation                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Fleet health = Overview showing all arrays with OK/Degraded/Unhealthy status                         │
+│  Phonehome status = Confirming Connected for all arrays; data age < 2 minutes                         │
+│  Active alerts = Open proactive alerts requiring acknowledgement or ITSM action                       │
+│  TAC case status = Checking open Pure Storage support cases in Pure1                                  │
+│  Degraded array = Array with non-critical fault; plan remediation within SLA                          │
+│  Forecast review = Weekly check of capacity projections; flag < 90 day arrays                         │
+│  Performance check = Weekly review of latency/IOPS trends for workload health                         │
+│  Purity versions = Monthly audit; arrays running EOS Purity should be scheduled for upgrade           │
+│  Evergreen plan = Monthly review of subscription expiry dates for renewal planning                    │
+│  Access review = Monthly audit of Pure1 user list; remove stale accounts                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────────── Pure1 — Operations ──────────────────────────────────────────┐
 │                                                                                                       │

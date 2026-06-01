@@ -46,7 +46,6 @@ VCSA Backup & Restore Architecture
                                            │  hosts, API    │
                                            └────────────────┘
 ```
-```text
 ┌────────────────────────────────── vCenter Server — Backup & Restore ──────────────────────────────────┐
 │                                                                                                       │
 │  vCenter provides built-in file-based backup via VAMI; image-level backup via                         │

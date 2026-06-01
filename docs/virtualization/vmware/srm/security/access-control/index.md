@@ -24,7 +24,6 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
 │  Rotate: array API token ──► update in SRM ──► delete old    │
 └──────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌───────────────────────────────────── VMware SRM — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │  SRM access control uses vCenter SSO roles; SRM Administrator for full control,                       │

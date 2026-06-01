@@ -34,7 +34,6 @@ flowchart LR
     psLog --> wef
     wef --> siem
 ```
-```powershell
 ┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostics: event log analysis, performance data collection, network traces, memory dumps.          │

@@ -27,7 +27,6 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 │  Network Mapping: Protected VLAN ──► Recovery VLAN / Test    │
 └──────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM design standards define RPO tiers, protection group structure, test frequency,                   │

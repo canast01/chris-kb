@@ -25,7 +25,6 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 │  SRA Auth: array API token ──► stored encrypted in SRM       │
 └──────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌───────────────────────────────────── VMware SRM — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
 │  SRM uses vCenter SSO for user authentication; site pair uses TLS certificates                        │

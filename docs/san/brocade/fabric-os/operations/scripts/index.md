@@ -139,7 +139,6 @@ Edit these lines near the top of the script:
 chmod +x brocade_fabric_health.sh
 SWITCH_HOST=192.168.1.10 SWITCH_USER=admin ./brocade_fabric_health.sh
 ```
-```powershell
 ┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

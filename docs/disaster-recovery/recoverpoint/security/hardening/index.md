@@ -5,6 +5,48 @@
 Hardening reference covering Hardening Checklist, Network Port Reference.
 </div>
 
+```
+┌────────────────────────────────────── RecoverPoint — Hardening ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               RecoverPoint — Hardening Checklist                              │   │
+│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
+│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
+│   │          [ ] Restrict management port (443 (mgmt HTTPS)) to jump host / management VLAN       │   │
+│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
+│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Network Hardening                                       │   │
+│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
+│   │         [ ] Firewall: allow only 443 (mgmt HTTPS) · 2222 (RPA SSH) · 8888 (splitter API)      │   │
+│   │                  [ ] Disable unused ports and protocols on management interface               │   │
+│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
+│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  RPA virtual appliances on ESXi · Journal volumes on storage array · WAN link between sites           │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPA           = RecoverPoint Appliance — virtual appliance managing journal and replication          │
+│  Splitter      = intercepts host I/O at hypervisor or array level; sends copy to RPA                  │
+│  Journal       = write-order-consistent storage capturing all writes for point-in-time access         │
+│  Consistency Group= set of volumes protected together; writes are applied in order across all         │
+│  Bookmark      = named marker in journal; enables deterministic recovery to a known state             │
+│  Image Access  = mounting a journal point-in-time image to a host for testing or recovery             │
+│  Failover      = activating the replica at the recovery site; breaks replication relationship         │
+│  Test Copy     = non-disruptive image access for validation without breaking replication              │
+│  RPO           = Recovery Point Objective; how much data loss is acceptable; CDP = near-zero          │
+│  RTO           = Recovery Time Objective; time from failover to service restored                      │
+│  Reverse       = after failover, replicates from recovery site back to re-sync production             │
+│  Splitter Lag  = delay between host write and journal commit; monitor for replication health          │
+│  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
+│  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── RecoverPoint — Hardening ───────────────────────────────────────┐
 │                                                                                                       │

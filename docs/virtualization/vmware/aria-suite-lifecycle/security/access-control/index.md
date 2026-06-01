@@ -25,7 +25,6 @@ Access Control reference covering Service Account for API Automation, Separation
 │  Never assign roles to individual user accounts                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```powershell
 ┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │  Admin and User roles with vIDM group mapping for Aria Suite Lifecycle Manager.                       │

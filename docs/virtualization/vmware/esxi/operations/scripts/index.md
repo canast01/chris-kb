@@ -20,21 +20,51 @@ ESXi Automation Scripts — Tool Selection
 │  SSH-based ad-hoc checks      Plink / CMD batch (.bat) │
 └───────────────────────────────────────────────────────┘
 ```
-
-Script Execution Flow (PowerCLI example)
-```powershell
-┌─────────────────────────────────────────────────────┐
-│  Admin workstation (Windows / PowerShell)             │
-│  └── Connect-VIServer → vCenter                       │
-│           │                                           │
-│           ├── Get-VMHost → each ESXi host             │
-│           │   ├── Connection state check              │
-│           │   ├── Hardware sensor check               │
-│           │   ├── Datastore capacity check            │
-│           │   ├── Network adapter check               │
-│           │   └── Required services check             │
-│           └── Report: PASS / WARNING / CRITICAL       │
-└─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               PowerCLI Scripts               │  │            Shell / esxcli Scripts           │   │
+│   │           Get-VMHost health report           │  │          esxcli system version get          │   │
+│   │           Set-VMHostNTP / DNS bulk           │  │          for host in list; ssh cmd          │   │
+│   │             Move-VM bulk vMotion             │  │           esxcli storage core path          │   │
+│   │         Get-Datastore free space rpt         │  │            esxcli vm process kill           │   │
+│   │           Invoke-VMScript in guest           │  │          cron + configBundle backup         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  PowerCLI for vCenter-scope tasks; esxcli over SSH for per-host automation.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Python / pyVmomi Scripts           │  │             Automation Patterns             │   │
+│   │           ServiceInstance connect            │  │              Idempotent design              │   │
+│   │           Traverse container view            │  │            Error handling + retry           │   │
+│   │           Get host config objects            │  │              Dry-run mode flag              │   │
+│   │           Reconfigure host via API           │  │              Log output to file             │   │
+│   │          Task monitoring wait loop           │  │             Pipeline integration            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts on x86, management network, jump host for script execution                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PowerCLI    = VMware PowerShell SDK; Connect-VIServer for vCenter/ESXi                               │
+│  pyVmomi     = Python SDK for vSphere API; official VMware library                                    │
+│  esxcli      = on-host CLI; run via SSH or Ansible for bulk host ops                                  │
+│  govc        = Go CLI for vCenter API; lightweight alternative to PowerCLI                            │
+│  Invoke-VMScript = PowerCLI cmd to run script in guest via VMtools                                    │
+│  Container view = pyVmomi API for traversing vCenter inventory objects                                │
+│  Task object = vSphere async task; polled until complete or error                                     │
+│  Idempotent  = script produces same result if run multiple times safely                               │
+│  Dry-run     = logic executes but no changes applied; safe testing                                    │
+│  cron        = Linux scheduler on jump host; triggers backup/health scripts                           │
+│  SSH         = Secure Shell; disabled by default on ESXi; enable per-host                             │
+│  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```powershell
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐

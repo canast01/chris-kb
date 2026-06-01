@@ -5,6 +5,34 @@
 CloudIQ Standards reference covering System Tagging Policy, Health Score Thresholds, Alert Notification Routing, Capacity Warning Levels, Dashboard Standards and 2 more sections.
 </div>
 
+```
+┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Onboarding Standards             │  │            Operational Standards            │   │
+│   │             Register all arrays              │  │                Review weekly                │   │
+│   │              Consistent naming               │  │                Alerts to ITSM               │   │
+│   │              Tag env + location              │  │            Recommendations acted            │   │
+│   │             Service account only             │  │            Capacity plan monthly            │   │
+│   │             Verify telemetry OK              │  │              Escalation runbook             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  All Dell arrays on TCP 443 to cloudiq.dell.com · gateway VM for restricted networks                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Telemetry verification = Confirming array shows as Connected and data age < 15 minutes               │
+│  Naming standard = site-model-id format for array display name in CloudIQ                             │
+│  Tag = CloudIQ metadata label for grouping (env:prod, location:dc1, team:storage)                     │
+│  Service account = Dedicated non-personal Dell account for CloudIQ org management                     │
+│  ITSM integration = Webhook forwarding CloudIQ alerts to ServiceNow or similar                        │
+│  Recommendation = AI action item; policy requires acting within SLA (e.g., 5 business days)           │
+│  Capacity plan = Monthly review of forecast data to plan procurement before critical threshold        │
+│  Escalation runbook = Procedure triggered by Critical severity alert in CloudIQ                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │

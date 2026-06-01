@@ -41,7 +41,6 @@ KEY PROCEDURE FLOWS
          ▼
   Monitor until compliant
 ```
-```text
 ┌────────────────────────────────────── vSAN — Common Procedures ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN operational procedures: disk replacement, host removal, policy update,                          │

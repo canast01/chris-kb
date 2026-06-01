@@ -30,7 +30,6 @@ graph LR
     checkLogs -->|Warnings| devMode
     devMode --> resolved
 ```
-```text
 ┌──────────────────────────────────────── Python — Diagnostics ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Python diagnostic sequence: reproduce → inspect traceback → pdb debug → add logging      │   │

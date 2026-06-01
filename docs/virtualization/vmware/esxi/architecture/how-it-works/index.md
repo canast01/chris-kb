@@ -27,8 +27,6 @@ VMkernel Internals — Resource Stack
 │                                   └── pNICs (vmnic0..n)    │
 └────────────────────────────────────────────────────────────┘
 ```
-  ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
-```text
 ┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │

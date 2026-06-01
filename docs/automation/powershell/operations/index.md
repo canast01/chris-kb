@@ -6,6 +6,30 @@
 PowerShell — Operations reference.
 </div>
 
+```
+┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       PowerShell ops: script deployment, module updates, remoting config, DSC management      │   │
+│   │  Module mgmt: Install-Module, Update-Module, Get-InstalledModule; -Scope AllUsers for shared  │   │
+│   │            Remoting: Enable-PSRemoting; configure WinRM HTTPS; test with Test-WSMan           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Module Operations               │  │             Remoting Operations             │   │
+│   │              Find-Module <name>              │  │           Enable-PSRemoting -Force          │   │
+│   │       Install-Module -Name <x> -Force        │  │            Test-WSMan <hostname>            │   │
+│   │           Update-Module -Name <x>            │  │            Enter-PSSession <host>           │   │
+│   │          Get-InstalledModule | sort          │  │           Invoke-Command -Computer          │   │
+│   │        Uninstall-Module -AllVersions         │  │          New-PSSession (persistent)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │Enable-PSRemoting = configures WinRM listener and firewall rule; required before remoting works│   │
+│   │  PSRepository      = Register-PSRepository to add internal feed (Nexus, Artifactory, ProGet)  │   │
+│   │    -AllowClobber   = Install-Module flag; overrides conflicting commands from other modules   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 ┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,6 +4,60 @@
 Dell Secure Connect Gateway navigation for Operations, CLI Reference, Scripts.
 </div>
 
+```
+┌────────────────────────────────── Dell Secure Connect Gateway (SCG) ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       SCG: Dell phone-home gateway; relays support telemetry from on-prem arrays to Dell      │   │
+│   │            Outbound HTTPS port 443 to Dell support; no inbound connections required           │   │
+│   │         Supports: PowerMax, Unity, PowerScale, PowerStore, VxBlock, iDRAC, VxRail, ECS        │   │
+│   │       Deployment: VM or physical appliance; registered devices enroll via support portal      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Array sends telemetry → SCG collects → HTTPS to Dell → CloudIQ ingests → alert/analytics           │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Connectivity        │  │       Managed Devices       │  │          Functions          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        HTTPS port 443       │  │           PowerMax          │  │       Telemetry relay       │   │
+│   │       No inbound req.       │  │            Unity            │  │        Alert forward        │   │
+│   │        Proxy support        │  │          PowerScale         │  │        Log collection       │   │
+│   │           TLS 1.2+          │  │          PowerStore         │  │         CloudIQ feed        │   │
+│   │       VM or appliance       │  │        iDRAC / VxRail       │  │       Support SR open       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Device enrolled → SCG polls or receives events → batches telemetry → forwards to Dell              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   │      Aspect      │      Detail      │    Requirement    │   Alternative    │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Network      │  HTTPS 443 out   │   Firewall allow  │    HTTP proxy    │  DNS resolution  │   │
+│   │    Deployment    │     VM (OVA)     │    4 vCPU, 8 GB   │  Physical appl.  │  vCenter needed  │   │
+│   │   Registration   │   Support acct   │  Active contract  │        —         │  Per device SN   │   │
+│   │     CloudIQ      │    Auto-feeds    │    SCG enrolled   │ Direct call home │  SaaS analytics  │   │
+│                                                                                                       │
+│    Physical: SCG VM on management network; DNS and port 443 to esrs.emc.com required                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Phone-home     = Automated outbound telemetry from array to Dell Support; no manual uploads        │
+│    CloudIQ        = Dell SaaS analytics and health platform; receives data from SCG relay             │
+│    ESRS           = EMC Secure Remote Support; earlier name for SCG protocol/service                  │
+│    Alert forward  = SCG forwards array alerts to Dell Support; can auto-open Service Requests         │
+│    Log collection = SCG pulls diagnostic logs from enrolled arrays for support case upload            │
+│    Proxy support  = SCG can use HTTP/HTTPS proxy for outbound if direct internet not allowed          │
+│    TLS 1.2+       = All traffic from SCG to Dell uses TLS; no unencrypted support traffic             │
+│    OVA            = Open Virtualization Appliance; SCG deployment format for VMware                   │
+│    Support SR     = Service Request; SCG can auto-create SRs when critical alerts fire                │
+│    Enrolled device= Array registered with SCG; SCG relays its events and telemetry to Dell            │
+│    Direct call home= Some arrays can phone home directly without SCG; SCG is preferred                │
+│    Active contract= SCG and CloudIQ require valid Dell support contract for enrolled devices          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────── Dell Secure Connect Gateway (SCG) ──────────────────────────────────┐
 │                                                                                                       │

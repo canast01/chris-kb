@@ -37,24 +37,36 @@ Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pu
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Alerts via Pure1 API
-
-```bash
-TOKEN="<pure1-token>"
-
-# All open alerts across all arrays
-curl -s "https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state='open'" \
-  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
-
-# Open alerts with severity error or critical
-curl -s "https://api.pure1.purestorage.com/api/1.latest/alerts?filter=state='open'%20and%20(severity='error'%20or%20severity='critical')" \
-  -H "Authorization: Bearer $TOKEN" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for a in data.get('items', []):
-    print(f\"{a['arrays'][0]['name']} | {a['severity'].upper()} | {a['summary']}\")
-"
+┌─────────────────────────────────────────── Pure1 — Alerts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │               Alert Categories               │                 Alert Actions                  │   │
+│   │       Pre-failure: component degraded        │             Acknowledge: mark seen             │   │
+│   │           Capacity: fill < 90 days           │                 Open TAC case                  │   │
+│   │         Performance: latency anomaly         │                Webhook to ITSM                 │   │
+│   │            Software: Purity event            │             Dismiss false positive             │   │
+│   │         Connectivity: phonehome gap          │               Email to ops team                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Alerts generated in Pure cloud · delivered via Pure1 UI, email, webhook · TAC auto-case              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Pre-failure alert = Pure1 ML detecting component degradation before failure                          │
+│  Capacity alert = Projected full date within 90 days at current growth rate                           │
+│  Performance alert = Latency or IOPS anomaly detected by Pure1 ML                                     │
+│  Software alert = Purity OS event (firmware error, NVMe error, data reduction issue)                  │
+│  Connectivity alert = Array phonehome not received for > 5 minutes                                    │
+│  TAC auto-case = Pure1 opening case with diagnostic bundle; assigned to engineer                      │
+│  Acknowledge = Marks alert as seen; suppresses re-notification                                        │
+│  Dismiss = Close confirmed false-positive with comment                                                │
+│  Severity = Critical / Warning / Info; Critical triggers auto-case                                    │
+│  Proactive = Alert fires before customer notices impact; target of Pure1 model                        │
+│  Webhook = HTTP POST from Pure1 to configured URL when alert fires                                    │
+│  Phonehome gap = Connectivity loss; array cannot reach pure1.purestorage.com                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Alert Severity Definitions

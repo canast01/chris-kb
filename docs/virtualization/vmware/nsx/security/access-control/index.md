@@ -56,7 +56,6 @@ for r in d.get('results', []):
     print(f'  {name:<50} type={rtype:<15} roles={roles:<25} source={src}')
 "
 ```
-```text
 ┌──────────────────────────────────────── NSX — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX RBAC roles, vCenter-linked permissions, project isolation, and auditing.                         │

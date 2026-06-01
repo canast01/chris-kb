@@ -46,7 +46,6 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
-```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Operations Scripts ──────────────────────────────┐
 │                                                                                                       │
 │  Automation scripts for ND backup, health reporting, site management, and upgrades.                   │

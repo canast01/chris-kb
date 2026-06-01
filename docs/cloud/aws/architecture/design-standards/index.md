@@ -60,7 +60,6 @@ flowchart LR
     glacier -->|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive -->|"Expiration rule"| expire
 ```
-```text
 ┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │  Standards covering account structure, tagging, naming, networking, and security baseline.            │

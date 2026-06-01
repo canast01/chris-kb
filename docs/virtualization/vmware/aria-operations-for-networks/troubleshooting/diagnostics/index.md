@@ -16,7 +16,6 @@ Settings → Support → Download Support Bundle
   Select: Platform + All Collectors
   Download and attach to VMware Support case
 ```
-```text
 ┌────────────────────────────────────────── vRNI Diagnostics ───────────────────────────────────────────┐
 │                                                                                                       │
 │  app.log analysis, REST API diagnostic checks, and support bundle for vRNI.                           │

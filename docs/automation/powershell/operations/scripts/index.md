@@ -42,7 +42,6 @@ $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
-```powershell
 ┌────────────────────────────────── PowerShell — Scripts (Operations) ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │           Operational PowerShell scripts for common infrastructure management tasks           │   │

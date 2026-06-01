@@ -38,7 +38,6 @@ AUTOMATION FLOW
                  ├── Exit code (0=PASS, 1=WARN, 2=CRIT)
                  └── Alert / notification (email, webhook)
 ```
-```powershell
 ┌───────────────────────────────────── vSAN — Operational Scripts ──────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI and esxcli scripts automate vSAN health checks, capacity reporting,                         │

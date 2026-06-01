@@ -27,7 +27,6 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │                  │  └────────────┘  │                        │
 └──────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │

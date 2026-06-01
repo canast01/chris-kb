@@ -32,9 +32,6 @@ ESXi Encryption Stack
 │  └── TPM 2.0 — host attestation (vSphere 7.0+)          │
 └─────────────────────────────────────────────────────────┘
 ```
-  ESXi Host Certificate: /etc/vmware/ssl/rui.crt
-  Managed by VMCA (vCenter CA) — auto-renewed
-```text
 ┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │

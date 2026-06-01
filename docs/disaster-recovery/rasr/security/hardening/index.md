@@ -46,7 +46,6 @@ uemcli /sys/setting set -loginBanner "Authorised access only. All sessions are l
 uemcli /sys/security show
 uemcli /sys/setting show
 ```
-```text
 ┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -35,28 +35,34 @@ Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Pl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Capacity via Pure1 API
-
-```bash
-TOKEN="<pure1-token>"
-
-# All arrays with capacity data
-curl -s "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space" \
-  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
-
-# Arrays above 80% used
-curl -s "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,space" \
-  -H "Authorization: Bearer $TOKEN" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for a in data.get('items', []):
-    space = a.get('space', {})
-    total = a.get('capacity', 0)
-    used  = space.get('unique', 0) + space.get('snapshots', 0)
-    if total > 0 and (used / total) > 0.8:
-        print(f\"{a['name']}: {used/total*100:.1f}% used\")
-"
+┌───────────────────────────────────── Pure1 — Capacity Management ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Capacity Overview               │  │                 Forecasting                 │   │
+│   │              Total raw capacity              │  │             30/60/90 day horizon            │   │
+│   │               Effective used %               │  │               ML growth model               │   │
+│   │              Data reduction 1:X              │  │             Projected full date             │   │
+│   │              Unique vs reduced               │  │               Seasonal adjust               │   │
+│   │                Snapshot space                │  │              Capacity alert 90d             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Capacity metrics from Purity OS via phonehome · Pure1 processes and forecasts                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Effective capacity = Usable capacity after RAID; starting point for data placement                   │
+│  Data reduction = Combined dedup + compression ratio (e.g., 3.5:1)                                    │
+│  Unique data = Data before dedup; actual bytes written by hosts                                       │
+│  Reduced data = Physical footprint after dedup and compression                                        │
+│  Snapshot space = Physical space used by snapshots; tracked separately                                │
+│  Projected full date = ML forecast of when effective capacity will be exhausted                       │
+│  30/60/90 day = Default forecast horizons; Pure1 alerts at < 90 days                                  │
+│  Seasonal adjust = ML accounting for periodic usage spikes in forecast                                │
+│  Capacity alert = Pure1 alert + TAC case when horizon < 90 days                                       │
+│  Evergreen refresh = Capacity expansion via Pure subscription hardware refresh                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Capacity Alerts

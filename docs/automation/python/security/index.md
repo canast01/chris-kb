@@ -6,6 +6,30 @@
 Python Automation — Security reference.
 </div>
 
+```
+┌────────────────────────────────────────── Python — Security ──────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Python security: no hardcoded secrets, dependency CVE scanning, input validation, bandit scan │   │
+│   │   Secrets: os.environ["KEY"] or SecretManager SDK — never in source or config files in repo   │   │
+│   │   Supply chain: pin all dependencies; scan with safety or pip-audit; use trusted index only   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Secrets           │  │        Code Security        │  │         Supply Chain        │   │
+│   │    os.environ for secrets   │  │        bandit -r src/       │  │         Pin all deps        │   │
+│   │    AWS SecretsManager SDK   │  │      No eval() / exec()     │  │      pip-audit / safety     │   │
+│   │  python-dotenv (.env local) │  │      Validate all input     │  │     Only PyPI / internal    │   │
+│   │  No secrets in git history  │  │  subprocess: no shell=True  │  │        Dependabot PRs       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  bandit       = security linter; detects hardcoded secrets, SQL injection risks, unsafe calls │   │
+│   │          pip-audit    = checks installed packages against OSV vulnerability database          │   │
+│   │shell=True   = subprocess with shell=True risks command injection; always use list args instead│   │
+│   │            pre-commit   = hooks for bandit/ruff/gitleaks run before each git commit           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────────── Python — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

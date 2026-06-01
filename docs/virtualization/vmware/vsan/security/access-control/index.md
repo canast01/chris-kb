@@ -32,7 +32,6 @@ vSAN RBAC MODEL
                        ├── Host-02
                        └── vSAN Datastore  ◄── inherits (propagate=true)
 ```
-```text
 ┌──────────────────────────────────────── vSAN — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN access control is managed through vCenter RBAC; dedicated vSAN admin                            │

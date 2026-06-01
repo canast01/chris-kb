@@ -32,7 +32,6 @@ VPC CLI: Network Resource Hierarchy
   │  └─────────────────────┘                             │
   └──────────────────────────────────────────────────────┘
 ```
-```text
 ┌──────────────────────────────────────────── AWS CLI — VPC ────────────────────────────────────────────┐
 │                                                                                                       │
 │  VPC CLI commands for network creation, subnets, routing, security groups, and peering.               │

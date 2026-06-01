@@ -5,6 +5,34 @@
 Dell AIOps Standards reference covering System Tagging Requirements, Recommendation Priority and Response SLA, Alert Routing, Change Management Requirements, Deferral Policy and 3 more sections.
 </div>
 
+```
+┌──────────────────────────────────── Dell AIOps — Design Standards ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Platform Standards              │  │             Alert & Notification            │   │
+│   │             All Dell infra added             │  │             ITSM for all alerts             │   │
+│   │            SSD time-series store             │  │             Severity documented             │   │
+│   │                HA deployment                 │  │             No alert left > 24h             │   │
+│   │                 Backup daily                 │  │              Weekly rec review              │   │
+│   │            Dedicated admin access            │  │              Escalation defined             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on management cluster · SSD datastore · management network only                                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  HA deployment = Active/passive or clustered AIOps for platform availability                          │
+│  SSD time-series = Flash storage required for time-series DB write performance                        │
+│  All infra added = Every Dell array/server registered in AIOps; no blind spots                        │
+│  ITSM for all = ServiceNow incident created for every Critical/High AIOps alert                       │
+│  Alert SLA = Policy requiring no open Critical alert older than 24 hours                              │
+│  Weekly review = Dedicated calendar event to action AIOps recommendations                             │
+│  Escalation = Runbook defining who to call when AIOps shows Critical storage/compute alert            │
+│  Dedicated admin = AIOps admin login separate from day-to-day operator access                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────────────────── Dell AIOps — Design Standards ────────────────────────────────────┐
 │                                                                                                       │

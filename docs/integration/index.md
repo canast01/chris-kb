@@ -5,6 +5,40 @@
 References for infrastructure service integrations and connectivity patterns.
 </div>
 
+```
+┌─────────────────────── Integration — API, Certificate, Directory, Email & NTP ────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Integration references: patterns for connecting infrastructure to shared services       │   │
+│   │        Covers: REST API auth, CA trust store setup, LDAP/AD directory, SMTP relay, NTP        │   │
+│   │   External connectivity: outbound proxy config, firewall rules, service integration patterns  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Identity & Certs      │  │       Network Services      │  │       App Integrations      │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      LDAP/AD directory      │  │        NTP hierarchy        │  │       ServiceNow CMDB       │   │
+│   │       CA trust stores       │  │      SMTP relay config      │  │      Monitoring agents      │   │
+│   │      API auth patterns      │  │        DNS resolution       │  │     SIEM log forwarding     │   │
+│   │       TLS cert install      │  │         Proxy config        │  │       Backup agent reg      │   │
+│   │      SAML/SSO patterns      │  │        Firewall rules       │  │      Ticketing webhooks     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    LDAP         = Lightweight Directory Access Protocol; query AD for user/group membership           │
+│    LDAPS        = LDAP over TLS; use port 636; never send credentials over plain LDAP                 │
+│    Trust store  = OS/app certificate store; CA cert must be here for TLS validation to succeed        │
+│    NTP stratum  = Distance from reference clock; stratum 0 = atomic; infra uses stratum 2-3           │
+│    SMTP relay   = Mail server that forwards alerts; authenticated relay prevents open relay abuse     │
+│    mTLS         = Mutual TLS; both sides present certificates; service-to-service auth                │
+│    Proxy        = Outbound HTTP/HTTPS forwarder; set http_proxy env var for CLI tools                 │
+│    SAML         = Federated SSO standard; IdP issues assertions; SP trusts them                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────── Integration — API, Certificate, Directory, Email & NTP ────────────────────────┐
 │                                                                                                       │

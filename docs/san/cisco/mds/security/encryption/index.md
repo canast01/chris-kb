@@ -45,7 +45,6 @@ ssh version 2
 show ssh server
 show users
 ```
-```text
 ┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
 │                                                                                                       │
 │  Management-plane TLS and FC-SP fabric encryption protecting MDS switch communications.               │

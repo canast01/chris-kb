@@ -29,7 +29,6 @@ Pure1 > Administration > Single Sign-On > Configure
   - role claim → Admin or Read-only (via IdP group claim)
 - Enable SCIM for automatic user provisioning/deprovisioning
 ```
-```text
 ┌────────────────────────────────────────── Pure1 — Security ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

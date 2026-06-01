@@ -35,7 +35,6 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 ```text
 <Team/Domain> — <Product/Initiative>
 ```
-```text
 ┌─────────────────────────────────────── Jira — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

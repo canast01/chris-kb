@@ -30,7 +30,6 @@ flowchart TD
     class q1 decision
     class alert terminal
 ```
-```text
 ┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

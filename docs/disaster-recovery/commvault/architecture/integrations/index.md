@@ -5,6 +5,64 @@
 Commvault — Integrations reference.
 </div>
 
+```
+┌──────────────────────── Commvault Integrations — Platforms, Arrays, and Cloud ────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Integration Scope                                       │   │
+│   │     Commvault integrates with hypervisors, databases, storage arrays, and cloud providers     │   │
+│   │         IntelliSnap: native array API (REST/SMI-S) for hardware-accelerated snapshots         │   │
+│   │          Application iDAs provide quiesce and consistent backup for DBs and messaging         │   │
+│   │           Cloud: S3-compatible, Azure Blob, GCS as secondary copy or primary target           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Each integration has a dedicated iDA or connector; licensing is per data source type               │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Hypervisors      │       Databases       │     Storage Arrays    │      Cloud & SaaS     │   │
+│   │   VMware vSphere 7/8  │    Oracle DB (RMAN)   │    Dell PowerStore    │    AWS S3 / Glacier   │   │
+│   │   Hyper-V 2019/2022   │    SQL Server (VDI)   │     Dell PowerMax     │   Azure Blob / ADLS   │   │
+│   │      Nutanix AHV      │  SAP HANA / BR*Tools  │      NetApp ONTAP     │    Google Cloud GCS   │   │
+│   │     KVM (libvirt)     │    Exchange / M365    │      Pure Storage     │    Commvault Cloud    │   │
+│   │   AWS EC2 / Azure VM  │   PostgreSQL / MySQL  │    HPE Primera/3PAR   │   Salesforce backup   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    IntelliSnap offloads snapshot to array; backup job copies snapshot to MA with minimal host I/O     │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               IntelliSnap Flow               │  │              Cloud Integration              │   │
+│   │      1. CS triggers snap via array API       │  │       Cloud library: object container       │   │
+│   │    2. Array creates crash-consistent snap    │  │     MA authenticates with IAM/SAS token     │   │
+│   │       3. MA mounts snap for data read        │  │      Multipart upload for large chunks      │   │
+│   │       4. Data streamed to disk library       │  │    Lifecycle: move old copies to Glacier    │   │
+│   │    5. Snap unmounted; retained per policy    │  │           WORM via S3 Object Lock           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  IntelliSnap: MA needs FC/iSCSI access to array snap LUNs for mount; HBA/iSCSI initiator              │
+│  Array API: dedicated management NIC or VLAN for REST/SMI-S calls from CommServe                      │
+│  Cloud: outbound HTTPS 443 from MA to cloud endpoints; proxy support available                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  IntelliSnap    = Commvault snap management using native storage array APIs                           │
+│  SMI-S          = Storage Management Initiative Specification; standard array management API          │
+│  VDI            = SQL Server Virtual Device Interface for hot online backup                           │
+│  RMAN           = Oracle Recovery Manager; Commvault Oracle iDA wraps RMAN commands                   │
+│  BR*Tools       = SAP backup tools; Commvault integrates as backint backend                           │
+│  ADLS           = Azure Data Lake Storage Gen2; supported as cloud library target                     │
+│  Object Lock    = S3 immutability feature used for WORM compliance copies                             │
+│  IAM Role       = AWS identity for MA EC2 instance; used instead of static credentials                │
+│  SAS Token      = Azure shared access signature; time-limited credential for Blob access              │
+│  Cloud Library  = Commvault logical library pointing to object store bucket/container                 │
+│  Backint        = SAP backup API standard; Commvault implements as SAP HANA target                    │
+│  RCT            = Hyper-V Resilient Change Tracking; incremental VM backup mechanism                  │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌──────────────────────── Commvault Integrations — Platforms, Arrays, and Cloud ────────────────────────┐
 │                                                                                                       │

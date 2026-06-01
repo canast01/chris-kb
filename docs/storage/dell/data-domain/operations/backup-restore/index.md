@@ -30,7 +30,6 @@ graph TD
     ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
     ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
 ```
-```powershell
 ┌───────────────────────────────── Dell Data Domain Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -37,7 +37,6 @@ DIAGNOSTIC TOOL CHAIN
                           ▼
                  Upload to Broadcom case
 ```
-```text
 ┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN diagnostics use the health UI, esxcli, RVC, cmmds-tool, and support bundle                      │

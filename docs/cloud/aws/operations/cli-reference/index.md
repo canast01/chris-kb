@@ -31,7 +31,6 @@ AWS CLI Daily Ops: Top Commands
   │  list-nodegroups   │  │  send-command             │
   └────────────────────┘  └───────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────── AWS Operations — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  Common AWS CLI operational commands for day-to-day management and scripting.                         │

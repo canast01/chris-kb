@@ -38,7 +38,6 @@ vSphere Encryption Key Flow
   │  vCenter ──TLS──▶ ESXi :443 (host management)      │
   └────────────────────────────────────────────────────┘
 ```
-```text
 ┌───────────────────────────────────── vCenter Server — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter encrypts management traffic via TLS and integrates with external KMS                         │

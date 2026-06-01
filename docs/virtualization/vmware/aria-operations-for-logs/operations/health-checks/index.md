@@ -17,7 +17,6 @@ curl -sk -u 'admin:<password>' \
 
 # Expected: all nodes state = "ACTIVE"
 ```
-```text
 ┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
 │                                                                                                       │
 │  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │

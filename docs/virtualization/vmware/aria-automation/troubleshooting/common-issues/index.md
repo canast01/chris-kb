@@ -19,7 +19,6 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
   && echo "YAML OK" || echo "YAML syntax error"
 ```
-```text
 ┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │  Common vRA issues: failed requests, data collection errors, SSO failures, Orchestrator faults.       │

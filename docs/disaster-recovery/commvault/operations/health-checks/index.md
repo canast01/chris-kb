@@ -5,6 +5,64 @@
 Health Checks reference covering Daily Checklist, Weekly Checks.
 </div>
 
+```
+┌───────────────────────────── Commvault Health Checks — Daily and Weekly ──────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Daily Health Checks              │  │             Weekly Health Checks            │   │
+│   │        Review overnight job failures         │  │          Run SLA compliance report          │   │
+│   │         Check CommServe services up          │  │         Validate aux copy completion        │   │
+│   │        Verify disk library free space        │  │      Check DDB health and fragmentation     │   │
+│   │      Review alert emails for anomalies       │  │        Review library capacity trends       │   │
+│   │       Check MA status (active/offline)       │  │       Verify DR CommServe sync status       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Health checks use Command Center dashboards, qlist CLI, and CommServe event log                    │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    CommServe Service Health                                   │   │
+│   │        Check Windows services: CommVault Communications (GxCVD), Job Manager (GxJobMgr)       │   │
+│   │          Check SQL Server: CSDB query response time < 2s; check for blocking queries          │   │
+│   │                 Check CV log directory: disk < 80% full; rotate logs if needed                │   │
+│   │                 Windows Event Log: look for GxJobMgr, MSSQL errors in last 24h                │   │
+│   │           CommServe DR sync: SQL log shipping lag < 15 min; test failover quarterly           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    MediaAgent health includes DDB consistency and connectivity from all clients                       │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       MediaAgent Health                                       │   │
+│   │              MA status: all configured MAs should show Ready in CommCell Console              │   │
+│   │         DDB fragmentation: run DDB Verification job monthly; check for corrupt chunks         │   │
+│   │                  Disk library: free space > 20%; monitor growth trend weekly                  │   │
+│   │             Network throughput: MA backup streams should sustain > 500 MB/s per MA            │   │
+│   │                  MA log: C:\Program Files\Commvault\Log Files\MediaAgent.log                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Monitor disk library mount points (NFS/CIFS/LUN) for connectivity and free space                     │
+│  MA server: check CPU/RAM utilization during peak backup windows (target < 80% CPU)                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GxCVD          = CommVault Communications Service; handles all inter-component comms                 │
+│  GxJobMgr       = CommVault Job Manager service; schedules and monitors all backup jobs               │
+│  DDB Verify     = Job that reads all DDB fingerprints and validates against stored chunks             │
+│  CSDB           = CommServe Database (SQL Server); holds all CommCell configuration                   │
+│  MA Ready       = Status indicating MA service is running and library is accessible                   │
+│  SLA Report     = Compliance report: % subclients with successful backup in SLA window                │
+│  Log Shipping   = SQL Server mechanism replicating CSDB transaction logs to DR CommServe              │
+│  Aux Copy Lag   = Time between primary backup completion and secondary copy completion                │
+│  CV_DIAG        = Commvault diagnostic tool; collects all logs and config for support                 │
+│  Library Prune  = Aged-out backup chunks removed from disk library per retention policy               │
+│  Fragmentation  = DDB fragmentation degrades dedup performance; fixed by DDB defrag job               │
+│  CommServe DR   = Passive standby CommServe; kept in sync via SQL log shipping                        │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────── Commvault Health Checks — Daily and Weekly ──────────────────────────────┐
 │                                                                                                       │

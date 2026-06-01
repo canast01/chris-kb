@@ -29,7 +29,6 @@ mkfs.xfs /dev/mapper/secure-data
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
 ```
-```text
 ┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │

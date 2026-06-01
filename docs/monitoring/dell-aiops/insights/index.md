@@ -37,28 +37,36 @@ Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Key predicted metrics:
-
-| Metric | Alert Threshold | Action if Trending High |
-|---|---|---|
-| Average read latency (ms) | > 5 ms for block, > 2 ms for all-flash | Investigate cache hit rate, queue depth |
-| Write latency (ms) | > 3 ms sustained | Check destage rate, cache pressure |
-| Controller CPU (%) | > 80% | Evaluate workload distribution across controllers |
-| Cache hit rate (%) | < 70% | Analyse working set size vs. cache capacity |
-
-## Bottleneck Detection
-
-Bottleneck insights identify the active constraint limiting performance at a given time.
-
-Navigation: **CloudIQ > AIOps > Insights > Bottlenecks**
-
-```bash
-# List active bottleneck insights
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/bottlenecks?filter=state%20eq%20%27ACTIVE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {system_name, bottleneck_type, severity, recommendation}'
+┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │             AIOps Insights: AI-generated summaries of infrastructure health trends            │   │
+│   │                 Categories: Efficiency, Risk, Capacity, Performance, Security                 │   │
+│   │         Insight = aggregated pattern observed across multiple objects and time windows        │   │
+│   │                    Includes estimated business impact and priority ranking                    │   │
+│   │                    Updated daily from ML analysis of all ingested telemetry                   │   │
+│   │             Actionable: each insight links to recommendations and affected systems            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Insights computed in AIOps ML engine · stored in AIOps DB · displayed in UI and API                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Insight = Aggregated finding from ML analysis covering multiple systems or time windows              │
+│  Efficiency insight = Identifying over-provisioned or under-utilised resources                        │
+│  Risk insight = Patterns suggesting increased failure probability across a group of systems           │
+│  Capacity insight = Fleet-wide capacity outlook; systems at risk within 90 days                       │
+│  Performance insight = Workload patterns causing latency degradation across multiple arrays           │
+│  Security insight = Configuration gaps or unusual access patterns detected by ML                      │
+│  Business impact = Estimated operational risk or cost of not acting on insight                        │
+│  Priority ranking = Insights ordered by estimated impact and urgency                                  │
+│  Affected systems = List of infrastructure objects contributing to the insight                        │
+│  Linked recommendations = Specific actions to address the identified pattern                          │
+│  Daily refresh = Insight model runs nightly on new telemetry; UI updated each morning                 │
+│  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Common bottleneck types and remediation:

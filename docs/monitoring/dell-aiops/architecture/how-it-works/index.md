@@ -5,6 +5,38 @@
 How It Works reference covering Architecture, Component Roles, AIOps Capabilities, Telemetry Sources, Data Flow.
 </div>
 
+```
+┌────────────────────────────────────── Dell AIOps — How It Works ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Step 1: Collection — adapters poll or receive telemetry from Dell infrastructure       │   │
+│   │              Step 2: Ingest — data normalised and stored in time-series database              │   │
+│   │        Step 3: ML Analysis — models run anomaly detection, forecasting, and correlation       │   │
+│   │         Step 4: Alert Generation — threshold or ML trigger creates alert with context         │   │
+│   │            Step 5: Notification — alert routed to console, email, webhook, or ITSM            │   │
+│   │          Step 6: Remediation — engineer acts on recommendation; alert closes on clear         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data flow: infrastructure → collector → ingest API → time-series DB → ML → alert bus                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter = Component connecting AIOps to a specific data source (PowerStore, PowerScale)              │
+│  Normalisation = Converting vendor-specific metrics to AIOps common schema                            │
+│  Time-series = Metric stored with timestamp; enables trend and rate-of-change analysis                │
+│  Anomaly = Data point or pattern deviating from ML-learned baseline                                   │
+│  Forecasting = Regression model predicting future metric values (capacity exhaustion)                 │
+│  Correlation = Linking related alerts from different sources into a single incident                   │
+│  Threshold = Static or dynamic trigger value for alert generation                                     │
+│  Webhook = HTTP POST sent to external system when alert fires                                         │
+│  Recommendation = AI-generated action linked to alert for resolving root cause                        │
+│  Alert close = Automatic resolution when triggering condition clears in subsequent poll               │
+│  Context = Alert enriched with related metrics, affected objects, and suggested fix                   │
+│  Ingest API = REST endpoint receiving normalised metrics from collectors                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌────────────────────────────────────── Dell AIOps — How It Works ──────────────────────────────────────┐
 │                                                                                                       │

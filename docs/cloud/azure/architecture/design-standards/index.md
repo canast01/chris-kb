@@ -41,7 +41,6 @@ az policy state list --resource-group <rg> \
     --filter "policyDefinitionId eq '/providers/Microsoft.Authorization/policyDefinitions/<required-tags-id>'" \
     --query "[?complianceState=='NonCompliant']"
 ```
-```text
 ┌──────────────────────────────── Azure Architecture — Design Standards ────────────────────────────────┐
 │                                                                                                       │
 │  Naming, tagging, region, and landing zone standards for consistent Azure governance.                 │

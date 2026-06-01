@@ -33,7 +33,6 @@ ESXi CLI Tool Map
 │  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth     │
 └─────────────────────────────────────────────────────────┘
 ```
-```powershell
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │

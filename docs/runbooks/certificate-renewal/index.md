@@ -20,7 +20,6 @@
    7 days to expiry ──► Emergency change; on-call engineer engaged
    0 days           ──► Certificate expired — service unavailable to clients
 ```
-```bash
 ┌──────────────────────────────────── Runbook — Certificate Renewal ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,6 +6,30 @@
 Terraform — Operations reference.
 </div>
 
+```
+┌─────────────────────────────────────── Terraform — Operations ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Terraform operations: init, plan, apply, state management, workspace management, import    │   │
+│   │            Day-to-day: create branch → modify .tf → plan → review → apply → commit            │   │
+│   │    State ops: terraform state list/show/mv/rm — use with caution; always backup state first   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Core Operations                │  │               State Operations              │   │
+│   │                terraform init                │  │             terraform state list            │   │
+│   │          terraform plan -out=tfplan          │  │       terraform state show <resource>       │   │
+│   │            terraform apply tfplan            │  │            terraform state mv A B           │   │
+│   │         terraform destroy -target=X          │  │        terraform state rm <resource>        │   │
+│   │       terraform workspace select prod        │  │           terraform import addr ID          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    terraform import = bring existing resource under Terraform management; writes state only   │   │
+│   │  terraform state rm= removes resource from state without destroying it; orphans the resource  │   │
+│   │        -target       = apply/destroy specific resource; use sparingly; state can drift        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────────── Terraform — Operations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

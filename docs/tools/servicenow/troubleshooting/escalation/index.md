@@ -107,7 +107,6 @@ CONTACT:
 Primary: Chris Anastasiadis, platform-team@example.com, +44-xxx-xxx-xxxx
 Secondary: [Platform Lead name + contact]
 ```
-```text
 ┌──────────────────────────────────────── ServiceNow Escalation ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

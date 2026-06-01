@@ -32,7 +32,6 @@ graph TD
     collectResults --> exportCsv
     collectResults --> flagIssues
 ```
-```powershell
 ┌──────────────────────────────────── PowerShell — Scripts Library ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ PowerShell scripts library: reusable scripts for Active Directory, Azure, VMware, and storage │   │

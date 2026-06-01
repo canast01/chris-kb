@@ -24,7 +24,6 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
-```powershell
 ┌───────────────────────────────────── GitHub Actions — Hardening ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Harden GitHub Actions against supply chain attacks, secret exposure, and privilege abuse   │   │

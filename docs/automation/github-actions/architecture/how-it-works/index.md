@@ -24,7 +24,6 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-```text
 ┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │

@@ -28,7 +28,6 @@ graph LR
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
 ```
-```text
 ┌──────────────────────────────────────── Python — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Python integrates with cloud, storage, monitoring, and ITSM platforms via vendor SDKs     │   │

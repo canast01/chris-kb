@@ -79,46 +79,51 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## vSphere Update Manager (VUM) — Legacy
-
-Baseline-based approach: attach a patch or upgrade baseline to a cluster, scan for compliance, remediate. Still available in vSphere 7; not available in vSphere 8 for cluster-level management.
-
-## Host Upgrade Procedure
-
-**Pre-upgrade checklist:**
-- [ ] vCenter already upgraded to target-compatible version
-- [ ] Interop matrix checked for vSAN/NSX compatibility
-- [ ] HCL verified for target ESXi version + server model
-- [ ] vSAN health showing no warnings (if vSAN cluster)
-- [ ] HA admission control will allow one host in maintenance mode
-- [ ] Backup jobs confirmed paused/not scheduled for upgrade window
-
-**Upgrade order within a cluster:**
-1. Put host in maintenance mode (DRS migrates VMs automatically in Fully Automated mode)
-2. Verify no VMs remain on host
-3. Apply vLCM remediation for host
-4. Host reboots and returns to service
-5. Exit maintenance mode
-6. Validate host: check alerts, storage paths, vmkernel connectivity
-7. **Wait 15–30 minutes** before proceeding to next host
-
-Never upgrade all hosts simultaneously — HA and vSAN require quorum hosts.
-
-## ESXi Patch Application (Manual / Standalone)
-
-For hosts not managed by vLCM:
-
-```bash
-# Upload patch zip to datastore, then from ESXi shell:
-esxcli software sources vib list --depot=/vmfs/volumes/<datastore>/<patch.zip>
-
-# Install the patch
-esxcli software vib update --depot=/vmfs/volumes/<datastore>/<patch.zip>
-
-# Check result and reboot
-esxcli software vib list | grep -i <vib-name>
-reboot
+┌───────────────────────────────────── ESXi — Install and Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│  Fresh install via ISO/PXE and in-place upgrade via vLCM baseline or image.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Fresh Install                 │  │                 vLCM Upgrade                │   │
+│   │            Boot from ISO/USB/PXE             │  │         Create cluster image in vLCM        │   │
+│   │           Accept EULA, select disk           │  │          Attach baseline to cluster         │   │
+│   │         Set root password + mgmt IP          │  │          Remediate in rolling order         │   │
+│   │           Reboot → add to vCenter            │  │        Maintenance → upgrade → reboot       │   │
+│   │          Apply Host Profile config           │  │         Verify version post-upgrade         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Prerequisites → install/upgrade → add to cluster → verify health state.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Prerequisites                 │  │                Version Matrix               │   │
+│   │            HCL check for hardware            │  │           ESXi 8.0 U3 — current GA          │   │
+│   │           vCenter >= ESXi version            │  │           ESXi 7.0 U3 — supported           │   │
+│   │          Storage/NIC drivers on HCL          │  │          vCenter must lead ESXi ver         │   │
+│   │         Boot disk >= 8 GB (>= 32 GB)         │  │           N-2 upgrade path maximum          │   │
+│   │          Mgmt network planned ahead          │  │         Check VMware interop matrix         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 server on HCL, IPMI/iDRAC for PXE, 10 GbE mgmt NIC, boot disk (M.2/SD)                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vLCM     = vSphere Lifecycle Mgr; image-based ESXi patch and upgrade mgmt                            │
+│  HCL      = VMware Hardware Compatibility List; validated hardware for ESXi                           │
+│  PXE      = Preboot Execution Env; network boot for ESXi install via TFTP                             │
+│  Baseline = vLCM patch set; defines target ESXi build for remediation                                 │
+│  Remediate= vLCM process: puts host in maintenance + upgrades ESXi                                    │
+│  EULA     = End User License Agreement; accepted during ESXi installer                                │
+│  N-2 path = VMware supports skipping up to 2 major versions in upgrade                                │
+│  Host Profile = desired state config applied after fresh ESXi install                                 │
+│  Interop  = VMware Product Interoperability Matrix; validates version combos                          │
+│  GA       = General Availability; production-ready official release                                   │
+│  Rolling  = upgrade one host at a time; VMs migrated before each upgrade                              │
+│  Boot disk = ESXi install target; SD/USB (legacy), M.2 NVMe (recommended)                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Upgrade and Patching Readiness Checklist

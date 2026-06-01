@@ -26,7 +26,6 @@ The Connection Server is a standard domain member. Install Windows Server, join 
 # Check DNS resolves AD DCs
 nslookup _ldap._tcp.dc._msdcs.<your-domain>
 ```
-```text
 ┌──────────────────────────────────── VMware Horizon — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon integrates with AD for identity, vCenter for VM management, Workspace ONE                    │

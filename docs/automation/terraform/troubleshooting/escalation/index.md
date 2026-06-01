@@ -5,6 +5,30 @@
 Escalation reference covering Escalation Decision Tree, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation and 1 more sections.
 </div>
 
+```
+┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │
+│   │  Provider bugs: github.com/hashicorp/terraform-provider-<name>; include TF + provider version │   │
+│   │        Terraform Cloud: support.hashicorp.com; TF Enterprise: emergency contact per SLA       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │                Info to Gather               │   │
+│   │             State file corrupted             │  │           terraform version output          │   │
+│   │            Provider panic / crash            │  │               Provider version              │   │
+│   │           Lock cannot be released            │  │            TF_LOG=TRACE full log            │   │
+│   │               TF Cloud outage                │  │            State file (sanitised)           │   │
+│   │        Sentinel policy blocking apply        │  │               Plan JSON output              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  State corruption   = restore from S3 versioned backup; terraform state push prev-state.json  │   │
+│   │  Provider GitHub    = github.com/hashicorp/terraform-provider-aws (replace aws with provider) │   │
+│   │         HashiCorp support  = support.hashicorp.com; severity 1 for production outages         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

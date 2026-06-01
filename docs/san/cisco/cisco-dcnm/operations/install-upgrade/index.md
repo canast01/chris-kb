@@ -106,7 +106,6 @@ ssh root@dcnm-dc1-standby.corp.example.com
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
 # Expected: ACTIVE/STANDBY pair, VIP reachable
 ```
-```text
 ┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │  DCNM deployment: OVA/ISO to vSphere, initial config, switch discovery, upgrade path.                 │

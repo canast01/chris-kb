@@ -24,7 +24,6 @@ sequenceDiagram
     sssd-->>pam: Authentication success
     pam-->>user: Shell granted
 ```
-```text
 ┌────────────────────────────────── Linux Architecture — Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

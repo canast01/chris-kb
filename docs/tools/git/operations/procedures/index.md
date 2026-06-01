@@ -22,7 +22,6 @@ docs/     — Documentation changes (docs/update-api-reference)
 hotfix/   — Urgent production fixes (hotfix/payment-timeout)
 release/  — Release preparation (release/v2.4.0)
 ```
-```text
 ┌───────────────────────────────────── Git — Operations Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │  Standard procedures: branch lifecycle, tagging releases, access management, and repo setup.          │

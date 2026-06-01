@@ -4,6 +4,51 @@
 Monitoring reference: Pure1, CloudIQ, Aria Operations, InsightIQ, and 4 more.
 </div>
 
+```
+┌─────────────────────────────────── Monitoring — Platform Overview ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Monitoring Platform — Observability for Virtualisation, Storage, Network, and Compute     │   │
+│   │     Products: Aria Operations · CloudIQ · Dell AIOps · InsightIQ · Nexus Dashboard · Pure1    │   │
+│   │  Capabilities: metrics collection · alert routing · capacity forecasting · anomaly detection  │   │
+│   │    Shared services: syslog · log retention · metrics baseline · event correlation · health    │   │
+│   │    Targets: vSphere · NSX · PowerStore · PowerScale · ACI fabric · FlashArray · FlashBlade    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Each monitoring tool serves a distinct domain — together they form a unified observability layer   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │        VMware Domain        │  │         Dell Domain         │  │       Network/Storage       │   │
+│   │       Aria Operations       │  │        CloudIQ (SaaS)       │  │       Nexus Dashboard       │   │
+│   │     vCenter/NSX targets     │  │      Dell AIOps (SaaS)      │  │         Pure1 (SaaS)        │   │
+│   │     Capacity forecasting    │  │     PowerStore/PowerMax     │  │       FlashArray/Blade      │   │
+│   │      Anomaly detection      │  │      InsightIQ (VM app)     │  │      ACI fabric health      │   │
+│   │       Compliance packs      │  │       PowerScale perf       │  │        Flow analytics       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  On-prem: Aria Ops cluster on vSphere · InsightIQ VM on PowerScale · Nexus Dashboard cluster          │
+│  SaaS: CloudIQ · Dell AIOps · Pure1 — phone-home telemetry, no local server required                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Aria Operations  = On-prem analytics for vSphere, NSX, storage; collector + analytics nodes          │
+│  CloudIQ          = Dell SaaS platform; health scores and capacity forecasts for Dell arrays          │
+│  Dell AIOps       = AI-driven insight layer; anomaly correlation and root-cause suggestions           │
+│  InsightIQ        = VM appliance for PowerScale/Isilon performance analytics                          │
+│  Nexus Dashboard  = Cisco fabric visibility; NDI app for ACI/NX-OS health and assurance               │
+│  Pure1            = Pure Storage SaaS; health, capacity, and performance for FlashArray/Blade         │
+│  Syslog           = RFC-5424 event stream; aggregated to a central syslog server (e.g. rsyslog)       │
+│  Metrics baseline = Documented normal operating ranges; used to tune alert thresholds                 │
+│  Event correlation= Linking related alerts to a single root cause to reduce alert noise               │
+│  Alert management = Policy-driven routing of alerts to teams, tickets, and paging systems             │
+│  Log retention    = Policy governing how long logs are stored on-prem or in cloud storage             │
+│  Health score     = Composite 0-100 score aggregating component health indicators                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────── Monitoring — Platform Overview ────────────────────────────────────┐
 │                                                                                                       │

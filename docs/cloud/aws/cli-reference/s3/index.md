@@ -35,7 +35,6 @@ S3 CLI: Buckets → Objects → Sync
   │  put-bucket-lifecycle-configuration                  │
   └──────────────────────────────────────────────────────┘
 ```
-```text
 ┌──────────────────────────────────────────── AWS CLI — S3 ─────────────────────────────────────────────┐
 │                                                                                                       │
 │  S3 CLI commands for bucket management, object operations, sync, and policy config.                   │

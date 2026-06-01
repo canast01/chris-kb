@@ -5,6 +5,38 @@
 Nexus Dashboard Security reference.
 </div>
 
+```
+┌───────────────────────────────────── Nexus Dashboard — Security ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │               Network Security              │   │
+│   │             Local + LDAP/TACACS              │  │              HTTPS only TCP 443             │   │
+│   │             RBAC: role per team              │  │                Mgmt VLAN only               │   │
+│   │             APIC read-only user              │  │                TLS inter-node               │   │
+│   │               MFA integration                │  │                gRPC auth MDT                │   │
+│   │             Annual access review             │  │               Audit log in ND               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  ND cluster on management network · APIC observer account · gRPC on data network                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TACACS+ = AAA protocol for ND admin authentication; integrates with Cisco ISE                        │
+│  LDAP = Directory authentication for ND UI login via AD/OpenLDAP                                      │
+│  RBAC = Admin/Operator/Viewer roles; scoped to site or global                                         │
+│  APIC Observer = Minimum-privilege read-only role for NDI APIC integration                            │
+│  MFA = Multi-factor auth via SAML/SSO; ND supports external IdP                                       │
+│  TLS inter-node = All ND cluster internal traffic encrypted                                           │
+│  gRPC auth = MDT streaming uses TLS with certificate authentication                                   │
+│  Audit log = ND records logins, config changes, and user actions                                      │
+│  Mgmt VLAN = ND admin UI on management network; data network for fabric only                          │
+│  Annual review = Yearly audit of ND accounts and APIC service account                                 │
+│  Custom cert = Replace ND self-signed with CA cert in ND admin > Certificate                          │
+│  SSH restriction = Limit SSH to ND master nodes to jump-host IPs only                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌───────────────────────────────────── Nexus Dashboard — Security ──────────────────────────────────────┐
 │                                                                                                       │

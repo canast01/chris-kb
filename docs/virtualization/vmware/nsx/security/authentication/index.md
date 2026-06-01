@@ -47,7 +47,6 @@ curl -sk -u 'admin:password' \
   }' \
   "https://<nsx-manager>/api/v1/node/aaa/auth-policy"
 ```
-```text
 ┌──────────────────────────────────────── NSX — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX SSO via vCenter, local admin, LDAP identity source, and API token auth.                          │

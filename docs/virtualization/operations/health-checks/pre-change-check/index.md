@@ -41,7 +41,6 @@ Pre-Change Baseline Sequence
                           ▼
                  PROCEED WITH CHANGE
 ```
-```text
 ┌─────────────────────────────── Pre-Change Checks — Before Maintenance ────────────────────────────────┐
 │                                                                                                       │
 │    Verify platform is healthy before any host maintenance, upgrade, or config change                  │

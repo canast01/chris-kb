@@ -36,7 +36,6 @@ IAM CLI: Users · Roles · Policies · STS
          │          │  SessionToken           │
          └─────────►└─────────────────────────┘
 ```
-```text
 ┌──────────────────────────────────────────── AWS CLI — IAM ────────────────────────────────────────────┐
 │                                                                                                       │
 │  IAM CLI commands for users, roles, policies, MFA, and access key management.                         │

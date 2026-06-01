@@ -27,7 +27,6 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 │  └─────────────────────────┘                                    │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌─────────────────────────────────── Aria Suite LCM Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │  Environment sizing, product grouping, and naming standards for Aria Suite Lifecycle Manager.         │

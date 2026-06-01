@@ -21,7 +21,6 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  └──────────────────────┘      └──────────────────────────┘  │
 └──────────────────────────────────────────────────────────────┘
 ```
-```powershell
 ┌────────────────────────────────── VMware SRM — Operational Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │  SRM operational scripts use PowerCLI, srm-util, and the REST API to automate                         │

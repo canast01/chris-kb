@@ -27,7 +27,6 @@ pre-commit install
 pre-commit install --hook-type commit-msg
 pre-commit install --hook-type pre-push
 ```
-```text
 ┌─────────────────────────────────────────── Git — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Hardening Git: branch protection, dependency scanning, server-side hooks, and audit logging.         │

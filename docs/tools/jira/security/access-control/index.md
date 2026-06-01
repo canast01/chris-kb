@@ -20,7 +20,6 @@ Global Permissions
         └── Issue Security Scheme (per project)
               └── Issue Security Level (per issue)
 ```
-```text
 ┌──────────────────────────────────────── Jira — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -28,7 +28,6 @@ passwd -S username
 # List all accounts with UID >= 1000 (non-system)
 awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 ```
-```text
 ┌─────────────────────────────────────── Linux — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  Linux authentication: PAM stack, SSH keys, MFA, LDAP/Kerberos, and audit logging.                    │

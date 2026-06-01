@@ -25,7 +25,6 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
-```text
 ┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │

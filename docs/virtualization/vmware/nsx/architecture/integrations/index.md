@@ -59,41 +59,58 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Monitor preparation progress: **System → Fabric → Hosts → Configuration** — each host shows `Success` when preparation is complete.
-
----
-
-## VMware Cloud Foundation (VCF) Integration
-
-In VCF deployments, NSX is deployed and lifecycle-managed by SDDC Manager. NSX is not configured directly — changes go through the SDDC Manager UI or API.
-
-Key differences in VCF-managed NSX:
-
-| Capability | Standalone NSX | VCF-Managed NSX |
-|---|---|---|
-| Upgrade orchestration | NSX LCM | SDDC Manager Bundle |
-| Certificate management | NSX Manager CLI/API | SDDC Manager |
-| Transport node profiles | Manual | SDDC Manager workflow |
-| NSX Manager cluster sizing | Any | VCF-prescribed sizing |
-
-Check SDDC Manager for pending NSX upgrades before performing direct NSX operations. VCF enforces version alignment between vCenter, NSX, and ESXi.
-
----
-
-## Physical Underlay Requirements
-
-NSX overlay traffic runs over the physical network. The underlay must meet specific requirements for Geneve encapsulation to function correctly.
-
-### MTU Requirements
-
-Geneve adds a 54-byte overhead to each packet. The underlay must support an MTU of at least **1600** on all paths between TEPs. Jumbo frames (MTU 9000) are recommended.
-
-```bash
-# Test MTU from an ESXi host TEP vmkernel — don't-fragment ping
-vmkping -I vmk1 -d -s 1572 <remote-tep-ip>
-# -s 1572 = 1600 (Geneve MTU) - 28 (IP+UDP headers)
-# If this fails, the underlay MTU is insufficient
+┌─────────────────────────────────── NSX Architecture — Integrations ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      NSX integrations: vCenter, Aria suite, Active Directory IDFW, and third-party tools      │   │
+│   │           vCenter: registers NSX Manager as plugin; VM tag sync via Compute Manager           │   │
+│   │         IDFW: AD group membership drives DFW rules per user; key for VDI environments         │   │
+│   │         Aria Network Insight: flow-level visibility; Aria Operations: health and alert        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    vCenter sync → VM tagging → dynamic groups → DFW auto-update → policy enforcement                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         VMware Stack        │  │        Identity / AD        │  │         Third-Party         │   │
+│   │       vCenter plug-in       │  │         LDAP/AD join        │  │          Partner LB         │   │
+│   │         VM tag sync         │  │          IDFW rules         │  │         IDS/IPS feed        │   │
+│   │       Aria Operations       │  │        User → VM map        │  │          ServiceNow         │   │
+│   │       Aria Net.Insight      │  │         Group member        │  │      Ansible/Terraform      │   │
+│   │         Tanzu / TKG         │  │         Policy auto         │  │         Panorama/FMC        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Compute Manager (vCenter) registration is prerequisite for VM-tag dynamic group policy             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Integration    │     Protocol     │    NSX feature    │     Benefit      │      Notes       │   │
+│   │     vCenter      │     REST API     │      Tag sync     │   Dyn. groups    │    Comp. Mgr     │   │
+│   │    AD / LDAP     │      LDAPS       │     IDFW rules    │  User-based FW   │     VDI use      │   │
+│   │     Aria NI      │   Flow export    │     Visibility    │     Flow map     │   IPFIX parse    │   │
+│   │    Terraform     │   NSX provider   │     IaC deploy    │  Repeatability   │   VCS pipeline   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: vCenter API access from NSX Manager · AD reachable via management network                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Compute Manager = vCenter registered in NSX Manager; source of VM inventory and tags               │
+│    VM tag          = vSphere tag applied to VM; synced to NSX for dynamic group membership            │
+│    Dynamic group   = NSX group whose membership auto-updates based on tag, OS, or name                │
+│    IDFW            = Identity Firewall; maps AD user to VM for user-based DFW policy                  │
+│    LDAP            = AD integration; NSX reads group membership to build IDFW mappings                │
+│    Aria Net.Insight = VMware flow analytics; parses NSX IPFIX/sFlow; builds flow map                  │
+│    Aria Operations = VMware monitoring; NSX plugin shows gateway health and DFW stats                 │
+│    Tanzu / TKG     = Kubernetes integration; NSX provides pod networking via NCP plugin               │
+│    NCP             = NSX Container Plugin; syncs K8s namespace/pod state to NSX segments              │
+│    Terraform NSX   = VMware NSX Terraform provider; declare segments, rules, gateways as HCL          │
+│    Partner LB      = Third-party LB (F5, Citrix) inserted into NSX via service chain                  │
+│    Panorama/FMC    = Palo Alto/Cisco FMC; integrates with NSX for micro-seg enforcement               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### VLAN Requirements

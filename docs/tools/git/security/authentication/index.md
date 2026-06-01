@@ -38,7 +38,6 @@ ssh-keygen -t rsa -b 4096 -C "user@corp.example.com" -f ~/.ssh/id_rsa_git
 # Verify key fingerprint before uploading
 ssh-keygen -lf ~/.ssh/id_ed25519_git.pub
 ```
-```text
 ┌──────────────────────────────────────── Git — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Git authentication: SSH keys, PATs, OIDC for CI, and MFA enforcement.                                │

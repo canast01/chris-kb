@@ -36,29 +36,35 @@ InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting reference covering C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-CSV column structure (performance reports):
-
-| Column | Content |
-|---|---|
-| timestamp | ISO 8601 datetime |
-| node | Node name or "cluster" for aggregate |
-| read_bytes_s | Read throughput in bytes/sec |
-| write_bytes_s | Write throughput in bytes/sec |
-| latency_ms | Average round-trip latency in milliseconds |
-| ops_s | Operations per second |
-
-## SLA Reporting
-
-InsightIQ is commonly used to verify latency and availability SLAs for NAS workloads.
-
-```bash
-# On PowerScale: calculate average latency for a time window
-ssh admin@powerscale.example.com
-
-# Check average NFS latency (in microseconds) for last hour
-isi statistics protocol list --protocol=nfs \
-  --stats op_latency_ave --format table
+┌───────────────────────────────────────── InsightIQ — Reports ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Built-in Reports               │  │             Scheduling & Export             │   │
+│   │             Performance summary              │  │             Daily/weekly/monthly            │   │
+│   │                Capacity trend                │  │                Email delivery               │   │
+│   │              Top clients/shares              │  │                  PDF format                 │   │
+│   │              Protocol breakdown              │  │                  CSV format                 │   │
+│   │             Latency distribution             │  │              Custom time range              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Reports built in InsightIQ · PDF/CSV download · scheduled email via SMTP                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Performance summary = Cluster IOPS, latency, throughput over selected time window                    │
+│  Capacity trend = Space usage over time with growth rate and projected full date                      │
+│  Top clients = Ranked list of clients by IO volume; useful for chargeback                             │
+│  Top shares = Ranked NFS/SMB shares by IO; identify active workloads                                  │
+│  Protocol breakdown = IO split by NFS v3, NFS v4, SMB, S3, HDFS                                       │
+│  Latency distribution = Histogram of operation latencies; shows p50/p95/p99                           │
+│  Scheduled email = InsightIQ sending report to recipient list on configured cadence                   │
+│  Custom time range = User-defined start and end dates for report data window                          │
+│  Chargeback = Using top-client IO data to attribute storage cost to teams                             │
+│  PDF = Formatted document; suitable for management review or compliance audit                         │
+│  CSV = Raw metric data for import into BI tools or spreadsheets                                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 Typical SLA thresholds for NAS workloads:

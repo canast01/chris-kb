@@ -19,7 +19,6 @@ qlist jobs
 # Check CommServe services status
 qlist services
 ```
-```text
 ┌───────────────────────────── Commvault Operational Procedures — Runbooks ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

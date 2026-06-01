@@ -44,7 +44,6 @@ ESCALATION PATH
   ├── vc-support bundle
   └── Timeline + environment details
 ```
-```text
 ┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate vSAN issues to VMware GSS when data is at risk, resync is stalled,                          │

@@ -5,6 +5,36 @@
 Virtualization Storage Path Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 </div>
 
+```
+┌─────────────────────────────────── Storage Path Validation Runbook ───────────────────────────────────┐
+│                                                                                                       │
+│    Use after SAN changes, storage maintenance, host work, or datastore alerts                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Check Sequence                │  │                 Common Fixes                │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │           1. Datastore visibility            │  │             Rescan HBA adapters             │   │
+│   │           2. Host storage adapters           │  │             Check HBA driver/FW             │   │
+│   │           3. Path count and state            │  │           Fix zoning on SAN switch          │   │
+│   │            4. Multipathing policy            │  │            Set RR per array guide           │   │
+│   │          5. Array masking / zoning           │  │             Add host to zone set            │   │
+│   │            6. Datastore I/O test             │  │            Run iometer / dd test            │   │
+│   │            7. App I/O validation             │  │              App owner confirms             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    HBA      = Host Bus Adapter; FC or iSCSI NIC on ESXi connecting to SAN fabric                      │
+│    Zoning   = SAN switch config allowing specific HBAs to see specific storage ports                  │
+│    Masking  = Array-side config allowing specific initiators to access specific LUNs                  │
+│    RR       = Round Robin multipathing policy; distributes I/O across all active paths                │
+│    Dead path = Path in dead/error state; verify SAN port, cable, and zone config                      │
+│    Rescan   = ESXi re-discovers storage; run after SAN changes to pick up new LUNs                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 ┌─────────────────────────────────── Storage Path Validation Runbook ───────────────────────────────────┐
 │                                                                                                       │

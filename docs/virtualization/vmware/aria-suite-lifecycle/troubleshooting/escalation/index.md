@@ -33,7 +33,6 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation with logscraper bundle, SR process, and TAM engagement for LCM.                           │
