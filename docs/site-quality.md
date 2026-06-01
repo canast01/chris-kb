@@ -47,45 +47,49 @@ Site Quality Dashboard reference covering Current state, Pages by section, Quali
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-Generated: 2026-05-07
+Generated: 2026-06-01
 
 ## Current state
 
 | Item | Count |
 |---|---:|
-| Total markdown pages | 1720 |
+| Total markdown pages | 2,122 |
+| Pages with kb-summary | 2,120 |
+| Pages with full-width ASCII diagram | 1,984 |
+| Pages passing check-site.py | 2,122 |
+| MkDocs strict build warnings | 0 |
 
 ## Pages by section
 
 | Section | Pages |
 |---|---:|
-| Storage | 346 |
-| Virtualization | 344 |
+| Virtualization | 448 |
+| Storage | 434 |
 | Cloud | 223 |
-| Disaster Recovery | 134 |
-| Monitoring | 100 |
-| Security | 74 |
-| SAN | 70 |
-| Automation | 67 |
+| Disaster Recovery | 199 |
+| Monitoring | 118 |
+| SAN | 113 |
+| Automation | 107 |
+| Security | 96 |
+| Tools | 85 |
 | Protocols | 61 |
-| Certifications | 37 |
-| Tools | 36 |
-| Compute | 34 |
+| Compute | 45 |
+| Certifications | 38 |
 | Project Management | 33 |
 | AI | 32 |
-| Standards | 31 |
-| Networking | 15 |
 | Troubleshooting | 9 |
-| Database | 8 |
 | Change Management | 8 |
-| Integration | 8 |
-| Lifecycle | 8 |
-| Runbooks | 8 |
-| Inventory | 8 |
 | Data Protection | 8 |
+| Database | 8 |
+| Integration | 8 |
+| Inventory | 8 |
+| Lifecycle | 8 |
 | Performance | 8 |
+| Runbooks | 8 |
 | Architecture | 5 |
+| Networking | 5 |
 | Start Here | 1 |
+| Stats | 1 |
 
 ## Quality rules
 
