@@ -6,7 +6,7 @@ NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, I
 </div>
 
         CLOCK DRIFT AND NTP CORRECTION
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Without NTP:                                                │
 │  Real time  ─────────────────────────────────────────────►  │

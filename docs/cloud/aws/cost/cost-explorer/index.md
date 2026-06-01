@@ -5,7 +5,7 @@
 AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── AWS Cost — Cost Explorer ───────────────────────────────────────┐
 │                                                                                                       │
 │  Cost Explorer visualises and analyses AWS spend with filtering, grouping, and forecasts.             │

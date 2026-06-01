@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Security for Bedrock spans IAM access control, network isolation with VPC endpoints, encryption at rest and in transit, and content guardrails. Apply all layers for production deployments handling sensitive data.
 </div>
-```
+```text
 ┌───────────────────────────────── Ai Aws Bedrock Security — Security ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

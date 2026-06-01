@@ -4,7 +4,7 @@
 <div class="kb-summary">
 NetApp SnapCenter — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
-```
+```text
 ┌──────────────────────────────────── NetApp SnapCenter — Security ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

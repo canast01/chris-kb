@@ -4,7 +4,7 @@
 <div class="kb-summary">
 SAN Troubleshooting reference covering Diagnostic Scenario Reference, FLOGI Failure — Troubleshooting Sequence, Zone Not Active — Troubleshooting Sequence, ISL Down — Troubleshooting Sequence, Key CLI Commands and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────── Certifications San Troubleshooting — Troubleshooting ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Certificate automation scripts cover expiry scanning across all servers and services, TLS endpoint checking across all registered hostnames, CRL freshness monitoring, auto-renewal triggering via Venafi or ACME, and certificate chain validation.
 </div>
-```
+```text
 ┌────────────────────── Security Certificates Operations — Scripts and Automation ──────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

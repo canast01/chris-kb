@@ -6,7 +6,7 @@ DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zon
 </div>
 
         ZONE STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local  (primary / AD-integrated)         │
 │  ┌──────────────────────────────────────────────────────┐    │

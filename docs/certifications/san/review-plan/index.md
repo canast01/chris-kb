@@ -4,7 +4,7 @@
 <div class="kb-summary">
 SAN Certification Review Plan reference covering Target Certifications, Study Resources, 8-Week SAN Study Plan, Hands-On Lab Options, Study Checklist.
 </div>
-```
+```text
 ┌─────────────────────────────────── Certifications San Review Plan ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

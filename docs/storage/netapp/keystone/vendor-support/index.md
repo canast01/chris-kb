@@ -3,7 +3,7 @@
 <div class="kb-summary">
 NetApp Keystone Vendor Support reference covering Keystone Success Manager, Support Portal, Opening a Case, Information to Collect, SLA Tiers and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────────────── NetApp Keystone ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

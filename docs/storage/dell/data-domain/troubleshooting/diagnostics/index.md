@@ -23,7 +23,7 @@ flowchart TD
     K -->|No| M["support bundle generate\nEscalate to Dell"]
     D & F & H & J & L & M --> Z([Resolution])
 ```
-```
+```bash
 ┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

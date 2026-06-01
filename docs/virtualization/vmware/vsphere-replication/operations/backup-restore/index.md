@@ -6,7 +6,7 @@ Backup and Restore reference covering What to Back Up, VRA Pre-Upgrade Snapshot,
 </div>
 
   VR Backup Strategy
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA Appliance                                               │
 │  ┌──────────────────────────────────────────────────────┐    │

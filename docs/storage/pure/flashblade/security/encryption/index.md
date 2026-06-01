@@ -6,14 +6,14 @@ Encryption reference covering Data at Rest, Data in Flight — NFS, Data in Flig
 </div>
 
 FlashBlade Encryption Architecture
-```
+```text
 ```
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on)                                  │
 │  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)     │
 │  Drive removed → crypto erase (DEK destroyed)              │
 └────────────────────────────────────────────────────────────┘
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  Data in Transit                                           │
 │  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)          │

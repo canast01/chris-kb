@@ -4,7 +4,7 @@
 <div class="kb-summary">
 NetApp SnapMirror — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
-```
+```text
 ┌──────────────────────────────────── NetApp SnapMirror — Security ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

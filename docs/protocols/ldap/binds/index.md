@@ -6,7 +6,7 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
 </div>
 
         LDAP BIND TYPES
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  ANONYMOUS BIND                                              │
 │  ldapsearch -x -H ldap://dc01 -b "DC=corp,DC=local" ...     │

@@ -34,7 +34,7 @@ symcfg -sid <SID> discover
 # Review SYMCLI audit log for COD activations
 symaudit -sid <SID> list -action "license"
 ```
-```
+```text
 ┌──────────────────────────────────────── Dell COD Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,7 +69,7 @@ symaudit -sid <SID> list -action "license"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 3. Check current license state:
 

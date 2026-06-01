@@ -23,7 +23,7 @@ Get-WinEvent -LogName System -MaxEvents 50 |
 Get-Service -Name LanmanWorkstation, lmhosts | Start-Service
 Start-Service RASRAgent
 ```
-```
+```text
 ┌──────────────────────────────────────── RASR — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

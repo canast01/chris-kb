@@ -130,7 +130,7 @@ Christos Anastasiadis  |  May 2026
     NEW ACRONYM: IT = Information Technology
     Everything digital: servers, storage, networking, databases.
 
-    ```
+    ```text
     TRADITIONAL IT                    CLOUD (AWS)
 ```
     ┌─────────────────┐               ┌─────────────────┐
@@ -139,7 +139,7 @@ Christos Anastasiadis  |  May 2026
     │  Pay upfront     │               │  Pay per use     │
     │  Guess capacity  │               │  Scale anytime   │
     └─────────────────┘               └─────────────────┘
-```
+```text
     ```
 
 ??? question "Q2. Which cloud advantage eliminates the need to guess how much infrastructure capacity you need?"
@@ -150,7 +150,7 @@ Christos Anastasiadis  |  May 2026
     NEW ACRONYM: Auto Scaling = AWS service that automatically
     adds or removes servers based on real-time demand.
 
-    ```
+    ```text
     TRADITIONAL (guessing)            CLOUD (auto-match)
 ```
     ┌──────────────────┐              ┌──────────────────┐
@@ -159,7 +159,7 @@ Christos Anastasiadis  |  May 2026
     │ Buy too little?  │              │  Always matches  │
     │  crashes!        │              │  actual demand   │
     └──────────────────┘              └──────────────────┘
-```
+```text
     ```
 
 ??? question "Q3. What does "trade fixed expense for variable expense" mean?"
@@ -172,7 +172,7 @@ Christos Anastasiadis  |  May 2026
     OpEx  = Operational Expenditure: Ongoing costs
             Example: paying $50K/month AWS bill
 
-    ```
+    ```text
     CAPEX (Traditional)               OPEX (Cloud)
 ```
     ┌───────────────────┐             ┌───────────────────┐
@@ -180,20 +180,20 @@ Christos Anastasiadis  |  May 2026
     │ (buy servers)      │    vs       │ Feb:  $48,000      │
     │ Feb-Dec: maintain  │             │ (matches usage)    │
     └───────────────────┘             └───────────────────┘
-```
+```text
     ```
 
 ??? question "Q4. Which cloud model gives the most control over infrastructure?"
 
     IaaS (Infrastructure as a Service) — you manage OS and above.
 
-    ```
+    ```text
     RESPONSIBILITY STACK
 ```
     ┌──────────────────────────────────────────────┐
     │           IaaS        PaaS        SaaS       │
     │        ┌────────┐  ┌────────┐  ┌────────┐   │
-```
+```text
     │  YOU → │  App   │  │  App   │  │        │   │
     │  YOU → │  Data  │  │  Data  │  │  AWS   │   │
     │  YOU → │  OS    │  │        │  │manages │   │
@@ -201,7 +201,7 @@ Christos Anastasiadis  |  May 2026
     │  AWS → │  HW/DC │  │manages │  │        │   │
     │        └────────┘  └────────┘  └────────┘   │
 ```
-```
+```text
     │  Control: HIGH         MID          LOW      │
     └──────────────────────────────────────────────┘
     ```
@@ -215,14 +215,14 @@ Christos Anastasiadis  |  May 2026
     = Virtual servers you rent on AWS. Like a VM on your VMware cluster
       except AWS owns the physical hardware.
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────┐
     │  EC2 (Elastic Compute Cloud)     │
     │  YOU manage: OS, apps, data, SGs │
     │  AWS manages: hardware, hypervisor│
     └──────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q6. Elastic Beanstalk is an example of which model?"
@@ -232,7 +232,7 @@ Christos Anastasiadis  |  May 2026
     NEW ACRONYM: PaaS = Platform as a Service
     AWS provides complete platform. You bring the code.
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────────┐
     │  Elastic Beanstalk (PaaS)            │
@@ -240,7 +240,7 @@ Christos Anastasiadis  |  May 2026
     │  AWS → Provisions EC2, OS, LB, ASG   │
     │  App is running! (you did nothing)   │
     └──────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q7. Which cloud model requires managing the least infrastructure?"
@@ -251,21 +251,21 @@ Christos Anastasiadis  |  May 2026
     Like a streaming service for software. Just log in and use it.
     Examples: Gmail, Salesforce, ServiceNow, Jira
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────────┐
     │  SaaS: Open browser → Log in → Use  │
     │  Provider manages: code, DB, servers │
     │  You manage: NOTHING                 │
     └──────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q8. A company wants to keep sensitive data on-premises while using AWS for other workloads. Which deployment model?"
 
     Hybrid cloud — mix of on-premises and cloud.
 
-    ```
+    ```text
     YOUR DATA CENTER          AWS CLOUD
 ```
     ┌──────────────┐          ┌──────────────┐
@@ -274,7 +274,7 @@ Christos Anastasiadis  |  May 2026
     │  records     │  Direct  │  Analytics   │
     │  (on-prem)   │  Connect │  Backups     │
     └──────────────┘          └──────────────┘
-```
+```text
     Classic hybrid cloud pattern.
     ```
 
@@ -282,14 +282,14 @@ Christos Anastasiadis  |  May 2026
 
     Public cloud (all-in cloud).
 
-    ```
+    ```text
 ```
     ┌────────────────────────────────────┐
     │  INTERNET → AWS Region             │
     │  EC2, S3, RDS, Lambda — 100% cloud │
     │  No servers you own anywhere       │
     └────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q10. What is an AWS Region?"
@@ -300,7 +300,7 @@ Christos Anastasiadis  |  May 2026
     Physically separate data center(s) within a Region with
     independent power, cooling, and networking.
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────────┐
     │  30+ Regions worldwide               │
@@ -309,24 +309,24 @@ Christos Anastasiadis  |  May 2026
     │  Data stays IN region unless you     │
     │  explicitly move it                  │
     └──────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q11. How many AZs does each AWS Region have at minimum?"
 
     At least two. Most have three or more.
 
-    ```
+    ```text
     AWS REGION (e.g. us-east-1)
 ```
     ┌─────────────────────────────────────┐
     │  ┌─────────┐  ┌─────────┐  ┌─────┐  │
-```
+```text
     │  │   AZ-1  │  │   AZ-2  │  │AZ-3 │  │
     │  │(min req)│  │(min req)│  │     │  │
     │  └─────────┘  └─────────┘  └─────┘  │
 ```
-```
+```text
     │       └────────────┴────────────┘    │
     │         High-bandwidth private fiber  │
     └─────────────────────────────────────┘
@@ -337,17 +337,17 @@ Christos Anastasiadis  |  May 2026
     One or more discrete data centers with redundant power,
     networking, and connectivity within a region.
 
-    ```
+    ```text
     AVAILABILITY ZONE
 ```
     ┌──────────────────────────────────┐
     │  ┌──────────┐  ┌──────────┐      │
-```
+```text
     │  │  Data    │  │  Data    │      │
     │  │ Center A │  │ Center B │      │
     │  └──────────┘  └──────────┘      │
 ```
-```
+```text
     │  Independent power and cooling    │
     │  Connected to other AZs via       │
     │  private high-bandwidth fiber     │
@@ -363,17 +363,17 @@ Christos Anastasiadis  |  May 2026
     NEW ACRONYM: HA = High Availability
     Like your dual-fabric SAN — if Fabric A fails, Fabric B runs.
 
-    ```
+    ```text
     SINGLE AZ (bad)          MULTI-AZ (good)
 ```
     ┌─────────────┐          ┌─────────────────────┐
     │     AZ-1    │          │  AZ-1    │  AZ-2    │
     │  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
-```
+```text
     │  │  App   │ │          │ │ App  │ │ │ App  │ │
     │  └────────┘ │          │ └──────┘ │ └──────┘ │
 ```
-```
+```text
     │  AZ fails   │          │ AZ fails │ Still UP!│
     │  OUTAGE!    │          │          │    ✓     │
     └─────────────┘          └─────────────────────┘
@@ -387,7 +387,7 @@ Christos Anastasiadis  |  May 2026
     Network of servers worldwide caching content close to users.
     CloudFront = AWS's CDN service.
 
-    ```
+    ```text
     WITHOUT EDGE: [User: Tokyo] →→→→→ [Origin: us-east-1] ~150ms
     WITH EDGE:    [User: Tokyo] → [Edge: Tokyo] ~5ms (cached)
     ```
@@ -396,7 +396,7 @@ Christos Anastasiadis  |  May 2026
 
     Edge Locations (400+) vs Regions (30+).
 
-    ```
+    ```text
     Regions:         ██  30+
     AZs:             █████  90+
     Edge Locations:  ████████████████  400+
@@ -410,7 +410,7 @@ Christos Anastasiadis  |  May 2026
 
     NEW ACRONYM: ms = milliseconds (1/1000 of a second)
 
-    ```
+    ```text
     REGION (N. Virginia) ──extends──► [LA Local Zone]
     User in LA: ~20ms to VA vs ~1ms to Local Zone
     ```
@@ -423,7 +423,7 @@ Christos Anastasiadis  |  May 2026
     NEW ACRONYMS: 5G = Fifth Generation mobile network
                   IoT = Internet of Things
 
-    ```
+    ```text
     STANDARD: [Mobile] → [5G Tower] → [Internet] → [AWS] ~15ms
     WAVELENGTH:[Mobile] → [5G Tower + AWS compute] ~1-2ms
     ```
@@ -433,7 +433,7 @@ Christos Anastasiadis  |  May 2026
     AWS-managed hardware installed in YOUR data center to run
     AWS services on-premises.
 
-    ```
+    ```text
     YOUR DATA CENTER
 ```
     ┌──────────────────────────────────┐
@@ -442,7 +442,7 @@ Christos Anastasiadis  |  May 2026
     │  AWS hardware in YOUR building   │
     │  Connects to AWS via Direct Connect│
     └──────────────────────────────────┘
-```
+```text
     Extend on-prem to AWS.
     ```
 
@@ -618,7 +618,7 @@ Christos Anastasiadis  |  May 2026
 
 ??? question "Q50. Correct order of AWS infrastructure from largest to smallest?"
 
-    ```
+    ```text
     Region → Availability Zone → Data Center.
     (Edge locations exist separately for CloudFront CDN only.)
     ```
@@ -705,7 +705,7 @@ DAY 1 COMPLETE
     Guest OS = OS running INSIDE your VM (Windows/Linux you installed).
     Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────────────┐
     │  EC2 Instance                            │
@@ -714,7 +714,7 @@ DAY 1 COMPLETE
     │  HYPERVISOR (Nitro)       ← AWS patches  │
     │  PHYSICAL SERVER          ← AWS manages  │
     └──────────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q3. Who patches the database engine on RDS?"
@@ -1076,7 +1076,7 @@ DAY 2 COMPLETE
 
 ??? question "Q5. Which EC2 option offers up to 90% discount but can be interrupted?"
 
-    ```
+    ```text
     Spot Instances. AWS needs capacity back → 2-min warning → terminated.
     GOOD: batch jobs, big data, CI/CD, rendering (can restart).
     BAD: production databases, real-time apps (cannot interrupt).
@@ -1113,7 +1113,7 @@ DAY 2 COMPLETE
     Scale out (add instances) when demand rises.
     Scale in (remove instances) when demand drops.
 
-    ```
+    ```text
 ```
     ┌──────────────────────────────────────────┐
     │  ASG: Min=2, Max=10, Desired=2           │
@@ -1121,7 +1121,7 @@ DAY 2 COMPLETE
     │  CPU < 30%: terminate some instances     │
     │  Always right-sized, never over-paying   │
     └──────────────────────────────────────────┘
-```
+```text
     ```
 
 ??? question "Q12. Difference between scaling out and scaling up?"
@@ -1481,7 +1481,7 @@ FSx: Windows File Server (SMB/AD), Lustre (HPC), NetApp ONTAP, OpenZFS
 
 ??? question "Q20. What is AWS Storage Gateway?"
 
-    ```
+    ```text
     Hybrid cloud storage — connects on-premises environments to AWS.
     Apps see local interface; data actually stored in S3/Glacier.
     Types: File Gateway (NFS/SMB→S3), Volume (iSCSI→S3), Tape (VTL→Glacier)
@@ -2540,7 +2540,7 @@ STS: Security Token Service — issues temporary credentials for roles.
 
 ??? question "Q30. What is Amazon EventBridge?"
 
-    ```
+    ```text
     Serverless event bus connecting AWS services with automation.
     Event (EC2 stopped, S3 upload) → Rule → Target (Lambda, SNS, SSM).
     ```
@@ -2850,7 +2850,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q23. What is Systems Manager Run Command?"
 
-    ```
+    ```text
     Execute scripts/commands on many EC2 instances simultaneously.
     "Patch 500 web servers NOW" → one Run Command → done in minutes.
     Results per server. Rate control (e.g., 50 servers at a time).
@@ -3168,7 +3168,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q18. What is Amazon SQS?"
 
-    ```
+    ```text
     Simple Queue Service — decoupling applications with message queues.
     Producer → Queue → Consumer POLLS for messages.
     Messages stored safely if consumer is down (up to 14 days).
@@ -3232,7 +3232,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q28. What is the Well-Architected Tool?"
 
-    ```
+    ```text
     Free tool reviewing your architecture against 6 pillars.
     Answer ~65 questions → get findings (High/Medium risk) → improvement plan.
     WAR = Well-Architected Review (formal review with AWS Solution Architect).
@@ -3246,7 +3246,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q30. Critical app taking 2 years to re-architect. What to do now?"
 
-    ```
+    ```text
     Retain (keep on-premises) OR Rehost to EC2 now while planning Refactor.
     Common pattern: Rehost → stabilize → Replatform/Refactor over time.
     ```
@@ -3274,7 +3274,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q35. What is AWS Application Discovery Service?"
 
-    ```
+    ```text
     Discover on-premises servers before migration. Map dependencies.
     Agentless (VMware vCenter) or Agent-based (physical/other VMs).
     WebServer → AppServer → Database → must migrate all 3 together!
@@ -3300,7 +3300,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q39. What is Amazon EventBridge?"
 
-    ```
+    ```text
     Serverless event bus routing AWS events to targets automatically.
     Event (EC2 stops) → Rule (matches) → Target (Lambda, SNS, SSM automation).
     Formerly CloudWatch Events. Used for event-driven automation.
@@ -3336,7 +3336,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q45. Which migration tool provides continuous replication for lift-and-shift?"
 
-    ```
+    ```text
     AWS Application Migration Service (MGN) — continuous block-level replication.
     Install agent → replicate → test → cutover (minutes of downtime).
     ```
@@ -3453,7 +3453,7 @@ Connect:     Cloud contact center
 
 ??? question "Q5. Service for building, training, and deploying ML models?"
 
-    ```
+    ```text
     Amazon SageMaker — complete ML lifecycle platform.
     Data Wrangler (prepare) → Studio (build) → Training (train) → Endpoints (deploy).
     Pay only for compute when training runs.
@@ -3501,7 +3501,7 @@ Connect:     Cloud contact center
 
 ??? question "Q12. What is AWS CodePipeline?"
 
-    ```
+    ```text
     Orchestrates complete CI/CD pipeline: source → build → test → deploy.
     Integrates: CodeCommit (source), CodeBuild (build), CodeDeploy (deploy).
     All automated — developer pushes code → production deployment.
@@ -3561,7 +3561,7 @@ Connect:     Cloud contact center
 
 ??? question "Q21. REVIEW: Key difference between CloudWatch and CloudTrail?"
 
-    ```
+    ```text
     CloudWatch: "How is infrastructure PERFORMING?" (metrics, CPU, latency).
     CloudTrail: "WHO did WHAT to my infrastructure?" (API audit log).
     EXAM: "audit log" → CloudTrail. "CPU alarm" → CloudWatch.
@@ -3646,7 +3646,7 @@ Connect:     Cloud contact center
 
 ??? question "Q33. Build complete CI/CD pipeline using only AWS services?"
 
-    ```
+    ```text
     CodeCommit (source) → CodeBuild (build/test) → CodeDeploy (deploy).
     CodePipeline orchestrates the entire flow end-to-end.
     ```

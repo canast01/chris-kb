@@ -3,7 +3,7 @@
 <div class="kb-summary">
 VxRail LCM Failures reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── Virtualization Vxrail Troubleshooting ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

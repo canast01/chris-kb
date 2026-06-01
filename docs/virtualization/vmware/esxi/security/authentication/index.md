@@ -6,7 +6,7 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 </div>
 
 ESXi Authentication Paths
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Recommended Path (day-to-day)                           │
 │                                                          │
@@ -24,11 +24,11 @@ ESXi Authentication Paths
 │              ├── root (unique strong password per host)  │
 │              └── infra-breakglass (exception user)       │
 └──────────────────────────────────────────────────────────┘
-```
+```text
 
 Password Policy Controls (enforced via Host Profile)
 ```
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  /Security/PasswordQualityControl                        │
 │  ├── Minimum length: 12 chars                            │
@@ -39,7 +39,7 @@ Password Policy Controls (enforced via Host Profile)
 │  /Config/Etc/issue             = login banner text        │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │

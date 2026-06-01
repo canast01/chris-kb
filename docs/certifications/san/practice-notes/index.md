@@ -4,7 +4,7 @@
 <div class="kb-summary">
 SAN Practice Notes reference covering Zoning Exam Questions, Fabric Login Sequence — Common Error Scenarios, Common Wrong Answers to Avoid, Key Numbers to Memorize, Quick Reference: Brocade vs Cisco Terminology and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Certifications San Practice Notes ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

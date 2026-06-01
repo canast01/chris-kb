@@ -4,7 +4,7 @@
 Horizon knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── VMware Horizon VDI Stack ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

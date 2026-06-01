@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > SSH to the vCenter appliance before running these commands.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

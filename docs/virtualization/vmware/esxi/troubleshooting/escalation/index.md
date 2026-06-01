@@ -6,7 +6,7 @@ ESXi Escalation reference covering SLA Tiers, Escalation.
 </div>
 
 ESXi Escalation Path — Broadcom Support
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │  Collect Before Calling                                 │
 │  ├── esxcli system version get  (ESXi version + build)  │
@@ -26,7 +26,7 @@ ESXi Escalation Path — Broadcom Support
 │  └── P4 Info      Questions, how-to                     │
 └──────────────────────────┬──────────────────────────────┘
                            │
-```
+```text
 ```
 ┌──────────────────────────▼──────────────────────────────┐
 │  Escalation Triggers                                    │
@@ -37,7 +37,7 @@ ESXi Escalation Path — Broadcom Support
 │  Portal: https://support.broadcom.com                   │
 │  HCL check: https://compatibilityguide.broadcom.com     │
 └─────────────────────────────────────────────────────────┘
-```
+```text
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VMware GSS escalation, support bundle collection, and severity level matrix.                         │

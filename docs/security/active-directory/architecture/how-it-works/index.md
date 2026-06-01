@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Forest and Domain Hierarchy, Core Components, FSMO Role Placement, Key Services and Ports, Replication Topology and 4 more sections.
 </div>
-```
+```text
 ┌──────────────────────── Security Active Directory Architecture — How It Works ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

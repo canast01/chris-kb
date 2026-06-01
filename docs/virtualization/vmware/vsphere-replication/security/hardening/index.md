@@ -6,7 +6,7 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </div>
 
   VR Hardening Controls
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Credentials                 Network Restrictions            │
 │  ┌──────────────────────┐    ┌──────────────────────────┐    │

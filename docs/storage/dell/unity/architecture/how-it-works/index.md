@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, HA and Write Cache Mirroring, Hardware Models, Storage Pool Architecture and 3 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell Unity XT — How It Works ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -80,7 +80,7 @@ acs cluster init \
 acs health
 # Wait until all nodes show Healthy
 ```
-```
+```text
 ┌──────────────────────── Cisco Nexus Dashboard — Operations Install & Upgrade ─────────────────────────┐
 │                                                                                                       │
 │  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │

@@ -6,7 +6,7 @@ LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, P
 </div>
 
         LDAP QUERY STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"    │
 │             -b "DC=corp,DC=local"                           │

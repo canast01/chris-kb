@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, Node Resource Utilization, PVC and Storage Health, Load Balancer / Service Health and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Vmware Tanzu — Health Checks ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

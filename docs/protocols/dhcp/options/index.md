@@ -6,7 +6,7 @@ DHCP Options reference covering Overview, Common Option Codes, Setting Scope-Lev
 </div>
 
         DHCP OPTION HIERARCHY (most specific wins)
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Server-level options (apply to ALL scopes)                  │
 │  ┌──────────────────────────────────────────────────────┐    │

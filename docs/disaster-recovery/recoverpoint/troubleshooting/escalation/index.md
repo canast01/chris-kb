@@ -5,7 +5,7 @@
 RecoverPoint — Escalation reference.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── RecoverPoint — Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,7 +55,7 @@ Dell support for RecoverPoint is accessed via support.dell.com, with service req
 - **Support portal:** [support.dell.com](https://support.dell.com) — select RecoverPoint product line
 - **SR creation:** Use RPA cluster serial number; specify site A and site B versions
 - **Log collection:**
-  ```
+  ```text
   get support_bundle
   ```
   Run on each RPA; bundle includes system logs, CG state, journal metadata, and link statistics

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Application Gateway is a Layer 7 load balancer that provides SSL termination, URL-based routing, Web Application Firewall (WAF), and autoscaling. It operates at the application layer and is the preferred entry point for HTTP/HTTPS workloads.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

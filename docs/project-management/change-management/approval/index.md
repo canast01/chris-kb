@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Change Approval Process (Project) reference covering Overview, Approval Tiers, CAB Process, Risk Scoring, Emergency Change Process and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Change Management Approval ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

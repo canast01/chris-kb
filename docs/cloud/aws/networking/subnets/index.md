@@ -5,7 +5,7 @@
 AWS Subnets reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── Subnets — VPC Subnet Design ─────────────────────────────────────┐
 │                                                                                                       │
 │  Subnets divide a VPC CIDR into segments per AZ; public or private determined by route table.         │

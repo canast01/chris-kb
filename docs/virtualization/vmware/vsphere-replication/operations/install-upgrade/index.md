@@ -6,7 +6,7 @@ Install and Upgrade reference covering Prerequisites, VRA OVA Deployment, Regist
 </div>
 
   VR Deployment and Upgrade Workflow
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Deploy VRA OVA ──► Register with vCenter ──► Pair sites     │
 │  (both sites)        (VAMI port 5480)         (accept certs) │

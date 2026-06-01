@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Authentication reference covering Root CA Lifecycle — Offline Operation Flow, Root CA Offline Procedure, Certificate Transparency (CT).
 </div>
-```
+```text
 ┌─────────────────────────── Security Certificates Security — Authentication ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

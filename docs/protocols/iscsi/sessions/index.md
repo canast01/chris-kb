@@ -6,7 +6,7 @@ An iSCSI session is a logical connection between an initiator and a target, esta
 </div>
 
         SESSION SETUP SEQUENCE
-```
+```text
 ┌──────────────┐                         ┌──────────────────┐
 │  Initiator   │                         │     Target       │
 └──────┬───────┘                         └─────────┬────────┘
@@ -25,7 +25,7 @@ An iSCSI session is a logical connection between an initiator and a target, esta
        │ ◄═══════════════════════════════════════════│
        │  5. I/O (SCSI commands over TCP)           │
        │ ◄══════════════════════════════════════════►│
-```
+```text
 Each session can carry multiple connections (TCP streams) for performance.
 
 ## Session Lifecycle

@@ -6,7 +6,7 @@ SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1
 </div>
 
         TRIAGE: CANNOT ACCESS SMB SHARE
-```
+```powershell
 ┌──────────────────────────────────────────────────────────────┐
 │  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall  │
 │          │ ok                                                │

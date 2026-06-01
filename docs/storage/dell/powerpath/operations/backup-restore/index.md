@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Configuration File Location, Configuration Backup, Configuration Restore, Post-Restore Validation and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Dell PowerPath — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

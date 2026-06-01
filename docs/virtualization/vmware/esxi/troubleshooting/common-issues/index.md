@@ -6,7 +6,7 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 </div>
 
 ESXi Common Issue Resolution Paths
-```
+```text
 ┌────────────────────────────────────────────────────────┐
 │  Host Disconnected from vCenter                        │
 │  └── restart hostd → vpxa → check NTP / cert           │
@@ -37,7 +37,7 @@ ESXi Common Issue Resolution Paths
 │  └── esxcli system ntp set + /etc/init.d/ntpd restart  │
 └────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Host disconnect, PSOD, storage APD/PDL, VM power-on failures, and fixes.                             │

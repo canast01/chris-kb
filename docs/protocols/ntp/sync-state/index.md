@@ -6,7 +6,7 @@ NTP Sync State reference covering Reading `chronyc tracking` (Linux), Reading `t
 </div>
 
         SYNC STATE METRICS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  chronyc tracking output                                     │
 │                                                              │

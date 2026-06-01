@@ -6,7 +6,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 </div>
 
   LCM Integration Map
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Identity              Compute                  Storage          │
 │  ┌─────────────────┐   ┌──────────────────┐    ┌─────────────┐  │
@@ -29,7 +29,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 │     └──────────┘ └──────────┘   └─────────────┘                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── Aria Suite LCM Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │  vIDM, vCenter, all Aria products, NFS/S3 content store integrations for LCM.                         │
@@ -74,7 +74,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 ## NSX-T Integration (Optional)
 

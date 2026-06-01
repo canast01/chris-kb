@@ -8,7 +8,7 @@ title: MFA
 <div class="kb-summary">
 Multi-Factor Authentication (MFA) reference covering Overview, MFA Authentication Flow, TOTP vs Push Comparison, Daily Checks, Health Commands and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────────────── Security Mfa ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

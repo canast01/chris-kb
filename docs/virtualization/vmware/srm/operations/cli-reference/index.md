@@ -6,7 +6,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 </div>
 
   SRM CLI / API Access
-```
+```powershell
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM REST API (vCenter SSO token)                            │
 │  ┌──────────────────────────────────────────────────────┐    │
@@ -26,7 +26,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │

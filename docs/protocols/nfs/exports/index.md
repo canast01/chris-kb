@@ -6,7 +6,7 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
 </div>
 
         SERVER-SIDE EXPORT CONFIGURATION
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  /etc/exports                                                │
 │  ┌────────────────────────────────────────────────────────┐  │

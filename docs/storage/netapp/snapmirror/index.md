@@ -3,7 +3,7 @@
 <div class="kb-summary">
 NetApp SnapMirror knowledge base — replication architecture, operations, security, and troubleshooting for async, synchronous, SMBC, and XDP relationships.
 </div>
-```
+```text
 ┌────────────────────────────────────────── NetApp SnapMirror ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

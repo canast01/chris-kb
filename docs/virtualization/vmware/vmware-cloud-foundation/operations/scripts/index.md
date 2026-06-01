@@ -6,7 +6,7 @@ Scripts reference covering Trigger SoS Health Check and Poll Result (Bash).
 </div>
 
 VCF API Automation — Data Flow
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Automation Script / Pipeline                       │
 │  (Python / Bash / PowerShell)                       │
@@ -14,7 +14,7 @@ VCF API Automation — Data Flow
 ```
                        │ HTTPS POST /v1/tokens
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager REST API                              │
 │  https://<sddc-mgr>/v1                              │
@@ -29,7 +29,7 @@ VCF API Automation — Data Flow
 ```
                        │ returns JSON
                        ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Script Output / Integration                        │
@@ -38,7 +38,7 @@ VCF API Automation — Data Flow
 │  → ITSM ticketing system                            │
 │  → CMDB asset discovery                             │
 └─────────────────────────────────────────────────────┘
-```
+```powershell
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │
 │  PowerVCF scripts automate VCF operations: domain inventory, upgrade status,                          │

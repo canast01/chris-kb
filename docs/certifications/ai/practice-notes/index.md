@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AI Practice Notes reference covering Question Pattern Recognition, Common Wrong Answers to Avoid, Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C01), Key Terminology Distinctions, Scoring and Exam Strategy and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Certifications Ai Practice Notes ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

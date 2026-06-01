@@ -6,7 +6,7 @@ VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter H
 </div>
 
 Pre-Upgrade Checklist Flow
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Manager         vCenter               vSAN           │
 │  ─────────────          ───────────────        ─────          │
@@ -17,7 +17,7 @@ Pre-Upgrade Checklist Flow
 └──────────────────────────────────────────────────────────────┘
                                │
 ```
-```
+```text
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Hardware (each node via iDRAC)                              │
 │  PSU · memory · CPU · fans · NICs · disks all green          │

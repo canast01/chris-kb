@@ -5,7 +5,7 @@
 Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference covering Flow Visibility, Topology View, Path Trace for Troubleshooting, Common Visibility Issues.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

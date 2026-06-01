@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Services Reference reference covering Compute Services, Networking Services, Identity Services, Storage Services, Monitoring Services and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Certifications Azure Services ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

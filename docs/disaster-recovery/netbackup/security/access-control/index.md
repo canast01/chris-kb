@@ -5,7 +5,7 @@
 Access Control reference covering NetBackup Access Control (NBAC).
 </div>
 
-```
+```powershell
 ┌───────────────────────────────────── NetBackup — Access Control ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

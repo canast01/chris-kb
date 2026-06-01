@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Site Quality Dashboard reference covering Current state, Pages by section, Quality rules, Useful commands.
 </div>
-```
+```text
 ┌──────────────────────────────────── KB Site Quality Dashboard ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

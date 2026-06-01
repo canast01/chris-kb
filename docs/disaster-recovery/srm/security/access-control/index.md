@@ -22,7 +22,7 @@ Privileges to include:
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
 ```
-```
+```powershell
 ┌──────────────────────────────────────── SRM — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

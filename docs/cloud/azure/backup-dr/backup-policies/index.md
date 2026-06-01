@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backup policies define when backups run, how many recovery points are retained, and at what tiers
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Backup Dr ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

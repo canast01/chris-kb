@@ -6,7 +6,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 </div>
 
   LCM Triage Decision Tree
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix            │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
@@ -29,7 +29,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │  └─────────────────┘      └──────────────────┘                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
 │                                                                                                       │
 │  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
@@ -74,7 +74,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 If the upgrade is truly stuck (no log activity for 30+ minutes):
 1. Do NOT power off product VMs — this risks split-brain state

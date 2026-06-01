@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering SVM / Volume / LUN Hierarchy, Change Readiness, Rolling Node Upgrade Sequence, Maintenance Window, Post-Change Validation and 4 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── NetApp ONTAP — Operational Procedures ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

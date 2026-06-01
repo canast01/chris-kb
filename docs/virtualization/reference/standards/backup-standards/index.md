@@ -4,7 +4,7 @@
 <div class="kb-summary">
 VMware Backup Standards reference covering Critical VM Backup Policy, Standard VM Backup Policy, vCenter Backup, Snapshot Handling, Backup Monitoring and 2 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

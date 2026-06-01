@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Incident Triage, Common Symptoms and Resolutions.
 </div>
-```
+```text
 ┌────────────────────────────────────── Dell ECS — Common Issues ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

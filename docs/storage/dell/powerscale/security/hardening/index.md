@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Security baselines and compliance configuration for Dell PowerScale.
 </div>
-```
+```text
 ┌──────────────────────────────── Dell PowerScale — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

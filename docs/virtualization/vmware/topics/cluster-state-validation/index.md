@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Quick checks to confirm a vSphere cluster is healthy before and after changes.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -30,7 +30,7 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
-```
+```text
 ┌──────────────────────────────────────── Terraform — Hardening ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Terraform hardening: secure state backend, restrict apply access, scan configs, pin versions │   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Pre-Maintenance Checks reference covering Overview, Pre-Check Timeline, Environment Health Checklist, Backup Verification, Rollback Readiness and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────── Project Management Maintenance Windows Pre Checks ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

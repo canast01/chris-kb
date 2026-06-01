@@ -50,7 +50,7 @@ flowchart TD
     Q -- No --> R[See DNS Resolution guide]
     Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
 ```
-```
+```powershell
 ┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

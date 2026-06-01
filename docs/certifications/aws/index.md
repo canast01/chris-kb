@@ -9,7 +9,7 @@ title: AWS — Certifications
 <div class="kb-summary">
 Certifications reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-```
+```text
 ┌───────────────────────────────────────── Certifications Aws ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

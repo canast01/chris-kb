@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

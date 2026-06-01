@@ -21,7 +21,7 @@ export PGPASSWORD="<db-password>"
 export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
 ```
-```
+```text
 ┌─────────────────────────────────── Confluence — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

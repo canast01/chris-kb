@@ -4,7 +4,7 @@
 <div class="kb-summary">
 VxRail Pre-Upgrade Checks reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Virtualization Vxrail Operations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

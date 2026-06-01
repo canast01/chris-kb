@@ -5,7 +5,7 @@
 AWS Inspector reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────── AWS Inspector — Vulnerability Scanning ────────────────────────────────┐
 │                                                                                                       │
 │  Inspector continuously scans EC2, ECR container images, and Lambda for vulnerabilities.              │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure OpenAI requires you to deploy a model before use — the model version, deployment name, and capacity all affect availability and cost. This page covers creating deployments, capacity planning, and PTU vs consumption billing.
 </div>
-```
+```text
 ┌───────────────────────────────────── Ai Azure Openai Deployments ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

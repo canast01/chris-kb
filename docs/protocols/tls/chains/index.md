@@ -6,7 +6,7 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 </div>
 
         CHAIN OF TRUST
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  depth=2  Root CA (self-signed)                              │
 │           ┌─────────────────────────────────────────────┐   │

@@ -37,7 +37,7 @@ ESXi Health Check — Decision Flow
            ┌──────▼──────────────┐
            │  PASS — host healthy │
            └─────────────────────┘
-```
+```text
 ┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Known issues and resolution steps for frequent Venafi problems.
 </div>
-```
+```text
 ┌─────────────────────────── Security Venafi Troubleshooting — Common Issues ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

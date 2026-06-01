@@ -6,7 +6,7 @@ SMB Shares reference covering Overview, Creating Shares with PowerShell, Creatin
 </div>
 
         SHARE TYPES AND UNC PATH STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  \\server\Finance          ◄── standard share (visible)      │
 │  \\server\Finance$         ◄── hidden share ($ suffix)       │

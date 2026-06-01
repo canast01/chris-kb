@@ -5,7 +5,7 @@
 AWS Systems Manager reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── AWS Compute — Systems Manager ────────────────────────────────────┐
 │                                                                                                       │
 │  SSM provides fleet management: session access, patch, run-command, and parameter store.              │

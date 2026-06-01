@@ -37,7 +37,7 @@ curl -u user:token -X PUT \
   -H "Content-Type: application/json" \
   -d '{"version":{"number":4},"type":"page","title":"Updated Title","body":{"storage":{"value":"<p>New content</p>","representation":"storage"}}}'
 ```
-```
+```text
 ┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

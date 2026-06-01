@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Known issues and resolution steps for frequent CyberArk problems, covering the Vault, PVWA, PSM, and CPM components.
 </div>
-```
+```text
 ┌────────────────────────── Security Cyberark Troubleshooting — Common Issues ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

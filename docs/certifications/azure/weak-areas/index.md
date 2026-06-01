@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Weak Areas reference covering NSG vs ASG, VNet Peering vs VPN Gateway, RBAC vs Azure Policy, Storage Account Redundancy Options, Managed Disk Types and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Certifications Azure Weak Areas ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

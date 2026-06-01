@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Cluster Health Commands, Health Check Summary.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerScale — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

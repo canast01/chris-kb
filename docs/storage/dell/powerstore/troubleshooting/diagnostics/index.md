@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Data Collection, Component-Level Diagnostics, Event Log Analysis, Replication Diagnostics, Log Locations and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerStore — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

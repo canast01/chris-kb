@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Health Check Procedure, Change Readiness Checklist, Post-Change Validation, Quick Reference — Key REST API Health Endpoints, Incident Triage.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerStore — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

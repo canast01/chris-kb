@@ -7,7 +7,7 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
 
-```
+```text
 ┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

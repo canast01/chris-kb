@@ -58,7 +58,7 @@ while (gr.next()) {
     gs.print(gr.getValue('name') + ' | ' + gr.getValue('duration') + ' | ' + gr.getValue('thread'));
 }
 ```
-```
+```text
 ┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐                                                    │
@@ -308,7 +308,7 @@ After fixing the root cause, trigger a manual import: **System LDAP > LDAP Serve
 1. Navigate to **System Mailboxes > Outgoing** — check for SMTP connection errors
 2. Navigate to **System Log > Emails** — search for the specific notification
 3. Check `glide.email.smtp.active` in **System Properties > Email**:
-   ```
+   ```text
    https://<instance>.service-now.com/nav_to.do?uri=sys_properties_list.do?sysparm_query=name=glide.email.smtp.active
    ```
 4. Open the relevant Notification rule (**System Notification > Email > Notifications**) and click **Preview** to test against a specific record

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backout Plan reference covering Overview, Backout Criteria, Backout Steps Template, Backout Checklist, Validation After Backout and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────── Project Management Change Management Backout Plan ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

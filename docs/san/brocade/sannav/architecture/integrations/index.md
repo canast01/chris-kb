@@ -106,7 +106,7 @@ sudo systemctl restart rsyslog
 logger -t sannav-test "Test syslog message from SANnav"
 # Check SIEM for the test message
 ```
-```
+```text
 ┌──────────────────────────────────── Brocade SANnav — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav integrates with SIEM, TACACS+, SNMP NMS, REST automation, and NTP/SMTP.                       │

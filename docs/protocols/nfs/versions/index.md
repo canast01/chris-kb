@@ -6,7 +6,7 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
 </div>
 
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
-```
+```text
 ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
 │ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1     │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤

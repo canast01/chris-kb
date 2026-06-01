@@ -5,7 +5,7 @@
 Access Control reference covering Role-Based Access Control.
 </div>
 
-```
+```powershell
 ┌──────────────────────────────────── RecoverPoint — Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ Encryption reference covering Data in Transit, Replication Data Encryption (Per-
 </div>
 
   VR Encryption Coverage
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │  Traffic Path                       Encryption                │
 │  ┌───────────────────────────────────────────────────────┐    │

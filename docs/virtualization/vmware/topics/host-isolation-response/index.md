@@ -5,7 +5,7 @@
 <div class="kb-summary">
 vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Windows Server Active Directory forest with multi-site domain controllers, Kerberos authentication, LDAP directory services, and FSMO role delegation across primary and replica DCs.
 </div>
-```
+```text
 ┌──────────────────────── Security Active Directory Architecture — Architecture ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

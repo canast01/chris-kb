@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

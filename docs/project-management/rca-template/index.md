@@ -8,7 +8,7 @@ title: Root Cause Analysis Template
 <div class="kb-summary">
 Root Cause Analysis Template reference covering Overview, Incident Summary, Timeline, Root Cause, Corrective Actions and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Project Management Rca Template ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

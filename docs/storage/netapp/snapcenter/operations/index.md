@@ -4,7 +4,7 @@
 <div class="kb-summary">
 NetApp SnapCenter — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 </div>
-```
+```text
 ┌─────────────────────────────────── NetApp SnapCenter — Operations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Virtualization Glossary reference covering HA, DRS, vMotion, Storage vMotion, Snapshot and 5 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

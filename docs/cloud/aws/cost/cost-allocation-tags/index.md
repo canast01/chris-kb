@@ -5,7 +5,7 @@
 AWS Cost Allocation Tags reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── AWS Cost — Cost Allocation Tags ───────────────────────────────────┐
 │                                                                                                       │
 │  Cost allocation tags enable chargeback and showback by team, environment, and project.               │

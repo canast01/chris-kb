@@ -28,7 +28,7 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
-```
+```powershell
 ┌─────────────────────────────────────── PowerShell — Hardening ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell hardening: logging, execution control, JEA, AMSI, code signing — deploy via GPO  │   │

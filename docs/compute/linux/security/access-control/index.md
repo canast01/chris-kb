@@ -30,7 +30,7 @@ chmod 1775 /opt/shared
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
 ```
-```
+```powershell
 ┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  Access control on Linux: DAC permissions, SELinux MAC, ACLs, and sudo delegation.                    │
@@ -73,7 +73,7 @@ chmod 2775 /opt/projects
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 ## Mandatory Access Control — SELinux (RHEL)
 

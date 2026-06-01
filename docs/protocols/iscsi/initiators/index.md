@@ -6,7 +6,7 @@ An iSCSI initiator is the client-side component — typically software on a serv
 </div>
 
         INITIATOR TYPES
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │  SOFTWARE INITIATOR (OS built-in)                │
 │  ┌──────────────────────────────────────────┐    │

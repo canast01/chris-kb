@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Blob Storage reference covering Overview, Blob Lifecycle Management Flow, Access Tiers, Lifecycle Rules, SAS Tokens and 2 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

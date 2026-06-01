@@ -5,7 +5,7 @@
 AWS Account Structure reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Account Structure ──────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account structure with OU hierarchy isolating workloads by env and function.                   │

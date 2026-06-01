@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [Dell Secure Connect Gateway](../index.md) reference.
 </div>
-```
+```text
 ┌────────────────────────────────── Dell SCG — Scripts and Automation ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

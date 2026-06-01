@@ -5,7 +5,7 @@
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

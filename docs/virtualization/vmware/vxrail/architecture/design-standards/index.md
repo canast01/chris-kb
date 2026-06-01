@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Node count requirements, cluster naming, vSAN policy standards, network design rules, and configuration baselines for VxRail HCI deployments.
 </div>
-```
+```text
 ┌──────────────────── Virtualization Vmware Vxrail — Architecture Design Standards ─────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments.
 </div>
-```
+```text
 ┌───────────────────────────── Dell VPLEX — Architecture Design Standards ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

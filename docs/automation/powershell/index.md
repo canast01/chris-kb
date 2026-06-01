@@ -4,7 +4,7 @@
 PowerShell automation knowledge base covering execution engine internals, pipeline model, WinRM and SSH remoting, module development, runspace pools, and scripting patterns for Windows and cross-platform infrastructure automation.
 </div>
 
-```
+```powershell
 ┌───────────────────────────── PowerShell — Shell and Scripting Automation ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell: Microsoft shell and scripting language; cross-platform since PowerShell 7 (Core) │   │

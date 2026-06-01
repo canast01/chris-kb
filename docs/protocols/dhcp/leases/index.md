@@ -6,7 +6,7 @@ DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Le
 </div>
 
         LEASE LIFECYCLE AND RENEWAL TIMERS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Lease duration: 8 days (example)                            │
 │                                                              │

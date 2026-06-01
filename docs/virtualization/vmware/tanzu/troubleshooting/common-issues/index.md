@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Supervisor Stuck in Configuring State, TKG Cluster Create Fails, Pod Stuck in Pending, ImagePullBackOff, Service Type LoadBalancer Pending and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Vmware Tanzu — Common Issues ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -86,7 +86,7 @@ Common Issues reference covering Supervisor Stuck in Configuring State, TKG Clus
    ```
 
 4. **Content Library unreachable**: TKG OVA images cannot be downloaded
-   ```
+   ```text
    vCenter → Content Libraries → [Tanzu library] → Sync → check sync status
    ```
 
@@ -113,7 +113,7 @@ Common Issues reference covering Supervisor Stuck in Configuring State, TKG Clus
    ```
 
 3. **Insufficient resource quota in Supervisor namespace**:
-   ```
+   ```text
    vCenter → Workload Management → Namespaces → [namespace] → Resource Usage
    Verify: CPU/Memory not at limit
    ```

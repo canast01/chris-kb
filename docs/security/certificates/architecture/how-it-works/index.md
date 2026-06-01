@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-gapped Root CA at the trust anchor, an online Issuing CA for day-to-day issuance, and optionally a Registration Authority (RA) to separate enrolment approval from issuance.
 </div>
-```
+```text
 ┌────────────────────────── Security Certificates Architecture — How It Works ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

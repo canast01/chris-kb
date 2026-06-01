@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Dead Path Triage Flow, Dead Paths, All Paths Dead to a Device, Device Not Visible After LUN Provisioning, Incorrect Path Count and 6 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerPath — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Syslog and Centralized Logging reference covering Syslog Service Health, Configure rsyslog to Forward to Central Collector, journald to Syslog Bridge, Windows Event Forwarding, Syslog Severity Levels (RFC 5424) and 2 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Asset Inventory operational notes and deep-dive references.
 </div>
-```
+```text
 ┌───────────────────────────────── Project Management Asset Inventory ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -27,7 +27,7 @@ dmsetup ls --target crypt
 # Dump LUKS header info
 cryptsetup luksDump /dev/sdb
 ```
-```
+```text
 ┌────────────────────────────────── Data Protection — Data Encryption ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ cryptsetup luksDump /dev/sdb
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 **Disable weak protocols (nginx):**
 ```nginx

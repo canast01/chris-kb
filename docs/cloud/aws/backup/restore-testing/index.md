@@ -5,7 +5,7 @@
 AWS Restore Testing reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── AWS Backup — Restore Testing ─────────────────────────────────────┐
 │                                                                                                       │
 │  Automated restore testing validates recoverability on schedule without manual effort.                │

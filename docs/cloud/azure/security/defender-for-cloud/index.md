@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP).
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop Sources Available", Black Screen After Login, Slow Login, UAG Shows Disconnected from Connection Server and 1 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon issues: black screen, pool provisioning failure, Connection Server                    │
@@ -62,7 +62,7 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 **Causes and resolution:**
 
 1. **Parent VM snapshot issue:** Snapshot taken while VMware Tools not current, or VM was not properly sealed (sysprep not run / customization spec missing)
-   ```
+   ```text
    Horizon Console → Inventory → Desktops → [pool] → Edit
    Verify: Customization Spec is assigned and valid (test it in vCenter)
    vCenter → right-click golden image → Guest OS → Customize... → test
@@ -77,7 +77,7 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
    Fix: verify Horizon service account has required vCenter permissions
 
 3. **Datastore full:** Desktop VM cannot be provisioned
-   ```
+   ```text
    vCenter → Datastore → check free space > 10% minimum
    ```
 
@@ -93,7 +93,7 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 **Symptoms:** Users get "No desktop sources available" when connecting
 
 1. **Pool is exhausted — all desktops assigned or in use:**
-   ```
+   ```text
    Horizon Console → Inventory → Desktops → [pool]
    Check: Available count — if 0, all desktops are in use or error
    Increase pool size or add headroom
@@ -110,7 +110,7 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
    ```
 
 3. **Entitlement missing:** User is not entitled to the pool
-   ```
+   ```text
    Horizon Console → [pool] → Entitlements → verify user's AD group is listed
    ```
 

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths Not Recovering After SAN Maintenance, Device Not Visible After LUN Provisioning, Unlicensed Paths (unlic State) and 5 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerPath — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

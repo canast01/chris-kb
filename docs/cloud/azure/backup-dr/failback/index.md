@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Failback is the process of returning protected workloads from the DR (recovery) region back to the primary region after a failover event.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Backup Dr ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

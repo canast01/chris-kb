@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Scripts reference covering Path Health Check, Path Count Validator, Policy Audit, Windows: PowerPath Device Status via Plink (CMD), Windows: PowerPath Check on Local Windows Host (CMD) and 5 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────── Dell PowerPath — Scripts and Automation ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

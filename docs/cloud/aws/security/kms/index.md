@@ -5,7 +5,7 @@
 AWS KMS reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── KMS — Key Management Service ─────────────────────────────────────┐
 │                                                                                                       │
 │  KMS manages encryption keys used by AWS services; CMKs provide full customer control.                │

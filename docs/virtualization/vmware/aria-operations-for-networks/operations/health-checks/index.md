@@ -57,7 +57,7 @@ for c in data.get('results', []):
     print(f\"{c.get('nickname',''):<25} {c.get('status',''):<15} Last HB: {dt}\")
 "
 ```
-```
+```text
 ┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Data source status, flow freshness, and collector health checks for vRNI.                            │

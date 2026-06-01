@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Data Durability Model, Configuration Backup, Restoring Object Data, Veeam Backup Integration and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell ECS — Backup and Restore ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

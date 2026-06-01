@@ -42,7 +42,7 @@ jobs:
       - name: Test
         run: go test -race ./...
 ```
-```
+```text
 ┌───────────────────────────────────────── Git — Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Git integrations: CI/CD pipelines, issue tracking, IaC tools, and IDE plugins.                       │
@@ -87,7 +87,7 @@ jobs:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 Predefined CI/CD variables:
 

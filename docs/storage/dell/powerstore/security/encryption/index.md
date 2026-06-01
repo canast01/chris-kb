@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Transit, Encryption Compliance Summary.
 </div>
-```
+```bash
 ┌──────────────────────────────────── Dell PowerStore — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

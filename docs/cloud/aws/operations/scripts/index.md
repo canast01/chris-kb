@@ -115,7 +115,7 @@ Open the saved file and update these values near the top:
 cd ~/Desktop
 bash aws-health-check.sh
 ```
-```
+```text
 ┌──────────────────────────────── AWS Operations — Scripts & Automation ────────────────────────────────┐
 │                                                                                                       │
 │  Operational scripts for resource inventory, cost reporting, and routine automation tasks.            │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AI Platforms reference covering AWS Bedrock, Azure OpenAI Service, Google Vertex AI, Hugging Face, Platform Comparison Table and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────────── Certifications Ai Platforms ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

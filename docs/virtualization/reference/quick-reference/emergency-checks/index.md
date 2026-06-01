@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Use these when there is a major incident.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

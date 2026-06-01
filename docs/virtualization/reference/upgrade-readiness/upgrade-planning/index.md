@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Upgrade planning should start before the maintenance window.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

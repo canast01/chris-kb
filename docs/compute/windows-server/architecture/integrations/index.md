@@ -24,7 +24,7 @@ flowchart TD
     dc --- sysvol
     client -->|"GPO download"| sysvol
 ```
-```
+```text
 ┌──────────────────────────────────── Windows Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server integrations: Azure AD, VMware, monitoring tools, and enterprise apps.                │

@@ -48,7 +48,7 @@ sannav restart
 sudo sed -i 's/level="DEBUG"/level="INFO"/' /opt/sannav/conf/log4j2.xml
 sannav restart
 ```
-```
+```text
 ┌──────────────────────────────────── Brocade SANnav — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav diagnostics: service logs, DB status, API health, performance data, MAPS review.              │

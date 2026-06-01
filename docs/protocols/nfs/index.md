@@ -9,7 +9,7 @@ Network File System (NFS) allows hosts to mount remote directories over TCP. Cov
 </div>
 
         NFS ARCHITECTURE
-```
+```text
 ┌─────────────────┐        TCP 2049        ┌──────────────────────┐
 │   NFS CLIENT    │                        │    NFS SERVER        │
 │                 │                        │                      │

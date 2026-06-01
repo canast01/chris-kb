@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Key Vault is a managed service for storing and controlling access to secrets, encryption keys, and certificates. It provides hardware security module (HSM) backing, RBAC-based access control, soft-delete protection, and audit logging.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

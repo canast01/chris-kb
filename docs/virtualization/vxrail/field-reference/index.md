@@ -3,7 +3,7 @@
 <div class="kb-summary">
 VxRail Field Reference reference covering Overview, Daily Checks, Dependencies, Common Issues, Troubleshooting Workflow and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── Virtualization Vxrail Field Reference ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

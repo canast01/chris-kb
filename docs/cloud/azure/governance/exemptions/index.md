@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Policy exemptions allow specific resources, resource groups, or subscriptions to be excluded from policy evaluation. Exemptions are preferred over assignment exclusions because they are auditable, time-bound, and can be reviewed independently.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Governance ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

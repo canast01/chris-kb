@@ -4,7 +4,7 @@
 <div class="kb-summary">
 DRS and vMotion Behavior reference covering DRS Modes, vMotion Requirements, EVC (Enhanced vMotion Compatibility), vMotion Validation, Common vMotion Failure Causes and 2 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

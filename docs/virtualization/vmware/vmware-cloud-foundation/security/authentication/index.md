@@ -6,14 +6,14 @@ Authentication reference covering Common Issues, Related Reference.
 </div>
 
 VCF Authentication Flow
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Operator / Admin                                   │
 └──────────────────────┬──────────────────────────────┘
 ```
                        │ browser HTTPS / API token
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager                                       │
 │  authenticates via: Local admin (break-glass)       │
@@ -26,7 +26,7 @@ VCF Authentication Flow
                        │ passes auth context to
           ┌────────────┼────────────┐
           ▼            ▼            ▼
-```
+```text
 ```
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
 │ vCenter SSO  │ │ NSX Manager  │ │ SDDC Manager      │
@@ -36,7 +36,7 @@ VCF Authentication Flow
 │ source       │ │ source       │ │ component creds   │
 │              │ │              │ │ on schedule       │
 └──────────────┘ └──────────────┘ └──────────────────┘
-```
+```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
 │  VCF authentication flows through SDDC Manager (API token), vCenter SSO (per domain),                 │

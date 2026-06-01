@@ -16,7 +16,7 @@ aws sts get-caller-identity
 # Check profile in use
 aws configure list
 ```
-```
+```text
 ┌─────────────────────────────── AWS Diagnostics — Investigation Toolset ───────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic tools and investigation procedures for AWS infrastructure and application issues.         │

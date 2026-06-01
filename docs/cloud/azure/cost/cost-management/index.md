@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Cost Management reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
 </div>
-```
+```text
 ┌────────────────────────────────────────── Cloud Azure Cost ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

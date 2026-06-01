@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Models, Storage Object Hierarchy, VPLEX Metro Topology, Director Architecture and 5 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────────── Dell VPLEX — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

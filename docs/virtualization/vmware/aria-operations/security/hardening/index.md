@@ -27,7 +27,7 @@ echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
 
 # Confirm it is self-signed (Issuer == Subject)
 ```
-```
+```text
 ┌───────────────────────────────── Aria Operations Security Hardening ──────────────────────────────────┐
 │                                                                                                       │
 │  Network restrictions, MFA via vIDM, audit logging, and STIG hardening for vROps.                     │

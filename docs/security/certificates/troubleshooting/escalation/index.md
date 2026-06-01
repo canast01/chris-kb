@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures for raising support cases with Microsoft ADCS, commercial CAs (DigiCert, Entrust), and Let's Encrypt. Pre-collect diagnostics before opening any case to reduce round-trip delays.
 </div>
-```
+```text
 ┌───────────────────────── Security Certificates Troubleshooting — Escalation ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

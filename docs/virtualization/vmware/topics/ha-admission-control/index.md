@@ -4,7 +4,7 @@
 <div class="kb-summary">
 HA Admission Control reference covering Purpose, Admission Control Policies, Checking Admission Control Status, Configure Admission Control, Admission Control and Overcommit and 3 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

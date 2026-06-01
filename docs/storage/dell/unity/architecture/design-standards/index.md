@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Standards reference covering Pool Design Decision Tree, Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist.
 </div>
-```
+```text
 ┌──────────────────────────── Dell Unity XT — Architecture Design Standards ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

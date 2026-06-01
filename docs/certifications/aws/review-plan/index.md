@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AWS Certification Review Plan reference covering Target Exam and Study Timeline, AWS Skill Builder, Key Whitepapers, Practice Exam Resources, AWS Labs and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Certifications Aws Review Plan ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

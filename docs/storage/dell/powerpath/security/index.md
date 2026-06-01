@@ -4,7 +4,7 @@
 PowerPath — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── Dell PowerPath Security ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

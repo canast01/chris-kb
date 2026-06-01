@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AD failures typically trace back to replication, DNS, time sync, or Kerberos. This page covers the most common failure categories with diagnostic commands.
 </div>
-```
+```text
 ┌────────────────────── Security Active Directory Troubleshooting — Common Issues ──────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

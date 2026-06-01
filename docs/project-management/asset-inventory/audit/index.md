@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Asset Audit Process reference covering Overview, Audit Scope and Frequency, Discovery Tools, CMDB Reconciliation Steps, Discrepancy Tracking and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Project Management Asset Inventory Audit ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

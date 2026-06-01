@@ -25,7 +25,7 @@ apt update && apt install -y veeam
 veeam --version
 veeamconfig ui   # Opens text-based configuration UI
 ```
-```
+```text
 ┌────────────────────────────────────── Linux — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,7 +69,7 @@ veeamconfig ui   # Opens text-based configuration UI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 ### Run a Backup Job Manually
 

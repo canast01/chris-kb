@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Quick Reference, Host Connectivity Issues, Replication Issues, Performance Issues, Capacity Issues and 2 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerStore — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

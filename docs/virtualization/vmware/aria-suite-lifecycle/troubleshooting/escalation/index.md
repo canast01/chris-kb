@@ -6,7 +6,7 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 </div>
 
   LCM Escalation Path
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect upfront (avoids data-request delay)            │
 │  ┌─────────────────────────────────────────────────────────┐    │
@@ -33,7 +33,7 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation with logscraper bundle, SR process, and TAM engagement for LCM.                           │

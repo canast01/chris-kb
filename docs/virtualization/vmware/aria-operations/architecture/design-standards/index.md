@@ -5,7 +5,7 @@
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Alert Policy Standards, Related Sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │  Node sizing, cluster topology, and policy design standards for Aria Operations (vROps).              │

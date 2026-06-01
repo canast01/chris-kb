@@ -6,7 +6,7 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
 </div>
 
         VALIDATION CHECKLIST
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  chronyc tracking                                            │
 │  ├── Leap status: Normal            ✓ (not synchronised = ✗) │

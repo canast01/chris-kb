@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

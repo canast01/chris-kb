@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Operational procedures for certificate renewal, automation, and reporting.
 </div>
-```
+```text
 ┌───────────────────────── Security Venafi Operations — Operational Procedures ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

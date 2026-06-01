@@ -7,7 +7,7 @@ title: Standard SAML Configuration
 <div class="kb-summary">
 Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP concepts, attribute mapping, Azure AD (Entra ID) and Okta setup, security requirements, and troubleshooting. Product authentication pages link here for the shared baseline and document only their product-specific ACS URLs and entity IDs.
 </div>
-```
+```text
 ┌───────────────────────────────────── Security Saml Configuration ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

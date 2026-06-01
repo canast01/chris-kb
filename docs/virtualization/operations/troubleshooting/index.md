@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common virtualization troubleshooting workflows.
 </div>
-```
+```text
 ┌───────────────────── Virtualization Operations Troubleshooting — Troubleshooting ─────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ Scripts reference covering Export Active Alerts to CSV (Python), Capacity Report
 </div>
 
 Aria Operations API — Script Interaction Pattern
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Script / Automation Pipeline                       │
 └──────────────────────┬──────────────────────────────┘
@@ -15,7 +15,7 @@ Aria Operations API — Script Interaction Pattern
                        │    POST /suite-api/api/auth/token/acquire
                        │    → token (valid 30 min)
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations REST API                           │
 │  Authorization: vRealizeOpsToken <token>            │
@@ -32,7 +32,7 @@ Aria Operations API — Script Interaction Pattern
 ```
                        │ 2. Parse JSON response
                        ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Output / Integration                               │
@@ -41,7 +41,7 @@ Aria Operations API — Script Interaction Pattern
 │  → ITSM integration                                 │
 │  NOTE: re-authenticate every 25 min for long runs   │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
 │  REST API scripts for alert management, metric queries, and resource ops in vROps.                    │

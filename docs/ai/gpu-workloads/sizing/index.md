@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Selecting the right GPU — and the right number of them — depends on model size, task type (training vs inference), throughput requirements, and budget. This page provides a practical sizing framework.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Ai Gpu Workloads Sizing ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

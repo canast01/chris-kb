@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Authentication reference covering Overview, Unisphere Local Accounts, Active Directory / LDAP Integration, Role Mapping, Multi-Factor Authentication (MFA) and 5 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerMax — Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

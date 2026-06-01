@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Active Directory — Troubleshooting reference.
 </div>
-```
+```text
 ┌───────────────────── Security Active Directory Troubleshooting — Troubleshooting ─────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

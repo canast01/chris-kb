@@ -53,7 +53,7 @@ das.isolationaddress0 = <gateway IP>
 das.isolationaddress1 = <secondary IP>
 das.usedefaultisolationaddress = false
 ```
-```
+```text
 ┌────────────────────────────────── vCenter Server — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design standards define sizing, HA topology, network placement, and upgrade                          │
@@ -100,7 +100,7 @@ das.usedefaultisolationaddress = false
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 Tools must report `running` status in vCenter. A stale or not-running Tools status blocks live migration.
 

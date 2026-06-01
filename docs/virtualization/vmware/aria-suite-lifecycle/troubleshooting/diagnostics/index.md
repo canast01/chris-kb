@@ -6,7 +6,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 </div>
 
   LCM Diagnostic Data Sources
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM Appliance (SSH as root)       LCM API                      │
 │  ┌───────────────────────────┐     ┌──────────────────────────┐  │
@@ -27,7 +27,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │  └───────────────────────────┘                                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │
@@ -72,7 +72,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 Key services and expected states:
 

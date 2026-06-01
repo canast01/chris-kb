@@ -6,7 +6,7 @@ DHCP Failover reference covering Overview, Configuring Failover, Checking Failov
 </div>
 
         DHCP FAILOVER MODES
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  LOAD BALANCE (50/50 split):                                 │
 │  ┌─────────────────────┐    ┌─────────────────────────────┐  │

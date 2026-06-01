@@ -5,7 +5,7 @@
 AWS Compliance Review reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Compliance Review ──────────────────────────────────┐
 │                                                                                                       │
 │  Periodic compliance review using Security Hub, Audit Manager, and Config dashboards.                 │

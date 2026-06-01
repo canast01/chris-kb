@@ -6,7 +6,7 @@ VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily
 </div>
 
 Post-Upgrade Validation Sequence
-```
+```text
 ┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
 │  Services  │     │   Health   │     │    VMs     │     │    Docs    │
 │            │     │            │     │            │     │            │

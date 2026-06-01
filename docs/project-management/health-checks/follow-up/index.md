@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Check Follow-Up and Open Item Tracking reference covering Overview, Finding Classification, Creating Follow-Up Tickets, Owner Assignment, Tracking and Reporting and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Project Management Health Checks Follow Up ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

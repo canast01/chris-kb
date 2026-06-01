@@ -27,7 +27,7 @@ sudo systemctl start hms   # restart if stopped
 df -h
 sudo journalctl --vacuum-size=1G   # free journal space
 ```
-```
+```text
 ┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Common issues: data source red, no flows, LDAP login failure, and collector offline.                 │

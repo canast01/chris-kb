@@ -6,7 +6,7 @@ An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway
 </div>
 
         iSCSI TARGET STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Storage Array / Target                                  │
 │                                                          │

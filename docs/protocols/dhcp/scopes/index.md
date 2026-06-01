@@ -6,7 +6,7 @@ DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Pla
 </div>
 
         SCOPE STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Scope: Corp LAN – Floor 1 (192.168.10.0/24)                 │
 │  ┌──────────────────────────────────────────────────────┐    │

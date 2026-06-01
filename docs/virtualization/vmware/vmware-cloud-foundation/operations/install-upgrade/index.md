@@ -6,7 +6,7 @@ Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
 </div>
 
 VCF Upgrade Flow — SDDC Manager Orchestration
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Step 1: Bundle Acquisition                         │
 │  depot.vmware.com ──► SDDC Manager bundle store     │
@@ -15,7 +15,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 ```
                            │
                            ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Step 2: Pre-Check (SDDC Manager validates)         │
 │  DNS ✔  NTP ✔  Certs ✔  vSAN health ✔               │
@@ -24,7 +24,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 ```
                            │ all checks pass
                            ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Step 3: Upgrade Sequence (BOM order, no skipping)  │
 │                                                     │
@@ -45,13 +45,13 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 ```
                            │
                            ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Step 4: Post-Upgrade Validation                    │
 │  All domains green · services healthy · no alarms   │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
 │                                                                                                       │
 │  VCF installation uses Cloud Builder to deploy the management domain; upgrades                        │

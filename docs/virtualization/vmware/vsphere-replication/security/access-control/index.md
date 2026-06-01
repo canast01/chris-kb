@@ -6,7 +6,7 @@ Access Control reference covering vSphere Replication Uses vCenter RBAC, VR-Spec
 </div>
 
   vSphere Replication RBAC (via vCenter)
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  AD Groups              vCenter Custom Roles                  │
 │  ┌────────────────┐     ┌───────────────────────────────┐    │

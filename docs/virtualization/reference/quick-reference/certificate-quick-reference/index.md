@@ -4,7 +4,7 @@
 <div class="kb-summary">
 VMware Certificate Quick Reference reference covering Check Expiration Quickly, Identify Certificate Type, Review Trusted Root Chain, Check STS Certificate, Validate After Replacement and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

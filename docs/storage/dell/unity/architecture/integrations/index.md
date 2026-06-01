@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Integrations reference covering Integration Map, VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell Unity XT — Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

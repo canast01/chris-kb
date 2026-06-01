@@ -4,7 +4,7 @@
 Brocade SAN knowledge base covering Fabric OS switches and SANnav management. Includes fabric architecture, zoning, CLI references, health checks, and troubleshooting guides for Brocade Fibre Channel environments.
 </div>
 
-```
+```text
 ┌────────────────────────────────────────── Brocade SAN Stack ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

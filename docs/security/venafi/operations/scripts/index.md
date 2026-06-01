@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Automation scripts for Venafi cover certificate expiry reporting, automated renewal via VCert, discovery scan triggering, policy compliance reporting, and ADCS template alignment checking.
 </div>
-```
+```text
 ┌───────────────────────── Security Venafi Operations — Scripts and Automation ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

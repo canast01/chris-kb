@@ -24,7 +24,7 @@ SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();
 SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes
 FROM pg_replication_slots;
 ```
-```
+```text
 ┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

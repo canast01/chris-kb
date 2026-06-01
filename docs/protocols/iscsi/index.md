@@ -9,7 +9,7 @@ iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands ove
 </div>
 
         iSCSI END-TO-END ARCHITECTURE
-```
+```text
 ┌────────────────────┐       ┌──────────────────┐       ┌──────────────────┐
 │       HOST         │       │   IP NETWORK     │       │  iSCSI TARGET    │
 │                    │       │                  │       │  (Storage Array) │

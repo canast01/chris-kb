@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Hardening, Host Connectivity Hardening, SupportAssist and Remote Access Hardening and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Dell PowerMax — Security Hardening ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

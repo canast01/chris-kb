@@ -5,7 +5,7 @@ HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Man
 </div>
 
 VxRail Node Anatomy + Cluster Connectivity
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                     │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐  │

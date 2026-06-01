@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Controllers.
 </div>
-```
+```text
 ┌──────────────────── Security Active Directory Operations — Operational Procedures ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

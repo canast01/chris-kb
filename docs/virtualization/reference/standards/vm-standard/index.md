@@ -5,7 +5,7 @@
 VM Standard reference covering Overview, Templates, VMware Tools, Hardware Version, CPU and 5 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── vSphere — VM Standard ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

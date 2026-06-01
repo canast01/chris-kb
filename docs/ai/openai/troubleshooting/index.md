@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Troubleshooting reference covering Error Code Reference, Rate Limit Troubleshooting, Token Limit Issues, Authentication Issues, Timeout and Latency and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Ai Openai Troubleshooting — Troubleshooting ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

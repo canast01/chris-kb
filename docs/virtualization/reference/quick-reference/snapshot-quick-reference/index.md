@@ -4,7 +4,7 @@
 <div class="kb-summary">
 VMware Snapshot Quick Reference reference covering Find All Snapshots, Check Snapshot Age and Size, Identify Snapshot Owner, Remove a Snapshot Safely, Consolidation Warning and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

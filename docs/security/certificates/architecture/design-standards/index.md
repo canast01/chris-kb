@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Validity period standards: internal server certificates 2 years, external/public-facing certificates 1 year maximum (aligned with CA/Browser Forum requirements), code signing certificates 3 years.
 </div>
-```
+```text
 ┌───────────────── Security Certificates Architecture — Architecture Design Standards ──────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

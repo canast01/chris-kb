@@ -43,7 +43,7 @@ RBAC Permission Model
   │  svc-aria-ops          +  Read-Only    +  Root     │
   └───────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  vCenter access control uses SSO for authentication and a role-based permission                       │
@@ -89,7 +89,7 @@ RBAC Permission Model
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 **VM Operator** — day-to-day VM management without storage or host access:
 ```text

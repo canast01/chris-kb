@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Keystone Collector Not Reporting, Subscription Consumption Shows Unexpected Spike, SnapMirror Lag Alert, Collector VM Cannot Reach ONTAP Array, Keystone Portal Shows Wrong Committed Capacity and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── NetApp Keystone — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

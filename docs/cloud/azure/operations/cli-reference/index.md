@@ -4,7 +4,7 @@
 <div class="kb-summary">
 A practical reference for day-to-day Azure CLI usage: authentication, subscription management, resource group operations, output formatting, and productivity tools.
 </div>
-```
+```powershell
 ┌─────────────────────────────── Cloud Azure Operations — CLI Reference ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

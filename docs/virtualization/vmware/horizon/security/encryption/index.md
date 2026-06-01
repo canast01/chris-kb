@@ -6,7 +6,7 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 </div>
 
   TLS Encryption Path: Client to Desktop
-```
+```text
 ```
 ┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
 │  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
@@ -21,7 +21,7 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
 │  (Blast)     │             └───────────┘              │  (Blast agent)   │
 └──────────────┘                                        └──────────────────┘
-```
+```text
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │

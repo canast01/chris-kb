@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Azure Backup jobs, restore procedures, and Recovery Services vault management. See also: [Backup & DR](../../backup-dr/index.md) for full Azure Backup and Azure Site Recovery reference.
 </div>
-```
+```text
 ┌───────────────────────────── Cloud Azure Operations — Backup and Restore ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

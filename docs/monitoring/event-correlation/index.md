@@ -5,7 +5,7 @@
 Event Correlation reference covering Correlation Workflow, Building a Correlation Timeline, Common Correlation Patterns, SIEM Correlation Rules (Examples), Dependency Map (template) and 1 more sections.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────── Monitoring — Event Correlation ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 AWS EventBridge reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────── EventBridge — Event-Driven Automation ────────────────────────────────┐
 │                                                                                                       │
 │  EventBridge routes events from AWS services, custom apps, and SaaS to processing targets.            │

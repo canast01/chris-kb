@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backup & Restore reference covering Evergreen//Forever — No Traditional Backup Required, Export Array Configuration, Pre-Upgrade Configuration Snapshot, Restore After Model Swap, Pure1 Configuration Audit and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Storage Pure Evergreen — Backup and Restore ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

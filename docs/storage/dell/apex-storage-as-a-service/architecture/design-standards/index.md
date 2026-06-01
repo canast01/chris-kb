@@ -5,7 +5,7 @@
 Standards reference covering Upgrade Notes, Design Standards.
 </div>
 
-```
+```powershell
 ┌─────────────────────────── Dell Apex STaaS — Architecture Design Standards ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -26,7 +26,7 @@ realm join -U administrator corp.example.com
 realm list
 id administrator@corp.example.com
 ```
-```
+```text
 ┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,7 +58,7 @@ id administrator@corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 ### Restrict Login to AD Groups
 

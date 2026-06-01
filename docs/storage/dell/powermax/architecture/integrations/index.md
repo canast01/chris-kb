@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, Integration Topology and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerMax — Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

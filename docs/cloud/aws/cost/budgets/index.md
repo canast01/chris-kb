@@ -5,7 +5,7 @@
 AWS Budgets reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── AWS Cost — Budgets ──────────────────────────────────────────┐
 │                                                                                                       │
 │  AWS Budgets sets cost and usage thresholds with alerts and optional auto-actions.                    │

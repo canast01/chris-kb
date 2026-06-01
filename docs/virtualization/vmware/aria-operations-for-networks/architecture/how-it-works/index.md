@@ -23,7 +23,7 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 [Physical switches]  ──NetFlow UDP 2055──► [Collector VM]
 [Palo Alto firewall] ──Syslog/API──────►  [Collector VM]
 ```
-```
+```text
 ┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
 │                                                                                                       │
 │  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │

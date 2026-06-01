@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Three-tier PKI hierarchy with offline Root CA, ADCS-backed Issuing CA, and commercial CA integrations; certificate lifecycle managed via auto-enrollment, OCSP revocation, and Venafi TPP.
 </div>
-```
+```text
 ┌────────────────────────── Security Certificates Architecture — Architecture ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

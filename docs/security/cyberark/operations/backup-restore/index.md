@@ -4,7 +4,7 @@
 <div class="kb-summary">
 The CyberArk Vault stores credentials that protect the entire organization. Loss of the Vault with no tested backup means total recovery failure.
 </div>
-```
+```text
 ┌────────────────────────── Security Cyberark Operations — Backup and Restore ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

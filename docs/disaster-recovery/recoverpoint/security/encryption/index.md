@@ -5,7 +5,7 @@
 Encryption reference covering Journal Encryption, Network Segmentation, Certificate Management.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── RecoverPoint — Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

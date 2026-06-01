@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Security Audit Procedure reference covering Audit Types, Scope Definition, Configuration Audit Checks, Patch Compliance Check, Vulnerability Scan Review and 3 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Security Security Audit ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 Adapter-based integration model: each source system connects via a Management Pack adapter running on the analytics cluster or a Remote Collector. Native adapters cover vSphere, NSX, vSAN, and storage; third-party MPs extend to public cloud, network, and ITSM.
 </div>
 
-```
+```powershell
 ┌───────────────────────────── Aria Operations — Architecture Integrations ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

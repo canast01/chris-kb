@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Business Impact Assessment reference covering Overview, Impact Dimensions, User Impact Categories, SLA Breach Assessment, Affected Services Inventory and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Incident Management Impact ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

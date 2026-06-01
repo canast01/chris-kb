@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AWS Services Reference reference covering Compute Services, Storage Services, Networking Services, Security Services, Database Services and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────────── Certifications Aws Services ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 Jira knowledge base covering Data Center cluster architecture, issue management, workflow configuration, security, and troubleshooting.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Jira — Platform Overview ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

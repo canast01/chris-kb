@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Maintenance Window Planning reference covering Overview, Planning Checklist, Window Scheduling Guidance, Dependency Mapping, Risk Review and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────── Project Management Maintenance Windows Planning ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

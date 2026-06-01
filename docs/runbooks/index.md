@@ -5,7 +5,7 @@
 Common operational procedures for infrastructure tasks.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Runbooks — Operational Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

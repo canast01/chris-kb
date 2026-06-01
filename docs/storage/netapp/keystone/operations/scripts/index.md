@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Script Reference reference covering Subscription Utilization Report, ONTAP Volume Usage Snapshot, Keystone Collector Health Monitor.
 </div>
-```
+```text
 ┌────────────────────────────── NetApp Keystone — Scripts and Automation ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

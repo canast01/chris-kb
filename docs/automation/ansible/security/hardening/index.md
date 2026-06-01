@@ -38,7 +38,7 @@ AllowAgentForwarding no
 EOF
 systemctl reload sshd
 ```
-```
+```text
 ┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Harden Ansible control node and AWX to reduce attack surface and block unauthorised use    │   │

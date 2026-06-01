@@ -6,7 +6,7 @@ Install & Upgrade reference covering Interoperability Matrix, EOL Tracking, Pre-
 </div>
 
 Aria Operations — Upgrade Paths
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Option A: Aria Suite Lifecycle (Recommended)       │
 │                                                     │
@@ -22,7 +22,7 @@ Aria Operations — Upgrade Paths
 ```
                            │ or
                            ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Option B: In-Product Upgrade (Standalone)          │
 │                                                     │
@@ -35,7 +35,7 @@ Aria Operations — Upgrade Paths
 ```
                            │
                            ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Pre-Upgrade Gate (must pass before proceeding)     │
@@ -46,7 +46,7 @@ Aria Operations — Upgrade Paths
 │  ✔ VM snapshots taken (revert window)               │
 │  ✔ Backup completed within last 24h                 │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  OVA/PAK deployment, node cluster setup, and upgrade for Aria Operations (vROps).                     │

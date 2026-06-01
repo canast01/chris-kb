@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE), External Key Management (KMIP), Management Channel Encryption (TLS), iSCSI CHAP Authentication and 4 more sections.
 </div>
-```
+```bash
 ┌───────────────────────────────────── Dell Unity XT — Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

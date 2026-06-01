@@ -5,7 +5,7 @@
 <div class="kb-summary">
 VMware Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Certifications Vmware ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry, and outbound to ITSM systems, notification channels, and the Pure1 REST API for automation.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Pure1 — Architecture Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

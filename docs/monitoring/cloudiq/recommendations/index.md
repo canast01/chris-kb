@@ -5,7 +5,7 @@
 CloudIQ: Proactive Recommendations and Implementation Tracking reference covering Implementing a Recommendation, Energy Savings Recommendations, Tracking Recommendation History, Common Recommendation Issues.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

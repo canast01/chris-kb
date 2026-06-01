@@ -50,7 +50,7 @@ ssh root@dcnm-dc1.corp.example.com
 # Transfer to workstation for TAC case upload
 scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
 ```
-```
+```text
 ┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM diagnostics: service logs, DB health, REST health endpoint, NX-OS show commands.                │

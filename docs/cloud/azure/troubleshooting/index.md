@@ -5,7 +5,7 @@
 Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication Errors, Azure Storage Access Denied, AKS Pod Not Starting, App Service 502/503.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 </div>
 
   Health Check Chain
-```
+```text
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  VRA Status      │    │  VR Agents       │    │  Replication     │
 │  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM   │

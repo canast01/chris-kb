@@ -11,7 +11,7 @@ Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurI
                                       │  │ → Windows login     │   │
                                       │  └─────────────────────┘   │
                                       └─────────────────────────────┘
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  Horizon authenticates users via AD; external users authenticate through UAG with                     │

@@ -15,7 +15,7 @@
     ├── security.yml    # weekly security scans
     └── cleanup.yml     # scheduled resource cleanup
 ```
-```
+```text
 ┌────────────────────────────────── GitHub Actions — Design Standards ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Standards for consistent, secure, maintainable GitHub Actions workflows across repos     │   │

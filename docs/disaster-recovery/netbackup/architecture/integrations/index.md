@@ -46,7 +46,7 @@ flowchart TD
     class vadp,cyberark source
     class opscenter,siem ops
 ```
-```
+```text
 ┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

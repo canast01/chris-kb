@@ -8,7 +8,7 @@ title: PowerPath — Install & Upgrade
 <div class="kb-summary">
 Install & Upgrade reference covering Version and Release Matrix, Upgrade and Update Paths, EOL and Renewal Tracking, Replacement and Decommission Planning.
 </div>
-```
+```text
 ┌──────────────────────────────── Dell PowerPath — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

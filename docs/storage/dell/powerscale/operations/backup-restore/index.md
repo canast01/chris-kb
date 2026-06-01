@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell PowerScale.
 </div>
-```
+```text
 ┌──────────────────────────────── Dell PowerScale — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

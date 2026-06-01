@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Route Tables (User Defined Routes / UDRs) override Azure's default system routes
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

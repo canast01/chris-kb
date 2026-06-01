@@ -4,7 +4,7 @@
 <div class="kb-summary">
 vCenter Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Post-Upgrade Validation.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

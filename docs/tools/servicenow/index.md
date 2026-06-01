@@ -4,7 +4,7 @@
 ServiceNow knowledge base covering multi-instance SaaS architecture, ITSM/CMDB processes, MID Server integration, security, and troubleshooting.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── ServiceNow — Platform Overview ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

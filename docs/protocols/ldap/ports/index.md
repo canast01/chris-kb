@@ -6,7 +6,7 @@ LDAP Ports reference covering Overview, Port 389 and 636, Global Catalog Ports (
 </div>
 
         LDAP PORT MAP
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Port 389 (LDAP)                                             │
 │  ┌────────────────────────────────────────────────────────┐  │

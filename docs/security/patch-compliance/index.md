@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Patch Compliance Monitoring reference covering Patch Classification, Windows Patch Compliance, Linux Patch Compliance, SCCM / Endpoint Manager (Windows fleet), Patch Reporting and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────────── Security Patch Compliance ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

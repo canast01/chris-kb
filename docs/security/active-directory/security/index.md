@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Active Directory — Security reference.
 </div>
-```
+```text
 ┌──────────────────────────── Security Active Directory Security — Security ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Storage Accounts reference covering Overview, Storage Account Service Hierarchy, Account Types, Replication Options, Creating Storage Accounts and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────────────── Cloud Azure Storage ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation
 </div>
 
   Sizing and Bandwidth Design
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA sizing                                                  │
 │  ┌─────────────────────────────────────────────────────┐     │

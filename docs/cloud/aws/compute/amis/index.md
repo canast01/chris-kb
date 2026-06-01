@@ -5,7 +5,7 @@
 AWS AMIs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── AWS Compute — AMIs ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Amazon Machine Images: golden image pipeline, lifecycle management, and sharing.                     │

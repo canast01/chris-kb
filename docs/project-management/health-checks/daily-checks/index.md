@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Daily Infrastructure Health Checks reference covering Overview, Morning Check Routine, What to Look For, Escalation Decision Tree, Documentation and Handover and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Health Checks Daily Checks ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

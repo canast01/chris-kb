@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Incident Management operational notes and deep-dive references.
 </div>
-```
+```text
 ┌─────────────────────────────── Project Management Incident Management ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

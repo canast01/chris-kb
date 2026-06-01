@@ -6,7 +6,7 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 </div>
 
 ESXi CLI Tool Map
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │  esxcli — structured CLI for host management            │
 │  ├── system    hostname, ntp, syslog, accounts           │
@@ -33,7 +33,7 @@ ESXi CLI Tool Map
 │  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth     │
 └─────────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │

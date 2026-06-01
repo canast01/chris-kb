@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Ollama is a tool for running large language models locally. You download models to your machine and talk to them through the `ollama` command or its built-in API server — no cloud account or API key required.
 </div>
-```
+```powershell
 ┌────────────────────────── Ai Local Ai Ollama Cli Reference — CLI Reference ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

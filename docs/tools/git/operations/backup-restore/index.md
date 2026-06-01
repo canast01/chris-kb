@@ -36,7 +36,7 @@ git remote update --prune
 git fsck --full
 git count-objects -vH
 ```
-```
+```text
 ┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │  Git backup strategies: mirror clones, bundle exports, and recovery from history.                     │

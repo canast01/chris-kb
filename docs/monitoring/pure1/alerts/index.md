@@ -5,7 +5,7 @@
 Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pure1 API, Alert Severity Definitions, Common Alert Types and 2 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────────── Pure1 — Alerts ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

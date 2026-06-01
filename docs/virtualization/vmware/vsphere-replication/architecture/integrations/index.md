@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Integrations reference covering vCenter Integration, SRM Integration, Network Requirements, Cross-vCenter Replication, Multi-Target Replication (Fan-Out) and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────── Virtualization Vmware Vsphere Replication — Integrations ───────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

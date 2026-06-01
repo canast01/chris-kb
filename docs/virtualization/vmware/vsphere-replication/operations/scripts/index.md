@@ -6,7 +6,7 @@ Scripts reference covering Get All Replicated VMs and RPO Compliance, Export Rep
 </div>
 
   VR Automation via PowerCLI + REST API + Python
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Reporting                       Alerting                    │
 │  ┌──────────────────────────┐    ┌──────────────────────┐    │

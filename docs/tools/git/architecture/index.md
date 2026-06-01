@@ -4,7 +4,7 @@
 Git is a distributed version control system where every clone is a complete repository. Enterprise deployments use GitHub Enterprise Server or GitLab Self-Managed as the integration point, with Gitaly handling all repository I/O.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Git — Architecture ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Git object model and distributed repository architecture: object store, refs, and remotes.           │

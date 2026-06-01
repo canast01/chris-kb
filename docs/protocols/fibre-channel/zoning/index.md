@@ -6,7 +6,7 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 </div>
 
         ZONING: INITIATOR + TARGET → ZONE → ZONE SET → FABRIC
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Zone: esxi01_pure01_ctA1                                       │
 │  ┌───────────────────────┐    ┌───────────────────────────────┐ │

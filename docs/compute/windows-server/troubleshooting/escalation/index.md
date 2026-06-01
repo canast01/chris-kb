@@ -24,7 +24,7 @@ flowchart TD
     submit --> monitor
     monitor -->|"SLA breach"| escalateTAM
 ```
-```
+```text
 ┌───────────────────────────── Windows Server — Troubleshooting Escalation ─────────────────────────────┐
 │                                                                                                       │
 │  Escalation path: internal L2/L3 → Microsoft Premier/TAC → CSS with diagnostic bundle.                │

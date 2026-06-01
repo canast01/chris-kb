@@ -4,7 +4,7 @@
 <div class="kb-summary">
 PowerShell automation using the `psPAS` module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.
 </div>
-```
+```text
 ┌──────────────────────── Security Cyberark Operations — Scripts and Automation ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

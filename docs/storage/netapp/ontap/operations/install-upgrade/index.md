@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.
 </div>
-```
+```text
 ┌───────────────────────────────── NetApp ONTAP — Install and Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

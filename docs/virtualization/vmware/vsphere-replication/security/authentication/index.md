@@ -6,7 +6,7 @@ Authentication reference covering VRA Registered with vCenter SSO, Site Pairing 
 </div>
 
   VR Authentication Architecture
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script            vCenter SSO           VRA          │
 │  ┌──────────────┐         ┌──────────────┐      ┌─────────┐  │
@@ -106,7 +106,7 @@ When vCenter's SSL certificate is replaced:
   VRA VAMI → Configuration → vCenter Server → Reconnect or Re-register
   ```
 - Site pairing thumbprints should be verified:
-  ```
+  ```text
   Site Recovery → Sites → [pair] → verify Connected status
   ```
 

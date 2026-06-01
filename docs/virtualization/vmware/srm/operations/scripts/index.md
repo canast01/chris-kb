@@ -6,7 +6,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 </div>
 
   SRM Automation via PowerCLI + REST API
-```
+```powershell
 ┌──────────────────────────────────────────────────────────────┐
 │  Connect-SrmServer ──► $srm.ExtensionData.*                  │
 │                                                              │
@@ -21,7 +21,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  └──────────────────────┘      └──────────────────────────┘  │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌────────────────────────────────── VMware SRM — Operational Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │  SRM operational scripts use PowerCLI, srm-util, and the REST API to automate                         │

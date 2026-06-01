@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Post-Change Health Check reference covering Overview, Timing, Post-Change Check Sequence, Comparison Against Pre-Change Baseline, Escalation During Post-Check and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Health Checks Post Change ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

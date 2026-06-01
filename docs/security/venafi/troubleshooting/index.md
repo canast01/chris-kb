@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Venafi — Troubleshooting reference.
 </div>
-```
+```text
 ┌────────────────────────── Security Venafi Troubleshooting — Troubleshooting ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

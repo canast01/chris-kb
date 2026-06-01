@@ -5,7 +5,7 @@
 Escalation reference covering When to Escalate, Opening a Broadcom Support Request, Data to Collect Before Opening an SR, SR Handoff Checklist, VMware Knowledge Base.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Aria Operations for Logs — Escalation ────────────────────────────────┐
 │                                                                                                       │
 │  Escalate vRLI issues when log ingestion loss or corruption impacts operations and compliance.        │

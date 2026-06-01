@@ -6,7 +6,7 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 </div>
 
   LCM Common Procedures
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Deploy Product           Replace Certificate                   │
 │  ┌──────────────────┐     ┌──────────────────────────────────┐  │
@@ -27,7 +27,7 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 │  └──────────────────┘                                           │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────── Aria Suite LCM Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Certificate rotation, password rotation, and add product procedures for LCM.                         │

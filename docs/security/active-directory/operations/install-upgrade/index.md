@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Active Directory domain and forest functional levels determine which features are available and which DC OS versions are supported. Raising functional levels is a one-way operation and requires all DCs to run at least the corresponding Windows Server version.
 </div>
-```
+```text
 ┌───────────────────── Security Active Directory Operations — Install and Upgrade ──────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

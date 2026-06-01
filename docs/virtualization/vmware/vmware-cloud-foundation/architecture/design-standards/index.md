@@ -6,7 +6,7 @@ Design Standards reference covering Supported Configurations, Compliance Checks 
 </div>
 
 VCF Physical and Logical Design Requirements
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Underlay Network (physical)                        │
 │                                                     │
@@ -20,7 +20,7 @@ VCF Physical and Logical Design Requirements
 ```
                          │
                          ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  VMkernel Requirements (per host)                   │
 │                                                     │
@@ -34,7 +34,7 @@ VCF Physical and Logical Design Requirements
 ```
                          │
                          ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Management Domain Minimum Build                    │
@@ -47,7 +47,7 @@ VCF Physical and Logical Design Requirements
 │  DNS: forward + reverse for all FQDNs before deploy │
 │  NTP: all components synchronised                   │
 └─────────────────────────────────────────────────────┘
-```
+```powershell
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │
 │  VCF design standards define domain layout, host sizing, VLAN scheme, NSX topology,                   │

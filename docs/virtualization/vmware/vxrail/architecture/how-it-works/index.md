@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Dell VxRail is a hyper-converged infrastructure (HCI) appliance that combines compute, storage, and networking in a pre-integrated, factory-configured unit. VxRail is built on VMware vSphere and vSAN, and is exclusively managed through the VxRail Manager plugin within vCenter.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Vmware Vxrail — How It Works ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

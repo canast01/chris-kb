@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Common Issues, Incident Triage.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerMax — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

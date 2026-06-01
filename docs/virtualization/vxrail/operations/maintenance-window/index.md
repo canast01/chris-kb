@@ -6,7 +6,7 @@ VxRail Maintenance Window reference covering Overview, Where It Fits, Daily Chec
 </div>
 
 Maintenance Window Flow
-```
+```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
 │  Pre-Maintenance │   │    Execute       │   │  Post-Validate   │
 │                  │   │                  │   │                  │

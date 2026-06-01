@@ -6,7 +6,7 @@ Access Control reference covering Service Account for API Automation, Separation
 </div>
 
   LCM RBAC — AD Groups → LCM Roles
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  AD (via VIDM sync)          LCM Roles                          │
 │  ┌─────────────────────┐     ┌─────────────────────────────┐    │
@@ -25,7 +25,7 @@ Access Control reference covering Service Account for API Automation, Separation
 │  Never assign roles to individual user accounts                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │  Admin and User roles with vIDM group mapping for Aria Suite Lifecycle Manager.                       │
@@ -70,7 +70,7 @@ Access Control reference covering Service Account for API Automation, Separation
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 Assign the minimum role required for the automation task — use `LCM_CONTENT_DEVELOPER` for scripts that only query health; use `LCM_ADMIN` only for scripts that trigger upgrades or certificate replacements.
 

@@ -3,7 +3,7 @@
 <div class="kb-summary">
 VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Components, Main Dependencies, Ports and Protocols and 7 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Vxrail Technical Deep Dive ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

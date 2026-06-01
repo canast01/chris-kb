@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Certificate Renewal and Revocation Workflow, Renewal, Inventory, TLS Validation.
 </div>
-```
+```text
 ┌────────────────────── Security Certificates Operations — Operational Procedures ──────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

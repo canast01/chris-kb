@@ -4,7 +4,7 @@
 <div class="kb-summary">
 ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
-```
+```text
 ┌────────────────────────────────────── NetApp ONTAP — Operations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

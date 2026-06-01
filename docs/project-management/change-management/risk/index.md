@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Change Risk Assessment reference covering Overview, Risk Assessment Matrix, Risk Identification Checklist, Risk Mitigation Examples, Residual Risk and Acceptance and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Project Management Change Management Risk ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

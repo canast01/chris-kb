@@ -4,7 +4,7 @@
 <div class="kb-summary">
 A cipher suite specifies the algorithms used for key exchange, authentication, encryption, and integrity in a TLS connection. Weak cipher suites allow downgrade attacks or data exposure.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Protocols Tls Ciphers ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

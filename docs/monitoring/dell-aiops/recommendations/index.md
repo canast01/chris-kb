@@ -5,7 +5,7 @@
 Dell AIOps: Actionable Recommendations and Implementation Tracking reference covering Implementing Recommendations, Implementation Tracking Dashboard, Firmware Recommendation Workflow, Common Recommendation Issues.
 </div>
 
-```
+```bash
 ┌──────────────────────────────────── Dell AIOps — Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

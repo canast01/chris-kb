@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Losing a Certificate Authority's private key is an unrecoverable event — every certificate it issued becomes untrusted.
 </div>
-```
+```text
 ┌──────────────────────── Security Certificates Operations — Backup and Restore ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

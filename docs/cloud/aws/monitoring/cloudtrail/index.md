@@ -5,7 +5,7 @@
 AWS CloudTrail reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────── CloudTrail — API Audit Logging ────────────────────────────────────┐
 │                                                                                                       │
 │  CloudTrail records all AWS API calls for governance, compliance, and security investigation.         │

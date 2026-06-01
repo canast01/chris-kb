@@ -5,7 +5,7 @@
 CloudIQ: Alert Types, Severity, and Notification Configuration reference covering Notification Configuration, Dismissing and Acknowledging Alerts, Common Alert Issues.
 </div>
 
-```
+```text
 ┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

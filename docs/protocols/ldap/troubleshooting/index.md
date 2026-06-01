@@ -6,7 +6,7 @@ LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Cert
 </div>
 
         TRIAGE: LDAP BIND FAILS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Resolve DC name                                          │
 │     nslookup dc01.example.local ─── fail ──► fix DNS           │

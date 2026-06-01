@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change Health Check, Health Check Commands, Node-Level Diagnostic Checks and 3 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────────── Dell ECS — Health Checks ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

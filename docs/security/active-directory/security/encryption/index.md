@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Signing and Channel Binding, Kerberos Encryption Policy.
 </div>
-```
+```bash
 ┌─────────────────────────── Security Active Directory Security — Encryption ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

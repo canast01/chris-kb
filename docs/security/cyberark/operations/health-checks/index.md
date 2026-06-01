@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Daily operations focus on confirming that the Vault service is running, CPM is successfully rotating passwords, PSM is brokering sessions without errors, and no critical accounts are in a failed rotation state.
 </div>
-```
+```text
 ┌──────────────────────────── Security Cyberark Operations — Health Checks ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

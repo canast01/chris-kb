@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Asset Lifecycle Management reference covering Overview, Lifecycle Stages, Refresh Cycles, EOL Tracking, Budget Planning and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Asset Inventory Lifecycle ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

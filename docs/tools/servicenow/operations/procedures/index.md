@@ -20,7 +20,7 @@ On Hold:     Waiting for external input (vendor, customer info)
 Resolved:    Fix applied; awaiting confirmation from caller
 Closed:      Caller confirmed resolution or auto-closed after N days
 ```
-```
+```text
 ┌───────────────────────────────── ServiceNow — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  Standard operating procedures for day-to-day ServiceNow instance management.                         │

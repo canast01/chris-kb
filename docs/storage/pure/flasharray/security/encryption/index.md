@@ -6,7 +6,7 @@ Encryption reference covering Encryption at Rest, Encryption in Transit, TLS Con
 </div>
 
 FlashArray Encryption Architecture
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on, no config required)              │
 │                                                            │
@@ -24,7 +24,7 @@ FlashArray Encryption Architecture
 │  ├── Replication: TLS between arrays                       │
 │  └── Pure1 phone-home: HTTPS (443) outbound                │
 └────────────────────────────────────────────────────────────┘
-```
+```text
 
 FlashArray provides encryption at rest (hardware-based, always-on) and encryption in transit (TLS for all management and replication traffic). Both are enabled by default and require no configuration to activate — the operational task is to manage certificates, verify status, and integrate with external key managers when required.
 

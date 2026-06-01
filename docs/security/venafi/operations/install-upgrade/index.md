@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Venafi TPP manages the full certificate lifecycle — discovery, policy enforcement, issuance, renewal automation, and expiry alerting. This page covers operational lifecycle procedures including upgrades and migration to TLS Protect Cloud (VaaS).
 </div>
-```
+```text
 ┌────────────────────────── Security Venafi Operations — Install and Upgrade ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

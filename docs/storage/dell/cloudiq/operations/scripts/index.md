@@ -147,7 +147,7 @@ set CLOUDIQ_CLIENT_ID=your-client-id
 set CLOUDIQ_CLIENT_SECRET=your-client-secret
 python cloudiq_alert_poller.py
 ```
-```
+```bash
 ┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

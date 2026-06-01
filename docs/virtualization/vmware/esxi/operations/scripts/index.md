@@ -6,7 +6,7 @@ ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi 
 </div>
 
 ESXi Automation Scripts — Tool Selection
-```
+```powershell
 ┌───────────────────────────────────────────────────────┐
 │  Task                         Recommended Tool        │
 │  ─────────────────────────────────────────────────    │
@@ -22,7 +22,7 @@ ESXi Automation Scripts — Tool Selection
 ```
 
 Script Execution Flow (PowerCLI example)
-```
+```powershell
 ┌─────────────────────────────────────────────────────┐
 │  Admin workstation (Windows / PowerShell)             │
 │  └── Connect-VIServer → vCenter                       │
@@ -36,7 +36,7 @@ Script Execution Flow (PowerCLI example)
 │           └── Report: PASS / WARNING / CRITICAL       │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │

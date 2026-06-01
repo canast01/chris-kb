@@ -6,7 +6,7 @@ Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layou
 </div>
 
 ESXi Host Design Checklist — Standard Layout
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Naming & DNS                                            │
 │  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)         │
@@ -34,7 +34,7 @@ ESXi Host Design Checklist — Standard Layout
 │  NTP: 2+ servers matching vCenter NTP sources            │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │  Hardware sizing, HA cluster design, and build standards for ESXi deployments.                        │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AI Security and Responsible AI reference covering Responsible AI Pillars, AI Safety Concepts, Data Privacy in the ML Lifecycle, Bias Types and Mitigations, AI Governance Frameworks and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── Certifications Ai Security — Security ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

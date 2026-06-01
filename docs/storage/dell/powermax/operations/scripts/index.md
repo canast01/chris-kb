@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Scripts reference covering SRDF State Monitor, Array Health Check, SRDF Planned Failover, Ansible PowerMax Health Playbook, Windows: SRDF Health Check via Unisphere REST API (PowerShell) and 5 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────── Dell PowerMax — Scripts and Automation ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

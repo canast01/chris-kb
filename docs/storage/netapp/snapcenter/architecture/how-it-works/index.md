@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Topology, HA Options, Components, Connectivity and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── NetApp SnapCenter — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

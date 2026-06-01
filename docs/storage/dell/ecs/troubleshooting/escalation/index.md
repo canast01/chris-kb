@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Dell ECS — Escalation ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

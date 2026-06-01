@@ -4,7 +4,7 @@
 <div class="kb-summary">
 NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FAS, ONTAP Select). The CLI uses a dot-separated namespace — `storage aggregate show`, `network interface create` — and runs at the `cluster::>` prompt.
 </div>
-```
+```powershell
 ┌──────────────────────────────────── NetApp ONTAP — CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Alert Management reference covering Common Alert Sources, Alert Noise Reduction Checklist, Escalation Matrix (template).
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

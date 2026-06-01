@@ -13,7 +13,7 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
                    │  Manager        │   │  Agent (in    │
                    └─────────────────┘   │  AppStacks)   │
                                          └───────────────┘
-```
+```text
 ┌───────────────────────────────── VMware Horizon — Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon installation deploys Connection Servers on Windows VMs; upgrade applies                      │

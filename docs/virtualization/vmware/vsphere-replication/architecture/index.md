@@ -4,7 +4,7 @@
 vSphere Replication is a hypervisor-based asynchronous replication solution managed by the VRMS appliance, providing VM-level RPO control without requiring SAN-based replication.
 </div>
 
-```
+```text
 ┌───────────────────────────────── vSphere Replication — Architecture ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

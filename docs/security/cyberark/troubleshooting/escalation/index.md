@@ -4,7 +4,7 @@
 <div class="kb-summary">
 CyberArk support is accessed through the CyberArk Support Portal at support.cyberark.com, where Service Requests (SRs) are raised by product area (Vault, CPM, PSM, PVWA).
 </div>
-```
+```text
 ┌─────────────────────────── Security Cyberark Troubleshooting — Escalation ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

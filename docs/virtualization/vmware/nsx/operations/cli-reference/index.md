@@ -31,7 +31,7 @@ get service http
 get service manager
 get service controller
 ```
-```
+```text
 ┌───────────────────────────────────────── NSX — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX Manager CLI, Edge Node CLI, and REST API commands for operations.                                │

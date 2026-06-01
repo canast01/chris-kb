@@ -6,7 +6,7 @@
 PowerShell — Operations reference.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       PowerShell ops: script deployment, module updates, remoting config, DSC management      │   │

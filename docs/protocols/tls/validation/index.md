@@ -6,7 +6,7 @@ Use these commands to verify TLS configuration on servers, check certificate val
 </div>
 
         OPENSSL VALIDATION CHECKLIST
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  openssl s_client -connect <host>:443 -servername <host>     │
 │                                                              │

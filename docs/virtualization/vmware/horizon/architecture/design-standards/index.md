@@ -6,7 +6,7 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 </div>
 
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Load Balancer / DNS Round-Robin                            │
 │         ┌────────────┬────────────┬────────────┐            │
@@ -24,7 +24,7 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │            └─────────────────────┘                          │
 └─────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │

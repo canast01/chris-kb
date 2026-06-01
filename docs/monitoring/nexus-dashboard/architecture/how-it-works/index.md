@@ -5,7 +5,7 @@
 How It Works (Monitoring) reference covering Cluster Architecture, Node Communication, Network Interfaces.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── Nexus Dashboard — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

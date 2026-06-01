@@ -5,7 +5,7 @@
 Access Control reference covering Overview, Built-In Roles, Resource Group Scoping, Service Accounts, Least Privilege Guidance and 2 more sections.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── SANnav — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

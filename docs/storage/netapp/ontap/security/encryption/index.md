@@ -4,7 +4,7 @@
 <div class="kb-summary">
 ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols.
 </div>
-```
+```bash
 ┌────────────────────────────────────── NetApp ONTAP — Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

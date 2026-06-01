@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, AutoSupport, Information to Collect, SLA Tiers — NetApp SupportEdge, Escalation Path.
 </div>
-```
+```text
 ┌────────────────────────────────────── NetApp ONTAP — Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

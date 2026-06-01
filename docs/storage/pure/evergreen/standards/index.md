@@ -6,7 +6,7 @@ Pure Storage Evergreen Standards reference covering Naming Conventions, Build Ba
 </div>
 
 Evergreen Standards — Object Naming and Design
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Array    │  <site>-fa-<nn>   e.g. lon-fa-01             │
 ├──────────────────────────────────────────────────────────┤

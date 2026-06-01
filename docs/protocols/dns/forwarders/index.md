@@ -6,7 +6,7 @@ DNS Forwarders reference covering Overview, Configuring Global Forwarders, Condi
 </div>
 
         FORWARDER RESOLUTION FLOW
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Internal DNS (DC)            External / Upstream            │
 │  ┌──────────────────┐         ┌──────────────────────────┐   │

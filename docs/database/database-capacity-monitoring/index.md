@@ -28,7 +28,7 @@ SELECT indexname,
 FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
-```
+```text
 ┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,7 +60,7 @@ ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```bash
 
 ## Filesystem / Volume Capacity
 

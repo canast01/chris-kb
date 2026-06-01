@@ -6,7 +6,7 @@ Design Standards reference covering Naming Conventions, Build Baseline, Subscrip
 </div>
 
 Evergreen Subscription Design Checklist
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Tier selection   │  //X / //C / //E — match workload    │
 ├──────────────────────────────────────────────────────────┤

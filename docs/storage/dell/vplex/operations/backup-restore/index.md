@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell VPLEX.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell VPLEX — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

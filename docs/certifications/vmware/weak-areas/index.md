@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Weak Areas (VMware) reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Certifications Vmware Weak Areas ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

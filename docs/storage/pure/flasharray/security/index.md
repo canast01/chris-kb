@@ -6,7 +6,7 @@ FlashArray — Security reference: Authentication, Access Control, Encryption, H
 </div>
 
 FlashArray Security Layers
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │
 │  ├── SAML SSO (Okta / Azure AD) → MFA enforced           │

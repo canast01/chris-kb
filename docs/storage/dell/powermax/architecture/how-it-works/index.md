@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, HA Topology, Components, Connectivity and 3 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerMax — How It Works ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -23,7 +23,7 @@ steps:
   - name: Deploy to ECS
     run: aws ecs update-service --cluster prod --service app --force-new-deployment
 ```
-```
+```text
 ┌──────────────────────────────────── GitHub Actions — Integrations ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  GitHub Actions integrates with cloud providers, registries, ITSM, Slack, and security tools  │   │

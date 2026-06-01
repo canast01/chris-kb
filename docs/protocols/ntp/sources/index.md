@@ -6,7 +6,7 @@ NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Li
 </div>
 
         SOURCE SELECTION AND PREFERENCE
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  /etc/chrony.conf                                           │
 │  server ntp1.example.com iburst prefer  ◄── primary        │

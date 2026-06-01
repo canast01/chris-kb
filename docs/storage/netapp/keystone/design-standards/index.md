@@ -45,7 +45,7 @@ volume modify \
 # List volumes with their comments to verify tagging
 volume show -fields vserver,volume,comment | grep keystone
 ```
-```
+```text
 ┌───────────────────────────────── NetApp Keystone — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

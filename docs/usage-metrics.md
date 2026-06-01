@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Usage Metrics reference covering Current totals, Section growth, Health checks.
 </div>
-```
+```text
 ┌────────────────────────────────────────── KB Usage Metrics ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

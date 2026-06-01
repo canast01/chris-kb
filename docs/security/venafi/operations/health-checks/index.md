@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA co
 </div>
-```
+```text
 ┌───────────────────────────── Security Venafi Operations — Health Checks ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

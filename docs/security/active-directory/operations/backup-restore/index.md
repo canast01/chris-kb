@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific recovery modes.
 </div>
-```
+```text
 ┌────────────────────── Security Active Directory Operations — Backup and Restore ──────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

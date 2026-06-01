@@ -4,7 +4,7 @@
 <div class="kb-summary">
 A repeatable morning workflow to confirm the environment is healthy before the business day begins.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

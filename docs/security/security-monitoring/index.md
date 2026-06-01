@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Security Monitoring reference covering Daily Review Checklist, Key Windows Security Events, Linux Security Monitoring, Correlation Rules (SIEM Examples), Threat Detection Sources and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Security Security Monitoring ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

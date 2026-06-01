@@ -6,7 +6,7 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 </div>
 
   Health Check Chain
-```
+```text
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  Connection      │    │  Composer /      │    │  vCenter         │
 │  Servers         │───►│  App Volumes Mgr │───►│  (pool/datastore │
@@ -15,7 +15,7 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 ```
          │                                                │
          ▼                                                ▼
-```
+```text
 ┌──────────────────┐                         ┌──────────────────┐
 │  UAG             │                         │  Active Directory   │
 │  (port 443/8443  │                         │  (LDAP/Kerberos     │
@@ -24,14 +24,14 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 ```
          │
          ▼
-```
+```text
 ```
 ┌──────────────────┐
 │  Desktop Pools                                                   │
 │  (Available > 0,                                                 │
 │   Error = 0?)                                                    │
 └──────────────────┘
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon health checks verify Connection Server status, pool availability, agent                      │

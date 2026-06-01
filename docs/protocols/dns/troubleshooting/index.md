@@ -6,7 +6,7 @@ DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdi
 </div>
 
         TRIAGE: NSLOOKUP FAILS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  1. nslookup host.example.local ── no answer ──► continue       │
 │          │                                                   │

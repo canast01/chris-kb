@@ -5,7 +5,7 @@
 Encryption reference covering Backup Encryption, Linux Hardened Repository (Immutable Backups).
 </div>
 
-```
+```text
 ┌──────────────────────── Commvault Encryption — At Rest, In Transit, Key Mgmt ─────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

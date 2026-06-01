@@ -7,7 +7,7 @@ title: VxRail (VMware Platform)
 <div class="kb-summary">
 Technical and operational reference for Dell VxRail. Covers VxRail Manager, HCI node management, lifecycle upgrades, vSAN integration, hardware health, and troubleshooting for VxRail clusters managed within VMware vSphere environments.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Vxrail ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

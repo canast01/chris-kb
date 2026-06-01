@@ -4,7 +4,7 @@
 Array naming standards, team access model, alert threshold configuration, and operational baselines for Pure1.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Pure1 — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

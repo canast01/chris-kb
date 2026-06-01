@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Health Check Decision Flow, Daily Checks, Health Check, Cluster Health, Pre-Change Checklist and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── NetApp ONTAP — Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

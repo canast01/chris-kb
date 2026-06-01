@@ -33,7 +33,7 @@ sequenceDiagram
     Storage-->>HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin
 ```
-```
+```powershell
 ┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

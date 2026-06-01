@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Health Check Workflow, AutoSupport Validation, Pre-Change Checklist, Health Summary Table.
 </div>
-```
+```text
 ┌────────────────────────────────── NetApp Operations — Health Checks ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

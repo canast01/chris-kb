@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AWS Weak Areas reference covering VPC Peering vs PrivateLink vs Transit Gateway, S3 Storage Classes, IAM Policy Evaluation, RDS Multi-AZ vs Read Replicas, Security Group vs NACL and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Certifications Aws Weak Areas ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

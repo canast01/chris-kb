@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Array Health, Blade Health, Drive / Media Health and 4 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Pure FlashBlade — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

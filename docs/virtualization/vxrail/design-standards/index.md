@@ -6,7 +6,7 @@
 </div>
 
 VxRail Design Requirements — Key Standards
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Network VLAN Separation (required)                         │
 │                                                             │
@@ -18,7 +18,7 @@ VxRail Design Requirements — Key Standards
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ```
-```
+```text
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Cluster Sizing Rules                                        │
 │  min 3 nodes (FTT=1) · min 4 nodes (production safe)        │

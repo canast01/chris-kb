@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Certificates — Security reference.
 </div>
-```
+```text
 ┌────────────────────────────── Security Certificates Security — Security ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

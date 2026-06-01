@@ -6,7 +6,7 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
 </div>
 
         TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  1. nc -zv <server> 2049 ── fail ──► firewall / routing     │
 │          │ ok                                                │

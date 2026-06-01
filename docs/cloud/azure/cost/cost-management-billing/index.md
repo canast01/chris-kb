@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Cost Management + Billing is the central hub for understanding, analysing, and optimising Azure spend. It covers cost analysis, invoices, billing exports, and the Cost Management REST API.
 </div>
-```
+```text
 ┌────────────────────────────────────────── Cloud Azure Cost ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

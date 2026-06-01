@@ -5,7 +5,7 @@
 Hardening reference covering Network Security, Security Hardening Checklist.
 </div>
 
-```
+```powershell
 ┌─────────────────────────── Commvault Security Hardening — OS, Network, App ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

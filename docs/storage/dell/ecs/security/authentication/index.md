@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Authentication reference covering User Model Overview, Local Accounts, LDAP / Active Directory, S3 Object User Authentication, Audit Logging and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────────── Dell ECS — Authentication ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

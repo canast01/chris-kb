@@ -6,7 +6,7 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 </div>
 
   SRM Authentication Chain
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script           vCenter SSO          SRM Server     │
 │  ┌───────────┐           ┌───────────┐        ┌───────────┐  │
@@ -25,7 +25,7 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 │  SRA Auth: array API token ──► stored encrypted in SRM       │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware SRM — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
 │  SRM uses vCenter SSO for user authentication; site pair uses TLS certificates                        │

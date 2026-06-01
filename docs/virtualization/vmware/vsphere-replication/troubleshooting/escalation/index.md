@@ -6,7 +6,7 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
 </div>
 
   VR Escalation Path
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect (both sites)                                   │
 │  ┌─────────────────────────────────────────────────────────┐    │

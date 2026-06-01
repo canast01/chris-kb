@@ -5,7 +5,7 @@
 Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection reference covering Performance Predictions, Bottleneck Detection, Noisy Neighbour Detection, Common Insight Issues.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

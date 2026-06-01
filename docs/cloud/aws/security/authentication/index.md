@@ -32,7 +32,7 @@ aws sso-admin list-permission-sets \
 aws sso login --profile prod
 # Or configure SSO profile in ~/.aws/config:
 ```
-```
+```text
 ┌───────────────────────────── AWS Authentication — SSO, MFA & Credentials ─────────────────────────────┐
 │                                                                                                       │
 │  Authentication to AWS via IAM Identity Center SSO, MFA enforcement, and access keys.                 │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Diagnostics reference covering Collect Cluster Diagnostics, Supervisor Control Plane VM Access, TKG Cluster Events, Harbor Logs, Describe Stuck or Failing Pods and 3 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Vmware Tanzu — Diagnostics ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

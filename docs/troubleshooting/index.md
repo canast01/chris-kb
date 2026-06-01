@@ -5,7 +5,7 @@
 Cross-platform troubleshooting guides for common infrastructure issues.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── Cross-Platform Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

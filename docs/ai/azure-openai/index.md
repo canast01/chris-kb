@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Azure OpenAI Service hosts GPT-4o and other models within Azure regions with private endpoints, Entra ID auth, and regional data residency. Models must be explicitly deployed before use; coverage includes deployment quota, Standard vs PTU capacity, network isolation, content filtering, and monitoring.
 </div>
-```
+```text
 ┌─────────────────────────────────────────── Ai Azure Openai ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

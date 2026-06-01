@@ -4,7 +4,7 @@
 <div class="kb-summary">
 DNS and NTP Validation reference covering Why This Matters, NTP Validation — ESXi Host, NTP Validation — vCenter Appliance, DNS Validation — ESXi Host, DNS Validation — PowerCLI and 3 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

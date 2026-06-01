@@ -85,7 +85,7 @@ graph TD
     SW_ToR_A --> Host2
     SW_ToR_B --> Host3
 ```
-```
+```text
 ┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -117,7 +117,7 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 **vSAN Stretched Cluster requirements:**
 - Intersite latency: ≤5 ms RTT (synchronous replication)

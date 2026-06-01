@@ -6,7 +6,7 @@ SNMP is the primary protocol for collecting metrics from network devices, storag
 </div>
 
         SNMP MONITORING INTEGRATION
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │  Infrastructure                                               │
 │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │

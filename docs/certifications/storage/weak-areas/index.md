@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Weak Areas (Storage) reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Certifications Storage Weak Areas ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

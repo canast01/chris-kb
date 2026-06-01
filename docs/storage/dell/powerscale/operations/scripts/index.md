@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Automation scripts and reusable code for Dell PowerScale operations.
 </div>
-```
+```text
 ┌────────────────────────────── Dell PowerScale — Scripts and Automation ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

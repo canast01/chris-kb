@@ -5,7 +5,7 @@
 AWS Internet Gateway reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────── Internet Gateway — VPC Internet Connectivity ─────────────────────────────┐
 │                                                                                                       │
 │  IGW provides bidirectional internet access for public subnets; performs NAT for Elastic IPs.         │

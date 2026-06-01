@@ -6,14 +6,14 @@ Integrations reference covering NSX Federation (Multi-Site VCF), Backup Integrat
 </div>
 
 VCF Integration Topology
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager (integration hub)                      │
 └──┬──────┬──────┬──────┬──────┬──────────────────────┘
 ```
    │      │      │      │      │
    ▼      ▼      ▼      ▼      ▼
-```
+```text
 ┌──────┐ ┌────┐ ┌────┐ ┌────┐ ┌──────────────────────┐
 │ Aria │ │Aria│ │ AD │ │SIEM│ │  Backup                │
 │ Ops  │ │Auto│ │LDAP│ │Sys-│ │  (Veeam/NetBackup)     │
@@ -26,7 +26,7 @@ VCF Integration Topology
 ```
 
 NSX Federation (multi-site)
-```
+```text
 ```
 ┌──────────────────────────────────────────────────────┐
 │  Global NSX Manager (outside VCF LCM)                │
@@ -39,7 +39,7 @@ NSX Federation (multi-site)
 │   │ (data plane)     │  │ (data plane)     │         │
 │   └──────────────────┘  └──────────────────┘         │
 └──────────────────────────────────────────────────────┘
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
 │                                                                                                       │
 │  VCF integrates with external identity (AD/LDAP), backup tools, external KMS,                         │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Install & Upgrade reference covering Keystone Collector Deployment, Upgrade Keystone Collector, Add a New ONTAP Array to Keystone, Remove an Array from Keystone, Post-Upgrade Validation.
 </div>
-```
+```text
 ┌──────────────────────────────── NetApp Keystone — Install and Upgrade ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

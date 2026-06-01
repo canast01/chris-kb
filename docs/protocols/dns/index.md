@@ -9,7 +9,7 @@ Domain Name System (DNS) is the foundational naming protocol of IP networks, res
 </div>
 
         DNS RESOLUTION PATH
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                 │
 │  ┌────────┐  ┌──────────────┐  ┌────────────────────────────┐  │

@@ -31,7 +31,7 @@ Change password:
 ```text
 Settings → My Account → Change Password
 ```
-```
+```text
 ┌───────────────────────────────────────── vRNI Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Local, LDAP, vIDM SSO, and API token authentication methods for vRNI.                                │

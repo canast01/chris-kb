@@ -6,7 +6,7 @@ VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-spec
 </div>
 
 VxRail Upgrade Sequence
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 1: Plan          Phase 2: Pre-checks                 │
 │  ─────────────          ────────────────────                 │
@@ -19,7 +19,7 @@ VxRail Upgrade Sequence
 ```
                     │
                     ▼
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 3–4: Bundle + Pre-check                              │
 │  Upload Composite Bundle → VxRail Manager validates         │

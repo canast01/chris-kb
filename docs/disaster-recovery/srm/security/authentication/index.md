@@ -5,7 +5,7 @@
 Authentication reference covering Site Pair Service Account, Certificate Management.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── SRM — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

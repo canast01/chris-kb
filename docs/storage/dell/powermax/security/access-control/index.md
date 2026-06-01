@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering Overview, Unisphere Role-Based Access Control (RBAC), Solutions Enabler CLI Access Control, Data Plane Access Control — Masking Views, Access Control Reviews and 1 more sections.
 </div>
-```
+```powershell
 ┌─────────────────────────────────── Dell PowerMax — Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

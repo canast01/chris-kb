@@ -4,7 +4,7 @@
 <div class="kb-summary">
 TLS validation in Azure covers certificate management for App Gateway, App Service custom domains, API Management, and Azure Front Door, plus monitoring expiry across all endpoints.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

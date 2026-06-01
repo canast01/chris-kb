@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [SnapMirror Operations](../index.md) reference.
 </div>
-```
+```powershell
 ┌────────────────────────────────── NetApp SnapMirror — CLI Reference ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ Integrations reference covering VMware Integration, Backup Integration, Pure1 Mo
 </div>
 
 FlashBlade Integration Map
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                       FlashBlade                         │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐                │

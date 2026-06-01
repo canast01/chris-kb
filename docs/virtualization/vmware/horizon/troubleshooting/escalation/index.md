@@ -6,7 +6,7 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 </div>
 
   Escalation Path
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Internal Triage (L1/L2)                                     │
 │  ┌─────────────────────────────────────────────────────────┐ │
@@ -27,7 +27,7 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 │  └─────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware Horizon — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate Horizon issues to VMware GSS when all users are impacted, agent fails                       │

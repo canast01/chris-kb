@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure OpenAI integrates with Azure Monitor for metrics, logs, and alerting. Monitoring covers request volume, latency, token usage, error rates, and content filtering events.
 </div>
-```
+```text
 ┌───────────────────────────────────── Ai Azure Openai Monitoring ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

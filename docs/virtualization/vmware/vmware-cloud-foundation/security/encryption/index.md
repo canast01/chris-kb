@@ -6,7 +6,7 @@ Encryption reference covering vSAN Encryption.
 </div>
 
 VCF Encryption — Certificate and Data Flow
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  TLS Certificate Lifecycle (via SDDC Manager)       │
 │                                                     │
@@ -27,7 +27,7 @@ VCF Encryption — Certificate and Data Flow
 ```
                            │
                            ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  vSAN Data-at-Rest Encryption                       │
@@ -39,7 +39,7 @@ VCF Encryption — Certificate and Data Flow
 │  Key rotation: live operation (no downtime)         │
 │  KMS HA is critical — loss = datastore inaccessible │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
 │                                                                                                       │
 │  VCF encryption covers transport (TLS 1.2+), vSAN at-rest encryption, VM encryption,                  │

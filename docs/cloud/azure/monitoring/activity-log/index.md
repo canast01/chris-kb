@@ -4,7 +4,7 @@
 <div class="kb-summary">
 The Azure Activity Log is a platform log that records subscription-level events — resource creation, modification, deletion, and administrative operations. It is retained for 90 days natively and can be exported for longer-term storage or querying.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Monitoring ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

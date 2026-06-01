@@ -52,7 +52,7 @@ flowchart TD
     U -- No --> V[Fix forwarder IP\nCheck connectivity to remote DNS]
     U -- Yes --> W[Check local forwarder config\nnslookup -type=SOA domain]
 ```
-```
+```text
 ┌─────────────────────────────────── DNS Resolution Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -88,7 +88,7 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 ### SRV Records (critical for AD/Kerberos)
 

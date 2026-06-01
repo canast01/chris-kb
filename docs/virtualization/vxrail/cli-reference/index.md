@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [VxRail](../index.md) reference.
 </div>
-```
+```powershell
 ┌───────────────────────── Virtualization Vxrail Cli Reference — CLI Reference ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

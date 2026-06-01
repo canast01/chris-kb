@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [SnapCenter Operations](../index.md) reference.
 </div>
-```
+```text
 ┌────────────────────────────────── NetApp SnapCenter — Common Issues ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

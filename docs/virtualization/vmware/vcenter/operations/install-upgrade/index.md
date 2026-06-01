@@ -51,7 +51,7 @@ vSphere Upgrade Sequence
   Rollback: full restore from pre-upgrade backup only
             (no in-place rollback; keep old VCSA off for 24h window)
 ```
-```
+```text
 ┌───────────────────────────────── vCenter Server — Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  vCenter is deployed as an OVA; upgrades use the built-in VCSA installer ISO                          │

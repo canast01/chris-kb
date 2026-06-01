@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, REST API.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerScale — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Active Directory — Operations reference.
 </div>
-```
+```text
 ┌────────────────────────── Security Active Directory Operations — Operations ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

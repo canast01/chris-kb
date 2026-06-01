@@ -4,7 +4,7 @@
 <div class="kb-summary">
 All certificate lifecycle events are captured in the Venafi audit log and should be forwarded to a SIEM via the Log Server. Admin and service accounts should be reviewed quarterly.
 </div>
-```
+```text
 ┌──────────────────────────── Security Venafi Security — Security Hardening ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

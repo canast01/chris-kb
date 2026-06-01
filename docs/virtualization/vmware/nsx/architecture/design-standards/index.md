@@ -5,7 +5,7 @@
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
 </div>
 
-```
+```text
 ┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

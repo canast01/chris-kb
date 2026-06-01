@@ -6,7 +6,7 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 </div>
 
   Backup Sources                        Backup Methods
-```
+```text
 ┌─────────────────────┐               ┌────────────────────────────┐
 │  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
 │  (ADAM/LDAP)        │               └────────────────────────────┘
@@ -21,7 +21,7 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 │  + AppStack VMDKs   │               │  on datastore              │
 └─────────────────────┘               └────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │

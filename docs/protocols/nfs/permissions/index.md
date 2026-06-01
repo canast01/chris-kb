@@ -6,7 +6,7 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
 </div>
 
         NFS PERMISSION LAYERS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
 │  ┌────────────────────────────────────────────────────────┐  │

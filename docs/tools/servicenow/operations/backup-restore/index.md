@@ -22,7 +22,7 @@ flowchart LR
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
 ```
-```
+```text
 ┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  ServiceNow SaaS backup model: ServiceNow manages infrastructure backups; tenant manages exports.     │

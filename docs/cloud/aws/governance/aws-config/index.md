@@ -5,7 +5,7 @@
 AWS AWS Config reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── AWS Governance — AWS Config ─────────────────────────────────────┐
 │                                                                                                       │
 │  Config records resource inventory, tracks changes, and evaluates compliance rules.                   │

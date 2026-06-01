@@ -3,7 +3,7 @@
 <div class="kb-summary">
 PKI and certificate management knowledge base covering three-tier CA hierarchy, ADCS configuration, certificate lifecycle, CDP/AIA, OCSP/CRL revocation, auto-enrollment, and Venafi TPP integration.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Security Certificates ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

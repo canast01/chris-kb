@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering RBAC, Namespace Isolation, Compliance, Access Review Procedure.
 </div>
-```
+```powershell
 ┌────────────────────────────────────── Dell ECS — Access Control ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

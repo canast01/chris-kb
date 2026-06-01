@@ -86,7 +86,7 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-```
+```text
 ┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Common Ansible ops: rolling OS patching, credential rotation, inventory cleanup        │   │

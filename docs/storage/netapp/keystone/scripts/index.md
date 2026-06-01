@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [NetApp Keystone](../index.md) reference.
 </div>
-```
+```text
 ┌────────────────────────────── NetApp Keystone — Scripts and Automation ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

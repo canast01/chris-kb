@@ -6,7 +6,7 @@ CLI Reference reference covering Support Bundles, SDDC Manager REST API, Passwor
 </div>
 
 VCF CLI Tool Map — Where to Run What
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager Appliance (SSH: vcf user → sudo)      │
 │                                                     │
@@ -30,7 +30,7 @@ VCF CLI Tool Map — Where to Run What
 │    PATCH /v1/credentials rotate a credential        │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Key Log Paths (SDDC Manager appliance)             │
 │  /var/log/vmware/vcf/lcm/lcm-debug.log              │
@@ -38,7 +38,7 @@ VCF CLI Tool Map — Where to Run What
 │  /var/log/vmware/vcf/domainmanager/dm.log           │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │

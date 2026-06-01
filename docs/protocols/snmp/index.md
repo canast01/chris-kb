@@ -9,7 +9,7 @@ Simple Network Management Protocol (SNMP) polls device metrics and receives asyn
 </div>
 
         SNMP ARCHITECTURE
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
 │   ┌─────────────────┐          ┌────────────────────────┐  │

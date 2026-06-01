@@ -13,7 +13,7 @@ Health Checks reference covering Protection Group Health, RPO Compliance Check, 
                         └──────────────────┘    │  Last discovery  │
                                                 │  recent?         │
                                                 └──────────────────┘
-```
+```text
 ┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM health checks verify site pair connectivity, replication status, plan test                       │

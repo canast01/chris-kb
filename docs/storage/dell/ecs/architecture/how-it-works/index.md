@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Scale-Out Object Storage Topology, Erasure Coding, Virtual Data Centers (VDC), Replication Groups and Geo-Distribution and 3 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Dell ECS — How It Works ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -32,7 +32,7 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
-```
+```text
 ┌───────────────────────────────── Nexus Dashboard — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

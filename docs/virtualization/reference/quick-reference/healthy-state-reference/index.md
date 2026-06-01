@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Healthy State Reference reference covering Cluster, Storage, Network, VMs, Management.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

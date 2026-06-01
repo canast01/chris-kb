@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Health Check, Pre-Maintenance Health Check, Path State Verification, Port / HBA Check, Policy Verification and 2 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerPath — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Pre-Change Health Check reference covering Overview, Pre-Change Check Timeline, Pre-Change Checklist, Go / No-Go Decision, Baseline Snapshot and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Project Management Health Checks Pre Change ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

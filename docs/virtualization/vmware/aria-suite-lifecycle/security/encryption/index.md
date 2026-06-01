@@ -6,7 +6,7 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 </div>
 
   LCM Encryption Coverage
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Locker (certificate + secret vault)                            │
 │  ┌─────────────────────────────────────────────────────────┐    │
@@ -29,7 +29,7 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 │  (Never replace certificates directly on product appliances)    │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │  TLS for all managed products and centralised certificate management via LCM.                         │
@@ -74,7 +74,7 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 Submit the generated CSR to the CA. Retrieve the signed certificate chain (leaf + intermediates + root) in PEM format.
 

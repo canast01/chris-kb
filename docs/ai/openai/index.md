@@ -3,7 +3,7 @@
 <div class="kb-summary">
 The OpenAI API provides REST access to GPT-4o, embedding, image generation, and transcription models via Bearer token auth. Coverage includes cost control, rate limit tiers (TPM/RPM), API key security, prompt patterns, and automation use cases.
 </div>
-```
+```text
 ┌────────────────────────────────────────────── Ai Openai ──────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

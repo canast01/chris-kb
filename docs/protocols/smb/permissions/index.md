@@ -6,7 +6,7 @@ SMB Share Permissions reference covering Overview, Viewing and Setting Share Per
 </div>
 
         TWO-LAYER PERMISSION MODEL
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Network client accesses \\server\Finance                    │
 │                    │                                         │

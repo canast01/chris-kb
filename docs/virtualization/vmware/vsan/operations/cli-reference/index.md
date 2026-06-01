@@ -33,7 +33,7 @@ CLI TOOL CHAIN
                            ▼
                vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
 ```
-```
+```powershell
 ┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN CLI operations use esxcli on hosts, RVC (Ruby vSphere Console), PowerCLI,                       │

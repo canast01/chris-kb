@@ -30,7 +30,7 @@ flowchart TD
     stepFail --> secretErr
     stepFail --> wdErr
 ```
-```
+```text
 ┌─────────────────────────────────── GitHub Actions — Common Issues ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                     Most frequent GitHub Actions failures and their fixes                     │   │

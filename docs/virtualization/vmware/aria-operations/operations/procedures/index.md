@@ -6,7 +6,7 @@ Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow
 </div>
 
 Aria Operations — Alert Lifecycle
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Alert Fires                                        │
 │  (symptom threshold breached for N wait cycles)     │
@@ -14,7 +14,7 @@ Aria Operations — Alert Lifecycle
 ```
                        │
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Notification Delivered                             │
 │  → email (SMTP) · ServiceNow ticket · webhook       │
@@ -22,7 +22,7 @@ Aria Operations — Alert Lifecycle
 ```
                        │
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Ops Team Triage                                    │
 │  Alerts → All Alerts → filter Critical/Immediate    │
@@ -34,7 +34,7 @@ Aria Operations — Alert Lifecycle
                 ┌──────┴──────┐
                 │ Yes         │ No
                 ▼             ▼
-```
+```text
 ┌───────────────────┐  ┌─────────────────────────────┐
 │ Acknowledge alert │  │ Escalate · add notes         │
 │ Resolve issue     │  │ Open ITSM ticket             │
@@ -44,14 +44,14 @@ Aria Operations — Alert Lifecycle
 ```
           │
           ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Planned Maintenance? → Create Maintenance Schedule │
 │  Admin → Maintenance Schedules → Add Schedule       │
 │  select objects + time window → alerts suppressed   │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Add adapter, certificate rotation, and policy management procedures for vROps.                       │

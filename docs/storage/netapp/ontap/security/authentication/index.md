@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local accounts, Active Directory (LDAP/Kerberos), SSH public keys, and SAML-based SSO for System Manager.
 </div>
-```
+```text
 ┌──────────────────────────────────── NetApp ONTAP — Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

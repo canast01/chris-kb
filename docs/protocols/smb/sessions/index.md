@@ -6,7 +6,7 @@ SMB Sessions reference covering Overview, Listing and Managing Sessions, SMB Sig
 </div>
 
         SMB SESSION ESTABLISHMENT
-```
+```text
 ┌────────────┐                              ┌─────────────────┐
 │  Client    │                              │   SMB Server    │
 └─────┬──────┘                              └────────┬────────┘

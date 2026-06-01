@@ -6,7 +6,7 @@ How It Works reference covering Bundle Management, Password Management, Certific
 </div>
 
 VCF Bring-Up and Lifecycle Flow
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  Cloud Builder (bring-up tool)                       │
 │  reads deployment parameter workbook                 │
@@ -14,7 +14,7 @@ VCF Bring-Up and Lifecycle Flow
 ```
                        │ deploys
                        ▼
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  SDDC Manager (management domain)                    │
 │                                                      │
@@ -26,7 +26,7 @@ VCF Bring-Up and Lifecycle Flow
 ```
           │ LCM orchestrates upgrades in BOM order
           ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Upgrade Sequence                                    │
 │  SDDC Manager → vCenter → ESXi → NSX → vSAN FW       │
@@ -40,14 +40,14 @@ VCF Bring-Up and Lifecycle Flow
 ```
           │ manages new workload domains
           ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Workload Domain Provisioning                        │
 │  Commission hosts → Create domain → SDDC Manager     │
 │  deploys dedicated vCenter, NSX, vSAN as a unit      │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
 │                                                                                                       │
 │  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │

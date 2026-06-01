@@ -19,7 +19,7 @@ On each runner host, check the installed version:
 cd /opt/actions-runner   # or wherever the runner is installed
 ./config.sh --version
 ```
-```
+```text
 ┌───────────────────────────────── GitHub Actions — Install & Upgrade ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  GitHub Actions is a hosted service — no server-side installation; manage self-hosted runners │   │
@@ -44,7 +44,7 @@ cd /opt/actions-runner   # or wherever the runner is installed
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 Confirm the runner appears as **Idle** in the GitHub repository or organisation runner list (Settings > Actions > Runners).
 

@@ -10,7 +10,7 @@ Sizing guidelines, design standards, and best practices.
 ```text
 <site>-<role>-<nn>
 ```
-```
+```text
 ┌────────────────────────────────────── Linux — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -54,7 +54,7 @@ Sizing guidelines, design standards, and best practices.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 Sudo access granted via AD group membership:
 ```bash

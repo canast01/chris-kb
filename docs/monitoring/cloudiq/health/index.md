@@ -5,7 +5,7 @@
 CloudIQ: Health Score, Component Status, and Connectivity reference covering Component-Level Health, Connectivity Checks, Verifying SRS Connectivity on PowerScale, Common Health Issues.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── CloudIQ — Health Monitoring ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

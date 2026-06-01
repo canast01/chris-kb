@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Document post-upgrade findings to improve future upgrade runbooks. Complete this within 48 hours of change record closure while details are fresh.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

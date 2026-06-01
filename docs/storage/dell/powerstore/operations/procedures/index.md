@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Provisioning a Block Volume, Provisioning a NAS File System (NFS), Snapshot Operations, Host Management, Replication Management and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Dell PowerStore — Operational Procedures ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

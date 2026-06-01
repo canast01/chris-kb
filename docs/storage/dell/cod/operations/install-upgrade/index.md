@@ -26,7 +26,7 @@ Frame upgrade or replacement?
         ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
         └── NO  → Entitlement remains active until frame decommission
 ```
-```
+```text
 ┌───────────────────────────────────── Dell COD Install / Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

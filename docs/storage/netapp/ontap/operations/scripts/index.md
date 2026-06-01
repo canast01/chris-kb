@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Scripts reference covering Cluster Health Check (Perl), SnapMirror Lag Monitor (Bash), Volume Capacity Reporter (Python), Ansible ONTAP Health Playbook, Aggregate Space Alert (Perl) and 7 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── NetApp ONTAP — Scripts and Automation ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

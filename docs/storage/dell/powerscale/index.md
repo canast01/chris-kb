@@ -4,7 +4,7 @@
 Scale-out NAS platform running OneFS — multi-protocol access (NFS, SMB, S3, HDFS), SmartQuotas, SyncIQ replication, SmartPools tiering, and cluster-wide management for unstructured data at scale.
 </div>
 
-```
+```text
 ┌─────────────────────────────── Dell PowerScale (Isilon) Scale-Out NAS ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -7,7 +7,7 @@ title: AI
 <div class="kb-summary">
 AI platform and API reference for enterprise use — OpenAI, Azure OpenAI, AWS Bedrock, local LLM hosting via Ollama, and GPU workload management.
 </div>
-```
+```text
 ┌───────────────────────────────────────────────── Ai ──────────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

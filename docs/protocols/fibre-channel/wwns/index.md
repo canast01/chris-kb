@@ -6,7 +6,7 @@ A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every
 </div>
 
         WWNN vs WWPN STRUCTURE
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  HBA Card (Node)                                             │
 │  ┌──────────────────────────────────────────────────────┐   │

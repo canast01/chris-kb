@@ -5,7 +5,7 @@
 Access Control reference covering Role-Based Access Control, Audit Log.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── Veeam — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

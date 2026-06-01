@@ -6,7 +6,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 </div>
 
   Automation via PowerCLI / REST API
-```
+```powershell
 ┌──────────────────────────────────────────────────────────┐
 │  Connect-HVServer ──► token/session                      │
 │                                                          │
@@ -26,7 +26,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 │  └──────────────────┘                                    │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```powershell
 ┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI Horizon View module and REST API scripts automate pool reporting,                           │

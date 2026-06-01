@@ -5,7 +5,7 @@
 Hardening reference covering Management API Security, Operational Hardening Checklist.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── SRDF/S — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

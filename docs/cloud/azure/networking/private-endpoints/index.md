@@ -4,7 +4,7 @@
 <div class="kb-summary">
 A Private Endpoint is a network interface that uses a private IP from your VNet to connect to an Azure PaaS service (e.g., Storage Account, Key Vault, SQL Database) over Azure Private Link. Traffic stays on the Microsoft backbone and never crosses the public internet.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

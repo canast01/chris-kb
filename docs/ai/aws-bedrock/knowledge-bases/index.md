@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Bedrock Knowledge Bases provide retrieval-augmented generation (RAG) by connecting foundation models to your data stored in S3. Documents are chunked, embedded, and stored in a vector store for semantic search at inference time.
 </div>
-```
+```text
 ┌─────────────────────────────────── Ai Aws Bedrock Knowledge Bases ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

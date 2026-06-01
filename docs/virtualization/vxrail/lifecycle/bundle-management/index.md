@@ -6,20 +6,20 @@ VxRail Bundle Management reference covering Overview, Where It Fits, Daily Check
 </div>
 
 Bundle Lifecycle Flow
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Dell Support Portal / Offline Source                       │
 │  Download VxRail Composite Bundle (.zip)                    │
 └──────────────────────────┬──────────────────────────────────┘
-```
+```text
                            │  upload via UI or SCP
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  VxRail Manager — Bundle Upload                             │
 │  System → Lifecycle → Upload Bundle                         │
 └──────────────────────────┬──────────────────────────────────┘
-```
+```text
                            │  automatic
 ┌──────────────────────────▼──────────────────────────────────┐
 │  Validation                                                  │

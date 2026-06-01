@@ -5,7 +5,7 @@ Reference coverage for the networking and storage protocols used in enterprise i
 </div>
 
                         PROTOCOL LANDSCAPE
-```
+```text
 ┌───────────────────────────────────────────────────────────────┐
 │  STORAGE PROTOCOLS          MANAGEMENT PROTOCOLS              │
 │  ┌──────────┐  ┌───────┐   ┌──────┐ ┌─────┐ ┌─────┐ ┌─────┐ │

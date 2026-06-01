@@ -37,7 +37,7 @@ HARDENING LAYERS
   │  └── Aria Operations → SCG compliance score          │
   └──────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────────── vSAN — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN hardening includes ESXi host hardening, vSAN network isolation, data-at-rest                    │
@@ -84,7 +84,7 @@ HARDENING LAYERS
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 **Service baseline:**
 

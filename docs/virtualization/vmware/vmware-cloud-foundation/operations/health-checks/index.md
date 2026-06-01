@@ -6,7 +6,7 @@ Health Checks reference covering Common Operational Issues.
 </div>
 
 VCF Daily Health Check — Coverage Map
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager                                       │
 │  ├─ Dashboard: all domains green?                   │
@@ -18,7 +18,7 @@ VCF Daily Health Check — Coverage Map
                        │
           ┌────────────┼────────────┐
           ▼            ▼            ▼
-```
+```text
 ┌──────────────┐ ┌──────────┐ ┌──────────────────────┐
 │ NSX Manager  │ │ vCenter  │ │ SDDC Manager          │
 │              │ │ per WLD  │ │ appliance disk        │
@@ -32,7 +32,7 @@ VCF Daily Health Check — Coverage Map
 │ zones: OK?   │ │ green?   │ │                       │
 └──────────────┘ └──────────┘ └──────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — Health Checks ───────────────────────────────┐
 │                                                                                                       │
 │  VCF health checks span SDDC Manager, all vCenters, NSX managers, vSAN clusters,                      │

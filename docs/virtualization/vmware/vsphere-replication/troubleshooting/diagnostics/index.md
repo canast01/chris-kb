@@ -6,7 +6,7 @@ Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Ch
 </div>
 
   VR Diagnostic Data Sources
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  VRA Appliance (both sites)    ESXi Source Host                 │
 │  ┌───────────────────────┐     ┌─────────────────────────┐      │

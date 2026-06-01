@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Command Cheat Sheet reference covering ESXi Host Commands, vSAN Commands, Network Checks, Log Locations.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

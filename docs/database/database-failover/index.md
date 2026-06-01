@@ -30,7 +30,7 @@ psql -U postgres -c "SELECT now() AS current_time;"
 
 # Update application connection string / DNS to point at new primary
 ```
-```
+```text
 ┌──────────────────────────────────── Database — Failover Procedure ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,7 +69,7 @@ psql -U postgres -c "SELECT now() AS current_time;"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 ### MySQL — MHA (Master High Availability)
 

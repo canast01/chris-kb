@@ -28,7 +28,7 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
 │               └─────────────┘   │  (email / webhook)│  │
 │                                 └───────────────────┘  │
 └────────────────────────────────────────────────────────┘
-```
+```text
      │
      ▼
   az backup job list --status Failed

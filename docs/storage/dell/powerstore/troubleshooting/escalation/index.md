@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Support Case, Required Information for a Case, Case Priority Levels, Escalation Path and 4 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerStore — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

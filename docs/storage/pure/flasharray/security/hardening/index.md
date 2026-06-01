@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
 </div>
-```
+```text
 ┌──────────────────────────────── Pure FlashArray — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

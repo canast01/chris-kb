@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Daily operations centre on replication health and authentication event monitoring across all Domain Controllers.
 </div>
-```
+```text
 ┌──────────────────────── Security Active Directory Operations — Health Checks ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

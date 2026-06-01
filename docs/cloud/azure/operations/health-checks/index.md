@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Service health, VM status, load balancer health, and monitor alert review. See also: [Operations](../index.md) for the full daily checklist and incident triage procedures.
 </div>
-```
+```text
 ┌─────────────────────────────── Cloud Azure Operations — Health Checks ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 AWS Lambda reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── AWS Compute — Lambda ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Serverless function execution: triggers, runtimes, concurrency, VPC, and observability.              │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Ollama automatically uses the GPU when drivers and CUDA/ROCm are installed. This page covers confirming GPU usage, configuring which GPU(s) to use, VRAM requirements per model, and ROCm support.
 </div>
-```
+```text
 ┌──────────────────────────────────── Ai Local Ai Ollama Gpu Usage ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

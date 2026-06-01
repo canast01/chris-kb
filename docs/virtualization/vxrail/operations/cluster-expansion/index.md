@@ -6,7 +6,7 @@ VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Check
 </div>
 
 Add Node Flow
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Planning                                                    │
 │  same SKU as cluster · compatible firmware · IP/DNS ready    │

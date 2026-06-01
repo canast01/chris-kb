@@ -4,7 +4,7 @@
 <div class="kb-summary">
 | Product | FQDN | Certificate Type | Issuer | Expiration | Owner | Last Renewed | Next Review | |---|---|---|---|---|---|---|---| | vCenter | vcenter.domain.local | Machine SSL | VMCA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD | | vCenter | vcenter.domain.local | STS | 
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Inventory ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

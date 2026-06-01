@@ -5,7 +5,7 @@
 Access Control reference covering Solutions Enabler RBAC, Preventing Accidental Resync.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── SRDF/A — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

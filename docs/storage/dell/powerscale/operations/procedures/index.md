@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, NFS Export Management, SMB Share Management and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Dell PowerScale — Operational Procedures ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

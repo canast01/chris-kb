@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Asset Ownership and Accountability reference covering Overview, Ownership Model, Ownership Assignment Process, Ownership Handover, Cost Allocation and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────── Project Management Asset Inventory Ownership ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

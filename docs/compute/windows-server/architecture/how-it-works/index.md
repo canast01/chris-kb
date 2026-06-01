@@ -37,7 +37,7 @@ graph TB
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host
 ```
-```
+```text
 ┌──────────────────────────────────── Windows Server — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server boot process, service management, and AD authentication flow.                         │

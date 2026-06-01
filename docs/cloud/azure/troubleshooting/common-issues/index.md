@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Known failure modes, symptoms, causes, and fixes. See also: [Troubleshooting](../index.md) for full diagnostic procedures.
 </div>
-```
+```text
 ┌───────────────────────────── Cloud Azure Troubleshooting — Common Issues ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

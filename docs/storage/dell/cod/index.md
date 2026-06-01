@@ -4,7 +4,7 @@
 Dell Capacity on Demand — software-defined capacity licensing for PowerMax and VMAX. Pre-installed drives are activated via license key with no truck roll required. Covers architecture, operations, and troubleshooting for COD lifecycle management.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Dell Capacity on Demand (CoD) ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

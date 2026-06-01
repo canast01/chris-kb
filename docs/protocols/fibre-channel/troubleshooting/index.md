@@ -6,7 +6,7 @@ FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common
 </div>
 
         TRIAGE: HOST CANNOT SEE LUN
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  1. No LUN visible on host                                  │
 │          │                                                  │

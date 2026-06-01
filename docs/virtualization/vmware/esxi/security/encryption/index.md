@@ -6,7 +6,7 @@ ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encr
 </div>
 
 ESXi Encryption Stack
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │  Key Provider                                           │
 │  ├── Native Key Provider (NKP) — vCenter-managed        │
@@ -34,7 +34,7 @@ ESXi Encryption Stack
 ```
   ESXi Host Certificate: /etc/vmware/ssl/rui.crt
   Managed by VMCA (vCenter CA) — auto-renewed
-```
+```text
 ┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │

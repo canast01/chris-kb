@@ -6,7 +6,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 </div>
 
   Diagnostic Data Sources
-```
+```powershell
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server                UAG                        │
 │  ┌────────────────────────────┐   ┌────────────────────────┐ │
@@ -25,7 +25,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │  └────────────────────────────┘   └────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere Replication Server (Scale-Out) and 2 more sections.
 </div>
-```
+```text
 ┌────────────────────── Virtualization Vmware Vsphere Replication — How It Works ───────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

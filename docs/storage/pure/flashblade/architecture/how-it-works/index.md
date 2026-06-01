@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Scale-Out Architecture, HA Topology, Connectivity, File Services and 3 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Pure FlashBlade — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, I
 </div>
 
 FlashArray Day-to-Day Operations Flow
-```
+```text
 ```
 ┌───────────────────────────────────────────────────────┐
 │  Pure1 Cloud                                          │

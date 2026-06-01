@@ -4,7 +4,7 @@
 <div class="kb-summary">
 vSAN Quick Reference reference covering Fast Health Checks, Common Commands, Ping vSAN VMkernel Between Hosts, Common Issues.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

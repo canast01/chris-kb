@@ -5,7 +5,7 @@
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Dell PowerPath Operational Procedures ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ VxRail Firmware reference covering Overview, Where It Fits, Daily Checks, Health
 </div>
 
 VxRail Firmware Stack (bottom to top)
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Hardware Layer                                              │
 │  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐  │
@@ -16,13 +16,13 @@ VxRail Firmware Stack (bottom to top)
 └────────┼───────────────┼─────────────────────┼───────────────┘
          │               │                     │
 ```
-```
+```text
 ┌────────▼───────────────▼────────────────────▼────────────────┐
 │  NIC Firmware  ·  Disk Firmware  ·  Expansion card FW        │
 └──────────────────────────────────┬───────────────────────────┘
 ```
                                    │  all bundled in
-```
+```text
 ┌──────────────────────────────────▼───────────────────────────┐
 │  VxRail Composite Bundle                                     │
 │  (certified combination of all firmware + vSphere versions)  │

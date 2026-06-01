@@ -8,7 +8,7 @@ title: SAN — Certifications
 <div class="kb-summary">
 SAN operational notes and deep-dive references.
 </div>
-```
+```text
 ┌───────────────────────────────────────── Certifications San ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 <div class="kb-summary">
 Azure Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Certifications Azure ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

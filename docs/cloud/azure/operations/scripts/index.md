@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [Azure](../../index.md) reference.
 </div>
-```
+```text
 ┌─────────────────────────── Cloud Azure Operations — Scripts and Automation ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

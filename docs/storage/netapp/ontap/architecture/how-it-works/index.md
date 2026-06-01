@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, HA Topology, Cluster Networking, Storage Hierarchy, SVM (Storage VM) Architecture and 3 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────────── NetApp ONTAP — How It Works ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

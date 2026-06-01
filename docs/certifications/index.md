@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Certification study notes and practice tracking for AWS, Azure, VMware, SAN, storage, and AI practitioner exams.
 </div>
-```
+```text
 ┌─────────────────────────────────────────── Certifications ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

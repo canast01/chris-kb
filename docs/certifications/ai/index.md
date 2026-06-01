@@ -8,7 +8,7 @@ title: AI — Certifications
 <div class="kb-summary">
 AI operational notes and deep-dive references.
 </div>
-```
+```text
 ┌────────────────────────────────────────── Certifications Ai ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

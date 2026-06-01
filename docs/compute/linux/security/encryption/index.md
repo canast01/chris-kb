@@ -29,7 +29,7 @@ mkfs.xfs /dev/mapper/secure-data
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
 ```
-```
+```text
 ┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │
@@ -72,7 +72,7 @@ mount /dev/mapper/secure-data /mnt/secure-data
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 ### Persistent Mount via /etc/crypttab and /etc/fstab
 

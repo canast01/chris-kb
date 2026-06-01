@@ -3,7 +3,7 @@
 <div class="kb-summary">
 SnapCenter architecture reference — topology, HA options, components, connectivity ports, plugin model, and sizing guidelines.
 </div>
-```
+```text
 ┌────────────────────────────────── NetApp SnapCenter — Architecture ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

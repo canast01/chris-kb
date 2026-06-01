@@ -6,7 +6,7 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 </div>
 
   RBAC: AD Groups → Entitlements → Pools
-```
+```text
 ┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
 │ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /     │
 │              │    │                   │    │ Access Groups        │
@@ -20,7 +20,7 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 │ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘  │
 └──────────────┘    └───────────────────┘    └─────────────────────┘
 ```
-```
+```powershell
 ┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  Horizon access control uses AD groups for pool entitlements, Horizon admin roles                     │
@@ -67,7 +67,7 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 This limits the admin to only the pools in the assigned Access Group.
 

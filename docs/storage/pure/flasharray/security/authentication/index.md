@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Local Accounts, Active Directory (AD), LDAP (Non-AD), SAML SSO and 4 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Pure FlashArray — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

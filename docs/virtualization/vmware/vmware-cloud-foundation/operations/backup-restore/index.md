@@ -41,7 +41,7 @@ flowchart TD
         R2 --> R3[Restore vCenter]
     end
 ```
-```
+```text
 ┌───────────────────────────── VMware Cloud Foundation — Backup & Restore ──────────────────────────────┐
 │                                                                                                       │
 │  VCF backup covers SDDC Manager, all vCenters, and NSX managers; each component                       │

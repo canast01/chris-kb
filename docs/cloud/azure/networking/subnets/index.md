@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Subnets segment a Virtual Network address space into smaller ranges.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Networking ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

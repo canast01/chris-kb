@@ -6,7 +6,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 </div>
 
   LCM Authentication Architecture
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Interactive Users                                              │
 │  Browser → LCM UI → VIDM (SAML redirect) → AD/LDAP              │
@@ -27,7 +27,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 │  admin@local (UI/API) │ root (SSH) │ admin (limited shell)      │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │  vIDM SSO, local admin break-glass, and API token authentication for LCM.                             │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Storage Products Reference reference covering Dell Technologies Storage Portfolio, NetApp Storage Portfolio, Pure Storage Portfolio, Product Comparison by Use Case, Study Checklist.
 </div>
-```
+```text
 ┌─────────────────────────────────── Certifications Storage Products ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

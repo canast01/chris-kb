@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Use this section for practical notes, checks, commands, troubleshooting, design references, and change validation.
 </div>
-```
+```text
 ┌─────────────────────────────────── NetApp Operations — Operations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

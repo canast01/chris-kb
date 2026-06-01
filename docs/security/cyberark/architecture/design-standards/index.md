@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Safe names follow the pattern `ENV-TEAM-PURPOSE` (e.g., `PROD-INFRA-SERVERS`, `DEV-APP-SQLSVC`) to make ownership and scope immediately clear in PVWA.
 </div>
-```
+```text
 ┌─────────────────── Security Cyberark Architecture — Architecture Design Standards ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

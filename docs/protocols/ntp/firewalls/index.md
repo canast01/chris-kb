@@ -6,7 +6,7 @@ NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewal
 </div>
 
         NTP FIREWALL REQUIREMENTS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  NTP CLIENT (server/device)                                  │
 │  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐ │

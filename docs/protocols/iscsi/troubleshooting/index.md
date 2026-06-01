@@ -6,7 +6,7 @@ iSCSI Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Com
 </div>
 
         TRIAGE: HOST CANNOT SEE iSCSI LUN
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Ping target IP ───── fail ──► check VLAN, routing, NIC  │
 │          │ ok                                                │

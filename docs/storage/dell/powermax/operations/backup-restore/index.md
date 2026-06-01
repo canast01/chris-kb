@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Backup & Restore reference covering Overview, SnapVX Architecture, Creating and Managing Snapshots, Linking Snapshots for Backup or Restore, Restore Procedure and 6 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Dell PowerMax — Backup and Restore ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

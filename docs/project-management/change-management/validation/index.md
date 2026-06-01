@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Post-Change Validation reference covering Overview, Validation Principles, Standard Validation Checklist, Validation by Change Type, Monitoring Observation Period and 1 more sections.
 </div>
-```
+```text
 ┌─────────────────────────── Project Management Change Management Validation ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

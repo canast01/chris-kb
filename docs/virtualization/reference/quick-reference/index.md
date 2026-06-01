@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Fast operational tools for troubleshooting and validation.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

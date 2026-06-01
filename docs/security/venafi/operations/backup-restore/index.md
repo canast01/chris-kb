@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Venafi TPP state lives in two places: the SQL Server database and the application configuration on the TPP server. Both must be backed up and restorable independently. This page covers the full backup lifecycle, restore procedure, DR failover, and post-restore validation.
 </div>
-```
+```text
 ┌─────────────────────────── Security Venafi Operations — Backup and Restore ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

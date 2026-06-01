@@ -41,7 +41,7 @@ AWS VPC — Virtual Private Cloud
 │     (public            to on-prem)      │
 │      traffic)                           │
 └─────────────────────────────────────────┘
-```
+```text
 ┌───────────────────────────────────── VPC — Virtual Private Cloud ─────────────────────────────────────┐
 │                                                                                                       │
 │  VPC is an isolated virtual network within AWS; you control CIDR, subnets, and routing.               │

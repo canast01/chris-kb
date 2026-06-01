@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AI Model Concepts reference covering Transformers and Attention Mechanisms, Embeddings, Tokens and Tokenization, Fine-Tuning vs. RAG vs. Prompting, Generation Parameters and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Certifications Ai Model Concepts ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

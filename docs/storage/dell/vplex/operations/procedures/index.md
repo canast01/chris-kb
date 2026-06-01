@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Consistency Groups, Metro Operations.
 </div>
-```
+```text
 ┌───────────────────────────────── Dell VPLEX — Operational Procedures ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

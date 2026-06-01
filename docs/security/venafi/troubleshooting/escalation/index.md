@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures for raising support cases with Venafi, collecting diagnostic data, and escalating critical incidents.
 </div>
-```
+```text
 ┌──────────────────────────── Security Venafi Troubleshooting — Escalation ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

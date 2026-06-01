@@ -5,7 +5,7 @@
 InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards reference covering Protocol Performance Breakdown, Identifying Performance Bottlenecks via InsightIQ, Collecting a OneFS Performance Support Bundle, Common Performance Issues.
 </div>
 
-```
+```text
 ┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │

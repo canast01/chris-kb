@@ -6,7 +6,7 @@ VxRail Node Replacement Checklist reference covering Confirm the Issue, Capture 
 </div>
 
 Rollback Decision Tree
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  LCM upgrade started                                         │
 └──────────────────────────────┬───────────────────────────────┘

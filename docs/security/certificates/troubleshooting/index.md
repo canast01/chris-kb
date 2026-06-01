@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Certificates — Troubleshooting reference.
 </div>
-```
+```text
 ┌─────────────────────── Security Certificates Troubleshooting — Troubleshooting ───────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

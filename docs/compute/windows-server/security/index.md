@@ -6,7 +6,7 @@
 Windows Server — Security reference.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Windows Server — Security Overview ──────────────────────────────────┐
 │                                                                                                       │
 │  Security pillars: identity/access control, auth hardening, encryption, and OS hardening.             │

@@ -4,7 +4,7 @@
 Cluster sizing, form factor selection, IP addressing, naming conventions, and configuration baselines for Cisco Nexus Dashboard deployments.
 </div>
 
-```
+```powershell
 ┌───────────────────────────────── Nexus Dashboard — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

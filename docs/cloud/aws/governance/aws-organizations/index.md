@@ -5,7 +5,7 @@
 AWS AWS Organizations reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — AWS Organizations ──────────────────────────────────┐
 │                                                                                                       │
 │  AWS Organizations manages multi-account hierarchy, SCPs, and consolidated billing.                   │

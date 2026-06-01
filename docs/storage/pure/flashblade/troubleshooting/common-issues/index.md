@@ -4,7 +4,7 @@
 <div class="kb-summary">
 FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 errors, capacity expansion, blade hardware faults, ActiveDR replication lag, and snapshot policy failures.
 </div>
-```
+```text
 ┌───────────────────────────────────── FlashBlade — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

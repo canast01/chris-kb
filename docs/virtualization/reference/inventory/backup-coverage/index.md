@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Live register of all VMs, their backup policy, and last verified restore test. Review monthly.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Inventory ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

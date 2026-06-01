@@ -4,7 +4,7 @@
 VMware platform knowledge base covering the full VMware stack — vCenter, ESXi, vSAN, NSX, VCF, VxRail, Horizon, SRM, vSphere Replication, and the Aria Suite. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
 </div>
 
-```
+```powershell
 ┌────────────────────────────────────── VMware Platform Landscape ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌────────────────────┐  ┌────────────────────┐  ┌───────────────────────────────────────────────┐   │

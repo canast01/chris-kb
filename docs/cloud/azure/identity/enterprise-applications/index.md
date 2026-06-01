@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Enterprise applications in Microsoft Entra ID represent the service principal for an application within your tenant. They are created automatically when an app registration is made or when a third-party SaaS app is added from the gallery.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Identity ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

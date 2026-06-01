@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitoring, Validation.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── NetBackup — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@ How It Works reference covering Overview, Controller Refresh Model, HA Topology,
 </div>
 
 Evergreen — What's Included vs. Customer-Managed
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  Included in Evergreen subscription                        │
 │  ├── Purity software upgrades (non-disruptive NDU)         │

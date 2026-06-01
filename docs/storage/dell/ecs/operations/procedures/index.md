@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Provisioning Flow: Namespace → Bucket → IAM User, Creating a Namespace and 7 more sections.
 </div>
-```
+```text
 ┌────────────────────────────────── Dell ECS — Operational Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

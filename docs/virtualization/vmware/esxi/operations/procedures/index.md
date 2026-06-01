@@ -5,7 +5,7 @@
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── ESXi — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Maintenance mode, change control, and host decommission standard procedures.                         │

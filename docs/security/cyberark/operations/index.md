@@ -4,7 +4,7 @@
 <div class="kb-summary">
 CyberArk — Operations reference.
 </div>
-```
+```text
 ┌────────────────────────────── Security Cyberark Operations — Operations ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

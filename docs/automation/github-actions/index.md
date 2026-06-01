@@ -4,7 +4,7 @@
 GitHub Actions knowledge base covering event-driven workflow architecture, runner management, secrets and OIDC authentication, self-hosted runners, concurrency, and CI/CD pipeline design for GitHub-hosted repositories.
 </div>
 
-```
+```text
 ┌────────────────────────────────── GitHub Actions — CI/CD Automation ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   GitHub Actions: native CI/CD platform; workflows defined in YAML under .github/workflows/   │   │

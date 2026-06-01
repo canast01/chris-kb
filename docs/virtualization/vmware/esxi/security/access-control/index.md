@@ -6,7 +6,7 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </div>
 
 ESXi Access Control Model
-```
+```text
 ┌──────────────────────────────────────────────────────┐
 │  vCenter (Primary path — day-to-day operations)      │
 │  ├── AD / SSO identity source                        │
@@ -33,7 +33,7 @@ ESXi Access Control Model
 │  ├── root            break-glass, unique password    │
 │  └── infra-breakglass  Admin role, in exception list │
 └──────────────────────────────────────────────────────┘
-```
+```text
          │
     ┌────▼────────────────────────────────┐
     │  Firewall (host-based ruleset)      │
@@ -43,7 +43,7 @@ ESXi Access Control Model
     │  └── All other rulesets → disabled  │
     └─────────────────────────────────────┘
 ```
-```
+```powershell
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │

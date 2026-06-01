@@ -4,7 +4,7 @@
 <div class="kb-summary">
 AWS Bedrock requires explicit model access to be enabled per AWS account and region. Models are not available by default. This page covers enabling models, throughput modes, and quota management.
 </div>
-```
+```text
 ┌───────────────────────────────────── Ai Aws Bedrock Model Access ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

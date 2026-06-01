@@ -5,7 +5,7 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 </div>
 
         DORA HANDSHAKE
-```
+```text
 ┌────────────────────────────────────────────────────────────────┐
 │  Client (new device)              DHCP Server                  │
 │  ┌───────────────────┐            ┌────────────────────────┐   │

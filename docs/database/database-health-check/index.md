@@ -23,7 +23,7 @@ systemctl status mssql-server   # Linux
 # Windows:
 Get-Service -Name MSSQLSERVER
 ```
-```
+```text
 ┌──────────────────────────────────── Database — Daily Health Check ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

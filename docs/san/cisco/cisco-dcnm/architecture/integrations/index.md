@@ -94,7 +94,7 @@ systemctl restart rsyslog
 logger -p local0.info -t dcnm "Test message"
 # Verify arrival at SIEM
 ```
-```
+```text
 ┌────────────────────────────────────── Cisco DCNM — Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM integrates with Cisco ISE, SIEM, REST automation, CMDB, and NTP/SMTP.                           │

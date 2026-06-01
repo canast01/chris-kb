@@ -27,7 +27,7 @@ Apply the following configuration baseline to every vSAN cluster before placing 
 # Verify MTU 9000 end-to-end
 vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 ```
-```
+```text
 ┌─────────────────────────────────────── vSAN — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN design standards cover host sizing, disk group ratios, network requirements,                    │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 VMware Maintenance Window Standards reference covering Change Ticket Requirement, Stakeholder Notification, Window Definition, Pre-Change Evidence, Rollback Plan and 4 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

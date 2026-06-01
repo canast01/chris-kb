@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering STaaS Delivery Model, Components, HA Topology, Connectivity, Sizing and Capacity Model.
 </div>
-```
+```text
 ┌───────────────────────────────── Pure Evergreen//ONE — How It Works ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

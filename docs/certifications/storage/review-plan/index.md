@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Storage Certification Review Plan reference covering Certification Tracks Overview, 8-Week Study Plan (NCDA / ONTAP Track), Vendor Certification Resources, Hands-On Lab Options, SNIA Resources and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Certifications Storage Review Plan ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

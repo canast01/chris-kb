@@ -6,7 +6,7 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 </div>
 
 Aria Operations — CLI Command Reference Map
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  SSH: admin@<aria-ops-primary-fqdn>                 │
 │       (sudo -i for advanced maintenance tasks)      │
@@ -15,7 +15,7 @@ Aria Operations — CLI Command Reference Map
                        │
           ┌────────────┼──────────────┐
           ▼            ▼              ▼
-```
+```text
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
 │ Cluster Mgmt │ │ Adapters     │ │ Certificates      │
 │              │ │              │ │                   │
@@ -35,7 +35,7 @@ Aria Operations — CLI Command Reference Map
 │ restart                                             │
 └──────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  REST API  base: https://<aria-ops>/suite-api/api   │
 │  POST /api/auth/token/acquire   authenticate        │
@@ -44,7 +44,7 @@ Aria Operations — CLI Command Reference Map
 │  GET  /api/cluster/nodes        node status         │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │

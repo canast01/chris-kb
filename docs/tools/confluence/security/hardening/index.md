@@ -18,7 +18,7 @@ Administrator account policy:
 - Admin accounts reviewed and recertified quarterly
 - Admin sessions expire after 60–120 minutes (configure via session timeout)
 ```
-```
+```text
 ┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

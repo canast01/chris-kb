@@ -30,7 +30,7 @@ graph TB
     switches["Switches / ISLs"] --> scc
     devices["Host HBAs\nStorage Targets"] --> dcc
 ```
-```
+```powershell
 ┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
 │                                                                                                       │
 │  Access control: RBAC roles, login accounts, TACACS+/RADIUS, SCC/DCC zoning policies.                 │
@@ -77,7 +77,7 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 > **Warning:** Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.
 

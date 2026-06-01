@@ -6,7 +6,7 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 </div>
 
 VMkernel Internals — Resource Stack
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  VMkernel (bare-metal, no general OS underneath)           │
 │                                                            │
@@ -28,7 +28,7 @@ VMkernel Internals — Resource Stack
 └────────────────────────────────────────────────────────────┘
 ```
   ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
-```
+```text
 ┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │

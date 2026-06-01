@@ -4,7 +4,7 @@
 <div class="kb-summary">
 FlashArray — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
-```
+```text
 ┌────────────────────────────────── Pure FlashArray — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

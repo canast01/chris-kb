@@ -6,7 +6,7 @@ Backup & Restore reference covering Manual Backup via CLI, Backup via REST API, 
 </div>
 
 Aria Operations — Backup Architecture
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations Cluster                            │
 │  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
@@ -17,7 +17,7 @@ Aria Operations — Backup Architecture
                        │ file-based backup
                        │ (config only — not metric data)
                        ▼
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Backup Target                                      │
 │  NFS: nas-01.example.local:/aria-ops-backups           │
@@ -34,7 +34,7 @@ Aria Operations — Backup Architecture
 ```
                        │ restore
                        ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Restore Process                                    │
@@ -46,7 +46,7 @@ Aria Operations — Backup Architecture
 │  VM-level backup (Veeam/Commvault) of all nodes     │
 │  + Cassandra repair after restore                   │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  Backup CaSA store and configuration; restore steps for Aria Operations (vROps).                      │

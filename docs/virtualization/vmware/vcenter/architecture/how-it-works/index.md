@@ -70,7 +70,7 @@ graph LR
     class witness witness
     class clients client
 ```
-```
+```text
 ┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter Server is the centralised management platform for vSphere; all                               │

@@ -6,7 +6,7 @@ DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Rese
 </div>
 
         RESERVATION: MAC → FIXED IP
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  DHCP Scope: 192.168.10.0/24                                 │
 │  ┌──────────────────────────────────────────────────────┐    │

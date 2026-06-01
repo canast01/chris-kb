@@ -5,7 +5,7 @@
 AWS Backup Jobs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── AWS Backup — Backup Jobs ───────────────────────────────────────┐
 │                                                                                                       │
 │  Backup jobs execute on schedule or on-demand; monitor status, duration, and failures.                │

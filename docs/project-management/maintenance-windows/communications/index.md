@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Maintenance Window Communications reference covering Overview, Communication Timeline, Stakeholder List, Notification Templates, Bridge and War Room Details and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────── Project Management Maintenance Windows Communications ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Getting the most out of GPU hardware requires profiling to identify bottlenecks, then applying targeted optimisations such as mixed precision, larger batch sizes, and multi-GPU communication tuning.
 </div>
-```
+```text
 ┌──────────────────────────────────── Ai Gpu Workloads Performance ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

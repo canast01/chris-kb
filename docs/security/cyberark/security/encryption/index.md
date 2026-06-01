@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Session recordings are encrypted at rest using AES-256. Vault audit log integrity is protected by the Vault's internal signing mechanism. PVWA enforces TLS 1.2 minimum for all connections.
 </div>
-```
+```bash
 ┌─────────────────────────────── Security Cyberark Security — Encryption ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

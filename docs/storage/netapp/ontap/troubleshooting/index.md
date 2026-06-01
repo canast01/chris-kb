@@ -4,7 +4,7 @@
 <div class="kb-summary">
 ONTAP — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
-```
+```text
 ┌─────────────────────────────────── NetApp ONTAP — Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

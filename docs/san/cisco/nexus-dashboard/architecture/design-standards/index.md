@@ -5,7 +5,7 @@
 Standards reference covering Overview, Cluster Naming, Network Interface Standards, Sizing Guidelines, Site Registration Standards and 6 more sections.
 </div>
 
-```
+```powershell
 ┌──────────────────────── Cisco Nexus Dashboard — Architecture Design Standards ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

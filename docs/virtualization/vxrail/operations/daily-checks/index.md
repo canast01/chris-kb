@@ -6,7 +6,7 @@ VxRail Daily Checks reference covering Overview, Where It Fits, Daily Checks, He
 </div>
 
 Daily Check Sequence
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  1. VxRail Manager                                          │
 │     cluster health green · no failed lifecycle tasks        │
@@ -20,13 +20,13 @@ Daily Check Sequence
 │     recent tasks clean · HA / DRS healthy                   │
 └──────────────────────────┬──────────────────────────────────┘
                            │
-```
+```text
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  3. ESXi Hosts                                               │
 │     services healthy · NTP synchronized · no warnings       │
 └──────────────────────────┬──────────────────────────────────┘
-```
+```text
                            │
 ```
 ┌──────────────────────────▼──────────────────────────────────┐

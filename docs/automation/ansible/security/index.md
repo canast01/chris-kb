@@ -6,7 +6,7 @@
 Ansible — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Ansible — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible security: protect credentials, restrict execution, audit changes, harden control node │   │

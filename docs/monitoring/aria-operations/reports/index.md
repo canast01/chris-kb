@@ -5,7 +5,7 @@
 Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling Reports, Downloading Generated Reports, Report Output Formats, Common Report Issues.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Aria Operations — Reports ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │

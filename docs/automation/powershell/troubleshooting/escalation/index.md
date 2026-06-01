@@ -34,7 +34,7 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 [System.Environment]::Is64BitOperatingSystem
 [System.Environment]::Is64BitProcess
 ```
-```
+```powershell
 ┌─────────────────────────────────────── PowerShell — Escalation ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Escalate PowerShell issues to: infra team (remoting), vendor support (module bugs), Microsoft │   │
@@ -58,7 +58,7 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 (paste $Error[0].Exception.Message here)
 ```text
 

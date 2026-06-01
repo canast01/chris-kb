@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checklist.
 </div>
-```
+```text
 ┌───────────────────────── Security Certificates Security — Security Hardening ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

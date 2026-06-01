@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Check, Array Connectivity and Status, Director and Port Status and 7 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerMax — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

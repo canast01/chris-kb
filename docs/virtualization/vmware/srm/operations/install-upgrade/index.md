@@ -6,13 +6,13 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 </div>
 
   SRM Upgrade Sequence (strictly ordered)
-```
+```text
 ```
          │
          ▼
   After each step: verify site pairing still Connected before proceeding
 
-```
+```text
 ┌─────────────────────────────────── VMware SRM — Install & Upgrade ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is installed on Windows Server VMs with SQL Server; both sites must have                         │

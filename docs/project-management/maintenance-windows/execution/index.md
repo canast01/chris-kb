@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Maintenance Window Execution reference covering Overview, Go / No-Go at Window Open, Execution Checklist, Step-by-Step Discipline, Time Management During Execution and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────── Project Management Maintenance Windows Execution ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

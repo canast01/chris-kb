@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Incident Triage, Post-Change Validation.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── Dell CloudIQ Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

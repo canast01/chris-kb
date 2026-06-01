@@ -6,7 +6,7 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 </div>
 
         FC END-TO-END PATH
-```
+```text
 ┌────────┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌─────┐
 │  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array│
 │        ├───►│(SFP)├───►│  port  ──────┼───►│─────┼───►│port     ├───►│ LUN │

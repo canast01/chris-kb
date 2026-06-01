@@ -6,7 +6,7 @@ CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authenti
 </div>
 
   VR CLI and API Access
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA Appliance SSH                                           │
 │  ┌──────────────────────────────────────────────────────┐    │

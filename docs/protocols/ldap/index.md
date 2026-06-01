@@ -10,7 +10,7 @@ Lightweight Directory Access Protocol — directory service query and authentica
 </div>
 
         LDAP DIRECTORY INFORMATION TREE (DIT)
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  dc=company,dc=com           (domain root)                   │
 │  │                                                           │

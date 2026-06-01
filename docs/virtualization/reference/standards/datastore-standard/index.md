@@ -5,7 +5,7 @@
 Datastore Standard reference covering Overview, Naming, VMFS Version, Maximum Datastore Size, Mounting and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── vSphere — Datastore Standard ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

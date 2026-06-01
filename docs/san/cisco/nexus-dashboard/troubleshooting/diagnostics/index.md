@@ -31,7 +31,7 @@ acs system logs --component security --tail 100
 # Show audit log entries (user activity)
 acs system logs --component audit --tail 50
 ```
-```
+```text
 ┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Diagnostics ─────────────────────────┐
 │                                                                                                       │
 │  ND diagnostic tools: acs CLI, pod logs, tech-support bundle, and REST API queries.                   │

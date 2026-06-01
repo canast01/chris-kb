@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Venafi Trust Protection Platform knowledge base covering certificate lifecycle management, CA connector integrations, policy tree design, auto-renewal, HA topology, and REST API usage for enterprise PKI environments.
 </div>
-```
+```text
 ┌─────────────────────────────────────────── Security Venafi ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

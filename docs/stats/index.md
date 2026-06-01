@@ -9,7 +9,7 @@ description: Visitor statistics for chrisanastasiadis.com
 <div class="kb-summary">
 Visitor statistics for chrisanastasiadis.com
 </div>
-```
+```text
 ┌───────────────────────────────────── Site Stats — chrisanastasiadis.com ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

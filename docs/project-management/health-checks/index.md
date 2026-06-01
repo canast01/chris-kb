@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Health Checks operational notes and deep-dive references.
 </div>
-```
+```text
 ┌────────────────────────── Project Management Health Checks — Health Checks ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

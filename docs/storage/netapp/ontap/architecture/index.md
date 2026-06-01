@@ -3,7 +3,7 @@
 <div class="kb-summary">
 ONTAP architecture reference — HA topology, WAFL filesystem engine, SVM design, cluster networking, protocol stack, and data protection built-ins.
 </div>
-```
+```text
 ┌───────────────────────────────────── NetApp ONTAP — Architecture ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

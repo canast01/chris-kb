@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Diagnostics reference covering Triage Flow, Diagnostic Commands, Log Locations, Capacity Diagnostics, Capacity Management Actions and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Dell PowerScale — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

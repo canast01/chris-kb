@@ -47,7 +47,7 @@ Settings → SSL Certificate → Upload Certificate
   Upload: Private key (PEM, no passphrase)
   Save → UI restarts — reconnect after ~60 seconds
 ```
-```
+```bash
 ┌─────────────────────────────────────────── vRNI Encryption ───────────────────────────────────────────┐
 │                                                                                                       │
 │  TLS 1.2+, LDAPS, data-at-rest encryption, and certificate management for vRNI.                       │

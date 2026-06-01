@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a consistent hourly compute spend commitment over 1 or 3 years. Unlike Reserved Instances, savings plans apply automatically across VM families, regions, and compute services, giving more flexibility.
 </div>
-```
+```text
 ┌────────────────────────────────────────── Cloud Azure Cost ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

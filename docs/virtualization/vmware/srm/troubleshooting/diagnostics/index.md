@@ -6,7 +6,7 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 </div>
 
   SRM Diagnostic Data Sources
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM Server (Windows)           SRM Appliance (Linux)        │
 │  ┌──────────────────────────┐   ┌──────────────────────────┐ │
@@ -26,7 +26,7 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 │  Support Bundle: Site Recovery → Summary → Download          │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────── VMware SRM — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │  SRM diagnostics use support bundles, SRM Server logs, vSphere Replication logs,                      │

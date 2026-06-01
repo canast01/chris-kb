@@ -4,7 +4,7 @@
 <div class="kb-summary">
 PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed.
 </div>
-```
+```text
 ┌──────────────────── Security Active Directory Operations — Scripts and Automation ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -51,7 +51,7 @@ Recommended SAML configuration:
 - Signature Algorithm: RSA-SHA256 minimum
 - Session timeout: Align with IdP session timeout (e.g., 8 hours for corporate SSO)
 ```
-```
+```text
 ┌───────────────────────────────────── Confluence — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Nexus Dashboard Standards reference covering Cluster Sizing Standards, Node Naming Convention, Fabric Naming Convention, Alert Policy Standards, RBAC Standards and 1 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Nexus Dashboard — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

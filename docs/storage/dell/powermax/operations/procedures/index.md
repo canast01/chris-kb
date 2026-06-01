@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Masking Views, Provisioning.
 </div>
-```
+```text
 ┌─────────────────────────────── Dell PowerMax — Operational Procedures ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

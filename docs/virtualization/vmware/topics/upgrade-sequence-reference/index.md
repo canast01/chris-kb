@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Upgrade Sequence Reference reference covering Correct Upgrade Order, Why Order Matters, VCF (VMware Cloud Foundation) Sequence, Compatibility Matrix References, Key Version Constraints and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────────── Virtualization Vmware Topics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

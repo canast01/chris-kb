@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Change Management operational notes and deep-dive references.
 </div>
-```
+```text
 ┌──────────────────────────────── Project Management Change Management ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

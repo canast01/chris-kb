@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Thick Provisioning, Deduplication vs Compression, Replication Types, Snapshot vs Clone and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────────────── Certifications Storage Practice Notes ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

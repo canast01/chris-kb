@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering Tiered Administration Model, Core Security Controls, AdminSDHolder Monitoring.
 </div>
-```
+```powershell
 ┌───────────────────────── Security Active Directory Security — Access Control ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

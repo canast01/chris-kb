@@ -16,7 +16,7 @@ SRM operates across two paired sites: a **protected site** (production) and a **
 The two SRM Servers form a **site pair**. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.
 
 Protected Site                        Recovery Site
-```
+```text
 ```
 ┌─────────────────────┐               ┌─────────────────────┐
 │  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
@@ -25,11 +25,11 @@ Protected Site                        Recovery Site
 │  Production VMs     │               │  Placeholder VMs    │
 │  Storage Array A    │               │  Storage Array B    │
 └─────────────────────┘               └─────────────────────┘
-```
+```text
 ```
          │                                      │
          └──── Replication (ABR or VR) ─────────┘
-```
+```text
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM orchestrates VM failover between a protected site and recovery site using                        │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 ECS administration is split across three interfaces: the **ECS Management Shell** (`ecscli`), the **ECS Management REST API** (port 4443), and the **S3-compatible object API** (port 9020 HTTP / 9021 HTTPS).
 </div>
-```
+```powershell
 ┌────────────────────────────────────── Dell ECS — CLI Reference ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

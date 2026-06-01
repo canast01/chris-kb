@@ -24,7 +24,7 @@ Use LDAPS (port 636) for production — plain LDAP (port 389) is not acceptable 
 ```text
 Administration → SSL → Import Certificate → paste root CA PEM
 ```
-```
+```text
 ┌────────────────────────────── Aria Operations for Logs — Authentication ──────────────────────────────┐
 │                                                                                                       │
 │  vRLI supports local auth, LDAP/AD integration, and vIDM SSO for enterprise environments.             │

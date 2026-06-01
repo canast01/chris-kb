@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Policy compliance reviews evaluate the current state of resources against assigned policies and surface non-compliant resources. Regular compliance reviews are essential for maintaining governance standards and preparing for audits.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Cloud Azure Governance ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

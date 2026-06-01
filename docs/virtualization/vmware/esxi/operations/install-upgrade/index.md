@@ -32,7 +32,7 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
               │  target version         │
               │  All vSAN health green  │
               └─────────────────────────┘
-```
+```text
 ┌───────────────────────────────────── ESXi — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │  Fresh install via ISO/PXE and in-place upgrade via vLCM baseline or image.                           │

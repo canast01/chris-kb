@@ -3,7 +3,7 @@
 <div class="kb-summary">
 SnapMirror architecture reference — replication types (Async, Sync, SMBC, XDP), components, connectivity requirements, and DR failover procedures.
 </div>
-```
+```text
 ┌────────────────────────────────── NetApp SnapMirror — Architecture ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

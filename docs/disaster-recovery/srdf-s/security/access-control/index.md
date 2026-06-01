@@ -5,7 +5,7 @@
 Access Control reference covering Preventing Accidental Failover, Audit Logging.
 </div>
 
-```
+```powershell
 ┌─────────────────────────────────────── SRDF/S — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

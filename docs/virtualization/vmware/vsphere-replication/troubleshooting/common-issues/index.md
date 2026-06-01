@@ -6,7 +6,7 @@ Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking 
 </div>
 
   VR Triage Decision Tree
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix            │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
@@ -46,12 +46,12 @@ Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking 
    Fix: increase RPO to reduce required bandwidth, or prioritize replication traffic via QoS
 
 2. **Source datastore I/O saturation**: High I/O on source datastore causes CBT tracking to slow down
-   ```
+   ```text
    vCenter → [VM datastore] → Monitor → Performance → check IOPS and latency
    ```
 
 3. **Source ESXi host CPU saturation**:
-   ```
+   ```text
    vCenter → [ESXi host] → Monitor → Performance → CPU ready %
    # If >5%, ESXi is CPU-constrained — replication competes for CPU
    ```
@@ -71,7 +71,7 @@ Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking 
 Initial sync is a full copy of all VM disks — large VMs (1+ TB) naturally take a long time.
 
 1. **Check if sync is actually progressing** (not stalled):
-   ```
+   ```text
    Site Recovery → Replications → [VM] → check "Transferred" bytes — should increase over time
    ```
    If bytes transferred is not increasing for >1 hour → stalled
@@ -127,7 +127,7 @@ Fix: open TCP 31031 from source ESXi management IPs to target VRA IP in firewall
    ```
 
 4. **Site pair thumbprint mismatch** (cert was replaced):
-   ```
+   ```text
    Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
    ```
 

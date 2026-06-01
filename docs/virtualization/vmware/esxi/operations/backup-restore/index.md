@@ -6,7 +6,7 @@ ESXi Backup & Restore reference covering VM-Level Backup.
 </div>
 
 ESXi Backup & Restore Flow
-```
+```powershell
 ┌────────────────────────────────────────────────────────┐
 │  ESXi Host Configuration Backup                        │
 │  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration │
@@ -22,7 +22,7 @@ ESXi Backup & Restore Flow
 └───────────────────────┬────────────────────────────────┘
                         │
 ```
-```
+```text
 ┌───────────────────────▼────────────────────────────────┐
 │  Maintenance Mode — Pre-Change Checklist               │
 │  ├── Cluster capacity OK for N-1 hosts?                │
@@ -35,7 +35,7 @@ ESXi Backup & Restore Flow
 │  └── Exit Maintenance Mode → validate reconnect        │
 └────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────── ESXi — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │  configBundle backup, Host Profiles, and full reinstall restore procedure.                            │

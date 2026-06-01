@@ -6,7 +6,7 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 </div>
 
   SRM Backup Sources
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  vCenter VCSA Backup (covers most SRM config)                │
 │  ┌──────────────────────────────────────────────────────┐    │
@@ -27,7 +27,7 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── VMware SRM — Backup & Restore ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM backup covers the SRM Server configuration database; VMs protected by SRM are                    │

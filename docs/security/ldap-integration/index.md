@@ -7,7 +7,7 @@ title: Standard LDAP Integration
 <div class="kb-summary">
 Canonical LDAP/Active Directory integration reference for all KB-covered products. Use this page for field definitions, security standards, and connectivity testing. Product authentication pages link here for the shared baseline and document only their product-specific steps.
 </div>
-```
+```text
 ┌────────────────────────────────────── Security Ldap Integration ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -8,7 +8,7 @@ title: NSX
 Technical and operational reference for VMware NSX. Covers segments, gateways, distributed firewall, routing, edge nodes, and overlay networking for software-defined network and security across vSphere environments.
 </div>
 
-```
+```text
 ┌──────────────────────────────── NSX Software-Defined Networking Stack ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

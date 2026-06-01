@@ -49,7 +49,7 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
-```
+```text
 ┌───────────────────────────────── Brocade SANnav — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  SANnav scripting: REST API automation, zone management, reporting, Ansible playbooks.                │

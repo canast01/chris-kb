@@ -25,7 +25,7 @@ passwd ndadmin
 # Use a password meeting corporate complexity policy (20+ characters)
 # Store in vault; treat as break-glass
 ```
-```
+```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
 │                                                                                                       │
 │  Hardening checklist: replace default certs, restrict access, enable AAA, audit logging.              │
@@ -117,7 +117,7 @@ Configure a legal warning banner on the ND login page:
    WARNING: This system is for authorized use only.
    All connections are monitored and recorded.
    Unauthorized access is prohibited and may result in legal action.
-   ```
+   ```text
 3. Click **Save**. The banner appears below the login form.
 
 ---

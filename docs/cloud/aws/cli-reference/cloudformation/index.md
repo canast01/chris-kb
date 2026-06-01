@@ -37,7 +37,7 @@ CloudFormation CLI: Stack Lifecycle
           ▼
   delete-stack ──► DELETE_COMPLETE
 ```
-```
+```text
 ┌────────────────────────────────────── AWS CLI — CloudFormation ───────────────────────────────────────┐
 │                                                                                                       │
 │  Key CloudFormation CLI commands for stack management, drift detection, and StackSets.                │

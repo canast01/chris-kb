@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Inventory ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

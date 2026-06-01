@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering RBAC, Sudoers Configuration, Audit Logging.
 </div>
-```
+```powershell
 ┌─────────────────────────────────── Dell PowerPath — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

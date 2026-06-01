@@ -6,7 +6,7 @@
 Windows Server — Troubleshooting reference.
 </div>
 
-```
+```powershell
 ┌────────────────────────────── Windows Server — Troubleshooting Overview ──────────────────────────────┐
 │                                                                                                       │
 │  Structured troubleshooting: common issues first, diagnostics second, escalation when needed.         │

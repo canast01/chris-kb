@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Incident Triage, Issue Reference, Common Issues — Quick Reference.
 </div>
-```
+```text
 ┌───────────────────────────────────── Dell VPLEX — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

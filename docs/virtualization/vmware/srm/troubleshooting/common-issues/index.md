@@ -5,7 +5,7 @@
 Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA Not Found / Discovery Fails, Recovery Plan Stuck in "Running", Protection Group Shows Error, Test Failover: VMs Fail to Power On and 1 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │
@@ -112,19 +112,19 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 **Symptoms:** Recovery Plan is running but no progress for >10 minutes; one step shows in-progress indefinitely
 
 1. **Manual step timeout**: Recovery Plan has a manual approval step that no one has approved
-   ```
+   ```text
    Site Recovery → Recovery Plans → [plan] → [current run] → Steps
    Find the step waiting for input → click to complete/skip
    ```
 
 2. **VM power-on timeout**: VM at recovery site taking too long to power on (resource contention)
-   ```
+   ```text
    vCenter (Recovery) → Recent Tasks → look for power-on task on the stuck VM
    Check ESXi host resources at recovery site
    ```
 
 3. **Force cancel if stuck >30 minutes**:
-   ```
+   ```text
    Site Recovery → Recovery Plans → [plan] → Cancel
    Note: cancellation may leave partial state — check VMs manually
    ```
@@ -162,7 +162,7 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 **Symptoms:** Test recovery starts but VMs in isolated network fail to power on or get wrong IP
 
 1. **Network mapping missing**: The test network not mapped to an isolated portgroup
-   ```
+   ```text
    Site Recovery → Recovery Plans → [plan] → Test Networks
    Map each protected network to an isolated portgroup at recovery site
    ```
@@ -186,7 +186,7 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 **Symptoms:** After recovery, re-protect or planned migration back fails
 
 1. **VM not re-protected**: Must run "Reprotect" after DR before failback
-   ```
+   ```text
    Site Recovery → Protection → [PG] → Reprotect
    Wait for initial sync to complete (status: OK)
    Then run Planned Migration back to protected site

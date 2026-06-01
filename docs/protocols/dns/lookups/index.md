@@ -6,7 +6,7 @@ DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerSh
 </div>
 
         FORWARD vs REVERSE LOOKUPS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  FORWARD LOOKUP (name → IP)                                  │
 │  dig A web01.example.local @10.0.0.53                           │

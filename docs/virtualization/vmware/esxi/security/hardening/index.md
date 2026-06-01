@@ -6,7 +6,7 @@ Hardening reference covering Firewall Hardening, Advanced Security Settings, Sec
 </div>
 
 ESXi Host Hardening Layers
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │  1. Network Attack Surface Reduction                    │
 │  ├── Lockdown Mode: Normal (blocks direct SSH/API)      │
@@ -37,7 +37,7 @@ ESXi Host Hardening Layers
 └─────────────────────────────────────────────────────────┘
 ```
   Reference: VMware vSphere SCG → CIS → DISA STIG
-```
+```text
 ┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  CIS VMware benchmark, lockdown mode, host firewall, and hardening profile.                           │

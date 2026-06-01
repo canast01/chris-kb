@@ -6,7 +6,7 @@
 Linux — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
 
-```
+```powershell
 ┌────────────────────────────────── Linux — Troubleshooting Overview ───────────────────────────────────┐
 │                                                                                                       │
 │  Structured approach to Linux problem diagnosis: common issues, diagnostics, escalation.              │

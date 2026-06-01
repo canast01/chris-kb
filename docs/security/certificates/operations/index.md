@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Certificates — Operations reference.
 </div>
-```
+```text
 ┌──────────────────────────── Security Certificates Operations — Operations ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

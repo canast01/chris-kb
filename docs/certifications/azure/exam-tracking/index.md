@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure Exam Tracking reference covering Certification Path Overview, Exam Structure — AZ-900 (Fundamentals), Exam Structure — AZ-104 (Administrator), Exam Structure — AZ-305 (Architect), Scheduling and Retake Policy and 2 more sections.
 </div>
-```
+```text
 ┌───────────────────────────────── Certifications Azure Exam Tracking ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

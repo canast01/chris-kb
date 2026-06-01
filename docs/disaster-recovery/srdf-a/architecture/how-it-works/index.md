@@ -33,7 +33,7 @@ flowchart TD
     style dse fill:#be123c,color:#fff
     style rpoReset fill:#15803d,color:#fff
 ```
-```
+```text
 ┌──────────────────────────────────────── SRDF/A — How It Works ────────────────────────────────────────┐
 │                                                                                                       │
 │    SRDF/A data flow — from source to target through the protection pipeline:                          │

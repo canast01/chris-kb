@@ -4,7 +4,7 @@
 Operational tooling reference covering version control, project tracking, documentation, and ITSM — Git, Jira, Confluence, and ServiceNow.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Tools Platform Overview ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

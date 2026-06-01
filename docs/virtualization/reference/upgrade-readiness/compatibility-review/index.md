@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.
 </div>
-```
+```text
 ┌───────────────────────────── Virtualization Reference Upgrade Readiness ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

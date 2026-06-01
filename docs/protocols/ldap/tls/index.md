@@ -10,7 +10,7 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
 </div>
 
         STARTTLS vs LDAPS
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  STARTTLS (port 389 → upgrade to TLS)                        │
 │  ┌────────────┐         ┌──────────────────────────────┐     │

@@ -6,7 +6,7 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 </div>
 
 Aria Operations — Health Check Coverage Map
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Cluster Node Health                                │
 │  Admin → Cluster Management                         │
@@ -18,7 +18,7 @@ Aria Operations — Health Check Coverage Map
                        │
           ┌────────────┼────────────────────┐
           ▼            ▼                    ▼
-```
+```text
 ┌──────────────┐ ┌──────────────┐ ┌─────────────────┐
 │ Adapter      │ │ Disk         │ │ Service           │
 │ Health       │ │ Health       │ │ Health            │
@@ -36,14 +36,14 @@ Aria Operations — Health Check Coverage Map
 ```
           │
           ▼
-```
+```text
 ```
 ┌─────────────────────────────────────────────────────┐
 │  NTP Health (all nodes must be < 1 second drift)    │
 │  chronyc tracking (per node)                        │
 │  chronyc makestep (force sync if drifted)           │
 └─────────────────────────────────────────────────────┘
-```
+```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │

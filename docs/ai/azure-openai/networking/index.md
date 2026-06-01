@@ -4,7 +4,7 @@
 <div class="kb-summary">
 By default, Azure OpenAI resources accept traffic from all public IP addresses. For production deployments, restrict access using private endpoints, VNet integration, and firewall rules.
 </div>
-```
+```text
 ┌───────────────────────────────────── Ai Azure Openai Networking ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

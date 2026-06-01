@@ -4,7 +4,7 @@
 <div class="kb-summary">
 When a VM is reported as slow, check these in order:
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Reference Quick Reference ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

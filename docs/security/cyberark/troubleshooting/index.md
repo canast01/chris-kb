@@ -4,7 +4,7 @@
 <div class="kb-summary">
 CyberArk — Troubleshooting reference.
 </div>
-```
+```text
 ┌───────────────────────── Security Cyberark Troubleshooting — Troubleshooting ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

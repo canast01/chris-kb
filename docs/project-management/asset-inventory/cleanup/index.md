@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Asset Cleanup and Decommission reference covering Overview, Decommission Workflow, Data Wiping Standards, Dependency Verification Checklist, Physical Asset Disposal and 1 more sections.
 </div>
-```
+```text
 ┌───────────────────────────── Project Management Asset Inventory Cleanup ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Microsoft Defender for Cloud Secure Score is a quantified measure of an Azure environment's security posture. It aggregates security recommendations across subscriptions into a single percentage that rises as recommendations are remediated.
 </div>
-```
+```text
 ┌──────────────────────────────────────── Cloud Azure Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

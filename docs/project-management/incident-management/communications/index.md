@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Incident Communications reference covering Overview, Communication Principles, Update Cadence, Communication Templates, Stakeholder Distribution and 1 more sections.
 </div>
-```
+```text
 ┌──────────────────────── Project Management Incident Management Communications ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

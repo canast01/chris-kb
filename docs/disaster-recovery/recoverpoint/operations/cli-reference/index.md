@@ -50,7 +50,7 @@ flowchart TD
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
 ```
-```
+```text
 ┌──────────────────────────────────── RecoverPoint — CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

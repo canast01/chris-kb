@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 </div>
-```
+```text
 ┌────────────────────────────────── Dell PowerScale — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

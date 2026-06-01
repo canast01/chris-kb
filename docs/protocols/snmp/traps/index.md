@@ -6,7 +6,7 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 </div>
 
         TRAP FLOW (device-initiated, async)
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Device (switch/router/server)         NMS / trap receiver  │
 │  ┌─────────────────────────────┐       ┌──────────────────┐ │

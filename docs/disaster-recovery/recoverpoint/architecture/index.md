@@ -4,7 +4,7 @@
 Dell EMC RecoverPoint journal-based replication — RPA clusters intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery across CDP, CRR, and CLR modes.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── RecoverPoint — Architecture ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

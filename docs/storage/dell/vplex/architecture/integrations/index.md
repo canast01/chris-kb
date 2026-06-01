@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.
 </div>
-```
+```text
 ┌────────────────────────────────────── Dell VPLEX — Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

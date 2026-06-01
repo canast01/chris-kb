@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Appliance Architecture, Hardware Models, Components and 4 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerStore — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

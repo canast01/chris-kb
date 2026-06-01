@@ -26,7 +26,7 @@ graph TB
   class CLOUD cloud
   class DDDR dr
 ```
-```
+```text
 ┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -68,7 +68,7 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.
 

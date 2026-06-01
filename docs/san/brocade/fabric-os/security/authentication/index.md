@@ -27,7 +27,7 @@ flowchart TD
     localAuth -->|No| reject3["Login denied"]
     vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
 ```
-```
+```text
 ┌───────────────────────────────── Brocade Fabric OS — Authentication ──────────────────────────────────┐
 │                                                                                                       │
 │  Authentication: DH-CHAP for switch-to-switch, FCAP, TACACS+, and local login methods.                │
@@ -74,7 +74,7 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 
 If RADIUS authentication fails, the fallback to `LOCAL` authentication ensures break-glass access remains available. Always test RADIUS before relying on it.
 

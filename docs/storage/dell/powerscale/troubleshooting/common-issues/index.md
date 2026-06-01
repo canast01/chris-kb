@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Common Issues reference covering Quick Reference, Incident Triage.
 </div>
-```
+```text
 ┌─────────────────────────────────── Dell PowerScale — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

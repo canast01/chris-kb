@@ -3,7 +3,7 @@
 <div class="kb-summary">
 PAM platform with Digital Vault as the encrypted credential store, CPM for automated rotation, PSM for session proxying and recording, and PVWA as the web interface; primary and DR Vault pair with asynchronous replication.
 </div>
-```
+```text
 ┌──────────────────────────── Security Cyberark Architecture — Architecture ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

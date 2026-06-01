@@ -6,7 +6,7 @@
 Python Automation — Security reference.
 </div>
 
-```
+```text
 ┌────────────────────────────────────────── Python — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python security: no hardcoded secrets, dependency CVE scanning, input validation, bandit scan │   │

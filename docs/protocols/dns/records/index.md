@@ -6,7 +6,7 @@ DNS Records reference covering Overview, Common Record Types, Managing Records w
 </div>
 
         COMMON RECORD TYPES
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Forward zone: corp.local                                    │
 │  ┌────┬─────────────────────────────────────────────────┐   │

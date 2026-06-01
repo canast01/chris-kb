@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Escalation reference covering Before Opening a Support Case, Severity Definitions, Escalation Steps, VMware Support Portal, Component-Specific Support and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Virtualization Vmware Tanzu — Escalation ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

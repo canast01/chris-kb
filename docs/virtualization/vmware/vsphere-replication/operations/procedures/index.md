@@ -6,7 +6,7 @@ Procedures reference covering Configure Replication on a VM, Change RPO for a Re
 </div>
 
   Key Operational Procedures
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Configure Replication           Monitor + Manage            │
 │  ┌──────────────────────┐        ┌──────────────────────┐    │

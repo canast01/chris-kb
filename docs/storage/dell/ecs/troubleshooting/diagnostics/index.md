@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Diagnostics reference covering Diagnostic Overview, Management API Diagnostics, S3 API Diagnostics, Node-Level SSH Diagnostics, Log Locations and 2 more sections.
 </div>
-```
+```text
 ┌─────────────────────────────────────── Dell ECS — Diagnostics ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

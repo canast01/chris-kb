@@ -4,7 +4,7 @@
 <div class="kb-summary">
 `vplexcli` is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with `vplexcli`. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g.
 </div>
-```
+```powershell
 ┌───────────────────────────────────── Dell VPLEX — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

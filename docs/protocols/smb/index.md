@@ -5,7 +5,7 @@ Server Message Block (SMB) is a network file sharing protocol running over TCP p
 </div>
 
         SMB ARCHITECTURE
-```
+```text
 ┌──────────────────┐     TCP 445      ┌──────────────────────────┐
 │  Windows/Linux   │                  │   SMB SERVER (Windows)   │
 │  Client          │                  │                          │

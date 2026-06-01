@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Consistent tagging supports ownership, billing, backup policy, patch scheduling, and compliance.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,7 +6,7 @@
 Terraform — Operations reference.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Terraform — Operations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Terraform operations: init, plan, apply, state management, workspace management, import    │   │

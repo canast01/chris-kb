@@ -13,7 +13,7 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
                  │  SRM Server     │
                  │  (site pair)    │
                  └─────────────────┘
-```
+```text
 ┌────────────────────────────────────── VMware SRM — Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM integrates with vCenter, vSphere Replication, storage arrays, NSX for network                    │

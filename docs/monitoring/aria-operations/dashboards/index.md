@@ -5,7 +5,7 @@
 Creating, Editing, and Sharing reference covering Dashboard Interactions, Sharing and Cloning Dashboards, Importing Community Dashboards, Common Dashboard Issues.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Aria Operations — Dashboards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

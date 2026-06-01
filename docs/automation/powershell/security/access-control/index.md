@@ -28,7 +28,7 @@ graph TD
     adGroup -->|Member| svcAccount
     svcAccount --> transcript
 ```
-```
+```powershell
 ┌───────────────────────────────────── PowerShell — Access Control ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell access control: who can run scripts, remoting access, JEA capability delegation  │   │

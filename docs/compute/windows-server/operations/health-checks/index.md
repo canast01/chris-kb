@@ -30,7 +30,7 @@ flowchart TD
     rebootCheck -- No --> allGood
     rebootCheck -- Yes --> investigate
 ```
-```
+```powershell
 ┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Regular health checks: disk, AD replication, services, and event log review.                         │

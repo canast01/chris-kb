@@ -10,7 +10,7 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
 </div>
 
         SNMPv3 authPriv SECURITY MODEL (USM)
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  NMS                              Device agent               │
 │  ┌────────────────────┐           ┌──────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Evidence Capture and Audit Trail reference covering Overview, What Counts as Evidence, Naming Convention, Evidence Storage, Evidence Capture Checklist and 1 more sections.
 </div>
-```
+```text
 ┌────────────────────────────── Project Management Health Checks Evidence ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Build and operating standards for virtualization platforms.
 </div>
-```
+```text
 ┌───────────────────────────────── Virtualization Reference Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Architecture reference for Pure Storage Evergreen. Covers the non-disruptive controller refresh model, active-active HA, DirectFlash Modules, host connectivity, replication options, and subscription design standards.
 </div>
-```
+```text
 ┌──────────────────────────────── Storage Pure Evergreen — Architecture ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

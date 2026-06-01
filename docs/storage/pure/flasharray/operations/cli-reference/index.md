@@ -4,7 +4,7 @@
 <div class="kb-summary">
 CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System Management, Configuration & Directory Services, CSV Exports and 5 more sections.
 </div>
-```
+```powershell
 ┌─────────────────────────────────── Pure FlashArray — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

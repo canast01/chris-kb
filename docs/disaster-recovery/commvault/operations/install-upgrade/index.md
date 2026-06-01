@@ -5,7 +5,7 @@
 Install & Upgrade reference covering Release Cadence, Upgrade Order, CommVault to Metallic SaaS Migration, EOL Tracking.
 </div>
 
-```
+```text
 ┌───────────────────────────── Commvault Install and Upgrade — Procedures ──────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

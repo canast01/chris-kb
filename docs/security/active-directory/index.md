@@ -3,7 +3,7 @@
 <div class="kb-summary">
 Windows Server Active Directory knowledge base covering forest and domain architecture, FSMO roles, Kerberos authentication, replication topology, GPO management, and troubleshooting for enterprise directory environments.
 </div>
-```
+```text
 ┌────────────────────────────────────── Security Active Directory ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
