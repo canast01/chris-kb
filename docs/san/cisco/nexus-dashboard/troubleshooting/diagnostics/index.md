@@ -76,28 +76,6 @@ acs system logs --component audit --tail 50
 │  Tech-support   = All-in-one bundle; includes etcd snapshot, pod logs, cluster state                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Generating a TAC Support Bundle
-
-```bash
-ssh ndadmin@nd-dc1-1.corp.example.com
-
-# Generate support bundle — includes all platform logs, cluster state,
-# Kubernetes events, node resource state, and app logs
-acs techsupport --output /tmp/nd-support-$(date +%Y%m%d).tar.gz
-
-# Monitor generation (may take 5-15 minutes)
-# The command blocks until complete
-
-# Transfer to your workstation
-scp ndadmin@nd-dc1-1.corp.example.com:/tmp/nd-support-$(date +%Y%m%d).tar.gz ./
-
-# For NDFC-specific issues, also collect the NDFC support bundle
-kubectl exec -n ndfc deployment/ndfc-server -- \
-  /usr/local/ndfc/sbin/collect-support.sh --output /tmp/ndfc-support.tar.gz
-kubectl cp ndfc/$(kubectl get pod -n ndfc -l app=ndfc-server -o jsonpath='{.items[0].metadata.name}'):/tmp/ndfc-support.tar.gz ./ndfc-support-$(date +%Y%m%d).tar.gz
 ```
 
 ---

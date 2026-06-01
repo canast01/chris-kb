@@ -73,27 +73,6 @@ Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -Fi
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Procedure 3: File-Level Recovery from Image
-
-**When:** Specific files or directories need to be recovered without a full restore.
-
-```powershell
-# Mount the RASR WIM image as a drive letter (Windows 10/2019+)
-$imagePath = "\\nas01\rasr-images\prod\app01\app01_prod_20260510_001.wim"
-$mountPath = "C:\rasr-mount"
-
-New-Item -ItemType Directory -Path $mountPath -Force
-dism /Mount-Image /ImageFile:$imagePath /Index:1 /MountDir:$mountPath /ReadOnly
-
-# Browse and copy required files
-Get-ChildItem $mountPath\Users\Administrator\AppData\Local\
-Copy-Item "$mountPath\Program Files\MyApp\config\app.conf" C:\Recovered\
-
-# Unmount when done
-dism /Unmount-Image /MountDir:$mountPath /Discard
 ```
 
 ---

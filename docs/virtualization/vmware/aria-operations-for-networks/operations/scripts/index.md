@@ -75,29 +75,6 @@ HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "applicat
 │  CI/CD Integration   = Scripts run in pipelines for automated config drift detection                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Get Flows for a Source VM
-
-```python
-def get_flows_for_vm(vm_name, limit=100):
-    url = f"https://{VRNI_HOST}/api/ni/search"
-    payload = {
-        "query": f"flows where source_vm.name = '{vm_name}'",
-        "page": {"start_index": 0, "end_index": limit}
-    }
-    resp = requests.post(url, headers=HEADERS, json=payload, verify=VERIFY_SSL)
-    results = resp.json().get("results", [])
-    print(f"Flows from {vm_name}: {len(results)}")
-    for flow in results:
-        src = flow.get("source_ip", {}).get("ip_address", "?")
-        dst = flow.get("destination_ip", {}).get("ip_address", "?")
-        port = flow.get("port", {}).get("port_number", "?")
-        proto = flow.get("protocol", "?")
-        print(f"  {src} → {dst}:{port}/{proto}")
-
-get_flows_for_vm("web-server-01")
 ```
 
 ---

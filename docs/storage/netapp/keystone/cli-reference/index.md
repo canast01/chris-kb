@@ -85,29 +85,6 @@ echo "Token acquired"
 │    storage disk show  = Physical disk info; checks spares, broken, and RAID groups                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Usage Reporting
-
-```bash
-# Get current usage for a subscription
-curl -s -X GET \
-  "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/usage" \
-  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
-
-# Usage with date range (ISO8601)
-curl -s -X GET \
-  "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/usage?from=2024-11-01T00:00:00Z&to=2024-11-30T23:59:59Z" \
-  -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
-
-# Parse committed vs consumed vs burst in one shot
-curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/usage" \
-  -H "Authorization: Bearer $TOKEN" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-for tier in data.get('usageDetails', []):
-    print(f\"{tier['serviceLevel']:20s}  committed={tier['committedCapacity']:>8} TiB  \
-consumed={tier['consumedCapacity']:>8} TiB  burst={tier.get('burstCapacity',0):>8} TiB\")
-"
 ```
 
 ### Service Level Listing

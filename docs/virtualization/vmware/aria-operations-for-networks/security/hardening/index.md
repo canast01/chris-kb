@@ -82,11 +82,6 @@ sudo systemctl restart sshd
 │  SSH Restriction     = Limit SSH to jump host CIDR only; disable for non-admins                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**NSX-T (read-only):**
-```text
-NSX-T → System → User Management → Add User
-  Username: svc-vrni-nsx | Role: Auditor
 ```
 
 Never use admin-level credentials. vRNI only reads topology — no write access needed for monitoring.

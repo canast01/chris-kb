@@ -5,7 +5,7 @@
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
 </div>
 
-```text
+```
 ┌───────────────────────────────── NSX Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,17 +58,6 @@ Design Standards reference covering Segments (Logical Switches), Design Rules, C
 │    Seg naming    = Consistent segment naming prevents confusion in large environments                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-The three-node NSX Manager cluster uses sequential numbering. Site codes should match vCenter and ESXi naming (`lon` for London, `ams` for Amsterdam, etc.).
-
-## Segments (Logical Switches)
-
-```text
-Format: seg-<environment>-<function>-<vlan_or_subnet>
-Example: seg-prod-web-10.0.1.0
-         seg-dev-db-10.1.3.0
-         seg-mgmt-vmotion-10.100.2.0
 ```
 
 VLAN-backed segments (for management or underlay traffic) should include the VLAN ID:

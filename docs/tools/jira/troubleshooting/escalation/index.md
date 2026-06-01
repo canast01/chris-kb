@@ -79,44 +79,6 @@ flowchart TD
 │  Critical escalation = request via Atlassian account team for P1 outages                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Emergency Contacts
-
-| Contact | Role | When to Use | Channel |
-|---|---|---|---|
-| Jira Admin On-Call | L2 on-call | P1/P2 outside business hours | Ops paging system |
-| Platform Engineering Lead | L3 escalation | P1 — all users affected | Mobile / Slack |
-| Atlassian Enterprise Support | Vendor support | Confirmed product bug / Data Center defect | support.atlassian.com + phone |
-| Atlassian Emergency Hotline | Vendor critical | P1 with no ETA, licensed Enterprise customers | Atlassian Enterprise Support ticket → request callback |
-| Database Administrator (DBA) | DB issues | DB corruption, replication failure, schema issues | Ops paging system |
-| Security Team | Security incidents | Suspected breach, data exposure, audit failures | Security Slack channel |
-
-!!! warning "Atlassian Emergency Support"
-    Atlassian telephone/callback support is available only on **Premier** and **Enterprise** support tiers. Standard support is ticket-only with response within 1 business day for P1. Confirm your support tier in the Atlassian admin portal before planning SLAs.
-
----
-
-## Escalation Communication Template
-
-### Internal Incident Update
-
-Send to stakeholders during an active P1/P2:
-
-```yaml
-[JIRA INCIDENT] Status Update — HH:MM UTC
-
-SUMMARY: [One sentence — what is broken]
-IMPACT: [Who is affected, what they cannot do]
-STATUS: [Investigating / Identified root cause / Implementing fix / Monitoring]
-ETA: [Expected resolution time, or "Unknown — under investigation"]
-
-LAST ACTION: [Most recent step taken]
-NEXT ACTION: [What is being done now]
-
-Updates every [30 min / 1 hour] or on status change.
-Contact: [on-call name] via [Slack channel / phone]
 ```
 
 ### Resolution Notification

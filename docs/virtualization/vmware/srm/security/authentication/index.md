@@ -5,8 +5,8 @@
 Authentication reference covering Site Pairing Authentication (Certificate-Based), SRA Authentication to Storage Array, REST API Authentication, vSphere Replication Authentication, Break-Glass Access to SRM and 1 more sections.
 </div>
 
-```text
   SRM Authentication Chain
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script           vCenter SSO          SRM Server     │
 │  ┌───────────┐           ┌───────────┐        ┌───────────┐  │
@@ -70,19 +70,6 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 │  Cert rotation = requires re-pair; plan maintenance window                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Site Pairing Authentication (Certificate-Based)
-
-SRM sites authenticate to each other using the SRM Server's SSL certificates. When pairing sites:
-
-```text
-Site Recovery → New Site Pair
-  Remote vCenter FQDN → enter
-  Remote SRM Server FQDN → enter
-  → vCenter presents remote SRM certificate thumbprint for acceptance
-  Accept thumbprint → pairing established
 ```
 
 The certificate thumbprint is permanently stored — if either site's certificate is replaced, the pairing must be re-established or the new thumbprint accepted.

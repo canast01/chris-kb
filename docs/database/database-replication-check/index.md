@@ -54,24 +54,6 @@ FROM pg_replication_slots;
 │    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MySQL / MariaDB Replication
-
-```sql
--- On REPLICA: full replication status
-SHOW SLAVE STATUS\G
-
--- Key fields to check:
--- Slave_IO_Running: Yes
--- Slave_SQL_Running: Yes
--- Seconds_Behind_Master: 0 (or < threshold)
--- Last_IO_Error / Last_SQL_Error: empty
-
--- On PRIMARY: show connected replicas
-SHOW SLAVE HOSTS;
-
--- Binary log position on primary
-SHOW MASTER STATUS;
 ```
 
 ```bash

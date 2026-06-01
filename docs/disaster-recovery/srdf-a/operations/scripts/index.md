@@ -158,13 +158,6 @@ SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-The dry-run prints every command it would execute without making any changes.
-
-**Step 5 — Run the actual failover**
-
-```text
-SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-planned-failover.sh
 ```
 
 **What you should see**

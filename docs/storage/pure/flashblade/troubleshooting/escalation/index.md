@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
 </div>
+```
+┌──────────────────────────────────── Pure FlashBlade — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     FlashBlade escalation: severity triage, vendor support contact, and required artifacts    │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
+│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
+│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
+│   │         Replication         │  │            Async            │  │          DR/backup          │   │
+│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
+│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
+│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
+│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
+│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
+│    Replication        = async file or object replication between FlashBlade systems for DR            │
+│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
+│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
+│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
+│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
+│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
+│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 Pure Support Escalation Path — FlashBlade

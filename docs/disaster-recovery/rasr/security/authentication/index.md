@@ -66,26 +66,6 @@ Authentication requirements:
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Racadm CLI — change default password
-racadm set iDRAC.Users.2.Password "NewSecurePassword123!"
-
-# Enable AD authentication
-racadm set iDRAC.ActiveDirectory.Enable 1
-racadm set iDRAC.ActiveDirectory.DomainController1 dc01.example.local
-racadm set iDRAC.ActiveDirectory.RootDomain corp.local
-
-# Set session timeout (in seconds — 900 = 15 minutes)
-racadm set iDRAC.WebServer.Timeout 900
-
-# Disable HTTP, require HTTPS
-racadm set iDRAC.WebServer.HttpsPort 443
-racadm set iDRAC.WebServer.HttpPort 80
-racadm set iDRAC.WebServer.HttpsRedirect 1
-
-# View current user accounts
-racadm get iDRAC.Users
 ```
 
 ## Recovery Media Authentication

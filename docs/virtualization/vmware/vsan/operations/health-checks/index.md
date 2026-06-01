@@ -83,25 +83,6 @@ vSAN HEALTH CHECK SCOPE
 │  Resync ETA    = estimate shown in vSAN performance health panel                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Weekly Checks
-
-| Check | Command / Location | Notes |
-|---|---|---|
-| Storage policy compliance | vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant | All objects should be compliant; non-compliant triggers resync |
-| Capacity trend | vCenter → vSAN → Monitor → Capacity → Capacity History | Identify growth trends; flag if projected to hit 70% within 30 days |
-| Resync history | vCenter → vSAN → Monitor → Resyncing Objects → History | Confirm all resyncs completed; flag any that are stalled or recurring |
-| vSAN health test detail | vCenter → vSAN → Monitor → Skyline Health | Expand any yellow/red items; review recommended actions |
-| Software version alignment | `esxcli system version get` on each host | All hosts in a cluster must run the same ESXi build |
-
-```powershell
-# Check policy compliance across all VMs
-Get-VM | Get-SpbmEntityConfiguration | Where-Object {$_.ComplianceStatus -ne "compliant"} | Select Name,ComplianceStatus
-
-# Cluster capacity summary
-Get-VsanSpaceUsage -Cluster (Get-Cluster) | Select FreeSpaceGB,TotalCapacityGB,UsedSpaceGB
 ```
 
 ---

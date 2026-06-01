@@ -4,7 +4,7 @@
 VM sizing, data retention policy, network access requirements, naming conventions, and configuration baselines for InsightIQ deployments.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── InsightIQ — Design Standards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

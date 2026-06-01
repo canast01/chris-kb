@@ -67,28 +67,6 @@ veeamconfig ui   # Opens text-based configuration UI
 │  NBU         = NetBackup; Veritas enterprise backup platform with agent and catalog                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Schedule Backup Jobs
-
-```bash
-# Set a daily schedule at 02:00
-veeamconfig schedule set \
-  --jobName "SERVER01-Daily" \
-  --daily \
-  --at 02:00
-
-# Set a weekly schedule (Sunday at 03:00)
-veeamconfig schedule set \
-  --jobName "SERVER01-Daily" \
-  --weekly \
-  --dayOfWeek sunday \
-  --at 03:00
-
-# Enable the schedule
-veeamconfig schedule enable --jobName "SERVER01-Daily"
-
-# View schedule
-veeamconfig schedule show --jobName "SERVER01-Daily"
 ```
 
 ### Run a Backup Job Manually

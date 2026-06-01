@@ -5,7 +5,7 @@
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Blueprint / Template Standards, Project Standards and 1 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Aria Automation — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design patterns for projects, templates, naming, and governance in Aria Automation.                  │

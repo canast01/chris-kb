@@ -5,36 +5,41 @@
 VxRail Daily Checks reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
 Daily Check Sequence
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  1. VxRail Manager                                          │
 │     cluster health green · no failed lifecycle tasks        │
 │     no active alerts · service up                           │
 └──────────────────────────┬──────────────────────────────────┘
                            │
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  2. vCenter                                                  │
 │     all hosts Connected · no critical alarms                 │
 │     recent tasks clean · HA / DRS healthy                   │
 └──────────────────────────┬──────────────────────────────────┘
                            │
+```
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  3. ESXi Hosts                                               │
 │     services healthy · NTP synchronized · no warnings       │
 └──────────────────────────┬──────────────────────────────────┘
+```
                            │
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  4. vSAN                                                     │
 │     Skyline Health green · no degraded objects              │
 │     no unexpected resync · capacity within limits           │
 └──────────────────────────┬──────────────────────────────────┘
+```
                            │
 ┌──────────────────────────▼──────────────────────────────────┐
 │  5. iDRAC (each node)                                        │
 │     no hardware alerts · fans/PSU/disk/NIC all healthy      │
 └─────────────────────────────────────────────────────────────┘
-```
 
 ## Overview
 

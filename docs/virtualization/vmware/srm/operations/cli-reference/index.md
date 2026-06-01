@@ -5,8 +5,8 @@
 CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for SRM, Get Protected VM List, Get Recovery Plan History, Disconnect SRM Session.
 </div>
 
-```text
   SRM CLI / API Access
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM REST API (vCenter SSO token)                            │
 │  ┌──────────────────────────────────────────────────────┐    │
@@ -71,38 +71,6 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  Replication lag= time delta between protected and recovery replica                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## SRM REST API — Recovery Plans
-
-```bash
-# List all Recovery Plans
-curl -sk -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans" | \
-  python3 -m json.tool
-
-# Get Recovery Plan status
-PLAN_ID="<recovery-plan-moref>"
-curl -sk -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID" | \
-  python3 -m json.tool
-
-# Start a test recovery
-curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
-  -H "Content-Type: application/json" \
-  -d '{"recovery_type": "TEST"}'
-
-# Start a real recovery (DR failover)
-curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/start" \
-  -H "Content-Type: application/json" \
-  -d '{"recovery_type": "FAILOVER"}'
-
-# Cancel a running recovery
-curl -sk -X POST -H "vmware-api-session-id: $TOKEN" \
-  "https://vcenter-protected.example.local/api/vcenter/dr/recovery/plans/$PLAN_ID/cancel"
 ```
 
 ---

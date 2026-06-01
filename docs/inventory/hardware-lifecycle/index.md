@@ -78,17 +78,6 @@ fwupdmgr refresh && fwupdmgr update  # update via LVFS
 │    ITAD     = IT Asset Disposition; certified disposal with chain-of-custody and destruction cert     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## End-of-Life Planning
-
-```bash
-# List hardware in service by purchase year (from CMDB CSV)
-# Columns: AssetID,Model,PurchaseDate,Location,Owner
-awk -F',' 'NR>1 {
-  year = substr($3, 1, 4)
-  age = 2026 - year
-  if (age >= 5) printf "AGE %d: %s | %s | Owner: %s\n", age, $1, $2, $5
-}' hardware-inventory.csv | sort -rn
 ```
 
 ## Decommission Procedure

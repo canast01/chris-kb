@@ -72,34 +72,6 @@ sequenceDiagram
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-After creation:
-- [ ] Run the job once manually and verify success before relying on the schedule.
-- [ ] Confirm the restore point appears under **Home > Backups**.
-- [ ] Document the job name, scope, repository, and retention in the CMDB or runbook.
-
----
-
-## Backup Copy Job Setup (Offsite / Cloud Target)
-
-Backup copy jobs pull from a source backup job and write a secondary chain to an offsite or cloud repository. This is the primary mechanism for the 3-2-1 rule.
-
-### Steps
-
-1. Go to **Home > Backup Copy > VMware vSphere Backup...** (or Hyper-V equivalent).
-2. Select the **source** — a specific backup job or all backups from a repository.
-3. Select the **target repository** — object storage (S3-compatible, Azure Blob, Wasabi, etc.) or a remote Linux/Windows repo.
-4. Set the **copy interval** (e.g., every 1 day) and configure GFS retention independently of the source job.
-5. Enable **encryption** on the target if the repository is offsite or cloud.
-
-```powershell
-# List existing backup copy jobs
-Get-VBRJob -Type BackupSync | Select-Object Name, LastResult, LastRun
-
-# Check copy job sessions
-Get-VBRBackupSession | Where-Object { $_.JobType -eq "BackupSync" } |
-    Sort-Object CreationTime -Descending | Select-Object -First 10 |
-    Select-Object JobName, Result, CreationTime, EndTime
 ```
 
 ---

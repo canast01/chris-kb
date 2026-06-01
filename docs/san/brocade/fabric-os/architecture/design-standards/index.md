@@ -64,40 +64,6 @@
 │    Config naming  = Zone config names include date/ticket reference for auditability                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Examples:
-- Zone: `db01_0a-powermax01_0a` — host DB01 HBA0 port A to PowerMax array port 0A
-- Alias: `db01_0a` (alias for the initiator WWPN), `powermax01_0a` (alias for target port)
-
-Rules:
-- One initiator per zone — never put two host WWPNs in the same zone
-- Zones should contain: one host HBA port + required array target ports
-- No single-target zones without a matching initiator (orphan cleanup)
-
----
-
-## VSAN / Fabric Design
-
-For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
-- Production Fabric A: all switches in fabric A connected via ISLs
-- Production Fabric B: all switches in fabric B — completely separate cable plant
-- Switches must never be cabled between Fabric A and Fabric B
-
----
-
-## ISL Standards
-
-| Parameter | Standard |
-|---|---|
-| Minimum ISLs per switch pair | 2 (trunk group) |
-| ISL speed | Equal to or greater than connected host/array port speed |
-| Trunk group configuration | `porttrunkarea` configured on ISL ports |
-| FSPF cost | Default (auto) unless explicit traffic engineering is required |
-
-Verify trunk status:
-```bash
-trunkshow   # All ISL trunks and member ports
-islshow     # ISL utilisation
 ```
 
 ---

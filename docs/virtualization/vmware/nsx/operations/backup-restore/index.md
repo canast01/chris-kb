@@ -122,26 +122,6 @@ curl -sk -u 'admin:password' \
 │  Policy API  = NSX policy REST API; primary management interface                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Always trigger a manual backup before:
-- Any NSX upgrade
-- Major DFW policy changes
-- Edge cluster modifications
-- Certificate replacement
-
----
-
-## Verify Backup Integrity
-
-The SFTP server should contain timestamped backup bundles. Verify they exist:
-
-```bash
-# SSH to the SFTP backup server
-ls -lh /backups/nsx/
-# Expected: files like nsx-XXX-backup-YYYY-MM-DD-HH-MM-SS.tar.gz
-
-# Check file sizes are non-zero and increasing over time
-du -sh /backups/nsx/
 ```
 
 Periodic restore tests are essential. A backup that cannot be restored has no value. Schedule a restore drill quarterly in a non-production environment.

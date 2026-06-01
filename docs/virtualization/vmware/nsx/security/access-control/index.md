@@ -101,18 +101,6 @@ for r in d.get('results', []):
 │  Service acct = named automation account; not shared personal login                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Remove a Role Binding
-
-```bash
-# First, find the binding ID
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/aaa/role-bindings" | python3 -m json.tool
-
-# Delete by binding ID
-curl -sk -u 'admin:password' \
-  -X DELETE \
-  "https://<nsx-manager>/api/v1/aaa/role-bindings/<binding-id>"
 ```
 
 ---

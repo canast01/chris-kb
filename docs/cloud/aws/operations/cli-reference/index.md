@@ -76,30 +76,6 @@ AWS CLI Daily Ops: Top Commands
 │  Session Manager = aws ssm start-session; interactive shell without SSH or bastion                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## EC2
-
-```bash
-# List instances
-aws ec2 describe-instances \
-  --query 'Reservations[*].Instances[*].[InstanceId,State.Name,InstanceType,PrivateIpAddress,Tags[?Key==`Name`].Value|[0]]' \
-  --output table
-
-# Filter by tag
-aws ec2 describe-instances \
-  --filters "Name=tag:Environment,Values=prod" "Name=instance-state-name,Values=running" \
-  --query 'Reservations[*].Instances[*].[InstanceId,PrivateIpAddress,Tags[?Key==`Name`].Value|[0]]' \
-  --output table
-
-# Start / stop / reboot
-aws ec2 start-instances --instance-ids i-0abc123
-aws ec2 stop-instances --instance-ids i-0abc123
-aws ec2 reboot-instances --instance-ids i-0abc123
-
-# Get console output (useful when instance unreachable)
-aws ec2 get-console-output --instance-id i-0abc123 --output text
 ```
 
 ---

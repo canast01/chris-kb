@@ -49,32 +49,6 @@ flowchart TD
 │   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Reusable workflows reduce duplication by calling one workflow from another.
-
-```yaml
-# .github/workflows/reusable-deploy.yml (called workflow)
-name: Reusable Deploy
-
-on:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-    secrets:
-      deploy_key:
-        required: true
-
-jobs:
-  deploy:
-    runs-on: ubuntu-24.04
-    environment: ${{ inputs.environment }}
-    steps:
-      - uses: actions/checkout@v4
-      - run: ./scripts/deploy.sh ${{ inputs.environment }}
-        env:
-          DEPLOY_KEY: ${{ secrets.deploy_key }}
 ```
 
 ```yaml

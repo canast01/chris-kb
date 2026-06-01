@@ -77,26 +77,6 @@ show version
 │  show analytics   = MDS 9700 ITL flow analytics: IOPS, throughput, latency                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| State | Meaning | Action |
-|---|---|---|
-| `up` | Port is active and a device is logged in | Normal |
-| `down` | No signal — cable, SFP, or peer issue | Investigate SFP and cable; check peer switch port |
-| `errDisabled` | Port was disabled due to an error condition | Check `show interface fc<x/y>` for reason; flap the port after resolving |
-| `trunking` | TE port ISL is up and carrying VSANs | Normal for ISL ports |
-| `isolated` | VSAN isolated — usually a VSAN merge conflict | Check `show vsan` and trunk allowed VSANs |
-
-### show flogi database
-
-```text
-show flogi database vsan 10
-
----------------------------------------------------------------------------
-INTERFACE        VSAN    FCID           PORT NAME               NODE NAME
----------------------------------------------------------------------------
-fc1/1            10    0x010200  21:00:00:24:ff:a1:b2:c3  20:00:00:24:ff:a1:b2:c3
-fc1/2            10    0x010400  21:00:00:24:ff:d4:e5:f6  20:00:00:24:ff:d4:e5:f6
-fc1/8            10    0x010600  52:4a:93:7c:00:00:00:01  52:4a:93:7c:00:00:00:00
 ```
 
 Compare the list against the expected device register (CMDB or SAN design spreadsheet). A host HBA or storage target missing from this output is a fault condition.

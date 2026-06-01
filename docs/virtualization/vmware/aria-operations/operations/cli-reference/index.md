@@ -5,15 +5,17 @@
 CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service Enable/Disable), Useful Paths, REST API Quick Reference, Related Sections.
 </div>
 
-```text
 Aria Operations — CLI Command Reference Map
+```
 ┌─────────────────────────────────────────────────────┐
 │  SSH: admin@<aria-ops-primary-fqdn>                 │
 │       (sudo -i for advanced maintenance tasks)      │
 └──────────────────────┬──────────────────────────────┘
+```
                        │
           ┌────────────┼──────────────┐
           ▼            ▼              ▼
+```
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
 │ Cluster Mgmt │ │ Adapters     │ │ Certificates      │
 │              │ │              │ │                   │
@@ -32,6 +34,8 @@ Aria Operations — CLI Command Reference Map
 │ cluster                                             │
 │ restart                                             │
 └──────────────┘
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  REST API  base: https://<aria-ops>/suite-api/api   │
 │  POST /api/auth/token/acquire   authenticate        │
@@ -83,25 +87,6 @@ Aria Operations — CLI Command Reference Map
 │  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## vracli Commands
-
-### Cluster Management
-
-```bash
-# Show cluster health and node roles
-vracli cluster health
-
-# List all nodes and their status
-vracli cluster list-nodes
-
-# Restart all services on the node (use with care)
-vracli cluster restart
-
-# Show current version
-vracli version
 ```
 
 ### Adapter Management

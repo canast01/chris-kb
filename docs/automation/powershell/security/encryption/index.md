@@ -49,16 +49,6 @@ graph TD
 │   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Secure Communication (WinRM over HTTPS)
-
-```powershell
-# Use SSL for PSSession to prevent credential interception
-$sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-New-PSSession -ComputerName server01 -UseSSL -SessionOption $sessionOption -Credential $cred
-
-# Verify WinRM HTTPS listener is configured on the target
-winrm enumerate winrm/config/listener
 ```
 
 ## Encryption Reference

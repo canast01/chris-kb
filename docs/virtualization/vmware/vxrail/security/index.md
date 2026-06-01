@@ -4,7 +4,7 @@
 Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
 </div>
 
-```text
+```
 ┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,50 +60,6 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 │  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Store the new password in the organisation's secrets vault. The `mystic` account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.
-
-## LDAP Integration (Active Directory)
-
-Configure AD authentication for VxRail Manager:
-
-**VxRail Plugin → System → User Management → LDAP → Configure**
-
-| Field | Example |
-|---|---|
-| LDAP URL | `ldaps://ldap.example.local:636` |
-| Base DN | `DC=corp,DC=local` |
-| Bind DN | `CN=vxrailbind,OU=ServiceAccounts,DC=corp,DC=local` |
-| Admin Group | `CN=VxRail-Admins,OU=Groups,DC=corp,DC=local` |
-
-Use LDAPS (port 636, TLS) rather than plain LDAP (port 389). Test connectivity before saving.
-
-### vCenter Authentication
-
-vCenter authentication for the VxRail cluster follows standard vSphere RBAC. See the vCenter security pages for SSO and LDAP configuration.
-
-The VxRail Plugin requires specific vCenter permissions to operate. A dedicated vCenter service account (`vxrail-vc-svc`) should be configured with the minimum required permissions rather than using `administrator@vsphere.local`.
-
-```powershell
-# PowerCLI — create a custom role for VxRail Manager vCenter integration
-New-VIRole -Name "VxRail-Manager-Role" -Privilege (
-    Get-VIPrivilege -Id @(
-        "Host.Configuration.StoragePartitionConfiguration",
-        "Host.Configuration.NetConfig",
-        "Host.Configuration.FirmwareConfig",
-        "VirtualMachine.Config.AddExistingDisk",
-        "Datastore.Move",
-        "Global.Health"
-    )
-)
-
-# Assign role to the VxRail service account on the datacenter
-New-VIPermission \
-    -Entity (Get-Datacenter "DC-PROD") \
-    -Principal "CORP\vxrail-vc-svc" \
-    -Role "VxRail-Manager-Role" \
-    -Propagate $true
 ```
 
 ### iDRAC Authentication

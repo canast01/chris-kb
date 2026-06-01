@@ -5,7 +5,7 @@
 Dell AIOps Standards reference covering System Tagging Requirements, Recommendation Priority and Response SLA, Alert Routing, Change Management Requirements, Deferral Policy and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Dell AIOps — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

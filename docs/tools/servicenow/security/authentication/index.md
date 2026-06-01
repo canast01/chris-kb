@@ -91,27 +91,6 @@ gs.info('LDAP test result: ' + JSON.stringify(result));
 │  Duo        = MFA provider; push notification to mobile app for approval                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Azure AD (Entra ID) Enterprise Application Setup
-
-```yaml
-1. Azure Portal → Enterprise Applications → New Application
-2. Search: "ServiceNow" → Add
-3. Single sign-on → SAML
-4. Basic SAML Configuration:
-   - Identifier (Entity ID): https://<instance>.service-now.com
-   - Reply URL (ACS): https://<instance>.service-now.com/navpage.do
-   - Sign on URL: https://<instance>.service-now.com
-   - Relay State: (leave blank)
-5. Attributes & Claims:
-   - user.name → NameID (EmailAddress format)
-   - user.mail → email
-   - user.displayname → displayname
-   - user.givenname → firstname
-   - user.surname → lastname
-   - user.groups → groups (comma-separated GUIDs)
-6. Download: Federation Metadata XML
-7. Users and groups: Assign SNOW-Users AD group
 ```
 
 ### ServiceNow IdP Configuration

@@ -58,14 +58,6 @@ purearray set --proxy https://<proxy>:<port>   # if behind a proxy
 │  SaaS = Pure1 platform updated by Pure Storage; no customer upgrade action                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Array Decommission
-
-```text
-1. Open a Pure Storage support case to initiate array decommission from Pure1
-   (arrays cannot be removed from Pure1 by the customer directly)
-2. Ensure all alert notification rules referencing the array are updated
-3. Update automation scripts to exclude the decommissioned array serial number
 ```
 
 ## Purity Version Compatibility

@@ -64,29 +64,6 @@ uname -r
 │  certbot     = ACME client for Let's Encrypt; automates TLS cert issuance and renewal                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Process and CPU
-
-```bash
-# Check top CPU consumers
-ps aux --sort=-%cpu | head -20
-
-# Check top memory consumers
-ps aux --sort=-%mem | head -20
-
-# Check system-wide CPU breakdown (interactive)
-top
-# Press 1 to expand per-CPU view; 'c' to show full command
-
-# Check load by process and thread
-pidstat -u 1 5  # CPU usage per process, 5 samples 1 second apart
-
-# Find zombie processes
-ps aux | awk '$8 == "Z"'
-
-# Check process open files (useful for "too many open files" errors)
-lsof -p <pid> | wc -l
-ulimit -n  # current open file limit
 ```
 
 ## Memory

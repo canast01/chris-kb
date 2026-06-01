@@ -74,25 +74,6 @@
 │    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Stop here if** you find large application data directories or database files — escalate rather than delete.
-
-## Step 2 — Clean Log Files
-
-```bash
-# List compressed logs older than 30 days before deleting
-find /var/log -type f -name '*.gz' -mtime +30 -ls
-
-# Delete after review
-find /var/log -type f -name '*.gz' -mtime +30 -delete
-
-# Trim large active log files (truncate, do not delete — process holds fd)
-truncate -s 0 /var/log/<application>.log
-
-# Journald
-journalctl --disk-usage
-journalctl --vacuum-time=30d
-journalctl --vacuum-size=500M
 ```
 
 ## Step 3 — Package Cache

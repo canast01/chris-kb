@@ -5,8 +5,8 @@
 CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG CLI (hzedge), PowerShell — VMware.Hv.Helper, Horizon REST API.
 </div>
 
-```text
   Horizon CLI Tools
+```
 ┌──────────────────────────────────────────────────────────────────┐
 │  vdmadmin.exe          │  vdmexport / vdmimport                  │
 │  ┌────────────────┐    │  ┌──────────────────────────────────┐   │
@@ -71,27 +71,6 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 │  Remove-HVMachine= PowerCLI; remove a desktop VM from pool                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Run from an elevated command prompt on a Connection Server (or a machine with network access to the CS, using `-c` flag).
-
-## Session Management
-
-```cmd
-:: List all active sessions
-vdmadmin.exe -L -sessions
-
-:: List sessions for a specific user
-vdmadmin.exe -L -sessions -u domain\username
-
-:: List sessions in a specific pool
-vdmadmin.exe -L -sessions -poolid LON-KW-W11-IC
-
-:: Force logoff a specific session (use session ID from -L output)
-vdmadmin.exe -Q -s <ConnectionServerFQDN> -session <sessionID>
-
-:: Force logoff all disconnected sessions
-vdmadmin.exe -L -sessions | findstr /i "disconnected"
-:: Then loop through session IDs — use PowerShell for automation (see below)
 ```
 
 ### Desktop and Pool Operations

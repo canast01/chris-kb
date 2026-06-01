@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Deployment Models, Management Flow, Network Requirements, VM Sizing (Standalone, 11.x) and 1 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Cisco DCNM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM discovers via SNMP, manages VSAN zones, pushes NX-OS configs, monitors performance.             │

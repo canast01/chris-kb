@@ -92,16 +92,6 @@ grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | ta
 │  Bidirectional= Traceflow sends packets in both directions simultaneously                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### ESXi Host — NSX-Related Logs
-
-```bash
-# SSH to ESXi host
-# NSX VIB events
-grep -i "nsx\|NSX\|dvfilter\|geneve\|TEP" /var/log/vmkernel.log | tail -30
-
-# DFW events (if DFW logging is enabled on rules)
-grep -i "dfwpkt\|vsip\|PASS\|DROP" /var/log/vmkernel.log | grep "dfwpkt" | tail -20
 ```
 
 ---

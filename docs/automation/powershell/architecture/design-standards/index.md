@@ -37,47 +37,6 @@ Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 │   │   Pester                = PS testing framework; Describe/Context/It blocks; mock with Mock{}  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Parameter Validation Attributes
-
-Always validate parameters at the function boundary — never inside the function body.
-
-```powershell
-function Set-Widget {
-    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
-    param (
-        [Parameter(Mandatory, ValueFromPipelineByPropertyName)]
-        [ValidateNotNullOrEmpty()]
-        [string]$Name,
-
-        [Parameter(Mandatory)]
-        [ValidateRange(1, 100)]
-        [int]$Priority,
-
-        [Parameter()]
-        [ValidateSet('Active', 'Inactive', 'Maintenance')]
-        [string]$State = 'Active',
-
-        [Parameter()]
-        [ValidatePattern('^[A-Z]{2}-\d{4}$')]
-        [string]$Code,
-
-        [Parameter()]
-        [ValidateScript({
-            if (Test-Path $_) { $true }
-            else { throw "Path '$_' does not exist." }
-        })]
-        [string]$ConfigPath
-    )
-
-    process {
-        if ($PSCmdlet.ShouldProcess($Name, 'Set-Widget')) {
-            # implementation
-        }
-    }
-}
 ```
 
 Key attributes reference:

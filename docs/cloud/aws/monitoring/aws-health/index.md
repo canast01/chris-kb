@@ -5,7 +5,7 @@
 AWS Health reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────── AWS Health — Service & Account Health ────────────────────────────────┐
 │                                                                                                       │
 │  AWS Health surfaces service events, scheduled maintenance, and account-specific issues.              │

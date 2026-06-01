@@ -5,7 +5,7 @@
 Install & Upgrade reference covering Release Cadence, Upgrade Order, Migration: Physical Master to Appliance, License Lifecycle.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── NetBackup — Install & Upgrade ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

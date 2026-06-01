@@ -67,18 +67,6 @@ Get-Service -Name "DellRASR" | Select-Object Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Option 2 — Full domain rejoin:**
-
-```powershell
-# Remove from domain (local admin required)
-Remove-Computer -UnjoinDomainCredential (Get-Credential) -Restart -Force
-
-# Rejoin domain
-Add-Computer -DomainName "corp.example.com" `
-             -Credential (Get-Credential) `
-             -OUPath "OU=Servers,DC=corp,DC=example,DC=com" `
-             -Restart -Force
 ```
 
 **Option 3 — Reset computer account from DC (run on a domain controller):**

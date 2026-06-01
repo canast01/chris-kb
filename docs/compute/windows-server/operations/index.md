@@ -6,7 +6,7 @@
 Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Windows Server — Operations ─────────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server day-to-day operations: patching, AD management, monitoring, and backups.              │

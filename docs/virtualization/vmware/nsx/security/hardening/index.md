@@ -111,41 +111,6 @@ for r in d.get('results', []):
 │  NTP         = time sync; required for cert validity and log correlation                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Emergency Category Rules
-
-Maintain at least these rules in the Emergency category (highest priority, evaluated first):
-
-| Rule Name | Source | Destination | Service | Action |
-|---|---|---|---|---|
-| Allow-vCenter-to-ESXi | vCenter IP | All ESXi hosts | TCP 443, 902 | Allow |
-| Allow-NSX-Manager | NSX Manager VIPs | All ESXi hosts | TCP 443 | Allow |
-| Allow-NTP | All | NTP servers | UDP 123 | Allow |
-| Allow-DNS | All | DNS servers | TCP/UDP 53 | Allow |
-| Emergency-Block | Specific threat IP | Any | Any | Drop |
-
-These rules prevent a misconfigured Application DFW policy from cutting off NSX management access to ESXi hosts.
-
-### DFW Exclusion List
-
-The DFW Exclusion List bypasses DFW enforcement for specific VMs. Keep this list minimal — it is a security bypass.
-
-Legitimate candidates for exclusion:
-- NSX Manager VMs (self-management)
-- Active Directory domain controllers (when the only authentication source)
-- Physical-to-virtual migration VMs during migration window only
-
-```bash
-# List current exclusion list
-curl -sk -u 'admin:password' \
-  "https://<nsx-manager>/api/v1/firewall/excludelist"
-
-# Add a VM to the exclusion list (use the VM's external-id from fabric)
-curl -sk -u 'admin:password' \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"target_id": "<vm-moref>", "target_type": "VirtualMachine"}' \
-  "https://<nsx-manager>/api/v1/firewall/excludelist"
 ```
 
 ---

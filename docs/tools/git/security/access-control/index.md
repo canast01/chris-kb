@@ -61,19 +61,6 @@ Organisation / Instance level
 │  MFA enforce  = org setting requiring all members to have MFA enabled                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Organisation-Level Controls
-
-```bash
-# Verify org default repository permission
-gh api /orgs/{org} --jq '.default_repository_permission'
-# Should be "read" or "none" — never "write" or "admin"
-
-# List outside collaborators (non-org members with repo access)
-gh api /orgs/{org}/outside_collaborators --paginate
-
-# Remove an outside collaborator
-gh api --method DELETE /orgs/{org}/outside_collaborators/{username}
 ```
 
 ---

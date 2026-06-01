@@ -5,7 +5,7 @@
 AWS Savings Plans reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── AWS Cost — Savings Plans ───────────────────────────────────────┐
 │                                                                                                       │
 │  Savings Plans commit $/hour across EC2, Lambda, and Fargate for up to 66% savings.                   │
@@ -51,34 +51,6 @@ AWS Savings Plans reference covering Overview, Where It Fits, Daily Checks, Heal
 │  Cost Explorer rec= Suggests optimal SP type and amount based on usage history                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Savings Plans: Commitment vs Flexibility
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  Savings Plan Types                                  │
-  │                                                      │
-  │  ┌──────────────────┐  ┌──────────────────────────┐  │
-  │  │ Compute SP       │  │ EC2 Instance SP          │  │
-  │  │                  │  │                          │  │
-  │  │ Any EC2, Lambda, │  │ Specific instance family │  │
-  │  │ Fargate          │  │ in a region              │  │
-  │  │ Most flexible    │  │ Higher discount          │  │
-  │  └──────────────────┘  └──────────────────────────┘  │
-  │                                                      │
-  │  ┌──────────────────────────────────────────────┐    │
-  │  │ SageMaker SP  (for ML workloads)             │    │
-  │  └──────────────────────────────────────────────┘    │
-  └───────────────────────────┬──────────────────────────┘
-                              │ commit $/hour for 1yr/3yr
-                              ▼
-  ┌──────────────────────────────────────────────────────┐
-  │  Utilisation Dashboard (Cost Explorer)               │
-  │  Commitment covered usage ────────────►  savings     │
-  │  On-demand overspill ──────────────────►  full price │
-  │  Unused commitment ────────────────────►  wasted     │
-  └──────────────────────────────────────────────────────┘
 ```
 
 ## Overview

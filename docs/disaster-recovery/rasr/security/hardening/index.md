@@ -86,20 +86,6 @@ uemcli /sys/setting show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Firmware and Software Updates
-
-```bash
-# Check current array firmware version
-uemcli /sys/sw show -detail | grep -E "Version:|State:"
-
-# Verify update packages are validated (checksum check before apply)
-# Download from Dell EMC support portal; verify SHA-256 against published hash
-sha256sum downloaded-firmware.bin
-
-# Apply firmware (schedule during maintenance window; may cause brief I/O pause)
-uemcli /sys/sw upload -path /tmp/downloaded-firmware.bin
-uemcli /sys/sw upgrade
 ```
 
 ## iDRAC Hardening

@@ -5,8 +5,8 @@
 SMB Troubleshooting reference covering Overview, Access Denied Diagnostics, SMB1 Disabled Issues, Kerberos vs NTLM Authentication, Signing Mismatch and 1 more sections.
 </div>
 
-```text
         TRIAGE: CANNOT ACCESS SMB SHARE
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  1. ping / Test-NetConnection -Port 445 ── fail ─► firewall  │
 │          │ ok                                                │

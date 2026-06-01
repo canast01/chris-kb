@@ -44,28 +44,6 @@ flowchart LR
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Business Validation Checklist
-
-Business owners test against a defined scenario list. Scenarios must be agreed before the incident.
-
-| Scenario | System | Validation method |
-|---|---|---|
-| User login | Identity / App | Log in with IRE test account; confirm access |
-| Core transaction | ERP / Line of business app | Execute a test transaction end-to-end |
-| Report generation | BI / Reporting | Run key report; verify row counts within 5% of baseline |
-| File access | File server / SharePoint | Access and open a known file from the recovery point |
-| Email send/receive | Mail | Send test email from IRE mail relay; confirm delivery |
-| Critical data records | Database | Verify records present up to the chosen recovery point |
-
-```yaml
-Business validation sign-off form:
-  - System: ___________________
-  - Recovery point tested: ___________________
-  - Test scenarios passed: ___ / ___
-  - Data loss acceptable: Yes / No
-  - Approved by (app owner): ___________________
-  - Date/time: ___________________
 ```
 
 ## RTO / RPO Measurement

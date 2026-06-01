@@ -5,7 +5,7 @@
 Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation Checklist.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Dell COD Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -40,18 +40,6 @@ Standards reference covering COD License Naming, COD Inventory Tracking, Thresho
 │    Change ticket    = COD activation via formal change management; document before/after capacity     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## COD License Naming
-
-COD license files downloaded from the Dell License Portal should be stored with a consistent filename that identifies the array and the activation increment.
-
-Pattern: `cod-<array-sid>-<capacity-tib>tib-<date>.xml`
-
-Examples:
-
-```text
-cod-000123456789-50tib-20260115.xml
-cod-000987654321-100tib-20260301.xml
 ```
 
 Store license files in a secure, backed-up location — a secrets vault or a protected network share accessible only to storage admins. Lost license files require re-issuance from the Dell License Portal, which can cause delays during emergency activations.

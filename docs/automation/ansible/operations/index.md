@@ -6,7 +6,7 @@
 Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Ansible — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Ansible operations: running playbooks, managing inventory, AWX job templates, upgrades    │   │

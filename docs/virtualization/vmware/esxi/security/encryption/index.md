@@ -5,8 +5,8 @@
 ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encryption — Secure Boot and TPM, ESXi SSL/TLS Certificate Management, Encrypted vMotion and 1 more sections.
 </div>
 
-```text
 ESXi Encryption Stack
+```
 ┌─────────────────────────────────────────────────────────┐
 │  Key Provider                                           │
 │  ├── Native Key Provider (NKP) — vCenter-managed        │
@@ -31,6 +31,7 @@ ESXi Encryption Stack
 │  ├── UEFI Secure Boot — validates bootloader + VIBs     │
 │  └── TPM 2.0 — host attestation (vSphere 7.0+)          │
 └─────────────────────────────────────────────────────────┘
+```
   ESXi Host Certificate: /etc/vmware/ssl/rui.crt
   Managed by VMCA (vCenter CA) — auto-renewed
 ```
@@ -79,16 +80,6 @@ ESXi Encryption Stack
 │  Dedup        = deduplication; disabled when vSAN encryption is active                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-NKP backup is critical — if vCenter is lost without a NKP backup, all VMs encrypted with that provider become unrecoverable.
-
-## Encrypt a VM
-
-```powershell
-# PowerCLI — encrypt an existing VM
-$vm = Get-VM "db-server-01"
-$policy = Get-SpbmStoragePolicy -Name "VM Encryption Policy"
-Set-VM -VM $vm -StoragePolicy $policy -Confirm:$false
 ```
 
 The VM must be powered off or in a compatible state. Encryption processes each VMDK in-place.

@@ -82,24 +82,6 @@ graph LR
 │  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Outbound REST (ServiceNow calls external)
-
-Configured via **System Web Services > Outbound > REST Message**. Each REST Message defines:
-- Base URL and authentication (Basic, OAuth 2.0, API Key header)
-- HTTP methods (GET / POST / PUT / PATCH / DELETE)
-- Variable substitution in URL and body
-- MID Server routing (for on-prem targets)
-
-Business Rules, Flow Designer steps, or Script Includes invoke the message:
-
-```javascript
-// Server-side script
-var rm = new sn_ws.RESTMessageV2('PagerDuty_Create_Incident', 'post');
-rm.setStringParameterNoEscape('routing_key', gs.getProperty('pd.routing.key'));
-rm.setStringParameterNoEscape('payload', JSON.stringify(pdPayload));
-var response = rm.execute();
-gs.log('PD response: ' + response.getStatusCode());
 ```
 
 ---

@@ -63,29 +63,6 @@ flowchart LR
 │    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Veeam GFS Retention (GUI-equivalent settings reference)
-
-| GFS Level | Keep | Trigger |
-|---|---|---|
-| Weekly (father) | 4 restore points | Last successful backup of the week |
-| Monthly (grandfather) | 12 restore points | Last successful backup of the month |
-| Yearly (great-grandfather) | 5 restore points | Last successful backup of January |
-
-### Commvault — Storage Policy Retention Rules
-
-```text
-CommCell Console → Storage Policy → Right-click Copy → Properties → Retention:
-
-Primary Copy (Hot):
-  Basic Retention:       30 days
-  Extended Retention:    Weekly — keep for 4 weeks
-                         Monthly — keep for 12 months
-                         Yearly — keep for 5 years
-
-Auxiliary Copy (Cold — tape or object):
-  Basic Retention:       1 year
-  Extended Retention:    Yearly — keep for 7 years (financial/regulated clients)
 ```
 
 ---

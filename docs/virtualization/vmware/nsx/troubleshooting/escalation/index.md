@@ -123,16 +123,6 @@ curl -sk -u 'admin:password' \
 │  Config export = API GET of all NSX config; provides GSS full picture                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### ESXi Host DFW Logs
-
-For DFW-related issues, collect from the affected ESXi host:
-
-```bash
-# SSH to ESXi host
-vm-support -n -w /tmp/
-# Copy bundle to accessible location
-cp /tmp/esx-*.tgz /vmfs/volumes/<datastore>/support/
 ```
 
 Key files within the ESXi support bundle for NSX:

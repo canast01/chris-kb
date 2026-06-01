@@ -90,13 +90,6 @@ Settings → SSL Certificate → Upload Certificate
 │  openssl s_client    = CLI tool to verify TLS version and cipher negotiated                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Verify Certificate Expiry
-
-```bash
-echo | openssl s_client -connect vrni.example.local:443 -servername vrni.example.local 2>/dev/null \
-  | openssl x509 -noout -dates
-# notBefore= and notAfter= lines show validity window
 ```
 
 ---

@@ -87,18 +87,6 @@ VSAN UPGRADE SEQUENCE (host-by-host rolling)
 │  Disk group    = logical container of cache + capacity disks per host                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Pre-upgrade checks:**
-
-```bash
-# Verify cluster health (from any ESXi host in the cluster)
-esxcli vsan health cluster list
-
-# Check for degraded objects
-esxcli vsan debug object list | grep -i degraded
-
-# Verify resync queue is empty
-esxcli vsan debug resync summary
 ```
 
 All health checks must pass before beginning an upgrade. Resolve any degraded objects or active resyncs before proceeding.

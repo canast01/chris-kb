@@ -75,28 +75,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
 │  Slack webhook = POST alert summary to Slack channel incoming webhook URL                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Active Alert Export
-
-```python
-def export_alerts(token: str, output_file: str):
-    """Export all active alerts to CSV."""
-    data = pure1_get("/alerts", token, params={"filter": "state='open'"})
-    alerts = data.get("items", [])
-    with open(output_file, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "id", "summary", "severity", "array_name", "created"
-        ])
-        writer.writeheader()
-        for a in alerts:
-            writer.writerow({
-                "id":         a["id"],
-                "summary":    a.get("summary"),
-                "severity":   a.get("severity"),
-                "array_name": a.get("arrays", [{}])[0].get("name", "unknown"),
-                "created":    a.get("created")
-            })
-    print(f"Exported {len(alerts)} alerts to {output_file}")
 ```
 
 ## Pure1 Meta Anomaly Query

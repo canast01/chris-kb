@@ -112,24 +112,6 @@ flowchart TD
 │   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Send-MailMessage and Email Reports
-
-```powershell
-# Send a report by email (PowerShell 5.1 — deprecated but still functional)
-$mailParams = @{
-    To         = 'ops-team@example.com'
-    From       = 'automation@example.com'
-    Subject    = "Daily Server Report - $(Get-Date -Format 'yyyy-MM-dd')"
-    Body       = (Get-Content C:\Reports\server-report.html -Raw)
-    BodyAsHtml = $true
-    SmtpServer = 'smtp.example.com'
-    Port       = 587
-    Credential = (Get-Credential)
-    UseSsl     = $true
-    Attachments = 'C:\Reports\services.csv'
-}
-Send-MailMessage @mailParams
 ```
 
 ### Scheduled Tasks for Automated Reports

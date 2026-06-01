@@ -62,25 +62,6 @@ flowchart LR
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Failover
-
-Eyeglass-managed failover delegates SyncIQ policy operations and DNS updates to the appliance. Run failover from the UI when possible; CLI is for automation.
-
-```bash
-# List available failover jobs
-igls failover list
-
-# Run a failover job
-igls failover run --job <job_name>
-
-# Check failover job status
-igls failover status --job <job_name>
-
-# Cancel an in-progress failover
-igls failover cancel --job <job_name>
 ```
 
 ---

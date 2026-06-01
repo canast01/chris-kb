@@ -5,8 +5,8 @@
 ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi Syslog and Event Collector (Python), NTP Configuration Audit (Bash), Ansible ESXi Configuration Playbook, Windows: ESXi Host Health via REST API (PowerShell) and 1 more sections.
 </div>
 
-```text
 ESXi Automation Scripts — Tool Selection
+```
 ┌───────────────────────────────────────────────────────┐
 │  Task                         Recommended Tool        │
 │  ─────────────────────────────────────────────────    │
@@ -19,8 +19,10 @@ ESXi Automation Scripts — Tool Selection
 │  REST API health (no module)  PowerShell Invoke-REST   │
 │  SSH-based ad-hoc checks      Plink / CMD batch (.bat) │
 └───────────────────────────────────────────────────────┘
+```
 
 Script Execution Flow (PowerCLI example)
+```
 ┌─────────────────────────────────────────────────────┐
 │  Admin workstation (Windows / PowerShell)             │
 │  └── Connect-VIServer → vCenter                       │
@@ -79,12 +81,6 @@ Script Execution Flow (PowerCLI example)
 │  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 5 — Run it**
-
-```bash
-cd C:\Users\YourName\Desktop
-.\esxi_host_health.ps1
 ```
 
 ---

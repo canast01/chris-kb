@@ -4,7 +4,7 @@
 Event-driven CI/CD platform embedded in GitHub repositories; workflows defined in YAML trigger on push, PR, schedule, or API call; jobs run in parallel on hosted or self-hosted runners; artifacts and outputs bridge job data.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── GitHub Actions — Architecture ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     GitHub Actions architecture: GitHub.com hosts the control plane; runners execute jobs     │   │

@@ -108,37 +108,6 @@ graph LR
 │   │     pre_tasks     = tasks that run before roles in a play; use for health checks and drain    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Loops and Conditionals
-
-```yaml
-tasks:
-  - name: Install required packages
-    ansible.builtin.apt:
-      name: "{{ item }}"
-      state: present
-    loop:
-      - git
-      - curl
-      - unzip
-
-  - name: Create app users
-    ansible.builtin.user:
-      name: "{{ item.name }}"
-      groups: "{{ item.groups }}"
-    loop:
-      - { name: appuser, groups: www-data }
-      - { name: deploy,  groups: sudo }
-
-  - name: Only restart on RedHat
-    ansible.builtin.service:
-      name: httpd
-      state: restarted
-    when: ansible_os_family == "RedHat"
-
-  - name: Skip if already done
-    ansible.builtin.command: /opt/setup.sh
-    when: not setup_done | default(false)
 ```
 
 ### Tags

@@ -82,35 +82,6 @@ DIAGNOSTIC TOOL CHAIN
 │  SMART         = disk self-test; pre-failure indicator                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Log Locations
-
-| Log | Location | Contents |
-|---|---|---|
-| VMkernel | `/var/log/vmkernel.log` | ESXi kernel messages — disk I/O errors, NIC errors, vSAN module messages |
-| vSAN management | `/var/log/vsanmgmt.log` | vSAN management plane — health checks, policy changes |
-| CLOM | `/var/log/clomd.log` | Cluster Level Object Manager — placement decisions, resync triggers |
-| CMMDS | `/var/log/cmmdsd.log` | Cluster monitoring, membership, and directory service — host join/leave events |
-| LSOM | `/var/log/vsand.log` | Local Storage Object Manager — on-disk I/O, disk group events |
-| VOBD | `/var/log/vobd.log` | vSphere Object-Based Datastore — datastore events |
-| Hostd | `/var/log/hostd.log` | Host daemon — vCenter-to-host API, task execution |
-| vSAN DDP | `/var/log/vsan-dp.log` | Data protection and IO stats |
-| ESXi syslog | `/var/log/syslog.log` | General syslog — includes vsand and clomd messages |
-
-**Useful grep patterns:**
-
-```bash
-# Disk errors in vmkernel log
-grep -i "scsi\|disk\|naa\|devio\|abort" /var/log/vmkernel.log | grep -i "err\|fail\|warn" | tail -50
-
-# vSAN object events (CLOM decisions)
-grep -i "resync\|rebuild\|absent\|degrade" /var/log/clomd.log | tail -50
-
-# CMMDS membership changes (hosts joining/leaving)
-grep -i "member\|join\|leave\|partition" /var/log/cmmdsd.log | tail -30
-
-# vSAN management health events
-grep -i "fail\|warn\|error" /var/log/vsanmgmt.log | tail -50
 ```
 
 ---

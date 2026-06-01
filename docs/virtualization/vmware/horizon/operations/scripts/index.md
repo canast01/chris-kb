@@ -5,8 +5,8 @@
 Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected Sessions Older Than N Hours, Get All Desktops in Error State, Rebalance Instant Clone Pool, Export Entitlement Report and 3 more sections.
 </div>
 
-```text
   Automation via PowerCLI / REST API
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Connect-HVServer ──► token/session                      │
 │                                                          │
@@ -71,17 +71,6 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 │  Licence /usage    = REST endpoint for licence consumption reporting                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Get Session Count by Pool
-
-```powershell
-Get-HVLocalSession |
-  Group-Object { $_.NamesData.DesktopPoolCN } |
-  Select-Object Name, Count |
-  Sort-Object Count -Descending |
-  Format-Table -AutoSize
 ```
 
 ---

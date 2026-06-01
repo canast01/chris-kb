@@ -93,38 +93,6 @@ sannav restart
 │  Audit log CSV   = exported SANnav user action log; shared during security review                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Attach this bundle to the Broadcom support case.
-
----
-
-## Database Diagnostics
-
-### Check PostgreSQL Health
-
-```bash
-ssh admin@sannav-dc1.corp.example.com
-
-# Connect to PostgreSQL
-sudo -u postgres psql sannav
-
-# Check table sizes (identify if a table is growing unexpectedly)
-SELECT relname AS table, pg_size_pretty(pg_relation_size(relid)) AS size
-FROM pg_catalog.pg_statio_user_tables
-ORDER BY pg_relation_size(relid) DESC
-LIMIT 20;
-
-# Check active connections
-SELECT count(*) FROM pg_stat_activity WHERE state = 'active';
-
-# Check for long-running queries
-SELECT pid, now() - pg_stat_activity.query_start AS duration, query
-FROM pg_stat_activity
-WHERE (now() - pg_stat_activity.query_start) > interval '5 minutes'
-AND state = 'active';
-
-# Exit psql
-\q
 ```
 
 ### Check InfluxDB Health (SAN Analytics)

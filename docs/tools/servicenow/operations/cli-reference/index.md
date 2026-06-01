@@ -55,12 +55,6 @@ export PASS="your-password"
 │  PATCH            = HTTP method for partial record update by sys_id                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Get a single record by sys_id
-curl -s -u "$USER:$PASS" \
-  "$INSTANCE/api/now/table/incident/abc123def456abc123def456abc12345" \
-  -H "Accept: application/json" | jq '.result | {number, short_description, state}'
 ```
 
 **Common `sysparm_` parameters:**

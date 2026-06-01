@@ -85,21 +85,6 @@ flowchart TD
 │  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Enable BitLocker on OS Drive with TPM + PIN
-
-```powershell
-# Add a startup PIN protector (requires TPM + PIN policy in GPO)
-Add-BitLockerKeyProtector -MountPoint "C:" -TpmAndPinProtector -Pin (Read-Host "Enter PIN" -AsSecureString)
-
-# Add a recovery password protector (MUST add before enabling)
-Add-BitLockerKeyProtector -MountPoint "C:" -RecoveryPasswordProtector
-
-# Enable BitLocker encryption
-Enable-BitLocker -MountPoint "C:" -EncryptionMethod XtsAes256 -UsedSpaceOnly
-
-# Check encryption progress
-Get-BitLockerVolume -MountPoint "C:" | Select-Object VolumeStatus, EncryptionPercentage
 ```
 
 ### Enable BitLocker on Data Drives

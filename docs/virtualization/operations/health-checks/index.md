@@ -69,36 +69,6 @@ Health Check Flows
 │    Alarm      = vCenter triggered alert; P1=red critical, P2=yellow warning, P3=info                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```text
-┌──────────────────────────────────── Virtualization Health Checks ─────────────────────────────────────┐
-│                                                                                                       │
-│    Structured checks across daily operations, capacity planning, and change management                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Daily (~15 min)       │  │      Capacity (weekly)      │  │      Pre / Post Change      │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        vCenter alarms       │  │       CPU < 70% target      │  │        Alarms cleared       │   │
-│   │      Host connectivity      │  │       RAM balloon = 0       │  │         vSAN healthy        │   │
-│   │         vSAN health         │  │        Storage < 80%        │  │       Snapshots clear       │   │
-│   │       Datastore space       │  │       Growth trend OK       │  │      Backups confirmed      │   │
-│   │        VM state check       │  │       Forecast 90 days      │  │        HA/DRS active        │   │
-│   │        Backup status        │  │       Licence headroom      │  │      App owner sign-off     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    HA         = High Availability; restarts VMs on surviving hosts when a host fails                  │
-│    DRS        = Distributed Resource Scheduler; balances VM load across cluster hosts                 │
-│    vSAN       = VMware hyper-converged storage; health = no resync, no degraded objects               │
-│    Balloon    = VMware memory reclaim driver; non-zero = host under memory pressure                   │
-│    Swap       = VM disk-based memory swap; non-zero = critical memory shortage on host                │
-│    Datastore  = Storage volume presented to ESXi; monitor used % and provisioning ratio               │
-│    VAMI       = vCenter Appliance Management Interface; port 5480; cert and patch mgmt                │
-│    Alarm      = vCenter triggered alert; P1=red critical, P2=yellow warning, P3=info                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 <div class="kb-grid kb-grid-3">
 

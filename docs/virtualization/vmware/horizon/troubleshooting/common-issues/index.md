@@ -5,7 +5,7 @@
 Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop Sources Available", Black Screen After Login, Slow Login, UAG Shows Disconnected from Connection Server and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon issues: black screen, pool provisioning failure, Connection Server                    │
@@ -51,31 +51,6 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 │  1–5Mbps/user  = Blast bandwidth per session; plan WAN accordingly                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-  Triage Decision Tree
-┌─────────────────────────────────────────────────────────────┐
-│  Login issue?          Blank screen?       Slow login?       │
-│  ┌──────────┐          ┌──────────┐        ┌──────────┐      │
-│  │ No deskt.│          │ Agent    │        │ DEM migr.│      │
-│  │ sources  │          │ running? │        │ AppStack │      │
-│  │   │      │          │   │      │        │ AV scan  │      │
-│  │   ▼      │          │   ▼      │        └──────────┘      │
-│  │Entitlemnt│          │ Blast/   │                          │
-│  │ missing? │          │ PCoIP    │        UAG disconnected? │
-│  │Pool full?│          │ port ok? │        ┌──────────┐      │
-│  │Desktops  │          │ vGPU     │        │ CS cert  │      │
-│  │in ERROR? │          │ driver?  │        │ thumbprt │      │
-│  └──────────┘          └──────────┘        │ mismatch │      │
-│                                            │ TCP 443  │      │
-│  AppStack fails?                           │ UAG→CS?  │      │
-│  ┌──────────┐                             └──────────┘      │
-│  │ AVM reach│                                                │
-│  │ able?    │                                                │
-│  │ VMDK     │                                                │
-│  │ attached?│                                                │
-│  └──────────┘                                                │
-└─────────────────────────────────────────────────────────────┘
 ```
 
 ---

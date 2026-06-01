@@ -121,42 +121,6 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 │  SNMPv3 auth     = SNMP v3 authentication (SHA); privacy (AES) for polling                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 6. TLS Certificate Management
-
-Replace the default self-signed DCNM certificate:
-
-```bash
-ssh root@dcnm-dc1.corp.example.com
-
-# Generate CSR
-openssl req -new -newkey rsa:4096 -nodes \
-  -keyout /tmp/dcnm.key \
-  -out /tmp/dcnm.csr \
-  -subj "/CN=dcnm-dc1.corp.example.com/O=Corp/C=AU" \
-  -addext "subjectAltName=DNS:dcnm-dc1.corp.example.com"
-
-# After CA signs and returns dcnm.crt:
-
-# Import into DCNM keystore
-openssl pkcs12 -export -in dcnm.crt -inkey /tmp/dcnm.key \
-  -certfile intermediate-ca.crt \
-  -name "dcnm" -out /tmp/dcnm.p12 -passout pass:changeit
-
-keytool -importkeystore \
-  -srckeystore /tmp/dcnm.p12 -srcstoretype pkcs12 -srcstorepass changeit \
-  -destkeystore /usr/local/cisco/dcm/dcnm/conf/.dcnmkeystore \
-  -deststoretype jks -deststorepass <keystore-password> \
-  -alias dcnm -noprompt
-
-# Restart DCNM to serve new certificate
-/usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
-
-# Verify new certificate
-openssl s_client -connect dcnm-dc1.corp.example.com:443 </dev/null 2>/dev/null \
-  | openssl x509 -noout -subject -dates
 ```
 ---
 

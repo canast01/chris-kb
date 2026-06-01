@@ -46,40 +46,6 @@ flowchart TD
 │   │     concurrent.futures = ThreadPoolExecutor / ProcessPoolExecutor; simpler parallelism API    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Script Execution Models
-
-```python
-#!/usr/bin/env python3
-import argparse
-import sys
-import logging
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("widget_name")
-    parser.add_argument("--env", choices=["dev", "staging", "prod"], default="dev")
-    parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("-v", "--verbose", action="store_true")
-    return parser.parse_args()
-
-def main() -> int:
-    args = parse_args()
-    logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
-        format="%(asctime)s %(levelname)s %(message)s",
-    )
-    log = logging.getLogger(__name__)
-    log.info("Deploying widget %s to %s", args.widget_name, args.env)
-    if args.dry_run:
-        log.info("Dry run — no changes applied")
-        return 0
-    return 0
-
-if __name__ == "__main__":
-    sys.exit(main())
 ```
 
 ---

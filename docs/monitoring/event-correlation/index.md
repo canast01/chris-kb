@@ -5,7 +5,7 @@
 Event Correlation reference covering Correlation Workflow, Building a Correlation Timeline, Common Correlation Patterns, SIEM Correlation Rules (Examples), Dependency Map (template) and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Monitoring — Event Correlation ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,24 +48,6 @@ Event Correlation reference covering Correlation Workflow, Building a Correlatio
 │  Suppression        = Silencing child alerts once a parent incident is open                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Correlation Workflow
-
-1. **Collect timeline** — gather events from all affected systems within the suspected window (use UTC timestamps)
-2. **Identify common start time** — when did the first alert fire?
-3. **Map dependencies** — which systems feed into each other?
-4. **Narrow to single root cause** — storage, network, or compute failure?
-5. **Confirm by elimination** — does resolving the root cause clear all downstream alerts?
-
-## Building a Correlation Timeline
-
-```bash
-# Linux — extract events from a specific window across log files
-journalctl --since "2026-05-05 14:00:00" --until "2026-05-05 14:30:00" -p err --no-pager
-
-# Grep multiple log files for a time window
-grep "May  5 14:0[0-9]" /var/log/messages /var/log/syslog /var/log/nginx/error.log
 ```
 
 ## Common Correlation Patterns

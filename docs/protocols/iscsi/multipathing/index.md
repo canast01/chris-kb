@@ -5,8 +5,8 @@
 iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.
 </div>
 
-```text
         iSCSI MULTIPATH TOPOLOGY
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │   HOST                                                          │
 │   ┌──────────┐   path 1    ┌──────────┐        ┌─────────────┐ │

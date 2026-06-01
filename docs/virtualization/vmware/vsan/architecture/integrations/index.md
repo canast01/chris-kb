@@ -42,7 +42,6 @@ vSAN INTEGRATION MAP
   │  host, IP pool req.   │   │                      │
   └───────────────────────┘   └──────────────────────┘
 ```
-```text
 ┌───────────────────────────────────────── vSAN — Integrations ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN integrates with vCenter for management, NSX for micro-segmentation,                             │

@@ -75,11 +75,6 @@
 │    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Windows:**
-```powershell
-Get-Service <service>
-Get-EventLog -LogName Application -Source <service> -Newest 20
 ```
 
 **Stop here if** logs show a configuration error or missing dependency — fix the root cause before restarting, otherwise the service will fail again immediately.

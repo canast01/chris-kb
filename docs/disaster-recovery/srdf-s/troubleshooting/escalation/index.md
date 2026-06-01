@@ -5,7 +5,7 @@
 Escalation reference covering Required Information for Support Request, Support Tiers, When to Escalate.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRDF/S — Escalation ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -194,11 +194,6 @@ RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 │    Error handling   = Catch HTTP 4xx/5xx; retry with backoff; log to syslog on persistent failure     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 6 — Run the rollback when finished (resumes replication)**
-
-```text
-RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword CG_NAME="MyAppCG" ./rp-dr-test-failover.sh --rollback
 ```
 
 **What you should see**

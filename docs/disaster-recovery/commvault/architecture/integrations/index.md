@@ -5,7 +5,7 @@
 Commvault — Integrations reference.
 </div>
 
-```text
+```
 ┌──────────────────────── Commvault Integrations — Platforms, Arrays, and Cloud ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

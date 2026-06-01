@@ -4,7 +4,7 @@
 Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DFW failure patterns, diagnostic commands, log collection, and escalation procedures.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── NSX — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

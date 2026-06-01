@@ -52,16 +52,6 @@ Sizing guidelines, design standards, and best practices.
 │  XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Authentication
-
-```bash
-# SSH key-based authentication only
-# /etc/ssh/sshd_config enforced via Ansible
-PasswordAuthentication no
-PermitRootLogin no
-ChallengeResponseAuthentication no
-PubkeyAuthentication yes
 ```
 
 Sudo access granted via AD group membership:

@@ -5,7 +5,7 @@
 AWS AWS Config reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── AWS Governance — AWS Config ─────────────────────────────────────┐
 │                                                                                                       │
 │  Config records resource inventory, tracks changes, and evaluates compliance rules.                   │
@@ -51,38 +51,6 @@ AWS AWS Config reference covering Overview, Where It Fits, Daily Checks, Health 
 │  Exception       = Suppresses a specific NonCompliant finding for a known reason                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-AWS Config: Resource Recording → Rules → Compliance
-──────────────────────────────────────────────────────────────
-
-  ┌────────────────────────────────────────────────────┐
-  │  AWS Resources (EC2, S3, RDS, IAM, SGs, ...)       │
-  │  Config Change occurs                               │
-  └───────────────────────┬────────────────────────────┘
-                          │ recorded
-                          ▼
-  ┌────────────────────────────────────────────────────┐
-  │  Configuration Recorder                            │
-  │  Stores resource config snapshot to S3             │
-  │  Sends to Config delivery channel                  │
-  └───────────────────────┬────────────────────────────┘
-                          │ evaluated against
-                          ▼
-  ┌────────────────────────────────────────────────────┐
-  │  Config Rules (managed or custom Lambda)           │
-  │  s3-bucket-public-read-prohibited                  │
-  │  encrypted-volumes                                 │
-  │  root-account-mfa-enabled                         │
-  └───────────────────────┬────────────────────────────┘
-                          │
-              ┌───────────┴────────────┐
-              ▼                        ▼
-  ┌─────────────────────┐   ┌──────────────────────────┐
-  │  COMPLIANT          │   │  NON_COMPLIANT           │
-  │  (no action)        │   │  → SSM Remediation or    │
-  │                     │   │    Security Hub finding  │
-  └─────────────────────┘   └──────────────────────────┘
 ```
 
 ## Overview

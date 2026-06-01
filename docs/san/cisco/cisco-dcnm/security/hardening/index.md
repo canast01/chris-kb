@@ -73,29 +73,6 @@ usermod -L dcnm   # lock (disable password login)
 │  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 3. SSH Hardening
-
-```bash
-vi /etc/ssh/sshd_config
-
-# Apply:
-Protocol 2
-PermitRootLogin no        # use sudo from a non-root account
-PasswordAuthentication yes
-PubkeyAuthentication yes
-PermitEmptyPasswords no
-MaxAuthTries 3
-LoginGraceTime 30
-ClientAliveInterval 300
-ClientAliveCountMax 2
-X11Forwarding no
-AllowTcpForwarding no
-Banner /etc/issue.net
-
-systemctl restart sshd
 ```
 
 Configure SSH login banner:

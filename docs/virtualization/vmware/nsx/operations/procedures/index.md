@@ -82,14 +82,6 @@ curl -sk -u 'admin:password' \
 │  CR          = Change Request; ITSM record authorising change                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 3 — Validate rule is published**
-
-```bash
-# Check rule hit count on source VM's ESXi host
-# SSH to the ESXi host running the source VM
-summarize-dvfilter | grep <source-vm-name>
-vsipioctl getstats -f <filter-name> | grep <rule-id>
 ```
 
 **Step 4 — Functional test**

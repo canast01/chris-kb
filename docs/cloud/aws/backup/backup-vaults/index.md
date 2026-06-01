@@ -5,7 +5,7 @@
 AWS Backup Vaults reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── AWS Backup — Backup Vaults ──────────────────────────────────────┐
 │                                                                                                       │
 │  Backup vaults store recovery points; secured with KMS, access policies, and vault lock.              │

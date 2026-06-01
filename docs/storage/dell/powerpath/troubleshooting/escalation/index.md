@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
 </div>
+```
+┌───────────────────────────────────── Dell PowerPath — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     PowerPath escalation: severity triage, vendor support contact, and required artifacts     │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Driver           │  │        powermt daemon       │  │           OS-level          │   │
+│   │            Paths            │  │        Active-active        │  │         ≥4 paths/LUN        │   │
+│   │            Policy           │  │        Adaptive/ALUA        │  │        Array-specific       │   │
+│   │           Failover          │  │         Auto reroute        │  │          <5 sec RTO         │   │
+│   │          Management         │  │           pp_mgmt           │  │         Centralised         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Host OS (Windows/Linux) · HBA or iSCSI NIC ports · FC/IP switches · Dell arrays          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerPath          = Dell multipath driver; manages multiple I/O paths to storage for HA/perform...│
+│    powermt            = CLI utility; powermt display, powermt check, powermt save are core commands   │
+│    Pseudo device      = virtual block device created by PowerPath aggregating physical I/O paths      │
+│    Path health        = alive or dead status per path; dead paths trigger automatic I/O failover      │
+│    Adaptive policy    = load-balancing that distributes I/O across all active paths evenly            │
+│    CLARiiON policy    = active/passive policy for older VNX/CLARiiON arrays (one active path)         │
+│    ALUA               = Asymmetric Logical Unit Access; array signals preferred vs. non-preferred p...│
+│    Trespass           = LUN ownership movement between SP-A and SP-B on Unity or VNX arrays           │
+│    Ghost path         = stale path entry in PowerPath no longer backed by a physical device           │
+│    powermt check      = validates all paths and refreshes device table; run after fabric changes      │
+│    pp_mgmt            = PowerPath Management Appliance; central monitoring for all PowerPath hosts    │
+│    License key        = host-based license required per server; applied via powermt config license    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Support Portal
 

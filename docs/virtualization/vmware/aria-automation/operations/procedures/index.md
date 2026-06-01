@@ -76,16 +76,6 @@ curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
 │  Service account   = vRA uses a service account to authenticate to AD, vCenter, and NSX               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Provide GitHub/GitLab URL, branch, and personal access token. Templates are then sync'd from the repository.
-
-Template naming convention:
-```bash
-<team>-<resource-type>-<os/platform>-<size>
-# Examples:
-platform-vm-rhel9-small
-app-vm-win2022-medium
-shared-k8s-namespace-standard
 ```
 
 ---

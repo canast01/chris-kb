@@ -4,7 +4,7 @@
 Commvault enterprise backup and recovery — CommServe command and control, MediaAgent data movement with deduplication, and multi-site storage library management.
 </div>
 
-```text
+```
 ┌────────────────────────── Commvault — Enterprise Backup and Data Management ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

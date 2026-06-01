@@ -92,42 +92,6 @@ curl -sk -u 'admin:password' \
 │  Session timeout = idle session expiry; configurable in NSX                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Store the new password in the organisation's secrets vault immediately after rotation.
-
----
-
-## LDAP / Active Directory Authentication
-
-LDAP integration allows AD users and groups to authenticate to NSX Manager using their domain credentials. This eliminates shared local passwords for day-to-day administration.
-
-### Configure LDAP Identity Source
-
-**System → Users and Roles → LDAP**
-
-Alternatively via API:
-
-```bash
-curl -sk -u 'admin:password' \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '{
-    "resource_type": "LdapIdentitySource",
-    "display_name": "corp-ad",
-    "ldap_type": "AD",
-    "domain_name": "corp.local",
-    "base_dn": "DC=corp,DC=local",
-    "alt_user_search_filter": "(objectClass=user)",
-    "ldap_server": [{
-      "bind_identity": "CN=nsxbind,OU=ServiceAccounts,DC=corp,DC=local",
-      "password": "SvcAcctPassword!",
-      "host": "10.0.0.10",
-      "port": 636,
-      "use_starttls": false,
-      "certificate": ""
-    }]
-  }' \
-  "https://<nsx-manager>/api/v1/aaa/ldap"
 ```
 
 Use LDAPS (port 636) in production. If using LDAP (port 389) with STARTTLS, set `"use_starttls": true` and provide the CA certificate.

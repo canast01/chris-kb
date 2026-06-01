@@ -5,8 +5,8 @@
 Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, Bulk Locker Password Export (Alias List), NTP Validation Across All Product Nodes, Trigger Upgrade via API (Non-Interactive).
 </div>
 
-```text
   LCM Automation Scripts
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Script                    Purpose                              │
 │  ┌──────────────────────────────────────────────────────────┐   │
@@ -69,36 +69,6 @@ Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, B
 │  CI/CD Integration   = Scripts run on schedule for drift detection and reporting                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Pre-Upgrade Disk Check
-
-Run on the LCM appliance as root before any upgrade workflow.
-
-```bash
-#!/usr/bin/env bash
-# Run on LCM appliance as root before any upgrade
-THRESHOLD=80
-ALL_OK=true
-
-for mount in / /data /tmp /var/log; do
-  if mountpoint -q "$mount"; then
-    used=$(df -h "$mount" | awk 'NR==2{print $5}' | tr -d '%')
-    echo "$mount: ${used}% used"
-    if [[ $used -ge $THRESHOLD ]]; then
-      echo "  WARNING: $mount exceeds ${THRESHOLD}% — free space before upgrading"
-      ALL_OK=false
-    fi
-  fi
-done
-
-if $ALL_OK; then
-  echo "PASS: All filesystems within threshold"
-else
-  echo "FAIL: Disk space check failed — do not proceed with upgrade"
-  exit 1
-fi
 ```
 
 ---

@@ -151,23 +151,6 @@ ssh root@dcnm-dc1-standby.corp.example.com
 │  NTP             = Network Time Protocol; timestamps required for event correlation                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Post-Upgrade Validation
-
-```bash
-# Verify services
-/usr/local/cisco/dcm/dcnm/sbin/dcnm-server status
-
-# Check discovery connectivity
-# GUI: SAN > Fabrics — all switches should reconnect within 5 minutes
-
-# Check performance manager
-# GUI: Monitor > Performance — data should resume within 10 minutes
-
-# Verify event processing
-# GUI: Monitor > Alarms — confirm recent events are being received
-
-# Delete VM snapshot (taken pre-upgrade) after 48-hour validation
 ```
 
 ---

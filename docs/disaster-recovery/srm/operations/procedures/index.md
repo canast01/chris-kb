@@ -78,40 +78,6 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.
-
----
-
-## Test Failover (Non-Disruptive DR Drill)
-
-Test failover powers on recovered VMs in an isolated bubble network without disrupting production replication or the protected site.
-
-```mermaid
-sequenceDiagram
-    participant Admin
-    participant SRM as SRM Server
-    participant SRA as SRA / vSphere Rep
-    participant Storage as DR Storage
-    participant ESXI as Recovery ESXi
-
-    Admin->>SRM: Click Test on Recovery Plan
-    SRM->>SRM: Optional — replicate recent changes
-    SRM->>SRA: Create test snapshot / FlexClone of replica LUNs
-    SRA->>Storage: Snapshot replica volumes (non-disruptive)
-    Storage-->>SRA: Snapshot ready
-    SRM->>ESXI: Present snapshot datastores (read-only for production, R/W for test)
-    ESXI-->>SRM: Datastores accessible
-    SRM->>ESXI: Register VMs from snapshot datastores
-    SRM->>ESXI: Power on VMs in defined boot sequence (bubble network)
-    ESXI-->>SRM: VMs online
-    SRM->>SRM: Execute per-step delays and post-power-on scripts
-    SRM-->>Admin: Test running — validate services
-    Admin->>SRM: Click Cleanup
-    SRM->>ESXI: Power off test VMs
-    SRM->>SRA: Remove test snapshot / FlexClone
-    SRA->>Storage: Delete snapshot
-    SRM-->>Admin: Test cleanup complete; generate test report
 ```
 
 ### Test Failover Procedure

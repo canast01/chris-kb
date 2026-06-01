@@ -5,7 +5,7 @@
 CloudIQ: Alert Types, Severity, and Notification Configuration reference covering Notification Configuration, Dismissing and Acknowledging Alerts, Common Alert Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────────────── CloudIQ — Alerts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,46 +36,6 @@ CloudIQ: Alert Types, Severity, and Notification Configuration reference coverin
 │  Severity = Alert priority: Critical, Warning, Informational                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Notification Configuration
-
-CloudIQ sends alert notifications via email. Configure recipients at the tenant level.
-
-Navigation: **CloudIQ > Settings > Notifications**
-
-Steps to configure email alerts:
-1. Go to **Settings > Notifications > Alert Notifications**.
-2. Click **+ Add Recipient**.
-3. Enter email address and select severity threshold.
-4. Choose specific systems or **All Systems**.
-5. Save and send a test notification.
-
-| Option | Description |
-|---|---|
-| Severity Threshold | Minimum severity that triggers an email |
-| System Scope | All systems, or specific registered systems |
-| Digest vs Immediate | Send each alert individually or in a daily digest |
-| Test Notification | Sends a synthetic alert to verify delivery |
-
-## Dismissing and Acknowledging Alerts
-
-Alerts can be dismissed when the issue is known and accepted, or acknowledged to indicate someone is investigating.
-
-```bash
-# Acknowledge an alert via API
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/<alertId>/acknowledge" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Investigating - ticket INC0012345"}'
-
-# Dismiss an alert
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/alerts/<alertId>/dismiss" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Accepted risk - hardware replacement scheduled"}'
 ```
 
 ## Common Alert Issues

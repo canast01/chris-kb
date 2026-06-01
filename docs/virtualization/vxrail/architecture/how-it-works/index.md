@@ -5,12 +5,13 @@
 How It Works reference covering Overview, HCI Node Cluster, Cluster Topology, Node Components, VMkernel Network Design and 3 more sections.
 </div>
 
-```text
 VxRail LCM Flow — How It Works
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  VxRail Manager (VM on cluster)                             │
 │  LCM Engine · vCenter plugin · REST API · Health monitor    │
 └───────────────┬─────────────────────────────────────────────┘
+```
                 │ orchestrates
     ┌───────────▼──────────────────────────────────────┐
     │  vSAN (built on top of ESXi node storage)         │

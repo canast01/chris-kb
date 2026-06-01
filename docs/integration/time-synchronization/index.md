@@ -55,10 +55,6 @@ chronyc tracking | grep -E "offset|frequency|drift"
 │    w32tm        = Windows NTP tool; /query /status shows source, stratum, offset                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-systemctl enable --now chronyd
-chronyc waitsync 10  # wait up to 10 polls for sync
 ```
 
 ## ntpd (Legacy)

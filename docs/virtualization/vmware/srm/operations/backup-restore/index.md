@@ -5,8 +5,8 @@
 Backup and Restore reference covering Backup Schedule Recommendation, SRM Configuration Export (Migration / Documentation), vSphere Replication Appliance Backup, Recovery Plan PDF Export, SRM Database Considerations and 2 more sections.
 </div>
 
-```text
   SRM Backup Sources
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  vCenter VCSA Backup (covers most SRM config)                │
 │  ┌──────────────────────────────────────────────────────┐    │
@@ -72,43 +72,6 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │  VADP backup   = standard VM backup; required for SRM Server VM                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Backup parts that include SRM data:**
-
-| Part | Contents |
-|---|---|
-| `seat` | vCenter inventory service — includes SRM extension data (Protection Groups, Recovery Plans) |
-| `common` | vCenter Postgres database — core vCenter inventory |
-
-Both `seat` and `common` must be included in every vCenter backup for complete SRM recovery.
-
-## Backup Schedule Recommendation
-
-| Component | Frequency | Retention |
-|---|---|---|
-| vCenter VCSA (includes SRM config) | Daily | 14 days minimum |
-| SRM appliance snapshot | Weekly | 2 snapshots |
-| VR appliance snapshot | Weekly | 2 snapshots |
-| Recovery Plan PDF export | After each change | Stored in documentation system |
-
----
-
-## SRM Configuration Export (Migration / Documentation)
-
-SRM provides a config export utility useful when migrating SRM to a new server or documenting current state.
-
-### Export via SRM Appliance CLI
-
-```bash
-ssh root@srm-appliance.example.com
-
-# Run the SRM configuration export tool
-/usr/lib/vmware-dr/bin/vmware-dr-configure --action exportConfig \
-  --outputFile /tmp/srm-config-export.xml
-
-# Copy the export off the appliance
-scp root@srm-appliance.example.com:/tmp/srm-config-export.xml \
-  /backup/srm/srm-config-$(date +%Y%m%d).xml
 ```
 
 The exported XML contains:

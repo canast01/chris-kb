@@ -5,8 +5,8 @@
 Common Issues reference covering Common Issues, Technical Deep Dive.
 </div>
 
-```text
 VCF Common Failure Points — Quick Reference
+```
 ┌─────────────────────────────────────────────────────┐
 │  Symptom                 → Primary Check            │
 ├─────────────────────────────────────────────────────┤
@@ -80,102 +80,6 @@ VCF Common Failure Points — Quick Reference
 │  Cert expiry   = check SDDC Mgr Certificates tab; renew >30d ahead                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Common Issues
-
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
-
-### Operational Tasks
-
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
-
----
-
-## Technical Deep Dive
-
-VMware Cloud Foundation provides an integrated private cloud stack using SDDC Manager to manage vSphere, vSAN, NSX, workload domains, lifecycle, and credentials.
-
-### Platform Role
-
-VMware Cloud Foundation provides an integrated private cloud stack using SDDC Manager to manage vSphere, vSAN, NSX, workload domains, lifecycle, and credentials.
-
-### Core Components
-
-- SDDC Manager
-- Management domain
-- Workload domains
-- vCenter
-- ESXi
-- vSAN
-- NSX
-- Lifecycle Manager
-- Password and certificate management
-- Bundle repository
-
-### Main Dependencies
-
-- DNS resolution
-- NTP/time sync
-- Authentication source
-- Management network
-- Storage access
-- Certificate trust
-- Monitoring
-- Backup/recovery process
-- Vendor support access
-
-### Ports and Protocols
-
-| Use | Protocol | Port |
-|-----|----------|------|
-| SDDC Manager UI/API | HTTPS | 443 |
-| vCenter | HTTPS | 443 |
-| NSX Manager | HTTPS | 443 |
-| ESXi host management | HTTPS | 443 |
-| DNS | TCP/UDP | 53 |
-| NTP | UDP | 123 |
-
-### Key Logs
-
-- SDDC Manager logs
-- Lifecycle operation logs
-- vCenter logs
-- NSX Manager logs
-- ESXi host logs
-- Bring-up logs
-
-### Health Checks
-
-- Confirm management access.
-- Review current alarms.
-- Review recent failed tasks.
-- Validate DNS and NTP.
-- Confirm certificate status.
-- Check service health.
-- Check capacity and performance.
-- Confirm monitoring data is current.
-- Review recent changes.
-
-### Useful Commands
-
-```bash
-systemctl status lcm
-systemctl status domainmanager
-systemctl status operationsmanager
-systemctl status commonsvcs
-df -h
-journalctl -xe
 ```
 
 ### Common Failure Points

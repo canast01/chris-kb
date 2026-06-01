@@ -5,8 +5,8 @@
 Encryption reference covering Importing a Signed Certificate into Locker, Verifying a Certificate Before Import, Applying a Certificate to a Product, Password Encryption in Locker, TLS Standards and 1 more sections.
 </div>
 
-```text
   LCM Encryption Coverage
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Locker (certificate + secret vault)                            │
 │  ┌─────────────────────────────────────────────────────────┐    │
@@ -72,34 +72,6 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 │  Self-Signed Default = Default cert; replace with CA-signed before production                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Fill in:
-- **Common Name**: product FQDN or VIP FQDN
-- **SANs**: all node FQDNs, VIP FQDN, and any short names required
-- **Key size**: 4096-bit RSA (minimum accepted: 2048-bit)
-- **Signature algorithm**: SHA-256
-
-**Via API:**
-
-```bash
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
-
-curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
-  -H "Content-Type: application/json" \
-  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates/csr" \
-  -d '{
-    "alias": "vrops-prod-2027",
-    "commonName": "vrops-prod.example.local",
-    "orgUnit": "IT Platform",
-    "org": "Acme Corp",
-    "locality": "London",
-    "state": "England",
-    "country": "GB",
-    "keySize": 4096,
-    "sans": ["vrops-prod-01.example.local","vrops-prod-02.example.local","vrops-prod.example.local"]
-  }' | jq '.'
 ```
 
 Submit the generated CSR to the CA. Retrieve the signed certificate chain (leaf + intermediates + root) in PEM format.

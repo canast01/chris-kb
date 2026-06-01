@@ -5,7 +5,7 @@
 AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── AWS Cost — Cost Explorer ───────────────────────────────────────┐
 │                                                                                                       │
 │  Cost Explorer visualises and analyses AWS spend with filtering, grouping, and forecasts.             │
@@ -51,31 +51,6 @@ AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, 
 │  CUR             = Cost and Usage Report; raw billing data backing Explorer                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Cost Explorer: Usage Graph → Filter → Forecast
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  Usage / Spend Graph (monthly bars)                  │
-  │  Jan  Feb  Mar  Apr  May ...                         │
-  │  ███  ███  ████ ███  ████                            │
-  └───────────────────┬──────────────────────────────────┘
-                      │ apply filters
-          ┌───────────┼──────────────────┐
-          ▼           ▼                  ▼
-  ┌─────────────┐ ┌─────────────┐ ┌────────────────┐
-  │ Filter by   │ │ Filter by   │ │ Filter by      │
-  │ Service     │ │ Account     │ │ Tag            │
-  │ EC2 / RDS   │ │ Linked acct │ │ env=prod       │
-  └─────────────┘ └─────────────┘ └────────────────┘
-                      │
-                      ▼
-  ┌──────────────────────────────────────────────────────┐
-  │  Forecast (28/91 day projection)                     │
-  │  Based on trend line + seasonality                   │
-  │  Confidence interval shown                           │
-  └──────────────────────────────────────────────────────┘
 ```
 
 ## Overview

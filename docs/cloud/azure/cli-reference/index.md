@@ -7,7 +7,7 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
 
-```text
+```
 ┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,43 +62,6 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 │  az find          = AI-powered CLI helper; suggests relevant commands for a given scenario            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Virtual Machines
-
-Create, list, start, stop, and manage Azure VMs. `az vm deallocate` stops the VM and releases the compute allocation (billing stops for compute). `az vm stop` only powers off the OS — you're still billed.
-
-```bash
-# List
-az vm list --output table
-az vm list --resource-group <rg> --output table
-az vm list --resource-group <rg> --show-details --output table
-
-# Start / stop / restart
-az vm start --resource-group <rg> --name <vm>
-az vm stop --resource-group <rg> --name <vm>
-az vm deallocate --resource-group <rg> --name <vm>   # fully stop (stops billing for compute)
-az vm restart --resource-group <rg> --name <vm>
-
-# Details
-az vm show --resource-group <rg> --name <vm>
-az vm get-instance-view --resource-group <rg> --name <vm>
-
-# Create
-az vm create --resource-group <rg> --name <vm> --image Ubuntu2204 --size Standard_D2s_v3 \
-  --admin-username azureuser --ssh-key-values ~/.ssh/id_rsa.pub
-
-# Resize
-az vm resize --resource-group <rg> --name <vm> --size Standard_D4s_v3
-
-# Run a command inside the VM (requires VM agent)
-az vm run-command invoke --resource-group <rg> --name <vm> --command-id RunShellScript \
-  --scripts "uptime"
-
-# Open a port in the NSG
-az vm open-port --resource-group <rg> --name <vm> --port 22
 ```
 
 ---

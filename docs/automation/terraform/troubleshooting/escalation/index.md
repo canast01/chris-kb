@@ -5,7 +5,7 @@
 Escalation reference covering Escalation Decision Tree, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Escalate Terraform issues: provider bugs → GitHub, state corruption → HashiCorp support    │   │

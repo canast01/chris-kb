@@ -49,30 +49,6 @@ Availability % = (Total time - Downtime) / Total time × 100
 │    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Uptime Monitoring Tools
-
-| Tool | Method | Notes |
-|---|---|---|
-| Prometheus Blackbox Exporter | HTTP/TCP/ICMP probes from internal | Integrates with Grafana |
-| Zabbix | HTTP/TCP/ICMP + agent checks | All-in-one monitoring |
-| Pingdom / UptimeRobot | External HTTP probes | External visibility; SLA reporting |
-| Azure Monitor / Application Insights | App-level availability tests | Built-in for Azure workloads |
-| AWS CloudWatch | Route 53 health checks | Native for AWS endpoints |
-
-## Azure Monitor — Availability Test
-
-```bash
-# Create an availability test (ping test)
-az monitor app-insights web-test create \
-  -g <rg> \
-  --app-insights <ai-name> \
-  -n <test-name> \
-  --defined-web-test-kind ping \
-  --locations '[{"Id":"us-east-az"}]' \
-  --url "https://<app>/health" \
-  --frequency 300 \
-  --timeout 30
 ```
 
 ## AWS Route 53 Health Checks

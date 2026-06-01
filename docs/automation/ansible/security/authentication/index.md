@@ -40,14 +40,6 @@ ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 │   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Per-group Key Override
-
-```yaml
-# group_vars/network_devices/main.yml
-ansible_user: netadmin
-ansible_ssh_private_key_file: ~/.ssh/ansible_network_ed25519
-ansible_connection: network_cli
 ```
 
 ## WinRM Authentication (Windows Targets)

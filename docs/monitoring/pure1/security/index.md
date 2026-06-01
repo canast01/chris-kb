@@ -59,19 +59,6 @@ Pure1 > Administration > Single Sign-On > Configure
 │  API key rotation = RSA key pair rotated annually per security policy                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Secure Key Storage
-
-```bash
-# Never store the private key in plain text in scripts or repos
-# Load from secrets manager at runtime:
-
-import boto3  # example using AWS Secrets Manager
-
-def get_pure1_private_key() -> str:
-    client = boto3.client("secretsmanager", region_name="eu-west-1")
-    secret = client.get_secret_value(SecretId="pure1/api-private-key")
-    return secret["SecretString"]
 ```
 
 ## Authentication Flow (RSA Key)

@@ -52,13 +52,6 @@ flowchart TD
 │   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Sample trace output:
-
-```yaml
-DEBUG:    1+ >>>> $result = Get-Widget -Name 'widget-01'
-DEBUG:    2+ >>>> if ($result.State -eq 'Active') {
-DEBUG:   Variable: result = @{Name=widget-01; State=Active}
 ```
 
 > Warning: `-Trace 2` is very verbose. Redirect output to a file for scripts with large loops: `Set-PSDebug -Trace 2; .\MyScript.ps1 *>&1 | Out-File trace.txt`

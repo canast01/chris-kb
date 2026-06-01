@@ -86,38 +86,6 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
 │  Wildcard action = iam:* or s3:* in a policy grants all actions — avoid in production                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Cross-Account Access
-
-```bash
-# In the target account — create role with trust for source account
-cat > cross-account-trust.json <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {"AWS": "arn:aws:iam::<source-account-id>:root"},
-      "Action": "sts:AssumeRole",
-      "Condition": {
-        "StringEquals": {"sts:ExternalId": "my-external-id"}
-      }
-    }
-  ]
-}
-EOF
-
-aws iam create-role \
-  --role-name CrossAccountReadRole \
-  --assume-role-policy-document file://cross-account-trust.json
-
-# In the source account — assume the target role
-aws sts assume-role \
-  --role-arn arn:aws:iam::<target-account>:role/CrossAccountReadRole \
-  --role-session-name audit-session \
-  --external-id my-external-id
 ```
 
 ---

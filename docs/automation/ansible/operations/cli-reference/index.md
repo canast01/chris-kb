@@ -64,35 +64,6 @@ graph TD
 │   │    --extra-vars = -e "key=value"; highest precedence; override any inventory/role variable    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## ansible (Ad-Hoc)
-
-Run a single module directly against hosts without writing a playbook. Useful for quick checks, one-off operations, and testing connectivity before running a full playbook.
-
-```bash
-# Ping all hosts
-ansible all -i inventory.ini -m ping
-
-# Run shell command
-ansible all -i inventory.ini -m shell -a "uptime"
-ansible all -i inventory.ini -m command -a "hostname"
-
-# Copy a file
-ansible all -i inventory.ini -m copy -a "src=file.txt dest=/tmp/file.txt"
-
-# Install package
-ansible all -i inventory.ini -m package -a "name=curl state=present" --become
-
-# Gather facts
-ansible all -i inventory.ini -m setup
-ansible all -i inventory.ini -m setup -a "filter=ansible_distribution*"
-
-# Target specific groups or hosts
-ansible webservers -i inventory.ini -m ping
-ansible 'web*' -i inventory.ini -m ping         # wildcard host pattern
-ansible 'all:!db' -i inventory.ini -m ping      # all except db group
 ```
 
 ---

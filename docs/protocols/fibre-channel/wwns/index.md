@@ -5,8 +5,8 @@
 A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every Fibre Channel device.
 </div>
 
-```text
         WWNN vs WWPN STRUCTURE
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  HBA Card (Node)                                             │
 │  ┌──────────────────────────────────────────────────────┐   │

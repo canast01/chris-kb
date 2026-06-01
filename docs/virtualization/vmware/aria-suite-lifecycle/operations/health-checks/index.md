@@ -5,8 +5,8 @@
 Health Checks reference covering Cluster Node Health via API, Locker Health Checks, Pre-Upgrade Health Gate, Checking Product Health via LCM API, Log File Locations.
 </div>
 
-```text
   LCM Health Check Chain
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM Appliance           Locker              Environments        │
 │  ┌──────────────────┐    ┌──────────────┐    ┌──────────────┐   │
@@ -69,31 +69,6 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 │  Logscraper          = Run after health check failure to collect diagnostic logs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-In the LCM UI:
-- **Lifecycle Operations → Environments**: all environment cards should show green health indicators
-- **Locker → Certificates**: check for certificates expiring within 30 days
-- **Settings → My VMware**: verify bundle sync schedule last ran successfully
-
----
-
-## Cluster Node Health via API
-
-```bash
-# Authenticate and get a session token
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
-
-# List all environments and their health
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments" | \
-  jq '.[] | {name: .environmentName, health: .environmentHealth}'
-
-# Get all running requests (watch for stuck workflows)
-curl -sk -H "x-xenon-auth-token: $TOKEN" \
-  "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?state=RUNNING" | \
-  jq '.[] | {id: .requestId, type: .requestType, startTime: .startTime}'
 ```
 
 ---

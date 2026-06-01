@@ -66,15 +66,6 @@ If you have questions or concerns please reply by <date 2 days before window>.
 │    Rollback comms  = Notify immediately if rollback triggered; give new ETA for service restore       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Completion Announcement
-
-```yaml
-[CHANGE-COMPLETE] ITSM-XXXX — <service-name>
-Status: SUCCESS / FAILED / ROLLED BACK
-Duration: <actual duration>
-Impact: <confirmed impact>
-Next steps: <monitoring period / follow-up ticket / none>
 ```
 
 ## Rollback Announcement

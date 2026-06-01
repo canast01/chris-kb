@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapCenter Operations](../index.md) reference.
 </div>
+```
+┌────────────────────────────────── NetApp SnapCenter — Health Checks ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      SnapCenter health checks: routine verification of operational status and performance     │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Server           │  │          Windows VM         │  │       Central control       │   │
+│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
+│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
+│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
+│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
+│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
+│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
+│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
+│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
+│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
+│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
+│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
+│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
+│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
+│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
+│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

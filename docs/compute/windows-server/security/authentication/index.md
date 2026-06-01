@@ -71,21 +71,6 @@ sequenceDiagram
 │  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Domain Join
-
-```powershell
-# Add a server to an AD domain
-Add-Computer -DomainName "corp.local" -Credential (Get-Credential) -Restart
-
-# Verify domain membership
-(Get-WmiObject Win32_ComputerSystem).Domain
-nltest /sc_query:CORP.LOCAL
-
-# Check the secure channel to a domain controller
-Test-ComputerSecureChannel -Verbose
-# Repair if broken
-Test-ComputerSecureChannel -Repair -Credential (Get-Credential)
 ```
 
 ```cmd

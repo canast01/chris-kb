@@ -68,11 +68,6 @@ Administration → Authentication Sources → Add Source
 │  Bind Account        = Service account for LDAP queries; read-only, dedicated                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Test the LDAP connection:**
-
-```text
-Administration → Authentication Sources → select source → Test
 ```
 
 Expected result: "Connection successful — X users found."

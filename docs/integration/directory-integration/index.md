@@ -56,13 +56,6 @@ id administrator@corp.example.com
 │    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-systemctl enable --now sssd
-# Test
-id <ad-username>
-getent passwd <ad-username>
-getent group "Domain Admins"
 ```
 
 ### Restrict Login to AD Groups

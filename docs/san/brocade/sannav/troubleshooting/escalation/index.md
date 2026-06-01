@@ -130,13 +130,6 @@ uptime
 │  No changes      = freeze all fabric and SANnav changes during active incident                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### For Upgrade Issues
-
-```bash
-# Upgrade log
-cp /opt/sannav/logs/upgrade.log /tmp/
-# Include the previous version and target version in the case description
 ```
 
 ### For Performance Issues

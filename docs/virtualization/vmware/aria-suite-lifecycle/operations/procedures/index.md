@@ -5,8 +5,8 @@
 Procedures reference covering Rotate a Password in Locker, Add a vCenter Server to LCM, Content Migration Between Environments, Register VIDM (Workspace ONE Access), Decommission a Product from LCM.
 </div>
 
-```text
   LCM Common Procedures
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Deploy Product           Replace Certificate                   │
 │  ┌──────────────────┐     ┌──────────────────────────────────┐  │
@@ -70,26 +70,6 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 │  Credential Test     = LCM verifies stored account password still authenticates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 2 — Submit CSR to CA and retrieve the signed certificate chain.**
-
-**Step 3 — Import the signed certificate into Locker:**
-
-```bash
-# Via API
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
-
-# Import certificate (PEM-encoded leaf + intermediates + root, and private key)
-curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
-  -H "Content-Type: application/json" \
-  "https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates/import" \
-  -d '{
-    "alias": "vrops-prod-cert-2026",
-    "certificateChain": "<PEM chain as single escaped string>",
-    "privateKey": "<PEM private key as single escaped string>"
-  }'
 ```
 
 Via UI: **LCM → Locker → Certificates → Import Certificate** — paste PEM content for each field.

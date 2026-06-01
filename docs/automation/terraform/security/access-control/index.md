@@ -46,20 +46,6 @@ graph TD
 │   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Least Privilege IAM for Terraform
-
-Create a dedicated IAM role for Terraform with only the permissions required for the resources it manages.
-
-```bash
-# Verify effective permissions of the Terraform role
-aws iam simulate-principal-policy \
-  --policy-source-arn arn:aws:iam::123456789:role/terraform-automation \
-  --action-names s3:GetObject ec2:DescribeInstances \
-  --resource-arns "*"
-
-# List all policies attached to the Terraform role
-aws iam list-attached-role-policies --role-name terraform-automation
 ```
 
 ## Workspace and Environment Separation

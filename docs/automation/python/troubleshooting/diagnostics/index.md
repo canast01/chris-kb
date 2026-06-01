@@ -50,23 +50,6 @@ graph LR
 │   │   -W error       = treat warnings as errors; catches deprecation warnings before they break   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Structured Logging
-
-```python
-import logging
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s %(levelname)s %(name)s: %(message)s'
-)
-log = logging.getLogger(__name__)
-
-log.debug("Connecting to %s", host)
-log.info("Processing %d records", len(records))
-log.warning("Rate limit approaching: %d requests remaining", remaining)
-log.error("Failed to connect: %s", error)
-log.exception("Unhandled exception")   # includes full traceback
 ```
 
 ## Import and Module Diagnostics

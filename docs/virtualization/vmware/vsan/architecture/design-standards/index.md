@@ -72,51 +72,6 @@ vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 │  LLDP         = Link Layer Discovery Protocol; used for vSAN net health                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Switch configuration requirements:**
-
-| Setting | Value |
-|---|---|
-| MTU | 9000 (jumbo frames) — switch, vDS, and vmk must all match |
-| Port type | Access (not trunk) for vSAN VLAN |
-| Flow control | Disabled (vSAN handles congestion internally) |
-| Spanning Tree | PortFast / Edge Port on all vSAN-connected ports |
-
-**vDS port group settings for vSAN VMkernel:**
-
-- VLAN: dedicated VLAN (not shared with vMotion or management)
-- Load balancing: Route based on physical NIC load (or LACP if supported)
-- Failover order: Active-Active if two pNICs dedicated to vSAN
-
-**Bandwidth sizing guidance:**
-
-| Traffic type | Minimum | Recommended |
-|---|---|---|
-| vSAN replication (per host) | 10 GbE | 25 GbE |
-| ESA (NVMe-based) | 25 GbE | 25 GbE or 2×10 GbE LACP |
-| Stretched cluster inter-site | 10 GbE | 25 GbE + < 5 ms RTT |
-
----
-
-## Stretched Cluster Architecture
-
-A vSAN stretched cluster spans two physical sites with a witness at a third location. Each site is a fault domain. FTT=1 RAID-1 places one mirror at each site, with the witness providing quorum arbitration.
-
-```text
-Site A (preferred)          Site B (secondary)
-┌─────────────────┐         ┌─────────────────┐
-│ ESXi-01         │         │ ESXi-03         │
-│ ESXi-02         │         │ ESXi-04         │
-│ Component A ────┼─────────┼──► Component B  │
-└─────────────────┘         └─────────────────┘
-         │                          │
-         └──────────┬───────────────┘
-                    │
-              ┌─────┴──────┐
-              │  Witness    │
-              │ (Site C /  │
-              │  vCloud)   │
-              └────────────┘
 ```
 
 **Stretched cluster requirements:**

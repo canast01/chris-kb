@@ -4,7 +4,7 @@
 Dell CloudIQ — cloud-native AIOps SaaS for Dell storage. ML-driven health scoring, capacity forecasting, and proactive recommendations across PowerMax, Unity, PowerScale, PowerStore, and PowerFlex.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────────── Dell CloudIQ ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

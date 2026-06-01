@@ -83,46 +83,6 @@ vSphere Encryption Key Flow
 │  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## vSAN Encryption
-
-vSAN data-at-rest encryption is configured at the cluster level and requires a key provider (NKP or external KMS). Encryption is applied at the disk group layer.
-
-Configure at **vCenter → Cluster → Configure → vSAN → Services → Data Encryption**.
-
-## Certificate Encryption
-
-All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.
-
-See [Authentication](../authentication/index.md) for certificate management procedures.
-
-## VM Encryption Key Flow
-
-```mermaid
-graph TD
-    kms["External KMS\n(KMIP-compatible)"]
-    vc["vCenter Server\n(KMIP client)"]
-    kek["Key Encryption Key (KEK)\nper ESXi host"]
-    esxi["ESXi Host\n(holds encrypted DEK)"]
-    dek["Data Encryption Key (DEK)\nper VM — encrypted by KEK"]
-    disk["Encrypted VMDK\non datastore"]
-
-    kms -->|"provides KEK on request"| vc
-    vc -->|"delivers KEK"| esxi
-    esxi -->|"generates and encrypts DEK\nusing KEK"| dek
-    dek -->|"used to encrypt"| disk
-
-    classDef kms fill:#dc2626,stroke:#b91c1c,color:#fff
-    classDef vc fill:#b45309,stroke:#92400e,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef key fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class kms kms
-    class vc vc
-    class esxi host
-    class kek,dek key
-    class disk store
 ```
 
 ## vSphere Trust Authority (vTA)

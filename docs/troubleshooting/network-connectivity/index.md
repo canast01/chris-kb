@@ -85,26 +85,6 @@ flowchart TD
 │    traceroute    = Shows each hop to destination; identifies where path breaks                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### VMware ESXi
-
-```bash
-# List all NICs and link state on ESXi host
-esxcli network nic list
-
-# Example output:
-# Name    PCI Device    Driver  Admin Status  Link Status  Speed  Duplex
-# vmnic0  0000:03:00.0  ixgbe   Up            Up           10000  Full
-# vmnic1  0000:03:00.1  ixgbe   Up            Down         0      Half  ← problem
-
-# Check NIC statistics
-esxcli network nic stats get -n vmnic0
-
-# Check vSwitch uplink status
-esxcli network vswitch standard list
-
-# Check distributed vSwitch uplinks
-esxcli network vswitch dvs vmware list
 ```
 
 ---

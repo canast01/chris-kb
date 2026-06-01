@@ -5,7 +5,7 @@
 Diagnostics reference covering Log Locations, Before Calling Support.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Dell CloudIQ Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -43,34 +43,6 @@ Diagnostics reference covering Log Locations, Before Calling Support.
 │    /var/log/scg     = SCG application log directory; scg.log for main service events                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [CloudIQ](../../index.md) reference.
-
----
-
-Run the following on the **Secure Connect Gateway** host to diagnose connectivity and service health:
-
-```bash
-# Verify SCG can reach Dell's SRS telemetry endpoint
-curl -k https://esrs3.emc.com
-
-# Check dsagw service status (the core SCG telemetry forwarding service)
-systemctl status dsagw
-
-# Restart dsagw if it is stopped or failed
-systemctl restart dsagw
-
-# View dsagw logs live for telemetry send errors
-journalctl -u dsagw -f
-
-# Test CloudIQ API authentication (replace with your client_id and client_secret)
-curl -s -X POST "https://cloudiq.dell.com/auth/v1/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>"
-
-# Confirm DNS resolution for CloudIQ and SRS endpoints from the SCG host
-nslookup cloudiq.dell.com
-nslookup esrs3.emc.com
 ```
 
 For systems connected via a **proxy**, verify proxy settings in the SCG web UI under **Settings > Proxy** and confirm the proxy allows HTTPS to `cloudiq.dell.com` and `esrs3.emc.com` on port 443.

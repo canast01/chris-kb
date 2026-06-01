@@ -53,26 +53,6 @@ curl -sk -X POST \
 │  Dell support = Open case at support.dell.com; attach support bundle                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Common integration issues:
-
-| Integration | Error | Fix |
-|---|---|---|
-| CloudIQ API auth | 401 Unauthorized | Regenerate API client credentials in Settings |
-| ServiceNow webhook | 403 Forbidden | Verify ServiceNow MID server and integration user |
-| ESRS telemetry | No data after gateway restart | Restart phone-home agent on storage system |
-| Email notifications | Connection refused to SMTP | Check relay hostname and port in notification settings |
-
-## Reviewing AIOps System Events
-
-CloudIQ maintains an audit log of AIOps model events, which is useful when investigating why an alert fired or was suppressed.
-
-```bash
-# Get AIOps audit events for the last 7 days
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/audit_events?filter=created_at%20gt%20%272026-04-30%27&order_by=created_at%20desc" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {event_type, description, created_at}'
 ```
 
 ## Common Troubleshooting Reference

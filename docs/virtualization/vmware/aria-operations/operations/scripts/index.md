@@ -5,15 +5,17 @@
 Scripts reference covering Export Active Alerts to CSV (Python), Capacity Report (PowerShell), Cluster Health Check (Bash), Alert Export via REST (Bash / curl), Related Sections.
 </div>
 
-```text
 Aria Operations API — Script Interaction Pattern
+```
 ┌─────────────────────────────────────────────────────┐
 │  Script / Automation Pipeline                       │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ 1. Authenticate
                        │    POST /suite-api/api/auth/token/acquire
                        │    → token (valid 30 min)
                        ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations REST API                           │
 │  Authorization: vRealizeOpsToken <token>            │
@@ -27,8 +29,11 @@ Aria Operations API — Script Interaction Pattern
 │  POST /api/backups/<id>/actions/    trigger backup  │
 │       backup                                        │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ 2. Parse JSON response
                        ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Output / Integration                               │
 │  → CSV export (alerts, capacity, idle VMs)          │
@@ -80,48 +85,6 @@ Aria Operations API — Script Interaction Pattern
 │  Tag                 = Custom label on vROps resource for grouping and filtering                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Export Active Alerts to CSV (Python)
-
-```python
-#!/usr/bin/env python3
-"""Export all active critical/immediate alerts to CSV."""
-import requests
-import csv
-import urllib3
-urllib3.disable_warnings()
-
-ARIA_OPS_HOST = "aria-ops.domain.local"
-TOKEN = "your-token-here"
-
-def get_alerts():
-    url = f"https://{ARIA_OPS_HOST}/suite-api/api/alerts"
-    headers = {"Authorization": f"vRealizeOpsToken {TOKEN}"}
-    params = {"activeOnly": "true", "criticality": ["CRITICAL", "IMMEDIATE"]}
-    r = requests.get(url, headers=headers, params=params, verify=False)
-    r.raise_for_status()
-    return r.json().get("alerts", [])
-
-def export_alerts(alerts, filename="alerts_export.csv"):
-    with open(filename, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(["Alert ID", "Name", "Object", "Criticality", "Status", "Start Time"])
-        for a in alerts:
-            writer.writerow([
-                a.get("id"),
-                a.get("type", {}).get("name"),
-                a.get("resourceName"),
-                a.get("criticality"),
-                a.get("status"),
-                a.get("startTimeUTC")
-            ])
-    print(f"Exported {len(alerts)} alerts to {filename}")
-
-if __name__ == "__main__":
-    alerts = get_alerts()
-    export_alerts(alerts)
 ```
 
 ---

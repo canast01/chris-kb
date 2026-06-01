@@ -4,7 +4,7 @@
 Virtualization platform knowledge base covering VMware. Includes architecture references, operational procedures, CLI commands, health checks, lifecycle management, and troubleshooting guides.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── VMware Platform Stack ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

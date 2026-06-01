@@ -5,7 +5,7 @@
 Integrations reference covering Connectivity and Integration Points, Secure Connect Gateway, Email Notifications, Webhook Notifications, REST API Integration and 1 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Dell CloudIQ Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -49,34 +49,6 @@ Integrations reference covering Connectivity and Integration Points, Secure Conn
 │    Org grouping   = Group systems by site/customer in CloudIQ for MSP multi-tenancy                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Connectivity and Integration Points
-
-| Interface | Protocol / Endpoint | Purpose |
-|---|---|---|
-| SCG → CloudIQ telemetry | HTTPS 443 outbound | Telemetry upload from SCG to Dell CloudIQ back-end |
-| CloudIQ REST API | HTTPS `https://cloudiq.dell.com/cloudiq/rest/v1/` | Programmatic access to health, alerts, capacity, and performance data |
-| CloudIQ Auth API | HTTPS `https://cloudiq.dell.com/auth/v1/token` | OAuth2 token endpoint for API clients |
-| Email notifications | SMTP (Dell-managed) | Alert email delivery to configured recipients |
-| Webhook notifications | HTTPS POST (customer-defined URL) | Alert delivery to external systems (SIEM, ServiceNow, PagerDuty) |
-| SSO / IdP | SAML 2.0 | Optional corporate SSO for CloudIQ web login |
-
-## Secure Connect Gateway
-
-The Secure Connect Gateway (SCG) is the primary telemetry feed for CloudIQ. SCG is a virtual appliance (OVA) deployed on-premises that collects telemetry from registered Dell systems and forwards it encrypted to `cloudiq.dell.com:443` over HTTPS.
-
-Key configuration points:
-
-- Deploy one SCG per site or per network segment where Dell systems reside.
-- Register each storage system with SCG using the system's management IP and credentials.
-- SCG sends telemetry outbound only — no inbound firewall rules are required.
-- If outbound traffic must traverse a proxy, configure the proxy in SCG under **Settings > Proxy**. The proxy must allow HTTPS to `cloudiq.dell.com` and `esrs3.emc.com` on port 443.
-- Telemetry collection interval is typically every 5 minutes for health and performance data.
-
-```bash
-# Verify SCG can reach Dell endpoints
-curl -k https://cloudiq.dell.com
-curl -k https://esrs3.emc.com
 ```
 
 ## Email Notifications

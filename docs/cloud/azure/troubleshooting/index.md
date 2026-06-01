@@ -5,7 +5,7 @@
 Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication Errors, Azure Storage Access Denied, AKS Pod Not Starting, App Service 502/503.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,31 +60,6 @@ Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication 
 │  Storage 403       = Check access key vs SAS vs RBAC; check firewall rules and private endpoint config│
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Common causes:
-- NSG deny rule at NIC level (NIC NSG takes precedence over Subnet NSG)
-- User-defined route sending traffic to wrong next hop
-- Azure Firewall blocking traffic between hub and spoke
-- Service endpoint not configured on subnet (for PaaS services)
-
-## NSG Troubleshooting
-
-```bash
-# Check if traffic is allowed by NSG
-az network watcher check-nsg-flow --direction Inbound \
-    --protocol TCP --local 10.0.0.4 --local-port 443 \
-    --remote 10.1.0.10 --remote-port 52000 \
-    --nsg <nsg-id>
-# Output: access = Allow or Deny, with matching rule name
-
-# View NSG flow logs (query Log Analytics)
-# Workspace → Logs:
-AzureNetworkAnalytics_CL
-| where SubType_s == "FlowLog"
-| where FlowStatus_s == "D"   // Denied flows
-| where DestIP_s == "<target-ip>"
-| project TimeGenerated, SrcIP_s, DestIP_s, DestPort_d, NSGName_s, NSGRule_s
 ```
 
 ## Azure AD Authentication Errors

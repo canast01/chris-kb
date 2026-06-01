@@ -73,18 +73,6 @@ graph TB
 │  getty       = Terminal program that presents the login prompt on a virtual console                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## LVM Stack
-
-```mermaid
-flowchart TD
-    physDisk["Physical Disk\n/dev/sdb · /dev/sdc"]
-    pv["Physical Volumes\npvcreate"]
-    vg["Volume Group\nvg_system · vg_data"]
-    lv["Logical Volumes\nlv_root · lv_var · lv_app"]
-    fs["Filesystems\nxfs · ext4 · swap"]
-    mnt["Mount Points\n/ · /var · /tmp · /opt/app"]
-    physDisk --> pv --> vg --> lv --> fs --> mnt
 ```
 
 ## Storage Stack

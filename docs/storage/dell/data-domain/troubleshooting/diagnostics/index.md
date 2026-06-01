@@ -59,21 +59,6 @@ flowchart TD
 │    alerts show    = Check for active hardware or software alerts; review before escalating            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Save the output before making any changes:
-
-```bash
-# Generate a full support bundle (includes all logs, stats, and diagnostics)
-support bundle generate
-
-# Manual triage capture to a timestamped file
-# (run each command and append output)
-system show version > /tmp/triage_$(date +%Y%m%d).txt
-alerts show current >> /tmp/triage_$(date +%Y%m%d).txt
-filesys status >> /tmp/triage_$(date +%Y%m%d).txt
-filesys show space >> /tmp/triage_$(date +%Y%m%d).txt
-disk show state >> /tmp/triage_$(date +%Y%m%d).txt
-replication show >> /tmp/triage_$(date +%Y%m%d).txt
 ```
 
 ---

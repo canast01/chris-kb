@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE), External Key Management (KMIP), Management Channel Encryption (TLS), iSCSI CHAP Authentication and 4 more sections.
 </div>
+```
+┌───────────────────────────────────── Dell Unity XT — Encryption ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Unity XT encryption: data at rest and in transit encryption for all stored data        │   │
+│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
+│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
+│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Ctrl            │  │         SP-A + SP-B         │  │        Cache mirrored       │   │
+│   │             Pool            │  │       Dynamic FAST VP       │  │         Auto-tiering        │   │
+│   │          NAS server         │  │        File protocols       │  │          Per-tenant         │   │
+│   │           Snapshot          │  │        Writable snaps       │  │        Thin PiT copy        │   │
+│   │         Replication         │  │         Async/Metro         │  │       Native or RP4VM       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
+│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
+│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
+│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
+│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Unity XT 380F/480F/680F/880F · dual SPs · DPE/DAE expansion · 10/25 GbE                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols          │
+│    Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal   │
+│    UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands              │
+│    Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically  │
+│    FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers     │
+│    NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares   │
+│    Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation      │
+│    SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                 │
+│    Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported           │
+│    RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes             │
+│    Metro              = synchronous replication between two Unity XT sites; active-active zero RPO    │
+│    vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Encryption Layers
 

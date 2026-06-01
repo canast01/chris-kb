@@ -47,22 +47,6 @@ free -h | awk '/Mem/ {print "Available:", $7}'
 │    Snapshot chain= Each snapshot added to chain; long chains slow reads; delete after use             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## AWS — Cost Optimization
-
-```bash
-# Underutilised EC2 instances (Compute Optimizer)
-aws compute-optimizer get-ec2-instance-recommendations \
-  --query 'instanceRecommendations[?finding==`OVER_PROVISIONED`].{Instance:instanceArn,Current:currentInstanceType,Recommended:recommendationOptions[0].instanceType}'
-
-# Unattached EBS volumes
-aws ec2 describe-volumes \
-  --filters Name=status,Values=available \
-  --query 'Volumes[*].{ID:VolumeId,Size:Size,Type:VolumeType}' -o table
-
-# Unused Elastic IPs
-aws ec2 describe-addresses \
-  --query 'Addresses[?AssociationId==null].{IP:PublicIp,AllocationId:AllocationId}' -o table
 ```
 
 ## Azure — Cost Optimization

@@ -62,20 +62,6 @@ config backup restore <backup_name>
 │    mtree quota    = Logical soft/hard limit per MTree; shown in filesys show space output             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### NTP Configuration
-
-```bash
-# Show current NTP settings
-ntp status
-ntp show
-
-# Add NTP server
-ntp add timesever <ntp_server_ip>
-
-# Enable/disable NTP
-ntp enable
-ntp disable
 ```
 
 ### SNMP & Alerting Configuration

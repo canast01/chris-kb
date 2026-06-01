@@ -86,13 +86,6 @@ flowchart TD
 │  RPO           = daily backup = 24h RPO for config; VMs = per backup tool                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Verify Backup Status
-
-```bash
-# List available backups
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://<sddc-manager>/v1/system/backup-restore/backups" | jq '.elements[] | {id,creationTime,state}'
 ```
 
 ---

@@ -115,47 +115,6 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 │  Restore test    = quarterly test of full restore to validate backup integrity                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Post-Restore Validation
-
-| Check | Method |
-|---|---|
-| All switches reachable | Dashboard > Fabric Summary — all Online |
-| Zone configurations present | Inventory > Fabrics > Zones |
-| Alert policies restored | Administration > Alert Policies |
-| LDAP authentication working | Attempt login with AD account |
-| Email notifications working | Administration > Test Email |
-| License valid | Administration > License Management |
-
----
-
-## Zone Configuration Export (Standalone)
-
-In addition to full appliance backup, export zone configurations before every zoning change:
-
-### GUI Export
-
-1. Navigate to **Inventory > Fabrics > [Fabric Name]**.
-2. Select the fabric and click **Actions > Export Zone Configuration**.
-3. Save the file with a timestamped name: `DC1-FABRIC-A-zones-20260506.json`.
-4. Store in the change management system ticket.
-
-### CLI / API Export
-
-```bash
-TOKEN=$(curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
-  -H "Content-Type: application/json" \
-  -d '{"credentials":{"loginName":"admin","password":"<pass>"}}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['authToken'])")
-
-# Export zone database for a specific fabric (replace <fabricId>)
-curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zonedb" \
-  -H "Authorization: Bearer $TOKEN" \
-  -o dc1-fabric-a-zones-$(date +%Y%m%d).json
-
-# Logout
-curl -sk -X DELETE https://sannav-dc1.corp.example.com/rest/logout \
-  -H "Authorization: Bearer $TOKEN"
 ```
 
 ---

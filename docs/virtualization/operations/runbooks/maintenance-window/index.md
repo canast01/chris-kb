@@ -5,7 +5,7 @@
 Maintenance Window Runbook reference covering Before Maintenance, During Maintenance, After Maintenance.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Maintenance Window Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for all planned VMware work; follow pre/execute/post phases in order                           │
@@ -31,48 +31,6 @@ Maintenance Window Runbook reference covering Before Maintenance, During Mainten
 │    Exceptions  = Deviations from the plan; always document in the change record                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-Use this for planned VMware work.
-
-```text
-Maintenance Window Flow
-═══════════════════════════════════════════════════════════
-
-  PRE-CHECKS
-  ┌──────────────────────────────────────────────────────┐
-  │  Review change ticket · confirm window · notify      │
-  │  Confirm backups · confirm health · capture versions │
-  │  Confirm rollback plan · confirm vendor support      │
-  └──────────────────────────┬───────────────────────────┘
-                             │
-                             ▼
-  COMMUNICATE (start of window)
-  ┌──────────────────────────────────────────────────────┐
-  │  Notify stakeholders: work starting                  │
-  │  Open bridge / comms channel if P-level change       │
-  └──────────────────────────┬───────────────────────────┘
-                             │
-                             ▼
-  EXECUTE
-  ┌──────────────────────────────────────────────────────┐
-  │  Place host in maintenance mode (if required)        │
-  │  Perform approved work steps                         │
-  │  Monitor: cluster health · vSAN resync · DRS         │
-  │  Capture screenshots at key milestones               │
-  │  If unexpected issue → stop, assess, rollback/escalate│
-  └──────────────────────────┬───────────────────────────┘
-                             │
-                             ▼
-  VALIDATE
-  ┌──────────────────────────────────────────────────────┐
-  │  All hosts connected · VMs running · datastores OK   │
-  │  Monitoring clean · backup jobs not broken           │
-  │  App owner confirms (for production changes)         │
-  └──────────────────────────┬───────────────────────────┘
-                             │
-                             ▼
-  CLOSE
-  └─ Update ticket · attach evidence · send completion notice
 ```
 
 ## Before Maintenance

@@ -119,16 +119,6 @@ flowchart TD
 │  Zone audit      = quarterly review: remove stale aliases and unused zones                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### View Current State
-
-```text
-switch# show zoneset active vsan 10
-switch# show zone vsan 10
-switch# show device-alias database
-switch# show fcns database vsan 10
-switch# show flogi database vsan 10
-switch# show zone status vsan 10
 ```
 
 ### Device Aliases

@@ -75,14 +75,6 @@ ESXi Integration Map
 │  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Bind the iSCSI adapter to dedicated vmkernel ports for multipathing.
-
-**NFS:** Mount an NFS datastore:
-
-```bash
-esxcli storage nfs add --host=<nfs-server-ip> --share=/export/datastore01 --volume-name=NFS-DS01
-esxcli storage nfs list
 ```
 
 Ensure the NFS vmkernel adapter is on the correct VLAN and the NFS server export allows the ESXi management/NFS IP.

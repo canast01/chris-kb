@@ -5,7 +5,7 @@
 AWS NAT Gateway reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────── NAT Gateway — Private Subnet Outbound Access ─────────────────────────────┐
 │                                                                                                       │
 │  NAT Gateway enables private subnet instances to reach the internet without being reachable.          │

@@ -75,20 +75,6 @@
 │    Quiesce   = Cluster: move resources to peer node; HA group: disable before reboot                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Stop here if:** critical jobs are running and cannot be deferred. Reschedule the reboot.
-
-## Step 2 — Graceful Service Shutdown
-
-Stop application services in dependency order (app → middleware → DB):
-
-```bash
-systemctl stop <app-service>
-systemctl stop <middleware>
-systemctl stop <db-service>
-
-# Confirm each is stopped before continuing
-systemctl status <service>
 ```
 
 **Windows:**

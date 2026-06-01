@@ -37,21 +37,6 @@
 │   │ OIDC              = workflow requests short-lived AWS/Azure token; no stored cloud credentials│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Permissions — Principle of Least Privilege
-
-```yaml
-# Set minimal permissions at workflow level
-permissions:
-  contents: read      # default read for all
-  actions: none
-
-jobs:
-  deploy:
-    permissions:
-      contents: read
-      id-token: write   # only jobs that need OIDC
-      packages: write   # only jobs that push to GHCR
 ```
 
 !!! warning "Do not use `permissions: write-all`"

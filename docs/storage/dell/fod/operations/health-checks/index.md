@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [Flex on Demand](../../index.md) reference.
 </div>
+```
+┌────────────────────────────────────── Dell FoD — Health Checks ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         FoD health checks: routine verification of operational status and performance         │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
+│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
+│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
+│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
+│   │            Audit            │  │        License report       │  │          Compliance         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
+│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
+│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
+│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
+│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
+│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
+│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
+│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
+│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
+│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
+│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
+│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

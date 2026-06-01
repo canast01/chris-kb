@@ -59,24 +59,6 @@ cryptsetup luksDump /dev/sdb
 │    TLS 1.3    = Latest TLS version; removes weak ciphers; mandatory for public-facing services        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Storage arrays:**
-- **ONTAP**: `security key-manager show` — confirm key manager connected; `volume show -fields encryption-state`
-- **Pure FlashArray**: always-on encryption — confirm via `purecli array get`
-- **PowerMax**: DARE — verify in Unisphere → Array Settings → Encryption
-
-## Encryption in Transit
-
-```bash
-# Verify TLS version
-openssl s_client -connect <host>:443 -tls1_2
-openssl s_client -connect <host>:443 -tls1_3
-
-# Check nginx config
-grep -E "ssl_protocols|ssl_ciphers" /etc/nginx/nginx.conf
-
-# Comprehensive TLS audit
-./testssl.sh <host>:443
 ```
 
 **Disable weak protocols (nginx):**

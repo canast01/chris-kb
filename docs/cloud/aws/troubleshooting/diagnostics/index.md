@@ -61,36 +61,6 @@ aws configure list
 │  aws support     = Open AWS support case via CLI with describe-trusted-advisor-checks                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## EC2 — Instance Diagnostics
-
-```bash
-# Status checks
-aws ec2 describe-instance-status --instance-ids i-0abc123 \
-  --query 'InstanceStatuses[0].[SystemStatus.Status,InstanceStatus.Status,Events]'
-
-# Console output (boot log — useful when unreachable)
-aws ec2 get-console-output --instance-id i-0abc123 --output text
-
-# Console screenshot (GUI instances)
-aws ec2 get-console-screenshot --instance-id i-0abc123 \
-  --query 'ImageData' --output text | base64 -d > screenshot.jpg
-
-# Connect via SSM Session Manager (no SSH key needed)
-aws ssm start-session --target i-0abc123
-
-# Run diagnostic command via SSM
-COMMAND_ID=$(aws ssm send-command \
-  --instance-ids i-0abc123 \
-  --document-name AWS-RunShellScript \
-  --parameters 'commands=["df -h","free -h","netstat -tlnp","ps aux --sort=-%cpu | head -20"]' \
-  --query 'Command.CommandId' --output text)
-sleep 5
-aws ssm get-command-invocation \
-  --command-id $COMMAND_ID --instance-id i-0abc123 \
-  --query 'StandardOutputContent' --output text
 ```
 
 ---

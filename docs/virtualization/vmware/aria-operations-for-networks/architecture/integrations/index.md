@@ -91,15 +91,6 @@ curl -k -u 'svc-aon:PASSWORD' \
 │  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-The built-in **Read-Only** role at the vCenter root object covers most of these. Add `Host.Config.NetFlow` if AON will manage IPFIX configuration push to ESXi hosts.
-
-```bash
-# Test vCenter API access from Collector
-curl -k https://vcenter.example.local/rest/com/vmware/cis/session \
-  -X POST -u 'svc-aon@vsphere.local:PASSWORD' \
-  -o /dev/null -w "HTTP %{http_code}\n"
-# Expected: HTTP 200 with session token in response body
 ```
 
 ## Physical Switch Integration — NetFlow/IPFIX

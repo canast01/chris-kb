@@ -4,7 +4,7 @@
 Dell EMC InsightIQ performance analytics for PowerScale clusters — architecture, data collection, capacity trending, and operational runbooks.
 </div>
 
-```text
+```
 ┌──────────────────────────── InsightIQ — PowerScale Performance Reporting ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -81,35 +81,6 @@ ls -lh /var/backup/dcnm/
 │  Restore test    = quarterly test of full DCNM restore to validate backup integrity                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Automated Backup (Cron)
-
-```bash
-# Create backup script
-cat > /opt/scripts/dcnm-backup.sh << 'EOF'
-#!/bin/bash
-BACKUP_DIR="/var/backup/dcnm"
-REMOTE="bkp@backup-server.corp.example.com:/backups/dcnm/db"
-DATE=$(date +%Y%m%d-%H%M)
-LOGFILE="/var/log/dcnm-backup.log"
-
-mkdir -p "${BACKUP_DIR}"
-echo "$(date): Starting DCNM backup" >> "${LOGFILE}"
-
-pg_dumpall -U postgres -f "${BACKUP_DIR}/dcnm-db-${DATE}.sql" 2>> "${LOGFILE}"
-gzip "${BACKUP_DIR}/dcnm-db-${DATE}.sql" 2>> "${LOGFILE}"
-scp "${BACKUP_DIR}/dcnm-db-${DATE}.sql.gz" "${REMOTE}/" >> "${LOGFILE}" 2>&1
-
-# Retain only last 7 local backups
-find "${BACKUP_DIR}" -name "dcnm-db-*.sql.gz" -mtime +7 -delete
-
-echo "$(date): Backup complete" >> "${LOGFILE}"
-EOF
-
-chmod +x /opt/scripts/dcnm-backup.sh
-
-# Schedule nightly backup at 02:00
-echo "0 2 * * * root /opt/scripts/dcnm-backup.sh" >> /etc/cron.d/dcnm-backup
 ```
 
 ---

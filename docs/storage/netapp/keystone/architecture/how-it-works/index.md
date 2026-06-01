@@ -77,19 +77,4 @@ graph TB
 │    TLS 1.2+           = Minimum encryption standard for all Collector communications                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Each Keystone service level corresponds to a named adaptive QoS policy group applied to volumes — e.g., `extreme-ks`, `premium-ks`, `standard-ks`.
-
-## Capacity Management Thresholds
-
-| Threshold | Action |
-|---|---|
-| 70% of committed capacity | Internal review; forecast growth timeline |
-| 80% of committed capacity | Alert triggered; begin capacity amendment process |
-| 90% of committed capacity | Burst activates; escalate to Keystone Success Manager |
-| Burst limit reached | Further provisioning blocked; emergency amendment required |
-
-```bash
-# Request committed capacity increase at least 60 days before anticipated growth
-# Monitor burst usage via BlueXP Digital Wallet before month-end
 ```

@@ -100,20 +100,6 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
 │  syslog TLS      = encrypted syslog forwarding; audit events protected in transit                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### DCNM to Switch Communication (SSH)
-
-DCNM uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
-- SSH v2 is enforced on managed switches: `show ssh server | include version`
-- RSA keys are at least 2048-bit: `show crypto key mypubkey rsa`
-- DCNM uses host key verification: On first connect to a new switch, DCNM stores the host key fingerprint
-
-```bash
-# DCNM stores known host keys here
-cat /root/.ssh/known_hosts | grep <switch-ip>
-
-# If a switch certificate changes (replacement, factory reset), remove old key
-ssh-keygen -R <switch-ip> -f /root/.ssh/known_hosts
 ```
 
 ### DCNM to LDAP (LDAPS)

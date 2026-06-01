@@ -5,7 +5,7 @@
 Hardening reference covering NetBackup Security Architecture, Firewall Ports.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── NetBackup — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -68,25 +68,6 @@ curl -sk -X GET \
 │  Data node = Worker node; adding nodes scales collection capacity linearly                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Collection Failures and Data Gaps
-
-If objects show stale or missing data:
-
-1. Check adapter status (see above).
-2. Verify network connectivity from collector to monitored system.
-3. Confirm credentials have not expired.
-4. Check for certificate errors (common after vCenter recertification).
-
-```bash
-# Test connectivity from Aria Ops node to vCenter
-ssh admin@aria-ops.example.com
-curl -sk https://vcenter.example.com/sdk/vimService.wsdl | head -5
-
-# Force a collection cycle for an adapter instance
-curl -sk -X POST \
-  "https://aria-ops.example.com/suite-api/api/adapterinstances/<adapterId>/testconnection" \
-  -H "Authorization: vRealizeOpsToken <token>"
 ```
 
 ## Performance Degradation

@@ -5,8 +5,8 @@
 VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter Health, vSAN Health, Hardware Health, Infrastructure and 1 more sections.
 </div>
 
-```text
 Pre-Upgrade Checklist Flow
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Manager         vCenter               vSAN           │
 │  ─────────────          ───────────────        ─────          │
@@ -16,11 +16,14 @@ Pre-Upgrade Checklist Flow
 │  cert valid?            recent tasks clean    disk groups OK?│
 └──────────────────────────────────────────────────────────────┘
                                │
+```
+```
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Hardware (each node via iDRAC)                              │
 │  PSU · memory · CPU · fans · NICs · disks all green          │
 │  no predictive failures · firmware inventory available       │
 └──────────────────────────────┬──────────────────────────────┘
+```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Infrastructure + Backup                                     │
@@ -28,7 +31,6 @@ Pre-Upgrade Checklist Flow
 │  NTP synchronized · vCenter backup current                   │
 │  critical VM backups done · rollback plan documented         │
 └─────────────────────────────────────────────────────────────┘
-```
 
 ## VxRail Manager
 

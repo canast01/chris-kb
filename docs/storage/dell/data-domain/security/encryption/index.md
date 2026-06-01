@@ -65,17 +65,6 @@ graph TD
 │    Key escrow   = Backup copy of encryption key in separate secure vault; needed for recovery         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Sample output of `encryption status`:
-
-```text
-Encryption                        : Enabled
-Encryption Strength               : aes-256
-FIPS Mode                         : Enabled
-Key Manager Type                  : Internal
-Key Manager Status                : Active
-Embedded Key Manager Key Status   : OK
-Last Key Rotation                 : 2026-01-15 03:00:00
 ```
 
 ### Enable Encryption at Initial Commissioning

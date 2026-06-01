@@ -5,8 +5,8 @@
 Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge Base.
 </div>
 
-```text
   LCM Escalation Path
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect upfront (avoids data-request delay)            │
 │  ┌─────────────────────────────────────────────────────────┐    │
@@ -76,16 +76,6 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 │  RCA                 = Root Cause Analysis document issued after P1 resolution                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Log bundle (required for all SRs):**
-
-```bash
-# Generate support bundle from LCM appliance SSH
-ssh admin@lcm-prod-01.example.local
-vracli support-bundle generate
-
-# Bundle location — typically /data/support-bundles/<timestamp>.tar.gz
-ls -lh /data/support-bundles/
 ```
 
 The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.

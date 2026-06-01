@@ -76,22 +76,6 @@ get service controller
 │  node-uuid     = unique ID of NSX appliance; used in API paths                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Appliance Configuration
-
-```bash
-# Add a static route on the appliance (out-of-band management)
-set appliance gw-route <prefix>/<mask> <gateway_ip>
-
-# Check current appliance routes
-get appliance routes
-
-# Start or stop the NSX Manager UI
-set appliance ui start
-set appliance ui stop
-
-# Set hostname
-set appliance hostname <new_hostname>
 ```
 
 ### NTP and Time

@@ -38,7 +38,6 @@ After editing `main.cf`, reload without dropping the queue:
 ```bash
 postfix reload
 ```
-```text
 ┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

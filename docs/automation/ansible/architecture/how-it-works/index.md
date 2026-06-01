@@ -54,27 +54,6 @@ flowchart LR
 │   │        when             = conditional expression; task skipped when condition is False        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Playbooks
-
-Playbooks are YAML files that define ordered sets of plays. Each play maps a set of hosts to a list of tasks.
-
-```yaml
-- name: Configure web tier
-  hosts: webservers
-  become: true
-  roles:
-    - common
-    - nginx
-
-- name: Configure database tier
-  hosts: databases
-  become: true
-  roles:
-    - common
-    - postgresql
 ```
 
 ---

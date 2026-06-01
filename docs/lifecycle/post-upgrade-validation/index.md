@@ -51,27 +51,6 @@ flowchart TD
 │    Error rate     = Application error rate; an increase post-upgrade indicates regression             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Windows Server
-
-```powershell
-# Check uptime (confirm reboot occurred if expected)
-(Get-Date) - (gcim Win32_OperatingSystem).LastBootUpTime
-
-# Pending reboots
-(Get-PendingReboot).IsRebootPending
-
-# Critical event log errors post-reboot
-$since = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
-Get-WinEvent -FilterHashtable @{LogName='System'; Level=2; StartTime=$since} |
-  Select-Object TimeCreated, Message | Select-Object -First 20
-
-# Disk health
-Get-Disk | Select-Object Number, FriendlyName, HealthStatus, OperationalStatus
-Get-Volume | Where-Object SizeRemaining -lt 5GB
-
-# Windows Update status
-Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
 ```
 
 ### VMware ESXi

@@ -98,19 +98,6 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Cycle Time Increasing / RPO Growing
-
-**Symptom:** `symrdf query` shows cycle time significantly above the configured interval; RPO alerts fire.
-
-```bash
-# Check current cycle time and delta set state
-symrdf list -sid <r1_sid> -rdfg <group_num> -type RDF/A
-
-# Check delta set size and transmit queue
-symcfg -sid <r1_sid> list -rdfg <group_num> -v | grep -E "Delta|Cycle|Transmit"
 ```
 
 **Root causes:**

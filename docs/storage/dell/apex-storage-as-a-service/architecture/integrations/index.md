@@ -5,7 +5,7 @@
 Integrations reference covering Notes on APEX Management Boundaries.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Dell Apex STaaS — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

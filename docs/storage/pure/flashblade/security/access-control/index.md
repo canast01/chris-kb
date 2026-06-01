@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [FlashBlade Security](../index.md) reference.
 </div>
+```
+┌────────────────────────────────── Pure FlashBlade — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashBlade access control: RBAC roles, least-privilege, and access audit logging       │   │
+│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
+│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
+│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
+│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
+│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
+│   │         Replication         │  │            Async            │  │          DR/backup          │   │
+│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
+│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
+│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
+│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
+│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
+│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
+│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
+│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
+│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
+│    Replication        = async file or object replication between FlashBlade systems for DR            │
+│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
+│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
+│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
+│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
+│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
+│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

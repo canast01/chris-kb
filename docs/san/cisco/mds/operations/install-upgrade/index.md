@@ -120,23 +120,6 @@ show zoneset active   # zoning intact
 │  show system health= post-upgrade health check; all modules should be online                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.
-
----
-
-## Adding a New Switch to the Fabric
-
-When adding a new MDS switch to an existing fabric:
-
-1. Configure the new switch with a unique domain ID before connecting ISLs.
-2. Pre-configure NTP, AAA (TACACS+/RADIUS), SNMP, and syslog from the baseline template.
-3. Connect the ISL — the new switch will join the fabric.
-4. Verify the new switch appears in `show topology`:
-
-```text
-show topology
-show fcdomain domain-list vsan 10
 ```
 
 5. Configure VSANs on the ISL trunk port to allow only the required VSANs.

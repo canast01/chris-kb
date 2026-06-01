@@ -92,27 +92,6 @@ flowchart TD
 │    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### 2. Inspect Current Tickets
-
-```cmd
-# List cached Kerberos tickets
-klist
-
-# Example output:
-# Cached Tickets: (3)
-# #0>     Client: jsmith @ CORP.EXAMPLE.COM
-#         Server: krbtgt/CORP.EXAMPLE.COM @ CORP.EXAMPLE.COM
-#         KerbTicket Encryption Type: AES-256-CTS-HMAC-SHA1-96
-#         Start Time: 5/8/2026 08:12:00 (local)
-#         End Time:   5/8/2026 18:12:00 (local)
-#         Renew Until: 5/15/2026 08:12:00 (local)
-
-# Purge stale tickets
-klist purge
-
-# Re-request TGT (Linux/Mac with MIT Kerberos)
-kinit jsmith@CORP.EXAMPLE.COM
 ```
 
 ### 3. Clock Skew Detection

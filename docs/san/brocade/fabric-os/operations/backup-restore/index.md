@@ -80,35 +80,6 @@ flowchart TD
 │    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-The `-all` flag is required to capture Virtual Fabric configurations, logical switch assignments, and port-level settings. Without `-all`, only the base switch configuration is exported.
-
-### What configupload Captures
-
-| Component | Included |
-|---|---|
-| Zoning database (zone sets, zones, aliases) | Yes |
-| Port configuration (speed, state, trunk) | Yes |
-| AAA / RADIUS / TACACS+ settings | Yes |
-| SNMP configuration | Yes |
-| Syslog destinations | Yes |
-| IPfilter policies | Yes |
-| NTP configuration | Yes |
-| Virtual Fabric (lscfg) assignments | Yes (with -all) |
-| Firmware image | No — firmware is managed separately |
-
----
-
-## configdownload — Restoring a Switch
-
-`configdownload` restores a previously exported configuration. Used during switch replacement, disaster recovery, or to roll back a bad configuration change.
-
-```bash
-# Restore from SCP
-configdownload -all -scp -host <backup-server-ip> -u <username> -f /backups/brocade/<switchname>_config.cfg
-
-# Restore from FTP
-configdownload -all -host <backup-server-ip> -u <username> -p <password> -f /backups/brocade/<switchname>_config.cfg
 ```
 
 ### Restore Notes

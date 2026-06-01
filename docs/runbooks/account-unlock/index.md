@@ -80,16 +80,6 @@
 │    Service account= Non-interactive account; lockout = service failing; update credential source      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Step 2 — Find the Lockout Source
-
-```powershell
-# On the PDC Emulator — query Security event log for lockout events (4740)
-Get-WinEvent -ComputerName (Get-ADDomain).PDCEmulator -FilterHashtable @{
-    LogName = 'Security'
-    Id      = 4740
-} | Where-Object { $_.Properties[0].Value -eq '<username>' } |
-    Select-Object TimeCreated, Message | Select-Object -First 10
 ```
 
 Key fields in Event ID 4740:

@@ -5,8 +5,8 @@
 Authentication reference covering VRA Registered with vCenter SSO, Site Pairing Authentication (Certificate-Based), VRA Admin Account, REST API Authentication, vCenter Certificate Replacement Impact and 3 more sections.
 </div>
 
-```text
   VR Authentication Architecture
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  User / Script            vCenter SSO           VRA          │
 │  ┌──────────────┐         ┌──────────────┐      ┌─────────┐  │

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
 </div>
+```
+┌───────────────────────────────────── Dell PowerMax — Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      PowerMax escalation: severity triage, vendor support contact, and required artifacts     │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
+│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
+│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
+│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
+│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
+│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
+│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
+│    Storage group      = logical container for volumes sharing service level and host access policy    │
+│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
+│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
+│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
+│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
+│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
+│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
+│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
+│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Support Portal
 

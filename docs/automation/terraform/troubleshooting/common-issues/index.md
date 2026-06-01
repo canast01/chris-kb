@@ -45,21 +45,6 @@ flowchart TD
 │   │  After import: terraform plan should show no changes if config matches the existing resource  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Refresh and Reconciliation Issues
-
-```bash
-# Manually refresh state from real infrastructure
-terraform apply -refresh-only
-
-# Inspect what refresh would change
-terraform plan -refresh=true
-
-# Skip refresh when you know state is accurate (speeds up plan)
-terraform plan -refresh=false
-
-# Debug specific resource attributes
-terraform state show aws_instance.web01 | grep -i subnet
 ```
 
 ## Workspace Issues

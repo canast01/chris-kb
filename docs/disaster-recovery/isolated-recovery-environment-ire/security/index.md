@@ -65,23 +65,6 @@ Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndic
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Certificate and Key Management
-
-Do not import or use production certificates in the IRE.
-
-```bash
-# Generate fresh self-signed CA for IRE (valid only for recovery duration)
-openssl genrsa -out ire-ca.key 4096
-openssl req -new -x509 -key ire-ca.key -out ire-ca.crt -days 30 \
-  -subj "/CN=IRE-CA-Temporary/O=IR-Team/C=AU"
-
-# Issue IRE server certificates from this CA
-openssl genrsa -out ire-server.key 2048
-openssl req -new -key ire-server.key -out ire-server.csr \
-  -subj "/CN=ire-mgmt.local/O=IR-Team"
-openssl x509 -req -in ire-server.csr -CA ire-ca.crt -CAkey ire-ca.key \
-  -CAcreateserial -out ire-server.crt -days 30
 ```
 
 ## Audit Logging

@@ -87,17 +87,6 @@ get services | grep -v " running"
 │  BGP session = Edge peering with physical router; must be Established                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Tunnel Health
-
-```bash
-# From NSX Manager CLI — all tunnels
-nsxcli
-get tunnel status
-# Lines showing DOWN indicate broken TEP pairs
-
-# Count DOWN tunnels
-get tunnel status | grep -c DOWN
 ```
 
 ### BGP Neighbor Health (Edge CLI)

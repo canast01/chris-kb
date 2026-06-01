@@ -71,16 +71,6 @@ grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -30
 │  journalctl      = Linux systemd log; shows DCNM service crashes and errors                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Resolution for merge conflict:**
-1. Identify the switch with the conflicting zone database.
-2. If the DCNM zone set is the source of truth, clear the zone database on the conflicting switch and let DCNM re-push:
-
-```bash
-# On the conflicting switch — CAUTION: this clears all zones on this switch for the VSAN
-no zoneset distribute full vsan <vsan-id>
-zoneset activate name <zoneset-name> vsan <vsan-id>
-# Then trigger re-push from DCNM: SAN > Zoning > Deploy
 ```
 
 **Resolution for DCNM permission error:**

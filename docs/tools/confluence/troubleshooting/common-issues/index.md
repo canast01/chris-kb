@@ -100,48 +100,6 @@ jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 │  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 2. Slow Page Performance
-
-**Symptoms**
-
-- Page loads consistently exceed 3–5 seconds
-- `WARN SlowQueryChecker` entries in the log
-- High CPU on DB server; `pg_stat_activity` shows many long-running queries
-
-**Root Causes**
-
-- Inefficient CQL/Jira macro query loading on page render
-- Missing database indexes (common after large content migrations)
-- Under-provisioned JVM heap causing frequent GC pressure
-- Confluence search index out of date (forces fallback to DB)
-- A single expensive Marketplace macro blocking page render
-
-**Diagnosis**
-
-```bash
-# Check for slow query warnings
-grep "SlowQuery\|SlowPageLoad\|Slow page" \
-  /var/atlassian/application-data/confluence/logs/atlassian-confluence.log \
-  | tail -20
-
-# Enable slow query logging at DB level (PostgreSQL)
-psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
-  -c "ALTER SYSTEM SET log_min_duration_statement = '1000';"  # 1s threshold
-psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
-  -c "SELECT pg_reload_conf();"
-
-# Check DB index health
-psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
-  -c "SELECT schemaname, tablename, attname, n_distinct, correlation
-      FROM pg_stats
-      WHERE tablename = 'content'
-      ORDER BY tablename, attname;"
-
-# Profile a page via Chrome DevTools or Confluence page info
-# Append ?pageProfiler=true to any page URL (admin only)
 ```
 
 **Fix**

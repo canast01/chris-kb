@@ -72,20 +72,6 @@ graph TD
 │    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## VPLEX Integration
-
-RecoverPoint splitter on VPLEX director enables distributed CGs spanning VPLEX metro/geo fabrics:
-
-- Splitter installed on VPLEX director (not on ESXi hosts)
-- Supports metro (synchronous) and geo (asynchronous) configurations
-- Mixed topologies: VPLEX Metro + RecoverPoint → three-site continuous replication
-
-Configure VPLEX splitter via RecoverPoint CLI:
-```bash
-add_splitter_vplex -site production -vplex_ip <vplex_mgmt_ip>
 ```
 
 ---

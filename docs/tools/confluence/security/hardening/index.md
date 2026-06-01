@@ -61,13 +61,6 @@ Administrator account policy:
 │  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Rename or Disable the Default Admin Account
-
-```bash
-# Via Confluence admin UI: Administration > Users > edit the "admin" account
-# Rename to a less obvious name and store credentials in PAM vault
-# Or disable after creating named admin accounts
 ```
 
 ## Security Configuration Hardening

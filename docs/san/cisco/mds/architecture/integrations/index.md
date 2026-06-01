@@ -96,11 +96,6 @@ sequenceDiagram
 │  VMFS            = VMware File System; FC LUN presented to ESXi as datastore                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Verify the host can see the storage:**
-
-```text
-show zone member device-alias esxi-host01_hba0 vsan 10
 ```
 
 ---

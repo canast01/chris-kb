@@ -72,18 +72,6 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Recovery Plan Fails at Network Mapping Step
-
-1. SRM UI → Recovery Plans → select plan → Recent Tasks → view failed step
-2. Verify network mappings: SRM → Configure → Network Mappings — ensure every source network has a target mapping
-3. Confirm target port groups exist on recovery site ESXi cluster
-4. For NSX: confirm overlay segment exists at recovery site
-
-## SRA Communication Failure
-
-```text
-Symptom: Array Manager shows "Error" or "Unknown" state in SRM UI
 ```
 
 1. SRM → Configure → Array Managers → check status

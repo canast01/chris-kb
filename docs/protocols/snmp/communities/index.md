@@ -5,8 +5,8 @@
 An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB).
 </div>
 
-```text
         COMMUNITY STRING FLOW (SNMPv1/v2c)
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  NMS (monitoring server)        Device (switch/router)      │
 │  ┌─────────────────────┐        ┌────────────────────────┐  │

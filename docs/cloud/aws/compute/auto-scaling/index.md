@@ -5,7 +5,7 @@
 AWS Auto Scaling reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── AWS Compute — Auto Scaling ──────────────────────────────────────┐
 │                                                                                                       │
 │  EC2 Auto Scaling adjusts fleet size based on demand using scaling policies and health.               │

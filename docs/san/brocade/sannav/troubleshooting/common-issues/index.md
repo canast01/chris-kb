@@ -93,37 +93,6 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-3. Confirm the SANnav service account (`sannav_svc`) has the **admin** role on the switch — zoning operations require admin privileges.
-
----
-
-## SANnav GUI Slow or Unresponsive
-
-**Symptom:** The SANnav web UI takes > 30 seconds to load pages; sessions time out frequently.
-
-**Resolution:**
-
-```bash
-ssh admin@sannav-dc1.corp.example.com
-
-# Check CPU and memory
-top -b -n 1 | head -20
-free -h
-
-# Check disk I/O
-iostat -x 1 5
-
-# Check disk space — PostgreSQL growth is the most common cause
-df -h /opt/sannav
-du -sh /opt/sannav/data/postgres/
-du -sh /opt/sannav/data/influxdb/
-
-# Check for slow queries in PostgreSQL
-sudo -u postgres psql -c "SELECT query, calls, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;"
-
-# Restart services if memory leak is suspected
-sannav restart
 ```
 
 If disk is > 85% full: purge old performance data. Navigate to **Administration > System > Data Retention** and reduce the retention period for historical data.

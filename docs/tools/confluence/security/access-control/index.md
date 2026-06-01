@@ -62,28 +62,6 @@ Hierarchy:
 │  Audit trail       = Admin > Audit Log records all permission changes with timestamp                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Space Permissions
-
-Space permissions are configured per-space. Navigate to the space > **Space Settings** > **Permissions**.
-
-### Standard Permission Sets
-
-| Permission | View | Edit Pages | Create Pages | Delete Pages | Manage Space |
-|---|---|---|---|---|---|
-| Space Viewer | Yes | No | No | No | No |
-| Space Contributor | Yes | Yes | Yes | Own only | No |
-| Space Admin | Yes | Yes | Yes | Yes | Yes |
-
-### Group-Based Space Permissions
-
-```yaml
-Recommended pattern — use AD groups, not individual users:
-- confluence-<space-key>-viewers  → View-only access
-- confluence-<space-key>-editors  → Create and edit pages
-- confluence-<space-key>-admins   → Full space administration
-
-Map these to AD groups via LDAP sync.
 ```
 
 ```yaml

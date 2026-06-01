@@ -71,23 +71,6 @@ chmod 2775 /opt/projects
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Sensitive File Permissions Baseline
-
-| File | Owner | Permissions | Notes |
-|---|---|---|---|
-| `/etc/passwd` | root:root | 644 | World-readable, no passwords |
-| `/etc/shadow` | root:root | 000 | Readable only by root |
-| `/etc/gshadow` | root:root | 000 | Group password hashes |
-| `/etc/sudoers` | root:root | 440 | Only via `visudo` |
-| `/etc/ssh/sshd_config` | root:root | 600 | SSH daemon config |
-| `/root` | root:root | 700 | Root home directory |
-| `/etc/cron.d/` | root:root | 700 | Cron job directory |
-| `/var/log/audit/` | root:root | 700 | Audit log directory |
-
-```bash
-# Verify critical file permissions
-stat -c "%a %U %G %n" /etc/passwd /etc/shadow /etc/sudoers /etc/ssh/sshd_config
 ```
 
 ## Mandatory Access Control — SELinux (RHEL)

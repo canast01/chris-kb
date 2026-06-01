@@ -44,31 +44,6 @@ steps:
 │   │ Deployment API           = GitHub Deployments track which SHA is deployed to which environment│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Container Registries
-
-```yaml
-# Docker Hub
-- uses: docker/login-action@v3
-  with:
-    username: ${{ secrets.DOCKERHUB_USERNAME }}
-    password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-# GitHub Container Registry (GHCR) — no secrets needed with GITHUB_TOKEN
-- uses: docker/login-action@v3
-  with:
-    registry: ghcr.io
-    username: ${{ github.actor }}
-    password: ${{ secrets.GITHUB_TOKEN }}
-
-# Build and push
-- uses: docker/build-push-action@v5
-  with:
-    context: .
-    push: true
-    tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
-    cache-from: type=gha
-    cache-to: type=gha,mode=max
 ```
 
 ## Kubernetes

@@ -5,7 +5,7 @@
 Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code, Validation Checklist, Dashboard Review Cadence.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,19 +48,6 @@ Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code,
 │  Version suffix    = e.g. v2; indicates updated dashboard replacing a prior published version         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Grafana — Dashboard as Code
-
-```json
-// Store dashboards in Git — provision via Grafana provisioning
-// grafana/provisioning/dashboards/infra-overview.json
-{
-  "title": "Infrastructure Overview",
-  "uid": "infra-overview-v1",
-  "refresh": "5m",
-  "panels": [...]
-}
 ```
 
 ```yaml

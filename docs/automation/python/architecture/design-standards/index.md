@@ -82,39 +82,6 @@ def process_widgets(
 │   │   pip compile  = pip-tools; pip-compile requirements.in → requirements.txt with pinned deps   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Logging
-
-### Standard `logging` Module
-
-Never use `print()` for operational output. Use the `logging` module.
-
-```python
-import logging
-import sys
-
-# Module-level logger — use __name__ for automatic hierarchy
-log = logging.getLogger(__name__)
-
-def configure_logging(level: str = "INFO", json_output: bool = False) -> None:
-    """Configure root logger. Call once at application entry point."""
-    log_level = getattr(logging, level.upper(), logging.INFO)
-
-    if json_output:
-        import structlog
-        structlog.configure(
-            wrapper_class=structlog.make_filtering_bound_logger(log_level),
-            logger_factory=structlog.PrintLoggerFactory(file=sys.stdout),
-        )
-    else:
-        logging.basicConfig(
-            level=log_level,
-            format="%(asctime)s %(levelname)-8s %(name)s %(message)s",
-            datefmt="%Y-%m-%dT%H:%M:%S",
-            stream=sys.stdout,
-        )
 ```
 
 ### Structured JSON Logging (`structlog`)

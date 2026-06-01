@@ -42,14 +42,6 @@ cd /opt/actions-runner   # or wherever the runner is installed
 │   │     Ephemeral     = --ephemeral flag: runner deregisters after each job; clean env per run    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Re-registration is not required for in-place upgrades — the existing `.credentials` and `.runner` files remain valid.
-
-### 4. Restart the runner service
-
-```bash
-sudo systemctl start actions.runner.<org>-<name>.service
-sudo systemctl status actions.runner.<org>-<name>.service
 ```
 
 Confirm the runner appears as **Idle** in the GitHub repository or organisation runner list (Settings > Actions > Runners).

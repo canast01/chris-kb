@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > TLS certificate management and data encryption for Dell PowerScale.
 </div>
+```
+┌──────────────────────────────────── Dell PowerScale — Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       PowerScale encryption: data at rest and in transit encryption for all stored data       │   │
+│   │          At rest: AES-256 encryption using controller-managed or external key manager         │   │
+│   │          In transit: TLS 1.2+ for management; protocol encryption for data in flight          │   │
+│   │         Key management: external KMIP-compatible KMS or built-in key lifecycle manager        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Enable encryption → configure KMS → verify → audit → rotate keys                                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
+│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
+│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
+│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
+│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Layer       │     Standard     │     Key source    │       KMS        │      Notes       │   │
+│   │     At rest      │     AES-256      │     Controller    │  Internal/KMIP   │    Always on     │   │
+│   │    In transit    │     TLS 1.2+     │      PKI cert     │   Internal CA    │   Mgmt + data    │   │
+│   │   Key rotation   │      Annual      │     KMS policy    │   External KMS   │    Automated     │   │
+│   │    Key escrow    │     Required     │     KMS vault     │   External KMS   │    DR access     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
+│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
+│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
+│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
+│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
+│    Access zone        = logical container with separate authentication and export namespace per tenant│
+│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
+│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
+│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
+│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
+│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
+│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Encryption Layers
 

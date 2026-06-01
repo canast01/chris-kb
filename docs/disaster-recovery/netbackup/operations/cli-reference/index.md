@@ -99,32 +99,6 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Restore Operations
-
-### Catalog Restore Sequence
-
-When the catalog is lost, recovery must happen before any other restore is possible.
-
-```mermaid
-sequenceDiagram
-    participant Admin
-    participant Master as Primary Server
-    participant Catalog as Catalog Backup (offline copy)
-    participant Media as Media Server
-
-    Admin->>Master: Install / reinstall NetBackup\n(matching version)
-    Admin->>Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
-    Master->>Catalog: Locate catalog backup\n(separate STU or cold copy)
-    Catalog-->>Master: Catalog images transferred
-    Master->>Master: Rebuild EMM database\nnbemmcmd -machinealias
-    Master->>Media: Reconnect media servers\nbpclntcmd -hn <media> -chk
-    Media-->>Master: Media servers re-registered
-    Admin->>Master: Run bpdbjobs -summary\nverify catalog integrity
-    Admin->>Master: Resume backup policies\nbpbackup -p <policy>
-    note over Admin,Media: Catalog recovery enables\nall image restores to resume
 ```
 
 Run restores from the CLI. Always verify client name, backup time, and policy before executing.

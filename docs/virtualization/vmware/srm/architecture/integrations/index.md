@@ -5,18 +5,7 @@
 Integrations reference covering Storage Replication Adapter (SRA) Integration, vSphere Replication Integration, NSX-T Integration for Network Mapping, Active Directory / Identity Integration, Identity Federation with vIDM / Workspace ONE Access and 1 more sections.
 </div>
 
-```text
   SRM Integration Points
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│   vCenter    │   │  vSphere     │   │  Storage     │   │    NSX-T     │
-│  (both sites)│   │  Replication │   │  Array + SRA │   │  (segments)  │
-│  ┌─────────┐ │   │  ┌─────────┐ │   │  ┌─────────┐ │   │  ┌─────────┐ │
-│  │Site     │ │   │  │VRA pair │ │   │  │Pure /   │ │   │  │ segment │ │
-│  │Recovery │ │   │  │(TCP     │ │   │  │Dell /   │ │   │  │ mapping │ │
-│  │plugin   │ │   │  │ 44046)  │ │   │  │NetApp   │ │   │  │protected│ │
-│  │+ SSO    │ │   │  └─────────┘ │   │  │SRA      │ │   │  │ ──► rec.│ │
-│  └─────────┘ │   └──────────────┘   │  └─────────┘ │   │  └─────────┘ │
-└──────────────┘                      └──────────────┘   └──────────────┘
         │                                    │
         └─────────────────┬──────────────────┘
                           ▼
@@ -70,40 +59,6 @@ Integrations reference covering Storage Replication Adapter (SRA) Integration, v
 │  Test due alarm = SRM reminds when DR test is overdue                                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Re-pairing is required if either SRM Server's certificate is rotated (thumbprint changes invalidate the trust).
-
----
-
-## Storage Replication Adapter (SRA) Integration
-
-SRAs are vendor-provided plugins that give SRM control over array-level replication. Each SRA implements a defined interface (XML-based API) that SRM calls to:
-
-- **Discover** replicated devices (LUNs, volumes, datastores).
-- **Test failover** — create writable snapshots of replicated volumes without breaking replication.
-- **Failover** — promote replicated volumes to writable, break replication.
-- **Reverse replication** — re-establish replication in the opposite direction for failback.
-- **Query replication state** — check RPO compliance and replication health.
-
-SRA binaries are installed on the SRM Server (Windows: `C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\<vendor>\`, appliance: `/opt/vmware/srm/storage/sra/<vendor>/`).
-
-### SRA Registration and Testing
-
-After installing an SRA:
-
-1. In SRM UI → Array Managers → **Add Array Manager**.
-2. Select the SRA type from the drop-down (populated from installed SRAs).
-3. Enter array credentials (username, password, array management IP/hostname).
-4. SRM calls the SRA's `discoverArrays` command to validate connectivity.
-5. Assign array pair (protected site array ↔ recovery site array).
-6. Scan for replicated devices.
-
-```bash
-# From SRM appliance: list installed SRAs
-ls -la /opt/vmware/srm/storage/sra/
-
-# Check SRA log for errors after an array scan
-tail -f /var/log/vmware/srm/srm-sra.log
 ```
 
 ### SRA for Pure Storage

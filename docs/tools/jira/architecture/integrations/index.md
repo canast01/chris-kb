@@ -96,58 +96,6 @@ graph LR
 │  Crowd        = optional Atlassian SSO server; centralized auth if not using SAML                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Macro parameters:
-
-| Parameter | Example | Description |
-|---|---|---|
-| `key` | `PROJ-123` | Single issue embed |
-| `jql` | `project = PROJ AND status != Done` | JQL-driven table |
-| `columns` | `key,summary,status,priority` | Columns to display |
-| `maximumIssues` | `20` | Row limit |
-| `showSummary` | `true` | Show issue count header |
-
-### Confluence Page Links from Jira
-
-Install the **Confluence integration plugin** (bundled with Application Links). Once linked:
-- Jira issues show a **Confluence Pages** panel listing linked pages
-- Confluence pages show a **Jira Issues** panel listing linked issues
-- Wiki renderer in Jira description fields supports `[CONF:Page Title]` syntax
-
-### Requirements and Permissions
-
-- Both instances must share the same user directory (LDAP/Crowd) or have matching usernames for cross-app permissions to resolve correctly
-- The application link service user must have **Browse Projects** permission in Jira and **View** permission in Confluence
-
----
-
-## GitHub Integration
-
-### Jira GitHub App (Cloud / Data Center)
-
-Install the **GitHub for Jira** app from the Atlassian Marketplace. For Data Center, use the **Jira DVCS Connector** or the GitHub app for Data Center.
-
-Capabilities enabled:
-
-| Feature | How it works |
-|---|---|
-| Commit linking | Commit message contains `PROJ-123` → commit appears on issue |
-| Branch linking | Branch name contains `PROJ-123` → branch listed on issue |
-| PR linking | PR title/body contains `PROJ-123` → PR status on issue |
-| Deployment tracking | GitHub Actions deployment event → environment shown on issue |
-| Build status | CI check result → build status on issue |
-
-### Branch Naming Convention
-
-Enforce via branch protection rules or Git hooks:
-
-```bash
-<type>/<issue-key>-<short-description>
-
-# Examples
-feature/PROJ-123-add-login-page
-fix/PROJ-456-null-pointer-on-search
-chore/OPS-789-update-dependencies
 ```
 
 ### Commit Message Convention

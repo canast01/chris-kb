@@ -57,26 +57,6 @@ flowchart TD
 │    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Weekly Health Check
-
-```bash
-# Compression and deduplication ratio
-filesys show compression summary
-
-# DDBoost active clients
-ddboost show clients
-
-# NFS and CIFS connections
-nfs show clients
-cifs show clients
-
-# Alert history (look for recurring alerts)
-alert show history brief
-
-# System uptime and performance stats
-system show uptime
-system show stats
 ```
 
 ## Health Check — Pre-Change

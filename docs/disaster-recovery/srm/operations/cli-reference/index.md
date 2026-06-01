@@ -82,22 +82,6 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Recovery Plans
-
-Recovery plans define the failover sequence and IP customisation rules.
-
-```powershell
-# List all recovery plans
-Get-SRMRecoveryPlan
-
-# Show recovery plan details
-Get-SRMRecoveryPlan -Name <plan_name> | Format-List
-
-# List steps in a recovery plan
-Get-SRMRecoveryPlan -Name <plan_name> | Get-SRMRecoveryPlanStep
 ```
 
 ---

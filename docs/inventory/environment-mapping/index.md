@@ -81,17 +81,6 @@ For each application, document:
 │    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Azure
-
-```bash
-# List all resources by environment tag
-az resource list --tag Environment=Production \
-  --query '[*].{Name:name,Type:type,RG:resourceGroup,Location:location}' -o table
-
-# Show VM and its disk / network dependencies
-az vm show -g <rg> -n <vm-name> --show-details \
-  --query '{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}' -o json
 ```
 
 ## Change Impact Assessment

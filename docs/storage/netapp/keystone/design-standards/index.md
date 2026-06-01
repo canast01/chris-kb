@@ -97,34 +97,6 @@ volume show -fields vserver,volume,comment | grep keystone
 │    Retrieve policy  = Controls if tiered data read back to SSD (on-demand vs never)                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Volume Provisioning Checklist
-
-Before provisioning a new volume on a Keystone-managed cluster:
-
-- [ ] Service level (tier) confirmed for the workload based on IOPS and latency requirements
-- [ ] Available committed capacity verified for the target tier in BlueXP — not triggering burst
-- [ ] QoS adaptive policy-group selected and will be applied at volume creation time
-- [ ] Volume size accounts for snapshot reserve (add 20% for snapshots if frequent snapshots are expected)
-- [ ] Volume comment tagged with application owner, team, and Keystone tier
-- [ ] Space guarantee set appropriately: `none` (thin) for most workloads; `volume` (thick) only if required by the application
-- [ ] Keystone Collector confirmed running before provisioning — new capacity must be reported accurately
-
-```bash
-# Create a volume with Keystone tier QoS applied from the start
-volume create \
-    -vserver svm_prod \
-    -volume vol_newapp_data \
-    -aggregate aggr_flash_01 \
-    -size 2TB \
-    -space-guarantee none \
-    -snapshot-policy default \
-    -qos-adaptive-policy-group premium-ks \
-    -comment "app=newapp owner=it-ops tier=premium keystone=true"
-
-# Confirm the volume has the correct QoS policy
-volume show -vserver svm_prod -volume vol_newapp_data \
-    -fields qos-adaptive-policy-group,size,space-guarantee
 ```
 
 ---

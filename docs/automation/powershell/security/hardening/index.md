@@ -50,19 +50,6 @@ graph TD
 │   │AMSI bypass    = attackers attempt to disable; monitor for AMSI-related events in security logs│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Transcript Logging
-
-Enable transcript logging to create a full record of every PowerShell session.
-
-```powershell
-# Enable transcription for the current session
-Start-Transcript -Path "C:\Logs\ps-$(Get-Date -f yyyyMMdd-HHmm).log" -Append
-
-# Enable system-wide transcription via Group Policy:
-# Computer Configuration → Administrative Templates → Windows Components →
-# Windows PowerShell → Turn on PowerShell Transcription
-# OutputDirectory: \\server\pslogs\
 ```
 
 ## Audit and Event Log

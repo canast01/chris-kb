@@ -4,7 +4,7 @@
 Ansible automation knowledge base covering agentless architecture, inventory and playbook design, role and collection management, AWX/AAP deployment, and troubleshooting for Linux, Windows, network, and cloud targets.
 </div>
 
-```text
+```
 ┌──────────────────────────── Ansible — Agentless Configuration Management ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Ansible: open-source agentless automation using SSH (Linux) or WinRM (Windows) transport   │   │

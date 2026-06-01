@@ -81,25 +81,6 @@ flowchart TD
 │    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SureBackup Verification Tests (per VM)
-
-| Test | Description | Failure Meaning |
-|---|---|---|
-| Heartbeat | VM powers on and VMware Tools respond | Backup is unbootable |
-| Ping | VM responds to ICMP inside isolated lab | OS or network stack corrupt |
-| Application test | Custom script validates service (e.g., SQL port 1433 open) | Application layer failed |
-| VM screenshot | Captured for visual confirmation | No automated fail — human review |
-
-### Interpreting SureBackup Results (PowerShell)
-
-```powershell
-# Retrieve last SureBackup session results
-$session = Get-VBRSureBackupSession | Sort-Object CreationTime -Descending | Select-Object -First 1
-$session | Select-Object Name, State, Result, CreationTime, EndTime
-
-# Per-VM task results
-$session.GetTaskSessions() | Select-Object Name, Status, StartTime, StopTime | Format-Table -AutoSize
 ```
 
 Expected output columns: `Name` (VM name), `Status` (Success / Warning / Failed), timing. Any `Failed` row requires immediate investigation and re-run after remediation.

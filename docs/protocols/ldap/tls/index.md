@@ -9,8 +9,8 @@ title: TLS (LDAP)
 TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Configuring LDAPS on Active Directory, Channel Binding and LDAP Signing, LdapClientIntegrity (Client Side) and 1 more sections.
 </div>
 
-```text
         STARTTLS vs LDAPS
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  STARTTLS (port 389 → upgrade to TLS)                        │
 │  ┌────────────┐         ┌──────────────────────────────┐     │

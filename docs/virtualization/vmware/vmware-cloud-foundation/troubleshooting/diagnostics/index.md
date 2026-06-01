@@ -85,25 +85,6 @@ flowchart TD
 │  Root access   = SOS requires root; access via sudo after SSH                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SSH to SDDC Manager
-
-```bash
-# SSH as vcf user, then sudo
-ssh vcf@sddc-manager.corp.example.com
-sudo su -
-
-# Real-time log tail (LCM operations)
-tail -f /var/log/vmware/vcf/lcm/lcm-debug.log
-
-# Real-time ops manager log
-tail -f /var/log/vmware/vcf/operationsmanager/ops-manager.log
-
-# Search for errors in the last hour
-journalctl -u vmware-vcf-lcm --since "1 hour ago" --no-pager
-
-# Find all ERROR entries in LCM debug log
-grep -i 'ERROR\|FATAL\|Exception' /var/log/vmware/vcf/lcm/lcm-debug.log | tail -100
 ```
 
 ### SDDC Manager Services

@@ -68,28 +68,6 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Access Zone Activation at DR Site
-
-```bash
-# After failover is triggered — confirm DR access zones are active
-egcli accesszone status --cluster <dr-cluster>
-
-# Confirm NFS exports are present on DR cluster
-ssh admin@<dr-cluster> "isi nfs exports list"
-
-# Confirm SMB shares are present on DR cluster
-ssh admin@<dr-cluster> "isi smb shares list"
-
-# Confirm SmartConnect zones are responding on DR VIP pool
-nslookup <dr-smartconnect-zone-name>
-
-# Test NFS mount from a client (Linux)
-mount -t nfs <dr-smartconnect-ip>:/<export_path> /mnt/test
-ls /mnt/test
-
-# Test SMB access from a client (Windows)
-net use Z: \\<dr-cluster-ip>\<share_name>
 ```
 
 ### DNS Cutover

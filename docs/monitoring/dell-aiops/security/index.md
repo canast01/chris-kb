@@ -57,15 +57,6 @@ CloudIQ portal > Settings > Identity Providers > Add
 │  Least privilege = Adapter accounts have read-only access to infrastructure APIs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Audit Logging
-
-CloudIQ audit log captures all administrative actions for AIOps configuration and access.
-
-```text
-CloudIQ portal > Settings > Audit Log
-- View: filter by user, date, or action type
-- Export to CSV for SIEM ingestion
 ```
 
 Key events to review in audit log:

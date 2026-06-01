@@ -5,13 +5,15 @@
 Integrations reference covering NSX Federation (Multi-Site VCF), Backup Integration, SIEM and Syslog Integration.
 </div>
 
-```text
 VCF Integration Topology
+```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager (integration hub)                      │
 └──┬──────┬──────┬──────┬──────┬──────────────────────┘
+```
    │      │      │      │      │
    ▼      ▼      ▼      ▼      ▼
+```
 ┌──────┐ ┌────┐ ┌────┐ ┌────┐ ┌──────────────────────┐
 │ Aria │ │Aria│ │ AD │ │SIEM│ │  Backup                │
 │ Ops  │ │Auto│ │LDAP│ │Sys-│ │  (Veeam/NetBackup)     │
@@ -21,8 +23,11 @@ VCF Integration Topology
 │ SDDC │ │+NSX│ │    │ │    │ │                        │
 │ data │ │creds│ │    │ │    │ │  SFTP for SDDC Mgr    │
 └──────┘ └────┘ └────┘ └────┘ └──────────────────────┘
+```
 
 NSX Federation (multi-site)
+```
+```
 ┌──────────────────────────────────────────────────────┐
 │  Global NSX Manager (outside VCF LCM)                │
 │                        │ global policy               │
@@ -80,12 +85,6 @@ NSX Federation (multi-site)
 │  SIEM       = Security Information and Event Management; log receiver                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Assign roles to AD groups:**
-
-```text
-SDDC Manager → Administration → Users and Groups
-→ Add → enter AD group name → assign ADMIN / OPERATOR / VIEWER role
 ```
 
 **Test AD connectivity from SDDC Manager appliance:**

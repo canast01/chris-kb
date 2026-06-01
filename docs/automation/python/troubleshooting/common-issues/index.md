@@ -48,12 +48,6 @@ flowchart TD
 │   │           Fix: export REQUESTS_CA_BUNDLE=/etc/ssl/certs/corp-ca.pem in shell profile          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```python
-# Diagnose an import issue at runtime
-import importlib.util
-spec = importlib.util.find_spec('requests')
-print(spec.origin if spec else "Not found")
 ```
 
 ## API and Network Timeouts

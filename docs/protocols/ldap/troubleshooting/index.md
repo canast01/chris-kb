@@ -5,8 +5,8 @@
 LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Certificate Errors, Using ldp.exe (Windows GUI Tool), LDAP Referrals and 1 more sections.
 </div>
 
-```text
         TRIAGE: LDAP BIND FAILS
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  1. Resolve DC name                                          │
 │     nslookup dc01.example.local ─── fail ──► fix DNS           │

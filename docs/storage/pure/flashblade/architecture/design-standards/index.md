@@ -5,8 +5,8 @@
 Design Standards reference covering Naming Conventions, Sizing Guidelines, Build Baseline, Configuration Checklist.
 </div>
 
-```text
 FlashBlade Design Checklist
+```
 ┌───────────────────────────────────────────────────────────┐
 │  Naming          │  filesystem / bucket / account pattern │
 ├───────────────────────────────────────────────────────────┤

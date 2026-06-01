@@ -62,25 +62,6 @@ flowchart LR
 │  Generalise   = sysprep step to remove SIDs; must do before capturing image                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Hotfix and Patch Status
-
-```powershell
-# Last 10 installed hotfixes
-Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
-
-# Check Windows Update history
-Get-WUHistory  # Requires PSWindowsUpdate module
-
-# Pending updates check
-Install-Module PSWindowsUpdate -Force
-Get-WindowsUpdate
-
-# WSUS-managed patch status
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Software'")
-$SearchResult.Updates | Select-Object Title, MsrcSeverity
 ```
 
 ---

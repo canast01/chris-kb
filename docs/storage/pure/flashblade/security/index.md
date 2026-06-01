@@ -5,8 +5,8 @@
 FlashBlade — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
 
-```text
 FlashBlade Security Layers
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Identity & Auth                                         │
 │  ├── SAML SSO for GUI                                    │

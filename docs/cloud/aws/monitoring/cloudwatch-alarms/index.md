@@ -5,7 +5,7 @@
 AWS CloudWatch Alarms reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────── CloudWatch Alarms — Threshold Alerting ────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch Alarms evaluate metrics against thresholds and trigger automated responses.               │

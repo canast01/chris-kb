@@ -47,33 +47,6 @@ flowchart LR
 │   │          SLA              = AAP Premium: 1-hour response for Sev 1; Standard: 4 hours         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Red Hat Support (AAP)
-
-### Opening a Case
-
-1. Go to [access.redhat.com](https://access.redhat.com) → Cases → Open a New Case
-2. Select product: **Red Hat Ansible Automation Platform**
-3. Set severity:
-   - **Sev 1**: Production down — no workaround
-   - **Sev 2**: Major function impaired — workaround exists
-   - **Sev 3**: Minor issue — workaround exists
-   - **Sev 4**: Feature request / documentation
-
-### Required Attachments
-
-```bash
-# Generate sosreport on AWX controller node
-sosreport --batch --tmp-dir /tmp/ \
-  -o ansible,process,networking,kubernetes
-
-# Attach:
-# - sosreport archive
-# - /tmp/escalation-$(date +%F).log (vvvv run)
-# - /tmp/awx-web.log + /tmp/awx-task.log
-# - /tmp/job-stdout.txt
-# - ansible --version output
-# - ansible-galaxy collection list output
 ```
 
 ## Community Escalation (Open Source)

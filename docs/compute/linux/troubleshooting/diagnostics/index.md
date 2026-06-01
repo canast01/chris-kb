@@ -73,24 +73,6 @@ flowchart LR
 │  /proc/PID   = Virtual filesystem exposing process state: maps, fd, stat, cmdline                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## dmesg — Kernel Ring Buffer
-
-```bash
-# Errors and warnings
-dmesg --level=err,warn
-
-# Watch in real time
-dmesg -w
-
-# Hardware errors (memory, disk, network)
-dmesg | grep -iE "error|fail|reset|timeout|uncorrect" | tail -30
-
-# Disk I/O errors
-dmesg | grep -iE "sd[a-z]|nvme|blk_update_request|I/O error"
-
-# OOM events
-dmesg | grep -i "oom\|killed process\|out of memory"
 ```
 
 ## Audit Log (auditd)

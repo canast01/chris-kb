@@ -102,23 +102,6 @@ curl -sk -u 'admin:<password>' \
 │  OSI               = Operationally Significant Instance; licensed unit in vRLI                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Upload the PAK file. Aria Ops for Logs validates the file and presents a pre-upgrade compatibility check. If all checks pass, click **Upgrade**.
-
-**Upgrade via CLI (scripted):**
-
-```bash
-# Upload PAK file to master node
-scp VMware-vRealize-Log-Insight-*.pak admin@vrli-prod-01.example.local:/tmp/
-
-# Initiate upgrade via API
-curl -sk -u 'admin:<password>' -X POST \
-  "https://vrli-prod-01.example.local/api/v2/upgrade/upload" \
-  -F "pakFile=@/tmp/VMware-vRealize-Log-Insight-*.pak"
-
-# Monitor upgrade status
-watch -n 30 'curl -sk -u "admin:<password>" \
-  "https://vrli-prod-01.example.local/api/v2/upgrade/status" | jq .'
 ```
 
 ---

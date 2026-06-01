@@ -46,18 +46,6 @@ graph LR
 │   │  Vault agent    = injects secrets into env before terraform runs; no secrets in process args  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Azure
-
-```bash
-# Service principal — preferred for CI/CD
-export ARM_CLIENT_ID=...
-export ARM_CLIENT_SECRET=...
-export ARM_SUBSCRIPTION_ID=...
-export ARM_TENANT_ID=...
-
-# Verify authentication
-az account show
 ```
 
 ### Google Cloud

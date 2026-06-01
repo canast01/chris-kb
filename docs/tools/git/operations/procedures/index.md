@@ -65,25 +65,6 @@ release/  — Release preparation (release/v2.4.0)
 │  Short-lived     = feature branches should be merged within days, not weeks                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Deleting Branches
-
-```bash
-# Delete a merged local branch (safe — fails if unmerged)
-git branch -d feature/PLAT-42-s3-lifecycle
-
-# Force-delete an unmerged branch
-git branch -D feature/abandoned-experiment
-
-# Delete a remote branch
-git push origin --delete feature/PLAT-42-s3-lifecycle
-
-# Prune stale remote-tracking references
-git fetch --prune
-git remote prune origin
-
-# One-liner: delete all local branches already merged into main
-git branch --merged main | grep -v '^* \|main\|master' | xargs git branch -d
 ```
 
 ## Tracking Remote Branches

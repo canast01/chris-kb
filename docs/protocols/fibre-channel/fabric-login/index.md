@@ -5,12 +5,13 @@
 Fabric login is the process by which FC ports register with the fabric and establish communication paths.
 </div>
 
-```text
         FC LOGIN SEQUENCE
+```
 ┌──────────┐        ┌───────────┐        ┌───────────┐
 │ Host HBA │        │ FC Switch │        │  Storage  │
 │          │        │(Name Svr) │        │  Target   │
 └────┬─────┘        └─────┬─────┘        └─────┬─────┘
+```
      │  1. FLOGI           │                    │
      │ ──────────────────► │                    │
      │  ACC (FC_ID assigned)│                   │

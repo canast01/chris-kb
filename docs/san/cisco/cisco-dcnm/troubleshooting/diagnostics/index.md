@@ -95,20 +95,6 @@ scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
 │  Audit log CSV   = DCNM user action export; shared during security investigations                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Java Heap Diagnostics
-
-```bash
-# Find DCNM Java PID
-DCNM_PID=$(ps aux | grep "[d]cnm-server" | awk '{print $2}' | head -1)
-
-# Show Java heap usage
-jstat -gcutil ${DCNM_PID} 5s 10
-# If Old Gen (O) consistently > 90%: memory pressure; restart may be needed
-
-# Generate heap dump for Cisco TAC analysis (only when directed by TAC)
-jmap -dump:live,format=b,file=/tmp/dcnm-heap-$(date +%Y%m%d).hprof ${DCNM_PID}
-# Note: heap dump can be several GB; coordinate with TAC before generating
 ```
 
 ---

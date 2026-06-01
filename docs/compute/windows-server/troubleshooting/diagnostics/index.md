@@ -80,44 +80,6 @@ flowchart LR
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Key Security Event IDs
-
-| Event ID | Description |
-|---|---|
-| 4624 | Successful logon |
-| 4625 | Failed logon |
-| 4634 | Logoff |
-| 4648 | Logon with explicit credentials (RunAs) |
-| 4663 | Object access attempt |
-| 4688 | Process creation |
-| 4698 | Scheduled task created |
-| 4719 | Audit policy changed |
-| 4720 | User account created |
-| 4732 | Member added to a local security group |
-| 4740 | Account locked out |
-| 4756 | Member added to a universal security group |
-| 7036 | Service started or stopped |
-| 41 | Kernel power — unexpected reboot |
-| 6008 | Unexpected shutdown |
-
-## Searching by Event ID
-
-```powershell
-# Account lockouts in last hour
-Get-WinEvent -FilterHashtable @{ LogName='Security'; Id=4740; StartTime=(Get-Date).AddHours(-1) } |
-    ForEach-Object {
-        $xml = [xml]$_.ToXml()
-        [PSCustomObject]@{
-            Time     = $_.TimeCreated
-            Account  = $xml.Event.EventData.Data | Where-Object Name -eq 'TargetUserName' | Select-Object -ExpandProperty '#text'
-            CallerDC = $xml.Event.EventData.Data | Where-Object Name -eq 'SubjectDomainName' | Select-Object -ExpandProperty '#text'
-        }
-    }
-
-# Service stops (7034 = unexpected, 7036 = started/stopped)
-Get-WinEvent -FilterHashtable @{ LogName='System'; Id=7034,7036; StartTime=(Get-Date).AddHours(-24) } |
-    Select-Object TimeCreated, Message | Format-List
 ```
 
 ## Exporting Logs

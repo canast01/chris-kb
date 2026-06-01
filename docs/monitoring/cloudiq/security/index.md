@@ -59,17 +59,6 @@ CloudIQ portal > Settings > Identity Providers > Add
 │  API token security = client_id/secret treated as password; never logged or committed to code         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## SCG Certificate Security
-
-The SCG uses TLS certificates for:
-- HTTPS communication to Dell cloud (uses Dell trusted root CA — pre-configured)
-- HTTPS communication to array management interfaces
-
-Ensure the SCG clock is NTP-synchronised to avoid certificate validation failures:
-
-```text
-SCG admin UI > System Settings > Date/Time > NTP Configuration
 ```
 
 For internal arrays with self-signed certificates, add them to the SCG trust store:

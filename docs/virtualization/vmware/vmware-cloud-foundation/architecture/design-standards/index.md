@@ -5,8 +5,8 @@
 Design Standards reference covering Supported Configurations, Compliance Checks in SDDC Manager.
 </div>
 
-```text
 VCF Physical and Logical Design Requirements
+```
 ┌─────────────────────────────────────────────────────┐
 │  Underlay Network (physical)                        │
 │                                                     │
@@ -17,8 +17,10 @@ VCF Physical and Logical Design Requirements
 │                   Mgmt  vMot  vSAN  TEP             │
 │                   VLAN  VLAN  VLAN  VLAN            │
 └─────────────────────────────────────────────────────┘
+```
                          │
                          ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  VMkernel Requirements (per host)                   │
 │                                                     │
@@ -29,8 +31,11 @@ VCF Physical and Logical Design Requirements
 │                                                     │
 │  Standard vSwitches are NOT supported               │
 └─────────────────────────────────────────────────────┘
+```
                          │
                          ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Management Domain Minimum Build                    │
 │                                                     │
@@ -88,28 +93,4 @@ VCF Physical and Logical Design Requirements
 │  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Supported Configurations
-
-| Feature | Supported | Notes |
-|---|---|---|
-| vSAN ESA (Express Storage Architecture) | VCF 5.1+ | Requires NVMe drives |
-| vSAN OSA (Original Storage Architecture) | All versions | Hybrid and all-flash |
-| Stretched clusters | Yes | Requires witness host |
-| NSX Federation | VCF 4.3+ | Cross-site policy management |
-| Workload domains with FC storage | No | VCF uses vSAN only for principal storage |
-
-## Compliance Checks in SDDC Manager
-
-```bash
-# SDDC Manager UI — run before any upgrade:
-# Lifecycle Management → Precheck
-
-# Precheck validates:
-# - DNS resolution for all components
-# - NTP synchronisation
-# - Certificate expiry
-# - vSAN health
-# - Network pool capacity
-# - Password rotation status
 ```

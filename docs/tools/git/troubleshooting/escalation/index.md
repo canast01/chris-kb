@@ -66,47 +66,6 @@ flowchart TD
 │  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## GitLab Support Ticket Format
-
-Open tickets at: **https://support.gitlab.com** (requires valid license)
-
-```yaml
-Subject: [P1] GitLab 17.0 — Repository corruption detected on 3 projects
-
-License: EE Ultimate — License ID: xxxxx
-Instance URL: https://gitlab.example.com
-Version: 17.0.2-ee
-Installation type: Omnibus / Docker / Helm [choose one]
-OS: Ubuntu 22.04 LTS
-
-Describe the problem:
-After running the nightly backup on 2024-05-07, git fsck reports missing blob objects
-in 3 repositories. Affected projects: group/project-a, group/project-b, group/project-c.
-
-Error messages (exact):
-  error: object file .git/objects/ab/cd1234... is empty
-  error: sha1 mismatch 4f3a2b1c...
-  missing blob 4f3a2b1c... known as 'src/main.go'
-
-Steps to reproduce:
-1. git clone git@gitlab.example.com:group/project-a.git
-2. git fsck --full
-3. Error output as above
-
-Relevant logs:
-[Paste gitaly log excerpt, production.log excerpt]
-
-What we have already tried:
-- git fsck --full — confirmed corruption
-- git prune — did not resolve
-- Checked disk for errors: smartctl -a /dev/sda — no hardware errors reported
-- Attempted restore from last night's backup — backup also shows corruption (investigating)
-
-Urgency:
-Project-a is on the critical path for a release. Engineers are blocked on that repository.
 ```
 
 ---

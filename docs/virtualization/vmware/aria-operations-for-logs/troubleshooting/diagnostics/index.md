@@ -69,25 +69,6 @@ grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail 
 │  VMware SR         = Support Request; provide bundle + timeline + version details                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Generating a Support Bundle
-
-Collect a support bundle before opening a Broadcom SR:
-
-```bash
-# Via API — trigger support bundle generation
-curl -sk -u 'admin:<password>' -X POST \
-  "https://vrli-prod-01.example.local/api/v2/support/bundle" | jq '.'
-
-# The bundle is generated asynchronously — check status
-curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.example.local/api/v2/support/bundle/status" | jq '.'
-
-# Download the bundle when status is "COMPLETE"
-curl -sk -u 'admin:<password>' -o vrli-support-bundle.zip \
-  "https://vrli-prod-01.example.local/api/v2/support/bundle/download"
 ```
 
 Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.

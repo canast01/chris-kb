@@ -71,11 +71,6 @@ nslookup _ldap._tcp.dc._msdcs.<your-domain>
 │  CIFS              = file share protocol; desktop profiles stored here                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Import into Group Policy:**
-```cmd
-copy *.admx \\<domain>\SYSVOL\<domain>\Policies\PolicyDefinitions\
-copy en-US\*.adml \\<domain>\SYSVOL\<domain>\Policies\PolicyDefinitions\en-US\
 ```
 
 Key GPO paths (in GPMC):

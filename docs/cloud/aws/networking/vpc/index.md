@@ -14,6 +14,7 @@ AWS VPC — Virtual Private Cloud
 │  ← you control the IP ranges, subnets,
 │     routing, and security
                                           │
+```
 ┌─────────────────────────────────────────┐
 │           AWS VPC                       │
 │           (Virtual Private Cloud)       │
@@ -86,29 +87,6 @@ AWS VPC — Virtual Private Cloud
 │  RFC1918         = Private address ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## VPC to On-Premises — Connection Options
-
-```text
-YOUR DATA CENTRE                 AWS
-─────────────────                ─────────────────────────
-Core Network                     VPC
-     │                                │
-     │                                │
-  VPN GW ═══ IPSec tunnel ══════► VGW (Virtual Private Gateway)
-     │        (encrypted,             │
-     │         over internet)         └── your private subnets
-     │
-     │
-  Router ──── dedicated line ──► Direct Connect location
-              (private, no           │
-               public internet)      └── VGW or Transit Gateway
-
-VPN:            cheaper, uses internet, easy to set up
-Direct Connect: faster, private, more expensive, needs carrier
-Both can run:   Direct Connect primary + VPN as failover
 ```
 
 ---

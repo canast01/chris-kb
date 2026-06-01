@@ -52,44 +52,6 @@ graph LR
 │   │  ruff         = replaces flake8 + black + isort; configured in [tool.ruff] in pyproject.toml  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Package Management (pip)
-
-```bash
-# Install a package
-pip install requests
-
-# Install a specific version
-pip install netapp-ontap==22.11.0
-
-# Install from requirements file
-pip install -r requirements.txt
-
-# Upgrade a package
-pip install --upgrade boto3
-
-# Uninstall
-pip uninstall paramiko -y
-
-# List installed packages
-pip list
-
-# List outdated packages
-pip list --outdated
-
-# Show details for a package (version, location, dependencies)
-pip show pyVmomi
-
-# Export current environment to requirements file
-pip freeze > requirements.txt
-
-# Install packages without cache (useful in CI or disk-constrained environments)
-pip install --no-cache-dir -r requirements.txt
-
-# Install in user space (no venv, no sudo)
-pip install --user ansible
 ```
 
 ---

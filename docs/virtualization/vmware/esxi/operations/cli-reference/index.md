@@ -5,8 +5,8 @@
 ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6 more sections.
 </div>
 
-```text
 ESXi CLI Tool Map
+```
 ┌─────────────────────────────────────────────────────────┐
 │  esxcli — structured CLI for host management            │
 │  ├── system    hostname, ntp, syslog, accounts           │
@@ -78,25 +78,6 @@ ESXi CLI Tool Map
 │  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Restart management agents
-/etc/init.d/hostd restart
-/etc/init.d/vpxa restart
-/etc/init.d/ntpd restart
-/etc/init.d/ssh start
-/etc/init.d/ssh stop
-
-# All services
-services.sh restart
-services.sh status
-
-# Check host version
-vmware -v
-vmware -l
-
-# Uptime
-uptime
 ```
 
 ```bash

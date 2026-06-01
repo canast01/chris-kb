@@ -66,37 +66,6 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 │  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Stage 2: Map Application Dependencies
-
-AON builds application tiers automatically by clustering VMs that communicate with each other. You can also define application boundaries manually:
-
-**UI**: Plan & Assess → Applications → Add Application → Define membership by:
-- NSX security group membership
-- VM name regex (`web-.*`, `db-.*`)
-- IP subnet
-- NSX tag
-
-### Stage 3: Generate Security Group Recommendations
-
-Once an application is defined, AON analyzes all observed flows and recommends:
-- Which VMs should be in which NSX security groups
-- Which DFW rules to create (source group, destination group, port, action)
-- Flows that will be **allowed** vs **blocked** by the recommended policy
-
-**UI**: Plan & Assess → Micro-Segmentation → Recommended Rules tab
-
-The recommendation output includes:
-```yaml
-Source Group: sg-web-tier
-Destination Group: sg-db-tier
-Port: TCP 3306
-Action: Allow
-
-Source Group: sg-web-tier
-Destination Group: any
-Port: TCP 443
-Action: Allow
 ```
 
 ### Stage 4: Push to NSX

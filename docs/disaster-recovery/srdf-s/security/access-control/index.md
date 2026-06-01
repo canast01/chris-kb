@@ -5,7 +5,7 @@
 Access Control reference covering Preventing Accidental Failover, Audit Logging.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── SRDF/S — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -43,34 +43,6 @@ Access Control reference covering Preventing Accidental Failover, Audit Logging.
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [SRDF/S Security](../index.md) reference.
-
----
-
-## Preventing Accidental Failover
-
-SRDF/S failovers are zero-data-loss but cause site-wide impact. Guard against accidental execution:
-
-- Require second-factor confirmation for `symrdf failover` in production:
-  ```bash
-  export SYMCLI_CONFIRM=prompt    # Requires manual y/n before executing
-  ```
-- Implement a two-person rule: all production SRDF failovers require peer approval before execution
-- Restrict `symrdf establish -full` (full resync) to break-glass account — this destroys R2 content
-
----
-
-## Audit Logging
-
-All SRDF state changes are recorded in the PowerMax audit log:
-
-```bash
-# View recent RDF events
-symevent list -sid <SID> -type rdf -last 100
-
-# Export for SIEM ingest
-symevent list -sid <SID> -type rdf -output csv > /tmp/rdf_events.csv
 ```
 
 Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM. Alert on:

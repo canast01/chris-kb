@@ -87,18 +87,6 @@ sannav license
 │  curl            = command-line HTTP client; used to test SANnav REST API endpoints                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Upgrade
-
-```bash
-# Apply an upgrade package
-sannav upgrade /tmp/sannav-upgrade-2.4.0.bin
-
-# Check upgrade status (during upgrade)
-sannav upgrade --status
-
-# Show upgrade history
-sannav upgrade --history
 ```
 
 ### Network Configuration

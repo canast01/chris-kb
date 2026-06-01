@@ -53,19 +53,6 @@ git push backup --mirror
 │   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Filesystem Backup (Control Node)
-
-```bash
-# Critical paths
-rsync -avz --delete \
-  /home/ansible/.ssh/ \
-  backup-server.example.com:/backups/ansible/ssh/$(date +%F)/
-
-# Encrypted tar
-tar czf - /home/ansible/.ssh/ | \
-  openssl enc -aes-256-cbc -pbkdf2 -pass file:/etc/ansible-backup.key | \
-  ssh backup-server "cat > /backups/ansible/ssh-$(date +%F).tar.gz.enc"
 ```
 
 ## AWX / AAP Export

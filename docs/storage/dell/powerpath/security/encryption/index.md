@@ -5,7 +5,7 @@
 Encryption reference covering Overview, Encryption Responsibility Matrix.
 </div>
 
-```text
+```
 ┌──────────────────────────────── Dell PowerPath Security — Encryption ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

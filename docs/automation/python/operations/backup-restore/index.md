@@ -60,20 +60,6 @@ git push origin v1.4.2
 │   │     Python version = document in .python-version (pyenv) or pyproject.toml requires-python    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### `poetry` projects
-
-```bash
-# Lock file is auto-managed — update after dependency changes
-poetry lock
-
-# Export to requirements.txt format for Docker or CI
-poetry export -f requirements.txt --output requirements.txt --without-hashes
-poetry export -f requirements.txt --output requirements-dev.txt --with dev --without-hashes
-
-# Verify lock file is consistent with pyproject.toml
-poetry check
-poetry lock --check
 ```
 
 ### Offline package cache (air-gapped environments)

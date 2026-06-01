@@ -5,7 +5,7 @@
 Encryption reference covering Backup Encryption.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Veeam — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,15 +45,6 @@ Encryption reference covering Backup Encryption.
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Backup Encryption
-
-Enable AES-256 encryption per backup job:
-
-```powershell
-# VBR console: Job Properties → Storage → Enable backup file encryption
-# Enter encryption password — stored in VBR config DB
-# Export encryption keys after creation: Main Menu → Manage Passwords → Export
 ```
 
 ### S3 Object Lock (SOBR Capacity Tier)

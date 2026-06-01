@@ -97,66 +97,6 @@ flowchart TD
 │    Access review = Periodic check that all current permissions are still appropriate and needed       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Privileged Access Management (PAM)
-
-Restricted data access for privileged accounts must be brokered through a PAM solution (CyberArk, BeyondTrust):
-- Session recording enabled for all privileged access to data stores
-- Just-in-time (JIT) access provisioning — no standing Restricted access for admin accounts
-- Credentials vaulted and rotated automatically
-
----
-
-## GDPR and Compliance Alignment
-
-| Requirement | GDPR Article | Implementation |
-|---|---|---|
-| Lawful basis for processing | Art. 6 | Data Owner documents basis in Data Register |
-| Data minimisation | Art. 5(1)(c) | DLP + access controls limit scope of processing |
-| Right of access (DSAR) | Art. 15 | Purview Content Search + documented DSAR process (30-day SLA) |
-| Right to erasure | Art. 17 | Deletion workflow: data custodian executes secure erase; legal hold check required first |
-| Data breach notification | Art. 33 | 72-hour notification to supervisory authority; incident response procedure |
-| Records of processing activities (ROPA) | Art. 30 | Maintained in CMDB / GRC tool; reviewed annually |
-| Data Protection Impact Assessment (DPIA) | Art. 35 | Required for new systems processing Restricted data |
-| Data transfers outside EU/UK | Art. 44-49 | Standard Contractual Clauses (SCCs) / adequacy decisions documented per transfer |
-
----
-
-## Data Lineage Tracking
-
-Data lineage maps the origin, movement, transformation, and consumption of data assets. It is essential for impact analysis, compliance audits, and incident response.
-
-Tools:
-- **Microsoft Purview Data Map** — auto-scans Azure, SQL, SharePoint, and on-prem SQL Server to build lineage graphs
-- **Apache Atlas** — for Hadoop/data lake environments
-- **Informatica IDMC** — for complex ETL pipeline lineage
-- **Manual ROPA entries** — for systems not covered by automated scanning
-
-Minimum lineage record per dataset:
-
-| Field | Example |
-|---|---|
-| Dataset name | CustomerOrders_2026 |
-| Source system | ERP (SAP S/4HANA) |
-| Processing steps | Extract → Transform (PII mask) → Load to DWH |
-| Consumers | Finance BI team, Sales reports, Audit |
-| Classification | Confidential |
-| Data Owner | Head of Finance |
-| Last reviewed | 2026-05-01 |
-
----
-
-## Quarterly Access Review Process
-
-Access reviews must be completed within 10 business days of quarter start.
-
-1. **Generate access report** — export group memberships and share/application permissions from AD and target systems.
-
-```powershell
-# Export AD group members for review
-Get-ADGroupMember -Identity "DL-FinanceData-ReadOnly" -Recursive |
-    Select-Object Name, SamAccountName, ObjectClass |
-    Export-Csv "C:\Reviews\Q2-2026-FinanceData-Access.csv" -NoTypeInformation
 ```
 
 2. **Distribute to Data Owners** — send CSV report to relevant Data Owner via secure channel with 5-business-day response deadline.

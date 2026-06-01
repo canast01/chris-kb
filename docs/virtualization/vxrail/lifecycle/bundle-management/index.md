@@ -5,17 +5,21 @@
 VxRail Bundle Management reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
 Bundle Lifecycle Flow
+```
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Dell Support Portal / Offline Source                       │
 │  Download VxRail Composite Bundle (.zip)                    │
 └──────────────────────────┬──────────────────────────────────┘
+```
                            │  upload via UI or SCP
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  VxRail Manager — Bundle Upload                             │
 │  System → Lifecycle → Upload Bundle                         │
 └──────────────────────────┬──────────────────────────────────┘
+```
                            │  automatic
 ┌──────────────────────────▼──────────────────────────────────┐
 │  Validation                                                  │
@@ -24,6 +28,7 @@ Bundle Lifecycle Flow
 │  FAIL → error detail, do not proceed                        │
 └──────────────────────────┬──────────────────────────────────┘
                            │  on LCM start
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  Stage → Apply                                              │
 │  VxRail Manager extracts components → applies node-by-node  │

@@ -4,7 +4,7 @@
 Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers writes and transmits to R2 on a ~30-second cycle; RPO equals the last completed cycle.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── SRDF/A — Architecture ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

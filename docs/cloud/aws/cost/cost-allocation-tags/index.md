@@ -5,7 +5,7 @@
 AWS Cost Allocation Tags reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── AWS Cost — Cost Allocation Tags ───────────────────────────────────┐
 │                                                                                                       │
 │  Cost allocation tags enable chargeback and showback by team, environment, and project.               │
@@ -51,33 +51,6 @@ AWS Cost Allocation Tags reference covering Overview, Where It Fits, Daily Check
 │  IaC tagging     = Define required tags in Terraform/CloudFormation at resource level                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Cost Allocation Tags: Tag → Activate → Report
-──────────────────────────────────────────────────────────────
-
-  ┌─────────────────────────────────────────────────────┐
-  │  Resource Tags (applied at resource creation)       │
-  │  ┌────────────────┐  ┌───────────┐  ┌────────────┐  │
-  │  │ Key: env       │  │Key: owner │  │Key: cost-  │  │
-  │  │ Val: prod      │  │Val: team-A│  │     centre │  │
-  │  └────────────────┘  └───────────┘  │Val: CC-123 │  │
-  │                                     └────────────┘  │
-  └──────────────────────────┬──────────────────────────┘
-                             │ activate in Billing console
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │  AWS Billing — Activate Cost Allocation Tags        │
-  │  (up to 24h delay before tags appear in reports)    │
-  └──────────────────────────┬──────────────────────────┘
-                             │
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │  Cost Explorer — Filter & Group by tag              │
-  │  Group by: env → prod: $X  /  staging: $Y           │
-  │  Group by: owner → team-A: $X  /  team-B: $Y        │
-  │  Export ──► chargeback / showback report            │
-  └─────────────────────────────────────────────────────┘
 ```
 
 ## Overview

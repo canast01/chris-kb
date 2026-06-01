@@ -82,22 +82,6 @@ keystone-collector upgrade --apply
 │    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## NetApp ONTAP REST API (Keystone Collector Bootstrap)
-
-```bash
-# Test API connectivity from Collector VM to ONTAP
-curl -s -u admin:<password> \
-    "https://<ontap-mgmt-ip>/api/cluster" | jq '.name, .version.full'
-
-# List SVMs via REST
-curl -s -u admin:<password> \
-    "https://<ontap-mgmt-ip>/api/svm/svms" | jq '.records[].name'
-
-# Volume list via REST
-curl -s -u admin:<password> \
-    "https://<ontap-mgmt-ip>/api/storage/volumes?svm.name=<keystone-svm>" | \
-    jq '.records[] | "\(.name) \(.space.used) / \(.space.size)"'
 ```
 
 ## Keystone Portal API

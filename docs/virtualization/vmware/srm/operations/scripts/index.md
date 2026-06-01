@@ -5,8 +5,8 @@
 Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Test Failover Date and Result, Alert on Plans Not Tested in 30 Days, Check Placeholder VMs Exist at Recovery Site, Export Recovery Plan Summary.
 </div>
 
-```text
   SRM Automation via PowerCLI + REST API
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Connect-SrmServer ──► $srm.ExtensionData.*                  │
 │                                                              │
@@ -66,32 +66,6 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  Plan run date = stored in SRM DB; queryable via REST API                                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Get All Protected VMs and RPO Compliance
-
-```powershell
-$pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
-$results = @()
-
-foreach ($pg in $pgs) {
-    $vms = $srm.ExtensionData.Protection.ListProtectedVms($pg)
-    foreach ($vm in $vms) {
-        # Get last replication time from vSphere Replication if applicable
-        $vrState = $vm.ReplicationState
-
-        $results += [PSCustomObject]@{
-            ProtectionGroup  = $pg.Name
-            VMName           = $vm.Vm.Name
-            State            = $vm.State
-            ReplicationState = $vrState
-        }
-    }
-}
-
-$results | Export-Csv "srm-protected-vms-$(Get-Date -Format yyyyMMdd).csv" -NoTypeInformation
-Write-Host "Exported $($results.Count) protected VMs"
 ```
 
 ---

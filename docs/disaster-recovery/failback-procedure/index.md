@@ -61,25 +61,6 @@ switchshow                        # Brocade
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Veeam — run a final backup at DR before failback:**
-1. Veeam Backup & Replication → Replication jobs → Run job
-2. Confirm backup completes before proceeding
-
-## Phase 3 — Plan the Cutover Window
-
-- Agree on maintenance window with application owners
-- Set DNS TTL to 60 seconds at least 1 hour before cutover
-- Notify users of planned outage window
-- Have rollback plan documented: if failback fails, return to DR
-
-## Phase 4 — Initiate Failback
-
-**Graceful shutdown at DR:**
-```bash
-systemctl stop <application-service>
-# Confirm no active sessions
-ss -tnp | grep <port>
 ```
 
 **Wait for replication to catch up:**

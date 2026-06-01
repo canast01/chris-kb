@@ -74,18 +74,6 @@ SSM CLI: Session · Command · Parameter Store · Patching
 │  Managed instance= EC2 or on-prem server with SSM agent registered to account                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Run Command
-
-```bash
-# Run a shell command on one instance
-aws ssm send-command \
-  --instance-ids <id> \
-  --document-name "AWS-RunShellScript" \
-  --parameters commands="uptime"
-
-# Track command results
-aws ssm list-command-invocations --command-id <cmd_id> --details
 ```
 
 ## Parameter Store

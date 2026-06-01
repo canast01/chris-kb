@@ -53,13 +53,6 @@ ss -tulnp
 │    PAT            = Port Address Translation; maps multiple private IPs to one public IP+port         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### View Security Policy
-
-```bash
-show running security-policy    # PAN-OS
-show security policies          # Juniper SRX
-show access-list                # Cisco ASA
 ```
 
 ### Test Connectivity Through a Firewall

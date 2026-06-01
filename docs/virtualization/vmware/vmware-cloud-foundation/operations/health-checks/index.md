@@ -5,8 +5,8 @@
 Health Checks reference covering Common Operational Issues.
 </div>
 
-```text
 VCF Daily Health Check — Coverage Map
+```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager                                       │
 │  ├─ Dashboard: all domains green?                   │
@@ -14,9 +14,11 @@ VCF Daily Health Check — Coverage Map
 │  ├─ LCM → Bundles: critical patches pending?        │
 │  └─ Admin → Backup: last backup timestamp OK?       │
 └──────────────────────┬──────────────────────────────┘
+```
                        │
           ┌────────────┼────────────┐
           ▼            ▼            ▼
+```
 ┌──────────────┐ ┌──────────┐ ┌──────────────────────┐
 │ NSX Manager  │ │ vCenter  │ │ SDDC Manager          │
 │              │ │ per WLD  │ │ appliance disk        │
@@ -75,13 +77,6 @@ VCF Daily Health Check — Coverage Map
 │  Domain view   = per-domain health in SDDC Mgr Workload Domains tab                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**SDDC Manager appliance disk:**
-
-```bash
-ssh vcf@<sddc-manager-ip>
-df -h
-# Alert if /data or / is above 80%
 ```
 
 ## Common Operational Issues

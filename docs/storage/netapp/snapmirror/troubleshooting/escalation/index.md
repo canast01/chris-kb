@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapMirror Troubleshooting](../index.md) reference.
 </div>
+```
+┌─────────────────────────────────── NetApp SnapMirror — Escalation ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     SnapMirror escalation: severity triage, vendor support contact, and required artifacts    │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
+│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
+│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
+│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
+│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
+│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
+│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
+│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
+│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
+│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
+│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
+│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
+│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
+│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
+│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

@@ -8,7 +8,7 @@ title: SAN
 SAN knowledge base covering Cisco MDS switches, DCNM, Nexus Dashboard, Brocade Fabric OS, and SANnav. Includes fabric architecture, zoning standards, ISL and port configuration, host connectivity, CLI references, health checks, and troubleshooting guides for Fibre Channel environments.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SAN Fabric Overview ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

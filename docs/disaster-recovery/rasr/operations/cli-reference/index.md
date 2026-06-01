@@ -55,39 +55,6 @@ C:\Program Files\Dell\RASR\rasrutil.exe
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Required:**
-
-| Parameter | Description |
-|---|---|
-| `/dest <path>` | Destination path — local drive letter or UNC path |
-
-**Optional:**
-
-| Parameter | Description |
-|---|---|
-| `/user <domain\user>` | Username for network share authentication |
-| `/pass <password>` | Password for network share authentication |
-| `/compress` | Enable image compression (recommended) |
-| `/log <path>` | Path to write log file |
-| `/description "<text>"` | Human-readable label for the image |
-| `/volumes <C,D>` | Comma-separated volumes to include (default: all system volumes) |
-| `/exclude <path>` | Exclude a specific path from the image |
-
-**Examples:**
-
-```cmd
-:: Backup to network share with authentication and compression
-rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
-  /user CORP\svc-rasr /pass S3cr3t! /compress ^
-  /log C:\Logs\rasr.log /description "Pre-patch baseline 2026-05-08"
-
-:: Backup only the system volume to local USB
-rasrutil.exe /backup /dest E:\images /volumes C /compress
-
-:: Backup with exclusion of temp files
-rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 ^
-  /compress /exclude C:\Temp
 ```
 
 ---

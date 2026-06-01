@@ -55,20 +55,6 @@ kubectl logs -n nd-base <pod_name>
 │  APIC Read-Only = Minimum privilege for NDI APIC credentials: Observer role                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Insights & Alerts
-
-```bash
-# List all active alerts
-curl -k -X GET "https://<nd_fqdn>/nexus/infra/api/api/v1/faults?severity=critical"   -H "Authorization: <token>"
-
-# List anomalies
-curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/events/anomalies   -H "Authorization: <token>"
-
-# List advisories
-curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/advisories   -H "Authorization: <token>"
 ```
 
 ---

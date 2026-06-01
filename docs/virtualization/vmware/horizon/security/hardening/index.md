@@ -5,8 +5,8 @@
 Hardening reference covering Windows Hardening of Connection Server, UAG Hardening, USB Redirection Policy, Clipboard Direction Restriction, Drive Mapping Restriction and 3 more sections.
 </div>
 
-```text
   Hardening Checklist Coverage
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server          UAG                              │
 │  ┌──────────────────────┐   ┌──────────────────────────┐     │
@@ -70,20 +70,6 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │  Isolated VLAN = desktop VMs cannot reach management or other VLANs                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Windows Hardening of Connection Server
-
-```powershell
-# Disable unused services
-Stop-Service -Name "Fax" -ErrorAction SilentlyContinue
-Stop-Service -Name "XblAuthManager" -ErrorAction SilentlyContinue
-
-# AV exclusions for Connection Server (add to your AV policy):
-# C:\Program Files\VMware\VMware View\
-# C:\ProgramData\VMware\VDM\
-
-# Enable Windows Firewall — allow only required ports
-# TCP 443 (HTTPS), TCP 8443 (Blast), TCP 4001 (JMS inter-CS), TCP 22389 (LDAP replica)
 ```
 
 ---

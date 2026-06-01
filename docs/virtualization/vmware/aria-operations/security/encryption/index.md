@@ -57,18 +57,6 @@ Administration → Certificates → Replace Certificate
 │  Self-Signed Default = vROps ships with self-signed cert; replace for production                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Cluster-Internal TLS
-
-All inter-node communication within the Aria Operations cluster is encrypted using TLS. The cluster uses internally generated certificates for node-to-node communication — these are managed automatically and do not require manual replacement.
-
-To verify cluster nodes are communicating over TLS:
-
-```bash
-# From primary node — check Cassandra inter-node encryption
-grep -i "ssl\|tls\|encrypt" /storage/db/cassandra/cassandra.yaml | grep -v "#"
 ```
 
 ---

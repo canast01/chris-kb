@@ -5,7 +5,7 @@
 Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection reference covering Performance Predictions, Bottleneck Detection, Noisy Neighbour Detection, Common Insight Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Dell AIOps — Insights ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,28 +36,6 @@ Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 │  Pattern = Recurring behaviour observed across objects over time; basis for insight generation        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-I/O pattern classifications:
-
-| Pattern | Read/Write Split | Block Size | Typical Workload |
-|---|---|---|---|
-| Sequential Read | >70% read | >128 KB | Backup restore, analytics |
-| Sequential Write | >70% write | >128 KB | Log streaming, backup |
-| Random Read | >70% read | <32 KB | Database index scans |
-| Random Write | >70% write | <32 KB | OLTP databases |
-| Mixed Random | ~50/50 | <64 KB | Virtualisation |
-
-## Performance Predictions
-
-AIOps provides a 7 and 30-day forward projection of key performance metrics based on current trends.
-
-```bash
-# Get performance prediction for a specific system
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/performance_predictions?system_id=<systemId>" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.predictions[] | {metric, current_value, predicted_7d, predicted_30d, confidence}'
 ```
 
 Key predicted metrics:

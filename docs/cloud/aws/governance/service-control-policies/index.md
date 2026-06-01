@@ -5,7 +5,7 @@
 AWS Service Control Policies reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────── AWS Governance — Service Control Policies ──────────────────────────────┐
 │                                                                                                       │
 │  SCPs define maximum permissions for OUs and accounts; deny by default override IAM.                  │
@@ -51,36 +51,6 @@ AWS Service Control Policies reference covering Overview, Where It Fits, Daily C
 │  AccessDenied    = Error returned when SCP blocks an action; check Organizations                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-SCPs: Org Root → OU → Account → IAM Policy evaluation
-──────────────────────────────────────────────────────────────
-
-  Request arrives at AWS API
-          │
-          ▼
-  ┌──────────────────────┐
-  │  Root SCP            │ ── Deny? ──► ACCESS DENIED
-  └──────────┬───────────┘
-             │ allow
-             ▼
-  ┌──────────────────────┐
-  │  OU SCP              │ ── Deny? ──► ACCESS DENIED
-  └──────────┬───────────┘
-             │ allow
-             ▼
-  ┌──────────────────────┐
-  │  Account SCP         │ ── Deny? ──► ACCESS DENIED
-  └──────────┬───────────┘
-             │ allow (max permissions boundary set)
-             ▼
-  ┌──────────────────────┐
-  │  IAM Policy          │ ── Allow? ──► ACCESS GRANTED
-  │  (identity/resource) │ ── Deny? ───► ACCESS DENIED
-  └──────────────────────┘
-
-  Note: SCPs do not grant permissions — they only restrict.
-  A SCP Allow + no IAM Allow = still denied.
 ```
 
 ## Overview

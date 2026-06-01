@@ -5,8 +5,8 @@
 Procedures reference covering Configure Replication on a VM, Change RPO for a Replicated VM, Add VM to SRM Protection Group After VR Configured, Pause and Resume Replication, Recover a VM (Standalone VR) and 5 more sections.
 </div>
 
-```text
   Key Operational Procedures
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Configure Replication           Monitor + Manage            │
 │  ┌──────────────────────┐        ┌──────────────────────┐    │

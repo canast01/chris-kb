@@ -65,15 +65,6 @@ Administration → Authentication → Active Directory → Configure
 │  MFA               = Not native to vRLI; enforce MFA via vIDM if SSO integrated                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## AD Group-Based Role Assignment
-
-After AD is configured, map AD groups to Aria Ops for Logs roles:
-
-```text
-Administration → Authentication → Active Directory → Group Access
 ```
 
 | AD Group | Aria Ops for Logs Role |

@@ -90,18 +90,6 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Sessions & History
-
-```powershell
-# List recent sessions, newest first
-Get-VBRBackupSession | Sort-Object CreationTime -Descending | Select -First 20
-
-# Show session result and duration for a job
-Get-VBRBackupSession | Where-Object { $_.JobName -eq "prod-vm-daily" } |
-  Select JobName, State, Result, CreationTime, EndTime
 ```
 
 ---

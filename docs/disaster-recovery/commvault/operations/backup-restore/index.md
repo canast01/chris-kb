@@ -103,48 +103,6 @@ curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
 │  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
 │  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Restore Types
-
-### Full VM Restore (VMware)
-
-Restores the entire VM to a hypervisor — either in-place or to an alternate location.
-
-**Steps (CommCell Console):**
-
-1. **Protected VMs** → right-click VM → **Browse and Restore**.
-2. Select recovery point (date/time or specific job).
-3. Choose **Virtual Machine** → **Restore as VM**.
-4. Select destination host, datastore, and network.
-5. Optionally power on after restore.
-
-**Via REST API:**
-
-```bash
-curl -s -X POST "https://commserve.example.com/webconsole/api/v4/VM/Recover" \
-  -H "Authtoken: <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "taskInfo": {
-      "task": {"taskType": 1},
-      "subTasks": [{
-        "subTask": {"subTaskType": 3, "operationType": 1001},
-        "options": {
-          "restoreOptions": {
-            "virtualServerRestoreOptions": {
-              "diskLevelVMRestoreOption": {
-                "restoreToDefaultHost": false,
-                "esxHost": "esx01.example.com",
-                "dataStore": "DS_Production"
-              }
-            }
-          }
-        }
-      }]
-    }
-  }'
 ```
 
 ### File-Level Recovery (Guest Files)

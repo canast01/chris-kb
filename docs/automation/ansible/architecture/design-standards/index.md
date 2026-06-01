@@ -60,14 +60,6 @@ ansible-project/
 │   │          no_log: true  = suppress task output for tasks handling passwords or secrets         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Templates and Files
-
-```text
-templates/nginx.conf.j2      # .j2 suffix for all Jinja2 templates
-tasks/packages.yml           # domain concept, not a verb
-tasks/config.yml
-tasks/service.yml
 ```
 
 ## Module Standards

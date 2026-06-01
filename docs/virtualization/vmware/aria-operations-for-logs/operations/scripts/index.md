@@ -73,29 +73,6 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=
 │  Bearer header     = Authorization: Bearer <sessionId> on subsequent API calls                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Query Recent Events via API
-
-Use the API to search for log events programmatically (useful for automation and integration with incident management tools).
-
-```bash
-#!/usr/bin/env bash
-# Search for authentication failures in the last hour
-VRLI="vrli-prod-01.example.local"
-START=$(date -d "1 hour ago" +%s)000  # milliseconds
-END=$(date +%s)000
-
-curl -sk -u "admin:<password>" \
-  -H "Content-Type: application/json" \
-  -X POST "https://$VRLI/api/v2/events/ingest" \
-  -d "{
-    \"query\": \"Failed to authenticate OR authentication failure\",
-    \"start-time\": $START,
-    \"end-time\": $END,
-    \"limit\": 100
-  }" | jq '.events[] | {time: .timestamp, host: .fields.hostname, text: .text}'
 ```
 
 ---

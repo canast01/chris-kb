@@ -89,30 +89,6 @@ flowchart TD
 │    RPO breach  = Lag exceeds configured RPO target; escalate immediately as DR goal at risk           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Verify SRDF Link Health
-
-```bash
-# Check SRDF link status and error counters
-symrdf -g RDF_GRP_01 verify
-
-# Check SRDF/A cycle information (async groups)
-symrdf -g RDF_GRP_01 -type rdfa list
-
-# Example async output:
-# RDF Group (R1) : RDF_GRP_01
-# SRDF/A State   : Transmitting
-# Domino         : Enabled
-# DSE State      : Enabled
-# Cycle Num      : 4521
-# Cycle Time     : 00:00:03  ← cycle time; increase = lag growing
-
-# Get RDF port statistics (check error counters)
-symrdf -sid 000123 -rdfg 1 -type port list
-
-# Resume a suspended SRDF group (after resolving the root cause)
-# -nop = no prompt; ensure R1/R2 consistency is understood before running
-symrdf -g RDF_GRP_01 resume -nop
 ```
 
 ### SRDF Error Codes

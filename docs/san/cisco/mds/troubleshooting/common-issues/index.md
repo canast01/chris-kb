@@ -80,45 +80,6 @@ show fcdomain domain-list vsan 10
 │  CRC error      = Frame checksum failure; indicates physical layer problem                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Resolution by cause:**
-
-| Cause | Indicator | Fix |
-|---|---|---|
-| Fibre cable failure | `not-connected` reason; no Rx optical power | Replace fibre cable |
-| Failed SFP | Rx power very low or absent in transceiver output | Replace SFP |
-| HBA not sending FLOGI | Port up but no FLOGI entry | Check host HBA driver, firmware, and link state |
-| VSAN not assigned | Port up but device missing from `show flogi database` | `vsan database` → `vsan <id> interface fc<x/y>` |
-| Speed mismatch | Port negotiates down repeatedly | Force speed: `switchport speed <8000|16000|32000>` |
-| errDisabled | See errDisabled section below | Resolve root cause, then `no shutdown` |
-
----
-
-## errDisabled Port
-
-**Symptom:** `show interface brief` shows `errDisabled`. NX-OS automatically disabled the port after detecting a fault.
-
-```mermaid
-flowchart TD
-  A["Port in errDisabled\n(show interface brief)"] --> B["Read error reason\n(show interface fc1/4)"]
-  B --> C{"errDisabled reason?"}
-  C -->|"fcot-not-present"| D["Reseat or replace SFP"]
-  C -->|"link-failure-count-exceeded"| E["Replace SFP → test\nReplace cable → test\nCheck peer HBA/port"]
-  C -->|"isolation"| F["Resolve VSAN merge conflict\nCheck show trunk — allowed VSANs\nCheck fcdomain domain-list"]
-  C -->|"rcf-failure"| G["Assign unique static domain ID\nbefore ISL reconnect"]
-  C -->|"cfg-invalid"| H["Fix VSAN assignment\nor port mode config"]
-  D & E & F & G & H --> I{"Root cause\nresolved?"}
-  I -->|"No — do not re-enable"| J["Collect show tech-support\nOpen Cisco TAC case"]
-  I -->|"Yes"| K["shutdown → no shutdown\nVerify state = up"]
-
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-  classDef good fill:#15803d,stroke:#166534,color:#fff
-  class C,I decision
-  class D,E,F,G,H fix
-  class J warn
-  class K good
 ```
 
 ```bash

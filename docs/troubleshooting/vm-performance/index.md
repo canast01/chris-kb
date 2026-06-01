@@ -98,43 +98,6 @@ flowchart TD
 │    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### CPU Ready — Common Causes and Fixes
-
-| Cause | Indicator | Fix |
-|---|---|---|
-| Host CPU overcommitted | Host %Used >70%; many VMs on host | DRS migration; add ESXi host |
-| VM has too many vCPUs | %CSTP high; VM rarely uses all vCPUs | Reduce vCPU count to match workload |
-| vCPU hard limit set | %MLMTD >0 | Remove or increase CPU limit on VM |
-| Hyper-threading contention | HT siblings competing | Adjust HT sharing policy in advanced settings |
-
----
-
-## Memory Balloon and Swap Investigation
-
-VMware uses a three-tier memory reclamation hierarchy: Balloon → Swap → Compress.
-
-```bash
-# In esxtop — press 'm' for memory view
-# Key columns for a VM:
-# MCTLSZ  — current balloon size in MB (vmmemctl active)
-#            >0 = guest OS is being asked to give back memory
-# SWPWRT  — swap write rate MB/s (hypervisor swapping VM pages to disk)
-#            >0 = serious; causes dramatic latency
-# MEMCTL%  — percentage of allocated VM memory being ballooned
-# GRANT    — memory granted to VM (may be less than configured)
-# CNSM     — memory consumed by VM
-# TCHD     — memory touched (active working set)
-
-# Check balloon driver status inside Linux guest
-dmesg | grep -i balloon
-lsmod | grep vmmemctl
-
-# Check inside Windows guest (PowerShell)
-Get-WmiObject Win32_PhysicalMemory | Measure-Object Capacity -Sum
-
-# Check host-level memory pressure (ESXi host)
-# esxtop 'm' → look at host row: free memory, swap in/out rates
 ```
 
 ### Memory Reclamation States

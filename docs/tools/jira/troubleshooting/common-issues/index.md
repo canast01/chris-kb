@@ -88,14 +88,6 @@ jcmd "${JIRA_PID}" GC.heap_info
 │  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Restart Jira to apply.
-
-**2. Capture Heap Dump for Root Cause**
-
-```bash
-JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)
-jmap -dump:format=b,live,file=/tmp/jira-heap.hprof "${JIRA_PID}"
 ```
 
 Analyse with Eclipse Memory Analyser Tool (MAT) to identify leaking object graph.

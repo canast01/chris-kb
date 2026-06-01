@@ -74,21 +74,6 @@ Settings → My Account → Change Password
 │  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-After LDAP is configured, add Role Mappings (Settings → Authentication → Role Mappings) to map AD groups to vRNI roles.
-
----
-
-## SAML / VMware Identity Manager
-
-```text
-Settings → Authentication → SAML
-
-  IdP Metadata URL: https://vidm.example.local/SAAS/API/1.0/GET/metadata/idp.xml
-  SP Entity ID:     https://vrni.example.local  (auto-populated)
-  NameID Format:    urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
-
-  Download SP Metadata → import into vIDM as Service Provider
 ```
 
 Attribute mapping in vIDM:

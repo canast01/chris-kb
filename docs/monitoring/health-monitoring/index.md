@@ -5,7 +5,7 @@
 Infrastructure Health Monitoring reference covering Server Health (Windows), Storage Array Health, Network Health, Monitoring Agent Validation, Escalation Thresholds (reference).
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,19 +48,6 @@ Infrastructure Health Monitoring reference covering Server Health (Windows), Sto
 │  Historical baseline= Learned normal behaviour used to calibrate anomaly detection                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Server Health (Windows)
-
-```powershell
-# Services not running that should be
-Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Automatic' }
-
-# Disk usage
-Get-Volume | Select-Object DriveLetter, FileSystemLabel, @{N='UsedGB';E={[math]::Round(($_.Size - $_.SizeRemaining)/1GB,1)}}, @{N='FreeGB';E={[math]::Round($_.SizeRemaining/1GB,1)}}, @{N='Size';E={[math]::Round($_.Size/1GB,1)}}
-
-# Recent system errors
-Get-EventLog -LogName System -EntryType Error -Newest 20
 ```
 
 ## Storage Array Health

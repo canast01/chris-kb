@@ -8,8 +8,8 @@ title: iSCSI
 iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands over TCP/IP, delivering block storage across standard Ethernet on port 3260. Coverage includes initiator IQN naming, target discovery, CHAP authentication, multipathing (dm-multipath/MPIO), and network tuning for storage VLANs.
 </div>
 
-```text
         iSCSI END-TO-END ARCHITECTURE
+```
 ┌────────────────────┐       ┌──────────────────┐       ┌──────────────────┐
 │       HOST         │       │   IP NETWORK     │       │  iSCSI TARGET    │
 │                    │       │                  │       │  (Storage Array) │

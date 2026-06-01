@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [FOD](../index.md) reference.
 </div>
+```
+┌────────────────────────────────────── Dell FoD — CLI Reference ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │            FoD CLI: command-line interface for all management and operational tasks           │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │         License type        │  │        Permanent/Term       │  │       Feature-specific      │   │
+│   │          Activation         │  │         Key → array         │  │        Instant unlock       │   │
+│   │            Scope            │  │         Per-array SN        │  │       Non-transferable      │   │
+│   │           Features          │  │       Replication/Tier      │  │       Product-defined       │   │
+│   │            Audit            │  │        License report       │  │          Compliance         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Dell array with FoD-capable firmware · Dell licensing portal · array management          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FoD                = Feature on Demand; software capabilities locked in firmware, unlocked by li...│
+│    License key        = alphanumeric string generated at purchase; applied via GUI, CLI, or REST API  │
+│    Permanent license  = perpetual feature unlock; tied to specific array serial number                │
+│    Term license       = time-limited feature unlock; expires unless renewed through Dell portal       │
+│    Entitlement        = purchased right to use a feature; tracked in Dell software licensing portal   │
+│    License transfer   = FoD licenses are non-transferable between different array serial numbers      │
+│    Replication FoD    = unlocks synchronous or asynchronous array replication features                │
+│    Tier FoD           = unlocks FAST VP or cloud tiering between performance and capacity tiers       │
+│    License audit      = periodic reconciliation of active features versus licensed entitlements       │
+│    LicenseManager     = Dell tool for bulk license management across multiple array systems           │
+│    Array serial       = unique array identifier; FoD licenses are cryptographically bound to it       │
+│    FoD portal         = licensing.dell.com; purchase, download, and track all FoD license keys        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

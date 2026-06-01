@@ -102,27 +102,6 @@ aws rds start-db-instance --db-instance-identifier <db-id>
 │  DR test         = Disaster recovery test validating RTO/RPO targets are achievable                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Key CloudWatch Metrics
-
-| Metric | Warning Threshold | Critical Threshold |
-|---|---|---|
-| CPUUtilization | >70% | >90% |
-| FreeStorageSpace | <20% | <10% |
-| ReadLatency / WriteLatency | >10ms | >50ms |
-| DatabaseConnections | >80% of `max_connections` | >95% |
-| FreeableMemory | <20% | <10% |
-| ReplicaLag (read replicas) | >30s | >120s |
-
-### Restore from Snapshot
-
-```bash
-# Restore to new instance from snapshot
-aws rds restore-db-instance-from-db-snapshot \
-  --db-instance-identifier <new-db-id> \
-  --db-snapshot-identifier <snap-id> \
-  --db-instance-class db.r6g.large \
-  --no-publicly-accessible
 ```
 
 ### Troubleshooting

@@ -5,8 +5,8 @@
 DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference and 2 more sections.
 </div>
 
-```text
         RESERVATION: MAC → FIXED IP
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  DHCP Scope: 192.168.10.0/24                                 │
 │  ┌──────────────────────────────────────────────────────┐    │

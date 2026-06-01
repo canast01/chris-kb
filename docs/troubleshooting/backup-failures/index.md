@@ -85,28 +85,6 @@ flowchart TD
 │    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Log Locations
-
-| Component | Log Path |
-|---|---|
-| VBR Server | `C:\ProgramData\Veeam\Backup\` |
-| Agent (Windows) | `C:\ProgramData\Veeam\Backup\<JobName>.log` |
-| Agent (Linux) | `/var/log/veeam/backup/` |
-| Veeam Transport | `C:\ProgramData\Veeam\Backup\VeeamTransport.log` |
-| Mount Server | `C:\ProgramData\Veeam\Backup\VeeamMount.log` |
-| Guest Interaction | `C:\Windows\Temp\VeeamGuestHelper_*.log` (on guest) |
-
-```powershell
-# Get repository free space
-Get-VBRRepository | Select-Object Name, Path,
-    @{N='FreeGB';E={[math]::Round($_.GetContainer().CachedFreeSpace/1GB,1)}},
-    @{N='TotalGB';E={[math]::Round($_.GetContainer().CachedTotalSpace/1GB,1)}} |
-    Format-Table -AutoSize
-
-# List restore points for a VM
-Get-VBRRestorePoint -Name "vm-prod-sql01" | Select-Object Name, CreationTime, Algorithm |
-    Sort-Object CreationTime -Descending | Select-Object -First 10
 ```
 
 ### VSS Error Investigation

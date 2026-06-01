@@ -4,7 +4,7 @@
 Data Domain — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Dell Data Domain — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

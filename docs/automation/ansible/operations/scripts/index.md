@@ -49,16 +49,6 @@ graph LR
 │   │      awxkit     = Python library for AWX API; used by the awx CLI; importable in scripts      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 3 — Open the right terminal**
-
-- **For .yml (Ansible):** Needs Linux or WSL. Open your WSL terminal.
-
-**Step 4 — Run it**
-
-```bash
-cd ~
-ansible-playbook infra-health-check.yml -i inventory/hosts.yml
 ```
 
 **What you should see**

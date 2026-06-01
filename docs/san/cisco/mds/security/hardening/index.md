@@ -85,29 +85,6 @@ show feature | include telnet|http|tftp|ftp|snmp|ssh
 │  SIEM           = Security Information and Event Management; aggregates log analysis                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 3. Management Interface ACL
-
-Restrict SSH and HTTPS access to the management interface to authorised source IP ranges. This prevents brute-force attempts from untrusted networks.
-
-```bash
-# Define the authorised management source ranges
-ip access-list MGMT-RESTRICT
-  10 permit tcp 10.10.0.0/24 any eq 22     # SSH from jump hosts / management subnet
-  20 permit tcp 10.10.0.0/24 any eq 443    # HTTPS from management subnet
-  30 permit udp 10.10.2.0/24 any eq 161    # SNMP polling from NMS
-  40 permit udp any 10.10.3.50/32 eq 514   # Syslog (outbound; for reference)
-  50 deny ip any any log
-
-# Apply to management interface (inbound)
-interface mgmt0
-  ip access-group MGMT-RESTRICT in
-
-# Verify
-show ip access-lists MGMT-RESTRICT
-show running-config interface mgmt0
 ```
 
 ---

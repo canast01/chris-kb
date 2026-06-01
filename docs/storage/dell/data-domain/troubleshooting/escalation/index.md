@@ -89,32 +89,6 @@ support bundle generate
 │    Maintenance window= Coordinate hardware replacement with ops team; some replacements hot-swap      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-AutoSupport requires SCG (Secure Connect Gateway) registration or direct HTTPS outbound access to Dell's support endpoints.
-
-## Remote Support
-
-Dell ProSupport Plus includes remote support access via the SCG tunnel. Dell support engineers can connect to the DD CLI and System Manager remotely through the SCG — no inbound firewall rules are required.
-
-To enable or verify remote support capability:
-
-1. Confirm SCG registration: **System Manager → Administration → Autosupport → ESRS/SCG**
-2. Dell opens a remote session through the SCG tunnel after the customer approves the session
-3. All remote sessions are logged in the SCG audit log
-
-## Escalation Path
-
-```mermaid
-flowchart TD
-    incident(["Incident Detected"]) --> selfDiag["Self-diagnose:\nsupport bundle generate\nalerts show current"]
-    selfDiag --> openCase["Open Online Case\ndell.com/support\nAttach support bundle"]
-    openCase --> p1{"P1 — Production\ncompletely down?"}
-    p1 -->|Yes| callPhone["Call Dell Support\nrequest Senior Engineer\nreference case number"]
-    p1 -->|No| wait["Monitor case for\nresponse per SLA tier"]
-    callPhone --> tam["Contact TAM\n(Technical Account Manager)\nfor persistent P1/P2"]
-    tam --> remote["Remote Support via SCG\n(Dell engineer accesses DD\nthrough SCG tunnel)"]
-    remote --> resolved(["Resolved"])
-    wait --> resolved
 ```
 
 1. **Online case** — open via [https://www.dell.com/support](https://www.dell.com/support) for non-urgent issues

@@ -5,7 +5,7 @@
 Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling Reports, Downloading Generated Reports, Report Output Formats, Common Report Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Aria Operations — Reports ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -36,38 +36,6 @@ Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling 
 │  Recipient list = Named list of email addresses for scheduled report delivery                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Scheduling Reports
-
-Reports can be sent on a recurring schedule (daily, weekly, monthly) to one or more email addresses.
-
-Navigation: **Reports > Report Templates > [Template] > Schedule**
-
-Schedule configuration fields:
-
-| Field | Options |
-|---|---|
-| Frequency | Once, Hourly, Daily, Weekly, Monthly |
-| Time | Specific time of day (uses Aria Ops server timezone) |
-| Email recipients | Comma-separated addresses |
-| Format | PDF (default), CSV |
-| Traverse All Levels | Include sub-objects in a group hierarchy |
-
-```bash
-# Create a scheduled report via API
-curl -sk -X POST \
-  "https://aria-ops.example.com/suite-api/api/reportdefinitions/<templateId>/schedules" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "recurrence": "WEEKLY",
-    "dayOfWeek": "MONDAY",
-    "hours": 7,
-    "minutes": 0,
-    "emailTo": ["ops-team@example.com"],
-    "reportFormat": "PDF"
-  }'
 ```
 
 ## Downloading Generated Reports

@@ -191,10 +191,6 @@ SWITCH_HOST=192.168.1.10 SWITCH_USER=admin ./brocade_fabric_health.sh
 │    Alert trigger  = Script sends email or webhook when health metric exceeds threshold                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Add to crontab (`crontab -e`):
-```text
-*/15 * * * * SWITCH_HOST=192.168.1.10 SWITCH_USER=admin /opt/scripts/brocade_port_error_monitor.pl >> /var/log/brocade_monitor.log 2>&1
 ```
 
 ---

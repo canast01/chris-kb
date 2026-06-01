@@ -45,35 +45,6 @@ infra/
 │   │         terraform-docs = auto-generate module README from variables.tf and outputs.tf         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Module Versioning
-
-Modules must be pinned to a specific version or Git ref. Floating references (`latest`, no version) are prohibited in production.
-
-```hcl
-# Public registry — pin to exact version
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "5.8.0"       # Exact pin
-}
-
-# Private registry — pin to exact version
-module "compute" {
-  source  = "app.terraform.io/my-org/compute/aws"
-  version = "2.1.4"
-}
-
-# Git source — pin to tag (not branch)
-module "baseline" {
-  source = "git::https://github.com/my-org/tf-modules.git//baseline?ref=v1.3.0"
-}
-
-# Local path — only for modules in the same repository
-module "networking" {
-  source = "../../modules/networking"
-}
 ```
 
 ### Module versioning policy

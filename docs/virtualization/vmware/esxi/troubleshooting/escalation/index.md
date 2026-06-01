@@ -5,8 +5,8 @@
 ESXi Escalation reference covering SLA Tiers, Escalation.
 </div>
 
-```text
 ESXi Escalation Path — Broadcom Support
+```
 ┌─────────────────────────────────────────────────────────┐
 │  Collect Before Calling                                 │
 │  ├── esxcli system version get  (ESXi version + build)  │
@@ -15,6 +15,7 @@ ESXi Escalation Path — Broadcom Support
 │  └── esxtop -b -d 2 -n 30  (if performance issue)       │
 └──────────────────────────┬──────────────────────────────┘
                            │
+```
 ┌──────────────────────────▼──────────────────────────────┐
 │  Case Severity                                          │
 │  ├── P1 Critical  Production down, data loss risk       │
@@ -25,6 +26,8 @@ ESXi Escalation Path — Broadcom Support
 │  └── P4 Info      Questions, how-to                     │
 └──────────────────────────┬──────────────────────────────┘
                            │
+```
+```
 ┌──────────────────────────▼──────────────────────────────┐
 │  Escalation Triggers                                    │
 │  ├── Case not progressing → request internal escalation │
@@ -80,28 +83,6 @@ ESXi Escalation Path — Broadcom Support
 │  Phone bridge= S1 SR triggers phone call from VMware engineer                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**From vSphere Client:**
-
-vSphere Client > Host > Monitor > System > Support > Generate Support Bundle
-
-**Log files included in the bundle:**
-
-| Log | Content |
-|---|---|
-| `vmkernel.log` | VMkernel events, storage, network, hardware errors |
-| `hostd.log` | Host daemon API, VM operations, configuration changes |
-| `vpxa.log` | vCenter agent communication |
-| `fdm.log` | vSphere HA fault domain manager |
-| `vobd.log` | VMkernel observations and hardware events |
-| `auth.log` | Authentication events |
-| `shell.log` | Shell commands |
-
-For performance issues, also collect:
-
-```bash
-# esxtop snapshot (batch mode, 60 seconds, 2-second intervals)
-esxtop -b -d 2 -n 30 > /tmp/esxtop.csv
 ```
 
 ## SLA Tiers

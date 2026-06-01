@@ -46,21 +46,6 @@ curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \
 │  Rate limit = API enforces per-client limits; retry with exponential backoff on 429                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Recommendations (AIOps)
-
-```bash
-# List all active recommendations
-curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?filter=state%20eq%20'ACTIVE'" \
-  -H "Authorization: Bearer ${TOKEN}" | jq '.results[] | {id,title,severity,system_name}'
-
-# Filter by severity
-curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?filter=severity%20eq%20'Critical'%20and%20state%20eq%20'ACTIVE'" \
-  -H "Authorization: Bearer ${TOKEN}" | jq '.results[] | {id,title,recommended_action}'
-
-# Get a specific recommendation
-curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations/${REC_ID}" \
-  -H "Authorization: Bearer ${TOKEN}" | jq .
 ```
 
 ### Anomalies

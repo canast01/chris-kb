@@ -92,44 +92,4 @@ if ($Results) {
 │  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Blueprint Version Audit
-
-Lists all cloud templates with their version count and last modified date.
-
-```powershell
-# Blueprint-VersionAudit.ps1
-# Lists all blueprints with version count and last modification date.
-
-param(
-    [Parameter(Mandatory)][string]$Server,
-    [Parameter(Mandatory)][string]$Username,
-    [Parameter(Mandatory)][SecureString]$Password
-)
-
-$PlainPass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
-    [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
-)
-
-$LoginBody = @{ username = $Username; password = $PlainPass } | ConvertTo-Json
-$TokenResponse = Invoke-RestMethod -Method POST `
-    -Uri "https://$Server/csp/gateway/am/api/login" `
-    -Body $LoginBody -ContentType "application/json"
-$Token = $TokenResponse.access_token
-$Headers = @{ Authorization = "Bearer $Token" }
-
-$Blueprints = Invoke-RestMethod -Method GET `
-    -Uri "https://$Server/blueprint/api/blueprints?`$top=200" `
-    -Headers $Headers
-
-$Blueprints.content | Select-Object name, projectName, status,
-    @{ Name = "LastModified"; Expression = { $_.updatedAt } },
-    @{ Name = "Versions"; Expression = {
-        $BpVersions = Invoke-RestMethod -Method GET `
-            -Uri "https://$Server/blueprint/api/blueprints/$($_.id)/versions" `
-            -Headers $Headers
-        $BpVersions.content.Count
-    }} | Format-Table -AutoSize
 ```

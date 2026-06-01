@@ -5,11 +5,7 @@
 Health Checks reference covering Health Checklist.
 </div>
 
-```text
 ESXi Health Check — Decision Flow
-┌─────────────────────────────────────────────────────┐
-│  START: Daily / Pre-Change Health Sweep             │
-└──────────────────────────┬──────────────────────────┘
                            │
            ┌───────────────▼───────────────┐
            │  Host Connection State?        │
@@ -42,7 +38,6 @@ ESXi Health Check — Decision Flow
            │  PASS — host healthy │
            └─────────────────────┘
 ```
-```text
 ┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │

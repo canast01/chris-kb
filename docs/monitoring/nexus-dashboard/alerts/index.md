@@ -5,7 +5,7 @@
 Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Policies reference covering Acknowledging Alerts, Notification Policies, Alert Suppression During Maintenance, Common Alert Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Nexus Dashboard — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,21 +36,6 @@ Nexus Dashboard: Fabric Alerts, Severity, Acknowledgement, and Notification Poli
 │  Root cause = NDI correlation linking symptom to underlying network event                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Acknowledging Alerts
-
-Acknowledging an alert indicates that someone is investigating. Acknowledged alerts are tracked separately from unacknowledged.
-
-Navigation: **Insights > Alerts > [Alert] > Acknowledge**
-
-```bash
-# Acknowledge an alert via API
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/alerts/<alertId>/acknowledge" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Investigating — network team on call"}'
 ```
 
 ## Notification Policies

@@ -67,26 +67,6 @@ flowchart TD
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-GPOs are applied at the OU level by server role — infrastructure, database, application tiers each have a dedicated OU with role-specific policy.
-
-## WSUS / SCCM Patch Management
-
-```powershell
-# Verify WSUS client is configured
-Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" |
-    Select-Object WUServer, WUStatusServer
-
-# Force WSUS detection (triggers check-in with WSUS server)
-wuauclt /detectnow
-# Or on newer Windows:
-UsoClient StartScan
-
-# Check pending updates
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-$Updates = $UpdateSearcher.Search("IsInstalled=0")
-$Updates.Updates | Select-Object Title, MsrcSeverity
 ```
 
 Maintenance windows control reboot scheduling:

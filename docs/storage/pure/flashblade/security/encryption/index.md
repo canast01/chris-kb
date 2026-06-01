@@ -5,13 +5,15 @@
 Encryption reference covering Data at Rest, Data in Flight — NFS, Data in Flight — SMB, Data in Flight — Management and S3, Audit Logging and 1 more sections.
 </div>
 
-```text
 FlashBlade Encryption Architecture
+```
+```
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on)                                  │
 │  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)     │
 │  Drive removed → crypto erase (DEK destroyed)              │
 └────────────────────────────────────────────────────────────┘
+```
 ┌────────────────────────────────────────────────────────────┐
 │  Data in Transit                                           │
 │  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)          │
@@ -20,7 +22,6 @@ FlashBlade Encryption Architecture
 │  ├── Management GUI/API: HTTPS (443)                       │
 │  └── Replication (ActiveDR): TLS between FlashBlades       │
 └────────────────────────────────────────────────────────────┘
-```
 
 > Part of the [FlashBlade Security](../index.md) reference.
 

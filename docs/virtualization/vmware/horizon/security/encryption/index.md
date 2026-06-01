@@ -5,14 +5,17 @@
 Encryption reference covering Connection Server Certificate, UAG Certificate, Clipboard Encryption and Control, USB Redirection Encryption, Persistent Disk Encryption and 2 more sections.
 </div>
 
-```text
   TLS Encryption Path: Client to Desktop
+```
+```
 ┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐
 │  Horizon     │─────────────►│  UAG      │────────────►│  Connection      │
 │  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server           │
 │  (external)  │             └───────────┘             └──────────────────┘
 └──────────────┘                                                 │
+```
                                                         TLS / Blast AES-256
+```
 ┌──────────────┐  Blast AES  ┌───────────┐                      ▼
 │  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
 │  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
@@ -64,23 +67,6 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Connection Server Certificate
-
-```powershell
-# Install PFX certificate on Connection Server
-Import-PfxCertificate -FilePath "horizon-cs01.pfx" -CertStoreLocation Cert:\LocalMachine\My -Password (ConvertTo-SecureString "pfxpassword" -AsPlainText -Force)
-
-# Get thumbprint of installed cert
-Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -match "horizon-cs01" }
-
-# Update Horizon Connection Server to use the new cert:
-# Windows Certificate Manager → Lock the cert for vdm service:
-# Set the Friendly Name to "vdm" on the certificate
-# Restart VMware Horizon View Connection Server service
-Restart-Service -Name "VMwareVDMDS"
 ```
 
 ---

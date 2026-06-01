@@ -5,7 +5,7 @@
 Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRA Vendor is Involved, Support Portal, Escalation Path and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── VMware SRM — Escalation ───────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate SRM issues to VMware GSS when failover fails, site pair cannot reconnect,                   │
@@ -51,26 +51,6 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
 │  Broadcom portal= support.broadcom.com; former my.vmware.com                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-  Escalation Path
-┌──────────────────────────────────────────────────────────────┐
-│  Collect (both sites):                                       │
-│  SRM bundle + VR bundle + SRA logs + Recovery Plan history   │
-│  + vCenter events + SRM/vSphere versions                     │
-│                    │                                         │
-│                    ▼                                         │
-│  ┌─────────────────────────────────────────────────────┐     │
-│  │ Severity Assessment                                  │     │
-│  │  Sev 1 — DR failover failing ──► SR + call now      │     │
-│  │  Sev 2 — DR capability degraded ──► SR 24x7         │     │
-│  │  Sev 3 — One VM / test issue ──► SR biz hours       │     │
-│  └─────────────────────────────────────────────────────┘     │
-│                    │                                         │
-│                    ▼                                         │
-│  If SRA involved: open SR with VMware AND storage vendor     │
-│  TAM / Critical Escalation if Sev 1 unresolved > 2 hours     │
-└──────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -78,24 +78,6 @@ flowchart TD
 │  procexp        = SysInternals Process Explorer; shows handles, threads, DLLs per process             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## High CPU
-
-```powershell
-# Identify the top CPU-consuming process
-Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id,
-    @{N="CPU_s"; E={ [math]::Round($_.CPU,1) }},
-    @{N="WS_MB"; E={ [math]::Round($_.WorkingSet/1MB,1) }}
-
-# Per-core CPU usage
-Get-Counter '\Processor(*)\% Processor Time' -SampleInterval 2 -MaxSamples 3 |
-    ForEach-Object { $_.CounterSamples | Sort-Object CookedValue -Descending | Select-Object -First 8 Path, CookedValue }
-
-# Context switches — high values indicate CPU contention
-Get-Counter '\System\Context Switches/sec' -SampleInterval 2 -MaxSamples 5
-
-# Check power plan — servers should use High Performance
-powercfg /getactivescheme
 ```
 
 ## High Memory

@@ -4,7 +4,7 @@
 Aria Operations for Networks knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Aria Operations for Networks Stack ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

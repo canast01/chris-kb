@@ -5,8 +5,8 @@
 Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation, RPO Selection, Target Datastore Sizing and 3 more sections.
 </div>
 
-```text
   Sizing and Bandwidth Design
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA sizing                                                  │
 │  ┌─────────────────────────────────────────────────────┐     │

@@ -5,8 +5,8 @@
 Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Check VRA Service Status, Test Connectivity from Source ESXi to Target VRA, Check ESXi hbrsvc (Replication Source Service) and 4 more sections.
 </div>
 
-```text
   VR Diagnostic Data Sources
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  VRA Appliance (both sites)    ESXi Source Host                 │
 │  ┌───────────────────────┐     ┌─────────────────────────┐      │

@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Deployment Topology, Supported Hardware, Network Requirements, VM Sizing and 2 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Brocade SANnav — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav discovers switches via SNMP/REST, aggregates MAPS events, manages zones centrally.            │

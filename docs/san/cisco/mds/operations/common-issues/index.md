@@ -96,35 +96,6 @@ show logging last 100 | grep fc1/3
 │  copy run start  = saves running config; loss of unsaved changes on reload                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## errDisabled Port
-
-**Symptom:** `show interface brief` shows a port in `errDisabled` state. The port was automatically disabled by NX-OS following an error condition.
-
-```mermaid
-flowchart TD
-  A["Port shows errDisabled\n(show interface brief)"] --> B["Check reason\n(show interface fc1/4 | include err)"]
-  B --> C{"Reason?"}
-  C -->|"fcot-not-present"| D["Reseat or replace SFP\nCheck slot seating"]
-  C -->|"link-failure-count-exceeded"| E["Replace SFP and cable\nCheck peer device port"]
-  C -->|"isolation"| F["Resolve VSAN merge conflict\nCheck trunk allowed VSANs"]
-  C -->|"rcf-failure"| G["Assign unique static domain ID\n(fcdomain domain N static vsan N)"]
-  C -->|"cfg-invalid"| H["Fix VSAN assignment or\nport mode config error"]
-  D & E & F & G & H --> I["Root cause resolved?"]
-  I -->|"Yes"| J["interface fc1/4\n  shutdown\n  no shutdown"]
-  I -->|"No"| K["Escalate to Cisco TAC\nCollect show tech-support"]
-  J --> L["Confirm: show interface fc1/4\nstate returns to 'up'"]
-
-  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-  classDef action fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-  classDef good fill:#15803d,stroke:#166534,color:#fff
-  classDef bad fill:#991b1b,stroke:#7f1d1d,color:#fff
-  class C decision
-  class D,E,F,G,H,J action
-  class L good
-  class K bad
 ```
 
 ```bash

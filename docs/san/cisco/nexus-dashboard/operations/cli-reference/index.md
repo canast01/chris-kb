@@ -79,36 +79,6 @@ acs version
 │  REST API       = Preferred programmatic interface; CLI used for break-glass ops                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Backup and Restore
-
-```bash
-# Configure remote backup target
-acs backup remote add \
-  --server backup-server.corp.example.com \
-  --path /backups/nexus-dashboard/ \
-  --user nd-bkp
-
-# Show configured remote target
-acs backup remote show
-
-# Test remote connectivity
-acs backup remote test
-
-# Create a backup immediately
-acs backup create
-
-# List available backups
-acs backup list
-
-# List backups on remote target
-acs backup list --remote
-
-# Start a restore (use the backup ID from list output)
-acs restore --backup-id <id>
-
-# Show restore status
-acs restore status
 ```
 
 ### Upgrade

@@ -5,8 +5,8 @@
 Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image Update to an Instant Clone Pool, Add a New Connection Server Replica, Configure UAG for External Access, Enable True SSO and 4 more sections.
 </div>
 
-```text
   Common Operational Procedures
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Create Pool     │  Push Image      │  Manage Sessions       │
 │  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────┐  │
@@ -72,15 +72,6 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Entitle an AD Group to a Pool
-
-```text
-Horizon Console → Inventory → Desktops → [pool name] → Entitlements
-  Add Entitlement → select AD group or user
-  e.g.: CORP\Horizon-Pool-Win10 → Add
 ```
 
 Users in the group can now connect to the pool from Horizon Client or HTML access.

@@ -5,8 +5,8 @@
 Encryption reference covering Encryption at Rest, Encryption in Transit, TLS Configuration Reference, Compliance Mapping, Operational Checklist.
 </div>
 
-```text
 FlashArray Encryption Architecture
+```
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on, no config required)              │
 │                                                            │
@@ -17,6 +17,7 @@ FlashArray Encryption Architecture
 │  AES-256-XTS hardware encryption in drive                  │
 │  Removed drive: cryptographic erase (NIST SP 800-88)       │
 └────────────────────────────────────────────────────────────┘
+```
 ┌────────────────────────────────────────────────────────────┐
 │  Data in Transit (TLS, always-on)                          │
 │  ├── Management: HTTPS (443) + SSH (22)                    │

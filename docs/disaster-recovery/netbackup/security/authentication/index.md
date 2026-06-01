@@ -58,17 +58,6 @@ nbcertcmd -listCerts | grep -E "Host|Expiry"
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### List and Revoke API Tokens
-
-```bash
-# List all API tokens (admin only)
-curl -s -X GET "https://<master>:1556/netbackup/security/api-tokens" \
-  -H "Authorization: Bearer <token>"
-
-# Revoke a specific token by name
-curl -s -X DELETE "https://<master>:1556/netbackup/security/api-tokens/ci-pipeline" \
-  -H "Authorization: Bearer <token>"
 ```
 
 ### Token Expiry and Best Practices

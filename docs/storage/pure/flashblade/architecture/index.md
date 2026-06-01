@@ -3,6 +3,59 @@
 <div class="kb-summary">
 Architecture reference for Pure Storage FlashBlade. Covers the scale-out blade model, Purity//FB data services, NFS/SMB/S3/HDFS protocol support, HA through blade redundancy, ActiveDR and ActiveCluster replication, and design standards.
 </div>
+```
+┌─────────────────────────────────── Pure FlashBlade — Architecture ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ FlashBlade architecture overview: massively parallel all-flash NAS and object storage platfor │   │
+│   │                      Protocols: NFS v3/v4.1 · SMB · S3 · Swift · REST API                     │   │
+│   │             Key components: Purity//FB, File systems, Object buckets, Replication             │   │
+│   │          Design principles: HA, scalability, non-disruptive operations, and security          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Design → deploy → configure → validate → monitor → optimise                                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
+│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
+│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
+│   │         Replication         │  │            Async            │  │          DR/backup          │   │
+│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   File system    │  NAS namespace   │      NFS/SMB      │  Kerberos/NTLM   │   Up to 4 PiB    │   │
+│   │  Object bucket   │   S3 namespace   │      S3/Swift     │   S3 keys/IAM    │    Versioning    │   │
+│   │   Replication    │     Async DR     │   Encrypted TCP   │   Certificate    │  File or object  │   │
+│   │     SafeMode     │ Locked snapshots │      Internal     │   Pure support   │    Immutable     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
+│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
+│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
+│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
+│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
+│    Replication        = async file or object replication between FlashBlade systems for DR            │
+│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
+│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
+│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
+│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
+│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
+│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 FlashBlade Architecture — Component Relationships

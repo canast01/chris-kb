@@ -62,36 +62,6 @@ def get_token(host, username, password):
 │  Retry logic = Exponential backoff pattern for handling 429/503 from Aria Ops API                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Common metric keys:
-- `cpu|usage_average` — VM CPU usage %
-- `mem|usage_average` — VM memory usage %
-- `disk|commandsAveraged_average` — disk IOPS
-- `net|usage_average` — network usage KBps
-
-## Push Custom Metric
-
-```python
-def push_custom_metric(host, token, resource_id, metric_key, value, timestamp_ms):
-    url = f"https://{host}/suite-api/api/resources/stats/addstatscollection"
-    headers = {
-        "Authorization": f"vRealizeOpsToken {token}",
-        "Content-Type": "application/json"
-    }
-    payload = {
-        "stat-contents": [{
-            "resourceId": resource_id,
-            "stat-list": {
-                "stat": [{
-                    "timestamps": [timestamp_ms],
-                    "data": [value],
-                    "statKey": {"key": metric_key}
-                }]
-            }
-        }]
-    }
-    resp = requests.post(url, headers=headers, json=payload, verify=True)
-    resp.raise_for_status()
 ```
 
 ## Script Inventory

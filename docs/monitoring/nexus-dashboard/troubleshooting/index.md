@@ -53,32 +53,6 @@ acs nodes
 │  Epoch gap = NDI shows missing epochs when telemetry interrupted                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Network requirements for ND to fabric communication:
-
-| Source | Destination | Port | Purpose |
-|---|---|---|---|
-| ND Management | APIC Management | 443 (HTTPS) | API communication |
-| ND Data | Leaf switches | 5640 (UDP) | ERSPAN/telemetry |
-| ND Management | NTP | 123 (UDP) | Time synchronisation |
-| ND Management | DNS | 53 (UDP/TCP) | Name resolution |
-
-## Upgrade Issues
-
-Nexus Dashboard upgrades are managed via the Admin interface.
-
-Navigation: **Admin > Software Management > Upgrade**
-
-```bash
-# Check current ND version
-curl -sk -X GET \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v1/platform/version" \
-  -H "Authorization: Bearer <token>" | jq '.version'
-
-# Verify upgrade pre-checks pass before proceeding
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v1/platform/upgrade/precheck" \
-  -H "Authorization: Bearer <token>" | jq '.checks[] | select(.status != "PASS")'
 ```
 
 Common upgrade failure points:

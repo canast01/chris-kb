@@ -75,20 +75,6 @@ flowchart TD
 │  NIC error counters= rx_errors/tx_errors on interface; indicate cabling or driver issues              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## System Overview
-
-```bash
-# Uptime, load average, logged-in users
-uptime
-w
-
-# OS version and kernel
-cat /etc/os-release
-uname -r
-
-# Last reboot
-last reboot | head -5
 ```
 
 ## CPU and Load

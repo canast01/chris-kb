@@ -5,7 +5,7 @@
 Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference covering Alert Correlation, Predicted Failure Alerts, Acknowledging and Dismissing AI Alerts, Common AI Alert Issues.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Dell AIOps — Alerts ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,27 +36,6 @@ Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference co
 │  Noise reduction = Correlation grouping related alerts into single actionable incident                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Anomaly alert fields:
-
-| Field | Meaning |
-|---|---|
-| `deviation_percent` | How far above/below the expected band the metric is |
-| `confidence` | Model confidence (0–1); values < 0.7 indicate early learning |
-| `baseline_window_days` | How many days the model was trained on |
-| `contributing_metrics` | Other metrics correlated with the anomaly |
-
-## Alert Correlation
-
-AIOps groups related alerts that likely share a common cause. For example, high latency on a volume, increased queue depth on the controller, and a degraded disk can be grouped as a single correlated alert for a failing drive.
-
-```bash
-# List correlated alert groups
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/alert_groups?filter=state%20eq%20%27ACTIVE%27" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {id, root_cause_summary, alert_count, started_at}'
 ```
 
 Correlation benefits:

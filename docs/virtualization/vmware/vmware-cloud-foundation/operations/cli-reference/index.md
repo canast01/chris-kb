@@ -5,8 +5,8 @@
 CLI Reference reference covering Support Bundles, SDDC Manager REST API, Password Management, Service Status & Logs.
 </div>
 
-```text
 VCF CLI Tool Map — Where to Run What
+```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager Appliance (SSH: vcf user → sudo)      │
 │                                                     │
@@ -29,6 +29,8 @@ VCF CLI Tool Map — Where to Run What
 │    GET  /v1/credentials  list managed credentials   │
 │    PATCH /v1/credentials rotate a credential        │
 └─────────────────────────────────────────────────────┘
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Key Log Paths (SDDC Manager appliance)             │
 │  /var/log/vmware/vcf/lcm/lcm-debug.log              │
@@ -81,23 +83,6 @@ VCF CLI Tool Map — Where to Run What
 │  upgrade-status= show current upgrade state across all components                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Support Bundles
-
-```bash
-# Collect LCM-specific support bundle
-sudo vcf-support-bundle --type lcm
-
-# Collect full SDDC Manager support bundle
-sudo vcf-support-bundle --type sddc
-
-# Collect bundle for a specific component
-sudo vcf-support-bundle --type nsx
-
-# List available bundle types
-sudo vcf-support-bundle --help
 ```
 
 ---

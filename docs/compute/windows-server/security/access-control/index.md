@@ -80,14 +80,6 @@ Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountNa
 │  Protected Users= AD security group; blocks NTLM, unconstrained delegation, DES                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Apply User Rights via GPO (PowerShell DSC reference)
-
-```powershell
-# Query user right assignment directly
-(Get-LocalUser).Name
-# For domain-aware rights, query via GPO result:
-gpresult /H C:\temp\gpo-report.html /F
 ```
 
 ## Just Enough Administration (JEA)

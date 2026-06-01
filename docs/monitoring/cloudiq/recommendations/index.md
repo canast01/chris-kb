@@ -5,7 +5,7 @@
 CloudIQ: Proactive Recommendations and Implementation Tracking reference covering Implementing a Recommendation, Energy Savings Recommendations, Tracking Recommendation History, Common Recommendation Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── CloudIQ — AI Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,38 +36,6 @@ CloudIQ: Proactive Recommendations and Implementation Tracking reference coverin
 │  SLA = Internal target for acting on Critical/High recommendations (e.g., within 3 business days)     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Recommendation priority fields:
-
-| Field | Values | Meaning |
-|---|---|---|
-| `priority` | HIGH, MEDIUM, LOW | Business impact if unaddressed |
-| `effort` | LOW, MEDIUM, HIGH | Implementation complexity |
-| `impact` | Description string | Expected outcome after implementation |
-| `state` | ACTIVE, DISMISSED, IMPLEMENTED | Current status |
-
-## Implementing a Recommendation
-
-1. Navigate to the recommendation detail page.
-2. Review the **Steps** tab for guided implementation instructions.
-3. Click **Mark as Implemented** once the change is applied.
-4. CloudIQ will validate the change in the next telemetry cycle and confirm effectiveness.
-
-```bash
-# Mark a recommendation as implemented via API
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/<recId>/implement" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Completed by ops team, INC0054321"}'
-
-# Dismiss a recommendation (accepted risk or not applicable)
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations/<recId>/dismiss" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Not applicable — system is scheduled for decommission"}'
 ```
 
 ## Energy Savings Recommendations

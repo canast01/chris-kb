@@ -45,21 +45,6 @@ SCG admin UI > Systems > [System] > Connection Status
 │  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-This integration allows correlating VM workload contention in Aria Operations with storage anomalies detected by Dell AIOps, enabling end-to-end root cause analysis across the VMware + Dell stack.
-
-## Email and Webhook Notifications
-
-```text
-# Critical recommendations → PagerDuty
-CloudIQ > Settings > Notifications > Rule: AIOps-Critical
-- Trigger: Recommendation Severity = Critical
-- Action: Webhook (PagerDuty Events API v2)
-
-# High recommendations → Email + Teams
-CloudIQ > Settings > Notifications > Rule: AIOps-High
-- Trigger: Recommendation Severity = High
-- Action: Email (storage-ops@company.com) + Webhook (Teams channel)
 ```
 
 ## SIEM Integration

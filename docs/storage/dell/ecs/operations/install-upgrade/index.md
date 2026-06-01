@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Checks, Upgrade and Update Paths, Adding a New Node to an Existing VDC, Disk Replacement and 3 more sections.
 </div>
+```
+┌─────────────────────────────────── Dell ECS — Install and Upgrade ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           ECS installation and upgrade: deployment and version management procedures          │   │
+│   │         Pre-upgrade: back up configuration, check compatibility, review release notes         │   │
+│   │      Upgrade: rolling upgrade preserves service; non-disruptive on dual-controller arrays     │   │
+│   │           Post-upgrade: verify all services running; run health check; notify users           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Plan → backup config → upgrade staging → upgrade production → validate                             │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
+│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
+│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
+│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
+│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │   Storage pool   │ Drive aggregatio │      Internal     │       N/A        │   Erasure 12+4   │   │
+│   │       VDC        │  Site grouping   │      Internal     │       N/A        │   HA per site    │   │
+│   │      Bucket      │ Object namespace │   S3/Swift/Blob   │   S3 keys/IAM    │    Per tenant    │   │
+│   │ Replication grp  │ Geo replication  │    ECS protocol   │   Certificate    │    3-way geo     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
+│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
+│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
+│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
+│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
+│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
+│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
+│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
+│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
+│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
+│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
+│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Version and Release Matrix
 

@@ -5,8 +5,8 @@
 Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configuration, Firewall Rules for LCM, Hardening Checklist.
 </div>
 
-```text
   LCM Hardening Controls
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Credentials                 SSH                             │
 │  ┌──────────────────────┐    ┌──────────────────────────┐    │
@@ -70,29 +70,6 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 │  Log Retention        = 90 days minimum; match compliance policy                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-- Import the full chain: leaf certificate + intermediate CA(s) + root CA
-- Private key must be unencrypted (no passphrase) in PEM format
-- Minimum key size: RSA 4096-bit for new certificates; RSA 2048-bit is the floor for existing
-- Certificate must include SAN for all node FQDNs and the load balancer VIP
-
----
-
-## SSH Hardening on the LCM Appliance
-
-```bash
-# Disable password authentication for root (prefer key-based)
-# Edit /etc/ssh/sshd_config
-PermitRootLogin prohibit-password
-PasswordAuthentication no   # Only if SSH keys are pre-configured
-
-# Restrict SSH to the management network
-AllowUsers admin root
-# OR use /etc/hosts.allow:
-sshd: 10.0.1.0/24  # management network CIDR only
-
-# Restart SSH after changes
-systemctl restart sshd
 ```
 
 ---

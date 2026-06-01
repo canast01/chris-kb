@@ -5,7 +5,7 @@
 CloudIQ Standards reference covering System Tagging Policy, Health Score Thresholds, Alert Notification Routing, Capacity Warning Levels, Dashboard Standards and 2 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -32,21 +32,6 @@ CloudIQ Standards reference covering System Tagging Policy, Health Score Thresho
 │  Escalation runbook = Procedure triggered by Critical severity alert in CloudIQ                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## System Tagging Policy
-
-Every system onboarded to CloudIQ must be tagged with the three mandatory tags before being considered operational. Tags enable reporting, alert routing, and capacity forecasting by site, environment, and team.
-
-| Tag Key | Required | Example Values |
-|---|---|---|
-| Site | Yes | `dc1`, `dc2`, `dr-site` |
-| Environment | Yes | `prod`, `non-prod`, `dev` |
-| Team | Yes | `storage-ops`, `db-team`, `platform` |
-
-Apply tags immediately after onboarding a system:
-
-```text
-CloudIQ portal > Assets > [System] > Tags > Add Tag
 ```
 
 Untagged systems must be remediated within 48 hours of onboarding. Monthly audit: report on untagged systems via REST API or dashboard filter.

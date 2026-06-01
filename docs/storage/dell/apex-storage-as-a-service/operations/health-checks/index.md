@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [APEX Storage as a Service](../../index.md) reference.
 </div>
+```
+┌─────────────────────────────────── Dell Apex STaaS — Health Checks ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Apex STaaS health checks: routine verification of operational status and performance     │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Owner            │   │
+│   │           Hardware          │  │       NVMe/SAS arrays       │  │             Dell            │   │
+│   │          Management         │  │         Apex Console        │  │           Customer          │   │
+│   │          Monitoring         │  │         CloudIQ/SCG         │  │            Shared           │   │
+│   │           Billing           │  │       Committed+burst       │  │         Dell billing        │   │
+│   │           Network           │  │        iSCSI VLAN/FC        │  │           Customer          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Dell array hardware on-premises · customer iSCSI VLAN / FC fabric · Apex Console SaaS    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Apex STaaS         = on-prem Dell storage consumed as a cloud service with subscription billing    │
+│    Apex Console       = cloud portal; provision volumes, view usage, and raise support requests       │
+│    Committed base     = minimum contracted capacity tier; billed monthly regardless of actual use     │
+│    Burst capacity     = pre-installed unlocked storage above committed; billed when consumed          │
+│    SCG                = Secure Connect Gateway; relays array telemetry to CloudIQ for analysis        │
+│    CloudIQ            = Dell AIOps SaaS; health scores, capacity forecasts, firmware advisories       │
+│    NVMe tier          = all-flash performance tier; sub-millisecond latency for database workloads    │
+│    Capacity tier      = SAS/NL-SAS lower cost tier; suited to bulk storage and backup targets         │
+│    iSCSI CHAP         = Challenge Handshake Auth Protocol; authenticates iSCSI initiators to array    │
+│    FC port sec.       = FC fabric binding and port security; restricts which HBAs can log in          │
+│    vVols              = Virtual Volumes; per-VM storage objects exposed via VASA provider to vCenter  │
+│    OOB mgmt           = out-of-band management network for direct array controller access             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

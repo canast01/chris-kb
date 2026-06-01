@@ -6,7 +6,7 @@
 Ansible — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Ansible — Troubleshooting ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Ansible troubleshooting: connectivity, variable resolution, module failures, AWX job issues  │   │

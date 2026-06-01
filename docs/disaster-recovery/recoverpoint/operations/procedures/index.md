@@ -170,24 +170,6 @@ flowchart TD
 │    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Full Failover (Declared DR Event)
-
-```bash
-# Step 1 — Enable image access at DR site (logged access — records writes)
-group enable-image-access --gname <cg_name> --copy DR_Copy \
-  --image latest --access-mode logged
-
-# Step 2 — Confirm volumes are accessible and mount at DR site
-# (Host/vSphere steps — present volumes to DR hosts)
-
-# Step 3 — Start applications at DR site; validate
-
-# Step 4 — Recover production (complete failover — DR copy becomes production)
-group recover-production --gname <cg_name>
-
-# Step 5 — Confirm new production copy state
-group status --gname <cg_name>
 ```
 
 ### Post-Failover Validation

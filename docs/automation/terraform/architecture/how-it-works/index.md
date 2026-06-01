@@ -59,41 +59,6 @@ flowchart TD
 │   │    State lock    = prevents concurrent terraform apply; acquired on apply, released on done   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-For strict isolation (separate AWS accounts, different permissions), use separate root modules with separate backends rather than workspaces.
-
----
-
-## Provider Plugin Architecture
-
-Providers are separate binaries (Go plugins) downloaded by `terraform init`. Terraform communicates with providers over a local gRPC socket.
-
-```hcl
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.40"
-    }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 3.100"
-    }
-    vsphere = {
-      source  = "hashicorp/vsphere"
-      version = "~> 2.7"
-    }
-  }
-}
-
-provider "aws" {
-  region = var.aws_region
-}
-
-provider "azurerm" {
-  features {}
-  use_oidc = true
-}
 ```
 
 ---

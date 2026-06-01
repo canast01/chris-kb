@@ -64,13 +64,6 @@ flowchart LR
 │   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SSH Remoting (PowerShell 7+)
-
-```powershell
-# /etc/ssh/sshd_config: Subsystem powershell /usr/bin/pwsh -sshs -NoLogo
-$session = New-PSSession -HostName linux-host-01 -UserName svcaccount -SSHTransport
-Invoke-Command -Session $session -ScriptBlock { uname -a }
 ```
 
 ---

@@ -58,22 +58,6 @@ graph TD
 │    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## NetBackup (OST with DD Boost)
-
-NetBackup uses the OpenStorage Technology (OST) plug-in to write directly to DD via DD Boost.
-
-1. Install the OST plug-in on each NetBackup media server
-2. Create DD Boost user and storage unit on the DD
-3. In NetBackup, add a Disk Pool using storage server type `DataDomain` with DD Boost credentials
-4. Create a Storage Unit pointing at the Disk Pool
-5. Configure backup policies to target the new Storage Unit
-
-**Verify:**
-
-```bash
-ddboost show clients  # NetBackup media servers should appear
-replication show  # if OST optimised duplication is used, check replication contexts
 ```
 
 ## CommVault (SISL + DD Boost)

@@ -73,16 +73,6 @@ Pre-Change Baseline Sequence
 │    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## 2. Host Connectivity
-
-```powershell
-# Confirm all hosts are connected and not in maintenance mode
-Get-VMHost | Select-Object Name, ConnectionState, PowerState |
-    Where-Object { $_.ConnectionState -ne "Connected" -or $_.PowerState -ne "PoweredOn" }
-
-# Any unexpected maintenance mode hosts?
-Get-VMHost | Where-Object { $_.ConnectionState -eq "Maintenance" } | Select-Object Name
 ```
 
 ## 3. Active Alarms

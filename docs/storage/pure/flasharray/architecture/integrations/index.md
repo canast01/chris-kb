@@ -5,15 +5,7 @@
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
 </div>
 
-```text
 FlashArray Integration Map
-┌──────────────────────────────────────────────────────────────┐
-│                        FlashArray                            │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐      │
-│  │ FC/iSCSI │  │  Mgmt    │  │  Repl    │  │  NVMe-oF │      │
-│  │ data     │  │  HTTPS   │  │  port    │  │  data    │      │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────────┘      │
-└───────┼─────────────┼─────────────┼──────────────────────────┘
         │             │             │
         ▼             ├──► Pure1 (phone-home HTTPS)
   ESXi / Linux        ├──► vCenter VASA / Plugin
@@ -79,72 +71,6 @@ FlashArray Integration Map
 │  API token     = Authentication credential for REST and automation; scoped to array user role         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## VMware Integration
-
-Pure Storage provides a native vSphere integration stack for FlashArray:
-
-**Pure Storage Plugin for VMware vSphere (vSphere Plugin / PSO):**
-
-- Install the Pure Storage Plugin via VMware Marketplace or directly from Pure Support
-- The plugin adds a "Pure Storage" panel in vCenter under the array's management view
-- Enables VM-level snapshot management directly from vCenter — create, clone, and recover snapshots per VM without leaving vCenter
-- Supports overwrite-protected volume snapshots tied to VM snapshot consistency groups
-
-**VASA (vStorage APIs for Storage Awareness):**
-
-- Register the FlashArray VASA provider in vCenter: `vCenter > Storage Providers > Add` with the FlashArray management IP and credentials
-- VASA enables vVols (Virtual Volumes) — each VM's disks become individual FlashArray volumes, enabling per-VM QoS, snapshot, and replication policies
-- Required to use vVols datastores; traditional VMFS datastores do not require VASA
-
-**Integration steps:**
-
-1. Create a dedicated service account on FlashArray with `storage_admin` role for vCenter integration
-2. Register VASA provider in vCenter using the FlashArray management IP
-3. Create a vVols datastore in vCenter pointing to the FlashArray Protocol Endpoint volume
-4. Optionally install the vSphere Plugin for enhanced snapshot and management UI
-5. Configure VM Storage Policies in vCenter to map workload tiers to FlashArray QoS settings
-
-## Backup Integration
-
-**Veeam Backup & Replication:**
-
-- Install the Veeam Plug-in for Pure Storage FlashArray (available from Pure Support)
-- Configure the FlashArray as a storage integration plugin in Veeam's Storage Infrastructure
-- Veeam uses FlashArray snapshot APIs to create instant, application-consistent snapshots before backup jobs begin — reduces backup window and eliminates performance impact on production
-- Veeam Instant VM Recovery can use FlashArray snapshots as a recovery point source
-
-**Commvault:**
-
-- Commvault IntelliSnap integrates with FlashArray via the REST API
-- Configure a FlashArray array instance in Commvault's storage library
-- IntelliSnap creates FlashArray snapshots as a pre-backup step, then backs up from the snapshot rather than live data
-
-**Veritas NetBackup:**
-
-- NetBackup Snapshot Client integrates with FlashArray via the NetBackup FlashArray agent
-- Configure the FlashArray as a snapshot host; NetBackup orchestrates snapshot creation and backup-from-snapshot workflows
-
-## Pure1 Monitoring
-
-FlashArray phones home to Pure1 automatically over HTTPS (port 443) once registered.
-
-**Phone-home requirements:**
-- Outbound HTTPS from FlashArray management interface to `*.purestorage.com`
-- If a proxy is required: configure via `purearray setattr --proxy <proxy_url>`
-
-**Pure1 capabilities:**
-- Fleet-wide health dashboard, hardware fault detection, and capacity forecasting
-- AI-driven performance anomaly detection (Pure1 Meta)
-- Upgrade readiness reports and prescriptive upgrade path recommendations
-- SLA compliance reporting for Evergreen//One customers
-- Support case creation and diagnostic upload integration
-
-**Verify phone-home status:**
-
-```bash
-# Check phone-home/support tunnel status on the array
-purearray list --phonehome
 ```
 
 ## Authentication

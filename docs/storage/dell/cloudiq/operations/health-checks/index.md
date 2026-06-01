@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Incident Triage, Post-Change Validation.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Dell CloudIQ Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -39,46 +39,6 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 │    Capacity runway= Days until storage pool reaches fill threshold based on growth rate               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [CloudIQ](../../index.md) reference.
-
----
-
-## Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Log in to CloudIQ ([cloudiq.dell.com](https://cloudiq.dell.com)) | | |
-| [ ] Review all active CRITICAL alerts | | none should be outstanding at EOD without an open change or incident ticket |
-| [ ] Check capacity forecast panel | | flag any system projected to reach full capacity within 30 days |
-| [ ] Confirm all expected systems are reporting | | a system showing as "Not Reporting" requires investigation |
-| [ ] If automation scripts use the CloudIQ REST API, check that the API token is valid | | |
-
-## Health Check Commands
-
-```bash
-# Set environment variables before running
-CLOUDIQ_TOKEN="<your_api_token>"
-CLOUDIQ_BASE="https://apigw.dell.com/cloudiq/v1"
-
-# List all systems and their current health scores
-curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
-  "${CLOUDIQ_BASE}/storage-systems" | jq '.results[] | {name: .object_name, health: .health_score, type: .type}'
-
-# Pull active alerts summary (severity: CRITICAL, WARNING)
-curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
-  "${CLOUDIQ_BASE}/alerts?filter=state%20eq%20%22ACTIVE%22" | \
-  jq '.results[] | {severity: .severity, resource: .resource_name, description: .description}'
-
-# Capacity forecast — systems within 30 days of full
-curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
-  "${CLOUDIQ_BASE}/storage-systems/capacity" | \
-  jq '.results[] | select(.days_until_full != null and .days_until_full < 30) | {name: .object_name, days_until_full: .days_until_full, percent_used: .percent_used}'
-
-# Check which systems are not currently reporting
-curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
-  "${CLOUDIQ_BASE}/storage-systems" | \
-  jq '.results[] | select(.connectivity_status != "CONNECTED") | {name: .object_name, connectivity: .connectivity_status}'
 ```
 
 ## Change Readiness

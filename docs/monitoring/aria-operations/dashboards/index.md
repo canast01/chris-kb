@@ -5,7 +5,7 @@
 Creating, Editing, and Sharing reference covering Dashboard Interactions, Sharing and Cloning Dashboards, Importing Community Dashboards, Common Dashboard Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Aria Operations — Dashboards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,44 +48,6 @@ Creating, Editing, and Sharing reference covering Dashboard Interactions, Sharin
 │  Clone dashboard    = Copying an existing dashboard as starting point for customisation               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Common widget types and their use cases:
-
-| Widget | Use Case |
-|---|---|
-| Metric Chart | Time-series graph of one or more metrics |
-| Metric Sparkline | Compact trend indicator for summary dashboards |
-| Health Chart | Object health over time |
-| Object List | Filtered list of resources with columns |
-| Alert List | Active or recent alerts with severity |
-| Heat Map | Grid view of objects by metric value |
-| Scoreboard | Single metric value with status colouring |
-| Relationship Chart | Object topology graph |
-
-When configuring a Metric Chart widget:
-1. Select **Edit Widget > Data > Add Metric**.
-2. Choose object type (e.g., ClusterComputeResource).
-3. Select metric key (e.g., `cpu|usage_average`).
-4. Set time range and aggregation (AVG, MAX, MIN).
-
-## Dashboard Interactions
-
-Widgets can be linked so clicking an object in one widget filters the data in connected widgets. This is configured via **Widget Interactions** in the dashboard editor.
-
-```bash
-# Export a dashboard definition as JSON (for backup or migration)
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/dashboards/<dashboardId>" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" > dashboard-backup.json
-
-# Import a dashboard from JSON
-curl -sk -X POST \
-  "https://aria-ops.example.com/suite-api/api/dashboards" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Content-Type: application/json" \
-  -d @dashboard-backup.json
 ```
 
 ## Sharing and Cloning Dashboards

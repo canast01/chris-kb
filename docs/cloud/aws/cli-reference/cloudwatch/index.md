@@ -40,7 +40,6 @@ CloudWatch CLI: Metrics → Alarms → Logs
   │  logs tail --follow  │
   └──────────────────────┘
 ```
-```text
 ┌──────────────────────────────────────── AWS CLI — CloudWatch ─────────────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch CLI commands for metrics, alarms, log groups, dashboards, and insights.                   │

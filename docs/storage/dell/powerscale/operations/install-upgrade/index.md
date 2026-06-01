@@ -5,7 +5,7 @@
 Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Dell PowerScale Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

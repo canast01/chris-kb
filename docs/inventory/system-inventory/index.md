@@ -5,7 +5,7 @@
 System Inventory Management reference covering Overview, Required Fields, Daily Checks, Workflow.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Inventory — System Inventory ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

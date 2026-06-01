@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Data Durability Model, Configuration Backup, Restoring Object Data, Veeam Backup Integration and 1 more sections.
 </div>
+```
+┌──────────────────────────────────── Dell ECS — Backup and Restore ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        ECS backup: snapshots, replication, and external backup application integration        │   │
+│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshot → replicate to DR → verify → document → test restore                                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Node            │  │        x86 appliance        │  │        Shared-nothing       │   │
+│   │         Storage pool        │  │          Node group         │  │        Erasure coded        │   │
+│   │             VDC             │  │          Virtual DC         │  │        Per-site unit        │   │
+│   │          Rep. group         │  │          Multi-VDC          │  │        Geo redundancy       │   │
+│   │            Bucket           │  │       Object container      │  │        S3/Swift/Blob        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: ECS appliance nodes · 10/25 GbE backend network · commodity SAS drives                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ECS                = Elastic Cloud Storage; Dell S3-compatible object store for unstructured data  │
+│    VDC                = Virtual Data Center; group of ECS nodes at a single geographic site           │
+│    Storage pool       = collection of nodes within a VDC; defines the erasure coding domain           │
+│    Replication group  = links VDCs for geo-redundant object storage; 3-way replication                │
+│    Bucket             = top-level S3 namespace; equivalent to S3 bucket or Azure container            │
+│    Erasure coding     = data protection scheme; default 12+4 provides 4-drive fault tolerance         │
+│    Namespace          = tenant-level isolation; multiple tenants share a single ECS cluster           │
+│    CAS                = Content Addressed Storage; fixed-content object storage with WORM support     │
+│    Replication factor = number of VDC copies; 3-way geo-replication for maximum durability            │
+│    Atmos API          = legacy Dell Atmos-compatible API; supported for migration from Atmos systems  │
+│    HDFS connector     = ECS Hadoop connector; ECS appears as HDFS namespace for analytics jobs        │
+│    Quota              = per-namespace or per-bucket storage quota; enforced as hard or soft limit     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Overview
 

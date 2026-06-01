@@ -5,8 +5,8 @@
 Design Standards reference covering Test Network Design, IP Customization Strategy, Recovery Plan Structure Best Practices, RPO Targets and SRA Capability, Test Frequency Recommendations and 1 more sections.
 </div>
 
-```text
   Replication Topology + Recovery Plan Structure
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Protected Site               Recovery Site                  │
 │  ┌────────────┐               ┌────────────┐                 │
@@ -72,11 +72,6 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 │  WAN BW        = replication bandwidth; plan for peak replication rate                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.
-
-**Option B: Different VLAN IDs, same IP subnets** — Recovery site uses different physical VLANs but same IP subnets (extended L3 or re-advertising the subnets):
-```text
-Protected: dvPG-App-VLAN100 (10.10.0.0/24)  →  Recovery: dvPG-App-VLAN500 (10.10.0.0/24)
 ```
 No IP customization needed. Requires routing coordination.
 

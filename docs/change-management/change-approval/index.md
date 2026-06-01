@@ -5,7 +5,7 @@
 Change Approval Process reference covering Change Types and Approval Requirements, CAB Approval Workflow, Risk Classification Matrix, ITSM Approval Fields, Approval Checklist and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────────── Change Approval ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -41,32 +41,6 @@ Change Approval Process reference covering Change Types and Approval Requirement
 │    Notice period= Minimum lead time between RFC submission and earliest implementation date           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-Ensures all changes are assessed for risk and approved by the appropriate authority before implementation.
-
-## Change Types and Approval Requirements
-
-| Change Type | Risk | Approval Required | Lead Time |
-|---|---|---|---|
-| Standard (pre-approved) | Low | None — pre-approved template | Immediate |
-| Normal — Low risk | Low-Medium | Team lead or service owner | 5 business days |
-| Normal — High risk | High | CAB (Change Advisory Board) | 10 business days |
-| Emergency | Critical | eCAB or single approver on-call | < 4 hours |
-
-## CAB Approval Workflow
-
-```text
-Requester submits RFC
-        ↓
-Technical review (peer / architect)
-        ↓
-Risk assessment (Impact × Likelihood)
-        ↓
-CAB review meeting
-        ↓
-Approved / Rejected / Deferred
-        ↓
-Requester notified → scheduled for change window
 ```
 
 ## Risk Classification Matrix

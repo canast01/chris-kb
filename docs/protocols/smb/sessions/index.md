@@ -5,11 +5,12 @@
 SMB Sessions reference covering Overview, Listing and Managing Sessions, SMB Signing, SMB Version Negotiation, Session Limits and Timeouts and 1 more sections.
 </div>
 
-```text
         SMB SESSION ESTABLISHMENT
+```
 ┌────────────┐                              ┌─────────────────┐
 │  Client    │                              │   SMB Server    │
 └─────┬──────┘                              └────────┬────────┘
+```
       │  1. Negotiate (dialect selection)             │
       │ ─────────────────────────────────────────────►│
       │     Server offers SMB 3.1.1                   │

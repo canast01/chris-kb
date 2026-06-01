@@ -4,7 +4,7 @@
 Secure Connect Gateway deployment standards, SCG sizing, network requirements, alert threshold baselines, and naming conventions for CloudIQ.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

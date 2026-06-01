@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Backup and restore in ONTAP is built around native snapshot technology. Snapshots are the on-array recovery primitive; SnapMirror and SnapVault extend recovery to remote systems and long-term retention; application-aware tools (SnapCenter, Veeam) add consistency coordination.
 </div>
+```
+┌────────────────────────────────── NetApp ONTAP — Backup and Restore ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       ONTAP backup: snapshots, replication, and external backup application integration       │   │
+│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshot → replicate to DR → verify → document → test restore                                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
+│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
+│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
+│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
+│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
+│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
+│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
+│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
+│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
+│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
+│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
+│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
+│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
+│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
+│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Snapshot-Based Restore
 

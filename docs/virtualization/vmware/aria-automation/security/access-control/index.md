@@ -78,33 +78,6 @@ Infrastructure → Administration → Projects → select project → Members �
 │  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Configure:
-- Name: `proj-app-lon-prod`
-- Description: London production application team
-- Cloud zones: add target vCenter cloud zones and NSX zones
-- Cost limits: set monthly spend limit if integrated with Aria Cost
-- Quota: set CPU, memory, and VM count limits to prevent runaway provisioning
-
-**Cloud zone quota example:**
-
-| Resource | Limit |
-|---|---|
-| VMs | 50 |
-| vCPU | 200 |
-| Memory | 800 GB |
-| Storage | 10 TB |
-
----
-
-## Content Sharing (Service Broker)
-
-Catalog items are shared to projects — a template not shared to a project is not visible to that project's users.
-
-**Share a catalog item:**
-
-```bash
-Service Broker → Content & Policies → Content Sharing → New Content Sharing Policy
 ```
 
 - Source: select the Assembler content source (or a git-backed content source)

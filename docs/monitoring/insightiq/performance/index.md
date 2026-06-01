@@ -5,7 +5,7 @@
 InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards reference covering Protocol Performance Breakdown, Identifying Performance Bottlenecks via InsightIQ, Collecting a OneFS Performance Support Bundle, Common Performance Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────── InsightIQ — Performance Analysis ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -35,28 +35,6 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 │  Read vs write = IO breakdown critical for cache effectiveness and drive wear planning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Protocol Performance Breakdown
-
-InsightIQ separates performance by protocol, allowing identification of which protocol is driving load.
-
-| Protocol | Key Metrics to Watch | Normal Latency |
-|---|---|---|
-| NFS v3/v4 | ops/s, avg latency, errors | < 5 ms |
-| SMB2/3 | read/write MB/s, latency | < 10 ms |
-| HDFS | throughput MB/s, job duration | Highly variable |
-| S3 | request rate, latency, error rate | < 50 ms for object ops |
-
-```bash
-# Check NFS client latency in real time
-isi statistics client list --protocol=nfs --sort=latency --limit=20
-
-# Check SMB active sessions
-isi smb sessions list
-
-# Per-client throughput — who is consuming the most bandwidth
-isi statistics client list --sort=bytes_in --limit=10 --human-readable
 ```
 
 ## Identifying Performance Bottlenecks via InsightIQ

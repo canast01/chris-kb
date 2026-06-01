@@ -4,7 +4,7 @@
 Unity — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Dell Unity Operations ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -94,54 +94,6 @@ trap cleanup EXIT
 │  CSV input       = bulk zone creation from spreadsheet; scripted via REST API batch                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Unreachable Switch Alert
-
-Queries SANnav for any switch not in REACHABLE state and exits non-zero if found (suitable for nagios/Icinga or CI pipeline health gate):
-
-```python
-#!/usr/bin/env python3
-# sannav-check-reachability.py
-
-import sys, json, os
-import urllib.request, urllib.error
-
-HOST = "https://sannav-dc1.corp.example.com"
-USER = "svc-monitor"
-PASS = os.environ.get("SANNAV_PASS", "")
-
-ctx = __import__("ssl").create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = __import__("ssl").CERT_NONE
-
-def api(method, path, body=None):
-    url = HOST + path
-    req = urllib.request.Request(url, method=method,
-          headers={"Content-Type": "application/json",
-                   "Authorization": f"Bearer {TOKEN}"} if "TOKEN" in globals() else
-                  {"Content-Type": "application/json"},
-          data=json.dumps(body).encode() if body else None)
-    with urllib.request.urlopen(req, context=ctx) as r:
-        return json.load(r)
-
-# Login
-resp = api("POST", "/rest/login", {"credentials": {"loginName": USER, "password": PASS}})
-TOKEN = resp["authToken"]
-
-try:
-    data = api("GET", "/rest/resourcegroups/all/switches")
-    unreachable = [s["name"] for s in data.get("switches", [])
-                   if s.get("connectivityState") != "REACHABLE"]
-    if unreachable:
-        print(f"CRITICAL: {len(unreachable)} switch(es) unreachable: {', '.join(unreachable)}")
-        sys.exit(2)
-    else:
-        print(f"OK: All {len(data.get('switches',[]))} switches reachable")
-        sys.exit(0)
-finally:
-    api("DELETE", "/rest/logout")
 ```
 
 ---

@@ -5,7 +5,7 @@
 AWS Instance Recovery reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── AWS Compute — Instance Recovery ───────────────────────────────────┐
 │                                                                                                       │
 │  EC2 recovery mechanisms: CloudWatch alarm recovery, reboot, restore from AMI/snapshot.               │

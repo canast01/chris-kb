@@ -5,7 +5,7 @@
 Hardening reference covering Hardening Checklist, Network Access Controls.
 </div>
 
-```text
+```
 ┌───────────────────────────────── VMware Cloud Foundation — Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │  VCF hardening follows the VMware Security Hardening Guide and VCF Security Config;                   │
@@ -51,40 +51,6 @@ Hardening reference covering Hardening Checklist, Network Access Controls.
 │  Baseline image= vLCM image that all ESXi hosts must match                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-VCF Hardening — Network Access Control Model
-┌─────────────────────────────────────────────────────┐
-│  Management Jump-Host / PAW                         │
-│  (restricted CIDR — the only permitted source)      │
-└──────────────────────┬──────────────────────────────┘
-                       │ TCP 443 only
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│  SDDC Manager  (management network segment)         │
-│  firewall: restrict UI/API to jump-host CIDR        │
-└───┬───────────────┬───────────────┬─────────────────┘
-    │ TCP 443       │ TCP 443       │ TCP 443, 902
-    ▼               ▼               ▼
-┌────────┐   ┌──────────┐   ┌───────────────────────┐
-│vCenter │   │NSX Mgr   │   │ESXi hosts               │
-│        │   │(3 nodes) │   │                         │
-└────────┘   └──────────┘   └───────────────────────┘
-    │
-    │ UDP/TCP 514 or TLS 6514
-    ▼
-┌─────────────────────────────────────────────────────┐
-│  SIEM / Syslog Receiver                             │
-│  All audit events, admin actions, LCM operations    │
-└─────────────────────────────────────────────────────┘
-
-Key Hardening Controls:
-  ✔ All passwords rotated at first use
-  ✔ RBAC via AD groups — no shared local accounts
-  ✔ TLS 1.2 minimum on all endpoints
-  ✔ CA-signed certificates (not self-signed)
-  ✔ vSAN encryption for sensitive workload domains
-  ✔ Audit log review monthly
 ```
 
 ## Hardening Checklist

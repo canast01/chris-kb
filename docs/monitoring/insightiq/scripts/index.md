@@ -51,30 +51,6 @@ def iiq_get(path: str, params: dict = None) -> dict:
 │  Python requests = pip install requests; standard HTTP library for InsightIQ API                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Threshold Alert Forwarding (SNMP)
-
-```python
-from pysnmp.hlapi import *
-
-SNMP_TARGET   = "<monitoring-platform-ip>"
-SNMP_PORT     = 162
-SNMP_COMMUNITY = "public"
-
-def send_snmp_trap(cluster: str, metric: str, value: float, threshold: float):
-    send_notification(
-        SnmpEngine(),
-        CommunityData(SNMP_COMMUNITY),
-        UdpTransportTarget((SNMP_TARGET, SNMP_PORT)),
-        ContextData(),
-        "trap",
-        NotificationType(ObjectIdentity("1.3.6.1.4.1.12345.1")).addVarBinds(
-            ("1.3.6.1.4.1.12345.1.1", OctetString(cluster)),
-            ("1.3.6.1.4.1.12345.1.2", OctetString(metric)),
-            ("1.3.6.1.4.1.12345.1.3", OctetString(f"{value:.2f}")),
-        )
-    )
-    print(f"Sent SNMP trap: {cluster} {metric}={value} (threshold={threshold})")
 ```
 
 ## Automated Weekly Report Generation

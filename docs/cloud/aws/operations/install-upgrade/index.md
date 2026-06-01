@@ -71,25 +71,6 @@ aws ssm describe-instance-patches --instance-id <i-xxxx> \
 │  Immutable upgrade= Never patch in place; always replace with pre-patched AMI                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Major version upgrades require:
-1. Test in staging environment first
-2. Create final snapshot before upgrade
-3. Schedule change record with agreed rollback window
-4. Run application validation suite post-upgrade
-
-## AMI Lifecycle
-
-```bash
-# Create AMI from running instance
-aws ec2 create-image --instance-id <i-xxxx> --name "prod-app-$(date +%Y%m%d)" --no-reboot
-
-# List old AMIs (older than 90 days)
-aws ec2 describe-images --owners self --query "Images[?CreationDate<='$(date -d '90 days ago' +%Y-%m-%dT%H:%M:%S)'].[ImageId,Name,CreationDate]"
-
-# Deregister old AMI (after confirming no launch templates reference it)
-aws ec2 deregister-image --image-id <ami-xxxx>
-aws ec2 delete-snapshot --snapshot-id <snap-xxxx>
 ```
 
 ## Lambda Runtime Deprecation

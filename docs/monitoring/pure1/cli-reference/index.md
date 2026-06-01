@@ -57,17 +57,6 @@ curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type
 │  py-pure-client = Pure-provided Python library wrapping Pure1 API                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Metrics
-
-```bash
-# List available metrics
-curl -X GET "https://api.pure1.purestorage.com/api/1.latest/metrics"   -H "Authorization: Bearer <token>"
-
-# Query array-level IOPS
-curl -X GET "https://api.pure1.purestorage.com/api/1.latest/metrics/history?ids=<metric_id>&resource_ids=<array_id>&start_time=<epoch>&end_time=<epoch>"   -H "Authorization: Bearer <token>"
 ```
 
 ---

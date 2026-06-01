@@ -134,17 +134,6 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-After failover, present R2 volumes to DR hosts using the array's storage masking configuration.
-
-### Confirming RPO at Failover Time
-
-```bash
-# Immediately after failover, record the cycle timestamp
-symrdf -g 20 -type A query -detail | grep -E "Cycle Time|Completed|Lag"
-
-# The "Last Consistent" timestamp is the effective recovery point
-symrdf -g 20 -type A query -detail | grep "Last"
 ```
 
 | RPO Factor | How to Check | Acceptable Threshold |

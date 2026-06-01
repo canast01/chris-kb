@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Dell PowerMax (formerly VMAX) is Dell's enterprise all-flash storage platform. The CLI tool is SYMCLI (Solutions Enabler CLI) — commands follow a `sym<object> <action> -sid <SymmID>` pattern. Every command requires the array's SID (Symmetrix ID).
 </div>
+```
+┌──────────────────────────────────── Dell PowerMax — CLI Reference ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         PowerMax CLI: command-line interface for all management and operational tasks         │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
+│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
+│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
+│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
+│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
+│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
+│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
+│    Storage group      = logical container for volumes sharing service level and host access policy    │
+│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
+│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
+│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
+│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
+│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
+│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
+│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
+│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
  Run `symcfg list` first to identify your SID.
 

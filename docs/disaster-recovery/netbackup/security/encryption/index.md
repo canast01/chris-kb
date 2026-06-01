@@ -5,7 +5,7 @@
 Encryption reference covering Backup Data Encryption.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── NetBackup — Encryption ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,17 +45,6 @@ Encryption reference covering Backup Data Encryption.
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Backup Data Encryption
-
-Enable encryption at the policy level:
-
-```bash
-# Create an encryption key file
-nbkm -createKey -keyGroupName backupkeys
-
-# Enable encryption in policy (Admin Console):
-# Policy Attributes → Use Encryption → select key group
 ```
 
 | Encryption Mode | Location | CPU Impact |

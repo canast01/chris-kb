@@ -94,17 +94,6 @@ Recommended SAML configuration:
 │  Assertion    = SAML XML document signed by IdP containing user identity and attributes               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Import AD CA cert into Confluence Java truststore (Linux server)
-keytool -import -trustcacerts \
-  -alias corp-ad-ca \
-  -file /tmp/corp-root-ca.cer \
-  -keystore /opt/atlassian/confluence/jre/lib/security/cacerts \
-  -storepass changeit -noprompt
-
-# Restart Confluence after importing
-systemctl restart confluence
 ```
 
 ## Local Accounts

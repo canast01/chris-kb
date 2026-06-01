@@ -82,29 +82,6 @@ HARDENING LAYERS
 │  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## ESXi Host Hardening
-
-### Disable Unnecessary Services
-
-The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.
-
-```bash
-# List all services and their status
-esxcli system maintenanceMode set --enable false  # only needed if in MM
-vim-cmd hostsvc/service/list
-
-# Disable services that should not be running
-# CIM server (not needed unless hardware monitoring via CIM)
-esxcli system wbem set --enable false
-
-# SFCBD (CIM broker) — disable if CIM is disabled
-/etc/init.d/sfcbd-watchdog stop
-chkconfig sfcbd-watchdog off
-
-# NTP daemon should be RUNNING (required for vSAN)
-# SSH should be STOPPED unless in use
-# ESXi Shell should be STOPPED
 ```
 
 **Service baseline:**

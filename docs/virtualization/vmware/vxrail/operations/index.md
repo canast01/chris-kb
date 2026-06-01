@@ -4,7 +4,7 @@
 Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,26 +60,6 @@ Day-to-day operational reference for VxRail in the VMware product context. Cover
 │  Post-upgrade validation = Checks ESXi version, iDRAC FW, vSAN health, and cluster stability after LCM│
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## VxRail Manager Operations
-
-### Access VxRail Plugin
-
-1. Log into vCenter with an account that has the VxRail Plugin role
-2. **Menu → VxRail** — the plugin opens in the vCenter UI
-3. Navigate: **Cluster**, **Hosts**, **LCM**, **Support**
-
-### Change VxRail Manager Admin Password
-
-```bash
-# SSH to VxRail Manager VM (default port 22)
-ssh mystic@<vxrail-manager-ip>
-
-# Change the local admin password
-passwd mystic
 ```
 
 Also update the password in:

@@ -63,33 +63,6 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Examples:
-- `DG-PROD-ERP-DC1-01`
-- `DG-PROD-DB-DC1-01`
-
-## SRDF Group Number Allocation
-
-Maintain an SRDF group number allocation register in CMDB. Ranges:
-
-| Range | Purpose | Why separated |
-|---|---|---|
-| 1–50 | Tier 1 production sync/async groups | Strict RPO — isolated from lower-tier groups to prevent cycle contention |
-| 51–100 | Tier 2 business apps | Moderate RPO — can share directors with Tier 1 if bandwidth allows |
-| 101–150 | DR testing and pre-production | Testing operations (splits, resyncs) must not impact production group numbers |
-| 151–200 | Reserved for future expansion | Avoids group number conflicts during environment growth |
-
-## Consistency Group Design Rules
-
-- One SRDF group per application tier (DB, APP, WEB) — never mix tiers in a single group
-- Group all volumes of a multi-volume application into one consistency group to ensure write-order fidelity
-- Do not exceed 2,048 devices per SRDF group
-- Test consistency at minimum quarterly during DR tests
-
-## Bandwidth Sizing
-
-```text
-Required bandwidth (MB/s) = peak_change_rate_MB_per_cycle / cycle_time_s × 1.20
 ```
 
 Where 1.20 = 20% headroom for burst absorption. Measure peak change rate with:

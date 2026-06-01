@@ -5,7 +5,7 @@
 Virtualization Network Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────── Virtualization Network Validation Runbook ──────────────────────────────┐
 │                                                                                                       │
 │    Use after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues         │

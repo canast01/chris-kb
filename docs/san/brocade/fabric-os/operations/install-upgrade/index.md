@@ -80,18 +80,6 @@ sequenceDiagram
 │    One fabric     = Upgrade one fabric completely before touching the peer fabric                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Adding a New Switch to the Fabric
-
-1. Pre-configure the new switch: hostname, domain ID, NTP, AAA, SNMP, syslog.
-2. Set the domain ID statically before connecting ISLs to avoid domain ID conflict:
-
-```bash
-configure
-# Set Fabric Parameters → insistDomainId = 1
-# Set Domain ID to the assigned value from the SAN design register
 ```
 
 3. Connect ISL cables to the edge ports of the core switch.

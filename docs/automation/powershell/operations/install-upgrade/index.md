@@ -36,21 +36,6 @@ pwsh --version
 │   │     NuGet provider= required for PSGallery; Install-PackageProvider -Name NuGet if missing    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Upgrade PowerCLI
-
-```powershell
-# Check current version
-Get-Module VMware.PowerCLI -ListAvailable | Select-Object Name, Version
-
-# Unload current session modules
-Get-Module VMware* | Remove-Module -Force
-
-# Upgrade
-Update-Module VMware.PowerCLI -Confirm:$false
-
-# Verify
-Get-Module VMware.PowerCLI -ListAvailable | Select-Object Name, Version
 ```
 
 ## Update All Installed Modules

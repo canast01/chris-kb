@@ -5,8 +5,8 @@
 > Part of the [VxRail](../index.md) reference.
 </div>
 
-```text
 VxRail Design Requirements — Key Standards
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Network VLAN Separation (required)                         │
 │                                                             │
@@ -17,11 +17,14 @@ VxRail Design Requirements — Key Standards
 │  VLAN: VM Traffic   per-app    workload connectivity        │
 └──────────────────────────────┬──────────────────────────────┘
                                │
+```
+```
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Cluster Sizing Rules                                        │
 │  min 3 nodes (FTT=1) · min 4 nodes (production safe)        │
 │  min 6 nodes for FTT=2 · same SKU required per cluster      │
 └──────────────────────────────┬──────────────────────────────┘
+```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Firmware / Software Rule                                    │
@@ -29,7 +32,6 @@ VxRail Design Requirements — Key Standards
 │  Never update vSphere, vSAN, or firmware independently      │
 │  Verify HCL alignment after every LCM bundle apply          │
 └─────────────────────────────────────────────────────────────┘
-```
 
 ---
 ## Naming Conventions

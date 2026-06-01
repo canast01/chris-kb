@@ -73,11 +73,6 @@ Administration → Access Control → Object Permissions → Add Permission
 │  Local Account        = vROps-internal account; use for break-glass only                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Search for the AD group by name or DN, select, and import. The group appears in the User Groups list. Assign a role:
-
-```text
-Administration → Access Control → User Groups → select group → Assign Role → select role → Save
 ```
 
 | AD Group | Aria Operations Role | Object Scope |

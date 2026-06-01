@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Health Check Procedure, Change Readiness Checklist, Post-Change Validation, Quick Reference — Key REST API Health Endpoints, Incident Triage.
 </div>
+```
+┌─────────────────────────────────── Dell PowerStore — Health Checks ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      PowerStore health checks: routine verification of operational status and performance     │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
+│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
+│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
+│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
+│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
+│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
+│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
+│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
+│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
+│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
+│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
+│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
+│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
+│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
+│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
+│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Daily Health Check Procedure
 

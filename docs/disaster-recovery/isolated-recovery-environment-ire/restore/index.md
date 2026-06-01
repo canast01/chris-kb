@@ -53,24 +53,6 @@ flowchart TD
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### File/Volume Restore from Snapshot
-
-```bash
-# Pure FlashArray: restore volume from snapshot
-purevol copy --overwrite snap01.vol01 vol01-ire-restore
-
-# Mount restored volume to IRE host (after FC/iSCSI connection)
-ssh pureuser@<flasharray-ip>
-purevol connect vol01-ire-restore --host <ire-host>
-
-# On IRE host: rescan and mount
-iscsiadm -m session --rescan
-# or for FC:
-echo "1" > /sys/class/scsi_host/host0/scan
-
-# Mount read-only for scanning
-mount -o ro /dev/mapper/<device> /mnt/recovery-volume
 ```
 
 ### Database Restore

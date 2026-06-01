@@ -47,15 +47,6 @@ graph LR
 │   │   encrypt_string = encrypts a single string value; embed inline in plain YAML variable files  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Paste the output directly into a plaintext YAML file:
-
-```yaml
-# group_vars/prod/main.yml
-vault_db_password: !vault |
-  $ANSIBLE_VAULT;1.2;AES256;prod
-  62313365396662343061393463336135623131376139323936656566366135363262363164376234
-  ...
 ```
 
 ### Recommended Layout

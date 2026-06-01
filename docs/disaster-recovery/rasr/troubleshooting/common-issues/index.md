@@ -60,29 +60,6 @@ Start-Service RASRAgent
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Recovery Failures
-
-### WinPE boots but cannot see the network share
-
-**Symptom:** RASR wizard starts, but the network share path returns "path not found" or "access denied".
-
-**Causes and fixes:**
-
-| Cause | Fix |
-|---|---|
-| Network driver not loaded | Verify server generation matches media driver pack; rebuild media for 15G/16G if needed |
-| No IP assigned in WinPE | Run `wpeutil` → check IP; manually assign: `netsh interface ip set address "Ethernet" static 10.x.x.x 255.255.255.0 10.x.x.1` |
-| Authentication failure | WinPE cannot use Kerberos — use NTLM/local credentials: `net use Z: \\nas01\rasr-images /user:nashost\localuser` |
-| Firewall blocking 445 | Confirm no firewall rule blocks SMB from the recovery network VLAN to the NAS |
-
-```cmd
-:: From WinPE command prompt — test and map share
-ping nas01
-net use Z: \\nas01\rasr-images\prod\app01 /user:nashost\localuser
-dir Z:\
 ```
 
 ### WinPE cannot see local disks

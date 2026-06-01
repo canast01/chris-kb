@@ -15,8 +15,9 @@ SRM operates across two paired sites: a **protected site** (production) and a **
 
 The two SRM Servers form a **site pair**. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.
 
-```text
 Protected Site                        Recovery Site
+```
+```
 ┌─────────────────────┐               ┌─────────────────────┐
 │  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
 │  SRM Server         │◄──── TCP 9086 ─►│  SRM Server         │
@@ -24,9 +25,10 @@ Protected Site                        Recovery Site
 │  Production VMs     │               │  Placeholder VMs    │
 │  Storage Array A    │               │  Storage Array B    │
 └─────────────────────┘               └─────────────────────┘
+```
+```
          │                                      │
          └──── Replication (ABR or VR) ─────────┘
-```
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM orchestrates VM failover between a protected site and recovery site using                        │
@@ -72,29 +74,6 @@ Protected Site                        Recovery Site
 │  Reprotect     = reverse replication direction after failover                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Priority Groups
-
-- VMs in **Priority 1** power on first. SRM waits for them to complete before moving to Priority 2.
-- Within a priority group, VMs start concurrently (subject to host resource limits).
-- Maximum of 5 priority groups. If you need finer ordering, use pre/post steps with `Wait for heartbeat` or custom scripts.
-- Recovery Plan steps within a VM's sequence:
-  1. Suspend or shut down VM at protected site (planned migration only)
-  2. Storage operations (SRA: promote LUN / VR: finalize disk)
-  3. Configure network (apply IP customization)
-  4. Pre-power-on commands (optional)
-  5. Power on VM
-  6. Post-power-on commands (optional, typically wait for VM tools heartbeat)
-
-### IP Customization
-
-Two approaches:
-
-**Subnet-level mapping** — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.
-
-```text
-Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
-VM at 10.10.0.50       →  Recovers at 10.20.0.50
 ```
 
 **Per-VM customization** — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.

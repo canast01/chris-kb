@@ -74,17 +74,6 @@ Morning Check Sequence
 │    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Also check: VCSA VAMI at `https://vcenter:5480` — confirm appliance health, disk usage, and certificate expiry.
-
-## 2. Host Connectivity
-
-```powershell
-# All hosts should be Connected/PoweredOn
-Get-VMHost | Select-Object Name, ConnectionState, PowerState, OverallStatus |
-    Where-Object { $_.ConnectionState -ne "Connected" -or $_.PowerState -ne "PoweredOn" }
-
-# Any result here = action required
 ```
 
 ## 3. Cluster HA / DRS

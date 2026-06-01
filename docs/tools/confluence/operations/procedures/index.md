@@ -80,32 +80,6 @@ curl -u user:token -X PUT \
 │  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Macro | Purpose | Common Config |
-|-------|---------|--------------|
-| Table of Contents | Page nav | Min heading H2, max H3 |
-| Children Display | Show sub-pages | depth=1, sort=title |
-| Jira Issues | Live ticket list | JQL filter |
-| Status | Visual badge | Yellow / Green / Red |
-| Code Block | Syntax highlight | Language: bash, python, yaml |
-
-## Page History and Versioning
-
-Confluence stores every save as a numbered version. You can compare and restore.
-
-```bash
-# Get version history for a page
-curl -u user:token \
-  "https://your-instance.atlassian.net/wiki/rest/api/content/12345/version"
-
-# Restore a specific version
-curl -u user:token -X POST \
-  "https://your-instance.atlassian.net/wiki/rest/api/content/12345/version" \
-  -H "Content-Type: application/json" \
-  -d '{"operationKey": "restore", "params": {"versionNumber": 4}}'
-
-# Compare versions in the UI:
-# Page → ... menu → Page History → select two versions → Compare
 ```
 
 Add a version comment when saving: **Edit → Save → enter comment** — this helps trace why content changed.

@@ -59,13 +59,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Pagination = Handling limit/offset for large result sets in API responses                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Capacity Trend Query
-
-```python
-def get_capacity(token: str, system_id: str) -> dict:
-    """Return capacity data for a specific system."""
-    return api_get(f"/systems/{system_id}/capacity", token)
 ```
 
 ## Create ServiceNow Incident on CRITICAL Alert (Event-Driven)

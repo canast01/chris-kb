@@ -76,26 +76,6 @@ flowchart TD
 │  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## High Memory / OOM
-
-```bash
-# Current memory state
-free -h
-cat /proc/meminfo | grep -E "MemTotal|MemFree|MemAvailable|Cached|SwapUsed"
-
-# Processes using most memory
-ps aux --sort=-%mem | head -15
-
-# OOM killer activity
-dmesg | grep -i "oom\|killed process" | tail -20
-journalctl -k --since "1 hour ago" | grep -i oom
-
-# Memory leak — watch a process over time
-watch -n5 "ps -o pid,vsz,rss,comm -p <PID>"
-
-# Huge pages usage
-cat /proc/meminfo | grep -i huge
 ```
 
 ## High Disk I/O or Latency

@@ -73,23 +73,6 @@ AWS Backup & Restore Flow
 │  Incremental snapshot= After first full, EBS snapshots store only changed blocks                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## EBS Snapshot — Manual
-
-```bash
-# Create snapshot of an EBS volume
-aws ec2 create-snapshot \
-  --volume-id vol-0abc123def456789 \
-  --description "Pre-patch snapshot $(date +%Y-%m-%d)" \
-  --tag-specifications 'ResourceType=snapshot,Tags=[{Key=Name,Value=pre-patch},{Key=Environment,Value=prod}]'
-
-# List snapshots for a volume
-aws ec2 describe-snapshots \
-  --filters "Name=volume-id,Values=vol-0abc123def456789" \
-  --query 'Snapshots[*].[SnapshotId,StartTime,State,Description]' \
-  --output table
 ```
 
 ---

@@ -60,23 +60,6 @@ curl -sk -u 'admin:<password>' \
 │  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Disk thresholds:**
-- < 70% used: normal
-- 70–80% used: schedule capacity expansion
-- > 80% used: immediate action required — oldest data will be deleted to free space
-- 100% used: ingestion stops
-
----
-
-### Agent Connectivity
-
-```bash
-# List all registered agents and their last check-in time
-curl -sk -u 'admin:<password>' \
-  "https://vrli-prod-01.example.local/api/v2/agents" | \
-  jq '.agents[] | {host: .hostname, lastActive: .lastActive, state: .state}' | \
-  jq -s 'sort_by(.lastActive)'
 ```
 
 Via UI: **Administration → Agents** — agents with a last check-in older than 15 minutes are potentially offline.

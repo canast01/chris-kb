@@ -71,26 +71,6 @@ refactor(cache): replace in-memory store with Redis
 │  Changelog    = auto-generated from conventional commits by tools like release-it                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Only amend commits that have not been pushed to a shared branch.
-
-## Squashing Commits
-
-Squash a chain of WIP commits into a single clean commit before merging.
-
-```bash
-# Interactive rebase — squash last 4 commits
-git rebase -i HEAD~4
-# In the editor: change 'pick' to 's' (squash) for all but the first
-
-# Squash everything on a branch into one commit against main
-git switch feature/my-feature
-git rebase -i $(git merge-base HEAD main)
-
-# Alternative: merge --squash (no rebase needed)
-git switch main
-git merge --squash feature/my-feature
-git commit -m "feat(platform): add S3 lifecycle management"
 ```
 
 ## Cherry-Picking

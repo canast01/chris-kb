@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapMirror Security](../index.md) reference.
 </div>
+```
+┌───────────────────────────────── NetApp SnapMirror — Authentication ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        SnapMirror authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options       │   │
+│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
+│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
+│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
+│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
+│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
+│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
+│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
+│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
+│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
+│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
+│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
+│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
+│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
+│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
+│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
+│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
+│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
+│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
+│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
+│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
+│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

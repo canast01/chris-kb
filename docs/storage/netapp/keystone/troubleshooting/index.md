@@ -3,6 +3,59 @@
 <div class="kb-summary">
 NetApp Keystone Troubleshooting reference covering Common Issues, Diagnostic, Log Locations, Before Calling Support.
 </div>
+```
+┌────────────────────────────────── NetApp Keystone — Troubleshooting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Keystone troubleshooting: structured diagnostic process for common issues           │   │
+│   │         Start with health dashboard, then check recent changes, then review event logs        │   │
+│   │        Collect support bundle before contacting vendor support to accelerate resolution       │   │
+│   │         Escalation matrix: L1 → L2 → vendor support based on severity and SLA targets         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check health → review changes → examine logs → diagnose → resolve                                  │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           Hardware          │  │       AFF/FAS on-prem       │  │         NetApp-owned        │   │
+│   │        Service level        │  │       Extreme/Perf/Std      │  │         Latency SLA         │   │
+│   │          Collector          │  │         Telemetry VM        │  │        ONTAP polling        │   │
+│   │          Dashboard          │  │            BlueXP           │  │       Usage visibility      │   │
+│   │           Billing           │  │       Committed+burst       │  │       Monthly invoice       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │Keystone Collecto │  Usage metering  │     ONTAP REST    │ Service account  │    On-prem VM    │   │
+│   │      BlueXP      │   SaaS portal    │       HTTPS       │    OAuth2/SSO    │   NetApp SaaS    │   │
+│   │   AFF Extreme    │  NVMe perf tier  │    FC/iSCSI/NFS   │  Kerberos/CHAP   │  Sub-ms latency  │   │
+│   │   AutoSupport    │ Telemetry relay  │       HTTPS       │   Certificate    │    Call-home     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: NetApp AFF/FAS arrays on-prem · Keystone Collector VM · BlueXP cloud portal              │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Keystone           = NetApp STaaS; fixed-term subscription for ONTAP or StorageGRID capacity       │
+│    Service level      = tiered SLA: Extreme (NVMe), Performance (SSD), Standard (HDD)                 │
+│    Committed capacity = minimum contracted TiB; billed monthly even if below threshold                │
+│    Burst capacity     = usage above committed; available without pre-ordering; billed monthly         │
+│    Keystone Collector = on-prem VM that gathers usage metrics and sends to NetApp Keystone            │
+│    BlueXP             = NetApp SaaS control plane; Keystone dashboard, DRaaS, and cloud integrations  │
+│    AFF                = All Flash FAS; ONTAP-based NVMe/SSD array used for Extreme and Performance ...│
+│    FAS                = Fabric Attached Storage; ONTAP hybrid HDD/SSD for Standard service level      │
+│    StorageGRID        = NetApp S3 object storage; Object service level in Keystone subscriptions      │
+│    AutoSupport        = ONTAP telemetry relay; sends call-home data and log bundles to NetApp         │
+│    Service request    = NetApp SR; support ticket opened via mysupport.netapp.com portal              │
+│    SKU                = Keystone service SKU identifies the service level and raw or usable capacity  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Common Issues
 

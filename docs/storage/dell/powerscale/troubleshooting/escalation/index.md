@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Procedure.
 </div>
+```
+┌──────────────────────────────────── Dell PowerScale — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     PowerScale escalation: severity triage, vendor support contact, and required artifacts    │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
+│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
+│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
+│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
+│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
+│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
+│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
+│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
+│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
+│    Access zone        = logical container with separate authentication and export namespace per tenant│
+│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
+│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
+│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
+│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
+│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
+│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Support Portal
 

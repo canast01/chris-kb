@@ -56,24 +56,6 @@ graph LR
 │   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Set-VM and VM Configuration
-
-```powershell
-# Change vCPU and memory (VM must be powered off for most changes)
-Get-VM -Name web01 | Set-VM -NumCpu 4 -MemoryGB 8 -Confirm:$false
-
-# Add a network adapter
-Get-VM web01 | New-NetworkAdapter -NetworkName 'VM Network' -Type VMXNET3 -StartConnected
-
-# Add a hard disk
-Get-VM web01 | New-HardDisk -CapacityGB 100 -StorageFormat Thin -Confirm:$false
-
-# Power operations
-Start-VM -VM web01 -Confirm:$false
-Stop-VM -VM web01 -Confirm:$false
-Restart-VM -VM web01 -Confirm:$false
-Suspend-VM -VM web01 -Confirm:$false
 ```
 
 ### Snapshots

@@ -105,32 +105,6 @@ flowchart LR
 │  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## CloudFormation Stack Lifecycle
-
-```mermaid
-flowchart TD
-    template["Template\nYAML / JSON"]
-    validate["aws cloudformation validate-template"]
-    createStack["CREATE_IN_PROGRESS\naws cloudformation create-stack"]
-    createComplete["CREATE_COMPLETE\nStack resources provisioned"]
-    createFailed["CREATE_FAILED\nRollback triggered"]
-    rollbackComplete["ROLLBACK_COMPLETE\nResources removed"]
-    updateStack["UPDATE_IN_PROGRESS\naws cloudformation update-stack"]
-    updateComplete["UPDATE_COMPLETE\nChanges applied"]
-    updateFailed["UPDATE_ROLLBACK_COMPLETE\nPrevious state restored"]
-    deleteStack["DELETE_IN_PROGRESS\naws cloudformation delete-stack"]
-    deleteComplete["DELETE_COMPLETE\nStack removed"]
-
-    template --> validate --> createStack
-    createStack --> createComplete
-    createStack --> createFailed --> rollbackComplete
-    createComplete --> updateStack
-    updateStack --> updateComplete
-    updateStack --> updateFailed
-    createComplete --> deleteStack
-    updateComplete --> deleteStack
-    deleteStack --> deleteComplete
 ```
 
 ## Security Standards

@@ -85,23 +85,6 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Performance and Throughput Metrics
-
-```bash
-# Monitor RDF write throughput and latency (5-second intervals, 6 samples)
-symstat -rdf -i 5 -c 6
-
-# Check for any bandwidth saturation on RDF ports
-symstat -rdf -dir RF-1F -type port
-
-# Review historical performance data
-symstat -rdf -start_time "2026-05-07 08:00:00" -end_time "2026-05-07 09:00:00"
-
-# Check host-side write latency impact from synchronous commit
-symstat -type device -dev 0A1 -i 5 -c 3
 ```
 
 **WAN Latency Impact on Write Performance:**

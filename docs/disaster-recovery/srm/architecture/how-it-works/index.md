@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Topology, Recovery Plan Modes, Storage Replication Adapters (SRAs), Protection Groups and 1 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRM — How It Works ──────────────────────────────────────────┐
 │                                                                                                       │
 │    SRM data flow — from source to target through the protection pipeline:                             │

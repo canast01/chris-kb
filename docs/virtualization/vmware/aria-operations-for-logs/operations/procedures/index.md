@@ -57,15 +57,6 @@ connection refused
 │  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Certificate Errors
-
-```text
-certificate
-SSL
-handshake failed
-x509
-STS
 ```
 
 ### vMotion Failures

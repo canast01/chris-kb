@@ -64,15 +64,6 @@ flowchart LR
 │  CloudFormation = AWS native IaC; stack-based resource provisioning and updates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-VPN is configured as a backup to Direct Connect with lower BGP preference (AS-Path prepend or local preference).
-
-## Active Directory
-
-**AWS Managed Microsoft AD** (new deployments):
-```bash
-# Create managed AD
-aws ds create-microsoft-ad --name corp.local --password <pwd> --vpc-settings VpcId=<vpc>,SubnetIds=<sub1>,<sub2>
 ```
 
 **AD Connector** (proxy authentication to on-premises AD without replication):

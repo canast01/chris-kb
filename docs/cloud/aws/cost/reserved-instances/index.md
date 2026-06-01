@@ -5,7 +5,7 @@
 AWS Reserved Instances reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── AWS Cost — Reserved Instances ────────────────────────────────────┐
 │                                                                                                       │
 │  Reserved Instances provide up to 72% EC2 discount for 1- or 3-year commitments.                      │
@@ -51,34 +51,6 @@ AWS Reserved Instances reference covering Overview, Where It Fits, Daily Checks,
 │  Modify RI       = Split one RI into smaller sizes or merge smaller into larger                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Reserved Instances: On-Demand vs RI Pricing
-──────────────────────────────────────────────────────────────
-
-  On-Demand                  Reserved Instance (RI)
-  ┌─────────────┐            ┌──────────────────────────────┐
-  │ Pay per hour│            │ Commit 1yr or 3yr term       │
-  │ No upfront  │            │                              │
-  │ Full price  │            │ Payment Options:             │
-  └─────────────┘            │ ┌──────────┐ ┌────────────┐ │
-                             │ │ All      │ │ Partial    │ │
-  Savings vs On-Demand:      │ │ Upfront  │ │ Upfront    │ │
-  1yr All Upfront ─► ~40%    │ │ (max sav)│ │ (balanced) │ │
-  3yr All Upfront ─► ~60%    │ └──────────┘ └────────────┘ │
-                             │ ┌──────────────────────────┐ │
-                             │ │ No Upfront (lowest       │ │
-                             │ │ commitment, hourly bill) │ │
-                             │ └──────────────────────────┘ │
-                             └──────────────────────────────┘
-                                          │
-                                          ▼
-                             ┌──────────────────────────────┐
-                             │ Utilisation Tracking         │
-                             │ Cost Explorer → RI reports   │
-                             │ Low utilisation → sell on    │
-                             │ Marketplace or modify        │
-                             └──────────────────────────────┘
 ```
 
 ## Overview

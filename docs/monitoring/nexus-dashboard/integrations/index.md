@@ -60,22 +60,6 @@ curl -sk -X POST \
 │  Cisco TAC = Technical Assistance Centre; Smart Call Home auto-opens cases                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## NDDB Traffic Tapping
-
-NDDB allows traffic from production ACI ports to be mirrored to monitoring tool ports without dedicated TAPs.
-
-Configuration steps:
-1. Navigate to **NDDB > Monitoring Domains > Add**.
-2. Define monitoring tool ports (where traffic is sent).
-3. Create a filter (match traffic by VLAN, IP prefix, or port).
-4. Create a monitoring session linking production ports to tool ports.
-
-```bash
-# List NDDB monitoring sessions
-curl -sk -X GET \
-  "https://nexus-dashboard.example.com/nddb/api/v1/sessions" \
-  -H "Authorization: Bearer <token>" | jq '.sessions[] | {name, status, filterCount}'
 ```
 
 ## Common Integration Issues

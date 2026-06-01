@@ -5,7 +5,7 @@
 AWS Restore Testing reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── AWS Backup — Restore Testing ─────────────────────────────────────┐
 │                                                                                                       │
 │  Automated restore testing validates recoverability on schedule without manual effort.                │
@@ -51,33 +51,6 @@ AWS Restore Testing reference covering Overview, Where It Fits, Daily Checks, He
 │  Quarterly review= Manual review of test history to confirm RPO/RTO targets met                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Restore Testing Workflow
-─────────────────────────────────────────────────────────────
-
-  ┌────────────────┐    ┌──────────────────┐    ┌──────────────┐
-  │  Restore Test  │───►│  Restore Job     │───►│ Validation   │
-  │  Plan          │    │                  │    │              │
-  │                │    │  Recovery point  │    │ ┌──────────┐ │
-  │  Schedule:     │    │  ──────────────► │    │ │ Resource │ │
-  │  Weekly/Monthly│    │  New temp        │    │ │ starts   │ │
-  │                │    │  resource        │    │ │ Health   │ │
-  │  Selection:    │    │  launched in     │    │ │ checks   │ │
-  │  Vault / tag   │    │  isolated env    │    │ │ pass     │ │
-  └────────────────┘    └──────────────────┘    │ └──────────┘ │
-                                                └──────┬───────┘
-                                                       │
-                                                       ▼
-                                               ┌──────────────┐
-                                               │  Compliance  │
-                                               │  Report      │
-                                               │  PASSED /    │
-                                               │  FAILED      │
-                                               │  + duration  │
-                                               └──────────────┘
-                                               (temp resource
-                                                auto-deleted)
 ```
 
 ## Overview

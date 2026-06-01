@@ -88,55 +88,6 @@ kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 │  Backup success = Verification that scheduled backup completed and is retrievable                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 3. Fabric Discovery Status (NDFC)
-
-Navigate to **NDFC > Fabrics > [Fabric Name]**:
-- All switches should be in **Manageable** or **Managed** state
-- Switch count should match expected
-- No switches in **Unmanageable** or **Unreachable** state
-
-If switches are unmanageable:
-1. Verify SSH from ND data network to switch management IP
-2. Verify SNMPv3 credentials match switch configuration
-3. Check NDFC discovery logs:
-   ```bash
-   kubectl logs -n ndfc deployment/ndfc-discovery-manager --tail=100 | grep -i "error\|fail"
-   ```
-
----
-
-## 4. NDI Anomaly Review
-
-Navigate to **NDI > Dashboard**:
-- Review the anomaly count by severity (Critical, Major, Warning)
-- Drill into Critical anomalies — these require active investigation
-- Review the anomaly trend over the past 24 hours (increase may indicate an emerging issue)
-
-Navigate to **NDI > Explore > Anomalies**:
-- Filter by time: Last 24 Hours
-- Sort by severity
-- For each Critical or Major anomaly: confirm whether it is a known/acknowledged condition or a new finding
-
----
-
-## 5. VSAN and Zone Set Health (NDFC SAN)
-
-Navigate to **NDFC > Fabrics > [Fabric] > VSANs**:
-- All production VSANs should be **Active** on all member switches
-- No VSAN isolation events in the last 24 hours
-
-Navigate to **NDFC > Fabrics > [Fabric] > Zoning**:
-- The correct zone set is active in each VSAN
-- Zone member counts match expectations
-
-```bash
-# Cross-check zone set on MDS switch directly
-# (NX-OS CLI)
-show zoneset active vsan 10
-# Verify against NDFC-reported active zone set
 ```
 
 ---

@@ -109,20 +109,6 @@ cat /tmp/jira-plugins-before.txt
 │  PostgreSQL 14 = minimum recommended for Jira 9.x; check matrix for exact version                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Install Java
-
-```bash
-# Install OpenJDK 17 (RHEL/CentOS)
-dnf install java-17-openjdk-devel -y
-
-# Verify
-java -version
-# openjdk version "17.x.x"
-
-# Set JAVA_HOME
-echo 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk' >> /etc/profile.d/java.sh
-source /etc/profile.d/java.sh
 ```
 
 ### Install Jira

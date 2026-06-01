@@ -4,7 +4,7 @@
 NetApp storage knowledge base covering ONTAP, SnapMirror, SnapCenter, and Keystone. Includes architecture references, operational procedures, CLI commands, replication, SnapMirror Active Sync, MetroCluster, and troubleshooting guides.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── NetApp Storage Stack ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -77,29 +77,6 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## SyncIQ Replication Health
-
-```bash
-# On production PowerScale cluster
-ssh admin@<production-cluster>
-
-# List all SyncIQ policies managed by Eyeglass
-isi sync policies list
-
-# View a specific policy — confirm last run and status
-isi sync policies view <policy_name>
-
-# Check for any active or failed SyncIQ jobs
-isi sync jobs list
-
-# Check SyncIQ reports for the last 24 hours
-isi sync reports list --limit 20
-
-# Check SyncIQ errors
-isi sync reports errors list
 ```
 
 | SyncIQ Status | Meaning | Action |

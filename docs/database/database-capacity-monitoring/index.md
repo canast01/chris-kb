@@ -58,29 +58,6 @@ ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 │    Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SQL Server
-
-```sql
--- Database file sizes and usage
-SELECT DB_NAME(vfs.database_id) AS database_name,
-       mf.name AS logical_name,
-       mf.type_desc,
-       ROUND(vfs.size_on_disk_bytes / 1048576.0, 1) AS size_mb,
-       ROUND(vfs.io_stall_read_ms, 0) AS read_stall_ms
-FROM sys.dm_io_virtual_file_stats(NULL, NULL) vfs
-JOIN sys.master_files mf ON vfs.database_id = mf.database_id AND vfs.file_id = mf.file_id
-ORDER BY vfs.size_on_disk_bytes DESC;
-
--- Top 20 tables by size
-SELECT TOP 20 t.name AS table_name,
-       SUM(a.total_pages) * 8 / 1024 AS total_size_mb,
-       SUM(a.used_pages) * 8 / 1024 AS used_size_mb
-FROM sys.tables t
-JOIN sys.indexes i ON t.object_id = i.object_id
-JOIN sys.partitions p ON i.object_id = p.object_id AND i.index_id = p.index_id
-JOIN sys.allocation_units a ON p.partition_id = a.container_id
-GROUP BY t.name ORDER BY total_size_mb DESC;
 ```
 
 ## Filesystem / Volume Capacity

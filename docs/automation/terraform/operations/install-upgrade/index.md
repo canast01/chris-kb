@@ -40,26 +40,6 @@ terraform version
 │   │     required_version= constraint in versions.tf; prevents running wrong Terraform version     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Version Management with tfenv
-
-`tfenv` lets you switch Terraform versions per project — essential when managing multiple workspaces with different required versions.
-
-```bash
-# Install tfenv (Linux/macOS)
-git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
-echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-
-# List available versions
-tfenv list-remote
-
-# Install a specific version
-tfenv install 1.7.5
-tfenv use 1.7.5
-
-# Pin a project to a version (creates .terraform-version)
-echo "1.7.5" > .terraform-version
 ```
 
 ## Upgrade Terraform In-Place

@@ -5,7 +5,7 @@
 Authentication reference covering Site Pair Service Account, Certificate Management.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── SRM — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,14 +45,6 @@ Authentication reference covering Site Pair Service Account, Certificate Managem
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Site Pair Service Account
-
-The SRM site pair connection uses a service account on each vCenter:
-
-```text
-Account: svc-srm-pair@domain.local
-Privileges: SRM plug-in permissions + read access to vCenter inventory
 ```
 
 - Do not use a named personal account — must survive staff changes

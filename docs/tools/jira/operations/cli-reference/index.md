@@ -48,16 +48,6 @@ export JIRA_AUTH=$(echo -n "${JIRA_USER}:${JIRA_TOKEN}" | base64)
 │  dbconfig.xml   = JIRA_HOME; JDBC connection settings; edit to change DB params                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Expected output:
-
-```json
-{
-  "baseUrl": "https://jira.example.com",
-  "version": "9.12.0",
-  "deploymentType": "Server",
-  "serverTitle": "Jira"
-}
 ```
 
 ---

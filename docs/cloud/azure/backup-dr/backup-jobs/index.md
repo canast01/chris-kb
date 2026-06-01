@@ -9,6 +9,7 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
   Trigger
      │
      ▼
+```
 ┌────────────────────────────────────────────────────────┐
 │              Backup Job Lifecycle                      │
 │                                                        │
@@ -27,6 +28,7 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
 │               └─────────────┘   │  (email / webhook)│  │
 │                                 └───────────────────┘  │
 └────────────────────────────────────────────────────────┘
+```
      │
      ▼
   az backup job list --status Failed

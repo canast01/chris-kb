@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapCenter Troubleshooting](../index.md) reference.
 </div>
+```
+┌─────────────────────────────────── NetApp SnapCenter — Escalation ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     SnapCenter escalation: severity triage, vendor support contact, and required artifacts    │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Server           │  │          Windows VM         │  │       Central control       │   │
+│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
+│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
+│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
+│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
+│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
+│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
+│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
+│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
+│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
+│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
+│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
+│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
+│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
+│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
+│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

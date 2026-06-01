@@ -68,14 +68,6 @@ sequenceDiagram
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SOBR Capacity Check
-
-In **Backup Infrastructure > Scale-Out Repositories**, verify that no extent shows **Sealed** or **Unavailable** status. Check the free space on each performance tier extent.
-
-```powershell
-# Repository free space — all repos including SOBR extents
-Get-VBRRepository | Select-Object Name, @{N="FreeGB";E={[math]::Round($_.FreeSpace/1GB,1)}}, @{N="TotalGB";E={[math]::Round($_.TotalSpace/1GB,1)}}
 ```
 
 Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).

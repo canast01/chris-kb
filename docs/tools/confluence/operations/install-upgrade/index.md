@@ -96,22 +96,6 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 │  Rollback     = revert VM snapshot or restore DB dump; re-run previous installer                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Upgrade Procedure
-
-### Step 1 — Stop Confluence
-
-Stop all nodes in a rolling manner. For Data Center, stop non-primary nodes first, then the primary (the node that will be upgraded).
-
-```bash
-# On each node (stop non-primary nodes first)
-/opt/atlassian/confluence/bin/stop-confluence.sh
-
-# Verify stopped
-sleep 10
-pgrep -fl "confluence" && echo "Still running — wait" || echo "Stopped"
 ```
 
 ### Step 2 — Back Up Current Installation

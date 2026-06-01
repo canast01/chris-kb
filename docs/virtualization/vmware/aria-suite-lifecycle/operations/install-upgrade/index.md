@@ -5,8 +5,8 @@
 Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM, Full Suite Upgrade Procedure.
 </div>
 
-```text
   LCM Upgrade Sequence (strict order)
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: LCM itself                                             │
 │   Lifecycle Operations → System Upgrade → select bundle         │
@@ -29,7 +29,6 @@ Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM,
 │  └─────────────────────────────────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```text
 ┌────────────────────────────────── Aria Suite LCM Install & Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │  LCM OVA deployment, depot synchronisation, and product installation via LCM.                         │

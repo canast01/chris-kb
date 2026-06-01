@@ -78,50 +78,6 @@ nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 │  Disk encryption= OS-level feature (LUKS) optional on bare-metal ND deployments                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### ND to Managed Switch Communication (SSH and SNMP)
-
-NDFC uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
-- SSH v2 enforced on managed switches: `show ssh server` on each MDS
-- RSA keys ≥ 2048-bit: `show crypto key mypubkey rsa` on each MDS
-- NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: **NDFC > Fabrics > [Fabric] > Edit Switch > Reset Host Key**
-
-SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Design Standards](../../architecture/design-standards/index.md) page.
-
-### ND Cluster Internal Communication
-
-Inter-node cluster communication (Kubernetes, etcd, Kafka) uses mutual TLS (mTLS) with internally managed certificates. These are managed automatically by ND and do not require operator attention under normal circumstances.
-
-### LDAP Traffic
-
-Use port 636 (LDAPS) for all LDAP connections. Import the corporate CA certificate to ensure proper trust chain validation. Never use plain LDAP port 389 in production — it transmits bind credentials in cleartext.
-
----
-
-## Data at Rest
-
-### Stored Credentials
-
-ND stores the following sensitive data encrypted at rest in its internal database (Keycloak + PostgreSQL):
-- LDAP bind DN password
-- TACACS+ shared key
-- Switch SSH usernames and passwords (via NDFC)
-- SNMPv3 auth and priv passwords (via NDFC)
-- SMTP authentication credentials
-- Backup encryption passphrase
-
-Encryption keys are managed by the ND platform's internal key management service (Vault). Keys are tied to the cluster instance and are included in cluster backups.
-
-### Kubernetes Secret Encryption
-
-ND stores application credentials and configuration in Kubernetes Secrets. Kubernetes Secrets are base64-encoded by default, but ND enables etcd encryption at rest for Secrets using AES-GCM:
-
-```bash
-ssh ndadmin@nd-dc1-1.corp.example.com
-
-# Verify etcd encryption is enabled (should be configured by ND platform)
-kubectl get secret -n kube-system encryptionconfig -o yaml 2>/dev/null | grep -i "aes\|secretbox"
-# Expected: encryption configuration present
 ```
 
 ### Backup Encryption

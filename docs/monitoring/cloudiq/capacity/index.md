@@ -5,7 +5,7 @@
 CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity Forecasting, Pool and Volume Utilisation, Threshold Alerts for Capacity, Common Capacity Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── CloudIQ — Capacity Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -35,44 +35,6 @@ CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity F
 │  Seasonal adjustment = ML model accounting for cyclical usage spikes in forecast                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Key capacity metrics available via API:
-
-| Field | Description |
-|---|---|
-| `capacity_used_tb` | Currently used raw capacity in TB |
-| `capacity_total_tb` | Total usable capacity in TB |
-| `capacity_used_percent` | Percentage utilisation |
-| `days_until_full` | Projected days until pool full |
-| `efficiency_ratio` | Data reduction ratio (dedupe + compression) |
-
-## Capacity Forecasting
-
-CloudIQ forecasts capacity exhaustion using a linear regression over the last 30 days of growth data. The forecast is updated daily.
-
-Navigation: **CloudIQ > Capacity > [System] > Forecast**
-
-Forecast indicators:
-
-| Indicator | Threshold | Typical Alert Severity |
-|---|---|---|
-| Days Until Full < 90 | Warning | Minor |
-| Days Until Full < 30 | Escalated warning | Major |
-| Days Until Full < 7 | Critical runway | Critical |
-
-Forecast accuracy is highest when growth is consistent. Spikes from bulk data migrations can skew short-term projections; use the 90-day trend for planning.
-
-## Pool and Volume Utilisation
-
-For block storage systems (PowerStore, PowerMax):
-
-```bash
-# List storage pools with utilisation
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_pools?select=name,capacity_used_percent,days_until_full&filter=system_id%20eq%20'<systemId>'" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[]'
 ```
 
 For file systems (PowerScale/Isilon), check file system capacity:

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell VPLEX.
 </div>
+```
+┌─────────────────────────────────── Dell VPLEX — Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       VPLEX backup: snapshots, replication, and external backup application integration       │   │
+│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshot → replicate to DR → verify → document → test restore                                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
+│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
+│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
+│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
+│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
+│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
+│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
+│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
+│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
+│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
+│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
+│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
+│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
+│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
+│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
+│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Overview
 

@@ -5,8 +5,8 @@
 Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layout, NTP Configuration, VIB Acceptance Levels, Storage Path Configuration and 3 more sections.
 </div>
 
-```text
 ESXi Host Design Checklist — Standard Layout
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Naming & DNS                                            │
 │  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)         │
@@ -79,47 +79,6 @@ ESXi Host Design Checklist — Standard Layout
 │  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.
-
----
-
-## BIOS / UEFI Baseline
-
-Configure the following on all physical hosts before installing ESXi:
-
-| Setting | Required Value | Reason |
-|---|---|---|
-| Hyperthreading | Enabled | Required for NUMA-aware scheduling |
-| Power Policy | High Performance | Prevent CPU throttling under load |
-| C-States | Disabled or C1 only | Reduce latency jitter for VMs |
-| IOMMU (VT-d / AMD-Vi) | Enabled | Required for DirectPath I/O (SR-IOV, GPU passthrough) |
-| Secure Boot | Enabled | Required for TPM 2.0 attestation |
-| TPM 2.0 | Enabled | Host attestation; vSphere 7.0+ feature |
-| Serial Port | Disabled | Reduce attack surface |
-| PXE Boot on management NIC | Disabled (unless Auto Deploy) | Prevent unintended re-provision |
-| IPMI / iDRAC / iLO | Enabled, on dedicated OOB NIC | Out-of-band management |
-
----
-
-## VMkernel Adapter Layout
-
-Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:
-
-| Adapter | Service | MTU | Subnet |
-|---|---|---|---|
-| vmk0 | Management | 1500 | Mgmt VLAN /24 |
-| vmk1 | vMotion | 9000 | vMotion VLAN /24 |
-| vmk2 | vSAN | 9000 | vSAN VLAN /24 |
-| vmk3 | NFS / iSCSI | 9000 | Storage VLAN /24 |
-
-Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.
-
-Verify MTU end-to-end:
-
-```bash
-vmkping -I vmk2 -d -s 8972 <target-IP>
-# -d = don't fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)
 ```
 
 ---

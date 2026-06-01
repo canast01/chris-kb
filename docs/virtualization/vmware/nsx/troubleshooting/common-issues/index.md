@@ -99,26 +99,6 @@ vsipioctl getstats -f <filter-name>
 │  Resync      = NSX Manager pushes config to transport node again                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Common Causes
-
-| Cause | Diagnosis | Fix |
-|---|---|---|
-| MD5 password mismatch | Neighbour shows `Auth Failure` in logs | Match passwords on both sides |
-| ASN mismatch | `get bgp config` — verify remote ASN | Correct in NSX policy or on router |
-| Physical link down | `get interface fp-eth0` — DOWN | Fix physical connectivity |
-| MTU mismatch | BFD timers firing; route established then drops | Verify MTU on physical switch ports |
-| BFD hold timer | BFD session flapping | Tune BFD timers to match physical path latency |
-| Underlay routing | Edge cannot reach peer IP | Add static route on Edge: `set appliance gw-route` |
-
-### Recovery
-
-After fixing the root cause, BGP re-establishes automatically. No manual reset needed. Monitor:
-
-```bash
-# From Edge CLI — watch BGP state
-get bgp neighbor summary
-# State should change from Active → OpenSent → Established within 30–60 seconds
 ```
 
 ---

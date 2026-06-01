@@ -79,17 +79,6 @@ flowchart TD
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Check Load Balancer Pool
-
-```bash
-# HAProxy stats (if applicable)
-echo "show stat" | socat stdio /var/run/haproxy/admin.sock \
-  | cut -d',' -f1,2,18,19 | grep jira
-
-# AWS ALB — check target group health
-aws elbv2 describe-target-health \
-  --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:123456789:targetgroup/jira-tg/abc123
 ```
 
 Expected: All nodes show `healthy` / `UP`.

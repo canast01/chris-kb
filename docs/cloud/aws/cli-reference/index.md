@@ -5,7 +5,7 @@
 AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes & Snapshots, S3, VPC & Networking, CloudWatch and 5 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,43 +60,6 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 │  --region       = Overrides default region for a single command; or set AWS_DEFAULT_REGION env var    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## EC2 — Instances
-
-EC2 (Elastic Compute Cloud) is AWS's virtual machine service. Each instance is a VM running in the cloud. Instances have security groups (virtual firewalls) and key pairs (SSH authentication).
-
-```bash
-# List instances (all)
-aws ec2 describe-instances
-
-# Filter by Name tag
-aws ec2 describe-instances --filters "Name=tag:Name,Values=<name>"
-
-# Compact table view — ID, state, and name
-aws ec2 describe-instances \
-  --query 'Reservations[].Instances[].[InstanceId,State.Name,Tags[?Key==`Name`].Value|[0]]' \
-  --output table
-
-# Start / stop / reboot / terminate
-aws ec2 start-instances --instance-ids <id>
-aws ec2 stop-instances --instance-ids <id>
-aws ec2 reboot-instances --instance-ids <id>
-aws ec2 terminate-instances --instance-ids <id>
-
-# Instance types
-aws ec2 describe-instance-types --instance-types t3.medium
-
-# Key pairs (used for SSH access to instances)
-aws ec2 describe-key-pairs
-aws ec2 create-key-pair --key-name <name> --query 'KeyMaterial' --output text > key.pem
-
-# Security groups (virtual firewalls — control inbound/outbound traffic)
-aws ec2 describe-security-groups
-aws ec2 authorize-security-group-ingress --group-id <sg_id> --protocol tcp --port 22 --cidr 10.0.0.0/8
-aws ec2 revoke-security-group-ingress --group-id <sg_id> --protocol tcp --port 22 --cidr 10.0.0.0/8
 ```
 
 ---

@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Guidelines.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── NetBackup — How It Works ───────────────────────────────────────┐
 │                                                                                                       │
 │    NetBackup data flow — from source to target through the protection pipeline:                       │

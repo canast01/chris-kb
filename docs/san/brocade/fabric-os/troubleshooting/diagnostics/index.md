@@ -78,26 +78,6 @@ flowchart LR
 │  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Switch-Level Diagnostics
-
-### Overall Health
-
-```bash
-# Overall switch health status — expected: HEALTHY
-switchstatusshow
-
-# Switch identity, port count, fabric membership
-switchshow
-
-# Chassis hardware inventory — blades, CPs, SFPs
-chassisshow
-
-# Slot-level blade status
-slotshow
-
-# Uptime and last reboot cause
-uptime
 ```
 
 ### Environmental Sensors

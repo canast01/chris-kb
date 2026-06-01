@@ -84,44 +84,6 @@ JVM version:            17.0.11
 │  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Cache Hit Rates:**
-
-| Cache | Healthy Hit Rate |
-|---|---|
-| Query result cache | > 70% |
-| GlideRecord cache | > 80% |
-| ACL cache | > 90% |
-
----
-
-## Thread Monitor (`/thread_monitor.do`)
-
-Shows every active Java thread with current state and stack trace. Use to identify blocked or runaway threads.
-
-Access: `https://<instance>.service-now.com/thread_monitor.do`
-
-### Reading Thread State
-
-| Thread State | Meaning | Action |
-|---|---|---|
-| RUNNABLE | Executing code | Normal |
-| WAITING | Waiting on a lock or condition | Investigate if > 5 minutes |
-| BLOCKED | Blocked on a monitor lock | Immediate investigation |
-| TIMED_WAITING | Sleeping — waiting for signal | Usually normal (scheduled work) |
-
-### Identifying Problematic Threads
-
-Look for threads showing the same script or Business Rule name repeatedly across multiple calls. This indicates a lock contention or infinite loop.
-
-Example stack trace pattern indicating a Business Rule loop:
-
-```text
-"GlideWorker-42" BLOCKED
-  at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
-  at com.glide.db.DBSynchronizer.acquire(...)
-  at com.glide.script.ScriptLoader.loadScript(...)
-  ...invoked from: BR_AutoAssignIncidents on incident
 ```
 
 **Action:** Disable the offending Business Rule and investigate the script logic.

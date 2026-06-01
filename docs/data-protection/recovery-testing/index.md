@@ -135,26 +135,6 @@ flowchart TD
 │    Restore report    = Formal record of test result; filed for audit evidence                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Veeam DataLabs — Automated Recovery Testing
-
-Veeam DataLabs provides an on-demand isolated environment for recovery testing without impacting production.
-
-```powershell
-# Create a DataLabs On-Demand Sandbox from a SureBackup Virtual Lab
-$lab = Get-VBRVirtualLab -Name "SureBackup-VLab"
-$group = Get-VBRApplicationGroup -Name "AG-CriticalInfra"
-
-# Start an on-demand sandbox session
-$sandbox = Start-VBRSandbox -VirtualLab $lab -ApplicationGroup $group
-
-# The sandbox is now running — perform manual testing inside the isolated lab
-# e.g., connect via console to test VMs on the isolated network
-
-# When done — stop the sandbox
-Stop-VBRSandbox -Sandbox $sandbox
 ```
 
 DataLabs is ideal for:

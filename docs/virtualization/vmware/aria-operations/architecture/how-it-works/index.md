@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, Core Internal Services and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── How Aria Operations Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  Metric collection via adapters, analytics engine processing, and dashboard rendering.                │

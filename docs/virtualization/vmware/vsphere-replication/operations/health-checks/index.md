@@ -5,8 +5,8 @@
 Health Checks reference covering VRA and Site Pairing Status, Check All Replications for RPO Violations, Verify VRA Disk Space, VRS Health (if deployed), Verify Replication Files on Target Datastore and 2 more sections.
 </div>
 
-```text
   Health Check Chain
+```
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  VRA Status      │    │  VR Agents       │    │  Replication     │
 │  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM   │
@@ -17,8 +17,8 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 │  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │  │
 │  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │  │
 └──────────────────┘                            │  └────────────┘  │
-                                                └──────────────────┘
 ```
+                                                └──────────────────┘
 
 ---
 

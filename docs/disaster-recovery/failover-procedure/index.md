@@ -49,14 +49,6 @@ symrdf -g <rdfgroup> query
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**SRDF — failover to R2:**
-```bash
-# Planned failover (R1 accessible)
-symrdf -g <rdfgroup> failover -force
-
-# Unplanned (R1 unavailable)
-symrdf -g <rdfgroup> failover -noprompt -immediate
 ```
 
 ### VM Failover — VMware SRM

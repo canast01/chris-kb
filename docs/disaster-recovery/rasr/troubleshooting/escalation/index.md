@@ -92,26 +92,6 @@ Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$arch
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Or from iDRAC web UI: **Maintenance** → **Lifecycle Log** → **Export**.
-
-### System Information
-
-```powershell
-# Collect basic system info for Dell support
-$info = @{
-    Hostname        = $env:COMPUTERNAME
-    OS              = (Get-WmiObject Win32_OperatingSystem).Caption
-    OSBuild         = (Get-WmiObject Win32_OperatingSystem).BuildNumber
-    RASRVersion     = (Get-Item "C:\Program Files\Dell\RASR\rasrutil.exe").VersionInfo.FileVersion
-    DellModel       = (Get-WmiObject Win32_ComputerSystem).Model
-    ServiceTag      = (Get-WmiObject Win32_BIOS).SerialNumber
-    RASRService     = (Get-Service DellRASR -ErrorAction SilentlyContinue).Status
-    LastErrorCode   = $LASTEXITCODE
-}
-
-$info | ConvertTo-Json | Out-File "C:\Temp\RASR-SystemInfo.json"
-$info
 ```
 
 ### Error Codes to Include

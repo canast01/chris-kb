@@ -91,25 +91,6 @@ server {
 │  cert         = X.509 certificate; signed by internal CA or public CA (Let's Encrypt)                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### TLS at Tomcat (Direct Confluence)
-
-If not using a reverse proxy, configure TLS in Confluence's embedded Tomcat:
-
-```bash
-# Generate a certificate and import into a Java keystore
-keytool -genkeypair -alias confluence \
-  -keyalg RSA -keysize 4096 \
-  -validity 365 \
-  -keystore /opt/atlassian/confluence/conf/keystore.jks \
-  -storepass changeit \
-  -dname "CN=confluence.example.local,O=Corp,C=GB"
-
-# Import a CA-signed certificate
-keytool -importcert -alias corp-ca \
-  -file /tmp/corp-ca.cer \
-  -keystore /opt/atlassian/confluence/conf/keystore.jks \
-  -storepass changeit -noprompt
 ```
 
 ```xml

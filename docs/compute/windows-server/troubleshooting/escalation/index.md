@@ -70,42 +70,6 @@ flowchart TD
 │  CSAT           = Customer Satisfaction survey; sent after Microsoft case closure                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Support Tiers
-
-| Tier | Access | SLA |
-|---|---|---|
-| Standard (pay-per-incident) | Web + phone per incident | Business hours |
-| Developer | For development scenarios | Business hours |
-| Professional Direct | Proactive services + faster response | 1 business hour for Sev A |
-| Unified (formerly Premier) | Designated Support Engineer + advisory | < 1 hour for Sev A |
-
-## Windows Server Lifecycle
-
-| Version | Mainstream EOL | Extended Support EOL | ESU Available |
-|---|---|---|---|
-| Windows Server 2025 | October 2029 | October 2034 | N/A |
-| Windows Server 2022 | October 2026 | October 2031 | N/A |
-| Windows Server 2019 | January 2024 | January 2029 | N/A |
-| Windows Server 2016 | January 2022 | January 2027 | N/A |
-| Windows Server 2012 R2 | October 2018 | October 2023 | Via Azure Arc or ESU MAK |
-
-Track EOL dates in CMDB — alert 12 months before Extended Support ends.
-
-## Extended Security Updates (ESU)
-
-For servers running Windows Server 2012/2012 R2 past EOL:
-
-```powershell
-# Option 1: Enroll via Azure Arc (no additional cost)
-# Install Azure Arc agent, server auto-enrolls for ESU
-
-# Option 2: Purchase ESU MAK key and activate
-slmgr /ipk <ESU-MAK-KEY>
-slmgr /ato
-
-# Verify ESU activation
-slmgr /dlv   # Should show "Extended Security Update" license
 ```
 
 ## Common Issue Reference

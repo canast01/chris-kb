@@ -5,7 +5,7 @@
 Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry reference covering Interpreting Health Score Changes, Endpoint Reachability, Flow Telemetry, Using Flow Data for Troubleshooting, Common Fabric Health Issues.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Nexus Dashboard — Fabric Health ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,45 +36,6 @@ Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry 
 │  Drill-down = NDI UI allows clicking from site score to node to interface level                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Health score components:
-
-| Component | Weight | Description |
-|---|---|---|
-| Anomaly count | High | Number of active anomalies weighted by severity |
-| Configuration compliance | Medium | Deviations from fabric best practices |
-| Connectivity health | High | BGP, OSPF, fabric link status |
-| Hardware health | Medium | Interface errors, transceiver alarms |
-| Resource utilisation | Low | TCAM, buffer, CPU headroom |
-
-## Interpreting Health Score Changes
-
-| Score Change | Trigger Examples |
-|---|---|
-| Drop > 10 points | Major connectivity event, multiple critical anomalies |
-| Drop 5–10 points | New warning anomalies detected |
-| Drop 1–5 points | Minor configuration drift |
-| Score increasing | Anomalies resolving, maintenance completed |
-
-## Endpoint Reachability
-
-NDI tracks endpoint (IP/MAC) reachability across the fabric and can detect when an endpoint moves, disappears, or is unreachable.
-
-Navigation: **Insights > Endpoints**
-
-```bash
-# Search for an endpoint by IP address
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/endpoints/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": {"ip": "10.0.10.50"}}'
-
-# Get endpoint reachability history
-curl -sk -X GET \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/endpoints/<endpointId>/reachability" \
-  -H "Authorization: Bearer <token>" | jq '.data'
 ```
 
 Endpoint reachability states:

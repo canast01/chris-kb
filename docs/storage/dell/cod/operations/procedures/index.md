@@ -5,7 +5,7 @@
 Procedures reference covering COD Activation Procedure, Incident Triage.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Dell CoD — Operational Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

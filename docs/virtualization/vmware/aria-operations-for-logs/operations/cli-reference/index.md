@@ -71,19 +71,6 @@ li-admin storage
 │  API bearer token  = Auth via POST /api/v1/sessions; returns sessionId for API calls                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## REST API — Authentication
-
-```bash
-# Get session token
-curl -k -X POST https://<li-fqdn>/api/v1/sessions \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>","provider":"Local"}'
-
-# Use token in subsequent requests
-# Header: Authorization: Bearer <sessionId>
 ```
 
 ---

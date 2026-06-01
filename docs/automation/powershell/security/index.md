@@ -6,7 +6,7 @@
 PowerShell — Security reference.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── PowerShell — Security ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell security: execution policy, code signing, AMSI integration, script block logging  │   │

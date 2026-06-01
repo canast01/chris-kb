@@ -58,48 +58,6 @@ flowchart TD
 │    Context broken   = Replication context in error state; replication resync to re-establish          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-If cleaning does not recover sufficient space:
-
-- Coordinate with backup teams to expire and delete old backup data in the backup application
-- After the backup software marks data deleted, run `filesys clean start` again
-- If still insufficient: plan an emergency capacity expansion (disk shelf addition)
-
-**Prevention:**
-- Schedule weekly automatic cleaning: `filesys clean schedule set day tue start-time 02:00`
-- Set MTree hard quotas to prevent a single application from consuming all capacity
-- Monitor capacity weekly and project time-to-full using CloudIQ trending
-
----
-
-## Issue: Replication Context in Error State
-
-**Symptoms:** `replication show` displays a context in `Error`, `Idle-Error`, or `In-Error` state; replication lag growing continuously; DR copy not being updated.
-
-**Causes:** Network path failure between source and destination DD; destination filesystem full; authentication credential mismatch; DDOS version incompatibility after an upgrade on one side; SSL/TLS certificate mismatch.
-
-### Investigation Steps
-
-```bash
-# 1. Check context state
-replication show
-
-# 2. Get detailed error information for the specific context
-replication show errors
-
-# 3. Check destination filesystem space
-# (run on the destination DD)
-filesys show space
-
-# 4. Verify network connectivity to the destination
-net ping <destination-dd-hostname>
-net traceroute <destination-dd-hostname>
-
-# 5. Check network interface errors
-net show stats | grep -iE "error|drop"
-
-# 6. Check certificate status on both sides
-adminaccess certificate show
 ```
 
 ### Recovery Steps

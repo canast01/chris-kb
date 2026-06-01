@@ -4,7 +4,7 @@
 NetApp Keystone STaaS knowledge base — architecture, operations, security, and troubleshooting for on-premises consumption-based storage subscriptions.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────────── NetApp Keystone ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

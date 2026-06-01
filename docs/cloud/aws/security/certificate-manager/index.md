@@ -5,7 +5,7 @@
 AWS Certificate Manager reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── ACM — Certificate Manager ──────────────────────────────────────┐
 │                                                                                                       │
 │  ACM provisions, manages, and renews TLS certificates for AWS services at no charge.                  │

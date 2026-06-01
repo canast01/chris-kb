@@ -64,12 +64,6 @@ graph TD
 │    Resume rep       = After DR recovery, resume replication and resync from primary                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Note on filesystem cleaning during restores:** `filesys clean` is I/O intensive and competes with restore read traffic. If a major restore is scheduled, stop cleaning first:
-
-```bash
-filesys clean stop
-filesys clean status  # confirm it has stopped
 ```
 
 Resume after the restore completes:

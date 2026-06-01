@@ -4,7 +4,7 @@
 SCG prerequisites, configuration baselines, alert acknowledgement workflow, and operational standards for Dell AIOps.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Dell AIOps — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

@@ -89,24 +89,6 @@ resources:
 │  VMware SR         = Support Request; opened with support bundle attached for complex issues          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Blueprint Versioning
-
-```bash
-# List blueprints via vRA API
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/blueprint/api/blueprints \
-  | python3 -m json.tool
-
-# Create a new blueprint version
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/blueprint/api/blueprints/<blueprint-id>/versions \
-  -H "Content-Type: application/json" \
-  -d '{"version": "1.2", "description": "Added NSX segment"}'
-
-# Publish a version to Service Catalog
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/blueprint/api/blueprints/<blueprint-id>/versions/<version>/actions/publish
 ```
 
 ---

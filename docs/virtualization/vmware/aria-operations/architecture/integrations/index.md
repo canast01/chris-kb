@@ -5,8 +5,8 @@
 Integration reference covering NSX Adapter, Active Directory / LDAP Authentication, SMTP (Alert Email), ServiceNow ITSM Integration, Webhook / Generic REST Actions and 2 more sections.
 </div>
 
-```text
 Aria Operations — Adapter and Outbound Integration Map
+```
 ┌─────────────────────────────────────────────────────┐
 │  Data Sources (Inbound Adapters)                    │
 │                                                     │
@@ -20,22 +20,29 @@ Aria Operations — Adapter and Outbound Integration Map
 │       └─────────────┴──────────────────┘            │
 │                          │                          │
 └──────────────────────────┼──────────────────────────┘
+```
                            │ metrics + events
                            ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations Analytics Cluster                  │
 │  correlates · analyses · alerts                     │
 └──────────────────────────┬──────────────────────────┘
+```
                            │ outbound notifications
           ┌────────────────┼──────────────────────┐
           ▼                ▼                      ▼
+```
 ┌──────────────┐  ┌──────────────┐  ┌────────────────┐
 │  SMTP        │  │  ServiceNow  │  │  Webhook / REST │
 │  (email      │  │  (ITSM       │  │  (Slack, Teams, │
 │   alerts)    │  │   incidents) │  │   custom ITSM)  │
 └──────────────┘  └──────────────┘  └────────────────┘
+```
           │
           ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Aria Ops for Logs (Log Insight Adapter)            │
 │  forwards alerts for log correlation                │
@@ -84,21 +91,6 @@ Aria Operations — Adapter and Outbound Integration Map
 │  Notification Rule   = vROps config routing alert to a specific outbound channel                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## NSX Adapter
-
-Monitors NSX-T logical topology, transport nodes, and control plane health.
-
-**Requirements:**
-- NSX Manager FQDN/IP
-- NSX service account with read-only Enterprise Admin or Auditor role
-
-**Configure:**
-
-```text
-Administration > Solutions > NSX-T Adapter > Add Instance
 ```
 
 ---

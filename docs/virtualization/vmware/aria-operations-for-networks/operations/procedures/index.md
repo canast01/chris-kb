@@ -84,41 +84,6 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 │  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Configure NetFlow Export from a Cisco Switch
-
-This procedure targets Cisco IOS-XE. See the Integrations page for NX-OS and Arista.
-
-```ios
-! On the Cisco switch — replace 10.10.10.51 with your Collector VM IP
-
-flow exporter AON-EXPORTER
- destination 10.10.10.51
- source GigabitEthernet0/0/0
- transport udp 2055
- export-protocol netflow-v9
- template data timeout 60
-
-flow record AON-RECORD
- match ipv4 source address
- match ipv4 destination address
- match transport source-port
- match transport destination-port
- match ip protocol
- collect counter bytes long
- collect counter packets long
- collect timestamp sys-uptime first
- collect timestamp sys-uptime last
-
-flow monitor AON-MONITOR
- exporter AON-EXPORTER
- cache timeout active 60
- cache timeout inactive 15
- record AON-RECORD
-
-interface GigabitEthernet1/0/1
- ip flow monitor AON-MONITOR input
- ip flow monitor AON-MONITOR output
 ```
 
 Verify in AON within 5–10 minutes:

@@ -63,38 +63,6 @@ flowchart LR
 │  repadmin     = AD replication tool; output parsed by PS for reporting                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Disk Space Alert
-
-Sends an alert when any drive falls below a threshold.
-
-```powershell
-<#
-.SYNOPSIS
-  Disk space threshold alert — email if any drive is below threshold
-#>
-
-param(
-    [int]$ThresholdPct  = 15,
-    [string]$SmtpServer = "smtp.internal.local",
-    [string]$From       = "monitoring@internal.local",
-    [string]$To         = "ops@internal.local"
-)
-
-$alerts = Get-PSDrive -PSProvider FileSystem | Where-Object {
-    $total = $_.Used + $_.Free
-    $total -gt 0 -and ($_.Free / $total * 100) -lt $ThresholdPct
-} | ForEach-Object {
-    $total  = $_.Used + $_.Free
-    $pct    = [math]::Round($_.Free / $total * 100, 1)
-    "$($_.Name): $([math]::Round($_.Free/1GB,1)) GB free ($pct%)"
-}
-
-if ($alerts) {
-    $body = "Low disk space on $($env:COMPUTERNAME):`n`n" + ($alerts -join "`n")
-    Send-MailMessage -From $From -To $To -Subject "ALERT: Disk space on $env:COMPUTERNAME" `
-        -Body $body -SmtpServer $SmtpServer
-}
 ```
 
 ## Service Monitor

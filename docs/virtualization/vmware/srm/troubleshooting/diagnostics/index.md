@@ -5,8 +5,8 @@
 Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication Log Collection, SRA Logs, Check SRM Service Status, Verify Site Pairing Certificate and 2 more sections.
 </div>
 
-```text
   SRM Diagnostic Data Sources
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM Server (Windows)           SRM Appliance (Linux)        │
 │  ┌──────────────────────────┐   ┌──────────────────────────┐ │
@@ -71,12 +71,6 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 │  ProgramData   = Windows hidden folder; SRM writes logs here                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**SRM Appliance (Linux):**
-```bash
-ssh admin@srm-protected.example.local
-/var/log/vmware/srm/
-  vmware-dr.log
 ```
 
 ---

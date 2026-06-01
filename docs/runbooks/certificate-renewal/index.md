@@ -57,19 +57,6 @@
 │    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Step 1 — Confirm Current Certificate
-
-```bash
-# Check cert on disk
-openssl x509 -in <cert.pem> -noout -dates -subject -issuer
-
-# Check cert on live service
-echo | openssl s_client -connect <hostname>:443 -servername <hostname> 2>/dev/null \
-    | openssl x509 -noout -dates -subject
-
-# Check via curl (shows TLS negotiation)
-curl -vk https://<hostname>/ 2>&1 | grep -i "expire\|valid\|issuer\|subject"
 ```
 
 **Capture:** CN, SANs, issuing CA, expiry date, key algorithm.

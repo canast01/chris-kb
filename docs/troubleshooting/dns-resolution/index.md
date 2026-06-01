@@ -86,22 +86,6 @@ flowchart TD
 │    PTR record  = Reverse DNS record; IP → hostname; required for many services and logs               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Reverse (PTR) Resolution
-
-```bash
-# Reverse lookup — critical for Kerberos and NFS
-dig -x 10.10.1.55
-
-# Expected output:
-# ;; ANSWER SECTION:
-# 55.1.10.10.in-addr.arpa. 3600 IN PTR app01.corp.example.com.
-
-# nslookup equivalent
-nslookup 10.10.1.55
-
-# Check which reverse zone owns the IP range
-dig SOA 1.10.10.in-addr.arpa
 ```
 
 ### SRV Records (critical for AD/Kerberos)

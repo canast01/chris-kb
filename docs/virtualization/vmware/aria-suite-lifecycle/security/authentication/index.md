@@ -5,8 +5,8 @@
 Authentication reference covering Workspace ONE Access Integration, Active Directory Group Sync via VIDM, API Authentication, Local Accounts, Certificate Trust for API Clients and 2 more sections.
 </div>
 
-```text
   LCM Authentication Architecture
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Interactive Users                                              │
 │  Browser → LCM UI → VIDM (SAML redirect) → AD/LDAP              │
@@ -70,17 +70,6 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 │  90-day Rotation     = Local admin password changed every 90 days                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Workspace ONE Access Integration
-
-All interactive users should authenticate through VIDM. VIDM can be federated with Active Directory, LDAP, or upstream SAML identity providers.
-
-**Register VIDM with LCM:**
-
-```text
-LCM → Settings → Identity Manager → Configure
 ```
 
 Provide:

@@ -66,26 +66,6 @@ graph TB
 │    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.
-
-## Data Path
-
-```mermaid
-graph TD
-    client(["Backup Client"])
-    dsp["DDBoost Library\n(source-side dedup filter)\n~50% traffic reduction"]
-    sisl["SISL Engine\n(segment fingerprinting + locality filter)"]
-    nvram["NVRAM Write Cache\n(power-safe)"]
-    store["[(DDFS Segment Store)]\n(deduplicated + compressed)"]
-    repl["DD Replicator\n(async delta sync — TCP 2051)"]
-    remote["Remote Data Domain"]
-
-    client -->|"DDBoost over IP"| dsp
-    dsp -->|"unique segments only"| sisl
-    sisl --> nvram
-    nvram --> store
-    store --> repl --> remote
 ```
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.

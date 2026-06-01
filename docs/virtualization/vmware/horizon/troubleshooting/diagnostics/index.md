@@ -5,8 +5,8 @@
 Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log (Connection Server), Horizon Agent Logs in Guest VM, UAG Log Collection, Test Display Protocol Connectivity and 3 more sections.
 </div>
 
-```text
   Diagnostic Data Sources
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server                UAG                        │
 │  ┌────────────────────────────┐   ┌────────────────────────┐ │
@@ -70,15 +70,6 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │  Pool error    = UI shows red error; hover for provisioning reason                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Collect Horizon Support Bundle
-
-```text
-Horizon Console → Help → Download Support Bundle
-  Selects logs from all Connection Servers in the pod
-  Downloads as ZIP — attach to VMware Support case
 ```
 
 ---

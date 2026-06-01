@@ -79,12 +79,6 @@ git count-objects -vH
 │  Webhook           = must be updated to point to restored remote URL                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# /etc/git-backup/repos.txt
-https://github.com/org/repo-a.git
-https://github.com/org/repo-b.git
-git@gitlab.example.com:group/repo-c.git
 ```
 
 ---

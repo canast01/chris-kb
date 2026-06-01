@@ -5,8 +5,8 @@
 Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRM is Also Involved, VMware Support Portal, Escalation Path and 1 more sections.
 </div>
 
-```text
   VR Escalation Path
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Step 1: Collect (both sites)                                   │
 │  ┌─────────────────────────────────────────────────────────┐    │

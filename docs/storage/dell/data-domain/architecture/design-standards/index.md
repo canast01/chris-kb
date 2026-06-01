@@ -66,21 +66,6 @@ graph TD
 │    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Never use spaces, uppercase letters, or special characters other than hyphens in MTree names. MTree names are permanent — they cannot be renamed after creation.
-
-## DD Boost Storage Unit Naming
-
-Storage units are the DD Boost-layer objects mapped to MTrees. Use the same pattern as the MTree:
-
-Pattern: `su-<backup-tool>-<client-group>`
-
-Examples:
-
-```text
-su-veeam-prod
-su-netbackup-ora
-su-commvault-sql
 ```
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.

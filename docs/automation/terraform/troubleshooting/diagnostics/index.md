@@ -52,24 +52,6 @@ graph LR
 │   │       .resource_changes= JSON field listing all planned changes with before/after values      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Plan Inspection
-
-```bash
-# Graph the dependency tree to identify cycles
-terraform graph | dot -Tsvg > graph.svg
-
-# Inspect a saved plan in JSON format
-terraform plan -out=tfplan
-terraform show -json tfplan | jq '.resource_changes[] | {address, actions: .change.actions}'
-
-# Highlight destroy operations
-terraform show -json tfplan | \
-  jq '.resource_changes[] | select(.change.actions[] == "delete") | .address'
-
-# Check exit code for scripted drift detection
-terraform plan -detailed-exitcode
-# 0 = no changes, 1 = error, 2 = changes present
 ```
 
 ## State Inspection

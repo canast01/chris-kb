@@ -5,7 +5,7 @@
 Hardening reference covering Audit Log Forwarding, Appliance Patching.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Superna Eyeglass — Hardening ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

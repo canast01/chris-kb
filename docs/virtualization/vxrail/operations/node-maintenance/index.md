@@ -5,12 +5,13 @@
 VxRail Node Maintenance Procedure reference covering Before Starting, Evacuation Mode Selection, Entering Maintenance Mode, Performing the Work, Exiting Maintenance Mode and 1 more sections.
 </div>
 
-```text
 Node Maintenance Mode Lifecycle
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Pre-check: cluster health green · vSAN resync acceptable    │
 │  capacity to absorb workload from this node                  │
 └──────────────────────────────┬───────────────────────────────┘
+```
                                │
                     ┌──────────▼──────────┐
                     │  Enter Maintenance  │

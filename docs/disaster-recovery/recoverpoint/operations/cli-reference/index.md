@@ -90,29 +90,6 @@ flowchart TD
 │    failback         = CLI command to reverse replication after failover; requires resync first        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### System Status Commands
-
-```bash
-# From boxmgmt shell — type at the boxmgmt> prompt after logging in
-
-# Overall cluster state
-boxmgmt> system status
-
-# All CG (Consistency Group) states
-boxmgmt> groups status
-
-# RPA appliance info and version
-boxmgmt> get_all_rps_info
-
-# Verify RPA software version on each appliance
-boxmgmt> verify_rpa_version
-
-# Check cluster quorum
-boxmgmt> cluster quorum check
-
-# Check WAN link / connectivity between sites
-boxmgmt> network connectivity check
 ```
 
 ### Image Access (CG Operations)

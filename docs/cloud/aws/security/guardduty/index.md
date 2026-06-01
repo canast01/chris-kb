@@ -5,7 +5,7 @@
 AWS GuardDuty reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── GuardDuty — Threat Detection ─────────────────────────────────────┐
 │                                                                                                       │
 │  GuardDuty analyses CloudTrail, VPC Flow Logs, and DNS to detect threats with ML/signatures.          │

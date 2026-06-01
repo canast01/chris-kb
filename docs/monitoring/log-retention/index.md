@@ -5,7 +5,7 @@
 Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation Checklist.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,22 +48,6 @@ Log Retention Policy reference covering journald Retention, Centralised Log Rete
 │  Auto-move policy  = Lifecycle rule automatically migrating logs between tiers on schedule            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-**Example custom rule (`/etc/logrotate.d/myapp`):**
-```text
-/var/log/myapp/*.log {
-    daily
-    rotate 90
-    compress
-    delaycompress
-    missingok
-    notifempty
-    sharedscripts
-    postrotate
-        systemctl reload myapp
-    endscript
-}
 ```
 
 ## journald Retention

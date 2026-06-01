@@ -85,15 +85,6 @@ flowchart TD
 │    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### MTree Space Actions
-
-```bash
-# Reduce quota if an MTree is over-allocated
-mtree quota set hard-limit <new_size> TiB /data/col1/<mtree_name>
-
-# Remove quota entirely (no limit)
-mtree quota reset /data/col1/<mtree_name>
 ```
 
 ### Replication State

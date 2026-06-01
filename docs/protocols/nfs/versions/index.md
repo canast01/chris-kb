@@ -5,8 +5,8 @@
 NFS Versions reference covering Version Comparison, Recommended Version, Checking NFS Version in Use, Configuring NFS Version, NFSv4 ID Mapping and 1 more sections.
 </div>
 
-```text
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
+```
 ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
 │ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1     │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤

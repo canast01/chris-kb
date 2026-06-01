@@ -5,7 +5,7 @@
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Dell CloudIQ Escalation ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -33,55 +33,6 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 │    Backend check  = Dell CloudIQ SRE team investigates ingest pipeline for missing data               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [CloudIQ](../../index.md) reference.
-
----
-
-## Support Portal
-
-Dell CloudIQ support cases are handled through the standard Dell support portal at [https://www.dell.com/support](https://www.dell.com/support). CloudIQ is a SaaS service and does not have its own separate support queue — issues are logged against the affected storage system's case, with CloudIQ identified as the impacted component.
-
-If a CloudIQ issue affects multiple systems or is a platform-level SaaS problem (e.g., dashboard unavailable, API endpoints returning 5xx), open a case against any managed system and specify that the issue is with the CloudIQ SaaS platform itself.
-
-## Opening a Case
-
-When opening a support case for a CloudIQ-related issue:
-
-- **Product**: select the affected storage system (e.g., PowerScale, Unity XT) as the primary product.
-- **Affected component**: specify **CloudIQ** as the impacted component in the case description.
-- **Summary**: include what is not working — system not reporting, API failing, incorrect health score, alert not routing.
-
-Required information for the case:
-
-| Field | How to Obtain |
-|---|---|
-| System serial number | Chassis label or array CLI (e.g., `isi version` for PowerScale) |
-| SCG version | SCG web UI: Settings > About |
-| Error message | Exact error text from the CloudIQ portal or API response |
-| CloudIQ system list screenshot | Screenshot of CloudIQ Systems page showing reporting status |
-| SCG connectivity test output | `curl -k https://esrs3.emc.com` result from the SCG host |
-
-## Information to Collect
-
-Collect the following diagnostic data before or immediately after opening the case:
-
-```bash
-# On the Secure Connect Gateway host:
-
-# Check dsagw service status
-systemctl status dsagw
-
-# Review recent dsagw telemetry forwarding logs
-journalctl -u dsagw --since "2 hours ago"
-
-# Test connectivity to Dell SRS endpoint
-curl -k https://esrs3.emc.com
-
-# Test CloudIQ API authentication
-curl -s -X POST "https://cloudiq.dell.com/auth/v1/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>"
 ```
 
 Additional items:

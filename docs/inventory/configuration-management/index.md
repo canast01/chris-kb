@@ -62,17 +62,6 @@ ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 │    Reconciliation= Compare discovered data vs CMDB; find stale or missing records                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Azure Policy — Resource Compliance
-
-```bash
-# List non-compliant resources
-az policy state list \
-  --filter "complianceState eq 'NonCompliant'" \
-  --query '[*].{Resource:resourceId,Policy:policyDefinitionName}' -o table
-
-# Trigger compliance re-scan
-az policy state trigger-scan --subscription <sub-id>
 ```
 
 ## Drift Detection — Linux

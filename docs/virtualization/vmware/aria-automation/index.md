@@ -4,7 +4,7 @@
 Technical and operational reference for VMware Aria Automation. Covers infrastructure automation, service catalogue, blueprint design, deployment management, and IaC pipeline integration across the vSphere and cloud platforms.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Aria Automation Stack ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Performance Metrics Baseline reference covering Documenting the Baseline, Setting Thresholds from Baseline, Baseline Review Cadence.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,12 +48,6 @@ Performance Metrics Baseline reference covering Documenting the Baseline, Settin
 │  False positive    = Alert firing when conditions are actually normal; caused by stale baseline       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-**Linux — disk latency:**
-```bash
-iostat -xz 5 6   # extended stats, 5 sec interval, 6 samples
-# key fields: await (avg I/O wait ms), r_await, w_await, util%
 ```
 
 **Windows — performance counters:**

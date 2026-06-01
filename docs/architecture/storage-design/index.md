@@ -107,37 +107,6 @@ flowchart TD
 │    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-- Each host has HBAs connecting to both Fabric A and Fabric B — no single fabric failure takes down host access
-- Storage processors are cross-connected internally; either SP can serve data from any drive group
-- Zone each host's HBA WWN to only the array ports it needs — do not use single initiator / multiple target zoning unless the vendor certifies it
-
-### VLAN Isolation for iSCSI and NFS
-
-For Ethernet-based storage protocols (iSCSI, NFS, NVMe-oF RoCE):
-- Create dedicated storage VLANs (see network design VLAN table: VLAN 300 for iSCSI/vSAN, VLAN 310 for NFS)
-- Enable jumbo frames (MTU 9000) on all switches and host interfaces in the storage path
-- Do not route storage VLANs to the internet or DMZ — they should be fully isolated
-- Use dedicated VMkernel ports on ESXi with explicit traffic type assignments
-
-### Multipath I/O (MPIO) on iSCSI / NFS
-
-Configure at least 2 independent paths for all storage connections:
-- 2 × storage VMkernel ports on different subnets (e.g., 192.168.30.1 and 192.168.31.1)
-- Connect each VMkernel to a different physical uplink (NIC A → ToR A → array port 1; NIC B → ToR B → array port 2)
-- For iSCSI: use software iSCSI with port binding, or hardware iSCSI HBAs
-- For NFS: use NFS port binding (NFS 4.1 with session trunking) for multipath across multiple VMkernel IPs
-
----
-
-## Capacity Planning
-
-### Formula
-
-Capacity planning for storage must account for actual usable capacity, not raw capacity. Overhead from RAID, snapshots, metadata, and reserved space reduces usable capacity significantly.
-
-```text
-Usable Capacity = Raw Capacity × RAID Efficiency × (1 − Overhead)
 ```
 
 Where:

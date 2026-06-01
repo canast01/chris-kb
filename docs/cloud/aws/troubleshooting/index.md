@@ -5,7 +5,7 @@
 Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS Connection Issues, VPC Flow Logs — Analysing Traffic, Lambda Timeout Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── AWS Troubleshooting Overview ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,30 +60,6 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 │  Access Denied    = IAM error; check CloudTrail for the denied call; use Policy Simulator to trace    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Common causes:
-- Security group missing inbound rule for source CIDR
-- Route table missing route to internet gateway (for public subnet instances)
-- NACL denying traffic (check both inbound and outbound — NACLs are stateless)
-
-## S3 Access Denied
-
-```bash
-# Check bucket policy
-aws s3api get-bucket-policy --bucket <bucket-name>
-
-# Check block public access settings
-aws s3api get-public-access-block --bucket <bucket-name>
-
-# Check caller's effective permissions
-aws iam simulate-principal-policy \
-    --policy-source-arn arn:aws:iam::<account>:role/<role-name> \
-    --action-names s3:GetObject \
-    --resource-arns arn:aws:s3:::<bucket-name>/path/to/object
-
-# Check bucket ACL
-aws s3api get-bucket-acl --bucket <bucket-name>
 ```
 
 Common causes:

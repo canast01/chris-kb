@@ -4,7 +4,7 @@
 Agentless IT automation over SSH/WinRM; the control node pushes modules to managed nodes, executes tasks, and removes them; organised via inventory, playbooks, roles, and collections; enterprise scale via AWX/AAP and Execution Environments.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Ansible — Architecture ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Ansible architecture: control node runs ansible-playbook; connects outbound via SSH/WinRM   │   │

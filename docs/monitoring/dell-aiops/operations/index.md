@@ -61,17 +61,4 @@ Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow,
 │  Procurement plan = Capacity expansion request based on AIOps forecast data                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Health Score Decline Investigation
-
-If a system's health score drops from the previous check:
-
-```text
-1. CloudIQ > Assets > [System] > Health Score History
-   - Note when the decline started
-   - Check for correlation with maintenance, firmware upgrades, or workload changes
-2. Review associated AIOps recommendations for root cause
-3. Check active hardware faults: CloudIQ > Assets > [System] > Faults
-4. If hardware fault: open Dell support case with system serial number and fault details
-5. Track health score recovery — confirm score improves after recommended action
 ```

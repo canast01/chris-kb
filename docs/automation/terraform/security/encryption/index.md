@@ -48,22 +48,6 @@ graph TD
 │   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Secrets Management with Terraform
-
-Do not store secrets as Terraform variables in plain text. Use a secrets manager and reference values dynamically.
-
-```hcl
-# Read a secret from AWS Secrets Manager at plan/apply time
-data "aws_secretsmanager_secret_version" "db_password" {
-  secret_id = "prod/myapp/db-password"
-}
-
-resource "aws_db_instance" "main" {
-  identifier = "prod-db"
-  password   = data.aws_secretsmanager_secret_version.db_password.secret_string
-  # ...
-}
 ```
 
 ```hcl

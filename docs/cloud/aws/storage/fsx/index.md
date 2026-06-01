@@ -5,7 +5,7 @@
 AWS FSx reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── FSx — Managed File System Flavours ──────────────────────────────────┐
 │                                                                                                       │
 │  FSx provides fully managed file systems: Windows SMB, Lustre HPC, ONTAP, and OpenZFS.                │

@@ -5,14 +5,16 @@
 How It Works reference covering Bundle Management, Password Management, Certificate Management, Network Pools, Host Commissioning and 1 more sections.
 </div>
 
-```text
 VCF Bring-Up and Lifecycle Flow
+```
 ┌──────────────────────────────────────────────────────┐
 │  Cloud Builder (bring-up tool)                       │
 │  reads deployment parameter workbook                 │
 └──────────────────────┬───────────────────────────────┘
+```
                        │ deploys
                        ▼
+```
 ┌──────────────────────────────────────────────────────┐
 │  SDDC Manager (management domain)                    │
 │                                                      │
@@ -21,8 +23,10 @@ VCF Bring-Up and Lifecycle Flow
 │  │ (mgmt)   │  │ 3-node     │  │  (mgmt VMs)      │  │
 │  └──────────┘  └────────────┘  └──────────────────┘  │
 └─────────┬────────────────────────────────────────────┘
+```
           │ LCM orchestrates upgrades in BOM order
           ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Upgrade Sequence                                    │
 │  SDDC Manager → vCenter → ESXi → NSX → vSAN FW       │
@@ -33,8 +37,11 @@ VCF Bring-Up and Lifecycle Flow
 │  4. Schedule window → SDDC Manager applies BOM       │
 │  5. Post-upgrade validation                          │
 └─────────────────────────────────────────────────────┘
+```
           │ manages new workload domains
           ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Workload Domain Provisioning                        │
 │  Commission hosts → Create domain → SDDC Manager     │
@@ -86,18 +93,6 @@ VCF Bring-Up and Lifecycle Flow
 │  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Bundle Management
-
-```bash
-# SDDC Manager UI — Lifecycle Management → Bundle Management
-# Download latest bundles (requires internet or offline depot)
-
-# Check depot connectivity from SDDC Manager appliance
-curl -sk https://depot.vmware.com/PROD2/evo/vmw/index.xml | head -20
-
-# Offline depot: copy bundle .tar files to SDDC Manager
-# Administration → Depot Settings → Local Depot
 ```
 
 ### Precheck Validation Points

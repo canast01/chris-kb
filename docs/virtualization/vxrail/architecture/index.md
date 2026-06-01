@@ -4,8 +4,8 @@
 HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Managed as a system through VxRail Manager — all firmware, vSphere, and vSAN upgrades go through the LCM workflow via Composite Bundle, never independently.
 </div>
 
-```text
 VxRail Node Anatomy + Cluster Connectivity
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                     │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐  │
@@ -18,6 +18,7 @@ VxRail Node Anatomy + Cluster Connectivity
 │  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     ││
 │  └──────────┬───────────┘   └───────────────────────────────┘│
 └─────────────┼────────────────────────────────────────────────┘
+```
               │
    ┌──────────▼──────────────────────────────────┐
    │  vSphere Distributed Switch (VDS)            │

@@ -59,36 +59,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Requests library = pip install requests; standard Python HTTP client                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Forward Critical Recommendations to ServiceNow
-
-```python
-SNOW_URL  = os.environ["SNOW_URL"]
-SNOW_AUTH = (os.environ["SNOW_USER"], os.environ["SNOW_PASSWORD"])
-
-def create_snow_change(rec: dict) -> str:
-    payload = {
-        "short_description": f"Dell AIOps {rec['severity']}: {rec['title']}",
-        "description": (
-            f"System: {rec.get('system_name')}\n"
-            f"Recommended Action: {rec.get('recommended_action')}\n"
-            f"CloudIQ Recommendation ID: {rec['id']}"
-        ),
-        "category": "Storage",
-        "assignment_group": "storage-ops",
-        "type": "emergency" if rec["severity"] == "Critical" else "normal"
-    }
-    resp = requests.post(f"{SNOW_URL}/api/now/table/change_request",
-                         auth=SNOW_AUTH, json=payload)
-    resp.raise_for_status()
-    return resp.json()["result"]["number"]
-
-def process_critical_recommendations(token: str):
-    data = api_get("/recommendations", token,
-                   params={"filter": "severity eq 'Critical' and state eq 'ACTIVE'"})
-    for rec in data.get("results", []):
-        ticket = create_snow_change(rec)
-        print(f"Created ServiceNow ticket {ticket} for recommendation {rec['id']}")
 ```
 
 ## Weekly Health Score Report

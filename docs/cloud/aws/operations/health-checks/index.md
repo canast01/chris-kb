@@ -64,33 +64,6 @@ aws sts get-caller-identity
 │  Route 53 health = External probe; fails DNS failover if endpoint unreachable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## RDS Health
-
-```bash
-# List RDS instances and status
-aws rds describe-db-instances \
-  --query 'DBInstances[*].[DBInstanceIdentifier,DBInstanceStatus,Engine,MultiAZ,Endpoint.Address]' \
-  --output table
-
-# Check for pending maintenance
-aws rds describe-pending-maintenance-actions \
-  --query 'PendingMaintenanceActions[*].[ResourceIdentifier,PendingMaintenanceActionDetails[0].Action,PendingMaintenanceActionDetails[0].ForcedApplyDate]' \
-  --output table
-
-# RDS FreeStorageSpace (last hour, GB)
-aws cloudwatch get-metric-statistics \
-  --namespace AWS/RDS \
-  --metric-name FreeStorageSpace \
-  --dimensions Name=DBInstanceIdentifier,Value=prod-mysql \
-  --start-time $(date -u -v-1H +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ) \
-  --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  --period 3600 \
-  --statistics Minimum \
-  --query 'Datapoints[0].Minimum' \
-  --output text | awk '{printf "%.2f GB\n", $1/1024/1024/1024}'
 ```
 
 ---

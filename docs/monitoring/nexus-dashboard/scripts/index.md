@@ -62,32 +62,6 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
 │  JSON response = NDI API returns JSON; parse with json module or jq                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Fabric Fault Export
-
-```python
-import csv
-
-def export_fabric_faults(token: str, min_severity: str, output_file: str):
-    """Export active fabric faults filtered by severity."""
-    data = nd_get("/nexus/infra/faults", token,
-                  params={"severity": min_severity, "state": "active"})
-    faults = data.get("faults", [])
-    with open(output_file, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=[
-            "id", "title", "severity", "fabric", "node", "created_at"
-        ])
-        writer.writeheader()
-        for fault in faults:
-            writer.writerow({
-                "id": fault["id"],
-                "title": fault.get("title"),
-                "severity": fault.get("severity"),
-                "fabric": fault.get("fabric_name"),
-                "node": fault.get("node_name"),
-                "created_at": fault.get("created_at")
-            })
-    print(f"Exported {len(faults)} faults to {output_file}")
 ```
 
 ## ACI Fault Summary (via APIC)

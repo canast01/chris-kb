@@ -82,20 +82,6 @@ graph LR
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Examples:
-- `RDFG-S-DC1DC2-DB-01`
-- `RDFG-S-DC1DC2-APP-01`
-- `RDFG-S-DC1DC2-WEB-01`
-
----
-
-## Bandwidth Sizing
-
-Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.
-
-```text
-Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
 ```
 
 Where 1.25 = 25% headroom for burst absorption.

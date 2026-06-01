@@ -49,26 +49,6 @@ graph TD
 │   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## RBAC with Active Directory Groups
-
-Scope script access by checking group membership at runtime.
-
-```powershell
-# Check if the current user is in an AD group
-function Test-GroupMembership {
-    param([string]$GroupName)
-    $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-    $principal = [System.Security.Principal.WindowsPrincipal]$user
-    $group = [System.Security.Principal.NTAccount]$GroupName
-    $sid = $group.Translate([System.Security.Principal.SecurityIdentifier])
-    $principal.IsInRole($sid)
-}
-
-if (-not (Test-GroupMembership 'DOMAIN\Operators')) {
-    Write-Error "Access denied — requires Operators group membership"
-    exit 1
-}
 ```
 
 ## Least Privilege Reference

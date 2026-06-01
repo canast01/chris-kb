@@ -78,19 +78,6 @@ EKS CLI: Cluster → Nodes → Workloads
 │  IRSA            = IAM Roles for Service Accounts; pods assume IAM roles via OIDC                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Node Groups
-
-```bash
-# List and inspect managed node groups
-aws eks list-nodegroups --cluster-name <cluster>
-aws eks describe-nodegroup --cluster-name <cluster> --nodegroup-name <ng>
-
-# Scale a managed node group
-aws eks update-nodegroup-config \
-  --cluster-name <cluster> \
-  --nodegroup-name <ng> \
-  --scaling-config minSize=2,maxSize=10,desiredSize=4
 ```
 
 ## Fargate Profiles

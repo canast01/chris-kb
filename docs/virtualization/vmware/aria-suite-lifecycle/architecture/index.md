@@ -4,7 +4,7 @@
 Central management appliance for deploying and upgrading the full VMware Aria Suite. Orchestrates pre-check → snapshot → stage → upgrade → post-check as a single audited workflow; stores all credentials and certificates in the integrated Locker vault.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Aria LCM — Architecture ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

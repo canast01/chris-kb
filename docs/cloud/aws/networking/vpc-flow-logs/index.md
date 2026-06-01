@@ -5,7 +5,7 @@
 AWS VPC Flow Logs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────── VPC Flow Logs — Network Traffic Capture ───────────────────────────────┐
 │                                                                                                       │
 │  VPC Flow Logs capture metadata about IP traffic to/from ENIs for security and troubleshooting.       │

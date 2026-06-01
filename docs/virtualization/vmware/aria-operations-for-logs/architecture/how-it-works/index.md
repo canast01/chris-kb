@@ -67,11 +67,4 @@ graph TB
 │  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## ESXi Syslog Configuration
-
-```bash
-esxcli system syslog config set --loghost="udp://<vrli-fqdn>:514"
-esxcli system syslog reload
-esxcli network firewall ruleset set --ruleset-id=syslog --enabled=true
 ```

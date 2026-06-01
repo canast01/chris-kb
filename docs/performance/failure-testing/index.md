@@ -73,12 +73,6 @@ tc qdisc del dev eth0 root
 │    Rollback       = Restore normal state after test; documented before injection starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**VMware — simulate host failure:**
-```powershell
-# Suspend a VM (simulates host failure for HA test)
-Suspend-VM -VM "<vm-name>" -Confirm:$false
-# Monitor: HA should restart VM on another host
 ```
 
 ## Application Resilience Tests

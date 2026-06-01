@@ -5,7 +5,7 @@
 Operational references for database health, maintenance, and troubleshooting.
 </div>
 
-```text
+```
 ┌────────────────────────── Database — Health, Backup, Failover & Performance ──────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

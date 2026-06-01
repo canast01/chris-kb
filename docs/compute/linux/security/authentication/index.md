@@ -69,13 +69,6 @@ awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 │  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Apply changed settings to existing accounts:
-
-```bash
-chage -M 90 -m 1 -W 14 username
-# Verify
-chage -l username
 ```
 
 ## PAM — Pluggable Authentication Modules

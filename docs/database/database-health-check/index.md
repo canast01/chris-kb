@@ -53,25 +53,6 @@ Get-Service -Name MSSQLSERVER
 │    Wait event      = Reason a session is not running; categorised by type (I/O, lock, CPU, etc.)      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MySQL / MariaDB Health Checks
-
-```sql
--- Connection status
-SHOW STATUS LIKE 'Threads_%';
-SHOW STATUS LIKE 'Max_used_connections';
-
--- Replication status (on replica)
-SHOW SLAVE STATUS\G
--- Key fields: Seconds_Behind_Master, Slave_IO_Running, Slave_SQL_Running
-
--- Slow queries
-SHOW STATUS LIKE 'Slow_queries';
-SHOW VARIABLES LIKE 'slow_query_log%';
-
--- InnoDB buffer pool hit ratio (target > 99%)
-SHOW STATUS LIKE 'Innodb_buffer_pool_reads';
-SHOW STATUS LIKE 'Innodb_buffer_pool_read_requests';
 ```
 
 ## SQL Server Health Checks

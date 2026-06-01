@@ -35,19 +35,6 @@ pip install PyVmomi vsphere-automation-sdk-python
 │   │   Netbox            = open-source DCIM/IPAM; Ansible inventory plugin pulls live device list  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```yaml
-# Dynamic AWS inventory
-plugin: amazon.aws.aws_ec2
-regions: [eu-west-1, us-east-1]
-filters:
-  instance-state-name: running
-  "tag:ManagedBy": ansible
-keyed_groups:
-  - key: tags.Environment
-    prefix: env
-compose:
-  ansible_host: private_ip_address
 ```
 
 ## HashiCorp Vault

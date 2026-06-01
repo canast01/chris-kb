@@ -5,8 +5,8 @@
 ESXi Access Control reference covering Exception Users, Local Account Management, vCenter Role-Based Access Control, ESXi Shell and SSH Access Controls, Firewall Ruleset Management and 1 more sections.
 </div>
 
-```text
 ESXi Access Control Model
+```
 ┌──────────────────────────────────────────────────────┐
 │  vCenter (Primary path — day-to-day operations)      │
 │  ├── AD / SSO identity source                        │
@@ -14,6 +14,7 @@ ESXi Access Control Model
 │  └── Lockdown Mode: blocks all direct host access    │
 └──────────────────────┬───────────────────────────────┘
                        │ vpxa / hostd (HTTPS 443/902)
+```
 ┌──────────────────────▼───────────────────────────────┐
 │  ESXi Host                                           │
 │                                                      │
@@ -32,6 +33,7 @@ ESXi Access Control Model
 │  ├── root            break-glass, unique password    │
 │  └── infra-breakglass  Admin role, in exception list │
 └──────────────────────────────────────────────────────┘
+```
          │
     ┌────▼────────────────────────────────┐
     │  Firewall (host-based ruleset)      │
@@ -86,12 +88,6 @@ ESXi Access Control Model
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Via ESXCLI (must be run from DCUI or existing shell session):
-
-```bash
-vim-cmd hostsvc/lockdown_mode_enter
-vim-cmd hostsvc/lockdown_mode_exit    # to disable
 ```
 
 ## Exception Users

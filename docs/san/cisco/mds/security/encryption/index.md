@@ -90,24 +90,6 @@ show users
 │  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## HTTPS (Web and API Access)
-
-NX-OS supports HTTPS for the web GUI and NDFC REST API. HTTP (cleartext) must be disabled.
-
-```bash
-# Disable HTTP server
-no feature http-server
-
-# Enable HTTPS server
-feature https-server
-
-# Verify
-show feature | include http
-# http-server    disabled
-# https-server   enabled
 ```
 
 ### HTTPS Certificate Management

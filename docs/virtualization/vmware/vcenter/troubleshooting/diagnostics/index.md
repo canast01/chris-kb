@@ -94,38 +94,6 @@ Diagnostic Chain — Priority Order
 │  vpxd CPU      = high vCenter process CPU = query storm or stuck tasks                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Service Health
-
-### Appliance Management Interface (VAMI)
-
-Log into `https://<vcenter>:5480` to get an immediate overview:
-- **Summary** tab — CPU, memory, disk usage per partition
-- **Services** tab — status of every vCenter service (started/stopped)
-- **Monitor** tab — resource utilisation graphs
-- **Networking** tab — confirm IP, DNS, and hostname
-
-### Service Status from Shell
-
-```bash
-# SSH to VCSA as root or as a user with shell access
-
-# Summary of all services
-service-control --status --all
-
-# Individual service checks
-service-control --status vpxd              # core vCenter daemon
-service-control --status vmware-vpostgres  # embedded PostgreSQL
-service-control --status vmware-stsd       # SSO token service
-service-control --status vmware-sts-idmd   # SSO identity management daemon
-service-control --status vmware-lookupsvc  # service registry / lookup service
-service-control --status applmgmt          # VAMI (port 5480)
-service-control --status vsphere-ui        # vSphere Client (HTML5 UI)
-service-control --status vmware-eam        # ESX Agent Manager
-
-# Alternative — vmon-cli (more granular)
-vmon-cli --list
-vmon-cli --status vpxd
 ```
 
 ### Disk Partition Usage

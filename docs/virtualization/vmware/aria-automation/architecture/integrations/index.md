@@ -84,45 +84,6 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 │  Cost integration = Aria Operations cost data surfaced in vRA to show estimated spend per item        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Active Directory / LDAP (User Authentication)
-
-User authentication is handled by **VMware Workspace ONE Access (vIDM)**, which is deployed as part of the Aria Automation appliance or as a standalone service.
-
-- Configure the LDAP/AD directory sync in Workspace ONE Access.
-- Users and groups sync to Workspace ONE Access; assign them to Aria Automation projects via the Aria Automation UI (**Infrastructure > Administration > Projects > Users**).
-- Supports SAML 2.0 federated identity for enterprise SSO.
-
----
-
-## GitHub / GitLab (Pipeline SCM)
-
-Aria Automation Pipelines integrates with Git repositories for pipeline trigger (push/PR events) and blueprint/template version control.
-
-- Go to **Pipelines > Endpoints > Add Endpoint > GitHub** or **GitLab**.
-- Provide repository URL and a personal access token with repo read/write permissions.
-- Configure webhooks in the Git repository to trigger pipelines on push events.
-
-```bash
-# Add GitHub integration
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  https://<vra-fqdn>/blueprint/api/integrations \
-  -H "Content-Type: application/json" \
-  -d '{
-    "integrationType": "github",
-    "name": "github-blueprints",
-    "config": {
-      "url": "https://github.com/example-org/vra-blueprints",
-      "token": "<personal-access-token>",
-      "branch": "main"
-    }
-  }'
-
-# Sync blueprints from GitHub
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
-  "https://<vra-fqdn>/blueprint/api/integrations/<integration-id>/sync"
 ```
 
 ---

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [APEX Storage as a Service](../index.md) reference.
 </div>
+```
+┌─────────────────────────────────── Dell Apex STaaS — CLI Reference ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Apex STaaS CLI: command-line interface for all management and operational tasks        │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Owner            │   │
+│   │           Hardware          │  │       NVMe/SAS arrays       │  │             Dell            │   │
+│   │          Management         │  │         Apex Console        │  │           Customer          │   │
+│   │          Monitoring         │  │         CloudIQ/SCG         │  │            Shared           │   │
+│   │           Billing           │  │       Committed+burst       │  │         Dell billing        │   │
+│   │           Network           │  │        iSCSI VLAN/FC        │  │           Customer          │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Dell array hardware on-premises · customer iSCSI VLAN / FC fabric · Apex Console SaaS    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Apex STaaS         = on-prem Dell storage consumed as a cloud service with subscription billing    │
+│    Apex Console       = cloud portal; provision volumes, view usage, and raise support requests       │
+│    Committed base     = minimum contracted capacity tier; billed monthly regardless of actual use     │
+│    Burst capacity     = pre-installed unlocked storage above committed; billed when consumed          │
+│    SCG                = Secure Connect Gateway; relays array telemetry to CloudIQ for analysis        │
+│    CloudIQ            = Dell AIOps SaaS; health scores, capacity forecasts, firmware advisories       │
+│    NVMe tier          = all-flash performance tier; sub-millisecond latency for database workloads    │
+│    Capacity tier      = SAS/NL-SAS lower cost tier; suited to bulk storage and backup targets         │
+│    iSCSI CHAP         = Challenge Handshake Auth Protocol; authenticates iSCSI initiators to array    │
+│    FC port sec.       = FC fabric binding and port security; restricts which HBAs can log in          │
+│    vVols              = Virtual Volumes; per-VM storage objects exposed via VASA provider to vCenter  │
+│    OOB mgmt           = out-of-band management network for direct array controller access             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

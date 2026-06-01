@@ -6,7 +6,7 @@
 Terraform — Troubleshooting reference.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Terraform — Troubleshooting ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Terraform troubleshooting: state errors, provider errors, plan/apply failures, lock errors  │   │

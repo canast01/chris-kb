@@ -62,52 +62,6 @@ echo "All secrets rotated."
 │   │    Action audit   = scan all workflow YAML for uses: lines; verify each is pinned to a SHA    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Workflow Run Monitor
-
-```bash
-#!/bin/bash
-# monitor-workflow.sh — Wait for a workflow run to complete and report status
-set -euo pipefail
-
-REPO="${1:-org/infra}"
-WORKFLOW="${2:-deploy.yml}"
-BRANCH="${3:-main}"
-TIMEOUT_MINUTES="${4:-30}"
-
-echo "Waiting for latest $WORKFLOW run on $BRANCH..."
-
-# Get latest run ID
-RUN_ID=$(gh api "repos/$REPO/actions/workflows/$WORKFLOW/runs?branch=$BRANCH&per_page=1" \
-  | jq -r '.workflow_runs[0].id')
-
-if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
-  echo "No run found for $WORKFLOW on $BRANCH"
-  exit 1
-fi
-
-echo "Run ID: $RUN_ID"
-echo "URL: https://github.com/$REPO/actions/runs/$RUN_ID"
-
-# Poll until complete or timeout
-ELAPSED=0
-SLEEP=15
-while [ "$ELAPSED" -lt "$((TIMEOUT_MINUTES * 60))" ]; do
-  STATUS=$(gh api repos/$REPO/actions/runs/$RUN_ID | jq -r .status)
-  CONCLUSION=$(gh api repos/$REPO/actions/runs/$RUN_ID | jq -r .conclusion)
-
-  if [ "$STATUS" = "completed" ]; then
-    echo "Run completed: $CONCLUSION"
-    [ "$CONCLUSION" = "success" ] && exit 0 || exit 1
-  fi
-
-  echo "Status: $STATUS (elapsed: ${ELAPSED}s)"
-  sleep $SLEEP
-  ELAPSED=$((ELAPSED + SLEEP))
-done
-
-echo "Timeout after $TIMEOUT_MINUTES minutes"
-exit 1
 ```
 
 ## Bulk Secret Audit Script

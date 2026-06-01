@@ -87,25 +87,6 @@ flowchart TD
 │    irqbalance = Linux daemon; distributes hardware interrupts across CPUs for load balance            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Kernel vs User Space
-
-```bash
-# top — key fields:
-# %us = user space CPU
-# %sy = kernel/system CPU  ← if high: I/O, syscalls, interrupt handling
-# %wa = I/O wait          ← if high: storage bottleneck driving CPU wait
-# %si = software interrupt ← if high: network receive processing
-# %hi = hardware interrupt ← if high: check NIC offload / IRQ affinity
-
-# If %sy is high — use perf to identify kernel hot paths
-perf top -a --sort comm,dso
-
-# Example output showing ksoftirqd high:
-# Overhead  Shared Object       Symbol
-#   42.30%  [kernel]            [k] __softirqentry_text_start
-#   18.50%  [kernel]            [k] net_rx_action
-# → High network receive interrupt: check RSS / IRQ affinity
 ```
 
 ### perf — Deeper Kernel Analysis

@@ -68,19 +68,6 @@ which python   # Should point to ~/.pyenv/shims/python
 │   │      Re-create venv= after Python upgrade; venv is tied to a specific interpreter binary      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Windows
-
-```powershell
-# winget (Windows 10/11)
-winget install Python.Python.3.12
-
-# Or use pyenv-win
-pip install pyenv-win --target $env:USERPROFILE\.pyenv
-
-# Verify
-python --version
-py -3.12 --version   # py launcher
 ```
 
 ---

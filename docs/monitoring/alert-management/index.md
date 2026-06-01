@@ -5,7 +5,7 @@
 Alert Management reference covering Common Alert Sources, Alert Noise Reduction Checklist, Escalation Matrix (template).
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Monitoring — Alert Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,19 +48,6 @@ Alert Management reference covering Common Alert Sources, Alert Noise Reduction 
 │  Alert fatigue     = Operator desensitisation caused by excessive or low-quality alerts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Common Alert Sources
-
-### High CPU
-
-```bash
-# Top processes
-ps aux --sort=-%cpu | head -15
-top -bn1 | head -20
-
-# Historical (sar)
-sar -u 1 10
 ```
 
 ### High Memory

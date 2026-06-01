@@ -64,16 +64,6 @@ support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 │  Admin CLI = aiops-admin command-line tool for backup, upgrade, and service management                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Feature Enablement
-
-Some AIOps features are not enabled by default and require manual activation:
-
-```text
-CloudIQ portal > Settings > Features
-- Review available features per your subscription tier
-- Enable/disable features relevant to your environment
-- Document which features are enabled and the date of enablement
 ```
 
 ## API Lifecycle

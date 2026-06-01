@@ -45,28 +45,6 @@ flowchart TD
 │   │        Deployment review = env requires named team approval; reviewer approves/rejects        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Secret Scopes
-
-| Scope | Where set | Accessible by |
-|---|---|---|
-| Repository | Repo Settings → Secrets | All workflows in that repo |
-| Environment | Repo Settings → Environments | Jobs targeting that environment |
-| Organisation | Org Settings → Secrets | Repos granted access |
-| `GITHUB_TOKEN` | Auto-generated | All jobs (scoped to the run) |
-
-## OIDC — Keyless Authentication
-
-```mermaid
-sequenceDiagram
-    participant Job as Workflow Job
-    participant GH as GitHub OIDC
-    participant Cloud as Cloud Provider
-
-    Job->>GH: Request OIDC JWT\n(permissions: id-token: write)
-    GH-->>Job: Signed JWT\n(sub: repo:org/repo:ref:...)
-    Job->>Cloud: Exchange JWT for credentials
-    Cloud-->>Job: Temporary credentials\n(auto-expire)
 ```
 
 ```yaml

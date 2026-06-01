@@ -94,34 +94,6 @@ SSO Authentication Flow
 │  AD identity  = Active Directory added as SSO identity source                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## SSO Security
-
-### Authentication Policy
-
-Configure at **Administration → Single Sign On → Configuration → Policies → Password Policy**:
-
-| Parameter | Recommended Value |
-|---|---|
-| Maximum lifetime | 90 days |
-| Minimum length | 16 characters |
-| Complexity | Uppercase + lowercase + digits + special |
-| Lockout (failed attempts) | 5 attempts |
-| Lockout duration | 5 minutes |
-| Failed attempt interval | 3 minutes |
-
-### Identity Source Best Practices
-
-- Use LDAPS (port 636) not plain LDAP for all AD identity sources
-- Use a dedicated service account for LDAP bind; restrict it to read-only AD access
-- Enable multi-factor authentication at the IdP level using SAML federation (ADFS/Okta)
-- Review identity sources quarterly; remove unused sources
-
-### Unlocking a Locked SSO Account
-
-```bash
-# From VCSA shell — unlock administrator@vsphere.local
-/usr/lib/vmware-vmafd/bin/dir-cli user unlock --account administrator --domain vsphere.local
 ```
 
 ## TLS Configuration

@@ -61,20 +61,6 @@ Get-Service -Name "Veeam Agent for Microsoft Windows"
 │  Test restore = periodic recovery drill; validates backup integrity                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Managed by Veeam Backup & Replication (VBR)
-
-When managed centrally, agents are deployed and jobs are configured from the VBR console. On the agent side:
-
-```powershell
-# Check agent connection to VBR server
-veeamconfig ui   # Shows management server connection status
-
-# From VBR server — check agent connection
-Get-VBRDiscoveredComputer -Name "SERVER01"
-
-# Trigger a backup from VBR server
-Start-VBRComputerBackup -Computer (Get-VBRDiscoveredComputer -Name "SERVER01")
 ```
 
 ## Windows Server Backup (WSB)

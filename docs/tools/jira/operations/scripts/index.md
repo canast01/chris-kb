@@ -43,62 +43,6 @@ export PGPASSWORD="${JIRA_DB_PASSWORD}"
 │  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 2. User Audit Script
-
-Lists all Jira users, their active status, group memberships, and last login.
-
-```bash
-#!/bin/bash
-# jira-user-audit.sh — Export user list with status and groups
-OUTPUT="/tmp/jira-user-audit-$(date +%Y%m%d).csv"
-echo "Username,Display Name,Email,Active,Groups" > "${OUTPUT}"
-
-START_AT=0
-MAX_RESULTS=200
-
-while true; do
-  RESPONSE=$(curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-    "${JIRA_URL}/rest/api/2/user/search?username=.&maxResults=${MAX_RESULTS}&startAt=${START_AT}")
-
-  COUNT=$(echo "${RESPONSE}" | python3 -c "import sys,json; print(len(json.load(sys.stdin)))")
-
-  if [ "${COUNT}" -eq 0 ]; then
-    break
-  fi
-
-  # For each user, get group membership
-  USERNAMES=$(echo "${RESPONSE}" | python3 -c "
-import sys, json
-for u in json.load(sys.stdin):
-    print(u['name'])
-")
-
-  while read -r USERNAME; do
-    USER_DATA=$(curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
-      "${JIRA_URL}/rest/api/2/user?username=${USERNAME}&expand=groups")
-
-    echo "${USER_DATA}" | python3 -c "
-import sys, json
-u = json.load(sys.stdin)
-groups = '; '.join(g['name'] for g in u.get('groups', {}).get('items', []))
-print(','.join([
-    u.get('name',''),
-    u.get('displayName','').replace(',',''),
-    u.get('emailAddress',''),
-    str(u.get('active', False)),
-    groups
-]))
-" >> "${OUTPUT}"
-  done <<< "${USERNAMES}"
-
-  START_AT=$((START_AT + COUNT))
-  echo "Processed ${START_AT} users..."
-done
-
-echo "User audit saved: ${OUTPUT}"
 ```
 
 ### Inactive User Report (SQL)

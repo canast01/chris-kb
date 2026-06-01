@@ -5,8 +5,8 @@
 Hardening reference covering Firewall Hardening, Advanced Security Settings, Secure Boot, Audit Logging, Host Profile Enforcement and 2 more sections.
 </div>
 
-```text
 ESXi Host Hardening Layers
+```
 ┌─────────────────────────────────────────────────────────┐
 │  1. Network Attack Surface Reduction                    │
 │  ├── Lockdown Mode: Normal (blocks direct SSH/API)      │
@@ -35,6 +35,7 @@ ESXi Host Hardening Layers
 │  ├── Host Profile: enforces baseline across cluster     │
 │  └── Check Compliance after every change                │
 └─────────────────────────────────────────────────────────┘
+```
   Reference: VMware vSphere SCG → CIS → DISA STIG
 ```
 ┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
@@ -82,14 +83,6 @@ ESXi Host Hardening Layers
 │  SNMP v3     = secure SNMP version with auth+enc; v1/v2 must be disabled                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Exception Users List:**
-
-Users in the exception list can still access the host directly even in Normal Lockdown. Keep minimal — typically one named break-glass local account:
-
-```bash
-# View exception users (vSphere Client or via API)
-vim-cmd hostsvc/advopt/view Config.HostAgent.plugins.hostsvc.esxAdminsGroup
 ```
 
 Configure via vCenter: **Host → Configure → Security Profile → Lockdown Mode → Exception Users**

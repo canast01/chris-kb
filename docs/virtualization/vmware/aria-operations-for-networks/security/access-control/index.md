@@ -75,16 +75,6 @@ Settings → Authentication → LDAP → Configure
 │  Audit Log            = Records user login, config changes, and data source edits                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Local User Management
-
-Local users are managed via UI only (Settings → Users → Add User). The built-in `admin@local` account cannot be deleted.
-
-Change default admin password immediately after deployment:
-```text
-Settings → My Account → Change Password
 ```
 
 Disable unused local accounts:

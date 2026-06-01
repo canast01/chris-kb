@@ -5,7 +5,7 @@
 AWS S3 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── S3 — Object Storage ─────────────────────────────────────────┐
 │                                                                                                       │
 │  S3 stores objects in buckets; 11 nines durability; access controlled by policies and ACLs.           │

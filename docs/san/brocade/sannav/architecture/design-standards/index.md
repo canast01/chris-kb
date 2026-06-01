@@ -79,7 +79,6 @@ snmpconfig --set trapdest -index 1 \
 snmpconfig --show snmpv3
 snmpconfig --show trapdest
 ```
-```text
 ┌────────────────────────────────── Brocade SANnav — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design principles: HA deployment, dedicated management VLAN, RBAC, TLS, backups.                     │

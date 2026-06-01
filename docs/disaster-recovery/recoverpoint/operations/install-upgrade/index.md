@@ -103,38 +103,6 @@ flowchart TD
 │    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-!!! note "RPA Discovery"
-    Deployment Manager discovers RPAs via broadcast on the management subnet. Ensure the management station is Layer 2 adjacent to the RPAs, or configure the RPA management IPs statically via the RPA front-panel LCD before running the wizard if the broadcast does not reach them.
-
-### Step 3 — Configure Cluster
-
-Within the Deployment Manager wizard:
-
-1. **Discover RPAs** — the wizard scans and lists all unconfigured RPAs found on the subnet.
-2. **Assign cluster management IP** — static IP, shared by the cluster (VIP-style failover).
-3. **Assign per-RPA IPs** — management, WAN, and (if applicable) iSCSI IPs per node.
-4. **Configure NTP** — enter NTP server IPs; wizard verifies synchronisation.
-5. **Configure DNS** — enter DNS server IPs and domain suffix.
-6. **Set cluster name** — use the format `RP-<site>-CLUSTER-<number>` (e.g., `RP-DC1-CLUSTER-01`).
-7. **Pair sites** — repeat wizard for Site B cluster, then link the two clusters.
-
-!!! warning "WAN Latency"
-    RecoverPoint synchronous replication (CDP) requires WAN RTT < 5 ms for predictable RPO=0 performance. For higher latency links, use CLR (Continuous Long-distance Replication) asynchronous mode and size journals accordingly.
-
-### Step 4 — Assign Storage
-
-After cluster configuration, present the repository volume and gatekeeper devices to the RPAs using the array's masking/mapping tools:
-
-```bash
-# On PowerMax — create a masking view for RPAs (Solutions Enabler example)
-symaccess -sid <SYMID> create view -name MV_RPA_DC1 \
-  -sg SG_RPA_DC1 \
-  -pg PG_RPA_DC1_FC \
-  -host IG_RPA_DC1
-
-# Verify gatekeepers are visible from boxmgmt
-boxmgmt storage list_gks
 ```
 
 ---

@@ -60,21 +60,6 @@ flowchart TD
 │  System Info = Admin > System Information; shows memory, JVM version, and config                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### HTTP Health Endpoint
-
-```bash
-# Confluence status page (no auth required)
-curl -sf "https://confluence.example.com/status" | jq '.state'
-# Expected: "RUNNING"
-
-# Full health check response
-curl -s "https://confluence.example.com/status" | jq '.'
-# {
-#   "state": "RUNNING",
-#   "substate": "run",
-#   ...
-# }
 ```
 
 Response states:

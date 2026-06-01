@@ -5,8 +5,8 @@
 Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security.
 </div>
 
-```text
 Evergreen Security Controls
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Same FlashArray/FlashBlade security model applies       │
 │  ├── AES-256 encryption at rest (always-on SEDs)         │

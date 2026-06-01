@@ -5,7 +5,7 @@
 AWS Patch Manager reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── AWS Compute — Patch Manager ─────────────────────────────────────┐
 │                                                                                                       │
 │  SSM Patch Manager automates OS patching across EC2 fleet using baselines and groups.                 │

@@ -65,39 +65,6 @@ curl -u "user@corp.example.com:API_TOKEN" \
 │  MFA              = multi-factor auth enforced at IdP; Jira trusts SAML assertion                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## System Configuration Hardening
-
-### Administration → System → General Configuration
-
-| Setting | Recommended Value |
-|---|---|
-| Base URL | `https://jira.corp.example.com` (HTTPS only) |
-| Allow public signup | Disabled |
-| Mode | Private |
-| External user management | Enabled (if using AD/LDAP) |
-| CAPTCHA on signup | Enabled (if signup is enabled) |
-| Send email on new user | Disabled |
-| Allow people to email into Jira | Disabled unless explicitly needed |
-| Show user email addresses | Disabled (hide from non-admins) |
-
-### Security Settings
-
-Administration → System → Security Settings:
-
-```properties
-# jira-config.properties — additional security settings
-
-# Disable WebSudo prompts after N minutes
-jira.websudo.timeout=10
-
-# Require re-authentication for admin actions
-jira.websudo.is.disabled=false
-
-# Content Security Policy header
-jira.webresource.batching.enabled=true
 ```
 
 **WebSudo** forces administrators to re-enter credentials before accessing admin areas — always leave enabled.

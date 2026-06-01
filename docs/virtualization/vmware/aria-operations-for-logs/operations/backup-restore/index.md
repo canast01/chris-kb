@@ -79,13 +79,6 @@ df -h /var/log/loginsight
 │  LCM logscraper    = Diagnostic tool; not a backup tool; used for support bundles only                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Remove snapshots within 48 hours of a successful change:
-
-```powershell
-Get-VM | Where-Object { $_.Name -like "vrli-*" } | Get-Snapshot |
-  Where-Object { $_.Name -like "pre-change-*" } |
-  Remove-Snapshot -Confirm:$false
 ```
 
 ---

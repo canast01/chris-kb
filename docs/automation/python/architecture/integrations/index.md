@@ -49,33 +49,6 @@ graph LR
 │   │       Exit codes  = scripts should exit 0 on success, 1+ on failure; CI checks exit code      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Auth Patterns
-
-```python
-import requests
-from requests.auth import HTTPBasicAuth
-
-# Bearer token (most REST APIs)
-headers = {'Authorization': f'Bearer {api_token}'}
-resp = requests.get('https://api.example.com/v1/me', headers=headers)
-
-# Basic auth
-resp = requests.get(
-    'https://api.example.com/v1/data',
-    auth=HTTPBasicAuth('user', 'password')
-)
-
-# API key in query string
-resp = requests.get(
-    'https://api.example.com/v1/data',
-    params={'api_key': api_key, 'limit': 100}
-)
-
-# Session with persistent headers
-session = requests.Session()
-session.headers.update({'Authorization': f'Bearer {token}', 'Accept': 'application/json'})
-resp = session.get('https://api.example.com/v1/servers')
 ```
 
 ### Pagination

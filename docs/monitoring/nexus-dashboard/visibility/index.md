@@ -5,7 +5,7 @@
 Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference covering Flow Visibility, Topology View, Path Trace for Troubleshooting, Common Visibility Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,48 +36,6 @@ Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference
 │  Delta analysis = NDI showing configuration changes between two epochs                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Endpoint detail fields:
-
-| Field | Description |
-|---|---|
-| `ip` | IP address of the endpoint |
-| `mac` | MAC address |
-| `epg` | ACI EPG the endpoint belongs to |
-| `node` | Leaf switch it is attached to |
-| `port` | Physical port on the leaf |
-| `encap` | VLAN or VXLAN encapsulation |
-| `lastSeen` | Timestamp of last activity |
-
-## Flow Visibility
-
-NDI collects flow records from the fabric to provide per-connection visibility.
-
-Navigation: **NDI > Browse > Flows**
-
-```bash
-# Query flows between two endpoints
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/flows/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "filter": {
-      "src_ip": "10.10.20.50",
-      "dst_ip": "10.10.30.100",
-      "protocol": "TCP"
-    },
-    "timeRange": {"start": "2026-05-07T08:00:00Z", "end": "2026-05-07T10:00:00Z"},
-    "limit": 50
-  }'
-
-# Check for flows with fabric drops
-curl -sk -X POST \
-  "https://nexus-dashboard.example.com/nexus/infra/api/v3/insights/flows/query" \
-  -H "Authorization: Bearer <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"filter": {"drop_count_gt": 0}, "limit": 20}'
 ```
 
 Flow record fields useful for troubleshooting:

@@ -71,22 +71,6 @@ kubectl get nodes
 │  TAC            = Cisco TAC; escalate cluster quorum loss or etcd corruption                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Zone Activation Partially Propagates (Some Switches Updated, Others Not)
-
-**Symptom:** After activating a zone set in NDFC, the zone change is present on some switches but not all.
-
-**Diagnosis:**
-
-```bash
-# On each MDS switch — verify active zone set version
-show zoneset active vsan <vsan-id> | include name
-# Compare timestamps across switches — the lagging switch shows an older timestamp
-
-# Check for zone merge failures
-show zone merge-failure vsan <vsan-id>
 ```
 
 **Resolution:**

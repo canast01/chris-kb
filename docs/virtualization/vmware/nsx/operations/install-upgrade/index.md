@@ -108,17 +108,6 @@ get certificate api thumbprint
 │  Interop     = VMware Product Interoperability Matrix for version support                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Configure Virtual IP (VIP)
-
-The VIP is the single management IP/FQDN used by all clients. All API and UI traffic goes to the VIP.
-
-```bash
-# On the cluster (from any node)
-set cluster virtual-ip <vip-ip>
-
-# Verify
-get cluster virtual-ip
 ```
 
 DNS for the NSX Manager FQDN (e.g., `nsx-manager.example.local`) must point to this VIP.

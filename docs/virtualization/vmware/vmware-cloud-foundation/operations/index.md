@@ -4,7 +4,7 @@
 Day-to-day operational reference for VMware Cloud Foundation. Covers CLI commands, health checks, routine procedures, lifecycle management, backup strategy, and automation scripts.
 </div>
 
-```text
+```
 ┌────────────────────────────────────────── VCF — Operations ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

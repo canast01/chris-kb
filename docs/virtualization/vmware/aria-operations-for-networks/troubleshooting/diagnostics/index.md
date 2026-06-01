@@ -59,23 +59,6 @@ Settings → Support → Download Support Bundle
 │  Collector Log Level = Adjust in collector config for verbose debugging output                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Collector VM Log Locations
-
-```bash
-ssh admin@<collector-vm-ip>
-
-/var/log/vmware/hms/           # Collector HMS agent
-/var/log/vmware/collector/     # Data collection logs
-
-# Check services
-sudo systemctl status hms
-sudo systemctl status collector
-
-# Real-time collector log
-journalctl -u hms -f
 ```
 
 ---

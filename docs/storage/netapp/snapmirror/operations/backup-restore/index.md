@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapMirror Operations](../index.md) reference.
 </div>
+```
+┌─────────────────────────────── NetApp SnapMirror — Backup and Restore ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     SnapMirror backup: snapshots, replication, and external backup application integration    │   │
+│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshot → replicate to DR → verify → document → test restore                                      │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
+│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
+│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
+│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
+│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
+│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
+│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
+│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
+│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
+│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
+│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
+│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
+│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
+│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
+│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

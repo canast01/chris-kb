@@ -5,8 +5,8 @@
 ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Troubleshooting, Host Disconnect Troubleshooting, Maintenance Mode Validation.
 </div>
 
-```text
 ESXi Diagnostic Data Sources
+```
 ┌──────────────────────────────────────────────────────────┐
 │  vSphere Client (GUI)                                    │
 │  ├── Host → Monitor → Issues & Alarms                    │
@@ -78,45 +78,6 @@ ESXi Diagnostic Data Sources
 │  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Common Issues
-
-- Failed or stuck tasks
-- Certificate, DNS, or authentication issues
-- Capacity pressure
-- Service health warnings
-- Version mismatch after maintenance
-- Monitoring gaps
-
-## Log Analysis
-
-### Key Log Files
-
-| Log | Path | Content |
-|---|---|---|
-| vmkernel | `/var/log/vmkernel.log` | Storage, network, driver-level events |
-| hostd | `/var/log/hostd.log` | Host management agent (API, VM operations) |
-| vpxa | `/var/log/vpxa.log` | vCenter agent communication |
-| vobd | `/var/log/vobd.log` | Hardware/system observation (IPMI, sensors) |
-| fdm | `/var/log/fdm.log` | HA agent (Fault Domain Manager) |
-| auth | `/var/log/auth.log` | SSH logins, sudo |
-
-### Searching Logs
-
-```bash
-# Errors and warnings
-grep -i "error\|warning\|fail\|fault" /var/log/vmkernel.log | tail -30
-grep -i "error" /var/log/hostd.log | tail -20
-grep -i "disconnected\|lost connectivity" /var/log/vpxa.log | tail -10
-
-# Storage path errors
-grep -i "lost path\|path down\|APD\|PDL" /var/log/vmkernel.log | tail -20
-
-# Network errors
-grep -i "link down\|carrier\|vmnic" /var/log/vmkernel.log | tail -20
-
-# HA events
-grep -i "isolation\|restart\;fdm" /var/log/fdm.log | tail -20
 ```
 
 ### Collect Support Bundle

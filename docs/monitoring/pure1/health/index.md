@@ -5,7 +5,7 @@
 Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Connectivity Health — Phone Home, Health Monitoring Integration, Common Health Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Pure1 — Health Monitoring ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,24 +36,6 @@ Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Co
 │  Proactive swap = Pure staging replacement and dispatching before customer impact                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## FlashBlade Health
-
-```bash
-ssh pureuser@<flashblade-ip>
-
-# Blade and chassis health
-purehw list
-
-# Network interfaces
-purenetwork list
-
-# Active alerts
-purealert list --flagged
-
-# NFS/SMB service state
-pureservice list
 ```
 
 ## Health via Pure1 REST API

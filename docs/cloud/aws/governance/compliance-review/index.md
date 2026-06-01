@@ -5,7 +5,7 @@
 AWS Compliance Review reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── AWS Governance — Compliance Review ──────────────────────────────────┐
 │                                                                                                       │
 │  Periodic compliance review using Security Hub, Audit Manager, and Config dashboards.                 │
@@ -51,33 +51,6 @@ AWS Compliance Review reference covering Overview, Where It Fits, Daily Checks, 
 │  Access review   = Quarterly check of IAM users, roles, and permission sets                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Compliance Review: Config → Security Hub → Remediation
-──────────────────────────────────────────────────────────────
-
-  ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-  │ AWS Config    │   │ GuardDuty     │   │ Inspector     │
-  │ Rules         │   │ Findings      │   │ Findings      │
-  │ NON_COMPLIANT │   │ MEDIUM/HIGH   │   │ CVEs/vulns    │
-  └───────┬───────┘   └───────┬───────┘   └───────┬───────┘
-          └─────────────────┬─┘                   │
-                            ▼                     │
-                  ┌─────────────────────┐         │
-                  │   Security Hub      │◄────────┘
-                  │   Aggregated view   │
-                  │   Security Score    │
-                  │   Standard: CIS /   │
-                  │   AWS Foundational  │
-                  └──────────┬──────────┘
-                             │
-               ┌─────────────┼──────────────┐
-               ▼             ▼              ▼
-  ┌───────────────┐  ┌──────────────┐  ┌──────────────┐
-  │  SUPPRESS     │  │  REMEDIATE   │  │  ESCALATE    │
-  │  (accepted    │  │  SSM Autom.  │  │  ticket /    │
-  │   risk)       │  │  manual fix  │  │  CAB review  │
-  └───────────────┘  └──────────────┘  └──────────────┘
 ```
 
 ## Overview

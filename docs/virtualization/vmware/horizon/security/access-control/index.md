@@ -5,8 +5,8 @@
 Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Entitlements, App Volumes Permission Model, UAG Access Control, Service Account for vCenter and 1 more sections.
 </div>
 
-```text
   RBAC: AD Groups → Entitlements → Pools
+```
 ┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
 │ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /     │
 │              │    │                   │    │ Access Groups        │
@@ -65,28 +65,6 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 │  Qtrly review   = audit Horizon admin role assignments                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Recommended mapping:
-| AD Group | Horizon Role |
-|---|---|
-| `CORP\Horizon-Admins` | Administrators |
-| `CORP\Horizon-HelpDesk` | Help Desk Administrators |
-| `CORP\Horizon-ReadOnly` | Administrators (Read Only) |
-
----
-
-## Pool-Level Admin Delegation
-
-Horizon supports scoping admin permissions to specific pools via Access Groups:
-
-```text
-Horizon Console → Settings → Administrators → Access Groups → Create Group
-  Name: Pool-Win10-Admins
-  Assign pools: select specific desktop pools
-
-Settings → Administrators → Add Permission
-  Group: CORP\Horizon-Pool-Win10-Admins → Role: Inventory Administrators
-  Access Group: Pool-Win10-Admins
 ```
 
 This limits the admin to only the pools in the assigned Access Group.

@@ -69,36 +69,6 @@ curl -u user:token \
 │  WAL          = Write-Ahead Log; PostgreSQL durability mechanism, source for replication              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Variable best practices:
-- Add placeholder hint text for each field
-- Group related variables in a metadata table at the top
-- Keep variable names short and self-explanatory
-- Do not use required-field macros unless the team is trained on them
-
-## Updating and Deleting Templates
-
-```bash
-# Update an existing template
-curl -u user:token -X PUT \
-  "https://your-instance.atlassian.net/wiki/rest/api/template" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "templateId": "TEMPLATE_ID",
-    "name": "Runbook Template v2",
-    "templateType": "page",
-    "space": {"key": "OPS"},
-    "body": {
-      "storage": {
-        "value": "<h2>Updated body</h2>",
-        "representation": "storage"
-      }
-    }
-  }'
-
-# Delete a template
-curl -u user:token -X DELETE \
-  "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
 ```
 
 Note: updating a template does not retroactively change pages already created from it.

@@ -51,31 +51,6 @@ free -h           # check swap usage — DB paging = critical
 │    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MySQL / MariaDB — Slow Query Analysis
-
-```sql
--- Show currently running queries
-SHOW FULL PROCESSLIST;
--- Kill a query
-KILL QUERY <process_id>;
-
--- Slow query log (enable if not on)
-SHOW VARIABLES LIKE 'slow_query_log%';
-SET GLOBAL slow_query_log = 'ON';
-SET GLOBAL long_query_time = 1;  -- log queries > 1 second
-
--- Top slow queries
-mysqldumpslow -s t -t 20 /var/log/mysql/mysql-slow.log
-
--- Query execution plan
-EXPLAIN SELECT ...;
-EXPLAIN FORMAT=JSON SELECT ...;
-
--- Check for table locks
-SHOW OPEN TABLES WHERE In_use > 0;
-SELECT * FROM information_schema.innodb_trx\G
-SELECT * FROM information_schema.innodb_locks\G
 ```
 
 ## SQL Server — Slow Query Analysis

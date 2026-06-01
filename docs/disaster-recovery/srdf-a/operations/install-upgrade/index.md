@@ -89,49 +89,6 @@ symrdf -g <dgname> -sid <r1_sid> query
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## EOL and Platform Tracking
-
-| Platform | Status | Why it matters |
-|---|---|---|
-| VMAX3 (950F/850F) | End of Service Life — no new SRDF features; firmware-only support | No new SRDF/A features; plan migration before security support ends |
-| PowerMax 2000 | Current — supported with latest HYPERMAX OS | Full feature set including SRDF/A adaptive copy and Metro |
-| PowerMax 8000 | Current — supported with latest HYPERMAX OS | Full feature set; higher throughput for large SRDF groups |
-| PowerMax 9500 | Current — newest generation | Latest microcode features; recommended for new SRDF/A deployments |
-
-Track array firmware versions and SRDF license expiry dates in the CMDB. SRDF licenses are array-bound (node-locked to serial number); a controller board replacement requires license re-application via Dell Support.
-
----
-
-## Firmware Upgrade Sequence
-
-```mermaid
-flowchart TD
-    preCheck["Pre-Check: All Pairs Consistent\nsymrdf -g dgname -sid sid query"]
-    suspend["Suspend SRDF/A\nsymrdf -g dgname -sid sid suspend -noprompt"]
-    verifySuspended["Verify Suspended State\nsymrdf -g dgname -sid sid query"]
-    nduSource["NDU on Source Array\n(Non-Disruptive — host I/O unaffected)"]
-    nduTarget["NDU on Target Array"]
-    resume["Resume SRDF/A\nsymrdf -g dgname -sid sid resume -noprompt"]
-    monitorResync["Monitor Delta Set Backlog\n(Burst transmission expected)"]
-    verifyConsistent["Verify Consistent State\nsymrdf -g dgname -sid sid query"]
-    closeWindow["Close Change Window"]
-
-    preCheck --> suspend
-    suspend --> verifySuspended
-    verifySuspended --> nduSource
-    nduSource --> nduTarget
-    nduTarget --> resume
-    resume --> monitorResync
-    monitorResync --> verifyConsistent
-    verifyConsistent --> closeWindow
-
-    style preCheck fill:#2563eb,color:#fff
-    style closeWindow fill:#15803d,color:#fff
-    style suspend fill:#b45309,color:#fff
-    style resume fill:#b45309,color:#fff
 ```
 
 ## SRDF/A to SRDF/S Migration

@@ -4,7 +4,7 @@
 NSX virtualises the network layer and enforces distributed security at the hypervisor. The 3-node NSX Manager cluster manages control and policy; Transport Nodes run the data plane; Edge Nodes handle north-south routing, NAT, and VPN.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── NSX — Architecture ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,8 +5,8 @@
 Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and Network Design, UAG Sizing, App Volumes Sizing and 3 more sections.
 </div>
 
-```text
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Load Balancer / DNS Round-Robin                            │
 │         ┌────────────┬────────────┬────────────┐            │
@@ -69,61 +69,6 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │  Pod           = group of Connection Servers in same broadcast domain                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Desktop VM Sizing
-
-### Standard Sizing by Persona
-
-| Persona | Typical Use Case | vCPU | RAM | OS Disk | Notes |
-|---|---|---|---|---|---|
-| Task Worker | Call center, data entry, browser-only | 2 | 4 GB | 60 GB | High desktop density on ESXi |
-| Knowledge Worker | Office apps, email, Teams/Zoom | 2–4 | 6–8 GB | 60 GB | Majority of enterprise VDI |
-| Power User | Developer, analyst, multiple monitors | 4–8 | 8–16 GB | 80 GB | May need vGPU |
-| GPU User | CAD, 3D, video editing | 4–8 | 16–32 GB | 80 GB | vGPU required (NVIDIA GRID) |
-| RDS Session | Shared desktop/published app | N/A (host-level) | 2 GB/session | N/A | Size RDS host, not session |
-
-### RDS Host Sizing
-
-| RDS Host Size | vCPU | RAM | Concurrent Sessions |
-|---|---|---|---|
-| Small | 8 | 32 GB | 20–30 |
-| Medium | 16 | 64 GB | 40–60 |
-| Large | 32 | 128 GB | 80–120 |
-
-Actual session density depends heavily on workload. Test with load simulation (LoginVSI or similar) before production sizing.
-
-### ESXi Host Desktop Density
-
-Rule of thumb for Instant Clone pools (no vGPU):
-
-| Desktop Persona | Desktops per ESXi Host (dual-socket, 28–32 physical cores, 384 GB RAM) |
-|---|---|
-| Task Worker (2 vCPU / 4 GB) | 100–150 |
-| Knowledge Worker (4 vCPU / 8 GB) | 50–80 |
-| Power User (8 vCPU / 16 GB) | 25–40 |
-
-Apply a CPU over-commit ratio of 4:1 (vCPU:pCPU) for task workers, 3:1 for knowledge workers. Monitor CPU ready (%) — keep below 5% average.
-
----
-
-## Storage Sizing
-
-### Instant Clone Storage Per Pool
-
-| Object | Size per Desktop | Notes |
-|---|---|---|
-| Golden image OS disk | 40–80 GB | Shared via replica — one copy per datastore |
-| Replica VM disk | = Golden image | Read-only, shared across all children |
-| Parent VM disk | Thin delta above replica | Small — typically <1 GB |
-| Child VM OS delta disk | 2–10 GB | Grows during session; reset on logoff |
-| Child VM swap/memory | = Guest RAM | On same datastore; size accordingly |
-
-**Practical formula:**
-```text
-Total datastore capacity = (Replica size × 1) + (N_desktops × avg_delta × 1.25)
-Example: 60 GB replica + (200 desktops × 5 GB delta × 1.25) = 60 + 1250 = 1,310 GB per datastore
 ```
 
 ### App Volumes Storage

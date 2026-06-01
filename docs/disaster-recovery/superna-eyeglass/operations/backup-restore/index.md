@@ -83,25 +83,6 @@ flowchart LR
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Restoring Eyeglass Configuration
-
-### Restore to Same Appliance
-
-```bash
-# 1. Log in to Eyeglass CLI
-ssh admin@<eyeglass-ip>
-
-# 2. List available backups
-igls backup list
-
-# 3. Restore from a specific backup
-igls backup restore --id <backup-id>
-
-# 4. Confirm restore completed
-igls status
 ```
 
 ### Restore to New/Replacement Appliance

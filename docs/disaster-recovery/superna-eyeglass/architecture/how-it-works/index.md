@@ -81,33 +81,6 @@ graph LR
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Connectivity
-
-| Traffic | Port | Notes |
-|---|---|---|
-| Eyeglass Admin UI | 443 (HTTPS) | From management network |
-| PowerScale OneFS API | 8080 / 443 | From Eyeglass to each cluster |
-| Eyeglass appliance sync | 9000 | Between primary and DR Eyeglass appliances |
-| DNS management | 53, 445 | From Eyeglass to DNS servers |
-
-## Key CLI Commands
-
-```bash
-# List all DR policies
-egcli drpolicy list
-
-# Status of all policies (replication state, lag, last test)
-egcli drpolicy status --all
-
-# Trigger a DR failover
-egcli drfailover --policy POL-NAS-PROD --confirm
-
-# Manually trigger a SyncIQ sync before planned failover
-isi sync jobs start <synciq_policy_name>
-
-# Check SyncIQ lag on production cluster
-isi sync policies list | grep -E "Name|Last|Status"
 ```
 
 ## Sizing

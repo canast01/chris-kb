@@ -77,21 +77,6 @@ graph TB
 │  Dual control    = key operations require two independent admin approvals                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Remove Default SNMP Community Strings
-
-Legacy community strings (`public`, `private`) are present by default on factory switches. Remove them before connecting to any network.
-
-```bash
-# Show current community strings
-snmpconfig --show snmpv1
-
-# Remove default community strings (replace 'public' with actual string names)
-snmpconfig --delete snmpv1 -user public
-snmpconfig --delete snmpv1 -user private
-
-# Verify no community strings remain
-snmpconfig --show snmpv1
 ```
 
 ### Test SNMP v3 from Monitoring Server

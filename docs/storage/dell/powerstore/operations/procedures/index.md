@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Procedures reference covering Provisioning a Block Volume, Provisioning a NAS File System (NFS), Snapshot Operations, Host Management, Replication Management and 2 more sections.
 </div>
+```
+┌────────────────────────────── Dell PowerStore — Operational Procedures ───────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           PowerStore operational procedures: standard tasks for day-2 administration          │   │
+│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
+│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
+│   │            All procedures require approved change management tickets in production            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Open change → pre-check → execute → verify → post-check → close                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           T-model           │  │          Block only         │  │        iSCSI/FC/NVMe        │   │
+│   │           X-model           │  │         Block + File        │  │       Unified protocol      │   │
+│   │            Metro            │  │       Sync replication      │  │       Zero-RPO stretch      │   │
+│   │          Protection         │  │        Snapshot/Clone       │  │       Immutable snaps       │   │
+│   │             Mgmt            │  │          PSM / REST         │  │         Unified pane        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
+│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
+│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
+│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
+│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerStore T/X appliance · NVMe drives · SAS expansion shelves · 10/25 GbE               │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerStore         = Dell mid-range NVMe storage; T-model block-only, X-model unified block+file   │
+│    PowerStore Manager = browser GUI and REST API endpoint for all PowerStore operations               │
+│    Volume group       = logical collection of volumes sharing snapshot and replication policies       │
+│    Protection policy  = assigned to volumes; defines snapshot schedule, retention, and replication    │
+│    Metro volume       = synchronously replicated volume across two sites; zero RPO active-active      │
+│    Snapshot           = space-efficient point-in-time copy; crash-consistent or app-consistent        │
+│    Clone              = full writable copy of a volume or file system; independent lifecycle          │
+│    Applied-to         = PowerStore host mapping; volumes are applied-to a host or host group object   │
+│    Capacity license   = PowerStore uses usable-capacity licensing; licensed in TiB increments         │
+│    Storage container  = PowerStore X-model; unified block and file from the same storage pool         │
+│    Appliance          = single PowerStore node pair (dual controllers); scalable to 4 appliances      │
+│    NVMe-oF            = NVMe over Fabrics; FC-NVMe or NVMe/TCP host connectivity on PowerStore        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Provisioning a Block Volume
 

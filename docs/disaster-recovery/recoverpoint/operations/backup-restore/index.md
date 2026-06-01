@@ -89,46 +89,6 @@ get_bookmarks --cg "CG_PROD_SQL"
 │    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Failback Steps
-
-1. Confirm the primary site is healthy and volumes are accessible.
-2. **Consistency Groups** → select the CG → **Failback**.
-3. RecoverPoint will:
-   - Establish reverse replication (DR to primary).
-   - Sync changes made during failover back to the primary volumes.
-4. Monitor sync progress — wait for delta sync to minimize cutover window.
-5. When sync is current, click **Commit Failback**:
-   - DR I/O quiesces briefly.
-   - Primary volumes are promoted.
-   - Replication direction flips back to DR.
-6. Start production workloads on the primary.
-
----
-
-## Test Copy Workflow
-
-A Test Copy provides a writeable DR test without disrupting ongoing replication.
-
-```mermaid
-sequenceDiagram
-    participant Admin
-    participant RP as RecoverPoint
-    participant TestHost as Test Host (DR Site)
-    participant Prod as Production (Primary)
-
-    Admin->>RP: Create Test Copy from CG bookmark
-    RP->>RP: Branch journal at test point
-    RP->>TestHost: Present writeable test volume
-    Note over Prod,RP: Production replication continues unaffected
-
-    TestHost->>TestHost: Start test workload\nValidate data integrity
-    Admin->>RP: Run DR test scripts / application checks
-
-    Admin->>RP: Complete test — discard test copy
-    RP->>RP: Discard all writes on test copy
-    RP->>TestHost: Remove test volume
-    Note over RP: Journal continues — no impact to production RPO
 ```
 
 ### Creating a Test Copy via RPMA

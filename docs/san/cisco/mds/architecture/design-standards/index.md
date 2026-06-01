@@ -57,53 +57,6 @@
 │  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Examples:
-- Zone: `db01_0a-powermax01_0a`
-- Alias: `db01_0a` (WWPN alias for host HBA port), `powermax01_0a` (WWPN alias for target)
-
-Rules:
-- Enhanced zoning (enhanced zone mode) must be enabled on all VSANs: `zone mode enhanced vsan <id>`
-- One initiator per zone (single-initiator zoning)
-- Zone members always referenced by alias — never hard-coded WWPNs directly in zone definitions
-
-```mermaid
-graph TD
-  subgraph "Fabric A — DC1"
-    SW1["dc1-mds-sw01\n(odd — Fabric A)"]
-    SW3["dc1-mds-sw03\n(odd — Fabric A)"]
-    subgraph "VSAN 10 — Production A"
-      ZS10["Zone Set: dc1-fabA-prod"]
-      Z1["Zone: db01_0a-powermax01_0a"]
-      Z2["Zone: esxi01_0a-fa01_ct0_p0"]
-    end
-    subgraph "VSAN 20 — Replication A"
-      ZS20["Zone Set: dc1-fabA-repl"]
-    end
-  end
-
-  subgraph "Fabric B — DC1"
-    SW2["dc1-mds-sw02\n(even — Fabric B)"]
-    SW4["dc1-mds-sw04\n(even — Fabric B)"]
-    subgraph "VSAN 11 — Production B"
-      ZS11["Zone Set: dc1-fabB-prod"]
-    end
-    subgraph "VSAN 21 — Replication B"
-      ZS21["Zone Set: dc1-fabB-repl"]
-    end
-  end
-
-  ZS10 --> Z1 & Z2
-  SW1 --- SW3
-  SW2 --- SW4
-  SW1 <-->|"ISL"| SW2
-
-  classDef sw fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef zs fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef z fill:#b45309,stroke:#92400e,color:#fff
-  class SW1,SW2,SW3,SW4 sw
-  class ZS10,ZS11,ZS20,ZS21 zs
-  class Z1,Z2 z
 ```
 
 ## ISL Standards

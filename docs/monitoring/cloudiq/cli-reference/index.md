@@ -48,17 +48,6 @@ curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Typ
 │  JSON response = All API responses in JSON; use jq for command-line parsing                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Performance
-
-```bash
-# Get performance metrics for a system
-curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/metrics"   -H "Authorization: Bearer <token>"
-
-# Filter by metric type (iops, latency, bandwidth)
-curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems/<system_id>/metrics?filter=metric_name%20eq%20%22iops%22"   -H "Authorization: Bearer <token>"
 ```
 
 ---

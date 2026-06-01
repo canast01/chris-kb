@@ -5,17 +5,19 @@
 Backup & Restore reference covering Manual Backup via CLI, Backup via REST API, What Is and Is Not Backed Up, Restore Procedure, VM-Level Backup (Disaster Recovery).
 </div>
 
-```text
 Aria Operations — Backup Architecture
+```
 ┌─────────────────────────────────────────────────────┐
 │  Aria Operations Cluster                            │
 │  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
 │  │ Primary  │  │ Replica  │  │ Data nodes     │     │
 │  └──────────┘  └──────────┘  └────────────────┘     │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ file-based backup
                        │ (config only — not metric data)
                        ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Backup Target                                      │
 │  NFS: nas-01.example.local:/aria-ops-backups           │
@@ -29,8 +31,11 @@ Aria Operations — Backup Architecture
 │    metric time-series data · alert history          │
 │    log data                                         │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ restore
                        ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Restore Process                                    │
 │  Admin → Backup/Restore → select backup → Restore   │
@@ -85,17 +90,6 @@ Aria Operations — Backup Architecture
 │  Metric Data         = Historical metrics NOT in CaSA backup; starts fresh on restore                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Provide:
-- Location type: NFS or SFTP
-- NFS: `<nfs-server>:<export-path>` (e.g., `nas-01.example.local:/aria-ops-backups`)
-- SFTP: hostname, port (22), username, password or SSH key
-- Folder path on the target (auto-created if NFS)
-
-**Schedule:**
-
-```text
-Administration → Backup/Restore → Backup → Enable Scheduled Backup
 ```
 
 Recommended settings:

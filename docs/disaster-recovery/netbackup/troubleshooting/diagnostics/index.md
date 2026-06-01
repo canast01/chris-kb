@@ -79,25 +79,6 @@ vxlogview -o 117 -d 24h -t "DEBUG|WARNING|ERROR" | less
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Client Connectivity Diagnostics
-
-```bash
-# Test NetBackup client from master server
-bptestbpcd -client <client-hostname>
-
-# Manually test port reachability (bpcd port)
-nc -zv <client-hostname> 13782
-telnet <client-hostname> 13782
-
-# Check client's server list (what masters the client trusts)
-bpgetconfig -g <client-hostname> -L | grep -E "SERVER|CLIENT"
-
-# Validate name resolution matches between master and client
-nslookup <client-hostname>           # Run on master
-nslookup <master-hostname>           # Run on client
 ```
 
 ---

@@ -100,62 +100,45 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
-
----
-
-## Test-RASRImageAge
-
-Checks whether the most recent RASR image on a share was created within the maximum allowed age. Exits with a non-zero code and writes an Event Log entry if the image is stale.
-
-```powershell
-<#
-.SYNOPSIS
-    Verifies that the most recent RASR image does not exceed the maximum age threshold.
-.PARAMETER SharePath
-    UNC path to the RASR image directory.
-.PARAMETER MaxAgeDays
-    Maximum allowed age in days for the most recent image.
-#>
-function Test-RASRImageAge {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        [string]$SharePath,
-
-        [int]$MaxAgeDays = 7
-    )
-
-    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" -ErrorAction Stop |
-              Sort-Object LastWriteTime -Descending
-
-    if ($images.Count -eq 0) {
-        Write-Warning "No RASR images found in $SharePath"
-        return 1
-    }
-
-    $latest    = $images[0]
-    $ageDays   = ((Get-Date) - $latest.LastWriteTime).TotalDays
-    $threshold = $MaxAgeDays
-
-    if ($ageDays -gt $threshold) {
-        $msg = "RASR image age check FAILED: latest image '$($latest.Name)' is $([math]::Round($ageDays,1)) days old (threshold: $threshold days)"
-        Write-Warning $msg
-
-        $eventSource = "RASR-Backup"
-        if (-not [System.Diagnostics.EventLog]::SourceExists($eventSource)) {
-            [System.Diagnostics.EventLog]::CreateEventSource($eventSource, "Application")
-        }
-        Write-EventLog -LogName Application -Source $eventSource `
-                       -EntryType Warning -EventId 9002 -Message $msg
-        return 1
-    }
-
-    Write-Host "RASR image age OK: '$($latest.Name)' is $([math]::Round($ageDays,1)) days old."
-    return 0
-}
-
-# Example:
-# Test-RASRImageAge -SharePath "\\nas01\rasr-images\SERVER01" -MaxAgeDays 7
+┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   RASR — Automation Scripts                                   │   │
+│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │               cybersense scan                │  │             vault lock / unlock             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -207,47 +190,7 @@ function Remove-OldRASRImages {
 # Example:
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -RetentionCount 4
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -WhatIf
-```
 
-┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   RASR — Automation Scripts                                   │   │
-│   │                Scripts automate routine RASR operations — run via cron or CI/CD               │   │
-│   │               Always store credentials in vault (not in script); log all output               │   │
-│   │                 Test scripts in non-production before scheduling in production                │   │
-│   │                        Scope scripts to least-privilege service account                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
-│   │           Job success rate report            │  │            Auto-expire old points           │   │
-│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
-│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
-│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
-│   │               cybersense scan                │  │             vault lock / unlock             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
 ---
 

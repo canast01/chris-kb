@@ -66,30 +66,6 @@ CloudIQ portal > Settings > Notifications > Add Notification Rule
 │  Bi-directional = ServiceNow incident closure reflected back to CloudIQ alert state                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## REST API Access for Splunk / Grafana
-
-The CloudIQ REST API is used by Splunk Heavy Forwarders or Grafana data source plugins to pull fleet health and capacity data on a scheduled basis.
-
-```python
-# Example: fetch all systems and health scores
-import requests
-
-TOKEN_URL = "https://api.cloudiq.dell.com/auth/oauth/v2/token"
-API_BASE  = "https://api.cloudiq.dell.com/cloudiq/rest/v1"
-
-def get_token(client_id, client_secret):
-    resp = requests.post(TOKEN_URL, data={
-        "grant_type": "client_credentials",
-        "client_id": client_id,
-        "client_secret": client_secret
-    })
-    return resp.json()["access_token"]
-
-def list_systems(token):
-    headers = {"Authorization": f"Bearer {token}"}
-    resp = requests.get(f"{API_BASE}/systems", headers=headers)
-    return resp.json()["results"]
 ```
 
 ## Aria Operations Integration

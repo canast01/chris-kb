@@ -42,19 +42,6 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   │    State corruption = most common: concurrent apply or force-unlock; check integrity first    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## State Recovery After Corruption
-
-```bash
-# Check state is parseable
-terraform show
-
-# If corrupt, restore from backup
-terraform state push terraform.tfstate.bak-<timestamp>
-
-# Reconcile drift after restore
-terraform plan
-terraform apply -target=<drifted-resource>
 ```
 
 ## Checklist Before Destructive Operations

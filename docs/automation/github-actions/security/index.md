@@ -6,7 +6,7 @@
 GitHub Actions — Security reference.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── GitHub Actions — Security ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  GitHub Actions security: prevent secret exposure, supply chain attacks, privilege escalation │   │

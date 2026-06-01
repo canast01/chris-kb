@@ -5,13 +5,15 @@
 FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 </div>
 
-```text
 FlashArray Day-to-Day Operations Flow
+```
+```
 ┌───────────────────────────────────────────────────────┐
 │  Pure1 Cloud                                          │
 │  ├── Fleet health dashboard + AI anomaly alerts       │
 │  └── Capacity forecasting + upgrade scheduling        │
 └───────────────────────┬───────────────────────────────┘
+```
                         │  phone-home telemetry
 ┌───────────────────────▼───────────────────────────────┐
 │  FlashArray (Purity GUI / CLI / REST)                 │
@@ -21,7 +23,6 @@ FlashArray Day-to-Day Operations Flow
 │  ├── purepod list    ─── ActiveCluster pod status     │
 │  └── purepgroup list ─── snapshot + replication sched │
 └───────────────────────────────────────────────────────┘
-```
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

@@ -76,18 +76,6 @@ graph TD
 │  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Object | Description | Storage Key |
-|--------|-------------|-------------|
-| **blob** | Raw file content; no filename or path | `SHA1(content)` |
-| **tree** | Directory listing — maps names to blob/tree SHAs and modes | `SHA1(tree_data)` |
-| **commit** | Points to a tree; records author, committer, message, parent commits | `SHA1(commit_data)` |
-| **tag** | Annotated reference to another object; stores tagger and message | `SHA1(tag_data)` |
-
-```bash
-git cat-file -t <sha>     # print type
-git cat-file -p <sha>     # pretty-print content
-git ls-tree -r --name-only HEAD
 ```
 
 ---

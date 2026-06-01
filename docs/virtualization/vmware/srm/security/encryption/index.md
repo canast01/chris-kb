@@ -5,8 +5,8 @@
 Encryption reference covering Encryption at Recovery Site, Certificate Management for SRM Server, SRA Credential Storage Encryption, FIPS Mode.
 </div>
 
-```text
   TLS Encryption Coverage
+```
 ┌───────────────────────────────────────────────────────────────┐
 │  Traffic Path                        Encryption               │
 │  ┌──────────────────────────────────────────────────────┐     │
@@ -69,40 +69,6 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 │  Re-pair       = after cert replacement; required for site pair trust                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Enable encryption for VMs replicating over untrusted WAN links. For on-premises replication over private LAN, rely on network-level security instead.
-
----
-
-## Encryption at Recovery Site
-
-When VMs fail over to the recovery site, they inherit the storage encryption state from the source:
-
-- **vSAN encrypted at source → recovered VMs on encrypted vSAN at recovery:** encrypted throughout
-- **vSAN encrypted at source → recovered VMs on unencrypted datastore at recovery:** data is unencrypted at recovery — apply an encrypted storage policy at recovery site
-- **vSphere VM Encryption:** VM encryption keys are managed by vCenter KMS — if the KMS is unavailable at recovery site, encrypted VMs cannot start. Always include KMS in DR plan or use a shared KMS accessible from both sites.
-
----
-
-## Certificate Management for SRM Server
-
-SRM Server uses an SSL certificate for HTTPS access (port 443) and inter-site communication (port 9086).
-
-### Replace Certificate (Windows SRM)
-
-```powershell
-# Import new cert to Windows Certificate Store
-Import-PfxCertificate -FilePath srm-server.pfx `
-  -CertStoreLocation Cert:\LocalMachine\My `
-  -Password (ConvertTo-SecureString "pfxpassword" -AsPlainText -Force)
-
-# Get thumbprint of new cert
-$cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -match "srm-protected" }
-$cert.Thumbprint
-
-# Configure SRM to use new cert via SRM admin interface:
-# https://srm-protected.example.local:9086/admin → Certificate → Replace
-# Or re-run SRM installer → Modify → update certificate
 ```
 
 After replacing the SRM Server cert, update the thumbprint at the remote site:

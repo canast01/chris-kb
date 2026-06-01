@@ -47,13 +47,6 @@ graph TD
 │   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## .env Files with python-dotenv
-
-Use `.env` files for local development. Never commit `.env` to version control.
-
-```bash
-pip install python-dotenv
 ```
 
 ```python

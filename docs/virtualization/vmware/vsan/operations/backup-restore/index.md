@@ -84,31 +84,6 @@ BACKUP FLOW — vSAN VM TO TARGET
 │  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Layer | Provided by | Purpose |
-|---|---|---|
-| Storage resiliency | vSAN FTT policy | Survive hardware failure without data loss |
-| Backup | External tool (Veeam, Commvault, VADP) | Recover from logical corruption, deletion, ransomware |
-| DR / site failover | Stretched cluster or vSAN HCI Mesh | Survive site-level failure |
-| Snapshot | vSphere snapshot (short-term only) | Short-term rollback — not a backup |
-
----
-
-## Supported Backup Methods
-
-### VMware vStorage APIs for Data Protection (VADP)
-
-VADP is the standard VMware API used by all major backup products. It enables changed block tracking (CBT), quiesced snapshots, and LAN-free backup via NBD or SAN transport.
-
-- vSAN-backed VMs are fully compatible with VADP.
-- VADP backups use a vSphere snapshot to quiesce the VM, then read changed blocks via CBT.
-- CBT must be enabled on VMs for incremental backups — it is enabled by default on modern hardware versions.
-
-**Verify CBT is enabled on a VM:**
-
-```bash
-# From PowerCLI
-Get-VM <vmname> | Get-View | Select -ExpandProperty Config | Select -ExpandProperty ChangeTrackingEnabled
 ```
 
 **Reset CBT if incremental backups are failing:**

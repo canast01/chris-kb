@@ -67,25 +67,6 @@ Administration → SSL → Import Certificate → paste root CA PEM
 │  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Settings:
-- Domain: `corp.local`
-- Primary domain controller: `dc01.example.local:636`
-- Secondary domain controller: `dc02.example.local:636` (optional, for HA)
-- Use SSL: **Yes**
-- Bind DN: `CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local`
-- Bind password: service account password
-
-Test the connection before saving — Aria Ops for Logs performs a test LDAP bind and group search.
-
----
-
-## Workspace ONE Access (VIDM) Integration
-
-When deployed via LCM, VIDM is available as an SSO provider. For standalone deployments, configure VIDM integration manually:
-
-```text
-Administration → Authentication → VMware Identity Manager
 ```
 
 - VMware Identity Manager FQDN: `vidm.example.local`

@@ -49,15 +49,6 @@ provider "aws" {
 │   │  Vault provider= reads secrets from Vault at apply time; writes dynamic credentials to state  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# GitHub Actions OIDC for Azure
-# Requires federated credential on the app registration:
-# Entity: GitHub Actions deployment → repo:my-org/infra:ref:refs/heads/main
-export ARM_USE_OIDC=true
-export ARM_CLIENT_ID="..."
-export ARM_TENANT_ID="..."
-export ARM_SUBSCRIPTION_ID="..."
 ```
 
 ---

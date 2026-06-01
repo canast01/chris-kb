@@ -98,45 +98,6 @@ Administration → User Management → User Directories → Add Directory → Mi
 │  Assertion    = SAML XML signed by IdP; contains user attributes and groups                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Synchronisation and Failover
-
-- Configure a secondary LDAP server for resilience.
-- Set synchronisation interval to 60 minutes (reduce load on DC).
-- Enable incremental sync using `uSNChanged` attribute for large directories.
-
----
-
-## SAML 2.0 Single Sign-On
-
-### Jira Data Center SAML Configuration
-
-Administration → User Management → SAML 2.0 Single Sign-On
-
-| Field | Value |
-|---|---|
-| IdP Entity ID | From IdP metadata (e.g., `https://sts.windows.net/{tenant-id}/`) |
-| IdP SSO URL | `https://login.microsoftonline.com/{tenant-id}/saml2` |
-| IdP certificate | X.509 certificate from IdP metadata |
-| Attribute for username | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` |
-| SP Entity ID | `https://jira.corp.example.com` |
-| Assertion Consumer Service URL | `https://jira.corp.example.com/plugins/servlet/saml/auth` |
-
-### Azure AD (Entra ID) Enterprise Application Setup
-
-```yaml
-1. Azure Portal → Enterprise Applications → New Application → Jira SAML SSO
-2. Single sign-on → SAML
-3. Basic SAML Configuration:
-   - Identifier (Entity ID): https://jira.corp.example.com
-   - Reply URL: https://jira.corp.example.com/plugins/servlet/saml/auth
-   - Sign on URL: https://jira.corp.example.com
-4. Attributes & Claims:
-   - name: user.mail  (maps to Jira username)
-   - displayName: user.displayname
-   - groups: user.groups  (map to Jira groups)
-5. Download Federation Metadata XML
-6. Upload to Jira SAML configuration
 ```
 
 ### Enforcing SSO (Data Center)

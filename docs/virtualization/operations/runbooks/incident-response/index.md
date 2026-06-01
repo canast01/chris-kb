@@ -5,7 +5,7 @@
 Incident Response Runbook reference covering Steps, Evidence to Capture.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Incident Response Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for any active VMware platform issue; follow phases in order                                   │
@@ -33,47 +33,6 @@ Incident Response Runbook reference covering Steps, Evidence to Capture.
 │    Post-mortem = Written RCA document; timeline, root cause, and preventive actions                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-Use this when there is an active VMware platform issue.
-
-```text
-Incident Triage Flow
-═══════════════════════════════════════════════════════════
-
-  DETECT
-  ├─ Alert fired / user report / monitoring alarm
-  └─ Confirm issue is real ──► open incident ticket
-           │
-           ▼
-  ASSESS
-  ├─ Define scope: VM · host · cluster · full platform?
-  ├─ Identify impacted services and users
-  └─ Set severity P1 / P2 / P3
-           │
-           ▼
-  CONTAIN
-  ├─ Prevent further spread (isolate host, disable change)
-  ├─ Confirm HA has restarted critical VMs
-  └─ Communicate status to stakeholders
-           │
-           ▼
-  FIX
-  ├─ vCenter available? ──► check alarms, events, tasks
-  ├─ Host issue?         ──► ping, SSH, vpxa, hostd
-  ├─ Storage issue?      ──► paths, vSAN health, APD/PDL
-  ├─ Network issue?      ──► uplinks, port groups, NSX
-  └─ Escalate to vendor if root cause unclear
-           │
-           ▼
-  VALIDATE
-  ├─ All hosts connected
-  ├─ VMs running
-  ├─ Monitoring clean
-  └─ Application owner confirms OK
-           │
-           ▼
-  DOCUMENT
-  └─ Timeline · evidence · resolution → close ticket → RCA
 ```
 
 ## Steps

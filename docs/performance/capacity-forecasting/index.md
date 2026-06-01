@@ -39,11 +39,6 @@ Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 │    Overcommit   = Allocating more vCPU/RAM than physical; acceptable with headroom tracking           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**ONTAP — volume capacity trend:**
-```bash
-volume show -fields size,used,percent-used
-# Track weekly: write to external metrics store or pull via REST API
 ```
 
 **Pure FlashArray:**

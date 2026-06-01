@@ -91,53 +91,6 @@ flowchart TD
 │  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Step 2 — ServiceNow Performs Upgrade
-
-- Instance enters maintenance mode (unavailable ~2–4 hours)
-- ServiceNow applies the upgrade, runs internal validation
-- Notification email sent on completion
-
-### Step 3 — Post-Upgrade Dev Validation
-
-Immediately after upgrade completes:
-
-1. Log in; confirm no homepage errors
-2. Navigate to `stats.do` — review for memory or thread alerts
-3. Execute ATF test suite:
-   ```bash
-   snc atf run --suite "Core Regression Suite" --profile dev
-   ```
-4. Fix any ATF failures before proceeding to UAT upgrade
-
-### Step 4 — UAT Upgrade
-
-Repeat Steps 1–3 for the UAT instance. UAT upgrade should follow Dev upgrade by at least 1 week to allow developer fixes.
-
-### Step 5 — Production Upgrade
-
-After UAT sign-off:
-
-1. Raise production upgrade request on HI portal (minimum 5 business days lead time)
-2. Confirm change window with ServiceNow (they will confirm exact start time)
-3. Keep on-call team available throughout the window
-4. Follow post-upgrade validation checklist (below)
-
----
-
-## Plugin Management
-
-Plugins extend ServiceNow functionality. They are managed separately from the platform upgrade.
-
-### Checking Plugin Status
-
-Navigate to: **System Definitions > Plugins**
-
-```bash
-# List installed plugins via API
-curl -s -u "$SN_USER:$SN_PASS" \
-  "$INSTANCE/api/now/table/v_plugin?sysparm_query=active=true&sysparm_fields=name,id,version&sysparm_limit=200" \
-  -H "Accept: application/json" | jq '.result[] | {id, name, version}'
 ```
 
 ### Upgrading Plugins

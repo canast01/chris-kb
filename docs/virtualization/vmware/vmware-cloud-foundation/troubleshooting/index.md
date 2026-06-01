@@ -4,7 +4,7 @@
 Troubleshooting reference for VMware Cloud Foundation. Covers common SDDC Manager and LCM failure patterns, workload domain issues, diagnostic commands, log collection, and escalation procedures.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── VCF — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

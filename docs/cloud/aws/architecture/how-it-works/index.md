@@ -73,17 +73,6 @@ graph TB
 │  Log archive    = Dedicated account receiving all central logs; immutable S3 bucket                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## IAM Structure
-
-```text
-AWS Organizations SCPs (deny dangerous actions globally)
-    │
-IAM Identity Center (SSO — maps AD groups to permission sets)
-    │
-IAM Roles (assumed by EC2, Lambda, ECS, CI/CD via OIDC)
-    │
-No long-lived IAM user access keys in production
 ```
 
 - **Humans**: IAM Identity Center — no direct IAM users in member accounts

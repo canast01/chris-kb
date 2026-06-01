@@ -72,24 +72,6 @@ Host github.com gitlab.corp.example.com
 │  No --insecure= never disable TLS cert verification; risk of MITM attack                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### HTTPS/TLS Transport
-
-When SSH is not available, HTTPS must be enforced — plain HTTP must never be used.
-
-```bash
-# Force HTTPS instead of HTTP globally
-git config --global url."https://".insteadOf "http://"
-
-# Force SSH instead of HTTPS for GitHub
-git config --global url."git@github.com:".insteadOf "https://github.com/"
-
-# Verify TLS certificate validation is enabled (should be true by default)
-git config --global http.sslVerify
-# Returns: true (or empty — also means true)
-
-# Never disable TLS verification in production
-# BAD: git config --global http.sslVerify false
 ```
 
 **TLS version enforcement** (server-side, nginx/Apache reverse proxy in front of GitLab):

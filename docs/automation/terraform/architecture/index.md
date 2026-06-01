@@ -4,7 +4,7 @@
 Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary drives init/plan/apply/destroy workflow; remote state backend with locking prevents concurrent mutations; modules package reusable infrastructure components.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Terraform — Architecture ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Terraform architecture: CLI + core + provider plugins + remote state backend + target API   │   │

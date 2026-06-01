@@ -5,8 +5,8 @@
 LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Service Account Bind Configuration, Anonymous Bind Risks and 1 more sections.
 </div>
 
-```text
         LDAP BIND TYPES
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  ANONYMOUS BIND                                              │
 │  ldapsearch -x -H ldap://dc01 -b "DC=corp,DC=local" ...     │

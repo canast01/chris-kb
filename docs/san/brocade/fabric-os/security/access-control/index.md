@@ -75,57 +75,6 @@ graph TB
 │  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Role Assignment Standards
-
-| Team | Assigned Role | Justification |
-|---|---|---|
-| SAN engineering | `switchadmin` | Full switch operations excluding security config |
-| Zone management team | `zoneadmin` | Zone changes without access to switch config |
-| NOC / monitoring | `operator` | Read-only access for monitoring and triage |
-| Security engineering | `securityadmin` | Certificate and policy management only |
-| Break-glass (vault) | `admin` | Emergency full access — restricted to vault retrieval |
-
----
-
-## IPfilter Policy
-
-IPfilter restricts which source IP addresses or subnets can reach the switch management plane. This is the primary network-layer control for management access — even if an attacker has valid credentials, they cannot connect from an unauthorised source IP.
-
-### Create and Apply an IPfilter Policy
-
-```bash
-# Create a new IPv4 IPfilter policy
-ipfilter --create san_mgmt_policy -type ipv4
-
-# Allow SSH from management subnet
-ipfilter --addrule san_mgmt_policy \
-  -sip 10.10.100.0/24 -dp 22 -proto tcp -act permit
-
-# Allow HTTPS from management subnet
-ipfilter --addrule san_mgmt_policy \
-  -sip 10.10.100.0/24 -dp 443 -proto tcp -act permit
-
-# Allow SNMP v3 from monitoring server only
-ipfilter --addrule san_mgmt_policy \
-  -sip 10.10.50.10/32 -dp 161 -proto udp -act permit
-
-# Allow SNMP traps (outbound — no inbound rule needed)
-
-# Allow NTP (switch initiates to NTP server — no inbound rule needed)
-
-# Default-deny all other inbound traffic
-ipfilter --addrule san_mgmt_policy \
-  -sip 0.0.0.0/0 -dp 0 -proto any -act deny
-
-# Save the policy (writes to persistent storage)
-ipfilter --save san_mgmt_policy
-
-# Activate the policy (takes effect immediately — verify SSH access before activating)
-ipfilter --activate san_mgmt_policy
-
-# Verify the active policy
-ipfilter --show san_mgmt_policy
 ```
 
 > **Warning:** Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.

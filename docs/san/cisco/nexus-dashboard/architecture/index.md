@@ -4,7 +4,7 @@
 Cisco Nexus Dashboard is an app-hosting platform for Cisco data centre management. A 3-node or 5-node cluster provides shared identity, multi-site connectivity, and API gateway. NDFC (SAN/LAN), NDI (Insights), and NDO (Orchestrator) run as hosted applications on the cluster.
 </div>
 
-```text
+```
 ┌──────────────────────────── Cisco Nexus Dashboard — Architecture Overview ────────────────────────────┐
 │                                                                                                       │
 │  Clustered platform hosting NDFC, NDI, and NDO as microservice apps on Kubernetes.                    │

@@ -5,22 +5,26 @@
 Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
 </div>
 
-```text
 VCF Upgrade Flow — SDDC Manager Orchestration
+```
 ┌─────────────────────────────────────────────────────┐
 │  Step 1: Bundle Acquisition                         │
 │  depot.vmware.com ──► SDDC Manager bundle store     │
 │  (or offline: .tar file ► local depot)              │
 └──────────────────────────┬──────────────────────────┘
+```
                            │
                            ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Step 2: Pre-Check (SDDC Manager validates)         │
 │  DNS ✔  NTP ✔  Certs ✔  vSAN health ✔               │
 │  Password rotation ✔  HCL ✔  Disk space ✔           │
 └──────────────────────────┬──────────────────────────┘
+```
                            │ all checks pass
                            ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Step 3: Upgrade Sequence (BOM order, no skipping)  │
 │                                                     │
@@ -38,8 +42,11 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │         ▼                                           │
 │  ⑤ vSAN firmware/driver (HCL-validated)             │
 └──────────────────────────┬──────────────────────────┘
+```
                            │
                            ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Step 4: Post-Upgrade Validation                    │
 │  All domains green · services healthy · no alarms   │
@@ -90,75 +97,6 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  Depot         = VMware online update repository; SDDC Mgr downloads from                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Bundles are downloaded automatically on a configured schedule or manually triggered.
-
-## Async Patches
-
-Async patches allow individual component updates (e.g., ESXi security patch) between full VCF releases.
-
-- Must be validated against the VCF compatibility matrix before application
-- Apply via SDDC Manager: Lifecycle Management → Async Patches
-- Test in non-production domain first
-
-### Rolling Back
-
-VCF does not support direct rollback of component upgrades. Recovery options:
-
-| Component | Rollback Method |
-|---|---|
-| SDDC Manager | Restore from backup (separate SDDC Manager appliance) |
-| vCenter | File-Based Restore to pre-upgrade backup |
-| ESXi | Boot from previous bootbank: `esxcli system settings advanced set -o /UserVars.ESXiShellInteractiveTimeOut -i 0` then rollback VIB |
-| NSX-T | Restore NSX Manager from backup |
-
-Plan rollback paths before starting any upgrade.
-
----
-
-## Upgrade Readiness
-
-Before initiating any VMware Cloud Foundation upgrade, run through this pre-upgrade checklist in full. SDDC Manager will perform its own pre-checks but environmental issues outside its scope must be validated manually.
-
-### Pre-Upgrade Checklist
-
-Work through all items before opening the upgrade wizard in SDDC Manager:
-
-| Check | Command / Location | Pass Criteria |
-|---|---|---|
-| SDDC Manager health | SDDC Manager UI > Dashboard | All domains green |
-| vCenter health | `vSphere Client > Health` | No critical alarms |
-| NSX health | NSX Manager > System > Overview | All components up |
-| ESXi host health | `esxcli system healthcheck` | No critical hardware alarms |
-| Disk space on management VMs | `df -h` on each appliance | < 70% on all mounts |
-| NTP sync across all components | `chronyc tracking` | Offset < 5 seconds |
-| Snapshot inventory | SDDC Manager UI | No stale snapshots older than 72h |
-| Bundle download complete | SDDC Manager > Lifecycle > Bundle Management | Status: Available |
-
-### Bundle Download and Validation
-
-```bash
-# SSH into SDDC Manager
-ssh vcf@<sddc-manager-fqdn>
-
-# Check available and downloaded bundles
-curl -sk -u admin:<password> \
-  https://localhost/v1/bundles \
-  | python3 -m json.tool
-
-# Trigger bundle download from VMware depot
-curl -sk -X POST -u admin:<password> \
-  https://localhost/v1/bundles \
-  -H "Content-Type: application/json" \
-  -d '{"bundleType": "PATCH", "productType": "ESXI"}'
-
-# Check download status
-curl -sk -u admin:<password> \
-  https://localhost/v1/bundles/<bundle-id> \
-  | python3 -m json.tool | grep -E "status|downloadedSize|totalSize"
-
-# List available bundles on local depot
-ls -lh /nfs/vmware/vcf/nfs-mount/bundles/
 ```
 
 ### SDDC Manager Pre-Check Execution

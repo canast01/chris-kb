@@ -5,7 +5,7 @@
 Alert Health Check reference covering Active Alerts Review, Aria Operations Alerts, Hardware Alerts, Backup Alerts, Repeat Alerts and 2 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Alert Health Check — Review Flow ───────────────────────────────────┐
 │                                                                                                       │
 │    Review all active alerts every morning; triage by priority; assign or suppress                     │
@@ -34,34 +34,6 @@ Alert Health Check reference covering Active Alerts Review, Aria Operations Aler
 │    iDRAC         = Dell integrated remote access; hardware alerts: temp, disk, PSU                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Alert Review Flow
-═══════════════════════════════════════════════════════════
-
-  Alert Sources
-  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-  │   vCenter   │   │    Aria     │   │  Pure1 /    │
-  │   Alarms    │   │  Operations │   │   iDRAC     │
-  └──────┬──────┘   └──────┬──────┘   └──────┬──────┘
-         └─────────────────┼─────────────────┘
-                           ▼
-                  ┌─────────────────┐
-                  │ Priority Triage  │
-                  │                  │
-                  │  P1 Critical ──► Immediate action
-                  │  P2 Warning  ──► Assign owner
-                  │  P3 Info     ──► Log, review weekly
-                  └────────┬────────┘
-                           │
-              ┌────────────┼────────────┐
-              ▼            ▼            ▼
-       ┌──────────┐  ┌──────────┐  ┌──────────┐
-       │  Owner   │  │  False   │  │  Repeat  │
-       │ Assigned │  │ Positive │  │  Alert   │
-       │  + SLA   │  │ Suppress │  │  Tune or │
-       │ tracked  │  │ + reason │  │  fix perm│
-       └──────────┘  └──────────┘  └──────────┘
 ```
 
 ## Active Alerts Review

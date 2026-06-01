@@ -5,8 +5,8 @@
 Access Control reference covering Service Account for API Automation, Separation of Duties, Auditing Access.
 </div>
 
-```text
   LCM RBAC — AD Groups → LCM Roles
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  AD (via VIDM sync)          LCM Roles                          │
 │  ┌─────────────────────┐     ┌─────────────────────────────┐    │
@@ -68,39 +68,6 @@ Access Control reference covering Service Account for API Automation, Separation
 │  Audit Log           = LCM records all user actions and config changes                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-1. Select the role from the dropdown
-2. Click **Add Group** — search for the AD group synced via VIDM (e.g., `GG-LCM-Admins`)
-3. Save — the group is immediately assigned the role
-
-Remove a role assignment by selecting the row and clicking **Remove**.
-
-| AD Group | Assigned Role | Members |
-|---|---|---|
-| `GG-LCM-Admins` | LCM Admin | Platform team leads, on-call engineers |
-| `GG-LCM-Operators` | LCM Content Developer | Platform team engineers |
-| `GG-LCM-ReadOnly` | Viewer | Management, auditors, other teams |
-
----
-
-## Service Account for API Automation
-
-Create a dedicated local account for automation scripts — do not use `admin@local` for scripted access.
-
-```bash
-# Create a local API service account via LCM API (as admin)
-TOKEN=$(curl -sk -X POST "https://lcm-prod-01.example.local/lcm/authz/api/v2/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin@local","password":"<password>"}' | jq -r '.token')
-
-curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
-  -H "Content-Type: application/json" \
-  "https://lcm-prod-01.example.local/lcm/authz/api/v2/users" \
-  -d '{
-    "username": "svc-lcm-api@local",
-    "password": "<strong-password>",
-    "role": "LCM_CONTENT_DEVELOPER"
-  }'
 ```
 
 Assign the minimum role required for the automation task — use `LCM_CONTENT_DEVELOPER` for scripts that only query health; use `LCM_ADMIN` only for scripts that trigger upgrades or certificate replacements.

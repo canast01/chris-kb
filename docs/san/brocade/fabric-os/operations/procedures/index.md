@@ -76,25 +76,6 @@ flowchart TD
 │    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### View Current State
-
-```bash
-# Show active zone set and all member zones
-cfgshow
-
-# Show all defined aliases
-alishow
-
-# Show all defined zones
-zoneshow
-
-# Show zones for a specific alias
-zoneshow "esxi01_hba0"
-
-# Show name server — all logged-in devices in fabric
-nsshow
-nsallshow
 ```
 
 ### Create Aliases

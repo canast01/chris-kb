@@ -64,16 +64,6 @@ Symptom: Cluster shows Disconnected or Missing in InsightIQ
 │  Management report = Monthly PDF summary of performance trends for leadership review                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Capacity Review (Weekly)
-
-```text
-1. Dashboard > [Cluster] > Capacity
-2. Review used capacity trend over the last 30 days
-3. Calculate growth rate: (current used - 30 days ago used) / 30 days
-4. Project capacity exhaustion: days until 85% used
-5. Flag clusters with < 60 days to 85% threshold to capacity planning queue
-6. Include in weekly capacity report email
 ```
 
 ## Appliance Health Checks

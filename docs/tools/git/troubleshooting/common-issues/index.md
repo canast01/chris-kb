@@ -81,27 +81,6 @@ git mergetool
 │  cherry-pick     = apply specific commit to current branch; use to move work                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Fix Procedure
-
-```bash
-# 1. Edit each conflicted file — remove markers, keep correct content
-vim src/config.go
-
-# 2. Mark as resolved
-git add src/config.go
-
-# 3. Continue the merge
-git commit
-
-# --- OR --- abort and start over
-git merge --abort
-
-# For rebase conflicts:
-git rebase --abort      # abort
-# After fixing each file:
-git add <file>
-git rebase --continue
 ```
 
 ### Using `git rerere` to Remember Resolutions

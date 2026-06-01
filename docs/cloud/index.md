@@ -4,7 +4,7 @@
 Cloud infrastructure knowledge base covering AWS and Azure. Includes architecture, IAM, networking, compute, storage, monitoring, backup, security, governance, and cost management — with CLI references and operational procedures for both platforms.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Cloud Infrastructure ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

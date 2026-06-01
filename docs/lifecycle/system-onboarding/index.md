@@ -49,18 +49,6 @@ flowchart LR
 │    Vault entry   = Admin credentials stored in CyberArk/vault; no shared spreadsheet creds            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Windows Server
-
-```powershell
-Rename-Computer -NewName "<HOSTNAME>" -Restart:$false
-Add-Computer -DomainName "example.com" \
-  -Credential (Get-Credential) \
-  -OUPath "OU=Servers,DC=example,DC=com" -Restart
-
-New-NetIPAddress -InterfaceAlias "Ethernet0" -IPAddress "<ip>" -PrefixLength 24 -DefaultGateway "<gateway>"
-Set-DnsClientServerAddress -InterfaceAlias "Ethernet0" -ServerAddresses ("<dns1>","<dns2>")
-w32tm /config /manualpeerlist:"ntp1.example.com" /syncfromflags:manual /update
 ```
 
 ## 2. OS Hardening and Security Baseline

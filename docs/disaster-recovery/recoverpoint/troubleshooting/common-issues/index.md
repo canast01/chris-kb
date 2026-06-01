@@ -56,27 +56,6 @@ boxmgmt system status
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Resolution:**
-1. Identify which CG is generating excess writes
-2. Expand journal volume (can be done non-disruptively on most arrays)
-3. If link is down and journal is exhausted, a full resync may be required after link restoration
-4. Review if RPO target is realistic for the write rate
-
----
-
-## Splitter Communication Failure
-
-**Symptoms:** CG shows `Splitter connection problem`; writes may be blocked or split-brain situation.
-
-**PowerMax hardware splitter:**
-```bash
-# On PowerMax (via Solutions Enabler / SYMCLI)
-symrdf -sid <SID> list
-
-# Check splitter registration in RP
-boxmgmt splitter list
-boxmgmt splitter status <splitter-name>
 ```
 
 **RP4VM software splitter (ESXi):**

@@ -74,22 +74,6 @@ echo "Current lag: ${LAG} seconds"
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## DSE Health Check
-
-DSE (Delta Set Extension) is a spill device that absorbs write bursts when the in-memory delta set is full. A non-zero DSE utilization indicates write workload is exceeding baseline expectations.
-
-```bash
-# Check DSE device and utilization
-symcfg list -rdfg 20 -detail | grep -A5 "DSE"
-
-# Monitor DSE utilization over time
-symstat -rdf -g 20 -i 10 -c 6 | grep DSE
-
-# Check DSE device capacity
-symdev show <DSE_devnum> -v | grep -E "Capacity|Track"
 ```
 
 ---

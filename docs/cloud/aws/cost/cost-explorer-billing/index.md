@@ -5,7 +5,7 @@
 AWS Cost Explorer / Billing reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── AWS Cost — Cost Explorer Billing ───────────────────────────────────┐
 │                                                                                                       │
 │  Billing console: invoices, payment methods, tax settings, and consolidated billing.                  │
@@ -51,32 +51,6 @@ AWS Cost Explorer / Billing reference covering Overview, Where It Fits, Daily Ch
 │  Resource IDs    = CUR option adding AWS resource ARN to each billing line item                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Cost Explorer Billing: Account → Breakdown → Report
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  AWS Account (or Management Account)                 │
-  │  Billing period: monthly                             │
-  └──────────────────────────┬───────────────────────────┘
-                             │
-                ┌────────────┼───────────────────┐
-                ▼            ▼                   ▼
-  ┌─────────────────┐ ┌─────────────────┐ ┌──────────────┐
-  │  By Service     │ │  By Account     │ │  By Region   │
-  │  EC2: $X        │ │  Prod: $X       │ │  eu-west: $X │
-  │  RDS: $Y        │ │  Dev:  $Y       │ │  us-east: $Y │
-  │  S3:  $Z        │ │  Staging: $Z    │ │              │
-  └─────────────────┘ └─────────────────┘ └──────────────┘
-                             │
-                ┌────────────┼───────────────────┐
-                ▼            ▼                   ▼
-  ┌─────────────────┐ ┌─────────────────┐ ┌──────────────┐
-  │  By Tag         │ │  Forecast       │ │  RI / SP     │
-  │  env=prod       │ │  Next 30 days   │ │  Coverage    │
-  │  team=platform  │ │  trend line     │ │  Utilisation │
-  └─────────────────┘ └─────────────────┘ └──────────────┘
 ```
 
 ## Overview

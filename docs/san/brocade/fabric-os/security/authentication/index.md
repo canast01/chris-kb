@@ -72,35 +72,6 @@ flowchart TD
 │  Session timeout= idle session termination; Fabric OS default 30 minutes inactivity                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Role Mapping via RADIUS
-
-RADIUS users receive their FabricOS role from the RADIUS server via the VSA (Vendor-Specific Attribute) `Foundry-Privilege-Level` or a role-map configured on the switch.
-
-**Brocade VSA (Vendor ID 1588):**
-
-| Attribute | Value | FabricOS Role |
-|---|---|---|
-| Foundry-Privilege-Level | 2 | `admin` — full access |
-| Foundry-Privilege-Level | 3 | `switchadmin` — switch operations |
-| Foundry-Privilege-Level | 5 | `zoneadmin` — zone management only |
-| Foundry-Privilege-Level | 6 | `operator` — read-only |
-
-Configure the RADIUS server (Microsoft NPS / FreeRADIUS) to return the VSA based on Active Directory group membership:
-
-- AD Group: `SAN-Admins` → `Foundry-Privilege-Level = 2`
-- AD Group: `SAN-Operators` → `Foundry-Privilege-Level = 6`
-
-### Test RADIUS Authentication
-
-```bash
-# Validate RADIUS connection and user authentication
-aaaconfig --validate -user <test-username>
-# The switch connects to the RADIUS server and authenticates — output shows SUCCESS or failure reason
-
-# Show RADIUS server reachability (from switch)
-# The switch must have IP connectivity to the RADIUS server on the management VLAN
-ping <radius-server-ip>
 ```
 
 If RADIUS authentication fails, the fallback to `LOCAL` authentication ensures break-glass access remains available. Always test RADIUS before relying on it.

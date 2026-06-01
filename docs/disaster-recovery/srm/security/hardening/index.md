@@ -5,7 +5,7 @@
 Hardening reference covering Test Failover Network Isolation, Audit Logging.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────────── SRM — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -46,19 +46,6 @@ Hardening reference covering Test Failover Network Isolation, Audit Logging.
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Test Failover Network Isolation
-
-Recovery plan tests must never reach production networks. Enforce this:
-
-1. Create an isolated port group on the recovery site ESXi cluster: `vPG-SRM-Test-Bubble` (no uplinks)
-2. Configure network mapping in SRM: source production network → `vPG-SRM-Test-Bubble`
-3. Verify no routing exists from the test bubble to production VLANs
-4. If using NSX: create a dedicated overlay segment with no uplink for test failover
-
-```powershell
-# Verify test network mapping
-Get-SrmRecoveryPlan | Get-SrmNetworkMapping | Select Name, RecoveryNetwork
 ```
 
 ## Audit Logging

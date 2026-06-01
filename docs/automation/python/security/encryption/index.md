@@ -51,14 +51,6 @@ graph TD
 │   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Update the system CA bundle if API certs are self-signed
-sudo cp internal-ca.crt /usr/local/share/ca-certificates/
-sudo update-ca-certificates
-
-# Test connectivity with certificate verification
-openssl s_client -connect api.example.com:443 -CAfile /etc/ssl/certs/ca-certificates.crt
 ```
 
 ## Encrypting Local Files with cryptography

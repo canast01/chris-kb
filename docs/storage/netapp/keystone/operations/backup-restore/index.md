@@ -79,15 +79,6 @@ tar -tzf ks-config-<date>.tar.gz
 │    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## SnapMirror Relationship Export
-
-```bash
-# List all SnapMirror relationships
-snapmirror show -vserver <svm>
-
-# Export to file (run from ONTAP SSH session)
-snapmirror show -vserver <svm> > /tmp/snapmirror-$(date +%Y%m%d).txt
 ```
 
 ## Restore Keystone Collector Configuration

@@ -85,11 +85,6 @@ sequenceDiagram
 │    OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Verify the host sees the storage after zoning:**
-
-```bash
-zoneshow "esxi-host01_hba0-powermax01_fa0"
 ```
 
 ---

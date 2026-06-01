@@ -81,23 +81,6 @@ ssh-keygen -lf ~/.ssh/id_ed25519_git.pub
 │  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SSH Config for Multiple Identities
-
-```ini
-# ~/.ssh/config
-Host github.com
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_ed25519_git
-    IdentitiesOnly yes
-
-Host gitlab.corp.example.com
-    HostName gitlab.corp.example.com
-    User git
-    IdentityFile ~/.ssh/id_ed25519_corporate
-    IdentitiesOnly yes
-    Port 22
 ```
 
 `IdentitiesOnly yes` prevents SSH from trying all keys in the agent — critical when managing multiple identities.

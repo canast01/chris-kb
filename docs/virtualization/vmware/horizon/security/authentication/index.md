@@ -5,18 +5,7 @@
 Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurID), SAML Authentication (Workspace ONE / vIDM), Smart Card / Certificate Authentication, True SSO, Unauthenticated Access (Kiosk Mode) and 3 more sections.
 </div>
 
-```text
   Authentication Flow
-┌────────────┐    ┌──────────────┐    ┌─────────────────────────────┐
-│  User      │    │  Workspace   │    │  Connection Server          │
-│            │───►│  ONE / vIDM  │───►│  ┌─────────────────────┐    │
-│  1. Login  │    │  (SAML IdP)  │    │  │ AD Kerberos / NTLM  │    │
-│            │    │  ┌─────────┐ │    │  │ RADIUS (2FA)        │    │
-│            │    │  │ MFA /   │ │    │  │ Smart Card (PIV/CAC) │   │
-│            │    │  │ FIDO2 / │ │    │  └─────────────────────┘    │
-│            │    │  │ LDAP    │ │    │                             │
-│            │    │  └─────────┘ │    │  True SSO (cert issued)     │
-└────────────┘    └──────────────┘    │  ┌─────────────────────┐   │
                                       │  │ Enrollment Server   │   │
                                       │  │ → short-lived cert  │   │
                                       │  │ → Windows login     │   │
@@ -68,12 +57,6 @@ Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurI
 │  OTP           = One-Time Password; from hardware or soft token                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Configure AD domains in Horizon:
-```text
-Horizon Console → Settings → Servers → Domains
-  All trusted domains should appear automatically
-  If not: Add Domain → enter domain name and service account credentials
 ```
 
 ---

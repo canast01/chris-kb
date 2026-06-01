@@ -80,11 +80,6 @@
 │    Snapshot stun= Momentary IO pause during snapshot create/delete; worse with large VMs              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**ESXi CLI:**
-```bash
-vim-cmd vmsvc/getallvms | grep <vmname>
-vim-cmd vmsvc/snapshot.get <VMID>
 ```
 
 ## Step 2 — Create Snapshot

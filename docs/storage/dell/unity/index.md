@@ -4,7 +4,7 @@
 Mid-range unified storage — block (FC/iSCSI), file (NFS/SMB), and VMware integration with dual storage processor active-active architecture, FAST Cache, inline data reduction, and native replication.
 </div>
 
-```text
+```
 ┌─────────────────────────────── Dell Unity XT Unified Mid-Range Storage ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

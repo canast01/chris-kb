@@ -92,41 +92,6 @@ flowchart TD
 │  df -h          = disk usage; alert if JIRA_HOME volume exceeds 80% full                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Log Parsing Commands
-
-```bash
-# --- Error summary for today ---
-LOG=/opt/atlassian/jira/logs/atlassian-jira.log
-TODAY=$(date +%Y-%m-%d)
-
-grep "^${TODAY}" "${LOG}" | grep "ERROR" \
-  | sed 's/.*ERROR \[.*\] //' \
-  | sort | uniq -c | sort -rn | head -20
-
-# --- Extract unique error classes ---
-grep "^${TODAY}" "${LOG}" | grep "ERROR" \
-  | grep -oE '[A-Za-z]+Exception|[A-Za-z]+Error' \
-  | sort | uniq -c | sort -rn
-
-# --- Response time analysis from access log ---
-ACCESS_LOG=/opt/atlassian/jira/logs/localhost_access_log.$(date +%Y-%m-%d).txt
-awk '{print $NF}' "${ACCESS_LOG}" \
-  | awk '{sum+=$1; count++; if($1>3000) slow++} END {
-      printf "Total requests: %d\n", count;
-      printf "Avg response: %.0fms\n", sum/count;
-      printf "Requests > 3s: %d\n", slow
-    }'
-
-# --- Find slowest URLs ---
-awk '{print $NF, $7}' "${ACCESS_LOG}" \
-  | sort -rn | head -20
-
-# --- LDAP errors today ---
-grep "^${TODAY}" "${LOG}" | grep -i "ldap\|cwd" | grep -i "error\|warn"
-
-# --- Plugin errors today ---
-grep "^${TODAY}" "${LOG}" | grep -i "plugin\|addon" | grep -i "error"
 ```
 
 ---

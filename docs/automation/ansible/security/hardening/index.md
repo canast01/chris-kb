@@ -61,22 +61,6 @@ systemctl reload sshd
 │   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Known Hosts Management
-
-```bash
-# Pre-populate known_hosts — never use StrictHostKeyChecking=no
-ansible all -i inventory/ -m ansible.builtin.known_hosts \
-  -a "name={{ inventory_hostname }} key={{ lookup('pipe', 'ssh-keyscan -t ed25519 ' + inventory_hostname) }}"
-
-# Or populate via playbook before first run
-- name: Scan and register host keys
-  ansible.builtin.known_hosts:
-    name: "{{ item }}"
-    key: "{{ lookup('pipe', 'ssh-keyscan -t ed25519 ' + item) }}"
-    state: present
-  loop: "{{ groups['all'] }}"
-  delegate_to: localhost
 ```
 
 ## AWX / AAP Hardening

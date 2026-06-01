@@ -5,7 +5,7 @@
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Alert Policy Standards, Related Sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │  Node sizing, cluster topology, and policy design standards for Aria Operations (vROps).              │
@@ -49,43 +49,6 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 │  Adapter             = Collection plugin; connects vROps to a specific data source                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Aria Operations — Sizing and Deployment Reference
-┌─────────────────────────────────────────────────────┐
-│  Cluster Size Selection                             │
-│                                                     │
-│  Extra Small  Primary only    4 vCPU / 16 GB RAM    │
-│               up to 500 VMs                         │
-│                                                     │
-│  Small        Primary only    8 vCPU / 32 GB RAM    │
-│               up to 1,500 VMs                       │
-│                                                     │
-│  Medium       Primary         8 vCPU / 32 GB RAM    │
-│               + Replica       8 vCPU / 32 GB RAM    │
-│               up to 3,500 VMs                       │
-│                                                     │
-│  Large        Primary + Replica + 2 × Data          │
-│               up to 10,000 VMs                      │
-│                                                     │
-│  XL           Primary + Replica + 4+ × Data         │
-│               10,000+ VMs                           │
-└──────────────────────────┬──────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────┐
-│  Infrastructure Requirements                        │
-│  ┌─────────────────────────────────────────────┐    │
-│  │ DNS: A + PTR for every node                 │    │
-│  │ NTP: drift < 1 second across all nodes      │    │
-│  │ TLS: CA-signed cert (not self-signed)        │   │
-│  │ SMTP: relay configured for alert email       │   │
-│  │ LDAP/AD: bind account + group DNs ready     │    │
-│  └─────────────────────────────────────────────┘    │
-│                                                     │
-│  Remote Collector (per remote site):                │
-│  2 vCPU / 4 GB RAM · connects via 4505/4506         │
-└─────────────────────────────────────────────────────┘
 ```
 
 ## Naming Conventions

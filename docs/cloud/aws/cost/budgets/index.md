@@ -5,7 +5,7 @@
 AWS Budgets reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── AWS Cost — Budgets ──────────────────────────────────────────┐
 │                                                                                                       │
 │  AWS Budgets sets cost and usage thresholds with alerts and optional auto-actions.                    │
@@ -51,32 +51,6 @@ AWS Budgets reference covering Overview, Where It Fits, Daily Checks, Health Com
 │  Cost anomaly    = Separate service; detects unexpected spend spikes via ML                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-AWS Budgets: Alert Flow
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  Budget Definition                                   │
-  │  Type: Cost / Usage / RI / Savings Plans             │
-  │  Period: Monthly / Quarterly / Annual                │
-  │  Amount: $500 / month                                │
-  └───────────────────────┬──────────────────────────────┘
-                          │
-                          ▼
-  ┌──────────────────────────────────────────────────────┐
-  │  Threshold Alerts                                    │
-  │  80% of budget ─────────────────────► Alert 1       │
-  │  100% of budget ────────────────────► Alert 2       │
-  │  100% forecasted ───────────────────► Alert 3       │
-  └───────────────────────┬──────────────────────────────┘
-                          │
-                          ▼
-  ┌───────────────┐   ┌───────────────┐   ┌────────────────┐
-  │  SNS Topic    │   │  Email        │   │  Budget Action │
-  │  → Slack/     │   │  direct to    │   │  Apply SCP     │
-  │    PagerDuty  │   │  owner        │   │  Run SSM doc.  │
-  └───────────────┘   └───────────────┘   └────────────────┘
 ```
 
 ## Overview

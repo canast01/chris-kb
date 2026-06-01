@@ -119,42 +119,6 @@ graph TB
 │  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Database
-
-Jira requires a single shared relational database. Supported engines:
-
-| Engine | Supported Versions | Notes |
-|---|---|---|
-| PostgreSQL | 14, 15, 16 | Recommended for new deployments |
-| MySQL | 8.0 | Requires specific JDBC config |
-| Oracle | 19c | Supported, not recommended |
-| SQL Server | 2019, 2022 | Enterprise license required |
-
-### Search (OpenSearch / Elasticsearch)
-
-| Parameter | Value |
-|---|---|
-| Recommended version | OpenSearch 2.x / Elasticsearch 7.x |
-| Heap per node | 8–16 GB |
-| Minimum nodes | 3 (quorum) |
-| Replication factor | 1 |
-| Index rebuild trigger | Manual or after restore |
-
-### Shared Home (NFS / SMB)
-
-All nodes mount a shared file system at the Jira shared home path (`/var/atlassian/application-data/jira/shared`). This share contains attachments, avatars, logos, export files, and plugin data.
-
-```text
-/var/atlassian/application-data/jira/
-├── shared/               ← NFS/SMB mount (all nodes)
-│   ├── attachments/
-│   ├── avatars/
-│   ├── export/
-│   └── plugins/
-├── log/                  ← Node-local
-├── tmp/                  ← Node-local
-└── dbconfig.xml          ← Node-local (same content on each)
 ```
 
 NFS mount options:

@@ -55,19 +55,4 @@ flowchart TD
 │   │       Cause B: workflow file not on default branch → fix: merge to default branch first       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Caching and Stale State
-
-```yaml
-# Clear a cache by key via CLI
-gh cache delete --repo owner/repo "pip-cache-key-abc123"
-
-# List all caches
-gh cache list --repo owner/repo
-
-# Force cache miss by varying the key
-- uses: actions/cache@v4
-  with:
-    path: ~/.cache/pip
-    key: pip-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}-${{ github.run_id }}
 ```

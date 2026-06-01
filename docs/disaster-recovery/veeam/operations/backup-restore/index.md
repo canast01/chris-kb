@@ -68,12 +68,6 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**After stabilisation — migrate from backup to production:**
-
-```text
-Veeam Console → Home → Instant Recovery → select running recovery →
-  Migrate to Production → select datastore → Run migration
 ```
 
 This performs a Storage vMotion in the background. The VM remains live throughout.

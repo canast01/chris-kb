@@ -54,64 +54,6 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## DR Readiness Score
-
-The Eyeglass DR Readiness Score must be 100% before any scheduled failover test or before declaring DR capability for the environment.
-
-Score < 100% indicates one or more missing mappings or replication lag beyond threshold — investigate and resolve before proceeding with DR exercises.
-
-## Failover Test Frequency
-
-| Test Type | Minimum Frequency |
-|---|---|
-| DNS cutover test (non-disruptive) | Quarterly |
-| Share/quota validation on DR cluster (read-only check) | Monthly |
-| Full failover test (maintenance window, with data) | Annually |
-| Failback validation | After each full failover test |
-
-Document all failover test results in the change management system.
-
-## Operational Standards
-
-| Item | Standard |
-|---|---|
-| Eyeglass appliance backup | Daily configuration backup exported and stored off-appliance |
-| Monitoring | Eyeglass SNMP traps integrated with Aria Operations or equivalent |
-| Notifications | Email notifications active for DR team distribution list |
-| Service account rotation | Eyeglass service account credentials rotated every 90 days (coordinate with CyberArk policy) |
-| Post-change validation | Re-run Eyeglass readiness scan after any SyncIQ or PowerScale configuration change |
-
-## Policy Configuration
-
-An Eyeglass DR policy defines the mapping between a production PowerScale cluster and a DR cluster, including which access zones, SyncIQ policies, NFS exports, SMB shares, and DNS zones are part of the DR relationship. Policies are configured in the Eyeglass management UI or via `egcli`.
-
-| Policy Component | Description |
-|---|---|
-| Source cluster | Production PowerScale cluster |
-| Target cluster | DR PowerScale cluster |
-| Access zones | Which access zones are included in DR |
-| SyncIQ policy mapping | Which SyncIQ policies provide the replication |
-| DNS zones | SmartConnect zones managed as part of failover |
-| RPO target | Maximum acceptable replication lag |
-
-```mermaid
-flowchart TD
-    policy["Eyeglass DR Policy\nPOL-NAS-PROD"]
-    srcCluster["Source Cluster\nProduction PowerScale"]
-    tgtCluster["Target Cluster\nDR PowerScale"]
-    accessZones["Access Zones\nzone-finance / zone-home"]
-    synciqPolicies["SyncIQ Policies\npscale-dc1-pscale-dc2-finance\npscale-dc1-pscale-dc2-home"]
-    dnsZones["DNS Zones\nSmartConnect cutover zones"]
-    rpoTarget["RPO Target\n< 15 min (Tier 1)"]
-
-    policy --> srcCluster
-    policy --> tgtCluster
-    policy --> accessZones
-    policy --> synciqPolicies
-    policy --> dnsZones
-    policy --> rpoTarget
-    synciqPolicies -->|"replicates data\nto target"| tgtCluster
 ```
 
 ### Viewing Policies

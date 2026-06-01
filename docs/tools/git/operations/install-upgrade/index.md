@@ -69,20 +69,6 @@ sudo apt-get install --only-upgrade git
 │  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### macOS
-
-```bash
-# Homebrew (recommended)
-brew install git          # install
-brew upgrade git          # upgrade
-
-# Verify Homebrew git is on PATH ahead of Apple's git
-which git                 # should be /usr/local/bin/git or /opt/homebrew/bin/git
-git --version
-
-# Xcode Command Line Tools (Apple's version — usually older)
-xcode-select --install
 ```
 
 ### Windows

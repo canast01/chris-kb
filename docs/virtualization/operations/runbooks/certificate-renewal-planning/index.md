@@ -5,7 +5,7 @@
 VMware Certificate Renewal Runbook reference covering Identify the Expiring Certificate, Confirm Affected Products, Capture Current Certificate Details, Confirm Backup Exists, Schedule Maintenance Window and 4 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── VMware Certificate Renewal Runbook ──────────────────────────────────┐
 │                                                                                                       │
 │    Plan certificate renewals early; capture pre/post evidence; test all integrations                  │
@@ -34,43 +34,6 @@ VMware Certificate Renewal Runbook reference covering Identify the Expiring Cert
 │    Expiry buffer = Renew at 60 days remaining; 30 days = urgent; 0 days = service outage              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Identify the Expiring Certificate
-
-- Review certificate inventory
-- Confirm the certificate type: Machine SSL, STS, solution user, or integration endpoint
-- Note the affected product and expiration date
-
-## Confirm Affected Products
-
-- List all products that trust or use this certificate
-- Confirm which integrations may be disrupted during replacement
-
-## Capture Current Certificate Details
-
-- Subject, SAN, issuer, expiration date
-- Screenshot from VAMI or vSphere Client as pre-change evidence
-
-## Confirm Backup Exists
-
-- Confirm vCenter file-based backup is current
-- Confirm product backup for Aria or NSX if their certificate is being replaced
-
-## Schedule Maintenance Window
-
-- Plan replacement outside peak hours
-- Allow time for service restarts and integration validation
-
-## Replace the Certificate
-
-- Follow the correct replacement method for the certificate type
-- For VMCA-issued certs: use vSphere Client or VAMI
-- For custom CA certs: generate CSR, submit to CA, import signed cert
-
-## Restart Required Services
-
-```bash
-service-control --restart --all
 ```
 
 Only restart services after confirming the new certificate is applied.

@@ -5,7 +5,7 @@
 InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting reference covering CSV Export for Analysis, SLA Reporting, Common Report Issues.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── InsightIQ — Reports ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -35,21 +35,6 @@ InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting reference covering C
 │  CSV = Raw metric data for import into BI tools or spreadsheets                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## CSV Export for Analysis
-
-CSV exports are useful for importing into Excel, building Power BI dashboards, or correlating with application-level metrics.
-
-```bash
-# Download a CSV performance report from InsightIQ
-curl -sk -X GET \
-  "https://insightiq.example.com/api/json/v2/reports/<reportId>/export?format=csv" \
-  -u "admin:password" \
-  -o insightiq-performance.csv
-
-# Parse CSV to find peak throughput days
-awk -F',' 'NR>1 {print $1, $3+$4}' insightiq-performance.csv | sort -k2 -rn | head -10
 ```
 
 CSV column structure (performance reports):

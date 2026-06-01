@@ -5,8 +5,8 @@
 VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.
 </div>
 
-```text
 VxRail Upgrade Sequence
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 1: Plan          Phase 2: Pre-checks                 │
 │  ─────────────          ────────────────────                 │
@@ -16,13 +16,16 @@ VxRail Upgrade Sequence
 │  Bundle download    →   hardware (iDRAC)                    │
 │                         DNS · NTP · backups                  │
 └─────────────────────────────────────────────────────────────┘
+```
                     │
                     ▼
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 3–4: Bundle + Pre-check                              │
 │  Upload Composite Bundle → VxRail Manager validates         │
 │  Run LCM Pre-Check → all green before proceeding            │
 └──────────────────────────┬──────────────────────────────────┘
+```
                            │
           ┌────────────────▼──────────────────┐
           │  Phase 5: Node-by-Node Upgrade     │

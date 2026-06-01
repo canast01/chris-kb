@@ -56,33 +56,6 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 │   │   WinRM event log  = Event Viewer → Microsoft → Windows → WinRM for connection error details  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### 4. Environment Context
-
-Collect and attach:
-
-- [ ] Script name and version (check script header or git log)
-- [ ] Exact command line used to invoke the script
-- [ ] User/service account running the script (domain, local, managed service account)
-- [ ] Scheduled task definition (if applicable): `Export-ScheduledTask -TaskName 'MyTask' | Out-File task.xml`
-- [ ] Recent changes: deployments, patches, Group Policy updates, credential rotations
-- [ ] Network path to any resources the script accesses
-- [ ] WinRM connectivity test: `Test-WSMan -ComputerName <target>` (if remoting involved)
-- [ ] Relevant event log entries: `Get-EventLog -LogName Application -Source 'WidgetAutomation' -Newest 20 | Export-Csv events.csv`
-
-### 5. Ticket Template
-
-```text
-## Automation Failure Report
-
-**Script/Automation Name:**
-**Environment:** [Production / Staging / Dev]
-**Host(s) Affected:**
-**Service Account:**
-**Time of First Failure:**
-**Frequency:** [One-off / Intermittent / Consistent]
-
-**Error Message:**
 ```
 (paste $Error[0].Exception.Message here)
 ```text

@@ -5,7 +5,7 @@
 Dell AIOps: Actionable Recommendations and Implementation Tracking reference covering Implementing Recommendations, Implementation Tracking Dashboard, Firmware Recommendation Workflow, Common Recommendation Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Dell AIOps — Recommendations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -35,44 +35,6 @@ Dell AIOps: Actionable Recommendations and Implementation Tracking reference cov
 │  Weekly review = Dedicated recurring meeting to action or defer open recommendations                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Priority and effort matrix:
-
-| Priority | Effort | Action |
-|---|---|---|
-| HIGH | LOW | Implement immediately — high value, low risk |
-| HIGH | HIGH | Schedule in next change window |
-| MEDIUM | LOW | Batch into routine maintenance |
-| MEDIUM | HIGH | Evaluate carefully; may require planning |
-| LOW | LOW | Implement opportunistically |
-| LOW | HIGH | Defer unless other work requires it |
-
-## Implementing Recommendations
-
-Each recommendation includes a **Steps** tab with a numbered implementation procedure. For firmware updates, a link to the Dell EMC support portal download is included.
-
-```bash
-# Mark recommendation as in-progress
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/<recId>/start" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Scheduled for change window CR-2026-0512"}'
-
-# Mark recommendation as implemented
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/<recId>/implement" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"comment": "Applied firmware 5.3.1 — validated performance improvement"}'
-
-# Dismiss recommendation (not applicable)
-curl -sk -X POST \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/aiops/recommendations/<recId>/dismiss" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Content-Type: application/json" \
-  -d '{"reason": "NOT_APPLICABLE", "comment": "System decommissioning in 60 days"}'
 ```
 
 ## Implementation Tracking Dashboard

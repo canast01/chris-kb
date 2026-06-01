@@ -4,7 +4,7 @@
 Pure Storage knowledge base covering FlashArray and FlashBlade — including ActiveDR, ActiveCluster, Evergreen, and Pure1. Includes architecture references, operational procedures, CLI commands, replication, and troubleshooting guides.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Pure Storage Stack ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -90,40 +90,6 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Operations on Storage Groups (CG-based)
-
-SRDF/A operations are performed on Composite Groups (CG) or Storage Groups (SG). Using `-cg` is recommended for SRDF/A to ensure consistency across all devices.
-
-```bash
-# Suspend SRDF/A (pause replication — hold at DR site)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod suspend
-
-# Resume SRDF/A after suspend
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod resume
-
-# Update (force a manual sync cycle)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod update
-
-# Failover — activate R2 devices for production use at DR site
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failover
-
-# Failover without establishing reverse replication
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failover -nop
-
-# Failback — return to normal after failover (resync R2 to R1)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failback
-
-# Establish / re-establish SRDF/A pair (from scratch or after failover)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod establish
-
-# Split (break mirror, R1 and R2 both R/W — for maintenance)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod split
-
-# Swap personalities (R1 becomes R2, DR site becomes source)
-symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod swap
 ```
 
 ---

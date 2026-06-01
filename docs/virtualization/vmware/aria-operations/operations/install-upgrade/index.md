@@ -5,8 +5,8 @@
 Install & Upgrade reference covering Interoperability Matrix, EOL Tracking, Pre-Upgrade Checklist, Post-Upgrade Validation, Related Sections.
 </div>
 
-```text
 Aria Operations — Upgrade Paths
+```
 ┌─────────────────────────────────────────────────────┐
 │  Option A: Aria Suite Lifecycle (Recommended)       │
 │                                                     │
@@ -19,8 +19,10 @@ Aria Operations — Upgrade Paths
 │    Data nodes → Replica → Primary                   │
 │    (primary always last)                            │
 └──────────────────────────┬──────────────────────────┘
+```
                            │ or
                            ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Option B: In-Product Upgrade (Standalone)          │
 │                                                     │
@@ -30,8 +32,11 @@ Aria Operations — Upgrade Paths
 │  Air-gap:                                           │
 │  vracli software-update install --file <pak>        │
 └──────────────────────────┬──────────────────────────┘
+```
                            │
                            ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Pre-Upgrade Gate (must pass before proceeding)     │
 │  ✔ All nodes Online (Admin → Cluster Management)    │
@@ -42,7 +47,6 @@ Aria Operations — Upgrade Paths
 │  ✔ Backup completed within last 24h                 │
 └─────────────────────────────────────────────────────┘
 ```
-```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  OVA/PAK deployment, node cluster setup, and upgrade for Aria Operations (vROps).                     │

@@ -134,19 +134,6 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events
 │  Tech-support   = Collected before any recovery action; preserves failure state                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### For NDI Anomaly or Telemetry Issues
-
-```bash
-# NDI logs
-kubectl logs -n ndi deployment/ndi-anomaly-engine --tail=500 > /tmp/ndi-anomaly.log
-kubectl logs -n ndi deployment/ndi-flow-collector --tail=500 > /tmp/ndi-collector.log
-
-# Elasticsearch health
-kubectl exec -n ndi deployment/ndi-elasticsearch -- \
-  curl -sk http://localhost:9200/_cluster/health?pretty > /tmp/ndi-es-health.txt
-
-# Include: NDI version, affected site/fabric, time range of missing data
 ```
 
 ### For Cluster Formation or etcd Issues

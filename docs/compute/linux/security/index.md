@@ -6,7 +6,7 @@
 Linux — Security reference.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Linux — Security Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │  Linux security spans access control, authentication, encryption, and system hardening.               │

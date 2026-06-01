@@ -5,7 +5,7 @@
 Aria Operations Standards reference covering Alert Naming Convention, Alert Policy Hierarchy, Super Metric Standards, Dashboard Naming Convention, Custom Group Naming and 2 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Aria Operations — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │

@@ -65,10 +65,6 @@ Example: 99.9% SLO for 30 days
 │    Rolling window= SLO measured over last 30 days; older incidents age out of calculation             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Latency P99:**
-```promql
-histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))
 ```
 
 **Azure Monitor — availability metric:**

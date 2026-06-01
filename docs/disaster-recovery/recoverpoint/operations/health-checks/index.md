@@ -99,18 +99,6 @@ cluster quorum check
 │    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## RPO Compliance Check
-
-```bash
-# Check per-CG RPO against current lag (SSH)
-group status --gname <cg_name>
-
-# Expected output fields:
-#   Replication state:  ACTIVE
-#   Current lag:        3s
-#   Configured RPO:     300s
-#   Compliant:          YES
 ```
 
 | RPO Tier | Target | Alert Threshold |

@@ -67,22 +67,6 @@ curl -sf http://localhost:<port>/health
 │    Time overrun= Execution exceeds approved window; decision: extend (if safe) or rollback            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Phase 3 — Validation
-
-```bash
-# Service health
-systemctl status <service>
-curl -sf http://localhost:<port>/health && echo "OK"
-
-# No new errors since restart
-journalctl -u <service> --since "5 minutes ago" | grep -iE "error|critical|fail"
-
-# Key process running
-pgrep -a <process>
-
-# Functional smoke test
-curl -o /dev/null -sw "%{http_code}" https://<endpoint>/api/status
 ```
 
 ## Phase 4 — Monitoring Soak

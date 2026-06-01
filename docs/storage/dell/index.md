@@ -4,7 +4,7 @@
 Dell enterprise storage portfolio — block, file, object, and data protection platforms. Coverage includes architecture, provisioning, multipathing, replication, and operational procedures for each product.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Dell Storage Portfolio ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

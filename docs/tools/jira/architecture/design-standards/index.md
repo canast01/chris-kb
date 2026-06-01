@@ -78,61 +78,6 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 │  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Issue Type | When to Use | Hierarchy Level |
-|---|---|---|
-| **Epic** | Large body of work, multiple sprints | Top |
-| **Story** | User-facing feature or requirement | Mid |
-| **Task** | Technical work item, no direct user value | Mid |
-| **Bug** | Defect requiring a fix | Mid |
-| **Spike** | Research or proof-of-concept | Mid |
-| **Sub-task** | Decomposition of Story/Task/Bug | Bottom |
-
-### Operations / ITSM Issue Types
-
-For service desk / operations projects:
-
-| Issue Type | Description |
-|---|---|
-| **Incident** | Unplanned service disruption |
-| **Problem** | Root cause investigation following incident |
-| **Change Request** | Planned change to infrastructure/service |
-| **Service Request** | User request (access, provisioning) |
-| **Post-Mortem** | Structured review of incident |
-
-### Hierarchy Enforcement Rules
-
-- Epics may not be children of other Epics
-- Sub-tasks may not be children of Sub-tasks
-- Bugs may link to Epics via the **Epic Link** or **Parent** field but are not required to
-- Spikes always have a fixed **Story Points** cap (e.g., max 3 points) to enforce timeboxing
-
----
-
-## Workflow State Standards
-
-### Software Project Workflow
-
-All software projects use a shared **Software Standard Workflow**:
-
-```mermaid
-stateDiagram-v2
-    [*] --> Backlog
-    Backlog --> ToDoSprint : Sprint Planning
-    ToDoSprint --> InProgress : Start work
-    InProgress --> InReview : Submit for review
-    InReview --> InProgress : Review rejected
-    InReview --> QA : Review approved
-    QA --> InProgress : QA failed
-    QA --> Done : QA passed
-    InProgress --> Blocked : Blocked
-    Blocked --> InProgress : Unblocked
-    Done --> [*]
-
-    ToDoSprint: To Do (Sprint)
-    InProgress: In Progress
-    InReview: In Review
-    QA: QA / Testing
 ```
 
 | Status | Category | Description |

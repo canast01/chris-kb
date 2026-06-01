@@ -70,25 +70,6 @@ Data volume:      <GB / TB>
 │    Quiesce source = Stop writes to source for delta sync; creates RPO = zero at cutover               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Phase 2 — Pre-Migration Preparation
-
-```bash
-# 1. Take backup immediately before migration
-Start-VBRJob -Job "Production VMs"
-
-# 2. Take VM snapshot
-New-Snapshot -VM "HOSTNAME" \
-  -Name "pre-migration-$(Get-Date -Format yyyyMMdd)" \
-  -Quiesce -Memory:$false
-
-# 3. Document current state
-uname -a; hostname -f; ip addr; ip route
-df -h; systemctl list-units --state=running --type=service
-rpm -qa | sort > /tmp/pre-migration-packages.txt
-
-# 4. Lower DNS TTL to 60s (24h before migration)
-# Allows fast DNS cutover with minimal propagation delay
 ```
 
 ## Phase 3 — Data Synchronisation

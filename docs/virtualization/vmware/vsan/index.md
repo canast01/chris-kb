@@ -8,7 +8,7 @@ title: vSAN
 Technical and operational reference for VMware vSAN. Covers storage policies, disk groups, capacity management, resync operations, health monitoring, and troubleshooting for software-defined storage in vSphere clusters.
 </div>
 
-```text
+```
 ┌───────────────────────────────── vSAN Software-Defined Storage Stack ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

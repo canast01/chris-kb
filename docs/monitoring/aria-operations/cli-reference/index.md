@@ -65,20 +65,6 @@ tail -f /data/vcops/log/collector.log
 │  proxy set         = Configures HTTP proxy for Aria Ops outbound internet connectivity                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Resources & Inventory
-
-```bash
-# List all resources
-curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/resources?pageSize=1000"   -H "Authorization: OpsToken <token>"
-
-# Search for a resource by name
-curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/resources?name=<vm_name>"   -H "Authorization: OpsToken <token>"
-
-# Get resource health
-curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/resources/<resource_id>/health"   -H "Authorization: OpsToken <token>"
 ```
 
 ---

@@ -78,18 +78,6 @@ CLI TOOL CHAIN
 │  Test-VsanCluster= PowerCLI; triggers health check run                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Capacity & Objects
-
-```bash
-# Datastore info
-esxcli vsan datastore list
-
-# Total object count (VM files — VMDKs, swap files, snapshots)
-esxcli vsan debug object list | wc -l
-
-# Objects that are NOT healthy (should return nothing in a healthy cluster)
-esxcli vsan debug object list | grep -v "Healthy"
 ```
 
 ### Skyline Health (vSphere Client Context)

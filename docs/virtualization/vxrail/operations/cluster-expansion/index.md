@@ -5,13 +5,14 @@
 VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
 Add Node Flow
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Planning                                                    │
 │  same SKU as cluster · compatible firmware · IP/DNS ready    │
 │  network cabling plan · iDRAC IP assigned                    │
 └──────────────────────────────┬───────────────────────────────┘
+```
                                │
               ┌────────────────▼────────────────┐
               │  Physical Installation           │

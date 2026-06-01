@@ -5,7 +5,7 @@
 Authentication reference covering Multi-Factor Authentication, CyberArk Integration, VBR Windows Authentication Modes, Service Account Requirements, REST API Authentication and 3 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Veeam — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,67 +45,6 @@ Authentication reference covering Multi-Factor Authentication, CyberArk Integrat
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Multi-Factor Authentication
-
-For Veeam Backup Enterprise Manager (if deployed):
-- Enable MFA under Settings → Users → configure TOTP or SAML provider
-- Require MFA for all administrative accounts
-
-## CyberArk Integration
-
-VBR can retrieve infrastructure credentials from CyberArk at runtime:
-
-1. VBR console → Credentials → Add → CyberArk
-2. Configure CCP (Central Credential Provider) URL, application ID, and safe name
-3. Credentials retrieved at job runtime — never stored in VBR config DB
-
----
-
-## VBR Windows Authentication Modes
-
-VBR supports three authentication modes for console and remote access:
-
-| Mode | Description | Use Case |
-|---|---|---|
-| Local Windows | Accounts local to the VBR server OS | Standalone/lab deployments; avoid in production |
-| Active Directory | Domain accounts authenticated via Kerberos/NTLM | Standard enterprise deployments |
-| LDAP | Direct LDAP bind to a directory service (non-AD) | Cross-domain or non-Windows directory environments |
-
-Configure the authentication mode in VBR console under **Users and Roles** → select the account type when granting access. AD group membership is supported — assign roles to AD security groups rather than individual accounts.
-
----
-
-## Service Account Requirements
-
-### Minimum Permissions for VBR Service Account
-
-The VBR service account (`svc-veeam` or equivalent) requires the following:
-
-| Scope | Permission | Notes |
-|---|---|---|
-| VBR server OS | Local Administrator | Required for VBR installation and service operation |
-| vCenter | Veeam-defined privilege set | Use the Veeam vCenter role (assigned during setup wizard) |
-| Proxy servers | Local Administrator | VBR deploys and manages proxy components |
-| Repository servers | Local Administrator or share write | Needed to write backup files and manage extents |
-| SQL Server (VBR config DB) | `db_owner` on VBR config DB | `sysadmin` only required during initial DB setup |
-| Guest OS (application-aware) | Local Administrator on guest | For VSS quiescing and log truncation |
-
-> Do not use a Domain Admin account as the VBR service account. Scope permissions to the minimum above.
-
----
-
-## REST API Authentication
-
-VBR exposes a REST API on port 9419 (HTTPS). Authentication uses OAuth 2.0 bearer tokens.
-
-### Obtain a Token
-
-```bash
-# Request a bearer token (username/password exchange)
-curl -s -X POST "https://<vbr-server>:9419/api/oauth2/token" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=password&username=<user>&password=<pass>&use_short_term_refresh=false"
 ```
 
 ### Token Expiry

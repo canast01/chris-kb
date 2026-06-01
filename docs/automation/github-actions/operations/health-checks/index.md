@@ -46,22 +46,6 @@ flowchart TD
 │   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Schema Validation
-
-VS Code and JetBrains IDEs provide schema-based validation when the schema URL is declared.
-
-```yaml
-# Add to the top of any workflow file for IDE validation
-# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
----
-name: CI
-on: [push]
-jobs:
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
 ```
 
 ```bash

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Cluster Status, Director Health, Pre-Change Checklist and 1 more sections.
 </div>
+```
+┌───────────────────────────────────── Dell VPLEX — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        VPLEX health checks: routine verification of operational status and performance        │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
+│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
+│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
+│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
+│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
+│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
+│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
+│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
+│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
+│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
+│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
+│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
+│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
+│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
+│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
+│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Daily Checks
 

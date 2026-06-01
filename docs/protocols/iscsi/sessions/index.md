@@ -5,11 +5,12 @@
 An iSCSI session is a logical connection between an initiator and a target, established after discovery.
 </div>
 
-```text
         SESSION SETUP SEQUENCE
+```
 ┌──────────────┐                         ┌──────────────────┐
 │  Initiator   │                         │     Target       │
 └──────┬───────┘                         └─────────┬────────┘
+```
        │  1. SendTargets discovery                  │
        │ ──────────────────────────────────────────►│
        │     target IQN + portal list               │

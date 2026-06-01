@@ -76,15 +76,6 @@ Post-Change Validation Flow
 │    Monitoring alert = Any new alert fired after change = likely caused by the change; triage          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Datastore and Storage
-
-```powershell
-# Confirm datastores are accessible (no APD/PDL)
-Get-Datastore | Where-Object {$_.State -ne "Available"} | Select-Object Name, State
-
-# vSAN: confirm health is green after change
-esxcli vsan health cluster list | grep -v "Green"
 ```
 
 ## NSX (if change was NSX-related)

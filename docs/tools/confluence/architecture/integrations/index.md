@@ -64,29 +64,6 @@ Confluence Admin URL:
 │  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## GitHub / Bitbucket Integration
-
-### Atlassian Companion App (Cloud)
-
-For Cloud deployments, the **Atlassian for GitHub** app in the GitHub Marketplace links repositories to Confluence spaces and surfaces branch/PR/commit data inside pages.
-
-### Bitbucket Data Center — Application Link
-
-1. **Admin > Application Links** — add Bitbucket base URL
-2. Authentication: **OAuth** (recommended) or **Trusted Application**
-3. After linking, the **Bitbucket Commits** macro and **Code** macro become available
-
-### Code Macro (GitHub / Bitbucket / Generic)
-
-Embed syntax-highlighted code blocks referencing repository content:
-
-```yaml
-Macro: Code Block
-Language: bash / python / yaml / java
-Title: deploy.sh
 ```
 
 For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.

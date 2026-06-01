@@ -113,18 +113,6 @@ passwd admin
 │  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Post-Upgrade Validation
-
-```bash
-# Verify all services running
-sannav status
-
-# Check log for post-upgrade errors
-grep -i "ERROR\|FATAL" /opt/sannav/logs/server.log | tail -30
-
-# Verify switch connectivity restored
-# In GUI: Dashboard > Fabric Summary — all switches should be Online within 5 min
 ```
 
 Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.

@@ -106,18 +106,6 @@ flowchart LR
 │  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## ActiveCluster (Pods)
-
-A pod is the logical container for ActiveCluster synchronous replication. Volumes inside a pod are transparently accessible from both arrays with zero RPO — Purity synchronously replicates every write to the remote array before acknowledging to the host. A Purity Mediator tiebreaker service arbitrates split-brain events.
-
-```bash
-purepod create oracle-pod
-purepod add --array site-b-fa-01 oracle-pod   # stretch to remote array
-purevol create --size 4T oracle-pod::oracle-data-01
-purepod list                                   # show pods and stretch status
-purepod list --mediator oracle-pod             # mediator connectivity status
-purepod list --failover-preference oracle-pod
 ```
 
 ## Protection Groups

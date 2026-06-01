@@ -77,22 +77,6 @@ RDS CLI: Instances · Snapshots · Events
 │  Maintenance window= Weekly scheduled time for RDS to apply updates                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Snapshots
-
-```bash
-# List snapshots
-aws rds describe-db-snapshots
-
-# Create a manual snapshot
-aws rds create-db-snapshot \
-  --db-instance-identifier <id> \
-  --db-snapshot-identifier <snap_name>
-
-# Restore an instance from snapshot
-aws rds restore-db-instance-from-db-snapshot \
-  --db-instance-identifier <new_id> \
-  --db-snapshot-identifier <snap_name>
 ```
 
 ## Parameter Groups

@@ -4,7 +4,7 @@
 Linux server infrastructure running RHEL and Ubuntu — systemd service management, LVM2 storage, LACP bonded networking, SELinux/AppArmor security, and Ansible-driven automation for enterprise workloads.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Linux — Platform Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │  Linux is the primary OS for compute workloads: servers, containers, and automation.                  │

@@ -69,20 +69,6 @@ show running-config
 │  Pre-change snap = always capture zone set before making any zone changes                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Restore Procedures
-
-```bash
-# Rollback to a named checkpoint
-rollback running-config checkpoint <checkpoint_name>
-
-# Restore from a TFTP file
-copy tftp://<server>/<filename> running-config
-
-# Restore from SCP
-copy scp://<user>@<server>/<path>/<filename> running-config
 ```
 
 > After restoring, always verify: `show interface brief`, `show flogi database`, and `show zoneset active vsan all`.

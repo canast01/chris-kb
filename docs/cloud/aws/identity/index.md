@@ -4,7 +4,7 @@
 AWS IAM governs every API call in the platform. The principle of least privilege is enforced through roles (not users), customer-managed policies with Permission Boundaries, and SCPs at the org level. Access Analyzer, Access Advisor, and Credential Reports feed the quarterly permission review cycle.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── AWS Identity Overview ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

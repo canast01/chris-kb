@@ -5,8 +5,8 @@
 Procedures reference covering Create a Protection Group (vSphere Replication), Create a Recovery Plan, Run a Test Failover (Non-Disruptive), Run a Planned Migration, Run a Disaster Recovery (Protected Site Down) and 4 more sections.
 </div>
 
-```text
   Test Failover vs Actual Failover
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Test Failover (non-disruptive)                              │
 │  ┌───────────────────────────────────────────────────────┐   │
@@ -73,20 +73,6 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │  Network mapping= maps source portgroup to recovery portgroup                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-The protection group will include all VMs on the replicated datastores.
-
----
-
-## Create a Protection Group (vSphere Replication)
-
-```yaml
-Site Recovery → Protection → Protection Groups → New
-
-  Type: vSphere Replication groups
-  Name: WebApp-VR-PG
-  VMs: select individual VMs (each must have VR configured — right-click → Configure Replication)
-  → Finish
 ```
 
 ---

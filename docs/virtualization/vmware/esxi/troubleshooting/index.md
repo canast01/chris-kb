@@ -4,7 +4,7 @@
 Troubleshooting reference for VMware ESXi. Covers common host failure patterns, diagnostic commands, log collection, and escalation procedures for engaging VMware support.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── ESXi — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

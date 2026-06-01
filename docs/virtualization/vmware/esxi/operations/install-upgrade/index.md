@@ -5,15 +5,7 @@
 ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone), Upgrade and Patching Readiness Checklist, Driver and Firmware Lifecycle and 1 more sections.
 </div>
 
-```text
 ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
-┌─────────────────────────────────────────────────────────┐
-│  Pre-Upgrade                                            │
-│  ├── Confirm vCenter already at target-compatible ver   │
-│  ├── Check HCL for target ESXi + server model           │
-│  ├── Verify vSAN / NSX interop matrix                   │
-│  └── Take vCenter file-based backup                     │
-└──────────────────────────┬──────────────────────────────┘
                            │
               ┌────────────▼────────────┐
               │  vLCM: Set Cluster      │
@@ -86,15 +78,6 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
 │  Boot disk = ESXi install target; SD/USB (legacy), M.2 NVMe (recommended)                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Workflow:**
-1. Set cluster image (select base ESXi version + add-ons)
-2. Run **Check Compliance** — shows drift between running state and desired image
-3. **Remediate** — vLCM puts host in maintenance mode, applies image, reboots, exits maintenance mode
-
-Verify image depot is synced:
-```text
-vCenter → Lifecycle Manager → Settings → Patch Setup → Sync Updates
 ```
 
 ## vSphere Update Manager (VUM) — Legacy

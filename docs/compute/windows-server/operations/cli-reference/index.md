@@ -76,24 +76,6 @@ flowchart LR
 │  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Event Logs
-
-```powershell
-# Query event log (classic)
-Get-EventLog -LogName System -EntryType Error -Newest 50
-Get-EventLog -LogName Application -EntryType Error,Warning -After (Get-Date).AddHours(-24)
-Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 100
-
-# Query using Get-WinEvent (more flexible)
-Get-WinEvent -LogName System -MaxEvents 50
-Get-WinEvent -FilterHashtable @{LogName='System'; Level=2; StartTime=(Get-Date).AddHours(-24)}
-
-# Export event log
-Get-EventLog -LogName System | Export-Csv C:\Temp\SystemEvents.csv -NoTypeInformation
-
-# Clear event log (requires admin)
-Clear-EventLog -LogName Application
 ```
 
 ## Disk and Storage

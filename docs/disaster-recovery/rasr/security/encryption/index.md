@@ -76,36 +76,6 @@ uemcli /stor/drive show -detail | grep -i encrypt
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Recovery Media Encryption
-
-### LUKS-Encrypted Recovery USB (Linux)
-
-Recovery media containing Linux system images should be encrypted so lost media cannot be read.
-
-```bash
-# Prepare an encrypted partition on the recovery USB
-# WARNING: This destroys existing data on the device
-cryptsetup luksFormat --type luks2 \
-  --cipher aes-xts-plain64 \
-  --key-size 512 \
-  --hash sha512 \
-  /dev/sdX2   # Second partition on the USB (first is EFI/boot)
-
-# Open the encrypted partition
-cryptsetup luksOpen /dev/sdX2 rasr-media
-
-# Create filesystem for the recovery image
-mkfs.ext4 /dev/mapper/rasr-media
-
-# Mount and copy the RASR recovery image
-mkdir /mnt/rasr-media
-mount /dev/mapper/rasr-media /mnt/rasr-media
-cp -a /opt/rasr/recovery-image/* /mnt/rasr-media/
-
-# Close when done
-umount /mnt/rasr-media
-cryptsetup luksClose rasr-media
 ```
 
 ```bash

@@ -82,15 +82,6 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 │  Cipher suite= agreed TLS algorithms; ServiceNow enforces strong suites only                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Verify MID Server is using TLS 1.2+
-openssl s_client -connect <instance>.service-now.com:443 \
-  -tls1_2 -servername <instance>.service-now.com 2>&1 | grep "Protocol"
-
-# Check MID Server certificate trust store
-$JAVA_HOME/bin/keytool -list -keystore /opt/servicenow/mid/agent/security/keystore.jks \
-  -storepass midserver
 ```
 
 ---

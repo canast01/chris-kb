@@ -5,7 +5,7 @@
 Access Control reference covering APEX Console RBAC Roles, API Token Management, SSO and SAML Integration, SCG Access Controls, General Controls.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Dell Apex STaaS — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

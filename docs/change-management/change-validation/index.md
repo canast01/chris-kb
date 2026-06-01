@@ -66,22 +66,6 @@ curl -sf http://localhost:<port>/health && echo "OK"
 │    Baseline        = Pre-change metric snapshot; used as comparison target for post-change check      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Application / Endpoint Tests
-
-```bash
-# HTTP response code
-curl -o /dev/null -sw "%{http_code}" https://<endpoint>
-
-# TLS certificate valid
-openssl s_client -connect <host>:443 </dev/null 2>/dev/null | openssl x509 -noout -dates
-
-# DNS resolution
-dig +short <hostname>
-
-# Database connectivity
-psql -h <host> -U <user> -c "SELECT 1 AS alive;"
-mysql -h <host> -u <user> -e "SELECT 1 AS alive;"
 ```
 
 ## Monitoring Verification

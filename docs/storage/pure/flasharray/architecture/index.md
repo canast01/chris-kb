@@ -4,14 +4,7 @@
 Architecture reference for Pure Storage FlashArray. Covers the dual-controller HA model, product lines (//X/C/E), host connectivity protocols (FC, iSCSI, NVMe-oF), Purity data services, ActiveCluster synchronous replication, and design standards.
 </div>
 
-```text
 FlashArray — Dual-Controller Architecture
-┌──────────────────────────────┐  ┌──────────────────────────────┐
-│  CT0 (Active)                │  │  CT1 (Active)                │
-│  ├── FC / iSCSI / NVMe-oF   │  │  ├── FC / iSCSI / NVMe-oF     │
-│  ├── NVRAM write cache       │◄─►│  ├── NVRAM mirror            │
-│  └── Dedupe + compress       │  │  └── Dedupe + compress       │
-└──────────────┬───────────────┘  └───────────────┬──────────────┘
                │                                  │
                └──────────────┬───────────────────┘
                               │  shared NVMe shelf bus
@@ -23,7 +16,6 @@ ActiveCluster (sync replication, RPO=0):
   Site A FlashArray ◄──── stretch pod ────► Site B FlashArray
   (both sites serve I/O — mediator resolves split-brain)
 ```
-```text
 ┌──────────────────────────────────── Pure FlashArray Architecture ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

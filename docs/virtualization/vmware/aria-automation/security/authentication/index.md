@@ -56,51 +56,6 @@ API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials �
 │  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Provide:
-- VIDM hostname: `vidm.example.local`
-- Admin credentials for VIDM
-- Accept the VIDM certificate (or ensure it is trusted by the Aria Automation appliance)
-
-After configuration, all Aria Automation users authenticate via VIDM. The local `admin` account becomes a fallback that authenticates via VIDM using the `System Domain`.
-
----
-
-## Active Directory Integration via VIDM
-
-AD integration is configured in VIDM, not in Aria Automation directly:
-
-1. **VIDM console → Identity & Access Management → Directories → Add Directory**
-2. Select **Active Directory over LDAP/LDAPS**
-3. Provide:
-   - Domain: `corp.local`
-   - Domain controllers: `dc01.example.local:636`, `dc02.example.local:636`
-   - Bind DN: `CN=svc-vidm,OU=Service Accounts,DC=corp,DC=local`
-   - Bind password
-   - Base DN for user search: `DC=corp,DC=local`
-4. Select OUs to sync (choose specific OUs, not the full domain)
-5. Set sync schedule: every 60 minutes
-
-After sync, AD users can log into Aria Automation using their domain credentials via the VIDM login page.
-
----
-
-## API Authentication
-
-All Aria Automation REST API calls require a Bearer token obtained from VIDM.
-
-**Acquire a token (local admin account):**
-
-```bash
-TOKEN=$(curl -sk -X POST \
-  "https://vra-prod-01.example.local/csp/gateway/am/api/login" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>","domain":"System Domain"}' | \
-  jq -r '.token')
-
-# Use in subsequent requests
-curl -sk -H "Authorization: Bearer $TOKEN" \
-  "https://vra-prod-01.example.local/iaas/api/zones" | jq '.'
 ```
 
 **Acquire a token (AD user):**

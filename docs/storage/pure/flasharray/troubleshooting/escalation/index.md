@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, Opening a Case, Information to Collect, Before Calling Support, SLA Tiers and 1 more sections.
 </div>
+```
+┌──────────────────────────────────── Pure FlashArray — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     FlashArray escalation: severity triage, vendor support contact, and required artifacts    │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
+│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
+│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
+│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
+│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
+│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
+│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
+│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
+│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
+│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
+│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
+│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
+│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
+│    Host group         = logical collection of hosts sharing volume access via a host group object     │
+│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
+│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 Pure Support Escalation Path

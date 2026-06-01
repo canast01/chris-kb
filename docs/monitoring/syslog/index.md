@@ -5,7 +5,7 @@
 Syslog and Centralized Logging reference covering Syslog Service Health, Configure rsyslog to Forward to Central Collector, journald to Syslog Bridge, Windows Event Forwarding, Syslog Severity Levels (RFC 5424) and 2 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,23 +48,6 @@ Syslog and Centralized Logging reference covering Syslog Service Health, Configu
 │  Queue depth       = In-memory message buffer in collector; overflow causes message loss              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Syslog Service Health
-
-```bash
-# Check rsyslog running
-systemctl status rsyslog
-
-# Check syslog-ng
-systemctl status syslog-ng
-
-# Test log ingestion — inject a test message and verify receipt
-logger -t TEST "Health check message"
-grep "Health check message" /var/log/messages
-
-# Check disk on log server
-df -h /var/log
 ```
 
 ## Configure rsyslog to Forward to Central Collector

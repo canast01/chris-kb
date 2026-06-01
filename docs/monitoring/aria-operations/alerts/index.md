@@ -5,7 +5,7 @@
 Aria Operations: Alert Definitions and Policies reference covering Alert Policies, Alert Suppression and Maintenance Windows, Notification Rules and Outbound Plugins, Common Alert Issues.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Aria Operations — Alerts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,40 +48,6 @@ Aria Operations: Alert Definitions and Policies reference covering Alert Policie
 │  Outbound action   = Configured connector sending alert payload to external system                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Common threshold types:
-
-| Symptom Type | Example Use Case |
-|---|---|
-| Metric / Property — Static Threshold | CPU Usage > 90% for 3 cycles |
-| Metric / Property — Dynamic Threshold | Deviation from learned baseline (smart alerts) |
-| Message Event | Specific log event received from adapter |
-| Fault | Hardware fault reported by adapter |
-| Property | VM snapshot age > 7 days |
-
-## Alert Policies
-
-Policies control which alerts are active, their priority, and notification routing. Every object belongs to a policy, with a **Default Policy** at the base.
-
-Navigation: **Administration > Policies > Policy Library**
-
-- Create child policies for specific clusters or datastores to override thresholds without modifying the global policy.
-- Policy priority order: higher number = higher priority; child policies override parent policies for matching objects.
-
-```bash
-# List all policies
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/policies" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" | jq '.policy[] | {id, name, priority}'
-
-# Assign a policy to a resource group via API
-curl -sk -X PUT \
-  "https://aria-ops.example.com/suite-api/api/policies/<policyId>/resources" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Content-Type: application/json" \
-  -d '{"resourceIds": ["<resourceId>"]}'
 ```
 
 ## Alert Suppression and Maintenance Windows

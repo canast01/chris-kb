@@ -55,20 +55,6 @@ InsightIQ web UI > Administration > Authentication > LDAP
 │  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Ensure these rules are persistent across reboots (via iptables-save or firewalld).
-
-## OneFS Service Account Security
-
-The `svc-insightiq` service account on OneFS must be read-only and scoped to the minimum required privileges.
-
-```bash
-# Verify the InsightIQ service account privileges on OneFS
-isi auth roles list | grep IIQ
-isi auth roles view IIQ_ReadOnly
-
-# Confirm the account is not in any admin group
-isi auth users view svc-insightiq
 ```
 
 Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.

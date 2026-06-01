@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Windows certificate operations use `certutil` for verification, revocation, and store management. Linux operations rely on `openssl` for inspection, verification, and TLS connectivity testing.
 </div>
+```
+┌────────────────────────── Security Certificates Operations — CLI Reference ───────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Certificates CLI: command-line interface for all management and operational tasks       │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Core            │  │       Primary service       │  │        Main function        │   │
+│   │          Management         │  │        Control plane        │  │         Admin access        │   │
+│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
+│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
+│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Security Certificates Operations infrastructure · management network · monitoring        │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Certificates       = Security Certificates Operations platform overview and core concepts          │
+│    Management         = management console and command-line interface for administration              │
+│    Monitoring         = health and performance monitoring dashboards and alerting                     │
+│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
+│    Security           = access control, authentication, and encryption configuration                  │
+│    Backup             = backup and recovery procedures and schedule configuration                     │
+│    Upgrade            = software version upgrades and firmware patching procedures                    │
+│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
+│    Escalation         = vendor support escalation path and severity triage process                    │
+│    Documentation      = vendor knowledge base and official product documentation                      │
+│    Change management  = change ticket requirements for production modifications                       │
+│    Audit log          = admin action logging for compliance and security review                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
  PowerShell provides `Get-ChildItem Cert:\` for the Windows certificate store and `Test-Certificate` for chain validation.
 

@@ -63,21 +63,6 @@ user show
 │    Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Audit Logging
-
-All administrative actions are logged to the DD audit log.
-
-```bash
-# View audit log
-log view audit
-
-# Forward audit and system logs to a syslog server
-log host add <syslog-server-ip>
-log host show
-
-# Confirm syslog is working
-log test <syslog-server-ip>
 ```
 
 Log entries include: user logins, configuration changes, retention lock events, filesystem operations, and administrative commands. The audit log should be forwarded to a SIEM that retains logs for at least 12 months.

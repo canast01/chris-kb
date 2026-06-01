@@ -5,7 +5,7 @@
 Hardening reference covering Management API Security, Operational Hardening Checklist.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRDF/S — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -46,24 +46,6 @@ Hardening reference covering Management API Security, Operational Hardening Chec
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [SRDF/S Security](../index.md) reference.
-
----
-
-## Management API Security
-
-The Unisphere REST API should be secured:
-
-- Enable HTTPS only (disable HTTP on port 8080)
-- Use client certificate authentication for service accounts
-- Scope API accounts to minimum required capabilities
-- Rotate service account certificates annually
-
-Verify TLS configuration:
-```bash
-curl -k https://<unisphere>:8443/univmax/restapi/system/version
-# Production systems should use trusted CA cert (remove -k flag)
 ```
 
 ---

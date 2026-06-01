@@ -6,7 +6,7 @@
 Terraform — Security reference.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Terraform — Security ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       TF security: protect state, manage secrets, least-privilege, scan IaC with checkov      │   │

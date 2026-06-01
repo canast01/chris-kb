@@ -5,8 +5,8 @@
 Backup and Restore reference covering Verify the Backup, App Volumes Manager Database Backup, DEM Config Share Backup, AppStack VMDK Backup, Golden Image Snapshot Management and 2 more sections.
 </div>
 
-```text
   Backup Sources                        Backup Methods
+```
 ┌─────────────────────┐               ┌────────────────────────────┐
 │  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
 │  (ADAM/LDAP)        │               └────────────────────────────┘
@@ -66,13 +66,6 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 │  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Automate with Task Scheduler:**
-```cmd
-:: Create scheduled task — daily at 02:00
-schtasks /create /tn "Horizon ADAM Backup" /tr ^
-  "\"C:\Program Files\VMware\VMware View\Server\tools\bin\vdmexport.exe\" -f C:\Backups\horizon-config-latest.ldif" ^
-  /sc DAILY /st 02:00 /ru SYSTEM
 ```
 
 **What is included in the LDIF export:**

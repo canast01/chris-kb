@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Local Accounts, Active Directory (AD), LDAP (Non-AD), SAML SSO and 4 more sections.
 </div>
+```
+┌────────────────────────────────── Pure FlashArray — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashArray authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options       │   │
+│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
+│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
+│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
+│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
+│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
+│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
+│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
+│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
+│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
+│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
+│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
+│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
+│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
+│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
+│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
+│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
+│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
+│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
+│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
+│    Host group         = logical collection of hosts sharing volume access via a host group object     │
+│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
+│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 FlashArray Authentication Flow

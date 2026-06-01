@@ -71,20 +71,6 @@ awk -F',' 'NR>1 {
 │    SLA breach   = Vendor misses response time; escalate to account manager immediately                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Warranty / Support Status Checks
-
-```bash
-# Dell hardware — using Dell TechDirect API or iDRAC
-racadm getsvctag   # get service tag from iDRAC
-
-# Check warranty on Dell support site (requires service tag)
-curl -s "https://apidirect.dell.com/Contracts/v2/contracts?servicetag=<tag>" \
-  -H "X-BAPI-Key: <api-key>" | jq '.contracts[] | {entitlement:.entitlementType,end:.endDate}'
-
-# HPE iLO — show contract info
-# HPSUM or OneView shows warranty; or use:
-# curl https://warranty.hpe.com/CountryLanguageStore/wc/country/<country>/language/EN/contract/serial/<serial>
 ```
 
 ## Renewal Process

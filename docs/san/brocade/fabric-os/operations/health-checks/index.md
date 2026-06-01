@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checks, Health Check Checklist, Post-Change Validation.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Brocade Fabric OS — Health Checks ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,47 +58,6 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 │    MAPS alert     = Automated rule-based alert when metric breaches configured threshold              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [Operations](../index.md) reference.
-
----
-
-## Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Run `switchshow` | `switchshow` | Confirm all expected ports are online/active, flag any unexpected offline or faulty ports |
-| [ ] Run `fabricshow` | `fabricshow` | Verify fabric membership is stable and the correct switch holds the principal role |
-| [ ] Run `islshow` | `islshow` | Confirm all ISLs are up and running at expected speed (e.g. 32G) |
-| [ ] Run `porterrshow` | `porterrshow` | Review error counters; flag any increments in `enc_in`, `loss_sync`, or `link_fail` |
-| [ ] Run `errshow` | `errshow` | Scan recent error log entries for hardware or fabric events |
-| [ ] Run `cfgshow \| head -20` | `cfgshow \| head -20` | Confirm active zone config name matches expected, no unexpected changes |
-| [ ] Verify firmware level is consistent across all switches in the fabric | `version` | |
-| [ ] Check management platform (SANnav) for any active alerts | | |
-
----
-
-## Health Check Checklist
-
-- [ ] All ports in expected state: `switchshow`
-- [ ] Fabric principal switch correct, all members present: `fabricshow`
-- [ ] All ISLs up and at correct speed: `islshow`
-- [ ] No error counter increments on any port: `porterrshow`
-- [ ] SFP/GBIC optical levels within range: `sfpshow`
-- [ ] No critical entries in error log: `errshow`
-- [ ] Active zone config matches expected: `cfgshow`
-- [ ] No thermal or power alerts in switch environment: `sensorshow`
-
-```bash
-# Full fabric health sweep
-switchshow
-fabricshow
-islshow
-porterrshow
-sfpshow
-errshow
-cfgshow | head -20
-sensorshow
 ```
 
 ---

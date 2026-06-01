@@ -4,7 +4,7 @@
 Aria Operations deploys as an analytics cluster (Primary + Replica + optional Data Nodes) with Remote Collectors distributing telemetry collection across sites. Management Packs extend coverage to third-party platforms.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Aria Operations — Architecture ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

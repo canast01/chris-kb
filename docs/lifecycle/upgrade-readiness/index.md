@@ -50,34 +50,6 @@ flowchart LR
 │    Known issues   = Vendor-published list of bugs in release; check for impact on your environment    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Backup Type | Required Age | Verified |
-|---|---|---|
-| Full VM backup / BMR | < 24 hours | ☐ |
-| Application-consistent backup | < 24 hours | ☐ |
-| Database backup | < 4 hours (if DB host) | ☐ |
-| Config export (network device) | < 7 days | ☐ |
-
-## 3. System Health Checks
-
-```bash
-# Linux
-uptime                              # load < 2x CPU count
-df -h                               # disk usage < 80%
-free -h                             # available memory > 20%
-systemctl --failed                  # no failed units
-journalctl -p err -n 50 --no-pager # no critical errors
-
-# Check for pending reboots (RHEL/Rocky)
-needs-restarting -r && echo "No reboot pending" || echo "Reboot pending"
-
-# Windows
-Get-EventLog -LogName System -EntryType Error -Newest 20
-(Get-PendingReboot).IsRebootPending
-
-# VMware ESXi
-esxcli system health status get
-esxcli storage core path list | grep -c "Active (I/O)"
 ```
 
 | Health Check | Pass Criteria |

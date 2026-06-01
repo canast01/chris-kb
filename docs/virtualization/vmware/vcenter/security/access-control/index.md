@@ -87,49 +87,6 @@ RBAC Permission Model
 │  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Built-in Roles
-
-| Role | Description |
-|---|---|
-| Administrator | Full access to all objects |
-| Read-Only | View objects and properties; no configuration changes |
-| No Access | Explicitly block access to an object subtree |
-| Virtual Machine User | Interact with (console, power on/off) but not configure VMs |
-| Virtual Machine Power User | Interact + snapshot + basic reconfiguration |
-| Resource Pool Administrator | Manage resource pools and child objects |
-| Network Administrator | Manage networks and distributed switches |
-| Datastore Consumer | Allocate space from datastores |
-
-### Permission Scopes
-
-- **Global Permission**: Applies across all vCenter instances in the SSO domain; use sparingly — it overrides all inventory-level restrictions
-- **Inventory Permission**: Applied at datacenter, cluster, folder, or individual object level
-- **Propagation**: "Propagate to children" applies the permission to all objects in that subtree; uncheck only when you need to isolate a specific object
-
-### Permission Evaluation Order
-
-vCenter evaluates permissions from the most specific object upward. A `No Access` role on a VM overrides an `Administrator` role on the parent cluster. Global permissions are evaluated last and can override inventory permissions if the user has no other permission set.
-
----
-
-## Custom Roles
-
-Create custom roles for least-privilege: **Administration → Roles → New**
-
-### Common Custom Role Patterns
-
-**Backup Operator** — minimum privileges for VADP-based backup:
-```text
-VirtualMachine.Interact.CreateScreenshot
-VirtualMachine.State.CreateSnapshot
-VirtualMachine.State.RemoveSnapshot
-VirtualMachine.State.RevertToSnapshot
-VirtualMachine.Config.DiskLease
-Datastore.Browse
-Datastore.FileManagement
-Global.DisableMethods
-Global.EnableMethods
 ```
 
 **VM Operator** — day-to-day VM management without storage or host access:

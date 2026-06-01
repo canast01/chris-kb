@@ -70,16 +70,6 @@ pre-commit install --hook-type pre-push
 │  trivy            = container + filesystem vulnerability scanner; works on Git repos                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Run all hooks against all files
-pre-commit run --all-files
-
-# Update all hooks to latest versions
-pre-commit autoupdate
-
-# Skip a hook for one commit (break-glass only)
-SKIP=gitleaks git commit -m "Emergency fix"
 ```
 
 ---

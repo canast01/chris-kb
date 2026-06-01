@@ -5,7 +5,7 @@
 ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, Check Management Network, Check Hardware Management Interface, Review vCenter Alarms and 4 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── ESXi Host Evacuation Runbook ─────────────────────────────────────┐
 │                                                                                                       │
 │    Drain all VMs from a host before patching, hardware work, or decommission                          │

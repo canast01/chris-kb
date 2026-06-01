@@ -5,7 +5,7 @@
 Access Control reference covering Solutions Enabler RBAC, Preventing Accidental Resync.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── SRDF/A — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -43,25 +43,6 @@ Access Control reference covering Solutions Enabler RBAC, Preventing Accidental 
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [SRDF/A](../../index.md) reference.
-
----
-
-## Solutions Enabler RBAC
-
-Solutions Enabler v9+ enforces role-based access at the array scope. Roles for SRDF operations:
-
-| Role | Permitted Operations |
-|---|---|
-| `StorageAdmin` | symrdf failover, establish, split, suspend |
-| `StorageMonitor` | symrdf query, list — read-only |
-| `Audit` | Read-only access to audit logs |
-
-Create a dedicated service account per automation system; never use the root Solutions Enabler account:
-
-```bash
-symauth -sid <SID> add -username svc_dr_automation -role StorageAdmin -scope rdfg:<group_number>
 ```
 
 ---

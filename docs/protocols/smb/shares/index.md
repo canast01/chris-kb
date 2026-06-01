@@ -5,8 +5,8 @@
 SMB Shares reference covering Overview, Creating Shares with PowerShell, Creating Shares with net share, DFS Namespace Configuration, Share Enumeration and Auditing and 1 more sections.
 </div>
 
-```text
         SHARE TYPES AND UNC PATH STRUCTURE
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  \\server\Finance          ◄── standard share (visible)      │
 │  \\server\Finance$         ◄── hidden share ($ suffix)       │

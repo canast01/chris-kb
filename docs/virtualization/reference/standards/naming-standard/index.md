@@ -5,7 +5,7 @@
 Naming Standard reference covering Overview, Virtual Machines, Clusters, ESXi Hosts, Datastores and 7 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── vSphere — Naming Standard ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

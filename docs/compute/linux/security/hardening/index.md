@@ -76,12 +76,6 @@ flowchart TD
 │  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Lynis — cross-distro security auditing tool
-dnf install -y lynis   # or download from cisofy.com
-lynis audit system --quick
-lynis audit system > /tmp/lynis-report.txt 2>&1
 ```
 
 ## Kernel Hardening — sysctl

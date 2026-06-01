@@ -73,49 +73,6 @@ flowchart TD
 │  HA reboot       = High Availability failover; active CP reboots to standby CP                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Document the output of each command in the incident record before proceeding.
-
----
-
-## Incident Notes Template
-
-Capture these fields at the start of every incident:
-
-| Field | Notes |
-|---|---|
-| Symptom | What is failing — host can't see storage, port offline, fabric segmented |
-| Start time | When the problem began (and timezone) |
-| Impact | Which hosts, LUNs, or workloads are affected |
-| Switch/port | Affected switch hostname, domain ID, slot/port |
-| Error message | Exact text from `errshow` or SANnav alert |
-| Recent changes | Any changes in the previous 24 hours — firmware, cabling, zoning |
-| What was checked | Commands run and output summary |
-| Next action | What you are doing next |
-
----
-
-## Port Is Offline / No_Light
-
-**Symptoms:** `switchshow` shows a port in `No_Light`, `No_Module`, or `Offline` state. The connected host or storage device is not logging into the fabric.
-
-**Triage:**
-
-```bash
-# Check port state and detail
-portshow <slot/port>
-
-# Check if port is administratively disabled
-portshow <slot/port> | grep -i admin
-
-# Check SFP optical levels — power in/out should be within spec
-sfpshow <slot/port>
-
-# Check port error log for recent events
-portlogshow <slot/port>
-
-# Check port error counters
-portstatsshow <slot/port>
 ```
 
 **Resolution steps:**

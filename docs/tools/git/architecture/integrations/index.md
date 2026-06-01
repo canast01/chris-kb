@@ -85,54 +85,6 @@ jobs:
 │  Artifact       = built output (container, binary) published on tag push to registry                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### GitLab CI/CD
-
-GitLab CI is configured via `.gitlab-ci.yml` at the repository root.
-
-```yaml
-# .gitlab-ci.yml
-stages:
-  - build
-  - test
-  - publish
-
-variables:
-  GO_VERSION: "1.22"
-
-.go-base: &go-base
-  image: golang:${GO_VERSION}
-  before_script:
-    - go env -w GOMODCACHE=/cache/gomod
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths: [/cache/gomod]
-
-build:
-  <<: *go-base
-  stage: build
-  script:
-    - go build -o bin/app ./...
-  artifacts:
-    paths: [bin/]
-    expire_in: 1 hour
-
-test:
-  <<: *go-base
-  stage: test
-  script:
-    - go test -race -coverprofile=coverage.out ./...
-  coverage: '/coverage: \d+\.\d+%/'
-
-publish-image:
-  stage: publish
-  image: docker:26
-  services: [docker:26-dind]
-  only: [main]
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    - docker build -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
 ```
 
 Predefined CI/CD variables:

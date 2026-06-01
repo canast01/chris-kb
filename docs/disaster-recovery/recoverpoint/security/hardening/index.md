@@ -5,7 +5,7 @@
 Hardening reference covering Hardening Checklist, Network Port Reference.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── RecoverPoint — Hardening ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -83,20 +83,6 @@ isi statistics client list \
 │  Throughput required = Peak bandwidth needed; used for network and controller sizing                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Using Client Data for Capacity Planning
-
-Combine client analysis with capacity growth data to project per-tenant or per-application growth rates:
-
-```bash
-# Identify which directories are growing fastest
-ssh admin@powerscale.example.com
-
-# Top 10 directories by size under /ifs/data
-du -s /ifs/data/* | sort -rn | head -10
-
-# Watch directory growth over time using InsightIQ directory quota reports
-# Navigate to: InsightIQ > Reports > Quota > Directory Usage Trend
 ```
 
 ## Common Workload Analysis Issues

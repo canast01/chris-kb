@@ -57,24 +57,6 @@ Infrastructure → Connections → Cloud Accounts
 │  Catalog visible   = Consumer role user sees expected items in self-service portal                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-### Kubernetes Pod Health
-
-```bash
-ssh root@vra-prod-01.example.local
-
-# Check all pods are Running or Completed
-kubectl get pods --all-namespaces | grep -v "Running\|Completed\|Succeeded"
-# Any output here indicates a failing pod
-
-# Quick summary of pod states
-kubectl get pods --all-namespaces | \
-  awk 'NR>1 {print $4}' | sort | uniq -c | sort -rn
-
-# Describe a CrashLoopBackOff or Pending pod for diagnostics
-kubectl describe pod -n prelude <pod-name>
 ```
 
 ---

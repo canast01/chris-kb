@@ -49,12 +49,6 @@ ansible --version
 │   │requirements.yml= collections/roles dependency file; ansible-galaxy install -r requirements.yml│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Verify
-
-```bash
-ansible --version
-ansible all -i inventory/production/ -m ansible.builtin.ping
 ```
 
 ## Install Collections and Roles

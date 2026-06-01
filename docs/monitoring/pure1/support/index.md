@@ -5,7 +5,7 @@
 Support reference covering Diagnostic Bundle Collection, Severity Definitions, Evergreen Support — What's Covered, Proactive Support Features, Escalation Path and 1 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Pure1 — Support Integration ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,23 +36,6 @@ Support reference covering Diagnostic Bundle Collection, Severity Definitions, E
 │  Phonehome = Required for auto-case and remote assist; must be enabled and connected                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Diagnostic Bundle Collection
-
-Pure support will typically request a diagnostic bundle for non-obvious issues.
-
-```bash
-ssh pureuser@<flasharray-ip>
-
-# Generate and download a support bundle
-puresupport create --name "issue-description-$(date +%F)"
-
-# List generated bundles
-puresupport list
-
-# Download via SCP
-scp pureuser@<flasharray-ip>:/support/<bundle-name>.tar.gz /local/path/
 ```
 
 Bundles include: system logs, configuration, performance data, hardware status, and event history. No customer data is included.

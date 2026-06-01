@@ -47,14 +47,6 @@ jobs:
 │   │      OIDC token    = JWT issued by GitHub; cloud trusts issuer; exchanged for cloud cred      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```yaml
-# GCP OIDC setup
-- name: Authenticate to GCP
-  uses: google-github-actions/auth@v2
-  with:
-    workload_identity_provider: projects/123/locations/global/workloadIdentityPools/github/providers/github
-    service_account: deploy@myproject.iam.gserviceaccount.com
 ```
 
 ## Personal Access Tokens (PAT)

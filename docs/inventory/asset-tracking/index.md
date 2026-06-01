@@ -70,33 +70,6 @@ ethtool <interface> | grep -E "Speed|Duplex"
 │    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Cloud Asset Inventory
-
-### AWS
-
-```bash
-# All EC2 instances
-aws ec2 describe-instances \
-  --query 'Reservations[*].Instances[*].{ID:InstanceId,Type:InstanceType,State:State.Name,Name:Tags[?Key==`Name`].Value|[0],Launched:LaunchTime}' \
-  --output table
-
-# Untagged resources (no Owner tag — orphan risk)
-aws ec2 describe-instances \
-  --query 'Reservations[*].Instances[*] | [?!Tags[?Key==`Owner`]] | [*].{ID:InstanceId,State:State.Name}' \
-  --output table
-
-# Stopped instances older than 30 days
-aws ec2 describe-instances \
-  --filters "Name=instance-state-name,Values=stopped" \
-  --query 'Reservations[*].Instances[*].{ID:InstanceId,Name:Tags[?Key==`Name`].Value|[0],Launched:LaunchTime}' \
-  --output table
-
-# EBS volumes not attached
-aws ec2 describe-volumes \
-  --filters "Name=status,Values=available" \
-  --query 'Volumes[*].{ID:VolumeId,Size:Size,Created:CreateTime,Type:VolumeType}' \
-  --output table
 ```
 
 ### Azure

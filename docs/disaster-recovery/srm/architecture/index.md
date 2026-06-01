@@ -4,7 +4,7 @@
 VMware Site Recovery Manager DR orchestration — vCenter plugin that automates storage presentation, VM registration, power-on sequencing, and IP customisation across a site pair.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRM — Architecture ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

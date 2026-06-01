@@ -68,11 +68,6 @@ graph LR
 │   │         -detailed-exitcode= exit 0: no changes, exit 1: error, exit 2: changes present        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-To run a destroy instead:
-
-```text
-TF_DIR=/path/to/your/terraform ./tf-multi-workspace-deploy.sh --destroy
 ```
 
 **What you should see**

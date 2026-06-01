@@ -5,7 +5,7 @@
 AWS Security Hub reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────── Security Hub — Aggregated Security Posture ──────────────────────────────┐
 │                                                                                                       │
 │  Security Hub aggregates findings from AWS services and third parties into a central score.           │

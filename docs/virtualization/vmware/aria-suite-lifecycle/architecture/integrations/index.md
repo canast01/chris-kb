@@ -5,8 +5,8 @@
 Integrations reference covering vCenter Server, NSX-T Integration (Optional), SMTP Configuration, NFS Binary Repository, Proxy / Offline Depot and 2 more sections.
 </div>
 
-```text
   LCM Integration Map
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Identity              Compute                  Storage          │
 │  ┌─────────────────┐   ┌──────────────────┐    ┌─────────────┐  │
@@ -72,21 +72,6 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 │  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## vCenter Server
-
-LCM requires vCenter to deploy and manage OVA-based product appliances:
-
-1. LCM → Settings → vCenter Server → Add vCenter
-2. Provide vCenter FQDN, username (`svc-lcm@vsphere.local` or domain account), password
-3. Select target datacenter, cluster, and datastore during product deployment
-
-Required vCenter permissions for the LCM service account:
-```text
-Virtual Machine Power User (or equivalent)
-Datastore — AllocateSpace
-Network — Assign
-Host — CIM interaction
 ```
 
 ## NSX-T Integration (Optional)

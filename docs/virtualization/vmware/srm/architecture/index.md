@@ -4,7 +4,7 @@
 VMware Site Recovery Manager automates DR failover and failback by orchestrating protection groups, recovery plans, and vSphere Replication or SAN-based replication.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRM — Architecture ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

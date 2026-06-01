@@ -5,7 +5,7 @@
 AWS Permission Review reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── AWS Identity — Permission Review ───────────────────────────────────┐
 │                                                                                                       │
 │  Quarterly IAM review: remove unused principals, trim over-privileged policies.                       │

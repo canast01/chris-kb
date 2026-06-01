@@ -4,7 +4,7 @@
 Automation reference: Ansible, PowerShell, Python, Terraform, and 1 more.
 </div>
 
-```text
+```
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Automation: codifying repeatable infra operations into executable, version-controlled logic  │   │

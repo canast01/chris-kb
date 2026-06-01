@@ -67,21 +67,6 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### 3. Recovery Share Capacity
-
-```powershell
-# Check free space on the recovery share host
-$share = "\\nas01\rasr-images"
-$disk  = Get-PSDrive -Name Z -ErrorAction SilentlyContinue
-if (-not $disk) { net use Z: $share /persistent:no | Out-Null; $disk = Get-PSDrive Z }
-
-$freeGB  = [math]::Round($disk.Free / 1GB, 1)
-$totalGB = [math]::Round(($disk.Free + $disk.Used) / 1GB, 1)
-$pctFree = [math]::Round($disk.Free / ($disk.Free + $disk.Used) * 100, 1)
-
-Write-Host "Recovery share: ${freeGB} GB free of ${totalGB} GB (${pctFree}% free)"
-if ($pctFree -lt 20) { Write-Warning "ALERT: Less than 20% free on recovery share" }
 ```
 
 ### 4. VSS Writer Health

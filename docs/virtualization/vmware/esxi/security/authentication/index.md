@@ -5,8 +5,8 @@
 Authentication reference covering Create a Break-Glass Local Account, Password Policy, Active Directory Integration, Authentication Hardening, Login Banner and 2 more sections.
 </div>
 
-```text
 ESXi Authentication Paths
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Recommended Path (day-to-day)                           │
 │                                                          │
@@ -15,6 +15,7 @@ ESXi Authentication Paths
 │                └── Role mapped in vCenter → ESXi         │
 └──────────────────────────┬───────────────────────────────┘
                            │
+```
 ┌──────────────────────────▼───────────────────────────────┐
 │  Break-Glass Path (emergency only)                       │
 │                                                          │
@@ -23,8 +24,11 @@ ESXi Authentication Paths
 │              ├── root (unique strong password per host)  │
 │              └── infra-breakglass (exception user)       │
 └──────────────────────────────────────────────────────────┘
+```
 
 Password Policy Controls (enforced via Host Profile)
+```
+```
 ┌──────────────────────────────────────────────────────────┐
 │  /Security/PasswordQualityControl                        │
 │  ├── Minimum length: 12 chars                            │
@@ -80,24 +84,6 @@ Password Policy Controls (enforced via Host Profile)
 │  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Store root passwords in the organisation's secrets vault (CyberArk, HashiCorp Vault, or equivalent). Each host should have a **unique** root password — password reuse across hosts increases blast radius if one password is compromised.
-
-## Create a Break-Glass Local Account
-
-```bash
-# On each ESXi host
-esxcli system account add \
-  -i "infra-breakglass" \
-  -p "UniqueStr0ngP@ss!!" \
-  -d "Break-glass account — see vault for password"
-
-# Assign Admin role
-esxcli system permission set -i "infra-breakglass" -r Admin
-
-# Verify
-esxcli system account list
-esxcli system permission list
 ```
 
 ### List and Remove Unused Local Accounts

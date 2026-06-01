@@ -52,12 +52,6 @@ graph LR
 │   │       CloudTrail on S3= logs every GetObject/PutObject on state bucket; full audit trail      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Open Policy Agent — evaluate a Terraform plan against policy
-terraform plan -out=tfplan
-terraform show -json tfplan > plan.json
-opa eval --data policy.rego --input plan.json "data.terraform.deny"
 ```
 
 ## Dependency and Provider Security

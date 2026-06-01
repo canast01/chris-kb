@@ -7,7 +7,7 @@
 
 ---
 
-```text
+```
 ┌───────────────────────────────────── VMware — Version Inventory ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,13 +59,6 @@
 │    Upgrade path  = Validated intermediate version sequence needed to reach target version             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## PowerCLI
-
-```powershell
-# ESXi version for all hosts in a cluster
-Get-Cluster "cl-prod-compute-01" | Get-VMHost | Select Name, Version, Build | Sort Name
 ```
 
 ### NSX

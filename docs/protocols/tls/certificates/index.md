@@ -5,8 +5,8 @@
 A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service).
 </div>
 
-```text
         CERTIFICATE FIELD STRUCTURE (X.509)
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Certificate                                                 │
 │  ┌──────────────────────────────────────────────────────┐    │

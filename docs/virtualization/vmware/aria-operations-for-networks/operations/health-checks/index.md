@@ -100,13 +100,6 @@ for c in data.get('results', []):
 │  Sizing Headroom     = CPU/RAM utilisation should stay below 75% for stable operation                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Verify Flow Data Is Being Received
-
-**UI search query** (in the search bar at top of screen):
-
-```text
-flows where collector = "aon-collector-dc1" grouped by Flow Type
 ```
 
 This returns a count of flows grouped by East-West / North-South. If the count is 0 or the query returns no results, flow data is not arriving.

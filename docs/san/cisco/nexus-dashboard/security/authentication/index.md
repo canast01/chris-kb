@@ -124,22 +124,6 @@ acs certificates show-ca
 │  Metadata URL   = SAML IdP endpoint exposing signing cert and SSO URL automatically                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Include all node hostnames in the SAN extension so direct node access (not via VIP) also presents a valid certificate.
-
----
-
-## 7. Audit Trail
-
-All authentication events are recorded in the ND audit log:
-- View under **Admin Console > Operations > Audit Logs**
-- Filter by: category **Security**, event type **Login**, **Logout**, **Login_Failed**
-- Export to CSV for SIEM ingestion or quarterly review
-
-Authentication events also appear in ND platform logs:
-```bash
-ssh ndadmin@nd-dc1-1.corp.example.com
-acs system logs --component security --tail 100 | grep -i "login\|auth"
 ```
 ---
 

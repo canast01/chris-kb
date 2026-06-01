@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapMirror Operations](../index.md) reference.
 </div>
+```
+┌────────────────────────────────── NetApp SnapMirror — CLI Reference ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        SnapMirror CLI: command-line interface for all management and operational tasks        │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Async            │  │        Periodic sync        │  │         RPO: minutes        │   │
+│   │             Sync            │  │           Zero RPO          │  │          Sub-ms lag         │   │
+│   │            SM-BC            │  │        Active-active        │  │        Transparent FO       │   │
+│   │            Vault            │  │        Long retention       │  │         Backup copy         │   │
+│   │            Cloud            │  │         ONTAP → CVO         │  │       Cloud DR/backup       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Source ONTAP cluster · destination ONTAP cluster · intercluster LIFs · WAN link          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapMirror         = ONTAP replication; transfers only changed blocks after initial baseline sync  │
+│    Intercluster LIF   = dedicated logical interface for SnapMirror traffic between clusters           │
+│    SnapMirror policy  = defines schedule, retention, and transfer type (async/sync/vault)             │
+│    Baseline transfer  = first full snapshot transfer establishing the SnapMirror relationship         │
+│    Update             = incremental transfer; only sends new or changed blocks since last successfu...│
+│    Snapmirror break   = breaks the DR relationship; activates destination volume for read-write       │
+│    Resync             = re-establishes a broken SnapMirror relationship from the last common snapshot │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN volumes│
+│    Mediator           = ONTAP Mediator; quorum service for SM-BC running on Linux VM at third site    │
+│    SnapVault          = SnapMirror variant for backup retention; destination has independent schedule │
+│    MirrorAndVault     = policy combining SnapMirror DR and SnapVault backup retention copies          │
+│    Fanout             = single source volume replicating to multiple destination clusters simultane...│
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

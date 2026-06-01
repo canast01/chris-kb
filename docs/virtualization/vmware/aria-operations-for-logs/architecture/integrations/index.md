@@ -61,26 +61,6 @@ Administration → Integrations → Aria Operations → Add vRealize Operations 
 │  Custom field      = User-defined regex extractor creating a queryable field from log text            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-- Protocol: UDP or TCP
-- Host: `vrli-prod-01.example.local`
-- Port: 514 (UDP syslog) or 1514 (TCP syslog via LI Agent protocol)
-
-**Configure ESXi syslog via PowerCLI (bulk):**
-```powershell
-$target = "udp://vrli-prod-01.example.local:514"
-Get-VMHost | ForEach-Object {
-    $esxcli = Get-EsxCli -VMHost $_ -V2
-    $esxcli.system.syslog.config.set.Invoke(@{loghost = $target})
-    $esxcli.system.syslog.reload.Invoke()
-    Write-Host "$($_.Name): syslog configured"
-}
-
-# Verify
-Get-VMHost | ForEach-Object {
-    $esxcli = Get-EsxCli -VMHost $_ -V2
-    $cfg = $esxcli.system.syslog.config.get.Invoke()
-    Write-Host "$($_.Name): $($cfg.RemoteHost)"
-}
 ```
 
 **Configure ESXi syslog via esxcli (single host):**

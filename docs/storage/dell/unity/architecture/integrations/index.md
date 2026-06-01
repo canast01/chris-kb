@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Integrations reference covering Integration Map, VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory and 1 more sections.
 </div>
+```
+┌──────────────────────────────────── Dell Unity XT — Integrations ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Unity XT integrations: VMware vSphere, Kubernetes CSI, backup software, and monitoring    │   │
+│   │                          Protocols: FC · iSCSI · NFS · SMB · REST API                         │   │
+│   │      API: Unisphere / UEMCLI REST API enables automation and third-party tool integration     │   │
+│   │             Plug-ins available for vCenter, OpenShift, Splunk, and SIEM platforms             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Unity XT → REST API / plug-ins → VMware / K8s / backup / monitoring                                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │             Ctrl            │  │         SP-A + SP-B         │  │        Cache mirrored       │   │
+│   │             Pool            │  │       Dynamic FAST VP       │  │         Auto-tiering        │   │
+│   │          NAS server         │  │        File protocols       │  │          Per-tenant         │   │
+│   │           Snapshot          │  │        Writable snaps       │  │        Thin PiT copy        │   │
+│   │         Replication         │  │         Async/Metro         │  │       Native or RP4VM       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │    Unisphere     │  GUI / REST API  │       HTTPS       │    LDAP/local    │    SP-hosted     │   │
+│   │      UEMCLI      │  CLI management  │    SSH / HTTPS    │   Local admin    │  All operations  │   │
+│   │    NAS server    │  File services   │      NFS/SMB      │  Kerberos/NTLM   │ Virtual file se  │   │
+│   │   RecoverPoint   │ Continuous prote │   Encrypted TCP   │   Certificate    │   Journal CDP    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Unity XT 380F/480F/680F/880F · dual SPs · DPE/DAE expansion · 10/25 GbE                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Unity XT           = Dell unified mid-range array; block LUNs, file NAS, and VMware vVols          │
+│    Unisphere          = HTML5 GUI and REST API for Unity XT management; SP-hosted management portal   │
+│    UEMCLI             = CLI for Unity XT; uemcli -d <ip> -u admin -p <pw> /show commands              │
+│    Storage pool       = collection of drives forming a usable pool; FAST VP tiers data automatically  │
+│    FAST VP            = Fully Automated Storage Tiering VP; moves hot and cold data between tiers     │
+│    NAS server         = virtual file server on Unity; each has its own IP, DNS, and CIFS/NFS shares   │
+│    Data Mover         = older EMC term for NAS server; used in VNX and early Unity documentation      │
+│    SP-A / SP-B        = storage processors; active-active HA pair with mirrored cache                 │
+│    Snapshot           = space-efficient PiT copy of LUN or FS; writable snapshots supported           │
+│    RecoverPoint       = RP4VM; journal-based continuous data protection for Unity volumes             │
+│    Metro              = synchronous replication between two Unity XT sites; active-active zero RPO    │
+│    vVols              = Virtual Volumes; VASA provider exposes per-VM storage objects to vCenter      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Integration Map
 

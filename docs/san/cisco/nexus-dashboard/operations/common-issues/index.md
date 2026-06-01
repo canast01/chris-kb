@@ -80,61 +80,6 @@ kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname>
 │  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Common causes:
-- SNMP credentials changed on switches: update in NDFC fabric settings
-- Switch SNMP ACL blocking ND data IP: update switch ACL
-- PM database full: navigate to **NDFC > Settings > Data Retention** and reduce retention
-
----
-
-## NDI Not Receiving Telemetry
-
-**Symptom:** NDI dashboard shows no flow data or anomaly data is stale (> 30 minutes).
-
-**Resolution:**
-
-1. Verify the streaming telemetry connection from managed switches to ND:
-   - For MDS (SAN Insights): telemetry is pulled via NDFC, not streamed directly; verify NDFC-to-switch connectivity
-   - For ACI: verify APIC connectivity to ND
-
-2. Check NDI flow collector pods:
-   ```bash
-   kubectl get pods -n ndi | grep collector
-   kubectl logs -n ndi deployment/ndi-flow-collector --tail=100 | grep -i "error"
-   ```
-
-3. Verify the NDI license is applied:
-   - Navigate to **Admin Console > System > Licensing** — confirm NDI Insights license is valid
-
-4. For ACI sites: verify the APIC is registered in NDI:
-   - Navigate to **NDI > Manage > Sites** — confirm site status is **Online**
-
----
-
-## ND UI Certificate Warning After Upgrade
-
-**Symptom:** After an ND upgrade, browsers show a certificate warning on the ND management URL.
-
-**Cause:** ND upgrades may reset the TLS certificate to a self-signed default in some versions.
-
-**Resolution:**
-
-```bash
-ssh ndadmin@nd-dc1-1.corp.example.com
-
-# Check the current active certificate
-acs certificates show
-# If it shows the ND self-signed cert: the custom cert was lost
-
-# Re-import the corporate CA certificate
-acs certificates import \
-  --key /tmp/nd.key \
-  --cert /tmp/nd-bundle.crt \
-  --name nd-dc1-cert
-
-# Activate the certificate
-acs certificates activate --name nd-dc1-cert
 ```
 
 Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.

@@ -52,20 +52,6 @@ flowchart TD
 │    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## 3. Data Retention Review
-
-```bash
-# Identify data volume on system
-du -sh /data/* /opt/* /home/* /var/lib/* 2>/dev/null | sort -rh | head -20
-
-# Archive data if required by retention policy
-tar czf /backups/archive/<hostname>-$(date +%F).tar.gz /opt/app/data/ /var/log/<appname>/
-
-# Transfer archive to long-term storage
-rsync -av /backups/archive/<hostname>-$(date +%F).tar.gz archive-nas:/decommissioned/
-# or
-aws s3 cp /backups/archive/<hostname>-$(date +%F).tar.gz s3://company-archive/decommissioned/
 ```
 
 | Data Category | Decision | Signed Off |

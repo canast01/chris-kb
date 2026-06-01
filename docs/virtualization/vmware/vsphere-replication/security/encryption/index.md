@@ -5,8 +5,8 @@
 Encryption reference covering Data in Transit, Replication Data Encryption (Per-VM), Encryption at Rest on Target Datastore, KMS Consideration for Encrypted VMs, Certificate Management for VRA and 1 more sections.
 </div>
 
-```text
   VR Encryption Coverage
+```
 ┌───────────────────────────────────────────────────────────────┐
 │  Traffic Path                       Encryption                │
 │  ┌───────────────────────────────────────────────────────┐    │

@@ -35,7 +35,6 @@ Get-Label | Select-Object DisplayName, Priority, IsDefault, Guid
 # Check label policy assignments
 Get-LabelPolicy | Select-Object Name, Labels, Users, Workloads
 ```
-```text
 ┌──────────────────────────────── Data Protection — Data Classification ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

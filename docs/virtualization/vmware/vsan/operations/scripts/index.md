@@ -82,12 +82,6 @@ AUTOMATION FLOW
 │  Capacity report= UsedCapacity/TotalCapacity per datastore per host                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 5 — Run it**
-
-```bash
-cd C:\Users\YourName\Desktop
-.\vsan_cluster_health.ps1
 ```
 
 **What you should see**

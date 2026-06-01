@@ -4,7 +4,7 @@
 Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distributed Virtual Data Centers, multi-tenant namespaces, and compliance retention for petabyte-scale unstructured data workloads.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Dell ECS — Elastic Cloud Storage ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

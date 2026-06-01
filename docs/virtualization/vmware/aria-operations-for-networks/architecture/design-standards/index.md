@@ -5,7 +5,7 @@
 Design Standards reference covering Sizing, Collector Placement Guidelines, Network Requirements, High Availability, Certificate Requirements and 3 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── vRNI Design Standards ────────────────────────────────────────┐
 │                                                                                                       │
 │  Sizing, collector placement, and data source standards for Aria Operations for Networks.             │

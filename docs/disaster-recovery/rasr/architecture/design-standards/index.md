@@ -76,40 +76,6 @@ Examples:
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Recovery Media Standards
-
-| Requirement | Standard |
-|---|---|
-| Media format | ISO file stored on the recovery share alongside images |
-| iDRAC mapping | Pre-mapped and tested quarterly — do not wait until an incident |
-| WinPE version match | Media must match the server generation's driver pack (14G/15G/16G) |
-| Media refresh cycle | Rebuild media after each RASR agent update |
-| Physical USB | One USB per rack; labeled with server generation and last verified date |
-
-## Test and Validation Schedule
-
-| Test type | Frequency | Scope | Evidence required |
-|---|---|---|---|
-| **Boot media test** | Quarterly | Boot WinPE from iDRAC; confirm network access and share connectivity | Screenshot of share connection from WinPE |
-| **Full restore test** | Semi-annually | Restore to an isolated VM; verify OS boots | Restore completion log + screenshot |
-| **Partial restore test** | Quarterly | File-level recovery from image | File hash comparison |
-| **Schedule verification** | Monthly | Confirm backups are completing per schedule | Backup log review + OMSA alert check |
-
-```powershell
-# Monthly schedule verification script
-$servers = @("app01", "db02", "web01")
-foreach ($server in $servers) {
-    $img = Get-ChildItem "\\nas01\rasr-images\prod\$server\" |
-           Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    $age = (Get-Date) - $img.LastWriteTime
-    [PSCustomObject]@{
-        Server     = $server
-        LastImage  = $img.LastWriteTime
-        AgeHours   = [math]::Round($age.TotalHours, 1)
-        Status     = if ($age.TotalHours -lt 26) {"OK"} else {"ALERT — overdue"}
-    }
-} | Format-Table
 ```
 
 ## Access Control Standards

@@ -66,22 +66,6 @@ aws kms cancel-key-deletion --key-id <key-id>
 │    Transit eng  = Vault secrets engine; encrypts/decrypts via API without exposing key material       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Key Revocation
-
-1. Identify scope — which systems used the compromised key?
-2. Generate replacement key
-3. Re-encrypt data encrypted under the compromised key
-4. Revoke the old key in KMS/vault
-5. Document incident and remediation
-
-## SSH Host Key Rotation
-
-```bash
-ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
-ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
-systemctl restart sshd
-# Update known_hosts on all clients
 ```
 
 ## ONTAP Key Manager

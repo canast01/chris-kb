@@ -5,7 +5,7 @@
 Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Standards, Alert Notification Routing, Health Score Standards, API Access Standards and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── Pure1 — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -32,24 +32,6 @@ Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Stan
 │  Purity current = All arrays on supported Purity release; Pure1 flags end-of-life                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Array Tagging Policy
-
-Every FlashArray and FlashBlade registered in Pure1 must carry the three mandatory tags. Tags are used for reporting, alert routing, capacity forecasting by business unit, and chargeback.
-
-| Tag Key | Required | Example Values |
-|---|---|---|
-| Site | Yes | `dc1`, `dc2`, `dr-site` |
-| Environment | Yes | `prod`, `non-prod`, `dev` |
-| Owner | Yes | `storage-ops`, `db-team`, `platform` |
-
-Apply tags immediately after a new array appears in Pure1 (within 24 hours of onboarding).
-
-Monthly tag compliance check:
-
-```bash
-# Using Pure1 REST API to find untagged arrays
-# See scripts/pure1/tag_compliance.py
 ```
 
 ## Capacity Threshold Standards

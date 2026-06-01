@@ -89,51 +89,6 @@ Symptom Triage Map
 │  Log purge     = /var/log compression/rotation; also rotate stats DB                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Issue Summary
-
-| Symptom | Likely Cause | First Action |
-|---|---|---|
-| vCenter UI not loading | vpxd stopped or DB down | SSH → `service-control --status vpxd` |
-| Certificate error in browser | Machine SSL expired | VAMI → Certificate Management |
-| ESXi host shows Disconnected | Agent failure or cert mismatch | Reconnect host; check `/var/log/vmware/vpxd/vpxd.log` |
-| SSO login rejected | AD identity source broken or account locked | VAMI → SSO Configuration |
-| VAMI inaccessible | `applmgmt` service stopped | SSH → `service-control --start applmgmt` |
-| Datastore alarm (Inaccessible) | Storage path failure | Check host storage adapter and SAN/NFS path |
-| DRS/HA cluster warning | Admission control violation or host failure | Review cluster Events tab |
-| vCenter upgrade failed | Precheck failure or disk space | Review `/var/log/vmware/applmgmt/applmgmt.log` |
-
----
-
-## vCenter Services Not Starting
-
-### Symptoms
-- vSphere Client loads but shows "503 Service Unavailable" or partial UI
-- `service-control --status vpxd` returns `stopped`
-- Events and tasks pane empty or frozen
-
-### Diagnostic Steps
-
-```bash
-# SSH to VCSA
-
-# Check all service statuses at once
-service-control --status --all
-
-# Check vpxd specifically
-service-control --status vpxd
-
-# Check the Postgres database service
-service-control --status vmware-vpostgres
-
-# Tail vpxd log for the root error
-tail -200 /var/log/vmware/vpxd/vpxd.log | grep -E "error|fatal|panic" -i
-
-# Check disk space — a full /storage/db partition will kill Postgres
-df -h
-
-# Check Postgres log if DB failure suspected
-tail -100 /var/log/vmware/vpostgres/postgresql-*.log
 ```
 
 ### Resolution

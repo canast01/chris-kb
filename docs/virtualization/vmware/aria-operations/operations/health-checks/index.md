@@ -5,8 +5,8 @@
 Health Checks reference covering Cluster Node Health via API, Adapter Health, Disk and Storage Health, Service Health Commands, NTP and Time Sync and 3 more sections.
 </div>
 
-```text
 Aria Operations — Health Check Coverage Map
+```
 ┌─────────────────────────────────────────────────────┐
 │  Cluster Node Health                                │
 │  Admin → Cluster Management                         │
@@ -14,9 +14,11 @@ Aria Operations — Health Check Coverage Map
 │  Expected: all nodes ONLINE                         │
 │  Watch: OFFLINE · DEGRADED · SYNCING                │
 └──────────────────────┬──────────────────────────────┘
+```
                        │
           ┌────────────┼────────────────────┐
           ▼            ▼                    ▼
+```
 ┌──────────────┐ ┌──────────────┐ ┌─────────────────┐
 │ Adapter      │ │ Disk         │ │ Service           │
 │ Health       │ │ Health       │ │ Health            │
@@ -31,8 +33,11 @@ Aria Operations — Health Check Coverage Map
 │ Collecting   │ │              │ │ casa / nginx      │
 │ < 5 min ago  │ │ check inodes │ │ watchdog          │
 └──────────────┘ └──────────────┘ └─────────────────┘
+```
           │
           ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  NTP Health (all nodes must be < 1 second drift)    │
 │  chronyc tracking (per node)                        │
@@ -82,26 +87,6 @@ Aria Operations — Health Check Coverage Map
 │  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Cluster Node Health via API
-
-```bash
-# Authenticate
-TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>","authSource":"Local"}' | \
-  jq -r '.token')
-
-# List all cluster nodes and their status
-curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.example.local/suite-api/api/cluster/nodes" | \
-  jq '.nodes[] | {name: .name, role: .role, status: .nodeStatus}'
-
-# Expected: all nodes show nodeStatus = "ONLINE"
-# OFFLINE, DEGRADED, or SYNCING nodes require investigation before any upgrade
 ```
 
 ---

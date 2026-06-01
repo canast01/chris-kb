@@ -89,34 +89,6 @@ ESCALATION PATH
 │  GSS           = Global Support Services (VMware/Broadcom)                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Information Template
-
-Prepare the following information before submitting the case:
-
-```bash
-Environment:
-  vSphere version:         e.g. 8.0 U2
-  vSAN version / mode:     e.g. 8.0 U2 ESA / OSA
-  Cluster host count:      e.g. 6 nodes
-  vSAN storage policy:     e.g. FTT=2, RAID-6
-  Stretched cluster:       Yes / No
-  Encryption:              Yes (KMS type) / No
-
-Incident timeline:
-  When problem first detected:    YYYY-MM-DD HH:MM UTC
-  What changed before the issue:  e.g. ESXi patch applied, disk replaced
-  Current cluster health state:   e.g. 2 hosts degraded, 14 objects absent
-
-Current health:
-  esxcli vsan cluster get output: <paste>
-  esxcli vsan debug object list non-healthy output: <paste>
-  esxcli vsan debug resync summary get output: <paste>
-
-Error messages:
-  Skyline Health alerts: <paste>
-  vmkernel.log errors: <paste relevant lines>
-  vsanmgmt.log errors: <paste relevant lines>
 ```
 
 ### Support Bundle

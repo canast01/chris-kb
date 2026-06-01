@@ -72,26 +72,6 @@ symcfg list -v | grep "Microcode"
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Decommission Procedure
-
-```bash
-# Step 1: Quiesce application I/O
-# Step 2: Split pairs gracefully
-symrdf -g <rdfg> split -noprompt
-
-# Step 3: Verify split state
-symrdf -g <rdfg> query | grep State   # Should show: Split
-
-# Step 4: Delete SRDF pairs
-symrdf -g <rdfg> deletepair -force -noprompt
-
-# Step 5: Remove devices from SRDF group
-symrdf -rdfg <rdfg> delete -noprompt
-
-# Step 6: Update CMDB — remove group number from allocation register
 ```
 
 ---

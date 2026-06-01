@@ -5,7 +5,7 @@
 Encryption reference covering Backup Encryption, Linux Hardened Repository (Immutable Backups).
 </div>
 
-```text
+```
 ┌──────────────────────── Commvault Encryption — At Rest, In Transit, Key Mgmt ─────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -50,31 +50,6 @@ Encryption reference covering Backup Encryption, Linux Hardened Repository (Immu
 │  TLS Mutual     = Both sides present certs; prevents man-in-the-middle on backup streams              │
 │  CBC / XTS      = AES block cipher modes; XTS preferred for disk/chunk encryption                     │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Backup Encryption
-
-Configure per Storage Policy (Command Center: Storage → Storage Policies):
-
-| Encryption Option | When to Use |
-|---|---|
-| Client-side (BlowFish/AES-256) | Maximum protection; CPU overhead on client |
-| MediaAgent-side (AES-256) | Off-client encryption; no client CPU impact |
-| Storage-level encryption | If storage supports hardware encryption (not CommVault-managed) |
-
-Mandate for:
-- [ ] Policies covering PII or regulated data → AES-256, MediaAgent-side minimum
-- [ ] Cloud and off-site copy targets → always encrypted
-- [ ] DDB encryption: enable for dedup pools storing sensitive workloads
-
-## Linux Hardened Repository (Immutable Backups)
-
-Protect against ransomware using immutability:
-
-```bash
-# On Linux hardened repository server
-# CommVault sets immutable flag automatically via chattr +i
-# Verify:
-lsattr /path/to/backup/files | grep '\-i\-'
 ```
 
 Configure via VBR Repository settings: enable "Immutable" with retention period matching recovery requirements.

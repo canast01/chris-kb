@@ -4,7 +4,7 @@
 Dell VPLEX — Security reference: Authentication, Access Control, Encryption, Hardening.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Dell VPLEX Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

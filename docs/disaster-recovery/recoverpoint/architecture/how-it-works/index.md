@@ -67,16 +67,6 @@ graph LR
 │    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Journal Sizing
-
-```text
-Journal size (GB) = Write rate (MB/s) × 3600 × Retention hours / 1024
-
-Example: 50 MB/s write rate, 4-hour retention
-  50 × 3600 × 4 / 1024 = ~703 GB
-
-Minimum recommended: 10× hourly write rate
 ```
 
 | Environment Write Rate | Minimum Journal Size | Recommended Retention |

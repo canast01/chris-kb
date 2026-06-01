@@ -5,8 +5,8 @@
 Diagnostics reference covering Service Status Verification, Certificate Expiry Checks, Disk Space Verification, NTP and Time Sync, Pre-Operation Health Summary.
 </div>
 
-```text
   LCM Diagnostic Data Sources
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  LCM Appliance (SSH as root)       LCM API                      │
 │  ┌───────────────────────────┐     ┌──────────────────────────┐  │
@@ -70,26 +70,6 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │  GSS SR Attachment   = Logscraper archive + support bundle required for P1/P2                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Service Status Verification
-
-```bash
-# Check all LCM-related services
-systemctl list-units --type=service | grep -i "vrlcm\|vmware"
-
-# Check individual services
-systemctl status vmware-vrlcm
-systemctl status vmware-vrlcm-db
-systemctl status nginx
-
-# Restart a failed service
-systemctl restart vmware-vrlcm
-
-# View service logs via journald
-journalctl -u vmware-vrlcm -n 200 --no-pager
-
-# Check LCM API health endpoint
-curl -sk https://localhost/lcm/api/v1/health | python3 -m json.tool
 ```
 
 Key services and expected states:

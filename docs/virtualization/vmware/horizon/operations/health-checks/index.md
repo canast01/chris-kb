@@ -5,22 +5,27 @@
 Health Checks reference covering Desktop Pool Health, Active Session Count vs License, UAG Health Check, App Volumes Manager Health, DEM Share Accessibility and 3 more sections.
 </div>
 
-```text
   Health Check Chain
+```
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 │  Connection      │    │  Composer /      │    │  vCenter         │
 │  Servers         │───►│  App Volumes Mgr │───►│  (pool/datastore │
 │  (all green?)    │    │  (healthy?)      │    │   capacity?)      │
 └──────────────────┘    └──────────────────┘    └──────────────────┘
+```
          │                                                │
          ▼                                                ▼
+```
 ┌──────────────────┐                         ┌──────────────────┐
 │  UAG             │                         │  Active Directory   │
 │  (port 443/8443  │                         │  (LDAP/Kerberos     │
 │   reachable?)    │                         │   connectivity?)    │
 └──────────────────┘                         └──────────────────┘
+```
          │
          ▼
+```
+```
 ┌──────────────────┐
 │  Desktop Pools                                                   │
 │  (Available > 0,                                                 │
@@ -72,18 +77,6 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 │  Session count = active + disconnected; both consume licence                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Desktop Pool Health
-
-```yaml
-Horizon Console → Inventory → Desktops
-  For each pool, check:
-    - Available: desktops ready to accept new sessions
-    - Provisioned: total VMs in pool (Available + Connected + Disconnected)
-    - Error: should be 0 — investigate any in error state immediately
-    - Maintenance: expected only during admin maintenance
 ```
 
 Acceptable ratio: Available desktops should be ≥ 10% of pool size to handle burst demand.

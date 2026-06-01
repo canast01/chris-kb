@@ -52,45 +52,6 @@ graph LR
 │   │              Where-Object   = filter pipeline; alias: ?; $_.Property -eq "value"              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Variables, Output & Pipeline
-
-PowerShell passes objects between commands using the pipe (`|`). This is more powerful than text-based pipes — you get real properties you can filter and select, not just strings. Variables start with `$`.
-
-```powershell
-# Variables
-$myVar = "value"
-$myArray = @(1, 2, 3)
-$myHash = @{ key = "value" }
-
-# Output
-Write-Output "message"
-Write-Host "message" -ForegroundColor Green
-Write-Error "error message"
-Write-Verbose "verbose" -Verbose
-
-# Null check
-if ($null -eq $var) { "null" }
-
-# String formatting (embed expression in string)
-"Server: $($server.Name)"
-
-# Common pipeline filters
-Get-Service | Where-Object { $_.Status -eq "Running" }
-Get-Process | Where-Object { $_.CPU -gt 10 }
-Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
-
-# Select specific properties
-Get-VM | Select-Object Name, PowerState, NumCpu, MemoryGB
-
-# Aggregate
-Get-VM | Measure-Object MemoryGB -Sum -Average
-
-# ForEach loop via pipeline
-Get-VM | ForEach-Object { Write-Host $_.Name }
-1..10 | ForEach-Object { "Item $_" }
 ```
 
 ---

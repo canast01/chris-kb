@@ -74,19 +74,6 @@ symrdf -sid 000123456789 query -g <rdf_group>
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Important:** The `-force` flag is required when R1 is inaccessible and the link cannot confirm synchronization. Without it, `symrdf failover` will refuse to proceed if the link is already down.
-
-### Failover with Storage Group (SG-based management)
-
-In modern VMAX/PowerMax environments, RDF operations are performed at the Storage Group level:
-
-```bash
-# Storage Group failover (preferred for VMAX3/PowerMax)
-symrdf -sg PROD_SG failover -force
-
-# Query by storage group
-symrdf -sg PROD_SG query
 ```
 
 ---

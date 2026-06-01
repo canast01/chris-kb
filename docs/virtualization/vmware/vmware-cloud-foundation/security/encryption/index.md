@@ -5,8 +5,8 @@
 Encryption reference covering vSAN Encryption.
 </div>
 
-```text
 VCF Encryption — Certificate and Data Flow
+```
 ┌─────────────────────────────────────────────────────┐
 │  TLS Certificate Lifecycle (via SDDC Manager)       │
 │                                                     │
@@ -24,8 +24,11 @@ VCF Encryption — Certificate and Data Flow
 │                                                     │
 │  Timeline:  60d → plan   30d → schedule   7d → P2   │
 └──────────────────────────┬──────────────────────────┘
+```
                            │
                            ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  vSAN Data-at-Rest Encryption                       │
 │                                                     │
@@ -82,19 +85,6 @@ VCF Encryption — Certificate and Data Flow
 │  Master key   = SDDC Mgr DB encryption; derived from admin password                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Replacement procedure:**
-
-1. Generate CSR in SDDC Manager for the target component
-2. Submit CSR to internal CA and receive signed certificate + CA chain
-3. Import the signed cert and chain back into SDDC Manager
-4. SDDC Manager installs the certificate and restarts affected services
-
-**Check certificate expiry:**
-
-```bash
-openssl s_client -connect <vcenter-fqdn>:443 </dev/null 2>/dev/null \
-  | openssl x509 -noout -subject -dates
 ```
 
 **Lead times:**

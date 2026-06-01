@@ -57,25 +57,6 @@ graph TD
 │   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## SecretManagement Module
-
-The `Microsoft.PowerShell.SecretManagement` module provides a consistent interface for storing and retrieving secrets from vaults.
-
-```powershell
-# Install SecretManagement and the local vault extension
-Install-Module -Name Microsoft.PowerShell.SecretManagement -Scope CurrentUser
-Install-Module -Name Microsoft.PowerShell.SecretStore -Scope CurrentUser
-
-# Register the local vault
-Register-SecretVault -Name LocalVault -ModuleName Microsoft.PowerShell.SecretStore -DefaultVault
-
-# Store a secret
-Set-Secret -Name VCenterPassword -Secret 'P@ssword1'
-
-# Retrieve a secret
-$pass = Get-Secret -Name VCenterPassword -AsPlainText
-$cred = [PSCredential]::new('admin', (Get-Secret -Name VCenterPassword))
 ```
 
 ## Authentication Reference

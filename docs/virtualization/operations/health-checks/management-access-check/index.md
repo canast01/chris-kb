@@ -65,17 +65,6 @@ Management Access Check Flow
 │    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## vCenter Access
-
-```powershell
-# Verify vCenter login (PowerCLI)
-Connect-VIServer -Server vcenter.example.local -Credential $cred
-if ($?) { Write-Host "vCenter: OK" } else { Write-Host "vCenter: FAIL" }
-
-# Check vCenter certificate validity
-$cert = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
-$expiry = (Invoke-WebRequest -Uri "https://vcenter.example.local" -UseBasicParsing).Headers
 ```
 
 Checks to perform in vCenter UI:

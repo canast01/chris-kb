@@ -5,7 +5,7 @@
 AWS Account Structure reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── AWS Governance — Account Structure ──────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account structure with OU hierarchy isolating workloads by env and function.                   │
@@ -51,33 +51,6 @@ AWS Account Structure reference covering Overview, Where It Fits, Daily Checks, 
 │  Security Hub org= Aggregates security findings from all accounts in organisation                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-AWS Account Structure: Management → OUs → Members
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  Management Account (Root)                          │
-  │  Billing, SCPs, Organizations                       │
-  └───────────────────────┬──────────────────────────────┘
-             ┌────────────┼──────────────────┐
-             ▼            ▼                  ▼
-  ┌──────────────┐ ┌─────────────┐ ┌─────────────────┐
-  │  OU: Security│ │ OU: Workload│ │ OU: Sandbox     │
-  │              │ │             │ │                 │
-  │ ┌──────────┐ │ │ ┌─────────┐ │ │ ┌─────────────┐ │
-  │ │ Log      │ │ │ │ Prod    │ │ │ │ Developer   │ │
-  │ │ Archive  │ │ │ │ Account │ │ │ │ Accounts    │ │
-  │ │ Account  │ │ │ └─────────┘ │ │ └─────────────┘ │
-  │ └──────────┘ │ │ ┌─────────┐ │ └─────────────────┘
-  │ ┌──────────┐ │ │ │ Staging │ │
-  │ │ Audit    │ │ │ │ Account │ │
-  │ │ Account  │ │ │ └─────────┘ │
-  │ └──────────┘ │ │ ┌─────────┐ │
-  └──────────────┘ │ │ Dev     │ │
-                   │ │ Account │ │
-                   │ └─────────┘ │
-                   └─────────────┘
 ```
 
 ## Overview

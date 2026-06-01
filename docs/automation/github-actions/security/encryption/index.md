@@ -44,28 +44,6 @@ flowchart LR
 │   │    Env scope       = set secret as env var at job level; available to all steps in that job   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Secret Types and Scopes
-
-| Scope | Where set | Accessible by |
-|---|---|---|
-| Repository secret | Repo Settings → Secrets | All workflows in that repo |
-| Environment secret | Repo Settings → Environments | Jobs targeting that environment |
-| Organisation secret | Org Settings → Secrets | Repos granted access |
-| `GITHUB_TOKEN` | Auto-generated per run | All jobs, scoped to the run |
-
-## Secret Scanning and Rotation
-
-GitHub automatically scans pushed commits for common secret patterns and alerts when found.
-
-```bash
-# Enable secret scanning via CLI
-gh api --method PATCH /repos/OWNER/REPO \
-  -f security_and_analysis.secret_scanning.status=enabled \
-  -f security_and_analysis.secret_scanning_push_protection.status=enabled
-
-# List secret scanning alerts
-gh api /repos/OWNER/REPO/secret-scanning/alerts
 ```
 
 ## Masking Dynamic Values

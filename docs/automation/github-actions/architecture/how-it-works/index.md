@@ -46,35 +46,6 @@ flowchart TD
 │   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Runners
-
-### GitHub-Hosted Runners
-
-| Label | OS | vCPU | RAM |
-|---|---|---|---|
-| `ubuntu-24.04` / `ubuntu-latest` | Ubuntu 24.04 LTS | 4 | 16 GB |
-| `ubuntu-22.04` | Ubuntu 22.04 LTS | 4 | 16 GB |
-| `windows-2022` / `windows-latest` | Windows Server 2022 | 4 | 16 GB |
-| `macos-15` / `macos-latest` | macOS 15 (ARM, M1) | 4 | 14 GB |
-
-### Self-Hosted Runners
-
-Self-hosted runners poll GitHub via HTTPS long-polling for job assignments.
-
-```mermaid
-sequenceDiagram
-    participant R as Runner Agent
-    participant G as GitHub API
-    R->>G: Register (POST /repos/.../actions/runners/registration-token)
-    loop Long-polling
-        R->>G: GET next job
-        G-->>R: Job payload (steps, env, secrets)
-        R->>R: Execute all steps
-        R->>G: POST logs + results
-    end
 ```
 
 | Scope | Registration Level | Shared Across |

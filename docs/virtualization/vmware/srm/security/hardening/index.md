@@ -5,8 +5,8 @@
 Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Credentials, Test Recovery Plans Regularly, Restrict Who Can Execute Recovery, Secure Recovery Site Network Design and 3 more sections.
 </div>
 
-```text
   SRM Hardening Controls
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Network Restrictions        Access Controls                 │
 │  ┌──────────────────────┐    ┌──────────────────────────┐    │
@@ -71,23 +71,6 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 │  DR test evidence= required for DR compliance (ISO 22301, SOC 2)                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Least-Privilege SRA Service Accounts
-
-SRA credentials should have minimum array permissions:
-
-**Pure Storage FlashArray:**
-- Create API token with role: `readonly` for SRA discovery
-- Create separate API token with role: `array_admin` only for failover operations
-- Use the read-only token for normal operations; only use admin token during DR
-
-```bash
-# On FlashArray (CLI):
-pureapitoken create --name srm-readonly --role readonly
-pureapitoken create --name srm-failover --role storage_admin
-# Use srm-readonly token in SRA — update to srm-failover only during DR
 ```
 
 ---

@@ -5,8 +5,8 @@
 VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
 Post-Upgrade Validation Sequence
+```
 ┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
 │  Services  │     │   Health   │     │    VMs     │     │    Docs    │
 │            │     │            │     │            │     │            │
@@ -17,6 +17,7 @@ Post-Upgrade Validation Sequence
 │ all hosts  │     │ FW matches │     │ backups    │     │ versions   │
 │ Connected  │     │ baseline   │     │ working    │     │ recorded   │
 └────────────┘     └────────────┘     └────────────┘     └────────────┘
+```
        │                 │                  │                   │
        └─────────────────┴──────────────────┴───────────────────┘
                                     │

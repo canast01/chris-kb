@@ -61,19 +61,4 @@ Disconnect-VIServer -Confirm:$false
 │   │     Return values = output objects not strings; allows caller to filter with Where-Object     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Datastore Utilization Alert
-
-Lists datastores below a configurable free-space threshold.
-
-```powershell
-# ds-alert.ps1
-param([int] $ThresholdPct = 20)
-
-Get-Datastore |
-    Select-Object Name, CapacityGB, FreeSpaceGB,
-        @{N="FreePct";E={[math]::Round($_.FreeSpaceGB / $_.CapacityGB * 100, 1)}} |
-    Where-Object { $_.FreePct -lt $ThresholdPct } |
-    Sort-Object FreePct |
-    Format-Table -AutoSize
 ```

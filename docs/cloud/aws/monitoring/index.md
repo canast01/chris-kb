@@ -4,7 +4,7 @@
 AWS observability is built on CloudWatch (metrics, logs, alarms), CloudTrail (API audit trail), and EventBridge (event-driven automation). Coverage includes CloudWatch Agent for OS-level metrics, alarm standards, log retention, and AWS Health for service incident visibility.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── AWS Monitoring Overview ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -64,15 +64,6 @@ Before escalating to Dell support, work through the standard diagnostic steps:
 │  Proxy check = If gateway VM uses proxy, verify proxy allows cloudiq.dell.com:443                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Health Score Calculation Delay
-
-**Symptoms**: System health score shows as "Unknown" or does not update after a firmware upgrade.
-
-```text
-- This is expected behaviour after a firmware upgrade
-- Allow 2–4 hours for health score recalculation post-upgrade
-- If still not updated after 4 hours, open a Dell support case with system ID and upgrade timestamp
 ```
 
 ### Alert Notifications Not Delivered

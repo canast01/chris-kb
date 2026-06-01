@@ -50,25 +50,6 @@ flowchart TD
 │   │               Fix: rebuild EE image with collection included if running via AWX               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Sudo and Privilege Escalation Failures
-
-| Error | Likely cause | Fix |
-|---|---|---|
-| `sudo: a password is required` | No NOPASSWD in sudoers | Add `NOPASSWD` or use `--ask-become-pass` |
-| `incorrect sudo password` | Wrong become password | Run with `-K` flag |
-| `sudo: command not found` | sudo not installed | Install sudo or use `become_method: su` |
-| `Failed to set permissions on the temporary files` | sudoers restricts `SETENV` | Add `SETENV` to sudoers entry |
-
-```bash
-# Prompt for become password interactively
-ansible-playbook site.yml --ask-become-pass
-
-# Specify become method
-- name: Run as root
-  become: true
-  become_method: sudo
-  become_user: root
 ```
 
 ## Common Module Errors

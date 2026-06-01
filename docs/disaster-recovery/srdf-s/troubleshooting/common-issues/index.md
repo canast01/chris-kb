@@ -100,18 +100,6 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Recovery:**
-
-1. Resolve the underlying link or RTT issue first.
-2. Once the link is stable, re-establish the SRDF pair:
-
-```bash
-# Resync from R1 to R2 (R1 data is authoritative in this scenario)
-symrdf -g <dgname> -sid <r1_sid> resync -noprompt
-
-# Monitor until pair returns to Synchronized
-symrdf -g <dgname> -sid <r1_sid> query
 ```
 
 ---

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.
 </div>
+```
+┌────────────────────────────────────── Dell VPLEX — Integrations ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      VPLEX integrations: VMware vSphere, Kubernetes CSI, backup software, and monitoring      │   │
+│   │                                     Protocols: FC · iSCSI                                     │   │
+│   │ API: VPLEX Management Server / vplex CLI REST API enables automation and third-party tool int │   │
+│   │             Plug-ins available for vCenter, OpenShift, Splunk, and SIEM platforms             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    VPLEX → REST API / plug-ins → VMware / K8s / backup / monitoring                                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
+│   │            Metro            │  │         Sync stretch        │  │        <5ms RTT sites       │   │
+│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
+│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
+│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+│   │  Virtual volume  │ Virtualised LUN  │      FC/iSCSI     │    FC zoning     │   Multi-vendor   │   │
+│   │  Metro cluster   │   Sync stretch   │   Inter-cluster   │   Certificate    │    2-site max    │   │
+│   │     Witness      │  Quorum arbiter  │       HTTPS       │   Certificate    │     3rd site     │   │
+│   │     WAN-COM      │ Geo replication  │   Encrypted WAN   │   Certificate    │     Geo only     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
+│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
+│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
+│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
+│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
+│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
+│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
+│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
+│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
+│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
+│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
+│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```mermaid
 flowchart TB

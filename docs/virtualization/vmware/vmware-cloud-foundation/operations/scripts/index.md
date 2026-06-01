@@ -5,14 +5,16 @@
 Scripts reference covering Trigger SoS Health Check and Poll Result (Bash).
 </div>
 
-```text
 VCF API Automation — Data Flow
+```
 ┌─────────────────────────────────────────────────────┐
 │  Automation Script / Pipeline                       │
 │  (Python / Bash / PowerShell)                       │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ HTTPS POST /v1/tokens
                        ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager REST API                              │
 │  https://<sddc-mgr>/v1                              │
@@ -24,8 +26,11 @@ VCF API Automation — Data Flow
 │       health-summary                                │
 │  PATCH /v1/credentials ◄── rotate credentials       │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ returns JSON
                        ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Script Output / Integration                        │
 │  → stdout / CSV / JSON                              │
@@ -79,22 +84,4 @@ VCF API Automation — Data Flow
 │  Task ID       = async operation ID; poll with Get-VCFTask until complete                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Trigger SoS Health Check and Poll Result (Bash)
-
-```bash
-#!/usr/bin/env bash
-SDDC=$1; USER=$2; PASS=$3
-# Trigger health check task
-TASK=$(curl -sk -u "$USER:$PASS" -X POST \
-  "https://$SDDC/v1/system/health-summary" | jq -r '.id')
-echo "SoS task ID: $TASK"
-# Poll until complete
-while true; do
-  STATUS=$(curl -sk -u "$USER:$PASS" \
-    "https://$SDDC/v1/tasks/$TASK" | jq -r '.status')
-  echo "  Status: $STATUS"
-  [[ "$STATUS" == "Successful" || "$STATUS" == "Failed" ]] && break
-  sleep 10
-done
 ```

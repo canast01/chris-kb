@@ -5,7 +5,7 @@
 Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizing Recommendations, Reclaim Workflow, Capacity Planning Reports, Common Capacity Issues.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,38 +48,6 @@ Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizi
 │  Headroom          = Remaining available capacity before the configured utilisation limit             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Key capacity metrics to monitor:
-
-| Metric Key | Description |
-|---|---|
-| `summary|workload` | Current workload percentage |
-| `summary|remainingCapacityPercentage` | Remaining headroom |
-| `summary|timeRemaining` | Days until capacity exhausted |
-| `summary|totalCapacity` | Total configured capacity |
-
-## Rightsizing Recommendations
-
-Aria Operations identifies over-provisioned VMs through the **Reclaim** and **Rightsize** views.
-
-Navigation: **Optimization > Reclaim** or **Optimization > Rightsizing**
-
-Categories of rightsizing actions:
-
-| Category | Action | Typical Trigger |
-|---|---|---|
-| Oversized CPU | Reduce vCPU count | CPU demand < 20% over 30 days |
-| Oversized Memory | Reduce vRAM | Memory demand < 30% with no ballooning |
-| Idle VM | Power off or delete | No I/O, CPU, or network for 30+ days |
-| Snapshot Cleanup | Remove old snapshots | Snapshot age > 7 days |
-
-```bash
-# Export rightsizing recommendations via API
-curl -sk -X GET \
-  "https://aria-ops.example.com/suite-api/api/recommendations?recommendationType=RIGHTSIZE" \
-  -H "Authorization: vRealizeOpsToken <token>" \
-  -H "Accept: application/json" | jq '.recommendations[] | {resourceName, description, impact}'
 ```
 
 ## Reclaim Workflow

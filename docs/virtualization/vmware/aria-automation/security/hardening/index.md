@@ -55,19 +55,6 @@ VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Pass
 │  SIEM integration  = Security Information and Event Management; aggregates vRA and vIDM logs          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Store the new password in an enterprise vault. Do not use the `admin` account for routine access — create named AD-backed accounts for all users.
-
----
-
-## Certificate Replacement
-
-Replace the self-signed certificate with a CA-signed certificate before production use:
-
-**Via LCM (preferred for LCM-managed deployments):**
-
-```text
-LCM → Locker → import certificate → LCM → Lifecycle Operations → Aria Automation → Replace Certificate
 ```
 
 **Via vracli (standalone deployments):**

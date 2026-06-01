@@ -5,8 +5,8 @@
 CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & Time, Logs.
 </div>
 
-```text
   LCM CLI Coverage (SSH to LCM as root)
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  vracli sub-commands                                            │
 │  ┌───────────────────────────────────────────────────────┐      │
@@ -71,26 +71,6 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Services
-
-```bash
-# List all LCM-managed services and state
-vracli services list
-
-# Restart a named LCM service
-vracli services restart <service_name>
-
-# Stop a service
-vracli services stop <service_name>
-
-# Start a service
-vracli services start <service_name>
-
-# Show logs for a service
-journalctl -u <service_name> --since "1 hour ago"
 ```
 
 ---

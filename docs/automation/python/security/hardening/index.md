@@ -52,28 +52,6 @@ flowchart TD
 │   │   SBOM          = Software Bill of Materials; list all deps + versions for compliance audit   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Dependency Management
-
-Keep dependencies pinned and regularly audited.
-
-```bash
-# Pin all dependencies for reproducible builds
-pip freeze > requirements.txt
-
-# Audit for known vulnerabilities
-pip install pip-audit
-pip-audit
-
-# Check a specific package
-pip-audit --require requests
-
-# Update a vulnerable package
-pip install --upgrade requests
-
-# Scan with safety (alternative tool)
-pip install safety
-safety check -r requirements.txt
 ```
 
 ## File and Permission Security

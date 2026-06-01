@@ -51,13 +51,6 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 │  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Array Decommission
-
-```text
-1. CloudIQ dashboard > Assets > [System] > Remove System
-2. SCG admin UI > Systems > [System] > Delete
-3. Update CloudIQ notification rules to remove the decommissioned system from alert scopes
 ```
 
 ## API Token Lifecycle

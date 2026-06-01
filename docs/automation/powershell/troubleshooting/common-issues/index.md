@@ -49,30 +49,6 @@ flowchart TD
 │   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## PowerShell Remoting Issues
-
-```powershell
-# Enable remoting on a target machine (run as admin on the target)
-Enable-PSRemoting -Force -SkipNetworkProfileCheck
-
-# Test connectivity before running commands
-Test-WSMan -ComputerName server01
-Test-NetConnection -ComputerName server01 -Port 5985
-
-# Test basic remote session
-$session = New-PSSession -ComputerName server01 -Credential (Get-Credential)
-Invoke-Command -Session $session -ScriptBlock { hostname }
-Remove-PSSession $session
-
-# Diagnose firewall — WinRM ports
-# HTTP:  5985
-# HTTPS: 5986
-Get-NetFirewallRule -DisplayName "Windows Remote Management*" | Select-Object DisplayName, Enabled
-
-# Use SSL for secure remoting
-$sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-New-PSSession -ComputerName server01 -UseSSL -SessionOption $sessionOption
 ```
 
 ## Debugging Scripts

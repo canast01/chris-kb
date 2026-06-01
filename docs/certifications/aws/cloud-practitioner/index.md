@@ -132,12 +132,14 @@ Christos Anastasiadis  |  May 2026
 
     ```
     TRADITIONAL IT                    CLOUD (AWS)
+```
     ┌─────────────────┐               ┌─────────────────┐
     │  Buy servers     │               │  Request online  │
     │  Wait weeks      │     vs        │  Ready in mins   │
     │  Pay upfront     │               │  Pay per use     │
     │  Guess capacity  │               │  Scale anytime   │
     └─────────────────┘               └─────────────────┘
+```
     ```
 
 ??? question "Q2. Which cloud advantage eliminates the need to guess how much infrastructure capacity you need?"
@@ -150,12 +152,14 @@ Christos Anastasiadis  |  May 2026
 
     ```
     TRADITIONAL (guessing)            CLOUD (auto-match)
+```
     ┌──────────────────┐              ┌──────────────────┐
     │ Buy too much?    │              │  Auto Scaling    │
     │  wasted capacity │   vs         │  scales UP/DOWN  │
     │ Buy too little?  │              │  Always matches  │
     │  crashes!        │              │  actual demand   │
     └──────────────────┘              └──────────────────┘
+```
     ```
 
 ??? question "Q3. What does "trade fixed expense for variable expense" mean?"
@@ -170,11 +174,13 @@ Christos Anastasiadis  |  May 2026
 
     ```
     CAPEX (Traditional)               OPEX (Cloud)
+```
     ┌───────────────────┐             ┌───────────────────┐
     │ Jan: $2,000,000    │             │ Jan:  $45,000      │
     │ (buy servers)      │    vs       │ Feb:  $48,000      │
     │ Feb-Dec: maintain  │             │ (matches usage)    │
     └───────────────────┘             └───────────────────┘
+```
     ```
 
 ??? question "Q4. Which cloud model gives the most control over infrastructure?"
@@ -183,15 +189,19 @@ Christos Anastasiadis  |  May 2026
 
     ```
     RESPONSIBILITY STACK
+```
     ┌──────────────────────────────────────────────┐
     │           IaaS        PaaS        SaaS       │
     │        ┌────────┐  ┌────────┐  ┌────────┐   │
+```
     │  YOU → │  App   │  │  App   │  │        │   │
     │  YOU → │  Data  │  │  Data  │  │  AWS   │   │
     │  YOU → │  OS    │  │        │  │manages │   │
     │  AWS → │  Virt  │  │  AWS   │  │  ALL   │   │
     │  AWS → │  HW/DC │  │manages │  │        │   │
     │        └────────┘  └────────┘  └────────┘   │
+```
+```
     │  Control: HIGH         MID          LOW      │
     └──────────────────────────────────────────────┘
     ```
@@ -206,11 +216,13 @@ Christos Anastasiadis  |  May 2026
       except AWS owns the physical hardware.
 
     ```
+```
     ┌──────────────────────────────────┐
     │  EC2 (Elastic Compute Cloud)     │
     │  YOU manage: OS, apps, data, SGs │
     │  AWS manages: hardware, hypervisor│
     └──────────────────────────────────┘
+```
     ```
 
 ??? question "Q6. Elastic Beanstalk is an example of which model?"
@@ -221,12 +233,14 @@ Christos Anastasiadis  |  May 2026
     AWS provides complete platform. You bring the code.
 
     ```
+```
     ┌──────────────────────────────────────┐
     │  Elastic Beanstalk (PaaS)            │
     │  YOU → Upload your code              │
     │  AWS → Provisions EC2, OS, LB, ASG   │
     │  App is running! (you did nothing)   │
     └──────────────────────────────────────┘
+```
     ```
 
 ??? question "Q7. Which cloud model requires managing the least infrastructure?"
@@ -238,11 +252,13 @@ Christos Anastasiadis  |  May 2026
     Examples: Gmail, Salesforce, ServiceNow, Jira
 
     ```
+```
     ┌──────────────────────────────────────┐
     │  SaaS: Open browser → Log in → Use  │
     │  Provider manages: code, DB, servers │
     │  You manage: NOTHING                 │
     └──────────────────────────────────────┘
+```
     ```
 
 ??? question "Q8. A company wants to keep sensitive data on-premises while using AWS for other workloads. Which deployment model?"
@@ -251,12 +267,14 @@ Christos Anastasiadis  |  May 2026
 
     ```
     YOUR DATA CENTER          AWS CLOUD
+```
     ┌──────────────┐          ┌──────────────┐
     │  Sensitive   │◄────────►│  Web servers │
     │  financial   │  VPN /   │  Dev/test    │
     │  records     │  Direct  │  Analytics   │
     │  (on-prem)   │  Connect │  Backups     │
     └──────────────┘          └──────────────┘
+```
     Classic hybrid cloud pattern.
     ```
 
@@ -265,11 +283,13 @@ Christos Anastasiadis  |  May 2026
     Public cloud (all-in cloud).
 
     ```
+```
     ┌────────────────────────────────────┐
     │  INTERNET → AWS Region             │
     │  EC2, S3, RDS, Lambda — 100% cloud │
     │  No servers you own anywhere       │
     └────────────────────────────────────┘
+```
     ```
 
 ??? question "Q10. What is an AWS Region?"
@@ -281,6 +301,7 @@ Christos Anastasiadis  |  May 2026
     independent power, cooling, and networking.
 
     ```
+```
     ┌──────────────────────────────────────┐
     │  30+ Regions worldwide               │
     │  Examples: us-east-1 (N. Virginia)   │
@@ -288,6 +309,7 @@ Christos Anastasiadis  |  May 2026
     │  Data stays IN region unless you     │
     │  explicitly move it                  │
     └──────────────────────────────────────┘
+```
     ```
 
 ??? question "Q11. How many AZs does each AWS Region have at minimum?"
@@ -296,11 +318,15 @@ Christos Anastasiadis  |  May 2026
 
     ```
     AWS REGION (e.g. us-east-1)
+```
     ┌─────────────────────────────────────┐
     │  ┌─────────┐  ┌─────────┐  ┌─────┐  │
+```
     │  │   AZ-1  │  │   AZ-2  │  │AZ-3 │  │
     │  │(min req)│  │(min req)│  │     │  │
     │  └─────────┘  └─────────┘  └─────┘  │
+```
+```
     │       └────────────┴────────────┘    │
     │         High-bandwidth private fiber  │
     └─────────────────────────────────────┘
@@ -313,11 +339,15 @@ Christos Anastasiadis  |  May 2026
 
     ```
     AVAILABILITY ZONE
+```
     ┌──────────────────────────────────┐
     │  ┌──────────┐  ┌──────────┐      │
+```
     │  │  Data    │  │  Data    │      │
     │  │ Center A │  │ Center B │      │
     │  └──────────┘  └──────────┘      │
+```
+```
     │  Independent power and cooling    │
     │  Connected to other AZs via       │
     │  private high-bandwidth fiber     │
@@ -335,11 +365,15 @@ Christos Anastasiadis  |  May 2026
 
     ```
     SINGLE AZ (bad)          MULTI-AZ (good)
+```
     ┌─────────────┐          ┌─────────────────────┐
     │     AZ-1    │          │  AZ-1    │  AZ-2    │
     │  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
+```
     │  │  App   │ │          │ │ App  │ │ │ App  │ │
     │  └────────┘ │          │ └──────┘ │ └──────┘ │
+```
+```
     │  AZ fails   │          │ AZ fails │ Still UP!│
     │  OUTAGE!    │          │          │    ✓     │
     └─────────────┘          └─────────────────────┘
@@ -401,12 +435,14 @@ Christos Anastasiadis  |  May 2026
 
     ```
     YOUR DATA CENTER
+```
     ┌──────────────────────────────────┐
     │  AWS Outposts Rack:              │
     │  EC2 | EBS | RDS | ECS           │
     │  AWS hardware in YOUR building   │
     │  Connects to AWS via Direct Connect│
     └──────────────────────────────────┘
+```
     Extend on-prem to AWS.
     ```
 
@@ -670,6 +706,7 @@ DAY 1 COMPLETE
     Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
 
     ```
+```
     ┌──────────────────────────────────────────┐
     │  EC2 Instance                            │
     │  GUEST OS (Windows/Linux) ← YOU patch   │
@@ -677,6 +714,7 @@ DAY 1 COMPLETE
     │  HYPERVISOR (Nitro)       ← AWS patches  │
     │  PHYSICAL SERVER          ← AWS manages  │
     └──────────────────────────────────────────┘
+```
     ```
 
 ??? question "Q3. Who patches the database engine on RDS?"
@@ -1076,12 +1114,14 @@ DAY 2 COMPLETE
     Scale in (remove instances) when demand drops.
 
     ```
+```
     ┌──────────────────────────────────────────┐
     │  ASG: Min=2, Max=10, Desired=2           │
     │  CPU > 70%: launch more instances        │
     │  CPU < 30%: terminate some instances     │
     │  Always right-sized, never over-paying   │
     └──────────────────────────────────────────┘
+```
     ```
 
 ??? question "Q12. Difference between scaling out and scaling up?"

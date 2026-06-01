@@ -89,15 +89,6 @@ vCenter Hardening Layers
 │  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Configure SSH timeout so idle sessions are terminated automatically:
-
-```bash
-# On VCSA shell — /etc/ssh/sshd_config
-ClientAliveInterval 300
-ClientAliveCountMax 0
-PermitRootLogin yes           # required for VCSA; restrict by source IP in firewall
-PasswordAuthentication yes    # needed for initial access; prefer key-based where possible
 ```
 
 ---

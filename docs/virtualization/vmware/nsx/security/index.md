@@ -4,7 +4,7 @@
 Security reference for VMware NSX. Covers NSX Manager authentication, role-based access control, data-in-transit encryption, certificate management, and DFW hardening baselines.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────────── NSX — Security ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

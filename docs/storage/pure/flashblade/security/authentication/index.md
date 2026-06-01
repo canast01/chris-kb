@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Authentication reference covering Authentication Mechanisms Summary, Local Account Management, Active Directory Integration, LDAP Integration (Non-AD), SAML SSO Configuration and 3 more sections.
 </div>
+```
+┌────────────────────────────────── Pure FlashBlade — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashBlade authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options       │   │
+│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
+│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
+│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
+│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
+│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
+│   │         Replication         │  │            Async            │  │          DR/backup          │   │
+│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
+│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
+│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
+│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
+│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
+│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
+│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
+│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
+│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
+│    Replication        = async file or object replication between FlashBlade systems for DR            │
+│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
+│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
+│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
+│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
+│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
+│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 FlashBlade Authentication — Data vs Management Plane

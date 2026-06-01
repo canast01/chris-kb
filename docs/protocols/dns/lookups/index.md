@@ -5,8 +5,8 @@
 DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerShell), TTL Debugging and 1 more sections.
 </div>
 
-```text
         FORWARD vs REVERSE LOOKUPS
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  FORWARD LOOKUP (name → IP)                                  │
 │  dig A web01.example.local @10.0.0.53                           │

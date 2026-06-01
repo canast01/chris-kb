@@ -68,22 +68,6 @@ purearray set --proxy https://<proxy-host>:<port>
 │  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Additional steps:
-- Reduce polling frequency in scripts (increase interval from 5 to 15 minutes)
-- Consolidate multiple scripts into a single scheduled run that caches results
-- Ensure scripts are not running concurrently (use locking or staggered cron schedules)
-
-### Missing Arrays in Pure1 Dashboard
-
-**Symptoms**: Arrays are collecting but not visible in a dashboard or report.
-
-```text
-1. Check if a tag filter is active in the dashboard view:
-   Pure1 > Fleet > clear any active tag/site filters
-2. Verify the array has the required tags (Site, Environment, Owner)
-3. Confirm your Pure1 user account has access to the site/tag scope
-   (Admin may have scoped your account to specific tags)
 ```
 
 ### Alert Notifications Not Delivered

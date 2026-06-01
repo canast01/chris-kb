@@ -88,35 +88,6 @@ aws kms get-key-rotation-status --key-id $KEY_ID
 │  EBS default enc = Account-level setting encrypting all new EBS volumes automatically                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## EBS — Encrypted Volume
-
-```bash
-# Enable EBS encryption by default for all new volumes in region
-aws ec2 enable-ebs-encryption-by-default --region eu-west-1
-
-# Verify
-aws ec2 get-ebs-encryption-by-default --region eu-west-1
-
-# Create encrypted EBS volume with CMK
-aws ec2 create-volume \
-  --availability-zone eu-west-1a \
-  --size 100 \
-  --volume-type gp3 \
-  --encrypted \
-  --kms-key-id arn:aws:kms:eu-west-1:<account>:alias/prod-ebs-cmk
-
-# Encrypt an existing unencrypted volume (via snapshot copy)
-SNAP_ID=$(aws ec2 create-snapshot --volume-id vol-<unencrypted> \
-  --description "pre-encrypt" --query SnapshotId --output text)
-aws ec2 copy-snapshot \
-  --source-region eu-west-1 \
-  --source-snapshot-id $SNAP_ID \
-  --encrypted \
-  --kms-key-id alias/prod-ebs-cmk \
-  --region eu-west-1
 ```
 
 ---

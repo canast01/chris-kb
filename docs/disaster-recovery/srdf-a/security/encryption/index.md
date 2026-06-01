@@ -5,7 +5,7 @@
 Encryption reference covering Encryption In-Flight, Notes.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRDF/A — Encryption ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,18 +45,6 @@ Encryption reference covering Encryption In-Flight, Notes.
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [SRDF/A](../../index.md) reference.
-
----
-
-## Encryption In-Flight
-
-SRDF/E (SRDF Encryption) encrypts data over FCIP using AES-256. Verify per SRDF group:
-
-```bash
-symcfg list -rdfg -v | grep -i encrypt
-# Output should show: Encryption: Enabled
 ```
 
 ---

@@ -90,21 +90,6 @@ timedatectl status
 │  VSAN split       = VSAN partition causing isolation; major incident requiring fix                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 4. ISL Health and Utilization
-
-Navigate to **SAN > ISLs**. For each fabric:
-- All ISLs should show **Up** state
-- Utilization columns: review for sustained high utilization (> 70%)
-- Error columns: any CRC or signal loss errors require investigation
-
-```bash
-# On MDS switch for ISL detail
-show topology
-show interface fc<slot/port> counters detail
-# Check: input errors, CRC, output discard
 ```
 
 ---

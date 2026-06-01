@@ -52,26 +52,6 @@ flowchart TD
 │   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Using terraform plan for Drift Detection
-
-```bash
-# Standard drift detection run
-terraform plan -detailed-exitcode
-
-# Exit codes:
-# 0 = no changes (no drift)
-# 1 = error
-# 2 = changes detected (drift or config changes)
-
-# Capture in a script
-terraform plan -detailed-exitcode -out=tfplan
-STATUS=$?
-if [ $STATUS -eq 2 ]; then
-  echo "Drift or pending changes detected"
-elif [ $STATUS -eq 0 ]; then
-  echo "Infrastructure matches configuration — no drift"
-fi
 ```
 
 ### terraform import

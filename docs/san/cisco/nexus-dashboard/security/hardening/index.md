@@ -70,32 +70,6 @@ passwd ndadmin
 │  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 3. Restrict Management Network Access
-
-Use firewall or network ACL controls to limit access to the ND management interface:
-
-| Source | Destination | Port | Protocol | Action |
-|---|---|---|---|---|
-| Management subnet | ND mgmt IPs | 443 | HTTPS | Allow |
-| Jump host / VPN subnet | ND mgmt IPs | 22 | SSH | Allow |
-| Switch management subnet | ND data IPs | 22, 161, 162, 514 | TCP/UDP | Allow |
-| Any | ND mgmt IPs | 443, 22 | TCP | Deny (default) |
-
-ND does not provide a built-in host firewall UI. Apply ACLs on the upstream switch or firewall in front of the ND management network. Do not expose the ND management interface to the open internet.
-
-On the ND node OS (for emergency access control):
-
-```bash
-# Check firewall status (ND appliance uses firewalld)
-sudo firewall-cmd --list-all
-
-# Restrict SSH to management subnet
-sudo firewall-cmd --permanent --remove-service=ssh
-sudo firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.10.0.0/24" service name="ssh" accept'
-sudo firewall-cmd --reload
 ```
 
 ---

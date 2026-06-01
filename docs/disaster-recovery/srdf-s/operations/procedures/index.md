@@ -57,35 +57,6 @@ echo "Baseline captured at $(date)"
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Do not proceed if any device shows `SyncInProg`, `Transmit Idle`, or a track count above zero unless the business decision is to accept data loss.
-
-### Planned Failover Procedure for SRDF/S
-
-A planned failover is initiated when the primary site is taken offline deliberately (e.g., planned maintenance, site power work, or a DR test). Because SRDF/S is synchronous, R2 is always current at the point of failover.
-
-```bash
-# Step 1: Quiesce applications on the primary site
-# -- Application owner confirms quiesce --
-
-# Step 2: Confirm all pairs are Synchronized
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify -synchronized
-
-# Step 3: Capture pre-failover state baseline
-symrdf query -g <dgname> > /tmp/srdf_s_failover_prestate_$(date +%Y%m%d_%H%M).txt
-
-# Step 4: Initiate planned failover (R1 suspended, R2 write-enabled)
-symrdf -sid <r1_sid> -rdfg <rdf_group_number> -g <dgname> failover
-
-# Confirm pair state shows Failed Over / Write Disabled on R1
-symrdf query -g <dgname>
-symrdf -sid <r2_sid> -rdfg <rdf_group_number> query -g <dgname>
-
-# Step 5: Present R2 volumes to DR site hosts
-# -- Storage team enables host access to R2 LUNs --
-
-# Step 6: DR site application team mounts volumes and starts applications
-# -- DR team confirms applications are running at DR site --
 ```
 
 **SYMCLI shorthand:**

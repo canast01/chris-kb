@@ -90,10 +90,6 @@ Escalation Path — Broadcom / VMware Support
 │  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**From vCenter UI:**
-```text
-vSphere Client → Administration → Deployment → System Configuration → Export System Logs
 ```
 
 **From VCSA shell (`vm-support` bundle):**

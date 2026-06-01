@@ -61,26 +61,6 @@ graph TB
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Storage Isolation
-
-Backup copies used for IRE restoration must be:
-
-- **Immutable** — write-once, cannot be deleted or modified by any account including backup admins.
-- **Isolated** — stored in a separate cloud tenant, offline media, or vault-locked object storage.
-- **Access-controlled** — no production system has read or write access to the backup store.
-
-```bash
-# Azure: enable immutable blob storage for backup container
-az storage container immutability-policy create \
-  --account-name <backup-storage-account> \
-  --container-name <container-name> \
-  --period 30 \
-  --allow-protected-append-writes false
-
-az storage container immutability-policy lock \
-  --account-name <backup-storage-account> \
-  --container-name <container-name>
 ```
 
 ## Isolation Verification Checklist

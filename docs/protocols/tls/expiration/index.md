@@ -5,8 +5,8 @@
 Expired certificates cause immediate outages — services reject connections without warning.
 </div>
 
-```text
         EXPIRY ALERT THRESHOLDS AND ACTIONS
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  Days remaining    Alert level     Action                    │
 │  ─────────────     ───────────     ──────                    │

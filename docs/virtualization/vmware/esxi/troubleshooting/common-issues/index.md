@@ -5,8 +5,8 @@
 Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple Screen of Death) and 3 more sections.
 </div>
 
-```text
 ESXi Common Issue Resolution Paths
+```
 ┌────────────────────────────────────────────────────────┐
 │  Host Disconnected from vCenter                        │
 │  └── restart hostd → vpxa → check NTP / cert           │
@@ -82,14 +82,6 @@ ESXi Common Issue Resolution Paths
 │  vmk0     = management VMkernel adapter; ping test first step                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Resolution Steps
-
-1. **Restart management agents** (attempt first — low risk, no VM impact):
-
-```bash
-/etc/init.d/hostd restart
-/etc/init.d/vpxa restart
 ```
 
 2. **Check for clock skew** — certificate validation fails if the host clock is more than 5 minutes off:

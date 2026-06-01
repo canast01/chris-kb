@@ -98,42 +98,6 @@ echo "XML backup triggered at ${TIMESTAMP}"
 │  Verify       = compare row counts: SELECT count(*) FROM jiraissue;                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Full Database Backup
-
-```bash
-#!/bin/bash
-# pg-backup-jira.sh
-PGHOST="db.example.com"
-PGPORT="5432"
-PGUSER="jira"
-PGDATABASE="jiradb"
-BACKUP_DIR="/backup/jira/db"
-TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-BACKUP_FILE="${BACKUP_DIR}/jira_db_${TIMESTAMP}.pgdump"
-
-# Ensure backup dir exists
-mkdir -p "${BACKUP_DIR}"
-
-# Create backup (custom format — supports parallel restore)
-PGPASSWORD="${JIRA_DB_PASSWORD}" pg_dump \
-  -h "${PGHOST}" \
-  -p "${PGPORT}" \
-  -U "${PGUSER}" \
-  -d "${PGDATABASE}" \
-  -Fc \
-  --no-acl \
-  --no-owner \
-  -f "${BACKUP_FILE}"
-
-if [ $? -eq 0 ]; then
-  echo "Database backup completed: ${BACKUP_FILE}"
-  # Compress older backups > 7 days
-  find "${BACKUP_DIR}" -name "*.pgdump" -mtime +7 -exec gzip {} \;
-else
-  echo "ERROR: Database backup failed" >&2
-  exit 1
-fi
 ```
 
 Run this as a cron job:

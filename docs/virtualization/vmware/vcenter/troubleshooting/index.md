@@ -4,7 +4,7 @@
 Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure patterns, SSO and certificate issues, diagnostic commands, log collection, and escalation procedures.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── vCenter — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

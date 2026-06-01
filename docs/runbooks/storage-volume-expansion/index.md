@@ -78,11 +78,6 @@
 │    lvextend -r    = LVM: extends logical volume and resizes filesystem in one step                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Pure FlashArray:**
-```bash
-purevol setattr <volume_name> --size <new_size>
-# e.g. --size 2T
 ```
 
 **Dell PowerMax (Solutions Enabler):**

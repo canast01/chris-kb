@@ -55,27 +55,6 @@ psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_w
 │    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SQL Server
-
-```sql
--- Last backup per database
-SELECT d.name AS database_name,
-       MAX(b.backup_finish_date) AS last_backup,
-       b.type AS backup_type
-FROM sys.databases d
-LEFT JOIN msdb.dbo.backupset b ON d.name = b.database_name
-WHERE d.database_id > 4  -- exclude system DBs
-GROUP BY d.name, b.type
-ORDER BY d.name, b.type;
-
--- Failed backup jobs last 24h
-SELECT j.name AS job_name, h.run_date, h.run_time, h.message
-FROM msdb.dbo.sysjobs j
-JOIN msdb.dbo.sysjobhistory h ON j.job_id = h.job_id
-WHERE j.name LIKE '%backup%'
-  AND h.run_status = 0  -- 0 = failed
-  AND h.run_date >= CONVERT(int, CONVERT(varchar, GETDATE()-1, 112));
 ```
 
 ## Backup File Integrity Check

@@ -5,7 +5,7 @@
 Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA Not Found / Discovery Fails, Recovery Plan Stuck in "Running", Protection Group Shows Error, Test Failover: VMs Fail to Power On and 1 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │
@@ -51,33 +51,6 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 │  Snapshot purge= manual delete of orphan snapshots after stuck cleanup                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-  Triage Decision Tree
-┌──────────────────────────────────────────────────────────────┐
-│  Site pairing broken?         Replication lag?               │
-│  ┌──────────────────┐         ┌──────────────────────────┐   │
-│  │ Cert thumbprint  │         │ Network bandwidth?        │   │
-│  │  mismatch?       │         │ Source datastore I/O?    │   │
-│  │ TCP 9086 blocked?│         │ VRA unreachable?         │   │
-│  │ SRM service down?│         └──────────────────────────┘   │
-│  └──────────────────┘                                        │
-│                                                              │
-│  Recovery Plan stuck?         Test failover: VMs fail on?    │
-│  ┌──────────────────┐         ┌──────────────────────────┐   │
-│  │ Manual step wait │         │ Network mapping missing? │   │
-│  │  for approval?   │         │ Placeholder VM stale?    │   │
-│  │ VM power-on      │         │ Recovery site resources  │   │
-│  │  timeout?        │         │  insufficient?           │   │
-│  └──────────────────┘         └──────────────────────────┘   │
-│                                                              │
-│  Failback fails?                                             │
-│  ┌──────────────────┐                                        │
-│  │ Reprotect first! │                                        │
-│  │ Protected site   │                                        │
-│  │ vCenter up?      │                                        │
-│  └──────────────────┘                                        │
-└──────────────────────────────────────────────────────────────┘
 ```
 
 ---

@@ -5,7 +5,7 @@
 Escalation reference covering Escalation Workflow, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Escalate Python issues: CPython bugs (bugs.python.org), library bugs (GitHub issues)     │   │

@@ -81,52 +81,6 @@ flowchart TD
 │  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### ServiceNow Status Page
-
-Check `https://status.servicenow.com/` for any active incidents affecting your hosting region. Subscribe to RSS or email alerts for your data center zone.
-
----
-
-## 2. Stats Page (Performance)
-
-Navigate to: `https://<instance>.service-now.com/stats.do`
-
-This is the primary performance dashboard. Key sections:
-
-### System Information
-
-| Metric | Healthy Range | Alert Threshold |
-|---|---|---|
-| Instance uptime | > 72h between restarts | Unexpected restart = P2 |
-| Allocated heap | < 75% used | > 85% = investigate |
-| Free memory | > 25% of allocated | < 15% = alert |
-| Active sessions | Baseline ± 20% | Spike > 200% = investigate |
-| DB connections | < 80% of pool | > 90% = alert |
-
-### Threads
-
-| Thread Pool | Healthy State | Red Flag |
-|---|---|---|
-| Worker threads | < 80% busy | All workers waiting or blocked |
-| Scheduler threads | Running scheduled jobs | Stuck in WAIT state > 30 min |
-| GlideRecord cache | Hit rate > 80% | Hit rate < 50% |
-
-### Node Statistics (multi-node instances)
-
-Check that all nodes show balanced session counts. A single node carrying > 60% of sessions indicates a load balancer issue.
-
----
-
-## 3. Active Sessions
-
-Navigate to: **System Diagnostics > Session Debug** or query directly:
-
-```bash
-# Count active sessions via API
-curl -s -u "$SN_USER:$SN_PASS" \
-  "$INSTANCE/api/now/stats/sys_user_session?sysparm_query=active=true&sysparm_count=true" \
-  -H "Accept: application/json" | jq '.result.stats.count'
 ```
 
 Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.

@@ -64,21 +64,6 @@ flowchart LR
 │  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## log-archival.sh
-
-Compresses rotated logs older than 30 days to NFS archive:
-
-```bash
-#!/bin/bash
-ARCHIVE_PATH="/mnt/nfs-archive/logs/$(hostname)"
-LOG_PATH="/var/log"
-mkdir -p "$ARCHIVE_PATH"
-
-find "$LOG_PATH" -name "*.log-*" -mtime +30 -type f | while read f; do
-    gzip -9 "$f" && mv "${f}.gz" "$ARCHIVE_PATH/" && \
-    logger "Archived $f to $ARCHIVE_PATH"
-done
 ```
 
 ## patch-status-report.sh

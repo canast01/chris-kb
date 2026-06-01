@@ -69,19 +69,6 @@ graph TD
 │    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### LDAP Configuration Options
-
-```bash
-# Show full LDAP configuration
-authentication ldap show
-
-# Configure SSL for LDAP (LDAPS on port 636)
-authentication ldap set port 636
-authentication ldap set ssl enabled
-
-# Configure LDAP user search filter (restrict to a specific OU)
-authentication ldap set user-search-filter "(objectClass=person)"
 ```
 
 ### LDAP Role Mapping

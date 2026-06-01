@@ -62,34 +62,6 @@ boxmgmt support collect_bundle
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Splitter Health Check on ESXi (RP4VM)
-
-The RP4VM vSphere splitter is installed as a VIB on ESXi hosts. Use these commands directly on the ESXi host (SSH or ESXi shell).
-
-```bash
-# Check RP4VM splitter VIB is installed
-esxcli software vib list | grep -i recoverpoint
-
-# Verify the splitter driver is loaded
-vmkload_mod -l | grep splitter
-
-# Check vmkernel log for splitter-related events
-grep -i "recoverpoint\|rp4vm\|splitter" /var/log/vmkernel.log | tail -50
-
-# List all VMs with RP4VM splitter protection active
-esxcli recoverpoint vm list
-
-# Show splitter statistics for a specific VM (replace <vmid> with VM world ID)
-esxcli recoverpoint vm stats --vm-id <vmid>
-
-# Verify RPA connectivity from the ESXi splitter perspective
-esxcli recoverpoint rpa list
-
-# Check splitter-to-RPA link state
-esxcli recoverpoint rpa stats
 ```
 
 > If `esxcli recoverpoint` commands are not available, the RP4VM VIB is not installed or has been corrupted. Re-deploy from the RecoverPoint Deployment Manager.

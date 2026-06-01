@@ -90,40 +90,6 @@ echo "Token: $TOKEN"
 │  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Automate with a cron job on a management host:
-
-```bash
-#!/bin/bash
-# /usr/local/bin/aon-backup.sh
-set -euo pipefail
-
-PLATFORM="https://aon.example.local"
-USERNAME="svc-aon-backup@local"
-PASSWORD="PASSWORD"
-BACKUP_DIR="/opt/backups/aon"
-RETAIN_DAYS=30
-
-mkdir -p "$BACKUP_DIR"
-
-TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
-  -H "Content-Type: application/json" \
-  -d "{\"username\":\"${USERNAME}\",\"password\":\"${PASSWORD}\"}" \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-
-OUTFILE="${BACKUP_DIR}/aon-backup-$(date +%Y%m%d-%H%M%S).tar.gz"
-
-curl -sk -X GET "${PLATFORM}/api/ni/settings/backup" \
-  -H "Authorization: NetworkInsight ${TOKEN}" \
-  --output "$OUTFILE"
-
-if [[ -f "$OUTFILE" && $(stat -c%s "$OUTFILE") -gt 10000 ]]; then
-  echo "Backup successful: $OUTFILE"
-  find "$BACKUP_DIR" -name "aon-backup-*.tar.gz" -mtime "+${RETAIN_DAYS}" -delete
-else
-  echo "ERROR: Backup file is missing or too small." >&2
-  exit 1
-fi
 ```
 
 ```bash

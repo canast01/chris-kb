@@ -74,44 +74,6 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 │  Defender ATP   = Microsoft Defender for Endpoint; EDR platform with SIEM integration                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Audit Policy
-
-Configure via GPO: Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration.
-
-### Recommended Audit Categories
-
-| Category | Subcategory | Setting |
-|---|---|---|
-| Account Logon | Credential Validation | Success, Failure |
-| Account Logon | Kerberos Authentication | Success, Failure |
-| Account Management | User Account Management | Success, Failure |
-| Account Management | Security Group Management | Success, Failure |
-| DS Access | Directory Service Changes | Success |
-| Logon/Logoff | Logon | Success, Failure |
-| Logon/Logoff | Logoff | Success |
-| Logon/Logoff | Account Lockout | Failure |
-| Object Access | File System | Failure (Success only for sensitive paths) |
-| Privilege Use | Sensitive Privilege Use | Success, Failure |
-| Policy Change | Audit Policy Change | Success |
-| Policy Change | Authentication Policy Change | Success |
-| System | Security System Extension | Success |
-| System | System Integrity | Success, Failure |
-
-```powershell
-# Apply audit subcategory settings via auditpol
-auditpol /set /subcategory:"Credential Validation" /success:enable /failure:enable
-auditpol /set /subcategory:"Logon" /success:enable /failure:enable
-auditpol /set /subcategory:"Account Lockout" /failure:enable
-auditpol /set /subcategory:"User Account Management" /success:enable /failure:enable
-auditpol /set /subcategory:"Sensitive Privilege Use" /success:enable /failure:enable
-auditpol /set /subcategory:"Audit Policy Change" /success:enable
-
-# View current audit policy
-auditpol /get /category:*
-
-# Export audit policy to CSV
-auditpol /backup /file:C:\temp\audit-policy.csv
 ```
 
 ### Security Event Log Size

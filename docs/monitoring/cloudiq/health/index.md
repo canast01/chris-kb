@@ -5,7 +5,7 @@
 CloudIQ: Health Score, Component Status, and Connectivity reference covering Component-Level Health, Connectivity Checks, Verifying SRS Connectivity on PowerScale, Common Health Issues.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── CloudIQ — Health Monitoring ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,31 +36,6 @@ CloudIQ: Health Score, Component Status, and Connectivity reference covering Com
 │  Score history = 30-day time-series of health score; viewable in CloudIQ UI per array                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Component-Level Health
-
-Clicking into a system shows component-level status. Components vary by system type but typically include:
-
-| Component | System Types | Common Issues |
-|---|---|---|
-| Drives / SSDs | PowerStore, PowerMax, PowerScale | Predictive failure, read errors |
-| Controllers / Engines | PowerStore, PowerMax | Controller offline, firmware mismatch |
-| Nodes | PowerScale | Node offline, network partition |
-| Enclosures | All | Fans, power supplies, temperature |
-| Replication Links | PowerStore, PowerMax | SRDF link degraded, replication lag |
-| Battery Backup Units | PowerStore | BBU charge < threshold |
-
-## Connectivity Checks
-
-CloudIQ relies on the system's phone-home channel (SRS or ESRS) to receive telemetry. If a system goes grey or shows stale data, check connectivity first.
-
-```bash
-# Check last contact time for all systems
-curl -sk -X GET \
-  "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage_systems?select=name,last_contact_timestamp,connectivity_status" \
-  -H "Authorization: Bearer <access_token>" \
-  -H "Accept: application/json" | jq '.results[] | {name, last_contact: .last_contact_timestamp, status: .connectivity_status}'
 ```
 
 Connectivity status values:

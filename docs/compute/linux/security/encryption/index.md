@@ -70,22 +70,6 @@ mount /dev/mapper/secure-data /mnt/secure-data
 │  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Key Slot Management
-
-LUKS2 supports up to 32 key slots, allowing multiple passphrases or key files.
-
-```bash
-# Add a second passphrase (e.g., for a recovery key)
-cryptsetup luksAddKey /dev/sdb
-# or specify the new keyfile directly
-cryptsetup luksAddKey /dev/sdb /path/to/keyfile
-
-# Remove a passphrase from slot 1
-cryptsetup luksKillSlot /dev/sdb 1
-
-# Change passphrase (add new, then remove old)
-cryptsetup luksChangeKey /dev/sdb
 ```
 
 ### Persistent Mount via /etc/crypttab and /etc/fstab

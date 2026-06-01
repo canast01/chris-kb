@@ -5,7 +5,7 @@
 Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pure1 API, Alert Severity Definitions, Common Alert Types and 2 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────────── Pure1 — Alerts ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,32 +36,6 @@ Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pu
 │  Phonehome gap = Connectivity loss; array cannot reach pure1.purestorage.com                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## Viewing Alerts in Pure1
-
-**Pure1 → Alerts** — filtered by:
-- Array / site
-- Severity: Info / Warning / Error / Critical
-- State: Open / Closed
-- Time range
-
-## Alerts via CLI
-
-```bash
-ssh pureuser@<flasharray-ip>
-
-# All open alerts
-purealert list --flagged
-
-# All alerts (including closed)
-purealert list
-
-# Filter by severity
-purealert list | grep "error\|critical"
-
-# Acknowledge an alert
-purealert acknowledge --id <alert-id>
 ```
 
 ## Alerts via Pure1 API

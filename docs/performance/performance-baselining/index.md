@@ -73,16 +73,6 @@ vmstat -S M 5 12
 │    Deviation    = Metric outside normal range; signals regression or capacity issue                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Application Performance Baseline
-
-```bash
-# Apache/nginx access log — requests per minute and response time
-awk '{print $10, $NF}' /var/log/nginx/access.log | \
-  awk '{sum+=$1; count++} END {print "Avg response:", sum/count "ms; Total:", count "requests"}'
-
-# Database — PostgreSQL slow query analysis
-psql -c "SELECT query, mean_exec_time, calls FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 20;"
 ```
 
 ## Documenting the Baseline

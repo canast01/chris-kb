@@ -127,40 +127,6 @@ show zone status vsan 10
 │  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Switch Account Standards
-
-| Account | Role | Purpose |
-|---|---|---|
-| `dcnm_mgmt` | `network-admin` | DCNM SSH-based management and config push |
-| `admin` | `network-admin` | Break-glass only; password in vault |
-| `noc-operator` | `network-operator` | Read-only access for operations team |
-
-No personal named accounts on switches. All engineer access via TACACS+ with individual credentials (see MDS hardening).
-
----
-
-## Backup Standards
-
-| Type | Frequency | Retention | Target |
-|---|---|---|---|
-| DCNM full appliance backup | Weekly | 4 copies | Remote SCP/NFS |
-| Zone set export per fabric | Before every zone change | 90 days | Change management system |
-| DCNM DB backup (pg_dump) | Daily | 7 days | Remote backup server |
-| VM snapshot | Before each upgrade | Delete within 48h | vCenter datastore |
-
-### DCNM Database Backup (CLI)
-
-```bash
-ssh root@dcnm-dc1.corp.example.com
-
-# Backup PostgreSQL databases
-pg_dumpall -U postgres > /tmp/dcnm-db-$(date +%Y%m%d).sql
-
-# Transfer to backup server
-scp /tmp/dcnm-db-$(date +%Y%m%d).sql bkp@backup-server:/backups/dcnm/
 ```
 
 ---

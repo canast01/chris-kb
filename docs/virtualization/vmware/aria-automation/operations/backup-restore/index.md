@@ -79,13 +79,6 @@ Lifecycle Management → Backup → Add Backup Location
 │  NFS backup target = Network storage mount where backup archives are written and retained             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Scheduling Automatic Backups
-
-```text
-VAMI → Lifecycle Management → Backup → Schedule
 ```
 
 Recommended:

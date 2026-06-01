@@ -62,27 +62,6 @@ python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
 │  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Resolution:
-1. Reset the service account password in vCenter/NSX/AD
-2. **Infrastructure → Connections → Cloud Accounts → Edit → update credentials → Validate**
-3. If validation fails still: check certificate trust — the Aria Automation appliance must trust the vCenter/NSX certificate CA
-
----
-
-## Deployment Stuck in "Creating" or "Deleting"
-
-Symptoms: a deployment stays in `CREATE_INPROGRESS` or `DELETE_INPROGRESS` for more than 30 minutes.
-
-```bash
-# Check the deployment event log (UI)
-# Deployments → select deployment → History tab → review events
-
-# Check IaaS Gateway logs
-kubectl logs -n prelude -l app=iaas-gateway --tail=300 | grep -i "error\|timeout\|fail"
-
-# Check vCenter tasks (the deployment may have completed in vCenter but Aria Automation lost the callback)
-# vCenter → Recent Tasks → filter by Aria Automation service account name
 ```
 
 If the VM was created in vCenter but the deployment is stuck:

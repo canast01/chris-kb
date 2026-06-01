@@ -5,13 +5,7 @@
 Health Checks reference covering Protection Group Health, RPO Compliance Check, SRA Status (Array-Based Replication), Placeholder VMs at Recovery Site, Recovery Plan Pre-Check and 2 more sections.
 </div>
 
-```text
   Health Check Chain
-┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│  Site Pairing    │    │  Protection      │    │  Recovery Plan   │
-│  (Connected?)    │───►│  Groups (OK?)    │───►│  Pre-check       │
-│                  │    │  ┌────────────┐  │    │  (no errors)     │
-└──────────────────┘    │  │ RPO within │  │    └──────────────────┘
                         │  │ target?    │  │
                         │  │ Placeholder│  │    ┌──────────────────┐
                         │  │ VMs exist? │  │    │  SRA / Array     │
@@ -65,12 +59,6 @@ Health Checks reference covering Protection Group Health, RPO Compliance Check, 
 │  Datastore map = recovery datastore for each protected datastore                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-If site pairing shows error:
-```powershell
-# Check SRM service health
-Get-Service -ComputerName srm-protected.example.local -Name "VMware vCenter Site Recovery Manager"
-Get-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
 ```
 
 ---

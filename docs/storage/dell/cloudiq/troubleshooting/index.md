@@ -4,7 +4,7 @@
 CloudIQ — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Dell CloudIQ — Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

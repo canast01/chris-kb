@@ -82,24 +82,6 @@ systemctl restart dcnm-events
 │  netstat -tlnp    = verify DCNM port 443 is listening; basic health check                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Database Access
-
-```bash
-# Connect to DCNM main database
-psql -U postgres sane
-
-# Useful queries inside psql:
-\dt                           # list tables
-SELECT count(*) FROM switches;  # count managed switches
-SELECT count(*) FROM events WHERE severity='CRITICAL'; # count critical events
-SELECT * FROM switches WHERE status != 'manageable' LIMIT 10; # find unmanageable switches
-\q
-
-# Connect to performance database
-psql -U postgres pmdb
-SELECT count(*) FROM pmdata;
-\q
 ```
 
 ### Network Diagnostics

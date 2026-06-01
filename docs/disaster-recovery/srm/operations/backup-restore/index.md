@@ -87,28 +87,6 @@ ls -lh /var/lib/applmgmt/backup/
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Store these XML files in version control. A `git diff` against the previous export immediately shows what changed in a plan.
-
----
-
-## SRM Configuration Backup
-
-In addition to the database and recovery plans, the SRM pairing configuration and certificates should be captured.
-
-### Export SRM Configuration via UI
-
-1. **vSphere Client** → **Site Recovery** → **Site Pair** → select the pair.
-2. Navigate to **Configuration** → **Export Configuration**.
-3. Save the export archive.
-
-### Capture SRM Certificate Thumbprints
-
-```powershell
-# Record the pairing certificate thumbprints for reconstruction reference
-$srmInstance = Connect-SrmServer -SrmServerAddress srm01.example.com -Credential (Get-Credential)
-$cert = $srmInstance.ExtensionData.GetCertificate()
-Write-Host "SRM Certificate Thumbprint: $($cert.Thumbprint)"
 ```
 
 ---

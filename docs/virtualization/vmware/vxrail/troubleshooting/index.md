@@ -4,7 +4,7 @@
 Troubleshooting guide for VxRail in the VMware product context. Covers VxRail plugin unavailability, LCM pre-check failures, vSAN degraded states, and node rejoin procedures.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── VxRail — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,30 +60,6 @@ Troubleshooting guide for VxRail in the VMware product context. Covers VxRail pl
 │  GSS escalation    = Global Support Services; Dell/VMware support organisation for P1/P2 incidents    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## VxRail Manager Service Issues
-
-### VxRail Manager VM Not Responding
-
-```bash
-# SSH to VxRail Manager VM
-ssh mystic@<vxrail-manager-ip>
-
-# Check all VxRail services
-systemctl list-units --state=failed
-systemctl status mystic-server    # Main VxRail Manager service
-systemctl status mystic-mariadb   # Database backend
-systemctl status mystic-rabbitmq  # Message queue
-
-# Restart the VxRail Manager service
-sudo systemctl restart mystic-server
-
-# Check logs
-sudo journalctl -u mystic-server -n 100 --no-pager
-sudo tail -500 /var/log/mystic/mystic.log
 ```
 
 ### VxRail Plugin Not Loading in vCenter

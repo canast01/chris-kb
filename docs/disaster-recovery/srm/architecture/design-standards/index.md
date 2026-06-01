@@ -5,7 +5,7 @@
 Standards reference covering Naming Conventions, Priority Tiers, Recovery Plan Design, Test Frequency and Documentation, SRA Standards and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── SRM — Design Standards ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [Keystone Operations](../index.md) reference.
 </div>
+```
+┌─────────────────────────────────── NetApp Keystone — Health Checks ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Keystone health checks: routine verification of operational status and performance      │   │
+│   │         Checks include: controller status, drive health, replication lag, and capacity        │   │
+│   │         Frequency: daily quick checks; weekly detailed review; monthly capacity report        │   │
+│   │        Configure threshold-based alerts for proactive incident prevention and awareness       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Check status → review alerts → verify replication → capacity → log                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           Hardware          │  │       AFF/FAS on-prem       │  │         NetApp-owned        │   │
+│   │        Service level        │  │       Extreme/Perf/Std      │  │         Latency SLA         │   │
+│   │          Collector          │  │         Telemetry VM        │  │        ONTAP polling        │   │
+│   │          Dashboard          │  │            BlueXP           │  │       Usage visibility      │   │
+│   │           Billing           │  │       Committed+burst       │  │       Monthly invoice       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Check area    │  How to verify   │   Pass criteria   │    Frequency     │       Tool       │   │
+│   │   Controllers    │   show status    │    All healthy    │      Daily       │     CLI/GUI      │   │
+│   │      Drives      │   show drives    │  No failed/pred.  │      Daily       │     CLI/GUI      │   │
+│   │   Replication    │ show replication │  Lag < threshold  │      Daily       │     CLI/GUI      │   │
+│   │     Capacity     │  show capacity   │     < 80% used    │      Daily       │     CLI/GUI      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: NetApp AFF/FAS arrays on-prem · Keystone Collector VM · BlueXP cloud portal              │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Keystone           = NetApp STaaS; fixed-term subscription for ONTAP or StorageGRID capacity       │
+│    Service level      = tiered SLA: Extreme (NVMe), Performance (SSD), Standard (HDD)                 │
+│    Committed capacity = minimum contracted TiB; billed monthly even if below threshold                │
+│    Burst capacity     = usage above committed; available without pre-ordering; billed monthly         │
+│    Keystone Collector = on-prem VM that gathers usage metrics and sends to NetApp Keystone            │
+│    BlueXP             = NetApp SaaS control plane; Keystone dashboard, DRaaS, and cloud integrations  │
+│    AFF                = All Flash FAS; ONTAP-based NVMe/SSD array used for Extreme and Performance ...│
+│    FAS                = Fabric Attached Storage; ONTAP hybrid HDD/SSD for Standard service level      │
+│    StorageGRID        = NetApp S3 object storage; Object service level in Keystone subscriptions      │
+│    AutoSupport        = ONTAP telemetry relay; sends call-home data and log bundles to NetApp         │
+│    Service request    = NetApp SR; support ticket opened via mysupport.netapp.com portal              │
+│    SKU                = Keystone service SKU identifies the service level and raw or usable capacity  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

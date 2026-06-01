@@ -59,22 +59,6 @@ curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.nam
 │    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Backup Agent Integration
-
-```bash
-# Veeam agent status (Linux)
-systemctl status veeam
-veeamconfig job list
-veeamconfig session list --allJobs
-
-# Azure Backup agent
-systemctl status waagent
-az backup job list -g <rg> --vault-name <vault> --query '[?status==`Failed`]' -o table
-
-# AWS Backup
-aws backup list-backup-jobs --by-state FAILED \
-  --query 'BackupJobs[*].{Resource:ResourceArn,Status:State,StartTime:CreationDate}' --output table
 ```
 
 ## Active Directory / LDAP Integration

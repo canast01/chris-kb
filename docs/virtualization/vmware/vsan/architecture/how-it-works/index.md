@@ -66,37 +66,6 @@ ESXi Host (OSA)
 │  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-- NVMe-only — no SATA or SAS SSDs
-- No separate cache tier; each NVMe is both cache and capacity
-- Inline compression enabled by default
-- Requires minimum 4 hosts (vs 3 for OSA)
-- Separate ESA-specific HCL — OSA certified devices are not automatically ESA compatible
-- Higher throughput and lower latency than OSA, particularly at scale
-
----
-
-## Objects and Components
-
-vSAN stores **objects** — logical storage containers distributed across the cluster per storage policy. Each object is divided into **components** — physical chunks placed on individual disk groups. Component placement is managed automatically by CLOM.
-
-**VM storage objects:**
-
-| Object Type | Description |
-|---|---|
-| VM Home Namespace | VM configuration files (`.vmx`, `.nvram`, logs) |
-| VMDK | Each virtual disk — largest and most I/O-intensive object |
-| VM Swap | Memory swap file — equals VM RAM size; active only under memory pressure |
-| Snapshot Delta Disk | Created per snapshot; grows with writes while snapshot is active |
-| Instant Clone Memory Object | Memory state of an instant clone parent |
-
-### Object Placement — FTT=1 RAID-1
-
-```text
-VM VMDK Object
-├── Component A → ESXi-01, Disk Group 1
-├── Component B → ESXi-02, Disk Group 1  (mirror)
-└── Witness      → ESXi-03               (tiebreaker metadata only)
 ```
 
 ### Object Placement — FTT=1 RAID-5 (4 hosts minimum)

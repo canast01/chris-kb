@@ -5,11 +5,14 @@
 Procedures reference covering SDDC Manager Backup, Password Management, Useful Log Locations.
 </div>
 
-```text
 VCF Operational Procedures — Decision Map
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Routine Operations                                 │
 └──────┬───────────────┬────────────────┬─────────────┘
+```
+```
        │               │                │
        ▼               ▼                ▼
 ┌──────────────┐ ┌──────────────┐ ┌────────────────┐
@@ -75,11 +78,6 @@ VCF Operational Procedures — Decision Map
 │  Certificate tab= SDDC Mgr UI for cert status, CSR, and import                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## SDDC Manager Backup
-
-```text
-SDDC Manager → Administration → Backup → Configure (SFTP target recommended)
 ```
 
 - Schedule: daily; retain at least 7 restore points

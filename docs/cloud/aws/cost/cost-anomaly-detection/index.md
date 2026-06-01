@@ -5,7 +5,7 @@
 AWS Cost Anomaly Detection reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── AWS Cost — Cost Anomaly Detection ──────────────────────────────────┐
 │                                                                                                       │
 │  ML-based service detecting unexpected cost spikes across services, accounts, and tags.               │
@@ -51,35 +51,6 @@ AWS Cost Anomaly Detection reference covering Overview, Where It Fits, Daily Che
 │  Budget action   = Preventive control to stop spending when anomaly is detected                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Cost Anomaly Detection: ML Baseline → Alert → Triage
-──────────────────────────────────────────────────────────────
-
-  ┌─────────────────────────────────────────────────────┐
-  │  Historical spend data                              │
-  │  (AWS builds usage baseline automatically)          │
-  └──────────────────────────┬──────────────────────────┘
-                             │
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │  ML Model evaluates daily spend                     │
-  │  Considers: day-of-week, seasonality, growth trends │
-  └──────────────────────────┬──────────────────────────┘
-                             │ anomaly detected
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │  Anomaly Alert                                      │
-  │  Impact: $X above expected                          │
-  │  Monitor: service / linked account / cost category  │
-  └────────┬───────────────────────┬────────────────────┘
-           │                       │
-           ▼                       ▼
-  ┌─────────────────┐    ┌──────────────────────────────┐
-  │  SNS → email    │    │  Triage in Cost Explorer     │
-  │  / Slack        │    │  Drill into service / tag    │
-  └─────────────────┘    │  Find root cause             │
-                         └──────────────────────────────┘
 ```
 
 ## Overview

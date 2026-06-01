@@ -83,18 +83,6 @@ LCM → Lifecycle Operations → Environments → select or create environment �
 │  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Upload the Aria Automation `.pak` file from Broadcom Support Portal. The VAMI validates the file and presents a pre-upgrade compatibility check. Click **Upgrade** if all checks pass.
-
-**Via CLI:**
-
-```bash
-# Copy PAK file to the appliance
-scp VMware-vRealize-Automation-*.pak root@vra-prod-01.example.local:/tmp/
-
-# SSH to the appliance and trigger upgrade via vracli
-ssh root@vra-prod-01.example.local
-vracli software-update install --file /tmp/VMware-vRealize-Automation-*.pak
 ```
 
 ---

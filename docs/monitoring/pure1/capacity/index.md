@@ -5,7 +5,7 @@
 Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Planning, Snapshot Space Management, Common Capacity Issues.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Pure1 — Capacity Management ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -34,19 +34,6 @@ Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Pl
 │  Evergreen refresh = Capacity expansion via Pure subscription hardware refresh                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```bash
-ssh pureuser@<flashblade-ip>
-
-# FlashBlade capacity
-purearray list --space
-
-# File system capacity
-purefs list --space | sort -k4 -rh | head -20
-
-# Object store bucket usage
-purebucket list --space
 ```
 
 ## Capacity via Pure1 API

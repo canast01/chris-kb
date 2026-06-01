@@ -42,10 +42,6 @@ flowchart TD
 │   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Debug a single host with full SSH trace
-ansible-playbook site.yml -i inventory/ --limit web01 -vvv 2>&1 | tee /tmp/ansible-debug.log
 ```
 
 ## Variable Inspection

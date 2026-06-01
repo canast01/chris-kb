@@ -62,16 +62,6 @@ Admin > Solutions > VMware vCenter > Configure
 │  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Test the integration using the **Test Notification** button after saving.
-
-## Slack / Teams Webhooks
-
-```text
-Admin > Alerts > Notification Plugins > Add Webhook Plugin
-- Webhook URL: <Teams/Slack incoming webhook URL>
-- Alert filter: severity = Critical or Immediate
-- Payload template: include alert name, object, and description
 ```
 
 Separate plugins are recommended per team channel for targeted routing.

@@ -55,16 +55,6 @@ graph LR
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Escalation — If Malware Found
-
-```text
-1. Halt all access to the clean room immediately.
-2. Preserve the infected restore point (do not delete — needed for forensics).
-3. Notify the IR lead and security team.
-4. Roll back the clean room hosts to pre-scan snapshot.
-5. Identify an earlier, cleaner restore point and repeat the process.
-6. Document IOCs found for threat hunting in production.
 ```
 
 ## Common Issues

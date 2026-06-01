@@ -71,45 +71,6 @@ graph TD
 │    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-On the ESXi side, create a vDS uplink port group with **LACP Active** mode on each vDS uplink team.
-
-### vPC / MLAG (Switch-to-Switch)
-
-Cisco vPC (Virtual Port Channel) or equivalent MLAG (Multi-chassis Link Aggregation) allows two physical switches to present as a single logical switch to downstream devices. This eliminates Spanning Tree blocking on redundant uplinks.
-
-**vPC design requirements:**
-- Dedicated vPC peer-link: minimum 2 × 40 GbE or 2 × 100 GbE between the two switches
-- Dedicated vPC peer-keepalive link: 1 GbE out-of-band (mgmt0 port) for split-brain detection
-- Both switches must be in the same vPC domain with matching domain ID
-- Verify vPC consistency parameters (STP, allowed VLANs, MTU) are identical on both peers
-
-### Dual-Homed Uplinks (Distribution to Core)
-
-Connect each distribution switch to both core switches with individual L3 routed links (not port-channels at L3 boundary). Run OSPF across all four links. ECMP distributes traffic across all equal-cost paths; any single link or switch failure leaves three surviving paths.
-
----
-
-## Firewall Zone Model
-
-Zone-based firewall design enforces the principle of least-privilege routing between network segments. Traffic is permitted only when explicitly required; default inter-zone action is deny.
-
-```mermaid
-graph LR
-    Internet["Internet"]
-    DMZ["DMZ Zone\n(VLAN 10-99)"]
-    Prod["Production Zone\n(VLAN 100-199)"]
-    Mgmt["Management Zone\n(VLAN 400, 900)"]
-    Storage["Storage Zone\n(VLAN 300-310)"]
-    Backup["Backup Zone\n(VLAN 500-510)"]
-
-    Internet -->|"HTTPS/443, SMTP/25\n(policy-controlled)"| DMZ
-    DMZ -->|"App → DB only\n(specific ports)"| Prod
-    Prod -->|"iSCSI/NFS\n(3260, 2049)"| Storage
-    Prod -->|"Veeam backup agent\n(port 10006)"| Backup
-    Mgmt -->|"SSH, RDP, API\n(jump host only)"| Prod & Storage & Backup & DMZ
-    Internet -.->|"BLOCKED"| Prod
-    Internet -.->|"BLOCKED"| Mgmt
 ```
 
 **Zone definitions:**

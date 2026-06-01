@@ -5,7 +5,7 @@
 Procedures reference covering Maintenance Window.
 </div>
 
-```text
+```
 ┌──────────────────────────────── Dell CloudIQ — Operational Procedures ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

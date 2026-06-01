@@ -79,31 +79,6 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Log Locations
-
-| Log | Location |
-|---|---|
-| Solutions Enabler daemon log | `/var/symapi/log/` |
-| SE disconnect/reconnect events | `/var/symapi/log/symapi.log` |
-| Unisphere event log | Unisphere GUI → Events, or export via REST API |
-| Array audit log | `symevent list -sid <SID> -type rdf -output csv > /tmp/rdf_events.csv` |
-
----
-
-## SAN Switch Diagnostics
-
-```bash
-# Cisco MDS
-show fcip session
-show port-channel summary
-show interface gigabitEthernet X/X
-
-# Brocade
-portshow <port>
-portcfgshow
 ```
 
 ---

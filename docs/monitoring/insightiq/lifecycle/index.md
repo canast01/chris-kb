@@ -53,17 +53,6 @@ Key compatibility rules:
 │  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Backup
-
-InsightIQ does not have a native backup tool. Automate database backup with a daily cron job on the appliance.
-
-```bash
-# /etc/cron.d/iiq-backup
-0 2 * * * root pg_dump -U iiq iiq | gzip > /backup/iiq_$(date +\%Y\%m\%d).sql.gz
-
-# Retain last 14 days of backups
-0 3 * * * root find /backup -name 'iiq_*.sql.gz' -mtime +14 -delete
 ```
 
 Backup files should be replicated to an external backup target (NAS, S3-compatible, or enterprise backup solution).

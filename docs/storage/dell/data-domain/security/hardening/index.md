@@ -66,30 +66,6 @@ graph TD
 │    Audit logging = DDOS logs all admin commands with user, timestamp, and command text                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### SSH and Remote Access
-
-- [ ] Disable SSH root login
-- [ ] Restrict SSH access to the admin jump host or bastion server IP only
-- [ ] Disable interactive SSH password authentication if key-based auth is configured
-- [ ] Set session idle timeout to 15 minutes
-- [ ] Disable the HTTP (non-TLS) management interface — enforce HTTPS only
-
-```bash
-# Disable SSH root login
-adminaccess set ssh root disabled
-
-# Restrict SSH to specific management IPs (repeat for each allowed host)
-adminaccess add ssh allowed-hosts <jump-host-ip>
-
-# Set session idle timeout (minutes)
-adminaccess set idle-timeout 15
-
-# Disable plain HTTP; enforce HTTPS only
-adminaccess set http-auth disabled
-
-# Verify current adminaccess settings
-adminaccess show
 ```
 
 ### Login Banner

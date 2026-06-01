@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Security baselines and compliance configuration for Dell PowerScale.
 </div>
+```
+┌──────────────────────────────── Dell PowerScale — Security Hardening ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      PowerScale hardening: disable unused protocols, enforce encryption, restrict access      │   │
+│   │         Network: dedicated storage VLAN; restrict management access to jump hosts only        │   │
+│   │        Auth: disable default accounts; enforce password complexity and rotation policy        │   │
+│   │         Audit: forward syslog to SIEM; alert on privilege escalation and failed logins        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Baseline config → disable unused → enforce MFA → enable logging → audit                            │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
+│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
+│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
+│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
+│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Area       │     Control      │      Standard     │      Verify      │    Frequency     │   │
+│   │     Accounts     │ Disable defaults │  No default creds │   Login audit    │      Deploy      │   │
+│   │    Protocols     │  Disable unused  │   TLS 1.2+ only   │    Port scan     │     Monthly      │   │
+│   │       MFA        │ Enforce all admi │   TOTP/hardware   │    Auth logs     │    Continuous    │   │
+│   │     Logging      │ SIEM forwarding  │  All admin events │   SIEM alerts    │      Daily       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
+│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
+│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
+│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
+│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
+│    Access zone        = logical container with separate authentication and export namespace per tenant│
+│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
+│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
+│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
+│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
+│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
+│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Hardening Checklist
 

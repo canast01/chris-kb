@@ -79,39 +79,6 @@ graph TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Aria Operations Integration
-
-The PowerMax management pack surfaces SRDF/S health in Aria Ops dashboards:
-
-- SRDF pair state (`Synchronized`, `SyncInProg`, `Split`)
-- Write latency penalty imposed by synchronous replication
-- Link health and director port errors
-- Cycle time trends for capacity planning
-
-Install the management pack from Aria Marketplace → search "PowerMax" → Deploy.
-
----
-
-## Solutions Enabler REST API
-
-The Unisphere REST API enables programmatic SRDF/S pair management from Ansible or Terraform:
-
-```bash
-# Authenticate
-curl -k -u svc_api:password https://<unisphere>:8443/univmax/restapi/system/version
-
-# List SRDF groups
-GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group
-
-# Get pair state
-GET /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume/{devId}
-
-# Split pair (planned failover)
-PUT /univmax/restapi/91/replication/symmetrix/{sid}/rdf_group/{rdfgNumber}/volume
-Body: {"action": "Split", "executionOption": "SYNCHRONOUS"}
 ```
 
 ---

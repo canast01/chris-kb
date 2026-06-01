@@ -5,7 +5,7 @@
 AWS AWS Organizations reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────── AWS Governance — AWS Organizations ──────────────────────────────────┐
 │                                                                                                       │
 │  AWS Organizations manages multi-account hierarchy, SCPs, and consolidated billing.                   │
@@ -51,32 +51,6 @@ AWS AWS Organizations reference covering Overview, Where It Fits, Daily Checks, 
 │  Management account= Cannot have SCPs applied to it; exempt from OU restrictions                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-AWS Organizations: Root → OUs → Accounts → SCPs
-──────────────────────────────────────────────────────────────
-
-  ┌──────────────────────────────────────────────────────┐
-  │  Root (SCP: FullAWSAccess)                           │
-  │  ┌────────────────────────────────────────────────┐  │
-  │  │  OU: Production (SCP: deny-delete-cloudtrail)  │  │
-  │  │  ┌──────────────────────────────────────────┐  │  │
-  │  │  │ Account: prod-us-east-1                  │  │  │
-  │  │  │ Account: prod-eu-west-1                  │  │  │
-  │  │  └──────────────────────────────────────────┘  │  │
-  │  └────────────────────────────────────────────────┘  │
-  │  ┌────────────────────────────────────────────────┐  │
-  │  │  OU: Development (SCP: deny-production-regions)│  │
-  │  │  ┌──────────────────────────────────────────┐  │  │
-  │  │  │ Account: dev-sandbox                     │  │  │
-  │  │  └──────────────────────────────────────────┘  │  │
-  │  └────────────────────────────────────────────────┘  │
-  └──────────────────────────────────────────────────────┘
-
-  SCP Evaluation (per request):
-  Root SCP ──► OU SCP ──► Account SCP ──► IAM Policy
-  All must Allow ──► access granted
-  Any Deny ─────────────────────► access denied
 ```
 
 ## Overview

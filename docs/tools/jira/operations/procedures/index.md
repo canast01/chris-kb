@@ -65,19 +65,6 @@ Example:
 │  Backup verify  = check pg_dump file exists and is non-zero size after cron run                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Story Points
-
-Story points measure relative complexity, not time.
-
-```bash
-# Common Fibonacci scale
-1 — Trivial change, well-understood
-2 — Simple, minor unknowns
-3 — Moderate complexity
-5 — Complex, some research needed
-8 — Very complex or large scope
-13 — Should be split before estimating
 ```
 
 Estimation tips:

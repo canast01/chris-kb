@@ -70,13 +70,6 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```cmd
-# Test connectivity between VBR server and proxy (run on VBR server)
-Test-NetConnection -ComputerName <proxy-hostname> -Port 2500
-
-# Test proxy to repository connectivity
-Test-NetConnection -ComputerName <repo-hostname> -Port 2500
 ```
 
 Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.

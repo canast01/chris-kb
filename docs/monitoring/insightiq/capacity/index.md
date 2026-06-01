@@ -5,7 +5,7 @@
 InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference covering Protocol-Level Capacity Breakdown, Quota Monitoring, Common Capacity Issues.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── InsightIQ — Capacity Management ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -34,34 +34,6 @@ InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference
 │  CSV export = Downloading capacity data for external planning tools                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-InsightIQ capacity report settings:
-
-| Setting | Description |
-|---|---|
-| Granularity | 5 min, 1 hour, 1 day |
-| Look-back Period | Up to 365 days (depends on InsightIQ retention) |
-| Node Breakdown | Per-node or cluster aggregate |
-| Protocol Filter | NFS, SMB, HDFS, S3 |
-
-## Protocol-Level Capacity Breakdown
-
-InsightIQ can show which protocol (NFS, SMB, HDFS, S3) is consuming the most capacity growth over time. This is useful for chargeback and planning.
-
-```bash
-# On PowerScale: check per-protocol throughput to correlate with capacity
-ssh admin@powerscale.example.com
-
-# Check NFS exports and their sizes
-isi nfs exports list
-
-# Check SMB shares
-isi smb shares list
-
-# Check directory sizes for top-level paths
-isi get -d /ifs/data --numeric
-du -sh /ifs/data/* 2>/dev/null | sort -rh | head -20
 ```
 
 Protocol utilisation breakdown reference:

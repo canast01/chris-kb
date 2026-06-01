@@ -82,18 +82,6 @@ GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
 │  shortlog -sn    = summary of commits per author sorted by count                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Example output excerpt:
-
-```text
-16:42:01.123456 http.c:678             * Trying 140.82.121.4:443...
-16:42:01.234567 http.c:678             * Connected to github.com (140.82.121.4) port 443
-16:42:01.345678 http.c:678             * TLSv1.3, TLS handshake, Client hello (1):
-16:42:01.456789 http.c:678             > GET /org/repo.git/info/refs?service=git-upload-pack HTTP/2
-16:42:01.456790 http.c:678             > Host: github.com
-16:42:01.456791 http.c:678             > Authorization: Basic <REDACTED>
-16:42:01.567890 http.c:678             < HTTP/2 200
-16:42:01.567891 http.c:678             < content-type: application/x-git-upload-pack-advertisement
 ```
 
 ### Stripping Sensitive Data from Trace Logs

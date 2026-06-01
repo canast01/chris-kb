@@ -96,36 +96,6 @@ graph TB
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MediaAgent and Deduplication
-
-```mermaid
-flowchart LR
-    client(["Client Agent\n(VM / DB / File)"])
-    client -->|"raw data stream\nTCP 8403"| ma["MediaAgent"]
-
-    subgraph maBlock [MediaAgent Processing]
-        direction TB
-        chunk["Chunk data into\nvariable blocks"]
-        hash["Hash each block\n(SHA-256)"]
-        ddb[("DDB\nDeduplication DB\nSSD-backed")]
-        chunk --> hash
-        hash -->|"block seen before?"| ddb
-    end
-
-    ma --> maBlock
-
-    ddb -->|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
-    ddb -->|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
-
-    diskLib -->|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    class ma,chunk,hash ctrl
-    class ddb,diskLib,secondary store
-    class client host
 ```
 
 MediaAgent best practices:

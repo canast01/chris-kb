@@ -61,37 +61,6 @@ Role
 │  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Role Assignment Best Practices
-
-| Practice | Implementation |
-|---|---|
-| No direct role-to-user assignment | Assign roles to groups only |
-| Admin role is tightly controlled | Maximum 5 named individuals |
-| Service accounts have custom minimal roles | Not `admin` or `itil` |
-| Temp access via time-limited group | Automated removal on expiry |
-
----
-
-## Groups
-
-Groups serve as containers for users and role assignments.
-
-### Group Structure
-
-```text
-Platform Groups (synced from AD):
-  SNOW-Administrators        → admin role
-  SNOW-ITSM-Agents           → itil role
-  SNOW-Change-Managers       → change_manager role
-  SNOW-Asset-Managers        → asset role
-  SNOW-Report-Users          → report_admin role
-
-Functional (Assignment) Groups:
-  Level1-Support             → itil role (assignment group)
-  Network-Operations         → itil role (assignment group)
-  Windows-Platform-Team      → itil role (assignment group)
-  Security-Operations        → itil role + custom security role
 ```
 
 ```javascript

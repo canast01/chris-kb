@@ -69,20 +69,6 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
 │  Policy-based= IPSec with selectors; legacy; no dynamic routing                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Overlay encryption requires sufficient CPU on ESXi hosts (AES-NI hardware acceleration recommended). Measure the CPU overhead before enabling in production.
-
-### FIPS 140-2 Mode
-
-NSX-T supports FIPS 140-2 mode, which restricts cryptographic algorithms to FIPS-approved ciphers only. Enable during initial deployment — FIPS mode cannot be toggled on a running cluster without re-deployment.
-
-FIPS mode is configured during OVA deployment (set in the OVA properties) or via CLI before the cluster is formed:
-
-```bash
-# Check FIPS status
-nsxcli
-get fips status
-# Output: FIPS Mode: ENABLED or DISABLED
 ```
 
 When FIPS mode is enabled, NSX Manager, Edge nodes, and ESXi host agents must all run FIPS-compliant builds.

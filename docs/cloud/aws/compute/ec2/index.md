@@ -5,7 +5,7 @@
 AWS EC2 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────────── AWS Compute — EC2 ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Elastic Compute Cloud: instance types, purchasing options, networking, and storage.                  │

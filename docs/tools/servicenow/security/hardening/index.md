@@ -103,17 +103,6 @@ Object.keys(criticalProps).forEach(function(prop) {
 │  Script review= security check of Business Rules/Client Scripts before promotion                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Break-Glass Procedure
-
-```yaml
-Account: snow-breakglass
-Storage: CyberArk Safe: SNOW-BreakGlass
-Access: PAM workflow — dual approval required
-Session: Recorded in CyberArk session manager
-Post-use: Password rotation mandatory
-Alert: SIEM alert on sys_user_session for this account
-Review: Quarterly verification that account is functional
 ```
 
 ---

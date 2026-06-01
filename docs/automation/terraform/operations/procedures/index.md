@@ -49,25 +49,6 @@ graph LR
 │   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Targeted Apply
-
-Apply only specific resources without touching the rest of the configuration.
-
-```bash
-# Apply a single resource
-terraform apply -target=aws_instance.web01
-
-# Apply a module
-terraform apply -target=module.network
-
-# Apply multiple targets
-terraform apply \
-  -target=aws_security_group.web \
-  -target=aws_instance.web01
-
-# Destroy a specific resource
-terraform destroy -target=aws_instance.old_server -auto-approve
 ```
 
 Use `-target` sparingly — it creates drift between the plan and real state if overused.

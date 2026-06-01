@@ -125,24 +125,6 @@ acs health
 │  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Post-Upgrade Validation
-
-```bash
-# Verify cluster health
-acs health
-
-# Verify all nodes at new version
-acs nodes list | grep version
-
-# Verify all apps are Running
-acs apps status
-
-# Verify NDFC fabric connectivity
-# UI: NDFC > Fabrics — all switches should reconnect within 5 minutes
-
-# Verify NDI telemetry resumed (if installed)
-# UI: NDI > Dashboard — anomaly data should appear within 15 minutes
 ```
 
 After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.

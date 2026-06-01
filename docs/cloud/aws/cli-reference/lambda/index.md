@@ -80,19 +80,6 @@ Lambda CLI: Deploy → Invoke → Monitor
 │  ECR             = Elastic Container Registry; source for Lambda container image                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Environment Variables
-
-```bash
-# Update environment variables (replaces existing env vars entirely)
-aws lambda update-function-configuration \
-  --function-name <name> \
-  --environment "Variables={KEY1=value1,KEY2=value2}"
-
-# View current environment variables
-aws lambda get-function-configuration \
-  --function-name <name> \
-  --query "Environment.Variables"
 ```
 
 ## Event Source Mappings (SQS / Kinesis triggers)

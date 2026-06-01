@@ -5,8 +5,8 @@
 Backup and Restore reference covering What to Back Up, VRA Pre-Upgrade Snapshot, VRA Configuration Backup via OVF Export, Recover a VM Using vSphere Replication (Standalone), Recovery Point Retention and 2 more sections.
 </div>
 
-```text
   VR Backup Strategy
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  VRA Appliance                                               │
 │  ┌──────────────────────────────────────────────────────┐    │

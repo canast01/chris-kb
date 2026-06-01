@@ -98,25 +98,6 @@ flowchart TD
 │  FLOGI          = Fabric Login; N_Port to switch handshake where FC-SP auth occurs                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Testing and Verification
-
-```bash
-# Test authentication for a known user
-test aaa group TACACS-SERVERS <username> <test-password>
-# Expected: server responds with authentication success
-
-# Check server reachability status
-show tacacs-server
-
-# Check per-server statistics
-show tacacs-server statistics
-
-# Check AAA configuration
-show aaa
-show aaa authentication
-show aaa authorization
-show aaa accounting
 ```
 
 ### TACACS+ Key Encryption

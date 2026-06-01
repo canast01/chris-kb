@@ -55,23 +55,6 @@ df -h /home/insightiq
 │  Backup target = NFS mount or local directory configured in iiq_config                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Performance Data
-
-```bash
-# List available performance breakouts
-curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts"
-
-# Query CPU utilisation for a cluster (last hour)
-curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.cpu.user?cluster=<guid>&begin=<epoch>&end=<epoch>"
-
-# Query disk throughput
-curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.disk.bytes.in.rate?cluster=<guid>&begin=<epoch>&end=<epoch>"
-
-# Query client protocol operations
-curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/performance/breakouts/cluster.protostats.nfs.ops.rate?cluster=<guid>&begin=<epoch>&end=<epoch>"
 ```
 
 ---

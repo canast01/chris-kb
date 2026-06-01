@@ -86,32 +86,6 @@ KEY PROCEDURE FLOWS
 │  30% free       = minimum headroom for resync operations                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Add a Disk Group to an Existing Host
-
-Adding a disk group increases per-host storage capacity and I/O parallelism.
-
-**Prerequisites:**
-- Physical disks are installed and visible to the ESXi host.
-- Disks are on the vSAN HCL for the installed ESXi version.
-- No active resync in progress on the cluster.
-
-```bash
-# 1. Identify unclaimed disks on the host
-esxcli storage core device list | grep -v "Is Local SAS Disk"
-esxcli vsan storage list          # compare — unclaimed disks won't appear here
-
-# 2. Identify device NAA IDs for new disks
-esxcli storage core device list | grep -E "Display Name|naa\."
-
-# 3. Create the disk group (cache SSD + one or more capacity disks)
-esxcli vsan storage add -s <cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
-
-# 4. Verify the disk group was created
-esxcli vsan storage list
-
-# 5. Check health — new disk group should appear healthy
-esxcli vsan health cluster list
 ```
 
 **From vCenter UI:**

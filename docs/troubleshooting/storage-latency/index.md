@@ -88,30 +88,6 @@ flowchart TD
 │    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## VMware ESXi esxtop Storage Analysis
-
-```bash
-# Open esxtop on ESXi host (SSH required)
-esxtop
-
-# Press 'u' to switch to storage/disk adapter view
-# Press 'e' for storage device view (LUN level)
-
-# Key columns (storage device view):
-# DAVG  — Device Average latency (array-side; ms)
-#          >10ms = investigate; >20ms = concern; >30ms = critical
-# KAVG  — Kernel Average latency (VMkernel overhead; should be <2ms)
-# GAVG  — Guest Average = DAVG + KAVG + QAVG (total latency seen by VM)
-# QAVG  — Queue Average latency (time spent in VMkernel queue; >0 = queuing)
-# ABRTS — Aborts per second (I/O aborted by guest; >0 = serious problem)
-# RESETS — Device resets (>0 = path or device failure)
-# CONS  — Commands outstanding per second
-
-# Batch export esxtop data (useful for trend analysis)
-esxtop -b -d 5 -n 60 > /tmp/esxtop_storage_$(date +%Y%m%d).csv
 ```
 
 ### esxtop Storage Threshold Summary

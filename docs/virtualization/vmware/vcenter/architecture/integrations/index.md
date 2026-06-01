@@ -83,34 +83,6 @@ vCenter Integration Map
 │  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Supported backup proxy modes:**
-- **Hot-add** (preferred) — backup proxy VM mounts target VM disks directly; highest performance
-- **NBD/NBDSSL** — network-based transfer over LAN; fallback mode
-- **SAN** — FC/iSCSI direct access; requires backup proxy on same SAN fabric
-
-## Veeam Backup & Replication
-
-- Registers vCenter as a managed server in Veeam Console
-- Uses VADP for VM backup; leverages Changed Block Tracking (CBT)
-- vCenter credentials need: `Datastore.Browse`, `VirtualMachine.Config.*`, `VirtualMachine.State.CreateSnapshot`, and `Global.DisableMethods`
-- Veeam Proxy VMs should be deployed in same cluster/datastore as protected VMs for hot-add
-
-### CommVault IntelliSnap
-
-- Integrates via vCenter API + array-level snapshot APIs
-- Uses array snapshots for near-instant backup; VADP for recovery
-- CommVault iDataAgent or VSA Proxy installed in vCenter environment
-
-## Identity and Authentication Integration
-
-### Active Directory Integration
-
-Connect vCenter SSO to AD so AD users/groups can be granted vSphere permissions:
-
-```text
-vCenter → Administration → Single Sign On → Configuration → Identity Sources → Add
-Type: Active Directory (Integrated Windows Authentication) or LDAP/LDAPS
 ```
 
 - **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain

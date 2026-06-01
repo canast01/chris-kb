@@ -63,32 +63,6 @@ Closed:      Caller confirmed resolution or auto-closed after N days
 │  Role inherit = group role automatically applies to all group members                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Priority Matrix
-
-Priority = f(Impact, Urgency)
-
-| | Urgency 1 (Critical) | Urgency 2 (High) | Urgency 3 (Medium) | Urgency 4 (Low) |
-|--|---------------------|-----------------|-------------------|----------------|
-| Impact 1 (Enterprise) | P1 | P2 | P2 | P3 |
-| Impact 2 (Department) | P2 | P2 | P3 | P3 |
-| Impact 3 (Group) | P2 | P3 | P3 | P4 |
-| Impact 4 (Individual) | P3 | P3 | P4 | P4 |
-
-## SLA Targets
-
-```bash
-# Query SLA records for an incident
-curl -u user:token -G \
-  "https://your-instance.service-now.com/api/now/table/task_sla" \
-  --data-urlencode 'sysparm_query=task.number=INC0012345' \
-  --data-urlencode 'sysparm_fields=sla.name,has_breached,time_left,stop_time'
-
-# List all breached SLAs
-curl -u user:token -G \
-  "https://your-instance.service-now.com/api/now/table/task_sla" \
-  --data-urlencode 'sysparm_query=has_breached=true^task.active=true' \
-  --data-urlencode 'sysparm_fields=task.number,sla.name,stage'
 ```
 
 | Priority | Response SLA | Resolution SLA |

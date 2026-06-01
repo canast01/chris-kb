@@ -5,8 +5,8 @@
 Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferred for Production), Backing Up the NFS Binary Repository, Exporting LCM Environment Configuration via API, Restore Procedure, Backup Verification Checklist.
 </div>
 
-```text
   LCM Backup Strategy
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  What to Back Up              Method                            │
 │  ┌───────────────────────┐    ┌─────────────────────────────┐   │
@@ -70,12 +70,6 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 │  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Remove the snapshot within 48 hours of a successful upgrade:
-
-```bash
-Get-Snapshot -VM (Get-VM "lcm-prod-01") -Name "pre-upgrade-*" |
-  Remove-Snapshot -Confirm:$false
 ```
 
 ## Option 2 — VADP-Compatible Backup (Preferred for Production)

@@ -85,22 +85,6 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Establish & Suspend
-
-Use establish to create or re-establish synchronous replication. Use suspend carefully — it stops replication.
-
-```bash
-# Establish (initial sync or re-establish after split)
-symrdf -sid <sid> -g <group> establish -noprompt
-
-# Suspend replication (R2 becomes read/write accessible)
-symrdf -sid <sid> -g <group> suspend -noprompt
-
-# Check pair state after suspend
-symrdf -sid <sid> -g <group> query
 ```
 
 ---

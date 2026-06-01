@@ -5,7 +5,7 @@
 Escalation reference covering Opening a Support Case, Collecting show tech-support (Diagnostic Bundle), Required Information for SR, Support Contract Verification, Severity Levels and 2 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────── Cisco MDS — Troubleshooting Escalation ────────────────────────────────┐
 │                                                                                                       │
 │  Escalation path for MDS issues: internal triage → Cisco TAC → hardware RMA process.                  │
@@ -51,33 +51,6 @@ Escalation reference covering Opening a Support Case, Collecting show tech-suppo
 │  Cisco WebEx    = Collaboration tool used for TAC remote-assist sessions                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [Cisco MDS](../../index.md) reference.
-
----
-
-## Opening a Support Case
-
-TAC portal: [mycase.cisco.com](https://mycase.cisco.com)
-
-Alternatively, call TAC for P1/P2 cases (number on your Cisco contract documentation).
-
-1. Select product: Cisco MDS 9000 Series
-2. Select NX-OS version and model
-3. Enter switch serial number to link to SmartNet contract
-4. Upload `show tech-support` output immediately (see below)
-
-## Collecting show tech-support (Diagnostic Bundle)
-
-```bash
-# Redirect output to a file (takes 5–10 minutes on a busy switch)
-show tech-support > bootflash:tech-support-$(hostname)-$(date +%Y%m%d).txt
-
-# Copy to SCP server
-copy bootflash:tech-support-*.txt scp://<username>@<scp-server>/<path>
-
-# Or via TFTP
-copy bootflash:tech-support-*.txt tftp://<tftp-server>/<path>/
 ```
 
 Contents of `show tech-support`:

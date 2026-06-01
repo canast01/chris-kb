@@ -59,11 +59,6 @@ dig <hostname> @<dns_server_ip>    # query a specific server directly
 │    Asymmetric   = Forward and return path differ; FW stateful check fails; causes drops               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Windows:**
-```powershell
-Get-DnsClientServerAddress
-ipconfig /all | findstr DNS
 ```
 
 #### 3. Test DNS Server Reachability

@@ -50,64 +50,6 @@ export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 │  Heap dump = -XX:+HeapDumpOnOutOfMemoryError in JVM_SUPPORT_RECOMMENDED_ARGS                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Pages
-
-```bash
-# List pages in a space
-curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/content?spaceKey=OPS&type=page&limit=50" \
-  | jq '.results[] | {id, title}'
-
-# Get a page with full body (storage format)
-curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/content/12345?expand=body.storage,version,space" \
-  | jq '{id, title, version: .version.number, body: .body.storage.value}'
-
-# Create a page
-curl -s -X POST -H "$CF_AUTH" -H "Content-Type: application/json" \
-  "${CF_URL}/rest/api/content" \
-  -d '{
-    "type": "page",
-    "title": "New Runbook",
-    "space": { "key": "OPS" },
-    "ancestors": [{ "id": "98304" }],
-    "body": {
-      "storage": {
-        "value": "<p>Initial content.</p>",
-        "representation": "storage"
-      }
-    }
-  }' | jq '{id, title}'
-
-# Update a page (must increment version.number)
-CURRENT_VERSION=$(curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/content/12345?expand=version" | jq '.version.number')
-NEXT_VERSION=$((CURRENT_VERSION + 1))
-
-curl -s -X PUT -H "$CF_AUTH" -H "Content-Type: application/json" \
-  "${CF_URL}/rest/api/content/12345" \
-  -d "{
-    \"id\": \"12345\",
-    \"type\": \"page\",
-    \"title\": \"Updated Runbook\",
-    \"version\": { \"number\": ${NEXT_VERSION} },
-    \"body\": {
-      \"storage\": {
-        \"value\": \"<p>Updated content.</p>\",
-        \"representation\": \"storage\"
-      }
-    }
-  }" | jq '{id, title, version: .version.number}'
-
-# Delete (trash) a page
-curl -s -X DELETE -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/content/12345"
-
-# Search using CQL
-curl -s -H "$CF_AUTH" \
-  "${CF_URL}/rest/api/content/search?cql=space%3DOPS+AND+type%3Dpage+AND+lastModified+%3E%3D+-7d" \
-  | jq '.results[] | {id, title}'
 ```
 
 ### Users and Groups

@@ -41,24 +41,6 @@ graph TD
 │   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Least Privilege on Managed Nodes
-
-### Dedicated ansible Service Account
-
-```bash
-# Create non-root ansible user on managed nodes
-useradd -r -s /bin/bash -m ansible
-
-# Restrict SSH — key-only, no password
-cat >> /etc/ssh/sshd_config <<EOF
-Match User ansible
-    PasswordAuthentication no
-    PubkeyAuthentication yes
-    AllowAgentForwarding no
-    X11Forwarding no
-EOF
-systemctl reload sshd
 ```
 
 ### Sudoers — Scope Privilege Escalation

@@ -5,17 +5,13 @@
 Install and Upgrade reference covering vSphere Replication Appliance Deployment, SRA Installation, Site Pairing, Upgrade Order, Post-Install Verification.
 </div>
 
-```text
   SRM Upgrade Sequence (strictly ordered)
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│  1. vCenter   │──►│  2. SRM Server│──►│  3. SRA       │──►│  4. VR        │
-│  (both sites) │   │  protected    │   │  (both SRM    │   │  Appliance    │
-│               │   │  site first,  │   │   Servers)    │   │  (both sites) │
-│               │   │  then recov.  │   │               │   │               │
-└───────────────┘   └───────────────┘   └───────────────┘   └───────────────┘
+```
+```
          │
          ▼
   After each step: verify site pairing still Connected before proceeding
+
 ```
 ┌─────────────────────────────────── VMware SRM — Install & Upgrade ────────────────────────────────────┐
 │                                                                                                       │
@@ -62,25 +58,6 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
 │  Remote SQL    = dedicated SQL Server; supports AlwaysOn HA                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Install SRM on both sites before pairing. Site pairing is done from the vCenter UI after both are installed.
-
----
-
-## vSphere Replication Appliance Deployment
-
-Deploy VRA OVA at both the protected and recovery sites:
-
-```yaml
-vCenter → Deploy OVF Template → VMware-vSphere-Replication-<version>.ovf
-  Network: Management network (must reach vCenter and remote VRA)
-  IP: static IP (DHCP not recommended)
-  NTP: configure NTP server
-
-Post-deploy:
-  VRA Web UI (https://vra-protected.example.local:5480)
-  Configuration → vCenter Server: vcenter-protected.example.local
-  → Register with vCenter
 ```
 
 Pair VRA appliances:

@@ -67,18 +67,6 @@ trust list | grep "internal-ca"
 │    GPO          = Group Policy Object; deploys CA cert to all domain machines automatically           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Add a CA Certificate — Java
-
-```bash
-# Add to JRE trust store
-keytool -importcert -alias internal-ca \
-  -file /path/to/internal-ca.crt \
-  -keystore $JAVA_HOME/lib/security/cacerts \
-  -storepass changeit -noprompt
-
-# Verify
-keytool -list -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit | grep internal-ca
 ```
 
 ## Verify a Certificate Chain

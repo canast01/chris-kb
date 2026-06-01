@@ -5,8 +5,8 @@
 DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdiag /test:dns, Cache Poisoning Checks, Replication Issues and 2 more sections.
 </div>
 
-```text
         TRIAGE: NSLOOKUP FAILS
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  1. nslookup host.example.local ── no answer ──► continue       │
 │          │                                                   │

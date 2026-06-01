@@ -5,8 +5,8 @@
 Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost During Operation, Locker Certificate Import Fails, VIDM Authentication Failure After Password Change, Product Shows Red Health in LCM Dashboard and 1 more sections.
 </div>
 
-```text
   LCM Triage Decision Tree
+```
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix            │
 │  ┌─────────────────┐      ┌──────────────────┐                  │
@@ -72,32 +72,6 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │  df -h               = Disk usage check; first step for any disk-related issue                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Error Code | Meaning | Resolution |
-|---|---|---|
-| `VRLCM_ERR_001` | DNS resolution failure | Fix A/PTR records; verify from LCM node with `nslookup` |
-| `VRLCM_ERR_012` | Insufficient disk space on `/data` | Free space or expand NFS share; minimum 50 GB free per product |
-| `VRLCM_ERR_023` | OVA/PAK checksum mismatch | Re-download bundle; verify SHA256 against Broadcom portal |
-| `VRLCM_ERR_031` | vCenter connectivity failure | Check credentials, firewall port 443, and vCenter certificate trust |
-| `VRLCM_ERR_045` | NTP time drift too large | Fix NTP source on LCM or product appliance; restart `chronyd` |
-| `VRLCM_ERR_057` | VIDM registration failed | Verify VIDM FQDN, credentials, and TLS certificate trust |
-
----
-
-## Upgrade Gets Stuck or Times Out
-
-Symptoms: upgrade request stays in `RUNNING` state for more than 2 hours; no progress on the workflow screen.
-
-```bash
-# Check if product appliance VMs are powered on and responsive
-ping <product-fqdn>
-ssh admin@<product-fqdn> "vracli status"
-
-# Check LCM application log for timeout or error
-grep -i "timeout\|error\|exception" /var/log/vmware/vrlcm/lcm-app.log | tail -100
-
-# Check if the upgrade agent on the product appliance is running
-ssh root@<product-fqdn> "systemctl status vra-appliance-agent"
 ```
 
 If the upgrade is truly stuck (no log activity for 30+ minutes):

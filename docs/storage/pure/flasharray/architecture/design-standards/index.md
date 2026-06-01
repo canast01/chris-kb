@@ -5,8 +5,9 @@
 FlashArray — Design Standards reference.
 </div>
 
-```text
 FlashArray Design Checklist — Key Areas
+```
+```
 ┌──────────────────────────────────────────────────────────┐
 │  Naming         │  array / volume / host / pg conventions│
 ├──────────────────────────────────────────────────────────┤
@@ -21,7 +22,6 @@ FlashArray Design Checklist — Key Areas
 │  Security       │  RBAC, SafeMode, SAML/LDAP, TLS syslog │
 └──────────────────────────────────────────────────────────┘
 ```
-```text
 ┌────────────────────────────────── Pure FlashArray Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -71,47 +71,6 @@ grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log 
 │  Worker overloaded = Worker CPU/RAM at limit; scale out by adding another worker VM                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Searching vCenter Events
-
-Use the vCenter log source and filter by event type or keyword:
-
-| Use Case | Search Pattern |
-|---|---|
-| Login events | `appname = "vpxd" AND text contains "SessionManager"` |
-| Task failures | `appname = "vpxd" AND text contains "TaskManager" AND text contains "error"` |
-| Certificate events | `appname = "vpxd" AND text contains "STS"` |
-| Permission changes | `appname = "vpxd" AND text contains "Permission"` |
-| Snapshot operations | `appname = "vpxd" AND text contains "snapshot"` |
-| VM power operations | `appname = "vpxd" AND (text contains "PowerOn" OR text contains "PowerOff")` |
-
----
-
-## Agent Not Delivering Logs
-
-Symptoms: agent shows as stale or offline in Administration → Agents; logs from that host are absent.
-
-```bash
-# Check agent service status on the source host (Linux)
-systemctl status liagentd
-journalctl -u liagentd --since "1 hour ago" | tail -50
-
-# Check agent log for connection errors
-tail -100 /var/log/vmware/loginsight-agent/liagent.log | grep -i "error\|ssl\|connect\|timeout"
-
-# Test TCP connectivity from agent to Aria Ops for Logs
-nc -zv vrli-prod-01.example.local 9543
-# Expected: Connection to vrli-prod-01.example.local 9543 succeeded
-
-# Verify agent configuration is correct
-grep -v "^#\|^$" /var/lib/loginsight-agent/liagent.ini
-# Check hostname, port (9543), and ssl setting
-
-# Restart the agent
-systemctl restart liagentd
-systemctl status liagentd
 ```
 
 For Windows agents:

@@ -4,7 +4,7 @@
 Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, ports, firmware, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Brocade Fabric OS — Overview ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -57,64 +57,6 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 │    portcfg        = FOS CLI command to configure port speed, mode, and behaviour                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-<div class="kb-grid kb-grid-3">
-
-<a class="kb-card" href="architecture/">
-  <strong>Architecture</strong>
-  <span>How it works, integrations, and design standards.</span>
-</a>
-
-<a class="kb-card" href="operations/">
-  <strong>Operations</strong>
-  <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
-</a>
-
-<a class="kb-card" href="security/">
-  <strong>Security</strong>
-  <span>Authentication, access control, encryption, and hardening.</span>
-</a>
-
-<a class="kb-card" href="troubleshooting/">
-  <strong>Troubleshooting</strong>
-  <span>Common issues, diagnostics, and escalation.</span>
-</a>
-
-</div>
-
-## Overview
-
-Brocade Fabric OS (FOS) is the operating system for Brocade/Broadcom Fibre Channel SAN switches and directors. Current generation platforms (G620, G720, G730, X7-4, X7-8) run FOS 9.x and support 32G and 64G FC port speeds. FOS manages the entire fabric — port negotiation, principal switch election, name server, zoning enforcement, ISL trunking, and Virtual Fabrics.
-
-Fabrics are deployed in a **dual-fabric** design. Each server HBA port connects to a separate, independent fabric. Storage arrays present target ports into both fabrics. No traffic is shared between Fabric A and Fabric B — redundancy is achieved by running production I/O across both fabrics simultaneously.
-
----
-
-## Daily Checks
-
-Run these commands on each switch at the start of every operational shift, or automate them via SANnav scheduled tasks.
-
-| Check | Command | Expected Result |
-|---|---|---|
-| Review switch health | `switchstatusshow` | `HEALTHY` — any other status requires investigation |
-| Check all port states | `switchshow` | All used ports `Online`; no unexpected `Faulty` or `No_Light` |
-| Check port error counters | `porterrshow` | Zero or flat counters — any increment on `enc_in`, `loss_sync`, or `link_fail` requires investigation |
-| Validate ISLs are up | `islshow` | All ISLs `Online` at expected speed (32G or 64G) |
-| Confirm fabric membership | `fabricshow` | All expected switches present; correct principal switch |
-| Validate active zone config | `cfgshow \| head -20` | Active zone set name matches expected; no unexpected changes |
-| Check error log | `errshow` | No new CRITICAL or ERROR entries since last check |
-| Check environmental sensors | `sensorshow` | All sensors `OK` — no temperature, fan, or PSU warnings |
-
-```bash
-# Run all daily checks in sequence
-switchstatusshow
-switchshow
-porterrshow
-islshow
-fabricshow
-cfgshow | head -20
-errshow
-sensorshow
 ```
 
 ---

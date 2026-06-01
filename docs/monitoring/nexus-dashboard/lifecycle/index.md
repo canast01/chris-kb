@@ -64,20 +64,6 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 │  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Upgrade services after the base ND platform upgrade is complete and all nodes are healthy.
-
-## Node Management
-
-### Adding a Node
-
-Expanding from 3 to 5 nodes requires the same ND version across all nodes.
-
-```text
-Admin > Cluster Configuration > Add Node
-- Enter the new node's management IP and credentials
-- ND orchestrates node join and cluster rebalancing
-- Wait for the new node to reach Online status (10–20 minutes)
 ```
 
 ### Replacing a Failed Node

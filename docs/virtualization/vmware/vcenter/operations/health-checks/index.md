@@ -83,11 +83,6 @@ Health Check Coverage Map
 │  certmgr      = /usr/lib/vmware-vmca/bin/certool for cert inspection                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Disk Partition Usage
-
-```bash
-df -h
 ```
 
 Key partitions to monitor:

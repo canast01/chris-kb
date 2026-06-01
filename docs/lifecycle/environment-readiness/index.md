@@ -51,31 +51,6 @@ flowchart TD
 │    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-| Resource | Required | Available | Headroom ≥ 20%? |
-|---|---|---|---|
-| vCPU / cores | | | ☐ |
-| Memory (GB) | | | ☐ |
-| Boot disk (GB) | | | ☐ |
-| Data disk (GB) | | | ☐ |
-| Network bandwidth | | | ☐ |
-
-### Storage
-
-```bash
-# VMware — check datastore free space
-Get-Datastore | Select-Object Name, FreeSpaceGB, CapacityGB |
-  Where-Object {$_.FreeSpaceGB / $_.CapacityGB -lt 0.25}  # warn < 25% free
-
-# Check storage pool capacity (Pure/PowerMax/ONTAP)
-# Pure Storage
-purearray list --space
-
-# NetApp ONTAP
-df -h -A -aggregate
-
-# Dell PowerMax
-symcfg list -tdev -pool <pool_name>
 ```
 
 ## 2. Network Readiness

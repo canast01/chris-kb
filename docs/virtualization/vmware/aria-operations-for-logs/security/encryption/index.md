@@ -57,22 +57,6 @@ Administration → SSL → Replace Certificate
 │  Cert expiry alert = vRLI shows warning banner when cert expires within 30 days                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Verifying Certificate Validity
-
-```bash
-# Check certificate expiry from an external client
-echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
-  openssl x509 -noout -dates
-
-# Check across all cluster nodes
-for node in vrli-prod-01 vrli-prod-02 vrli-prod-03; do
-  echo -n "$node.example.local: "
-  echo | openssl s_client -connect "$node.example.local:443" 2>/dev/null | \
-    openssl x509 -noout -enddate 2>/dev/null | sed 's/notAfter=//'
-done
 ```
 
 ---

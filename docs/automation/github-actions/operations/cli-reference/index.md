@@ -58,33 +58,6 @@ gh auth login
 │   │         gh api       = raw API calls; use for endpoints not covered by gh subcommands         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Secret Management
-
-```bash
-# List secrets (names only — values never shown)
-gh secret list
-gh secret list --env production
-gh secret list --org myorg
-
-# Set a secret from stdin
-echo "mysecretvalue" | gh secret set MY_SECRET
-
-# Set from a file (SSH key, certificate)
-gh secret set DEPLOY_SSH_KEY < ~/.ssh/deploy_ed25519
-
-# Set with explicit value
-gh secret set API_TOKEN --body "tok-abc123"
-
-# Set environment secret
-gh secret set PROD_DB_PASSWORD --env production
-
-# Set organization secret
-gh secret set SHARED_TOKEN --org myorg
-
-# Delete a secret
-gh secret delete OLD_TOKEN
-gh secret delete STAGING_KEY --env staging
 ```
 
 ## Environment Management

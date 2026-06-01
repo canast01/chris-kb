@@ -56,29 +56,6 @@ flowchart TD
 │    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Expected time:** 5–15 minutes
-
-!!! warning "Data written after snapshot is lost"
-    If the application wrote to a database since the snapshot was taken, coordinate with the database team — a DB restore may also be required.
-
-## Method 2 — Package / Patch Rollback (Linux)
-
-```bash
-# RHEL / Rocky — undo last dnf transaction
-dnf history list
-dnf history undo <transaction-id>
-
-# Roll back to previous kernel
-grubby --default-kernel
-grubby --set-default /boot/vmlinuz-<old-version>
-reboot
-
-# Downgrade a specific package
-dnf downgrade <package-name>
-
-# Ubuntu
-apt install <package>=<previous-version>
 ```
 
 ```powershell

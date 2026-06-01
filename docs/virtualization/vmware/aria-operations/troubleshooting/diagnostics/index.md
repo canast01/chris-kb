@@ -5,7 +5,7 @@
 Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Reports, Related Sections.
 </div>
 
-```text
+```
 ┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Support bundle generation, log analysis, and REST API diagnostics for vROps.                         │

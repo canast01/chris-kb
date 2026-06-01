@@ -66,23 +66,6 @@ sequenceDiagram
 │  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**SSSD configuration is written to `/etc/sssd/sssd.conf` automatically by realm.** Key settings to verify:
-
-```ini
-# /etc/sssd/sssd.conf
-[sssd]
-domains = ad-domain.fqdn
-services = nss, pam
-
-[domain/ad-domain.fqdn]
-id_provider = ad
-auth_provider = ad
-access_provider = ad
-ad_domain = ad-domain.fqdn
-krb5_realm = AD-DOMAIN.FQDN
-use_fully_qualified_names = True
-fallback_homedir = /home/%d/%u
 ```
 
 **Troubleshoot AD authentication:**

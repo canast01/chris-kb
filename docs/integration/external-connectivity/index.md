@@ -85,57 +85,6 @@ VM → pNIC1 or pNIC2 → Switch A or B → Core network
 │    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## How a VPN Tunnel Works — Packet Encapsulation
-
-Your data is wrapped inside an outer packet before it crosses the internet. Nobody outside can read the inner packet.
-
-```text
-VPN Gateway (on-prem)
-                                              │
-│  ← takes traffic from core network
-│  ← encrypts it with IPSec
-│  ← wraps it in a tunnel packet
-                                              │
-PUBLIC INTERNET
-══════════════════════════════════════════
-║                                        ║
-║   YOUR DATA (encrypted)                ║
-║   ┌─────────────────────────────┐      ║
-║   │ OUTER PACKET (public IP)    │      ║
-║   │  ┌───────────────────────┐  │      ║
-║   │  │ INNER PACKET          │  │      ║
-║   │  │ (your actual data)    │  │      ║
-║   │  │ (fully encrypted)     │  │      ║
-║   │  └───────────────────────┘  │      ║
-║   └─────────────────────────────┘      ║
-║                                        ║
-║   Anyone snooping sees OUTER PACKET    ║
-║   only — inner data is unreadable      ║
-══════════════════════════════════════════
-                                              │
-VPN Gateway (AWS / Azure side)
-│  ← receives tunnel packet
-│  ← decrypts it
-│  ← delivers your actual data
-                                              │
-┌───────────────┬───────────────┐
-│     AWS       │     AZURE                   │
-│  VPC          │  VNet                       │
-│  ├── EC2      │  ├── IaaS VM                │
-│  ├── EBS      │  ├── Managed                │
-│  └── S3       │  │   Disks                  │
-│               │  └── Files                  │
-└───────────────┴───────────────┘
-
-HOW THE TUNNEL WORKS:
-├── Both gateways agree on encryption settings (IKEv2)
-├── Outer packet uses PUBLIC IPs  ← travels internet
-├── Inner packet uses PRIVATE IPs ← your actual traffic
-├── Always on 24/7                ← not like a user VPN
-└── Both ends look like one network to your VMs
 ```
 
 ---

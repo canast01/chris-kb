@@ -55,27 +55,6 @@ sudo systemctl restart iiq-collector
 │  Dell support = support.dell.com; attach collection log and iiq_status output                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## InsightIQ Appliance Performance Issues
-
-InsightIQ can become slow if the database grows too large or if disk I/O is constrained.
-
-```bash
-# Check disk space on InsightIQ appliance
-df -h
-
-# Check InsightIQ database size
-sudo du -sh /var/lib/insightiq/db/
-
-# Check available memory
-free -h
-
-# Check active processes consuming resources
-top -b -n 1 | head -25
-
-# Clean up old data (if retention policy is set)
-# Navigate to: InsightIQ > Settings > Data Retention
-# Reduce retention period to free disk space
 ```
 
 Recommended InsightIQ appliance resources:

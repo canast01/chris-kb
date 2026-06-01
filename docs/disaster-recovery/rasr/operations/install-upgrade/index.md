@@ -123,13 +123,6 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Replace `F:` with the actual drive letter of the USB.
-
-### Create ISO File
-
-```cmd
-"C:\Program Files\Dell\RASR\rasrutil.exe" /createmedia /dest \\nas01\rasr-media\RASR_SERVER01_WinSrv2022.iso
 ```
 
 The ISO can be stored on the NAS and mounted via iDRAC virtual media for remote recovery.

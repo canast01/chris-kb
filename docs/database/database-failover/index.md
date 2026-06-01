@@ -67,23 +67,6 @@ psql -U postgres -c "SELECT now() AS current_time;"
 │    Split-brain    = Two nodes both believe they are primary; never promote without fencing            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MySQL / MariaDB — Replica Promotion
-
-```bash
-# On REPLICA — stop replication and capture position
-mysql -u root -e "STOP SLAVE;"
-mysql -u root -e "SHOW SLAVE STATUS\G"  # note Exec_Master_Log_Pos
-
-# Reset replica to become new primary
-mysql -u root -e "RESET SLAVE ALL;"
-mysql -u root -e "RESET MASTER;"
-
-# Enable writes (if read_only was set)
-mysql -u root -e "SET GLOBAL read_only = OFF;"
-mysql -u root -e "SET GLOBAL super_read_only = OFF;"
-
-# Re-point application connection (update DNS / HAProxy / ProxySQL backend)
 ```
 
 ### MySQL — MHA (Master High Availability)

@@ -53,19 +53,6 @@ flowchart TD
 │  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Site-Level XML Backup
-
-**Admin > General Configuration > Backup & Restore > Backup Confluence**
-
-- Produces a single XML zip containing all spaces, pages, users, groups, and settings
-- Do **not** use this as the sole production backup — it excludes attachments by default and is extremely slow on large instances (>10 GB can take hours)
-- Enable **Include attachments in backup** only for small instances (<1 GB attachments)
-
-Location of generated backups:
-
-```text
-<CONFLUENCE_HOME>/backups/
 ```
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`

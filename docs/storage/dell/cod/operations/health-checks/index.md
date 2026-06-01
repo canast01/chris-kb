@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Post-Change Validation.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Dell COD Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -39,37 +39,6 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 │    90-day runway = If current rate consumes remaining COD in < 90 days, activate more now             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [COD](../../index.md) reference.
-
----
-
-## Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| [ ] Review current COD utilization vs licensed capacity using SYMCLI or Unisphere | `symcfg -sid <sid> show -capacity -gb` | confirm no unexpected consumption increase |
-| [ ] Confirm no new COD activations have occurred without an associated change ticket | `symaudit -sid <sid> list -action "license"` | |
-| [ ] Check system capacity headroom | `symcfg -sid <sid> list -srp -detail` | flag if utilized capacity exceeds 80% of licensed capacity |
-| [ ] Verify Unisphere connectivity to Dell (required for COD activation) | | |
-
-## Health Check Commands
-
-```bash
-# Show current array capacity state including licensed vs consumed
-symcfg -sid <sid> show -capacity -gb
-
-# Show COD license entitlement and activation status
-symlmf -sid <sid> list
-
-# Show storage resource pool (SRP) utilization — confirms physical capacity consumed
-symcfg -sid <sid> list -srp -detail
-
-# Show total raw, subscribed, and usable capacity
-symcfg -sid <sid> show -tb
-
-# Check if COD capacity pools are available and their current state
-symcfg -sid <sid> list -demand -demand_type cod
 ```
 
 ## Change Readiness

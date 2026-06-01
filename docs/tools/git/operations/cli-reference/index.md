@@ -78,21 +78,6 @@ git remote set-url origin <new_url>
 │  log --graph       = ASCII graph of branch/merge topology in terminal                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Staging & Committing
-
-Changes must be explicitly staged before they're included in a commit. `git add -p` lets you stage individual hunks — useful for splitting one set of edits into multiple focused commits.
-
-```bash
-git add <file>
-git add .                        # stage everything in the current directory
-git add -p                       # interactive: choose which hunks to stage
-
-git commit -m "message"
-git commit --amend               # rewrite the last commit (local-only — don't amend pushed commits)
-git commit --amend --no-edit     # amend without changing the message
 ```
 
 ---

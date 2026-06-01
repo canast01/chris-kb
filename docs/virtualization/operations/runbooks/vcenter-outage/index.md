@@ -55,11 +55,6 @@ nslookup <vcenter-fqdn>
 │    GSS          = VMware Global Support Services; escalate P1 outages with SR number                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Check Disk Partitions
-
-```bash
-df -h
 ```
 
 Partitions that commonly cause failures when full:

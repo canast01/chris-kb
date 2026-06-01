@@ -81,23 +81,6 @@ flowchart TD
 │  df -h          = disk usage; alert if CONFLUENCE_HOME volume >80% full                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Log Level Changes (Runtime, No Restart)
-
-```bash
-# Enable DEBUG for a specific package
-curl -s -X PUT \
-  -H "Authorization: Bearer $CF_TOKEN" \
-  -H "Content-Type: application/json" \
-  "${CF_URL}/rest/api/admin/logging" \
-  -d '{"level": "DEBUG", "package": "com.atlassian.confluence.pages"}'
-
-# Return to WARN when done (debug is very verbose)
-curl -s -X PUT \
-  -H "Authorization: Bearer $CF_TOKEN" \
-  -H "Content-Type: application/json" \
-  "${CF_URL}/rest/api/admin/logging" \
-  -d '{"level": "WARN", "package": "com.atlassian.confluence.pages"}'
 ```
 
 ### Useful Log Grep Patterns

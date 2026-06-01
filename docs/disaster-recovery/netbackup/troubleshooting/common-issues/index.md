@@ -82,20 +82,6 @@ tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-If errors persist after cleaning, engage tape vendor support and check robotic library firmware version.
-
-### Status 96 — Unable to allocate new media
-
-```bash
-# List available scratch media
-vmquery -b -r <robot-number> | grep -i "scratch\|blank"
-
-# Check volume pool assignment for the policy
-bppllist <policyname> -L | grep -i pool
-
-# Move unassigned media to the correct scratch pool
-vmchange -m <mediaid> -vp <volume-pool>
 ```
 
 ---

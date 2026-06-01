@@ -5,7 +5,7 @@
 Access Control reference covering RBAC Roles, Audit Trail.
 </div>
 
-```text
+```
 ┌─────────────────────────── Commvault Access Control — RBAC and Permissions ───────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -49,28 +49,6 @@ Access Control reference covering RBAC Roles, Audit Trail.
 │  Audit Log      = Record of all CommCell user actions: login, backup trigger, config change           │
 │  LDAPS          = LDAP over TLS (port 636); required for secure AD authentication                     │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## RBAC Roles
-
-CommVault roles are assigned through User Groups scoped to specific Client Groups, Storage Policies, or Subclients:
-
-| Role | Capabilities |
-|---|---|
-| Master | Full CommCell administration |
-| Tenant Admin | Manage users and jobs within assigned tenant |
-| Operator | Start/stop jobs; no configuration changes |
-| End User | Self-service restore of own data only |
-| View Only | Read-only — view jobs and configuration |
-
-Assign roles in Command Center: Manage → Security → User Groups.
-
-**Never share admin accounts** — create individual named accounts for each operator; map AD groups to CommVault roles.
-
-## Audit Trail
-
-```powershell
-# View CommVault audit log
-qoperation execscript -sn GetAuditLog -si starttime=<timestamp>
 ```
 
 Forward audit logs to SIEM via syslog:

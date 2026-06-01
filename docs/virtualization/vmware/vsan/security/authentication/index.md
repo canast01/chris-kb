@@ -68,51 +68,6 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
 │  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.
-
----
-
-## Identity Sources
-
-### vSphere SSO Built-in Domain (vsphere.local)
-
-The embedded SSO domain (`vsphere.local`) exists by default on every VCSA deployment. It contains:
-
-- `administrator@vsphere.local` — the initial super-administrator account.
-- Service accounts used by vSphere internal components.
-
-**Use of `vsphere.local` accounts in production:**
-
-- `administrator@vsphere.local` should be used only for break-glass access and initial configuration.
-- All routine vSAN administration should use named accounts from an external identity source.
-- Create a minimum set of service accounts in `vsphere.local` for automation that cannot use AD (e.g., monitoring agents, backup integration).
-
-### Active Directory Integration
-
-Integrate vCenter SSO with Active Directory to allow domain users to authenticate against vCenter.
-
-**Configure AD identity source:**
-
-vSphere Client → vCenter → Administration → Single Sign-On → Configuration → Identity Sources → Add
-
-| Field | Value |
-|---|---|
-| Identity Source Type | Active Directory (Integrated Windows Authentication) or Active Directory as LDAP Server |
-| Domain Name | `example.com` |
-| Base DN for users | `OU=vSphere Admins,DC=example,DC=com` |
-| Base DN for groups | `OU=vSphere Groups,DC=example,DC=com` |
-| Domain alias | `EXAMPLE` |
-
-**Integrated Windows Authentication** (recommended): Uses the machine account of the VCSA joined to the domain. Requires VCSA to be domain-joined.
-
-**LDAP bind account** (alternative): Uses a dedicated service account with read-only access to the AD directory.
-
-```bash
-# Join VCSA to Active Directory domain (from VCSA shell)
-/opt/likewise/bin/domainjoin-cli join example.com Administrator
-# Reboot VCSA after domain join
-reboot
 ```
 
 **Post-join verification:**

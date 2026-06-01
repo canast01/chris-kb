@@ -5,38 +5,47 @@
 Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow, Common Maintenance Tasks, Creating a Custom Dashboard, Creating an Alert Definition and 2 more sections.
 </div>
 
-```text
 Aria Operations — Alert Lifecycle
+```
 ┌─────────────────────────────────────────────────────┐
 │  Alert Fires                                        │
 │  (symptom threshold breached for N wait cycles)     │
 └──────────────────────┬──────────────────────────────┘
+```
                        │
                        ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Notification Delivered                             │
 │  → email (SMTP) · ServiceNow ticket · webhook       │
 └──────────────────────┬──────────────────────────────┘
+```
                        │
                        ▼
+```
 ┌─────────────────────────────────────────────────────┐
 │  Ops Team Triage                                    │
 │  Alerts → All Alerts → filter Critical/Immediate    │
 │  → open alert → Symptoms tab → affected object      │
 │  → review metric history                            │
 └──────────────────────┬──────────────────────────────┘
+```
                        │ root cause found?
                 ┌──────┴──────┐
                 │ Yes         │ No
                 ▼             ▼
+```
 ┌───────────────────┐  ┌─────────────────────────────┐
 │ Acknowledge alert │  │ Escalate · add notes         │
 │ Resolve issue     │  │ Open ITSM ticket             │
 │ Cancel alert only │  └─────────────────────────────┘
 │ after full fix                                      │
 └───────────────────┘
+```
           │
           ▼
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  Planned Maintenance? → Create Maintenance Schedule │
 │  Admin → Maintenance Schedules → Add Schedule       │
@@ -86,15 +95,6 @@ Aria Operations — Alert Lifecycle
 │  Policy Inheritance  = Child groups inherit parent policy; overridden at child level                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-6. Cancel alerts only after the underlying issue is fully resolved — not as a suppression mechanism
-
-## Maintenance Windows
-
-Create a maintenance schedule to suppress alerts for planned work:
-
-```text
-Administration → Maintenance Schedules → Add Schedule
 ```
 
 - Name: `ESXi-03 Maintenance 2026-05-10`

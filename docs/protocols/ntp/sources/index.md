@@ -5,8 +5,8 @@
 NTP Sources reference covering Stratum Hierarchy, Viewing Sources — chrony (Linux), Source Statistics, Configuring Sources (chrony), Windows — w32tm Source Config and 2 more sections.
 </div>
 
-```text
         SOURCE SELECTION AND PREFERENCE
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  /etc/chrony.conf                                           │
 │  server ntp1.example.com iburst prefer  ◄── primary        │

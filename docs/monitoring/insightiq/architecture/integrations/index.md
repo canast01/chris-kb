@@ -4,7 +4,7 @@
 InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS REST API. External integrations are limited to email alerting, syslog forwarding, and the InsightIQ REST API for report automation.
 </div>
 
-```text
+```
 ┌──────────────────────────────── InsightIQ — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -31,18 +31,6 @@ InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS
 │  CSV export = Downloading metric data for external BI or spreadsheet analysis                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## PowerScale OneFS Integration
-
-InsightIQ collects data from PowerScale using a dedicated read-only API account:
-
-```bash
-# Create read-only service account on PowerScale
-isi auth users create insightiq-svc --enabled yes \
-  --set-password
-
-# Assign audit and read-only platform API role
-isi auth roles modify AuditAdmin --add-user insightiq-svc
 ```
 
 ## Scope Limitation

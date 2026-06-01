@@ -4,7 +4,7 @@
 Purpose-built backup appliance — inline global deduplication, DDBoost, MTree replication, and cloud tier integration for long-term backup retention and data protection target workloads.
 </div>
 
-```text
+```
 ┌───────────────────────────────── Dell Data Domain (PowerProtect DD) ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

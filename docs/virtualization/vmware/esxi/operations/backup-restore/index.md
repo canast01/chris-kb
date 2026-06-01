@@ -5,8 +5,8 @@
 ESXi Backup & Restore reference covering VM-Level Backup.
 </div>
 
-```text
 ESXi Backup & Restore Flow
+```
 ┌────────────────────────────────────────────────────────┐
 │  ESXi Host Configuration Backup                        │
 │  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration │
@@ -21,6 +21,8 @@ ESXi Backup & Restore Flow
 │  └── Quiescing: VMware Tools snapshot for consistency  │
 └───────────────────────┬────────────────────────────────┘
                         │
+```
+```
 ┌───────────────────────▼────────────────────────────────┐
 │  Maintenance Mode — Pre-Change Checklist               │
 │  ├── Cluster capacity OK for N-1 hosts?                │
@@ -78,10 +80,6 @@ ESXi Backup & Restore Flow
 │  Cluster     = group of ESXi hosts sharing HA, DRS, and vSAN resources                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-```bash
-# Via vSphere Client
-# Host → Configure → System → Security Profile → Export
 ```
 
 The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.

@@ -5,7 +5,7 @@
 Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration with Physical Network, Active Directory / LDAP Integration and 2 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── NSX Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,26 +58,6 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 │    Panorama/FMC    = Palo Alto/Cisco FMC; integrates with NSX for micro-seg enforcement               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-Once registered, vCenter clusters appear under **System → Fabric → Hosts**. Use them to apply transport node profiles at cluster scope.
-
-## Host Transport Node Profiles
-
-A Transport Node Profile (TNP) captures the NSX configuration applied to every ESXi host in a cluster: which VDS/vSS uplinks carry TEP traffic, which Transport Zones are included, and which IP pool allocates TEP addresses.
-
-```bash
-# Apply a TNP to a cluster (prepares all hosts in the cluster as transport nodes)
-# Via API — Policy endpoint
-curl -sk -u 'admin:password' \
-  -X PUT \
-  -H "Content-Type: application/json" \
-  -d '{
-    "host_profile_binding": {
-      "transport_node_profile_id": "<tnp-id>"
-    }
-  }' \
-  "https://<nsx-manager>/policy/api/v1/infra/sites/default/enforcement-points/default/clusters/<cluster-id>"
 ```
 
 Monitor preparation progress: **System → Fabric → Hosts → Configuration** — each host shows `Success` when preparation is complete.

@@ -5,14 +5,7 @@
 Install and Upgrade reference covering Horizon Agent Installation in Golden Image, UAG Deployment, App Volumes Manager Installation, Upgrade Order, Upgrade a Connection Server (Rolling) and 2 more sections.
 </div>
 
-```text
   Upgrade Sequence (strictly ordered)
-┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
-│  1. vCenter   │──►│  2. Connection│──►│  3. UAG       │──►│  4. Horizon   │
-│  (if          │   │  Servers      │   │  (redeploy    │   │  Agent in     │
-│   upgrading   │   │  (rolling —   │   │   from new    │   │  golden image │
-│   vSphere)    │   │   one at a    │   │   OVA)        │   │  + push pools)│
-└───────────────┘   │   time)       │   └───────────────┘   └───────────────┘
                     └───────────────┘
                             │
                    ┌────────▼────────┐   ┌───────────────┐
@@ -66,13 +59,6 @@ Install and Upgrade reference covering Horizon Agent Installation in Golden Imag
 │  Windows Server= required OS; 2019 or 2022; domain joined                                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-For replica servers (additional Connection Servers in the same pod):
-```powershell
-VMware-Horizon-Connection-Server-x86_64-<version>.exe /silent /norestart `
-  /v"VDM_SERVER_INSTANCE_TYPE=2 VDM_IP_PROTOCOL_USAGE=IPv4 `
-  VDM_INITIAL_ADMIN_SID=<domain-admin-SID> `
-  VDM_INITIAL_ADMIN_PASSWORD=<password>"
 ```
 
 ---

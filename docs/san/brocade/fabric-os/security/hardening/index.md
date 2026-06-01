@@ -74,16 +74,6 @@ flowchart TD
 │  IP whitelist    = management source IP restriction; configured via acp filter command                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Disable HTTP
-
-```bash
-# Disable HTTP, enable HTTPS only
-httpcfg --set -http 0
-httpcfg --set -https 1
-
-# Verify
-httpcfg --show    # HTTP: disabled; HTTPS: enabled
 ```
 
 ### Remove Default SNMP Community Strings

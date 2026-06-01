@@ -5,7 +5,7 @@
 AWS Backup Jobs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────────── AWS Backup — Backup Jobs ───────────────────────────────────────┐
 │                                                                                                       │
 │  Backup jobs execute on schedule or on-demand; monitor status, duration, and failures.                │
@@ -51,37 +51,6 @@ AWS Backup Jobs reference covering Overview, Where It Fits, Daily Checks, Health
 │  list-backup-jobs= AWS CLI command to query job history and status                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
-Backup Job Lifecycle
-─────────────────────────────────────────────────────────────
-
-  ┌────────────┐     ┌────────────┐     ┌─────────────────────────┐
-  │ SCHEDULED  │────►│  RUNNING   │────►│  COMPLETED              │
-  │            │     │            │     │  Recovery point created  │
-  │ cron expr. │     │ Snapshot   │     │  Retention clock starts  │
-  │ triggered  │     │ in progress│     └─────────────────────────┘
-  └────────────┘     └─────┬──────┘
-                           │ (error)
-                           ▼
-                     ┌────────────┐
-                     │  FAILED    │
-                     │            │
-                     │ Check:     │
-                     │ IAM role   │
-                     │ resource   │
-                     │ tag/ARN    │
-                     └────────────┘
-
-  Retention Phase:
-  ┌──────────────────────────────────────────┐
-  │ Recovery Point                           │
-  │ Created ──────────────────► Expiry date  │
-  │            (retain N days)               │
-  │                              │           │
-  │                              ▼           │
-  │                        AUTO-DELETED      │
-  └──────────────────────────────────────────┘
 ```
 
 ## Overview

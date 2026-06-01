@@ -70,31 +70,6 @@ graph TD
 │   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Apply & Destroy
-
-Apply makes the changes from a plan. Destroy removes all resources managed by Terraform. Use `-target` to operate on a specific resource instead of everything.
-
-```bash
-# Apply changes
-terraform apply
-terraform apply tfplan               # apply a saved plan (recommended — no surprises)
-terraform apply -auto-approve        # skip confirmation prompt (for CI/CD)
-terraform apply -var 'env=prod'
-terraform apply -var-file=prod.tfvars
-terraform apply -target=resource_type.name
-terraform apply -parallelism=10      # concurrent operations (default: 10)
-
-# Replace a specific resource (force recreation)
-terraform apply -replace=resource_type.name
-
-# Destroy all resources
-terraform destroy
-terraform destroy -auto-approve
-terraform destroy -target=resource_type.name
-terraform destroy -var-file=prod.tfvars
 ```
 
 ---

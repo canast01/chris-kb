@@ -78,17 +78,6 @@ graph TB
 │    BRCD exchange  = Brocade-specific capability exchange over E_Port during fabric init               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Fabric A and Fabric B are completely independent — no cross-fabric cables. ISLs form trunk groups between switches within a fabric only.
-
-## Principal Switch and Domain ID
-
-One switch per fabric is the principal switch, elected by lowest WWN (default) or by priority. Domain IDs are unique per switch within a fabric (1–239). Static domain IDs are strongly recommended for production fabrics.
-
-```bash
-fabricshow                         # show all switches and domain IDs in fabric
-switchshow | grep Domain           # show local domain ID
-configure                          # set insistDomainId=1 for static domain ID
 ```
 
 ## Name Server and Fabric Services

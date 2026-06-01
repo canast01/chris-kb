@@ -78,24 +78,6 @@ show interface fc1/1 counters errors
 │  FC loopback    = Hardware self-test looping frames back at the port for validation                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Rx power below the minimum operating range indicates a marginal or failing optical path — cable or SFP. Tx power below minimum indicates the SFP transmitter is degrading.
-
----
-
-## Layer 2: System and Hardware Diagnostics
-
-### CPU and Memory
-
-```bash
-# System-level CPU and memory summary
-show system resources
-
-# Per-process CPU — sorted by highest first
-show processes cpu sort | head -20
-
-# Per-process memory usage
-show processes memory sort | head -20
 ```
 
 CPU sustained above 80% or memory usage above 90% warrants investigation. High CPU from the `fc_platform` or zone processes may indicate FLOGI storms or a large zone database activation in progress.

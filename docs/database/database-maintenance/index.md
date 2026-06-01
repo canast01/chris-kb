@@ -64,17 +64,6 @@ FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LI
 │    VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## MySQL / MariaDB Maintenance
-
-```bash
-# Analyse and optimise tables (acquires lock — use during low-traffic window)
-mysqlcheck -u root --analyze --all-databases
-mysqlcheck -u root --optimize <database>
-
-# Or per-table in SQL:
-mysql -u root -e "ANALYZE TABLE <db>.<table>;"
-mysql -u root -e "OPTIMIZE TABLE <db>.<table>;"  # rebuilds table; use sparingly
 ```
 
 ```sql

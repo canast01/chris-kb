@@ -4,6 +4,59 @@
 <div class="kb-summary">
 CLI Reference reference covering Array Hardware, File Systems (NFS / SMB), Network, Object Store (S3), Replication (ActiveDR) and 3 more sections.
 </div>
+```
+┌─────────────────────────────────── Pure FlashBlade — CLI Reference ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        FlashBlade CLI: command-line interface for all management and operational tasks        │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Blades           │  │           NVMe+CPU          │  │         Parallel I/O        │   │
+│   │             File            │  │           NFS/SMB           │  │        Scale-out NAS        │   │
+│   │            Object           │  │           S3/Swift          │  │         Bucket store        │   │
+│   │         Replication         │  │            Async            │  │          DR/backup          │   │
+│   │           SafeMode          │  │         Locked snaps        │  │      Ransomware resist      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: FlashBlade//S or //E chassis · storage blades · 100 GbE network · Pure1 SaaS             │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FlashBlade         = Pure massively parallel all-flash NAS and object platform; single namespace   │
+│    Blade              = individual storage module in FlashBlade chassis; NVMe and CPU per blade       │
+│    File system        = FlashBlade NFS/SMB export namespace; up to 4 PiB per file system              │
+│    Object store       = S3-compatible bucket store on FlashBlade; versioning and lifecycle rules      │
+│    purefb CLI         = REST CLI client for FlashBlade: purefb fs list, purefb array show commands    │
+│    Replication        = async file or object replication between FlashBlade systems for DR            │
+│    SafeMode           = admin-locked snapshots; protected from deletion even by local array admin     │
+│    S3 multitenancy    = per-bucket policy and IAM-style access control for object storage             │
+│    NFS Kerberos       = FlashBlade NFS supports krb5, krb5i, and krb5p security flavours              │
+│    SMB multichannel   = FlashBlade uses SMB multichannel for improved Windows client performance      │
+│    Inline compression = always-on data reduction; typically 2-10x for unstructured data               │
+│    ActiveScale        = enterprise geo-distribution and erasure coding for large object workloads     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ```text
 purefb CLI Hierarchy

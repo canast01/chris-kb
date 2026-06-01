@@ -89,55 +89,6 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 │  Farm            = collection of RDS hosts for app/desktop delivery                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Customization at fork:** A post-customization script (`horizon-customization.ps1` or sysprep alternative) runs in each child VM immediately after the fork to:
-- Set a unique hostname (based on naming pattern defined in pool)
-- Join domain (using Instant Clone Domain Join — a cached machine account)
-- Remove previous user's profile data if persistent profile not in use
-
-### Full Clone Pools
-
-Full Clone pools provision independent VMs from a vCenter template. Each VM is a complete, independent copy.
-
-- Suitable for persistent desktops where users expect to "own" their VM
-- Higher storage consumption — no shared base disk
-- Slower provisioning (full VM deploy from template)
-- VM persists across sessions; user data survives logoff
-- Managed via vCenter snapshot for OS-level updates (manual or automated maintenance)
-
-### RDS Published Applications and Desktops
-
-RDS (Remote Desktop Services) Farms host Windows Server (with Desktop Experience or not) with Horizon Agent in RDS mode. Multiple users share a single Windows Server OS instance.
-
-- **Published Applications:** Individual apps (e.g., Internet Explorer, legacy apps) streamed to client
-- **Published Desktops:** Full RDS desktop session
-- Multiple RDS hosts form a **Farm**; a Farm backs a **Published Application Pool** or **Published Desktop Pool**
-- Load balancing across farm members is handled by Connection Server
-
-| Feature | Instant Clone Pool | Full Clone Pool | RDS Farm |
-|---|---|---|---|
-| Isolation | Per-user VM | Per-user VM | Shared OS, per-session |
-| State | Stateless (default) | Persistent | Stateless |
-| Provisioning speed | Seconds | Minutes | N/A (persistent hosts) |
-| Storage efficiency | High (shared base) | Low | Highest (many users per VM) |
-| User persona | Task/knowledge worker | Power user, persistent | Published app, high-density |
-
----
-
-## Connection Flow
-
-### Internal Client (LAN)
-
-```text
-1. User opens Horizon Client → enters Connection Server FQDN
-2. Horizon Client → HTTPS (443) → Connection Server
-3. Connection Server authenticates user against AD (Kerberos/LDAP)
-4. Connection Server checks entitlements (AD group → pool mapping)
-5. Connection Server selects an available desktop (or provisions new Instant Clone)
-6. Connection Server instructs vCenter to power on / assign VM
-7. Connection Server returns IP/FQDN + session ticket to client
-8. Client establishes Blast Extreme (TCP 8443 / UDP 8443) or PCoIP (TCP 4172 / UDP 4172) directly to VM
-9. Horizon Agent in VM validates ticket, establishes session
 ```
 
 ### External Client via UAG

@@ -94,53 +94,6 @@ BASE="https://cloudiq.apis.dell.com/rest/v1"
 │    /v1/health   = CloudIQ REST endpoint: returns health scores for all systems                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Alerts API
-
-```bash
-# --- List all active alerts ---
-curl -s -X GET "${BASE}/alerts" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# --- Filter alerts by severity ---
-# Severity values: CRITICAL, HIGH, MEDIUM, LOW, INFO
-curl -s -X GET "${BASE}/alerts?severity=CRITICAL" \
-  -H "${AUTH}" | python3 -m json.tool
-
-curl -s -X GET "${BASE}/alerts?severity=HIGH&severity=CRITICAL" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# --- Filter alerts by system ---
-curl -s -X GET "${BASE}/alerts?system_id=${SYSTEM_ID}" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# --- Filter alerts by state ---
-# States: ACTIVE, ACKNOWLEDGED, RESOLVED
-curl -s -X GET "${BASE}/alerts?state=ACTIVE" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# --- Get details for a specific alert ---
-ALERT_ID="<alert-id>"
-
-curl -s -X GET "${BASE}/alerts/${ALERT_ID}" \
-  -H "${AUTH}" | python3 -m json.tool
-
-# Key alert fields:
-#   id               – Alert identifier
-#   severity         – CRITICAL / HIGH / MEDIUM / LOW / INFO
-#   state            – ACTIVE / ACKNOWLEDGED / RESOLVED
-#   description      – Human-readable alert text
-#   resource_name    – Affected resource
-#   create_time      – ISO8601 timestamp
-#   acknowledge_time – Set when acknowledged
-
-# --- Acknowledge an alert ---
-curl -s -X PATCH "${BASE}/alerts/${ALERT_ID}" \
-  -H "${AUTH}" \
-  -H "Content-Type: application/json" \
-  -d '{"state": "ACKNOWLEDGED"}' | python3 -m json.tool
 ```
 
 ---

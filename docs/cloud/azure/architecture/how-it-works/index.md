@@ -72,18 +72,4 @@ graph TB
 │  IaC             = Infrastructure as Code; define Azure resources in declarative templates            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Identity Architecture
-
-```text
-Entra ID (cloud identity plane)
-    │
-    ├── Azure AD Connect sync ←── On-premises AD (source of truth)
-    ├── Entra ID Governance (lifecycle, access reviews)
-    ├── Privileged Identity Management (PIM — JIT role activation)
-    └── Conditional Access Policies (MFA, compliant device requirements)
-
-Humans: SSO via Entra ID, MFA required
-Service Principals: used by CI/CD, Terraform (OIDC preferred; no client secrets)
-Managed Identities: used by Azure services (no credentials to manage)
 ```

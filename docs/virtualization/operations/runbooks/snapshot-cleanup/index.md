@@ -5,7 +5,7 @@
 vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Identify Affected Objects, Check Failed Disks, Check Host Availability, Check Resync Status and 5 more sections.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── vSAN Snapshot Cleanup Runbook ────────────────────────────────────┐
 │                                                                                                       │
 │    Identify degraded vSAN objects; check disks and hosts; restore or rebuild                          │
@@ -31,32 +31,6 @@ vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Ident
 │    FTT            = Failures To Tolerate; storage policy setting; FTT=1 needs 3 hosts min             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-## Confirm vSAN Health State
-
-- Open vCenter → Cluster → vSAN → Skyline Health
-- Identify which health checks are failing
-- Open Virtual Objects view and filter by Degraded, Non-compliant, or Absent
-
-## Identify Affected Objects
-
-- Note the VM name, object type, and storage policy for each affected object
-- Check if the VM is still running or if it has failed
-
-## Check Failed Disks
-
-- Review Skyline Health → Physical Disk section
-- Check iDRAC for disk health on all VxRail nodes
-
-## Check Host Availability
-
-- Confirm all hosts are Connected in vCenter
-- Check if any host is in maintenance mode unexpectedly
-
-## Check Resync Status
-
-```bash
-esxcli vsan debug resync summary get
 ```
 
 Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.

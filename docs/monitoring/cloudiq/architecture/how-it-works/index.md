@@ -5,7 +5,7 @@
 How It Works (Monitoring) reference covering Architecture, Component Roles, Secure Connect Gateway (SCG), Telemetry Collection, Data Residency and 1 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── CloudIQ — How It Works ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -67,28 +67,6 @@ service vmware-vcops-watchdog restart
 │  Time Range           = Dashboard widget setting; widen if no data appears                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Cluster Node Offline or Degraded
-
-Symptoms: one or more nodes show OFFLINE or DEGRADED in Administration → Cluster Management; metric collection may be reduced if a data node is offline.
-
-```bash
-# Confirm node status via API
-TOKEN=$(curl -sk -X POST \
-  "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"<password>","authSource":"Local"}' | jq -r '.token')
-
-curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
-  "https://vrops-prod-01.example.local/suite-api/api/cluster/nodes" | \
-  jq '.nodes[] | {name: .name, role: .role, status: .nodeStatus}'
-
-# SSH to the degraded node and check services
-ssh admin@vrops-prod-02.example.local
-vracli status
-systemctl list-units 'vmware-*' --state=failed
 ```
 
 If the node is running but not joining the cluster:

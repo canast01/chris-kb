@@ -87,19 +87,6 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.
-
-## SIEM Integration
-
-Forward NetBackup audit logs to SIEM:
-
-```bash
-# Audit log location
-/usr/openv/netbackup/logs/audit/
-
-# Configure syslog forwarding for NetBackup events
-/usr/openv/netbackup/bin/nblog -syslog enable -syslog_host <siem_ip> -syslog_port 514
 ```
 
 Alert on: `backup failed`, `policy modified`, `client deleted`, `catalog backup failed`.

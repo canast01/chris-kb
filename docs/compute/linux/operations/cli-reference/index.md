@@ -73,30 +73,6 @@ flowchart LR
 │  symlink     = Symbolic link; pointer to another path, can cross filesystems                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Package Management
-
-```bash
-# RHEL (dnf)
-dnf install <package>
-dnf remove <package>
-dnf update -y
-dnf update --security -y
-dnf check-update
-dnf list installed | grep <name>
-dnf info <package>
-dnf history list
-dnf history undo <id>
-
-# Ubuntu (apt)
-apt update
-apt install <package>
-apt remove <package>
-apt upgrade -y
-apt full-upgrade -y
-apt list --installed 2>/dev/null | grep <name>
-apt show <package>
-apt autoremove -y
 ```
 
 ## Process Management

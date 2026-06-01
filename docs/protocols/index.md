@@ -4,8 +4,8 @@
 Reference coverage for the networking and storage protocols used in enterprise infrastructure — Fibre Channel, iSCSI, NFS, SMB, NTP, SNMP, TLS, DNS, DHCP, and LDAP.
 </div>
 
-```text
                         PROTOCOL LANDSCAPE
+```
 ┌───────────────────────────────────────────────────────────────┐
 │  STORAGE PROTOCOLS          MANAGEMENT PROTOCOLS              │
 │  ┌──────────┐  ┌───────┐   ┌──────┐ ┌─────┐ ┌─────┐ ┌─────┐ │

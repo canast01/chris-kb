@@ -4,7 +4,7 @@
 Veeam Backup & Replication architecture — Backup Server manages scheduling, Proxies handle data movement via VADP or agent, and SOBR provides tiered storage with immutable object offload.
 </div>
 
-```text
+```
 ┌──────────────────────────────────────── Veeam — Architecture ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

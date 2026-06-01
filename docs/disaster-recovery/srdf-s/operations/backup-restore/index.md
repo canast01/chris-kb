@@ -77,32 +77,6 @@ symrdf list -rdfg <rdf_group_number> -detail
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-A planned `failover` without `-force` verifies synchronization first and will abort if data could be lost.
-
----
-
-## Unplanned Failover Procedure
-
-When the R1 site suffers an outage and the SRDF link is severed, a forced failover is required.
-
-### Unplanned Failover Steps
-
-```bash
-# 1. Confirm R1 site is confirmed down (not a transient network issue)
-symrdf -sg PROD_SG query
-# Expected state: Link shows Suspended or R1 Not Ready
-
-# 2. Suspend the SRDF link (if not already suspended by the array)
-symrdf -sg PROD_SG suspend -force
-
-# 3. Force failover — promote R2 devices to RW
-symrdf -sg PROD_SG failover -force
-
-# 4. Verify R2 devices are now in RW state
-symrdf -sg PROD_SG query
-
-# 5. Present R2 volumes to DR hosts and start workloads
 ```
 
 **Caution:** In a synchronous pair, forced failover during an outage is effectively zero-data-loss if the link was synchronized before the failure. If the link had suspended writes (e.g., network drop was not immediate), up to the in-flight writes may be lost.

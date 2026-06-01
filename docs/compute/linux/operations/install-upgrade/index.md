@@ -61,23 +61,6 @@ flowchart TD
 │  leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## RHEL Subscription Management
-
-```bash
-# Check subscription status
-subscription-manager status
-subscription-manager list --consumed
-
-# Register a new system
-subscription-manager register --username <rhn-user> --password <rhn-pass>
-subscription-manager attach --auto
-
-# Check available repos
-subscription-manager repos --list-enabled
-
-# Enable a specific repo
-subscription-manager repos --enable=rhel-9-for-x86_64-appstream-rpms
 ```
 
 ## In-Place Upgrade (RHEL 8 → 9)

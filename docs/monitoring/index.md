@@ -4,7 +4,7 @@
 Monitoring reference: Pure1, CloudIQ, Aria Operations, InsightIQ, and 4 more.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Monitoring — Platform Overview ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

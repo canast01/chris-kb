@@ -61,19 +61,6 @@ sudo systemctl status vrni-platform
 │  SSH                 = Secure Shell; admin access to appliance CLI on port 22                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-SSH is available on port 22. Restrict access to jump hosts only — see Hardening page.
-
-## Platform VM CLI Commands
-
-### Version and Build Info
-
-```bash
-# Show platform version
-cat /etc/build.info
-
-# Or via the support script
-sudo /home/ubuntu/support/show-version.sh
 ```
 
 Output format:

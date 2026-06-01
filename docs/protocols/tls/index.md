@@ -9,11 +9,12 @@ title: TLS
 TLS (Transport Layer Security) provides encryption, integrity, and authentication for network communications.
 </div>
 
-```text
         TLS HANDSHAKE (TLS 1.3 simplified)
+```
 ┌─────────────┐                              ┌──────────────────┐
 │   Client    │                              │     Server       │
 └──────┬──────┘                              └────────┬─────────┘
+```
        │  1. ClientHello                              │
        │  (supported ciphers, TLS version)            │
        │ ────────────────────────────────────────────►│

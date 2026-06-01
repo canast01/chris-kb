@@ -4,7 +4,7 @@
 Azure Identity articles, operational checks, troubleshooting notes, and references.
 </div>
 
-```text
+```
 ┌─────────────────────────────────────── Azure Identity Overview ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

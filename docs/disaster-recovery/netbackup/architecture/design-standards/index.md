@@ -5,7 +5,7 @@
 NetBackup Standards reference covering Naming Conventions, Retention Schedule, Backup Policy to Job Flow, Encryption Standard, Test Restore Standard.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── NetBackup — Design Standards ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

@@ -84,15 +84,6 @@ journalctl -u dsagw -f
 │    SSL cert error  = SCG cannot validate CloudIQ endpoint cert; add CA to SCG trust store             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 3 — Verify the system is registered to SCG:**
-
-```bash
-# List devices registered to the SCG
-# SCG web UI: https://<scg-ip>:9443 → Devices → Registered Devices
-# Or via SCG CLI:
-dsagw list-devices
-# The affected system should appear in this list with status "Connected"
 ```
 
 **Step 4 — Check SupportAssist on the array:**

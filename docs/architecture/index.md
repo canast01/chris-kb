@@ -4,7 +4,7 @@
 Enterprise infrastructure architecture design guides covering high availability patterns, storage tiering, network topology, and disaster recovery design principles.
 </div>
 
-```text
+```
 ┌────────────────── Architecture — HA Design, Storage, Networking & Disaster Recovery ──────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

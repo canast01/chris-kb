@@ -79,25 +79,6 @@ sequenceDiagram
 │  jobdetails     = qlist subcommand returning verbose per-phase timing and error codes                 │
 │  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Backup Operations
-
-Trigger backups manually or validate subclient configuration.
-
-```bash
-# Run a full backup on a subclient
-qoperation backup -subclient <name> -backuptype full
-
-# Run an incremental backup
-qoperation backup -subclient <name> -backuptype incremental
-
-# Run backup for all subclients in a client
-qoperation backup -c <client_name> -a
-
-# List subclients for a client
-qlist subclient -c <client_name>
 ```
 
 ---

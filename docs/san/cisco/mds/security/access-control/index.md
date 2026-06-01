@@ -87,25 +87,6 @@ graph TD
 │  Account lockout= Security policy disabling login after N consecutive failed attempts                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Custom Roles
-
-For environments requiring fine-grained access, create custom roles with specific command rules:
-
-```bash
-# Create a custom role (example: zone-admin — zone changes only)
-role name zone-admin
-  rule 1 permit command zone *
-  rule 2 permit command zoneset *
-  rule 3 permit command device-alias *
-  rule 4 permit read-write feature zone
-  rule 10 permit read
-
-# Assign the role to a user
-username zoneadmin role zone-admin
-
-# Verify
-show role name zone-admin
 ```
 
 ### VSAN-Scoped Roles

@@ -82,38 +82,6 @@ aws iam get-account-summary \
 │  Root MFA        = Hardware MFA on root is CIS level 1 requirement; highest priority                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## CloudTrail — Multi-Region with CloudWatch
-
-```bash
-# Create S3 bucket for CloudTrail logs
-aws s3api create-bucket \
-  --bucket my-org-cloudtrail-logs \
-  --region eu-west-1 \
-  --create-bucket-configuration LocationConstraint=eu-west-1
-
-# Enable versioning + server-side encryption on the bucket
-aws s3api put-bucket-versioning \
-  --bucket my-org-cloudtrail-logs \
-  --versioning-configuration Status=Enabled
-
-# Create multi-region trail
-aws cloudtrail create-trail \
-  --name org-management-trail \
-  --s3-bucket-name my-org-cloudtrail-logs \
-  --include-global-service-events \
-  --is-multi-region-trail \
-  --enable-log-file-validation \
-  --cloud-watch-logs-log-group-arn arn:aws:logs:eu-west-1:<account>:log-group:CloudTrail \
-  --cloud-watch-logs-role-arn arn:aws:iam::<account>:role/CloudTrailCloudWatchRole
-
-aws cloudtrail start-logging --name org-management-trail
-
-# Verify
-aws cloudtrail get-trail-status --name org-management-trail \
-  --query '[IsLogging,LatestDeliveryTime,LatestCloudWatchLogsDeliveryTime]'
 ```
 
 ---

@@ -75,20 +75,6 @@ echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 │   │        OIDC trust      = re-configure cloud OIDC trust relationship if repo moves orgs        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Restore Procedures
-
-### Restore Workflow Files from Git
-
-```bash
-# Files are in Git — restore is just a checkout
-git clone git@github.com:org/repo.git
-# or restore specific file
-git checkout HEAD -- .github/workflows/deploy.yml
-
-# From mirror backup
-git clone /backups/github/repo.git /tmp/restore
-cp -r /tmp/restore/.github/workflows/ /opt/repo/.github/
 ```
 
 ### Recreate Secrets After Repository Loss

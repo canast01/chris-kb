@@ -58,19 +58,6 @@ curl -s -X POST \
 │    openssl s_client= Test TLS handshake; shows cert chain, expiry, cipher negotiated                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## DNS Resolution
-
-```bash
-# Resolve API hostname
-dig +short api.example.com
-nslookup api.example.com
-
-# Check for CNAME chain
-dig api.example.com CNAME
-
-# Test from container / pod namespace
-kubectl run -it --rm debug --image=curlimages/curl -- curl -v https://api.example.com/health
 ```
 
 ## Authentication Checks

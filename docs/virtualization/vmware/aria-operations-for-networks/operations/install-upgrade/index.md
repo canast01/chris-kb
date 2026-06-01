@@ -116,55 +116,6 @@ sudo systemctl status vrni-platform nginx cassandra
 │  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-If the Collector does not appear as Connected within 10 minutes, check:
-1. TCP 443 from Collector to Platform is open
-2. DNS resolves Platform FQDN from the Collector
-3. Pairing key was not expired or already used
-
-### Add vCenter as a Data Source
-
-Settings → Accounts and Data Sources → Add Source → vCenter Server
-
-| Field | Value |
-|---|---|
-| vCenter IP/FQDN | `vcenter.example.local` |
-| Username | `svc-aon@vsphere.local` |
-| Password | — |
-| Collector | Select the paired Collector |
-| Nickname | `vCenter-Production` |
-
-Click **Validate** to test credentials, then **Submit**.
-
-### Add NSX-T Manager as a Data Source
-
-Settings → Accounts and Data Sources → Add Source → NSX-T Manager
-
-| Field | Value |
-|---|---|
-| NSX-T Manager IP/FQDN | `nsxmgr.example.local` |
-| Username | `svc-aon` |
-| Password | — |
-| Collector | Select the paired Collector |
-| Nickname | `NSX-T-Production` |
-
-NSX-T data source auto-discovers VNIs, segments, and DFW rules within the first sync cycle (10 minutes).
-
-## Upgrade Process
-
-### Upgrade Order — Critical
-
-**Always upgrade Platform VM before Collector VMs.** A newer Collector cannot communicate with an older Platform. Upgrading Collectors first will cause them to disconnect and lose flow data during the window.
-
-```text
-Correct order:
-1. Snapshot Platform VM
-2. Upgrade Platform VM
-3. Verify Platform is healthy
-4. Snapshot each Collector VM
-5. Upgrade each Collector VM (one at a time or in parallel if environment allows)
-6. Verify all Collectors reconnect
-7. Delete snapshots (after 48-hour burn-in)
 ```
 
 ### Prepare for Upgrade

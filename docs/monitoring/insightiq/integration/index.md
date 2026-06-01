@@ -47,19 +47,6 @@ Configuration: InsightIQ web UI > Administration > Clusters > Add Cluster
 │  Alert cadence = How often InsightIQ re-sends alert if threshold remains exceeded                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Use LDAPS (TCP 636) to encrypt LDAP traffic. Store the bind account password in the secrets manager.
-
-## SMTP Email Alerts
-
-InsightIQ sends alert emails directly from the appliance via SMTP. Configure the outbound SMTP relay.
-
-```text
-InsightIQ web UI > Administration > Email Settings
-- SMTP server: relay.company.com
-- Port: 587 (STARTTLS)
-- From address: insightiq-alerts@company.com
-- Recipients: configure per alert rule (storage-ops@company.com)
 ```
 
 Alert rules are configured per metric threshold under: **Administration > Alert Settings > Add Alert**

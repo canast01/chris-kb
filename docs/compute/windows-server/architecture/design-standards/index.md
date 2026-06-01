@@ -61,35 +61,6 @@ flowchart LR
 │  Logon audit   = logs interactive, network, and Kerberos logons                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-All servers must be placed in the correct OU before applying GPOs. Computer accounts should not remain in the default `Computers` container.
-
-## Drive Letter Conventions
-
-| Drive | Purpose | Notes |
-|-------|---------|-------|
-| C: | Operating system | Minimum 100 GB; OS and program files only |
-| D: | Data / application files | Size based on workload |
-| E: | Logs | Application and IIS logs |
-| T: | TempDB (SQL Server) | High-IOPS volume; separate spindle or tier |
-| X: | Backup staging | Optional; separate from data |
-
-## PowerShell Remoting
-
-PowerShell remoting (WinRM) must be enabled on all managed servers:
-
-```powershell
-# Enable PowerShell remoting
-Enable-PSRemoting -Force
-
-# Verify WinRM is running
-Get-Service WinRM
-
-# Test remote connectivity
-Test-WSMan -ComputerName <servername>
-
-# Connect remotely
-Enter-PSSession -ComputerName <servername> -Credential (Get-Credential)
 ```
 
 WinRM listener configuration:

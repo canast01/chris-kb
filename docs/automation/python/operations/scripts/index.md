@@ -47,12 +47,6 @@ graph LR
 │   │ Output format    = JSON for machine parsing; tabulate/rich for human-readable terminal output │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-**Step 5 — Run the script**
-
-```bash
-cd C:\Users\YourName\Desktop
-.\setup-python-env.ps1
 ```
 
 **What you should see**

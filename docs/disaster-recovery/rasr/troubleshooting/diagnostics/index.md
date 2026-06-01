@@ -73,30 +73,6 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Network Share Diagnostics
-
-```powershell
-# Test TCP connectivity to NAS on SMB port
-Test-NetConnection -ComputerName nas01 -Port 445
-
-# Test share path is reachable
-Test-Path "\\nas01\rasr-images\$env:COMPUTERNAME"
-
-# Test authentication explicitly
-net use \\nas01\rasr-images /user:domain\rasr-svc
-# If fails: check password expiry, account lockout, firewall on port 445
-
-# Check SMB signing compatibility (mismatch can cause silent failures)
-Get-SmbClientConfiguration | Select-Object RequireSecuritySignature
-Get-SmbServerConfiguration | Select-Object RequireSecuritySignature
-
-# Check share space available
-$share = "\\nas01\rasr-images"
-$drive = New-PSDrive -Name "NASCheck" -PSProvider FileSystem -Root $share -Credential (Get-Credential) -Temporary
-Get-PSDrive NASCheck | Select-Object Name, Used, Free
 ```
 
 ---

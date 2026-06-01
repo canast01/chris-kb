@@ -99,23 +99,6 @@ server {
 │  TDE          = Transparent Data Encryption at PostgreSQL level (pgcrypto)                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Verifying TLS Configuration
-
-```bash
-# Check TLS certificate expiry
-openssl s_client -connect jira.corp.example.com:443 -servername jira.corp.example.com \
-  </dev/null 2>/dev/null | openssl x509 -noout -dates
-
-# Test cipher suite support
-nmap --script ssl-enum-ciphers -p 443 jira.corp.example.com
-
-# Check for weak protocols
-openssl s_client -connect jira.corp.example.com:443 -ssl3 2>&1 | grep "ssl handshake failure"
-openssl s_client -connect jira.corp.example.com:443 -tls1 2>&1 | grep "ssl handshake failure"
-
-# Test with testssl.sh
-./testssl.sh --severity HIGH jira.corp.example.com
 ```
 
 ### LDAPS for Directory Connectivity

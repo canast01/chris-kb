@@ -5,17 +5,19 @@
 Access Control reference covering Credential Rotation, Quarterly Access Review Checklist.
 </div>
 
-```text
 VCF RBAC Model — Role Assignment Flow
+```
 ┌─────────────────────────────────────────────────────┐
 │  Active Directory                                   │
 │  ┌──────────────────────────────────────────────┐   │
 │  │  GG-VCF-Admins · GG-VCF-Operators · ...     │    │
 │  └──────────────────────────────────────────────┘   │
 └───────────────────────┬─────────────────────────────┘
+```
                         │ AD groups mapped to roles
           ┌─────────────┼──────────────┐
           ▼             ▼              ▼
+```
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
 │ SDDC Manager │ │ NSX Manager  │ │ vCenter Server    │
 │              │ │              │ │ (per domain)      │
@@ -26,8 +28,11 @@ VCF RBAC Model — Role Assignment Flow
 │              │ │ Auditor      │ │ Apply at lowest   │
 │              │ │              │ │ inventory level   │
 └──────────────┘ └──────────────┘ └──────────────────┘
+```
 
 Credential Rotation (all via SDDC Manager — never manually):
+```
+```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager → Security → Credentials → Rotate     │
 │  ESXi root · vCenter SSO admin · NSX admin          │
@@ -80,12 +85,6 @@ Credential Rotation (all via SDDC Manager — never manually):
 │  Service accounts= SDDC Mgr manages all component service credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Use the returned `accessToken` as a Bearer token in subsequent API calls:
-
-```bash
-curl -sk https://<sddc-manager-fqdn>/v1/hosts \
-  -H "Authorization: Bearer <accessToken>"
 ```
 
 API tokens expire after 24 hours by default. For automation pipelines, authenticate at the start of each run rather than caching tokens across runs.

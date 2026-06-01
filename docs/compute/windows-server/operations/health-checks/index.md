@@ -73,17 +73,6 @@ flowchart TD
 │  LAPS          = auto-rotated local admin password; check rotation age                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Windows Services Status
-
-```powershell
-# Services that should be running but are not
-Get-Service | Where-Object {
-  $_.StartType -eq 'Automatic' -and $_.Status -ne 'Running'
-} | Select-Object Name, DisplayName, Status, StartType
-
-# Check a specific service
-Get-Service -Name wuauserv | Select-Object Name, Status, StartType
 ```
 
 ### Disk Space

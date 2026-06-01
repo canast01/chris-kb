@@ -4,7 +4,7 @@
 Technical and operational reference for VMware Aria Operations for Logs. Covers log ingestion, querying, alerting, dashboards, and integration for VMware infrastructure log management and analysis.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── Aria Operations for Logs Stack ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

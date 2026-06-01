@@ -4,7 +4,7 @@
 Cluster sizing, Management Pack governance, alert configuration baselines, naming conventions, and configuration standards for Aria Operations deployments.
 </div>
 
-```text
+```
 ┌─────────────────────────── Aria Operations — Architecture Design Standards ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

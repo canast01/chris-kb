@@ -55,15 +55,6 @@ Administration → Authentication → Local Users → admin → Edit → Change 
 │  MFA enforcement   = Handled by vIDM access policy if vRLI uses SSO                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermediate + root, PEM).
-
-Verify after replacement:
-
-```bash
-echo | openssl s_client -connect vrli-prod-01.example.local:443 2>/dev/null | \
-  openssl x509 -noout -issuer -subject -dates
-# Issuer should be your internal CA, not "VMware" or "self-signed"
 ```
 
 ---

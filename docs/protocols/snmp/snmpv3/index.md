@@ -9,8 +9,8 @@ title: SNMPv3
 SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext community strings of v1/v2c.
 </div>
 
-```text
         SNMPv3 authPriv SECURITY MODEL (USM)
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  NMS                              Device agent               │
 │  ┌────────────────────┐           ┌──────────────────────┐   │

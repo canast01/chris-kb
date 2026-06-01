@@ -5,8 +5,8 @@
 Access Control reference covering Least-Privilege Role Assignments, SRA Credential Management, Separation of Duties for Recovery, Network Access Control, Audit Trail.
 </div>
 
-```text
   SRM RBAC: Recovery Plan Roles → vCenter Permissions
+```
 ┌──────────────────────────────────────────────────────────────┐
 │  AD Groups                SRM Roles (via vCenter Global Perms)│
 │  ┌────────────────┐       ┌───────────────────────────────┐   │
@@ -69,29 +69,6 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
 │  No cross-site  = SRM roles are per-site; no admin across both sites                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## Least-Privilege Role Assignments
-
-| AD Group | Role | Rationale |
-|---|---|---|
-| `CORP\SRM-Admins` | Site Recovery Administrator | Full config and run |
-| `CORP\SRM-DR-RunTeam` | Site Recovery Recovery Admin | DR team — run plans only |
-| `CORP\Infra-ReadOnly` | Site Recovery User | View-only for auditing |
-
-Separate the configuration role (SRM-Admins) from the run role (SRM-DR-RunTeam) — different people should configure DR plans and execute them during an actual disaster.
-
----
-
-## SRA Credential Management
-
-SRA (Storage Replication Adapter) stores array credentials encrypted in SRM:
-
-```text
-Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
-  Array credentials: FlashArray management IP + API token
-  Credentials are stored encrypted — only SRM can decrypt them
 ```
 
 Rotate SRA credentials:

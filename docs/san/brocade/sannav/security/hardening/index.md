@@ -72,25 +72,6 @@ sudo passwd root
 │  Staging test    = validate SANnav upgrade in non-prod before production rollout                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 3. Disable Unused OS Services
-
-The SANnav appliance OS may have services enabled that are not required:
-
-```bash
-# List all active services
-sudo systemctl list-units --type=service --state=active
-
-# Disable services not needed for SANnav operation:
-sudo systemctl disable --now avahi-daemon    # mDNS — not needed
-sudo systemctl disable --now cups            # printing — not needed
-sudo systemctl disable --now bluetooth       # not applicable to VMs
-sudo systemctl disable --now postfix         # use SMTP relay; local MTA not needed
-
-# Verify SANnav services are still running after disabling
-sannav status
 ```
 
 ---

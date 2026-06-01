@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Masking Views, Provisioning.
 </div>
+```
+┌─────────────────────────────── Dell PowerMax — Operational Procedures ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │            PowerMax operational procedures: standard tasks for day-2 administration           │   │
+│   │           Covers: provisioning, expansion, maintenance, DR testing, and decommission          │   │
+│   │           Pre/post checks required for all maintenance activities affecting storage           │   │
+│   │            All procedures require approved change management tickets in production            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Open change → pre-check → execute → verify → post-check → close                                    │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
+│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
+│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
+│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
+│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Procedure     │    Pre-check     │       Steps       │      Verify      │    Post-check    │   │
+│   │    Provision     │  Capacity free?  │   Create volume   │   Host access    │   Monitor I/O    │   │
+│   │      Expand      │   Pool space?    │    Grow volume    │    FS resize     │   Verify size    │   │
+│   │     Snapshot     │   Policy set?    │   Take snapshot   │   Snap listed    │   Consistency    │   │
+│   │     Failover     │  Repl. in sync?  │    Break repl.    │    App online    │    Verify RTO    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
+│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
+│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
+│    Storage group      = logical container for volumes sharing service level and host access policy    │
+│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
+│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
+│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
+│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
+│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
+│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
+│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
+│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Change Readiness
 

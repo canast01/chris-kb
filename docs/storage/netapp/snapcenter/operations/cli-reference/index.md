@@ -4,6 +4,59 @@
 <div class="kb-summary">
 > Part of the [SnapCenter Operations](../index.md) reference.
 </div>
+```
+┌────────────────────────────────── NetApp SnapCenter — CLI Reference ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        SnapCenter CLI: command-line interface for all management and operational tasks        │   │
+│   │            Access: SSH or REST client to management IP; authenticate as admin role            │   │
+│   │        Commands: status, list, create, modify, delete, show, and diagnostic operations        │   │
+│   │          Scripting: use REST API or CLI in automation for provisioning and reporting          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH → authenticate → show status → configure → verify → log output                                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │            Server           │  │          Windows VM         │  │       Central control       │   │
+│   │           Plug-in           │  │          Host agent         │  │        App-consistent       │   │
+│   │            Policy           │  │       Schedule/retain       │  │         Backup rule         │   │
+│   │        Resource group       │  │       Grouped targets       │  │        Shared policy        │   │
+│   │           Recovery          │  │       Volume/LUN/file       │  │       Granular restore      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Category     │     Command      │      Purpose      │      Output      │      Notes       │   │
+│   │      Status      │   show status    │    Health check   │   State/alerts   │    Daily run     │   │
+│   │       List       │     list all     │     Inventory     │   Name/ID/size   │    Read-only     │   │
+│   │      Create      │  create volume   │     Provision     │    New object    │    Change req    │   │
+│   │      Delete      │ delete resource  │    Decommission   │   Confirmation   │   Irreversible   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SnapCenter Server (Windows) · ONTAP clusters · plug-in hosts · application servers       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SnapCenter         = NetApp backup orchestration; coordinates app-consistent snapshots via plug-ins│
+│    Plug-in            = host-side agent; quiesces application before snapshot: SQL, Oracle, VMware    │
+│    Resource group     = set of resources sharing a backup policy and schedule in SnapCenter           │
+│    Policy             = SnapCenter object defining snapshot frequency, retention, and replication t...│
+│    App-consistent     = snapshot taken after DB quiesce; guarantees crash-consistent recovery         │
+│    Clone lifecycle    = SnapCenter clone: create from snapshot, provision to host, then delete        │
+│    FlexClone          = underlying ONTAP technology; SnapCenter clone maps to an ONTAP FlexClone      │
+│    Vault policy       = SnapCenter policy that also replicates snapshots to SnapVault destination     │
+│    Mirror policy      = SnapCenter policy that replicates snapshots via SnapMirror to DR cluster      │
+│    RBAC               = SnapCenter role-based access; Admin, Backup Operator, Restore Operator roles  │
+│    SMF                = SnapCenter MySQL database storing job history, policies, and resource configs │
+│    SnapCenter API     = REST API on port 8143; full feature coverage for automation workflows         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ---
 

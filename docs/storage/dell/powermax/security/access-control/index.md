@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Access Control reference covering Overview, Unisphere Role-Based Access Control (RBAC), Solutions Enabler CLI Access Control, Data Plane Access Control — Masking Views, Access Control Reviews and 1 more sections.
 </div>
+```
+┌─────────────────────────────────── Dell PowerMax — Access Control ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         PowerMax access control: RBAC roles, least-privilege, and access audit logging        │   │
+│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
+│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
+│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │           Function          │   │
+│   │            Cache            │  │          DRAM 2 TB+         │  │        Sub-ms latency       │   │
+│   │         FE director         │  │        FC/iSCSI ports       │  │         Host facing         │   │
+│   │         BE director         │  │         NVMe drives         │  │        Storage facing       │   │
+│   │             SRDF            │  │         RDF director        │  │       Metro/remote DR       │   │
+│   │          TimeFinder         │  │         SnapVX/Clone        │  │       Local protection      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
+│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
+│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
+│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
+│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: PowerMax 2500/8500 engine · FE/BE/RDF directors · DRAM cache · expansion bays            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PowerMax           = Dell flagship NVMe all-flash array; millions of IOPS at sub-millisecond lat...│
+│    SRDF               = Symmetrix Remote Data Facility; sync/async metro and remote site replication  │
+│    TimeFinder SnapVX  = space-efficient snapshot technology; up to 256 snapshots per storage group    │
+│    Storage group      = logical container for volumes sharing service level and host access policy    │
+│    Service level      = performance target for a storage group: Diamond, Platinum, Gold, Silver       │
+│    FE director        = front-end director providing FC or iSCSI host-facing ports on the engine      │
+│    BE director        = back-end director connecting engine cache to NVMe flash drive bays            │
+│    RDF director       = SRDF director providing dedicated bandwidth for replication traffic           │
+│    Solutions Enabler  = CLI and API toolkit; symcli commands cover all PowerMax management            │
+│    Unisphere          = web GUI and REST API server for PowerMax; unified management interface        │
+│    DCM                = Dynamic Cache Management; auto-balances workloads across available cache re...│
+│    Service level obj. = workload performance class assigned to storage group; enforced by DPTM        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Overview
 

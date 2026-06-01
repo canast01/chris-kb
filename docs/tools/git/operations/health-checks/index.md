@@ -72,36 +72,6 @@ git -C /backup/repo.git fsck --full
 │  Build time drift = CI duration creeping up; indicates test suite growth or slowness                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-### `git gc` — Garbage Collection and Pack Optimization
-
-`git gc` compresses objects, removes unreachable objects, and optimises the repository.
-
-```bash
-# Standard GC (background-safe, won't block operations)
-git gc
-
-# Aggressive GC — more thorough repacking; CPU-intensive
-git gc --aggressive --prune=now
-
-# Check if GC is needed (auto-triggers at 6700 loose objects by default)
-git count-objects -v
-# output:
-# count: 42          <- loose objects
-# size: 168          <- size in KiB
-# in-pack: 15234     <- objects in pack files
-# packs: 2
-# size-pack: 8192    <- pack file size in KiB
-# prune-packable: 0
-# garbage: 0
-
-# Human-readable sizes
-git count-objects -vH
-
-# Repack into a single pack file
-git repack -a -d --depth=250 --window=250
 ```
 
 GC configuration tuning:

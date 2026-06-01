@@ -4,6 +4,59 @@
 <div class="kb-summary">
 Escalation reference covering Support Portal, AutoSupport, Information to Collect, SLA Tiers — NetApp SupportEdge, Escalation Path.
 </div>
+```
+┌────────────────────────────────────── NetApp ONTAP — Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       ONTAP escalation: severity triage, vendor support contact, and required artifacts       │   │
+│   │         L1: basic checks, restart services; L2: log analysis, config review, vendor SR        │   │
+│   │        Severity: P1 production down → immediate SR + on-call page; P2/P3 business hours       │   │
+│   │         Before escalating: collect support bundle, event timeline, and change history         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Detect issue → triage severity → collect artifacts → open SR → update                              │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Layer            │  │          Component          │  │            Notes            │   │
+│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
+│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
+│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
+│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
+│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Severity     │     Criteria     │   Response time   │      Owner       │    Vendor SLA    │   │
+│   │        P1        │ Production down  │     Immediate     │   On-call + L2   │    1 hr 24x7     │   │
+│   │        P2        │  Major degraded  │       1 hour      │   L2 engineer    │   4 hr biz hrs   │   │
+│   │        P3        │  Minor degraded  │      4 hours      │   L2 engineer    │   8 hr biz hrs   │   │
+│   │        P4        │    No impact     │    Next biz day   │    L1 support    │    2 biz days    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
+│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
+│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
+│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
+│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
+│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
+│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
+│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
+│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
+│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
+│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
+│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 ## Support Portal
 

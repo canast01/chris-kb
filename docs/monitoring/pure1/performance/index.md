@@ -5,7 +5,7 @@
 Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues.
 </div>
 
-```text
+```
 ┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -36,19 +36,6 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 │  Anomaly = Pure1 ML detecting performance deviation from established baseline                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```bash
-ssh pureuser@<flashblade-ip>
-
-# Array performance
-purearray list --performance
-
-# File system performance
-purefs list --performance | sort -k3 -rn | head -20
-
-# NFS/SMB protocol stats
-pureprotocol list
 ```
 
 ## Performance via Pure1 API

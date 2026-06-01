@@ -59,13 +59,6 @@ Infrastructure → Configure → Property Groups → New Property Group → Encr
 │  Cert expiry alert = LCM warns 30 days before cert expiry; schedule rotation in advance               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### HashiCorp Vault Integration
-
-For enterprise secrets management, configure Aria Automation to retrieve secrets from HashiCorp Vault at deployment time:
-
-```text
-Infrastructure → Connections → Integrations → Add Integration → HashiCorp Vault
 ```
 
 Provide:

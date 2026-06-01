@@ -135,40 +135,6 @@ sudo sannav restart
 │  Break-glass     = local admin account used only when TACACS+ is unreachable                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## 5. TLS for the SANnav Web UI
-
-The SANnav web UI is served over HTTPS. By default, it uses a self-signed certificate. Replace this with a certificate from the corporate CA or a public CA:
-
-```bash
-# Generate CSR on SANnav appliance
-ssh admin@sannav-dc1.corp.example.com
-
-openssl req -new -newkey rsa:4096 -nodes \
-  -keyout /tmp/sannav.key \
-  -out /tmp/sannav.csr \
-  -subj "/CN=sannav-dc1.corp.example.com/O=Corp/C=AU" \
-  -addext "subjectAltName=DNS:sannav-dc1.corp.example.com"
-
-# Send CSR to your CA for signing
-# After receiving the signed cert (sannav.crt):
-
-# Install certificate
-sudo cp /tmp/sannav.key /opt/sannav/conf/ssl/sannav.key
-sudo cp /tmp/sannav.crt /opt/sannav/conf/ssl/sannav.crt
-
-# If intermediate CA cert is needed, create bundle:
-cat sannav.crt intermediate-ca.crt > sannav-chain.crt
-sudo cp /tmp/sannav-chain.crt /opt/sannav/conf/ssl/sannav.crt
-
-# Reload nginx (SANnav's front-end web server)
-sudo systemctl reload nginx
-
-# Verify certificate is served correctly
-openssl s_client -connect sannav-dc1.corp.example.com:443 </dev/null 2>/dev/null \
-  | openssl x509 -noout -subject -dates
 ```
 
 Track certificate expiry; renew at least 30 days before expiry. SANnav will issue a warning alert when the certificate is within the warning threshold if certificate monitoring is enabled.

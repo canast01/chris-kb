@@ -4,7 +4,7 @@
 High-end all-flash enterprise array — SRDF synchronous and asynchronous replication, NVMe-oF, SnapVX snapshots, FAST VP tiering, and Solutions Enabler management for mission-critical block workloads.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Dell PowerMax Enterprise Storage ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 Hardening reference covering Network Port Requirements, Audit Logging.
 </div>
 
-```text
+```
 ┌───────────────────────────────────────── SRDF/A — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -46,31 +46,6 @@ Hardening reference covering Network Port Requirements, Audit Logging.
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-> Part of the [SRDF/A](../../index.md) reference.
-
----
-
-## Network Port Requirements
-
-| Port | Protocol | Purpose |
-|---|---|---|
-| 3260 | TCP | iSCSI (if used for management) |
-| 5000 | TCP | Solutions Enabler SYMAPI |
-| 443 | HTTPS | Unisphere REST API |
-| Custom | FCIP | SRDF replication over IP (configurable per director) |
-
-Restrict FCIP and Solutions Enabler API ports to array management IPs only using firewall ACLs.
-
----
-
-## Audit Logging
-
-All SRDF operations generate entries in the PowerMax audit log:
-
-```bash
-symevent list -sid <SID> -type rdf         # List all RDF events
-symevent show -sid <SID> -event_id <ID>    # Detail on specific event
 ```
 
 Forward to SIEM via syslog:

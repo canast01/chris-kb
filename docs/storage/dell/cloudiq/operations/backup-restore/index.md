@@ -77,44 +77,6 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
 │    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-Document for each notification rule:
-
-| Field | Example |
-|---|---|
-| Rule name | `storage-ops-critical-email` |
-| Severity filter | CRITICAL |
-| Systems scope | All, or specific tag (`env:production`) |
-| Destination type | Email / Webhook |
-| Recipients / URL | `storage-ops@corp.example.com` / `https://hooks.slack.com/...` |
-| Created by | `admin@corp.example.com` |
-| Last reviewed | 2026-01-15 |
-
-### SCG Registration Records
-
-The Secure Connect Gateway (SCG) is the on-premises component. Maintain a record of:
-
-- Which storage systems are registered to which SCG appliance
-- The SCG management IP and version
-- Which systems are registered to both SCG appliances (for redundancy)
-
-This information is required if you need to rebuild or replace the SCG appliance — re-registration requires the management IP and credentials for each array.
-
-```bash
-# Export the list of devices registered to the SCG
-# From the SCG web UI: https://<scg-ip>:9443
-# Settings → Registered Devices → Export to CSV
-
-# Or query the CloudIQ API for all monitored systems
-curl -s -X GET "${BASE}/systems?limit=200" \
-  -H "Authorization: Bearer ${TOKEN}" \
-  | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-print('system_name,type,health_score,location')
-for s in data.get('results', []):
-    print(f'{s.get(\"system_name\",\"\")},{s.get(\"type\",\"\")},{s.get(\"health_score\",\"\")},{s.get(\"location\",\"\")}')
-" > cloudiq_systems_$(date +%Y%m%d).csv
 ```
 
 ### Audit Log Exports

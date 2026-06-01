@@ -5,7 +5,7 @@
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
 </div>
 
-```text
+```
 ┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,20 +58,6 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 │    ToR           = Top-of-Rack physical switch; BGP peer for T0 gateway uplinks                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-## API Surfaces
-
-| API | Base URL | Use |
-|---|---|---|
-| Policy API | `/policy/api/v1/infra/` | Intent-based; preferred for new automation |
-| Management Plane API (MP API) | `/api/v1/` | Direct object manipulation; legacy |
-
-```bash
-# Authenticate and query cluster status
-curl -sk -u 'admin:Password123!' \
-  -H "Accept: application/json" \
-  "https://nsx-manager.example.local/api/v1/cluster/status"
 ```
 
 ---

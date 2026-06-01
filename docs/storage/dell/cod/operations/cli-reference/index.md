@@ -98,45 +98,6 @@ symcfg -sid <sid> list -disk -thin
 │    Solutions Enabler= Dell software toolkit for PowerMax management automation                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
----
-
-## SYMCLI — COD Activation
-
-COD activation formats previously locked disk capacity into the array's storage pools. This is done via `symconfigure` with a configuration change file, then committed.
-
-> **Important**: COD activation is a permanent, one-way action for the activated capacity. Always confirm the license file before committing. Changes to production arrays should follow your change management process.
-
-```bash
-# --- Step 1: Check current capacity before activation ---
-symcfg list -v -sid <sid> | grep -E "Licensed|Configured|COD"
-
-# --- Step 2: Preview (verify) the COD configuration change ---
-# Create a configuration command file:
-cat > /tmp/cod_activate.txt << 'EOF'
-activate capacity, count=<n_disk_groups>, type=EFD;
-EOF
-# (Adjust type to FBA or EFD depending on disk type; count = disk groups to activate)
-
-# Preview the change (does NOT commit)
-symconfigure -sid <sid> -f /tmp/cod_activate.txt preview
-
-# --- Step 3: Prepare and commit ---
-symconfigure -sid <sid> -f /tmp/cod_activate.txt prepare
-
-# Commit (this is the live activation — requires valid license)
-symconfigure -sid <sid> -f /tmp/cod_activate.txt commit
-
-# --- Step 4: Verify capacity increase ---
-symcfg list -v -sid <sid> | grep -E "Licensed|Configured"
-symcfg -sid <sid> show -pool
-
-# --- Alternative: activate via Unisphere GUI ---
-# Unisphere → <Array> → System → Capacity on Demand → Activate
-# (SYMCLI commit is equivalent to this GUI workflow)
-
-# --- Confirm new SRP capacity is visible ---
-symcfg -sid <sid> show -pool -thin
 ```
 
 ---

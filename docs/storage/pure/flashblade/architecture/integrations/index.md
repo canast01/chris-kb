@@ -5,8 +5,8 @@
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
 </div>
 
-```text
 FlashBlade Integration Map
+```
 ┌──────────────────────────────────────────────────────────┐
 │                       FlashBlade                         │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
@@ -14,6 +14,7 @@ FlashBlade Integration Map
 │  │  data    │  │  object  │  │  HTTPS   │                │
 │  └────┬─────┘  └────┬─────┘  └────┬─────┘                │
 └───────┼─────────────┼─────────────┼──────────────────────┘
+```
         │             │             │
         ▼             ▼             ├──► Pure1 (phone-home)
   ESXi NFS DS    Veeam repo         ├──► Pure1 REST API

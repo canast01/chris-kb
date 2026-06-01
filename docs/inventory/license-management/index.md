@@ -63,21 +63,6 @@ ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
 │    SCCM         = Microsoft System Center; discovers installed software for licence counting          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### AWS — Software Inventory via SSM
-
-```bash
-# View software inventory for an instance
-aws ssm list-inventory-entries \
-  --instance-id <instance-id> \
-  --type-name "AWS:Application" \
-  --query 'Entries[*].{Name:Name,Version:Version,Publisher:Publisher}' --output table
-
-# Aggregate across all managed instances
-aws ssm list-resource-data-sync
-aws ssm get-inventory \
-  --filters "Key=AWS:Application.Name,Values=Oracle*,Type=BeginWith" \
-  --query 'Entities[*].Data.AWS:Application.Content[*]' --output table
 ```
 
 ## License Utilisation — Common Products

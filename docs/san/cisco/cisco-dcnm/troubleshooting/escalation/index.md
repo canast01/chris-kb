@@ -138,17 +138,6 @@ top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
 │  No config changes= freeze all DCNM and MDS changes during active incident                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### For Zone Activation Issues
-
-```bash
-# Export the zone database for the affected fabric (GUI or API)
-# Include in case: fabric name, VSAN ID, error message shown in DCNM
-
-# On the principal MDS switch:
-show zone status vsan <vsan-id>
-show zone merge-failure vsan <vsan-id>
-# Include this output in the case
 ```
 
 ### For Performance / DB Issues

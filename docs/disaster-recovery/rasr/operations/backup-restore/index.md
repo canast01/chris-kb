@@ -76,13 +76,6 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\r
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Phase 2 — WinPE Environment
-
-The server boots into the RASR WinPE environment. The RASR recovery wizard launches automatically. If it does not, open a command prompt and run:
-
-```cmd
-X:\Dell\RASR\rasrwizard.exe
 ```
 
 ### Phase 3 — Map Network Share

@@ -5,7 +5,7 @@
 AWS Route 53 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```text
+```
 ┌────────────────────────────────── Route 53 — DNS & Traffic Routing ───────────────────────────────────┐
 │                                                                                                       │
 │  Route 53 provides authoritative DNS, health checks, and intelligent traffic routing policies.        │

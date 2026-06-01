@@ -67,12 +67,6 @@ show feature           # enabled features (zone, dpvm, fcsp, etc.)
 │  show tech-support= full diagnostic bundle for Cisco TAC escalation                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-### Module / Slot Status
-
-```bash
-show module            # all line cards and supervisor modules
-show module <slot>
 ```
 
 All modules should show status `ok`. A `failed` or `powered-dn` module requires immediate investigation.

@@ -82,22 +82,6 @@ uemcli /sys/auth/ldapgroup show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
-## Recovery Media Access Control
-
-### Physical Access Procedure
-
-Recovery USBs and ISOs must follow a strict custody chain to prevent unauthorised use.
-
-```text
-Standard Operating Procedure — RASR Recovery Media:
-
-1. Media is stored in a locked DR cabinet; key held by DR manager
-2. Access logged in the DR cabinet access register (name, date/time, reason)
-3. Media is checked out under a change record number
-4. Single-use principle: media is verified clean (virus scan) after return
-5. Media vault inventory reviewed monthly against CMDB records
-6. Retired or corrupted media securely destroyed (physical shred or cryptographic wipe)
 ```
 
 ### UEFI Boot Order Lock
