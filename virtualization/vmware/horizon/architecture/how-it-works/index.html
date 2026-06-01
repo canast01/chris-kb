@@ -4303,6 +4303,56 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#full-clone-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Clone Pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rds-published-applications-and-desktops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Published Applications and Desktops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connection Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal-client-lan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Client (LAN)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#external-client-via-uag" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4713,56 +4763,83 @@
 │  Pool            = collection of desktops with same policy                                            │
 │  Farm            = collection of RDS hosts for app/desktop delivery                                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Customization at fork:** A post-customization script (`horizon-customization.ps1` or sysprep alternative) runs in each child VM immediately after the fork to:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Set a unique hostname (based on naming pattern defined in pool)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Join domain (using Instant Clone Domain Join — a cached machine account)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Remove previous user&#39;s profile data if persistent profile not in use
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>### Full Clone Pools
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Full Clone pools provision independent VMs from a vCenter template. Each VM is a complete, independent copy.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Suitable for persistent desktops where users expect to &quot;own&quot; their VM
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Higher storage consumption — no shared base disk
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Slower provisioning (full VM deploy from template)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- VM persists across sessions; user data survives logoff
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Managed via vCenter snapshot for OS-level updates (manual or automated maintenance)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>### RDS Published Applications and Desktops
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>RDS (Remote Desktop Services) Farms host Windows Server (with Desktop Experience or not) with Horizon Agent in RDS mode. Multiple users share a single Windows Server OS instance.
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- **Published Applications:** Individual apps (e.g., Internet Explorer, legacy apps) streamed to client
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>- **Published Desktops:** Full RDS desktop session
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>- Multiple RDS hosts form a **Farm**; a Farm backs a **Published Application Pool** or **Published Desktop Pool**
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>- Load balancing across farm members is handled by Connection Server
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Feature | Instant Clone Pool | Full Clone Pool | RDS Farm |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|---|---|---|---|
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Isolation | Per-user VM | Per-user VM | Shared OS, per-session |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| State | Stateless (default) | Persistent | Stateless |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Provisioning speed | Seconds | Minutes | N/A (persistent hosts) |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| Storage efficiency | High (shared base) | Low | Highest (many users per VM) |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| User persona | Task/knowledge worker | Power user, persistent | Published app, high-density |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>---
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>## Connection Flow
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>### Internal Client (LAN)
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>```text
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>1. User opens Horizon Client → enters Connection Server FQDN
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>2. Horizon Client → HTTPS (443) → Connection Server
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>3. Connection Server authenticates user against AD (Kerberos/LDAP)
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>4. Connection Server checks entitlements (AD group → pool mapping)
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>5. Connection Server selects an available desktop (or provisions new Instant Clone)
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>6. Connection Server instructs vCenter to power on / assign VM
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>7. Connection Server returns IP/FQDN + session ticket to client
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>8. Client establishes Blast Extreme (TCP 8443 / UDP 8443) or PCoIP (TCP 4172 / UDP 4172) directly to VM
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>9. Horizon Agent in VM validates ticket, establishes session
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Customization at fork:</strong> A post-customization script (<code>horizon-customization.ps1</code> or sysprep alternative) runs in each child VM immediately after the fork to:
+- Set a unique hostname (based on naming pattern defined in pool)
+- Join domain (using Instant Clone Domain Join — a cached machine account)
+- Remove previous user's profile data if persistent profile not in use</p>
+<h3 id="full-clone-pools">Full Clone Pools<a class="headerlink" href="#full-clone-pools" title="Permanent link">&para;</a></h3>
+<p>Full Clone pools provision independent VMs from a vCenter template. Each VM is a complete, independent copy.</p>
+<ul>
+<li>Suitable for persistent desktops where users expect to "own" their VM</li>
+<li>Higher storage consumption — no shared base disk</li>
+<li>Slower provisioning (full VM deploy from template)</li>
+<li>VM persists across sessions; user data survives logoff</li>
+<li>Managed via vCenter snapshot for OS-level updates (manual or automated maintenance)</li>
+</ul>
+<h3 id="rds-published-applications-and-desktops">RDS Published Applications and Desktops<a class="headerlink" href="#rds-published-applications-and-desktops" title="Permanent link">&para;</a></h3>
+<p>RDS (Remote Desktop Services) Farms host Windows Server (with Desktop Experience or not) with Horizon Agent in RDS mode. Multiple users share a single Windows Server OS instance.</p>
+<ul>
+<li><strong>Published Applications:</strong> Individual apps (e.g., Internet Explorer, legacy apps) streamed to client</li>
+<li><strong>Published Desktops:</strong> Full RDS desktop session</li>
+<li>Multiple RDS hosts form a <strong>Farm</strong>; a Farm backs a <strong>Published Application Pool</strong> or <strong>Published Desktop Pool</strong></li>
+<li>Load balancing across farm members is handled by Connection Server</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Instant Clone Pool</th>
+<th>Full Clone Pool</th>
+<th>RDS Farm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Isolation</td>
+<td>Per-user VM</td>
+<td>Per-user VM</td>
+<td>Shared OS, per-session</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Stateless (default)</td>
+<td>Persistent</td>
+<td>Stateless</td>
+</tr>
+<tr>
+<td>Provisioning speed</td>
+<td>Seconds</td>
+<td>Minutes</td>
+<td>N/A (persistent hosts)</td>
+</tr>
+<tr>
+<td>Storage efficiency</td>
+<td>High (shared base)</td>
+<td>Low</td>
+<td>Highest (many users per VM)</td>
+</tr>
+<tr>
+<td>User persona</td>
+<td>Task/knowledge worker</td>
+<td>Power user, persistent</td>
+<td>Published app, high-density</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="connection-flow">Connection Flow<a class="headerlink" href="#connection-flow" title="Permanent link">&para;</a></h2>
+<h3 id="internal-client-lan">Internal Client (LAN)<a class="headerlink" href="#internal-client-lan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. User opens Horizon Client → enters Connection Server FQDN
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Horizon Client → HTTPS (443) → Connection Server
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Connection Server authenticates user against AD (Kerberos/LDAP)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Connection Server checks entitlements (AD group → pool mapping)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. Connection Server selects an available desktop (or provisions new Instant Clone)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. Connection Server instructs vCenter to power on / assign VM
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>7. Connection Server returns IP/FQDN + session ticket to client
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>8. Client establishes Blast Extreme (TCP 8443 / UDP 8443) or PCoIP (TCP 4172 / UDP 4172) directly to VM
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>9. Horizon Agent in VM validates ticket, establishes session
+</code></pre></div>
 <h3 id="external-client-via-uag">External Client via UAG<a class="headerlink" href="#external-client-via-uag" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. User opens Horizon Client → enters UAG external FQDN
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Horizon Client → HTTPS (443) → UAG (DMZ)

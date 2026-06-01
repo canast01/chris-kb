@@ -3326,6 +3326,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#commit-activity-report" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commit Activity Report
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#org-wide-secret-scanner" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3648,64 +3659,60 @@
 │  GitHub Actions   = workflow YAML in .github/workflows/ triggered by events                           │
 │  Batch delete     = gh api /repos/{owner}/{repo}/branches/{branch} -X DELETE                          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Commit Activity Report
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Generates a per-author commit activity report across one or all repositories.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>#!/usr/bin/env bash
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># commit-activity-report.sh
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Usage: REPO_PATH=. SINCE=&quot;30 days ago&quot; ./commit-activity-report.sh
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>set -euo pipefail
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>REPO_PATH=&quot;${REPO_PATH:-.}&quot;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>SINCE=&quot;${SINCE:-30 days ago}&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>OUTPUT_FORMAT=&quot;${OUTPUT_FORMAT:-text}&quot;   # text | csv
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>echo &quot;Commit activity report — since: $SINCE&quot;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>echo &quot;Repository: $(realpath $REPO_PATH)&quot;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>echo &quot;Generated: $(date -u &#39;+%Y-%m-%d %H:%M UTC&#39;)&quot;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>echo &quot;===&quot;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>if [[ &quot;$OUTPUT_FORMAT&quot; == &quot;csv&quot; ]]; then
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  echo &quot;author_name,author_email,commits,files_changed,insertions,deletions&quot;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>fi
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>git -C &quot;$REPO_PATH&quot; log \
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  --since=&quot;$SINCE&quot; \
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  --format=&quot;%an|%ae&quot; | \
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  sort | uniq | \
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>while IFS=&#39;|&#39; read -r name email; do
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  stats=$(git -C &quot;$REPO_PATH&quot; log \
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    --author=&quot;$email&quot; \
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    --since=&quot;$SINCE&quot; \
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    --numstat \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    --format=&quot;&quot; | \
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    awk &#39;NF==3 {ins+=$1; del+=$2; files++} END {print files, ins, del}&#39;)
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  commits=$(git -C &quot;$REPO_PATH&quot; rev-list \
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    --author=&quot;$email&quot; \
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    --since=&quot;$SINCE&quot; \
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    --count HEAD)
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  files=$(echo &quot;$stats&quot; | awk &#39;{print $1}&#39;)
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  ins=$(echo &quot;$stats&quot; | awk &#39;{print $2}&#39;)
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>  del=$(echo &quot;$stats&quot; | awk &#39;{print $3}&#39;)
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>  if [[ &quot;$OUTPUT_FORMAT&quot; == &quot;csv&quot; ]]; then
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>    echo &quot;\&quot;$name\&quot;,\&quot;$email\&quot;,$commits,$files,$ins,$del&quot;
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>  else
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    printf &quot;%-30s %-35s commits=%-4s files=%-5s +%-6s -%-6s\n&quot; \
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>      &quot;$name&quot; &quot;$email&quot; &quot;$commits&quot; &quot;$files&quot; &quot;$ins&quot; &quot;$del&quot;
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>  fi
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>done | sort -t&#39;=&#39; -k2 -rn
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>echo &quot;&quot;
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>echo &quot;Total commits: $(git -C &quot;$REPO_PATH&quot; rev-list --since=&quot;$SINCE&quot; --count HEAD)&quot;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="commit-activity-report">Commit Activity Report<a class="headerlink" href="#commit-activity-report" title="Permanent link">&para;</a></h2>
+<p>Generates a per-author commit activity report across one or all repositories.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># commit-activity-report.sh</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Usage: REPO_PATH=. SINCE=&quot;30 days ago&quot; ./commit-activity-report.sh</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">REPO_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">REPO_PATH</span><span class="k">:-</span><span class="p">.</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">SINCE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SINCE</span><span class="k">:-</span><span class="nv">30</span><span class="p"> days ago</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">OUTPUT_FORMAT</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT_FORMAT</span><span class="k">:-</span><span class="nv">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="w">   </span><span class="c1"># text | csv</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Commit activity report — since: </span><span class="nv">$SINCE</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Repository: </span><span class="k">$(</span>realpath<span class="w"> </span><span class="nv">$REPO_PATH</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Generated: </span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M UTC&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;===&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FORMAT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;csv&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;author_name,author_email,commits,files_changed,insertions,deletions&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">fi</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--since<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SINCE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--format<span class="o">=</span><span class="s2">&quot;%an|%ae&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>name<span class="w"> </span>email<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span><span class="nv">stats</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span>--author<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$email</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span>--since<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SINCE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span>--numstat<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span>--format<span class="o">=</span><span class="s2">&quot;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">    </span>awk<span class="w"> </span><span class="s1">&#39;NF==3 {ins+=$1; del+=$2; files++} END {print files, ins, del}&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">  </span><span class="nv">commits</span><span class="o">=</span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>rev-list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span>--author<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$email</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span>--since<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SINCE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">    </span>--count<span class="w"> </span>HEAD<span class="k">)</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">  </span><span class="nv">files</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$stats</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $1}&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span><span class="nv">ins</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$stats</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span><span class="nv">del</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$stats</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT_FORMAT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;csv&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;\&quot;</span><span class="nv">$name</span><span class="s2">\&quot;,\&quot;</span><span class="nv">$email</span><span class="s2">\&quot;,</span><span class="nv">$commits</span><span class="s2">,</span><span class="nv">$files</span><span class="s2">,</span><span class="nv">$ins</span><span class="s2">,</span><span class="nv">$del</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="k">else</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">    </span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;%-30s %-35s commits=%-4s files=%-5s +%-6s -%-6s\n&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">      </span><span class="s2">&quot;</span><span class="nv">$name</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$email</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$commits</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$files</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ins</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$del</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-t<span class="s1">&#39;=&#39;</span><span class="w"> </span>-k2<span class="w"> </span>-rn
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Total commits: </span><span class="k">$(</span>git<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPO_PATH</span><span class="s2">&quot;</span><span class="w"> </span>rev-list<span class="w"> </span>--since<span class="o">=</span><span class="s2">&quot;</span><span class="nv">$SINCE</span><span class="s2">&quot;</span><span class="w"> </span>--count<span class="w"> </span>HEAD<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="org-wide-secret-scanner">Org-Wide Secret Scanner<a class="headerlink" href="#org-wide-secret-scanner" title="Permanent link">&para;</a></h2>
 <p>Scans all repositories in a directory for accidentally committed secrets using pattern matching. Complements tools like <code>truffleHog</code> and <code>gitleaks</code> with a lightweight local option.</p>

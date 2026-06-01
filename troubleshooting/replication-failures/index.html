@@ -2899,6 +2899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#verify-srdf-link-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify SRDF Link Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#srdf-error-codes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3286,31 +3297,29 @@
 │    VRS         = vSphere Replication Server; collects replication data on target site                 │
 │    RPO breach  = Lag exceeds configured RPO target; escalate immediately as DR goal at risk           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Verify SRDF Link Health
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Check SRDF link status and error counters
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf -g RDF_GRP_01 verify
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="verify-srdf-link-health">Verify SRDF Link Health<a class="headerlink" href="#verify-srdf-link-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check SRDF link status and error counters</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>verify
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check SRDF/A cycle information (async groups)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Check SRDF/A cycle information (async groups)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf -g RDF_GRP_01 -type rdfa list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Example async output:
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># RDF Group (R1) : RDF_GRP_01
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># SRDF/A State   : Transmitting
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Domino         : Enabled
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># DSE State      : Enabled
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Cycle Num      : 4521
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Cycle Time     : 00:00:03  ← cycle time; increase = lag growing
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Example async output:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># RDF Group (R1) : RDF_GRP_01</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># SRDF/A State   : Transmitting</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Domino         : Enabled</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># DSE State      : Enabled</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Cycle Num      : 4521</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Cycle Time     : 00:00:03  ← cycle time; increase = lag growing</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get RDF port statistics (check error counters)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">1</span><span class="w"> </span>-type<span class="w"> </span>port<span class="w"> </span>list
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Get RDF port statistics (check error counters)
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>symrdf -sid 000123 -rdfg 1 -type port list
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Resume a suspended SRDF group (after resolving the root cause)
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># -nop = no prompt; ensure R1/R2 consistency is understood before running
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symrdf -g RDF_GRP_01 resume -nop
-</code></pre></div></p>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Resume a suspended SRDF group (after resolving the root cause)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># -nop = no prompt; ensure R1/R2 consistency is understood before running</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>resume<span class="w"> </span>-nop
+</code></pre></div>
 <h3 id="srdf-error-codes">SRDF Error Codes<a class="headerlink" href="#srdf-error-codes" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

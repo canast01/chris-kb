@@ -2815,6 +2815,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Readiness Assessment Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3061,32 +3078,64 @@
 │    Downstream deps= Services or systems that depend on the environment being deployed to              │
 │    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Resource | Required | Available | Headroom ≥ 20%? |
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|---|---|
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| vCPU / cores | | | ☐ |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| Memory (GB) | | | ☐ |
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Boot disk (GB) | | | ☐ |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Data disk (GB) | | | ☐ |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Network bandwidth | | | ☐ |
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Required</th>
+<th>Available</th>
+<th>Headroom ≥ 20%?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCPU / cores</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Memory (GB)</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Boot disk (GB)</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Data disk (GB)</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+<tr>
+<td>Network bandwidth</td>
+<td></td>
+<td></td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># VMware — check datastore free space</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Get-Datastore<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>Name,<span class="w"> </span>FreeSpaceGB,<span class="w"> </span>CapacityGB<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.FreeSpaceGB<span class="w"> </span>/<span class="w"> </span><span class="nv">$_</span>.CapacityGB<span class="w"> </span>-lt<span class="w"> </span><span class="m">0</span>.25<span class="o">}</span><span class="w">  </span><span class="c1"># warn &lt; 25% free</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check storage pool capacity (Pure/PowerMax/ONTAP)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Pure Storage</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>purearray<span class="w"> </span>list<span class="w"> </span>--space
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>### Storage
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```bash
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># VMware — check datastore free space
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-Datastore | Select-Object Name, FreeSpaceGB, CapacityGB |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  Where-Object {$_.FreeSpaceGB / $_.CapacityGB -lt 0.25}  # warn &lt; 25% free
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Check storage pool capacity (Pure/PowerMax/ONTAP)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Pure Storage
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>purearray list --space
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># NetApp ONTAP
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>df -h -A -aggregate
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Dell PowerMax
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>symcfg list -tdev -pool &lt;pool_name&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># NetApp ONTAP</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>df<span class="w"> </span>-h<span class="w"> </span>-A<span class="w"> </span>-aggregate
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Dell PowerMax</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>symcfg<span class="w"> </span>list<span class="w"> </span>-tdev<span class="w"> </span>-pool<span class="w"> </span>&lt;pool_name&gt;
+</code></pre></div>
 <h2 id="2-network-readiness">2. Network Readiness<a class="headerlink" href="#2-network-readiness" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Confirm VLAN exists on target switch/fabric</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>vlan<span class="w"> </span>id<span class="w"> </span>&lt;vlan_id&gt;<span class="w">                 </span><span class="c1"># Cisco</span>

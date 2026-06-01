@@ -4129,6 +4129,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ebs-encrypted-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EBS — Encrypted Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rds-encryption-at-rest" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4478,36 +4489,33 @@
 │  TLS policy      = ALB security policy selecting supported TLS versions and ciphers                   │
 │  EBS default enc = Account-level setting encrypting all new EBS volumes automatically                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## EBS — Encrypted Volume
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Enable EBS encryption by default for all new volumes in region
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws ec2 enable-ebs-encryption-by-default --region eu-west-1
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Verify
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws ec2 get-ebs-encryption-by-default --region eu-west-1
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Create encrypted EBS volume with CMK
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>aws ec2 create-volume \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  --availability-zone eu-west-1a \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  --size 100 \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  --volume-type gp3 \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  --encrypted \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  --kms-key-id arn:aws:kms:eu-west-1:&lt;account&gt;:alias/prod-ebs-cmk
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Encrypt an existing unencrypted volume (via snapshot copy)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>SNAP_ID=$(aws ec2 create-snapshot --volume-id vol-&lt;unencrypted&gt; \
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  --description &quot;pre-encrypt&quot; --query SnapshotId --output text)
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>aws ec2 copy-snapshot \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  --source-region eu-west-1 \
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  --source-snapshot-id $SNAP_ID \
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  --encrypted \
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  --kms-key-id alias/prod-ebs-cmk \
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  --region eu-west-1
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="ebs-encrypted-volume">EBS — Encrypted Volume<a class="headerlink" href="#ebs-encrypted-volume" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable EBS encryption by default for all new volumes in region</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>enable-ebs-encryption-by-default<span class="w"> </span>--region<span class="w"> </span>eu-west-1
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>get-ebs-encryption-by-default<span class="w"> </span>--region<span class="w"> </span>eu-west-1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Create encrypted EBS volume with CMK</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--availability-zone<span class="w"> </span>eu-west-1a<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--volume-type<span class="w"> </span>gp3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--encrypted<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--kms-key-id<span class="w"> </span>arn:aws:kms:eu-west-1:&lt;account&gt;:alias/prod-ebs-cmk
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Encrypt an existing unencrypted volume (via snapshot copy)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nv">SNAP_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-snapshot<span class="w"> </span>--volume-id<span class="w"> </span>vol-&lt;unencrypted&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;pre-encrypt&quot;</span><span class="w"> </span>--query<span class="w"> </span>SnapshotId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aws<span class="w"> </span>ec2<span class="w"> </span>copy-snapshot<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span>--source-region<span class="w"> </span>eu-west-1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span>--source-snapshot-id<span class="w"> </span><span class="nv">$SNAP_ID</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--encrypted<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">  </span>--kms-key-id<span class="w"> </span>alias/prod-ebs-cmk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>--region<span class="w"> </span>eu-west-1
+</code></pre></div>
 <hr />
 <h2 id="rds-encryption-at-rest">RDS — Encryption at Rest<a class="headerlink" href="#rds-encryption-at-rest" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Encryption must be enabled at creation (cannot enable on existing instance)</span>

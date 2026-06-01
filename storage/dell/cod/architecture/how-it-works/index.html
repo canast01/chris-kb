@@ -3925,6 +3925,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#ha-and-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HA and Redundancy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dr-site-cod-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DR Site COD Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4160,35 +4193,29 @@
 │    Instant unlock   = Capacity joins pool within seconds; no volume migration or downtime             │
 │    Before/after     = Screenshot capacity before and after activation; attach to change ticket        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>The drives are physically present and spin up normally. Array firmware prevents them from being allocated to any storage pool until the COD entitlement is applied. Activation is instantaneous — there is no data movement or rebuild required to bring COD capacity online.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## HA and Redundancy
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>COD does not change the HA characteristics of the array. The underlying redundancy (RAID, director mirroring, engine failover) applies equally to COD capacity once activated. COD capacity uses the same dual-director, dual-engine architecture as baseline capacity.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## Activation Flow
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>1. Identify capacity need — check `symcfg` / Unisphere for current pool utilisation
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>2. Purchase COD increment — Dell account team issues a license key tied to array SID
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>3. Download license file from Dell License Portal
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>4. Apply license via SYMCLI (`symlicense -sid &lt;SID&gt; install -file &lt;license.xml&gt;`) or Unisphere
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>5. Array discovers new capacity — new devices become available
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>6. Bind new devices to the appropriate thin pool
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>7. Verify via `symcfg` that pool capacity has increased
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>8. Raise change ticket — record activation in CMDB
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>## DR Site COD Architecture
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Pre-install COD capacity at the DR site equal to the production site&#39;s expected peak. Under normal operations only the baseline DR capacity is active. On failover or DR test, activate the COD to match full production capacity.
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>```text
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Production Site          DR Site
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>────────────────         ──────────────────────────────
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Active: 500 TiB    ──→   Active baseline: 200 TiB
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                          COD reserved:   300 TiB  (activated on DR failover)
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                          Total after activation: 500 TiB
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>The drives are physically present and spin up normally. Array firmware prevents them from being allocated to any storage pool until the COD entitlement is applied. Activation is instantaneous — there is no data movement or rebuild required to bring COD capacity online.</p>
+<h2 id="ha-and-redundancy">HA and Redundancy<a class="headerlink" href="#ha-and-redundancy" title="Permanent link">&para;</a></h2>
+<p>COD does not change the HA characteristics of the array. The underlying redundancy (RAID, director mirroring, engine failover) applies equally to COD capacity once activated. COD capacity uses the same dual-director, dual-engine architecture as baseline capacity.</p>
+<h2 id="activation-flow">Activation Flow<a class="headerlink" href="#activation-flow" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Identify capacity need — check <code>symcfg</code> / Unisphere for current pool utilisation</li>
+<li>Purchase COD increment — Dell account team issues a license key tied to array SID</li>
+<li>Download license file from Dell License Portal</li>
+<li>Apply license via SYMCLI (<code>symlicense -sid &lt;SID&gt; install -file &lt;license.xml&gt;</code>) or Unisphere</li>
+<li>Array discovers new capacity — new devices become available</li>
+<li>Bind new devices to the appropriate thin pool</li>
+<li>Verify via <code>symcfg</code> that pool capacity has increased</li>
+<li>Raise change ticket — record activation in CMDB</li>
+</ol>
+<h2 id="dr-site-cod-architecture">DR Site COD Architecture<a class="headerlink" href="#dr-site-cod-architecture" title="Permanent link">&para;</a></h2>
+<p>Pre-install COD capacity at the DR site equal to the production site's expected peak. Under normal operations only the baseline DR capacity is active. On failover or DR test, activate the COD to match full production capacity.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Production Site          DR Site
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>────────────────         ──────────────────────────────
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Active: 500 TiB    ──→   Active baseline: 200 TiB
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                          COD reserved:   300 TiB  (activated on DR failover)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                          Total after activation: 500 TiB
+</code></pre></div>
 
 
 

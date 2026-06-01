@@ -3745,6 +3745,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cloudformation-stack-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudFormation Stack Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4121,33 +4132,30 @@
 │  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
 │  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## CloudFormation Stack Lifecycle
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart TD
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    template[&quot;Template\nYAML / JSON&quot;]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    validate[&quot;aws cloudformation validate-template&quot;]
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    createStack[&quot;CREATE_IN_PROGRESS\naws cloudformation create-stack&quot;]
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    createComplete[&quot;CREATE_COMPLETE\nStack resources provisioned&quot;]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    createFailed[&quot;CREATE_FAILED\nRollback triggered&quot;]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    rollbackComplete[&quot;ROLLBACK_COMPLETE\nResources removed&quot;]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    updateStack[&quot;UPDATE_IN_PROGRESS\naws cloudformation update-stack&quot;]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    updateComplete[&quot;UPDATE_COMPLETE\nChanges applied&quot;]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    updateFailed[&quot;UPDATE_ROLLBACK_COMPLETE\nPrevious state restored&quot;]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    deleteStack[&quot;DELETE_IN_PROGRESS\naws cloudformation delete-stack&quot;]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    deleteComplete[&quot;DELETE_COMPLETE\nStack removed&quot;]
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    template --&gt; validate --&gt; createStack
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    createStack --&gt; createComplete
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    createStack --&gt; createFailed --&gt; rollbackComplete
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    createComplete --&gt; updateStack
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    updateStack --&gt; updateComplete
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    updateStack --&gt; updateFailed
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    createComplete --&gt; deleteStack
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    updateComplete --&gt; deleteStack
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    deleteStack --&gt; deleteComplete
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="cloudformation-stack-lifecycle">CloudFormation Stack Lifecycle<a class="headerlink" href="#cloudformation-stack-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    template["Template\nYAML / JSON"]
+    validate["aws cloudformation validate-template"]
+    createStack["CREATE_IN_PROGRESS\naws cloudformation create-stack"]
+    createComplete["CREATE_COMPLETE\nStack resources provisioned"]
+    createFailed["CREATE_FAILED\nRollback triggered"]
+    rollbackComplete["ROLLBACK_COMPLETE\nResources removed"]
+    updateStack["UPDATE_IN_PROGRESS\naws cloudformation update-stack"]
+    updateComplete["UPDATE_COMPLETE\nChanges applied"]
+    updateFailed["UPDATE_ROLLBACK_COMPLETE\nPrevious state restored"]
+    deleteStack["DELETE_IN_PROGRESS\naws cloudformation delete-stack"]
+    deleteComplete["DELETE_COMPLETE\nStack removed"]
+
+    template --&gt; validate --&gt; createStack
+    createStack --&gt; createComplete
+    createStack --&gt; createFailed --&gt; rollbackComplete
+    createComplete --&gt; updateStack
+    updateStack --&gt; updateComplete
+    updateStack --&gt; updateFailed
+    createComplete --&gt; deleteStack
+    updateComplete --&gt; deleteStack
+    deleteStack --&gt; deleteComplete</code></pre>
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -2899,6 +2899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vss-error-investigation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3302,29 +3313,52 @@
 │    STU           = NetBackup Storage Unit; target for backup data; check capacity and path            │
 │    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Log Locations
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Component | Log Path |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| VBR Server | `C:\ProgramData\Veeam\Backup\` |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Agent (Windows) | `C:\ProgramData\Veeam\Backup\&lt;JobName&gt;.log` |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Agent (Linux) | `/var/log/veeam/backup/` |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Veeam Transport | `C:\ProgramData\Veeam\Backup\VeeamTransport.log` |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Mount Server | `C:\ProgramData\Veeam\Backup\VeeamMount.log` |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Guest Interaction | `C:\Windows\Temp\VeeamGuestHelper_*.log` (on guest) |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```powershell
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Get repository free space
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-VBRRepository | Select-Object Name, Path,
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    @{N=&#39;FreeGB&#39;;E={[math]::Round($_.GetContainer().CachedFreeSpace/1GB,1)}},
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    @{N=&#39;TotalGB&#39;;E={[math]::Round($_.GetContainer().CachedTotalSpace/1GB,1)}} |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    Format-Table -AutoSize
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># List restore points for a VM
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Get-VBRRestorePoint -Name &quot;vm-prod-sql01&quot; | Select-Object Name, CreationTime, Algorithm |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    Sort-Object CreationTime -Descending | Select-Object -First 10
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Log Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VBR Server</td>
+<td><code>C:\ProgramData\Veeam\Backup\</code></td>
+</tr>
+<tr>
+<td>Agent (Windows)</td>
+<td><code>C:\ProgramData\Veeam\Backup\&lt;JobName&gt;.log</code></td>
+</tr>
+<tr>
+<td>Agent (Linux)</td>
+<td><code>/var/log/veeam/backup/</code></td>
+</tr>
+<tr>
+<td>Veeam Transport</td>
+<td><code>C:\ProgramData\Veeam\Backup\VeeamTransport.log</code></td>
+</tr>
+<tr>
+<td>Mount Server</td>
+<td><code>C:\ProgramData\Veeam\Backup\VeeamMount.log</code></td>
+</tr>
+<tr>
+<td>Guest Interaction</td>
+<td><code>C:\Windows\Temp\VeeamGuestHelper_*.log</code> (on guest)</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Get repository free space</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;TotalGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedTotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span> <span class="p">|</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># List restore points for a VM</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-VBRRestorePoint</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-sql01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">Algorithm</span> <span class="p">|</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+</code></pre></div>
 <h3 id="vss-error-investigation">VSS Error Investigation<a class="headerlink" href="#vss-error-investigation" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>rem List VSS writers and state
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vssadmin list writers

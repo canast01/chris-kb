@@ -4454,6 +4454,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#alert-on-backup-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert on Backup Failure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore Procedure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4463,8 +4486,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#stage-1-deploy-the-new-vcsa" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4474,8 +4497,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#stage-2-import-backup-data" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4485,8 +4508,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#stage-3-post-restore-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4494,6 +4517,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4853,41 +4881,33 @@
 │  Quiescing    = VADP flush; ensures consistent VM disk state during backup                            │
 │  Tarball      = compressed archive format used by VCSA file-based backup                              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Include in weekly health check:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Confirm last backup completed successfully (green status in VAMI)
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Confirm backup files exist on target (SSH to backup server and list directory)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Confirm retention is working (old files being pruned)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>### Alert on Backup Failure
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Create a vCenter alarm or monitoring rule to alert if the backup job has not completed within 25 hours. Backup failure silently means no recovery path exists.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>---
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Restore Procedure
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Restore is a full appliance redeploy — you are deploying a new VCSA and importing the backup into it. The original VCSA must be powered off or removed before the restored appliance takes over.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```mermaid
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>graph TD
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    start([&quot;Restore required&quot;])
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    prereq[&quot;Gather: ISO, backup file,\nencryption password, target ESXi&quot;]
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    stage1[&quot;Stage 1 — Deploy new VCSA\nRun installer → Restore mode\nSet network, FQDN, root password&quot;]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    stage2[&quot;Stage 2 — Import Backup\nProvide SFTP/FTP location\nEnter encryption password\nSelect backup timestamp&quot;]
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    wait[&quot;Appliance deploys and\nimports data (30–60 min)&quot;]
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    stage3[&quot;Stage 3 — Post-restore validation\nService status, SSO login,\nhost connectivity, integrations&quot;]
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    done([&quot;vCenter restored&quot;])
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    start --&gt; prereq --&gt; stage1 --&gt; stage2 --&gt; wait --&gt; stage3 --&gt; done
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    classDef gate fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    class stage1,stage2,stage3,prereq step
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    class start,done gate
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    class wait step
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Include in weekly health check:
+- Confirm last backup completed successfully (green status in VAMI)
+- Confirm backup files exist on target (SSH to backup server and list directory)
+- Confirm retention is working (old files being pruned)</p>
+<h3 id="alert-on-backup-failure">Alert on Backup Failure<a class="headerlink" href="#alert-on-backup-failure" title="Permanent link">&para;</a></h3>
+<p>Create a vCenter alarm or monitoring rule to alert if the backup job has not completed within 25 hours. Backup failure silently means no recovery path exists.</p>
+<hr />
+<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
+<p>Restore is a full appliance redeploy — you are deploying a new VCSA and importing the backup into it. The original VCSA must be powered off or removed before the restored appliance takes over.</p>
+<pre class="mermaid"><code>graph TD
+    start(["Restore required"])
+    prereq["Gather: ISO, backup file,\nencryption password, target ESXi"]
+    stage1["Stage 1 — Deploy new VCSA\nRun installer → Restore mode\nSet network, FQDN, root password"]
+    stage2["Stage 2 — Import Backup\nProvide SFTP/FTP location\nEnter encryption password\nSelect backup timestamp"]
+    wait["Appliance deploys and\nimports data (30–60 min)"]
+    stage3["Stage 3 — Post-restore validation\nService status, SSO login,\nhost connectivity, integrations"]
+    done(["vCenter restored"])
+
+    start --&gt; prereq --&gt; stage1 --&gt; stage2 --&gt; wait --&gt; stage3 --&gt; done
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef gate fill:#15803d,stroke:#166534,color:#fff
+
+    class stage1,stage2,stage3,prereq step
+    class start,done gate
+    class wait step</code></pre>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Encryption password (from your password vault)</li>
@@ -4921,23 +4941,23 @@
 <li>The installer deploys the appliance, imports the backup, and starts services (typically 30–60 minutes)</li>
 </ol>
 <h3 id="stage-3-post-restore-validation">Stage 3 — Post-Restore Validation<a class="headerlink" href="#stage-3-post-restore-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to restored vCenter appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Confirm all services started</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check for any service failures</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vpxd
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpostgres
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check disk usage</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>df<span class="w"> </span>-h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to restored vCenter appliance</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Confirm all services started</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Check for any service failures</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vpxd
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpostgres
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check disk usage</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>df<span class="w"> </span>-h
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — confirm connection and inventory</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI — confirm connection and inventory</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">ConnectionState</span><span class="p">,</span> <span class="n">PowerState</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HAEnabled</span><span class="p">,</span> <span class="n">DrsEnabled</span>
 </code></pre></div>
 <p>Post-restore checklist:
 - [ ] vSphere Client accessible at <code>https://&lt;vcenter&gt;/ui</code>

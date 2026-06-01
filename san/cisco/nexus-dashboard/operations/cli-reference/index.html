@@ -3488,6 +3488,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#backup-and-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup and Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#upgrade" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3876,37 +3887,35 @@
 │  Namespace      = Kubernetes logical partition isolating app resources                                │
 │  REST API       = Preferred programmatic interface; CLI used for break-glass ops                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Backup and Restore
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Configure remote backup target
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>acs backup remote add \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  --server backup-server.corp.example.com \
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  --path /backups/nexus-dashboard/ \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  --user nd-bkp
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Configure remote backup target</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--server<span class="w"> </span>backup-server.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--path<span class="w"> </span>/backups/nexus-dashboard/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--user<span class="w"> </span>nd-bkp
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show configured remote target</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span>show
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Show configured remote target
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>acs backup remote show
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Test remote connectivity</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Test remote connectivity
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>acs backup remote test
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Create a backup immediately</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>acs<span class="w"> </span>backup<span class="w"> </span>create
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Create a backup immediately
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>acs backup create
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># List available backups</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>acs<span class="w"> </span>backup<span class="w"> </span>list
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># List available backups
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>acs backup list
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># List backups on remote target</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>acs<span class="w"> </span>backup<span class="w"> </span>list<span class="w"> </span>--remote
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># List backups on remote target
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>acs backup list --remote
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="c1"># Start a restore (use the backup ID from list output)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>acs<span class="w"> </span>restore<span class="w"> </span>--backup-id<span class="w"> </span>&lt;id&gt;
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Start a restore (use the backup ID from list output)
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>acs restore --backup-id &lt;id&gt;
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Show restore status
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>acs restore status
-</code></pre></div></p>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Show restore status</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>acs<span class="w"> </span>restore<span class="w"> </span>status
+</code></pre></div>
 <h3 id="upgrade">Upgrade<a class="headerlink" href="#upgrade" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Upload an upgrade image</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>acs<span class="w"> </span>upgrade<span class="w"> </span>upload<span class="w"> </span>/tmp/aci-nd-dk9.3.1.1.ova

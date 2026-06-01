@@ -4788,13 +4788,11 @@
 │  NFS Target          = Backup storage; LCM writes backup archive to NFS share                         │
 │  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Remove the snapshot within 48 hours of a successful upgrade:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Get-Snapshot -VM (Get-VM &quot;lcm-prod-01&quot;) -Name &quot;pre-upgrade-*&quot; |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Remove-Snapshot -Confirm:$false
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Remove the snapshot within 48 hours of a successful upgrade:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;lcm-prod-01&quot;</span><span class="o">)</span><span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;pre-upgrade-*&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>Remove-Snapshot<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+</code></pre></div>
 <h3 id="option-2-vadp-compatible-backup-preferred-for-production">Option 2 — VADP-Compatible Backup (Preferred for Production)<a class="headerlink" href="#option-2-vadp-compatible-backup-preferred-for-production" title="Permanent link">&para;</a></h3>
 <p>Use your enterprise backup solution (Veeam, Commvault, Veritas) to back up the LCM appliance VM with application-consistent quiesce. Schedule nightly full or incremental backups. Retain at least 14 daily restore points.</p>
 <p>Requirements:

@@ -2826,6 +2826,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Dependency Map Template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3102,18 +3119,16 @@
 │    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
 │    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Azure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List all resources by environment tag
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az resource list --tag Environment=Production \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  --query &#39;[*].{Name:name,Type:type,RG:resourceGroup,Location:location}&#39; -o table
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Show VM and its disk / network dependencies
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az vm show -g &lt;rg&gt; -n &lt;vm-name&gt; --show-details \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  --query &#39;{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}&#39; -o json
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all resources by environment tag</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--tag<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,Type:type,RG:resourceGroup,Location:location}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Show VM and its disk / network dependencies</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>az<span class="w"> </span>vm<span class="w"> </span>show<span class="w"> </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;vm-name&gt;<span class="w"> </span>--show-details<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{Name:name,IP:publicIps,PrivateIP:privateIps,OS:storageProfile.osDisk.name}&#39;</span><span class="w"> </span>-o<span class="w"> </span>json
+</code></pre></div>
 <h2 id="change-impact-assessment">Change Impact Assessment<a class="headerlink" href="#change-impact-assessment" title="Permanent link">&para;</a></h2>
 <p>Before any change, use the dependency map to answer:</p>
 <ol>

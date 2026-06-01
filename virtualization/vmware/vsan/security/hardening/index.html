@@ -4338,6 +4338,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#esxi-host-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ESXi Host Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disable-unnecessary-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable Unnecessary Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ssh-hardening" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4347,8 +4370,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#esxi-firewall" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4358,8 +4381,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#account-and-password-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4369,8 +4392,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#limit-root-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4380,8 +4403,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#audit-logging-to-syslog" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4391,8 +4414,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#ntp-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4400,6 +4423,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4851,30 +4879,26 @@
 │  Patch SLA      = critical patches within 7d; high within 30d                                         │
 │  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## ESXi Host Hardening
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Disable Unnecessary Services
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="esxi-host-hardening">ESXi Host Hardening<a class="headerlink" href="#esxi-host-hardening" title="Permanent link">&para;</a></h2>
+<h3 id="disable-unnecessary-services">Disable Unnecessary Services<a class="headerlink" href="#disable-unnecessary-services" title="Permanent link">&para;</a></h3>
+<p>The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all services and their status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>maintenanceMode<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span><span class="w">  </span><span class="c1"># only needed if in MM</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vim-cmd<span class="w"> </span>hostsvc/service/list
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The following services are disabled by default. Verify they remain disabled on all vSAN cluster hosts.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># List all services and their status
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli system maintenanceMode set --enable false  # only needed if in MM
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>vim-cmd hostsvc/service/list
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Disable services that should not be running
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># CIM server (not needed unless hardware monitoring via CIM)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli system wbem set --enable false
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># SFCBD (CIM broker) — disable if CIM is disabled
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>/etc/init.d/sfcbd-watchdog stop
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>chkconfig sfcbd-watchdog off
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># NTP daemon should be RUNNING (required for vSAN)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># SSH should be STOPPED unless in use
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># ESXi Shell should be STOPPED
-</code></pre></div></p>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Disable services that should not be running</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># CIM server (not needed unless hardware monitoring via CIM)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>wbem<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enable<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># SFCBD (CIM broker) — disable if CIM is disabled</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>/etc/init.d/sfcbd-watchdog<span class="w"> </span>stop
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>chkconfig<span class="w"> </span>sfcbd-watchdog<span class="w"> </span>off
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># NTP daemon should be RUNNING (required for vSAN)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># SSH should be STOPPED unless in use</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># ESXi Shell should be STOPPED</span>
+</code></pre></div>
 <p><strong>Service baseline:</strong></p>
 <table>
 <thead>

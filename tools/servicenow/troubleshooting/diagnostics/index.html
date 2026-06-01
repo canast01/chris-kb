@@ -3180,6 +3180,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#thread-monitor-thread_monitordo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thread Monitor (/thread_monitor.do)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thread Monitor (/thread_monitor.do)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#reading-thread-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading Thread State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifying-problematic-threads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifying Problematic Threads
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#db-activity-monitor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3662,45 +3701,75 @@
 │  REST message= outbound HTTP integration; result logged in sys_rest_message_fn                        │
 │  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Cache Hit Rates:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Cache | Healthy Hit Rate |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Query result cache | &gt; 70% |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| GlideRecord cache | &gt; 80% |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| ACL cache | &gt; 90% |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>---
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Thread Monitor (`/thread_monitor.do`)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Shows every active Java thread with current state and stack trace. Use to identify blocked or runaway threads.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Access: `https://&lt;instance&gt;.service-now.com/thread_monitor.do`
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### Reading Thread State
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Thread State | Meaning | Action |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>|---|---|---|
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| RUNNABLE | Executing code | Normal |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| WAITING | Waiting on a lock or condition | Investigate if &gt; 5 minutes |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| BLOCKED | Blocked on a monitor lock | Immediate investigation |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| TIMED_WAITING | Sleeping — waiting for signal | Usually normal (scheduled work) |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>### Identifying Problematic Threads
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Look for threads showing the same script or Business Rule name repeatedly across multiple calls. This indicates a lock contention or infinite loop.
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Example stack trace pattern indicating a Business Rule loop:
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>```text
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>&quot;GlideWorker-42&quot; BLOCKED
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  at com.glide.db.DBSynchronizer.acquire(...)
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  at com.glide.script.ScriptLoader.loadScript(...)
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  ...invoked from: BR_AutoAssignIncidents on incident
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Cache Hit Rates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cache</th>
+<th>Healthy Hit Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Query result cache</td>
+<td>&gt; 70%</td>
+</tr>
+<tr>
+<td>GlideRecord cache</td>
+<td>&gt; 80%</td>
+</tr>
+<tr>
+<td>ACL cache</td>
+<td>&gt; 90%</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="thread-monitor-thread_monitordo">Thread Monitor (<code>/thread_monitor.do</code>)<a class="headerlink" href="#thread-monitor-thread_monitordo" title="Permanent link">&para;</a></h2>
+<p>Shows every active Java thread with current state and stack trace. Use to identify blocked or runaway threads.</p>
+<p>Access: <code>https://&lt;instance&gt;.service-now.com/thread_monitor.do</code></p>
+<h3 id="reading-thread-state">Reading Thread State<a class="headerlink" href="#reading-thread-state" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Thread State</th>
+<th>Meaning</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RUNNABLE</td>
+<td>Executing code</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>WAITING</td>
+<td>Waiting on a lock or condition</td>
+<td>Investigate if &gt; 5 minutes</td>
+</tr>
+<tr>
+<td>BLOCKED</td>
+<td>Blocked on a monitor lock</td>
+<td>Immediate investigation</td>
+</tr>
+<tr>
+<td>TIMED_WAITING</td>
+<td>Sleeping — waiting for signal</td>
+<td>Usually normal (scheduled work)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="identifying-problematic-threads">Identifying Problematic Threads<a class="headerlink" href="#identifying-problematic-threads" title="Permanent link">&para;</a></h3>
+<p>Look for threads showing the same script or Business Rule name repeatedly across multiple calls. This indicates a lock contention or infinite loop.</p>
+<p>Example stack trace pattern indicating a Business Rule loop:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&quot;GlideWorker-42&quot; BLOCKED
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  at com.glide.db.DBSynchronizer.lock(DBSynchronizer.java:...)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  at com.glide.db.DBSynchronizer.acquire(...)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  at com.glide.script.ScriptLoader.loadScript(...)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  ...invoked from: BR_AutoAssignIncidents on incident
+</code></pre></div>
 <p><strong>Action:</strong> Disable the offending Business Rule and investigate the script logic.</p>
 <hr />
 <h2 id="db-activity-monitor">DB Activity Monitor<a class="headerlink" href="#db-activity-monitor" title="Permanent link">&para;</a></h2>

@@ -4313,6 +4313,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#information-to-collect-before-opening-a-case" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Information to Collect Before Opening a Case
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sla-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLA Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-sr-diagnostic-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-SR Diagnostic Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#useful-links" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4597,87 +4641,165 @@
 │  Timeline          = Chronological record of events, changes, and symptoms before the issue           │
 │  Stakeholder notif = Communicate impact and ETA to application owners and business units              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="information-to-collect-before-opening-a-case">Information to Collect Before Opening a Case<a class="headerlink" href="#information-to-collect-before-opening-a-case" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Where to Find</th>
+<th>How to Collect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Automation version</td>
+<td><code>vracli version</code> or admin UI → About</td>
+<td>CLI or UI</td>
+</tr>
+<tr>
+<td>vSphere / vCenter version</td>
+<td>vCenter About page</td>
+<td>UI</td>
+</tr>
+<tr>
+<td>NSX version</td>
+<td>NSX Manager About page</td>
+<td>UI</td>
+</tr>
+<tr>
+<td>LCM version</td>
+<td>LCM admin UI → Settings → System Details</td>
+<td>UI</td>
+</tr>
+<tr>
+<td>Support bundle</td>
+<td>Generated via <code>vracli support-bundle</code></td>
+<td>CLI (see above)</td>
+</tr>
+<tr>
+<td>Deployment event logs</td>
+<td>UI: Deployments → deployment → History tab</td>
+<td>UI or API</td>
+</tr>
+<tr>
+<td>Kubernetes pod logs</td>
+<td><code>kubectl logs &lt;pod&gt; -n prelude</code></td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Kubernetes pod status</td>
+<td><code>kubectl get pods --all-namespaces</code></td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Description of the issue with exact timestamps</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Steps to reproduce the issue</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Impact — how many users / deployments affected</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Timeline: last known good state → first failure</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Any actions taken so far (pod restarts, config changes)</td>
+<td>—</td>
+<td>Incident notes</td>
+</tr>
+<tr>
+<td>Screenshot or copy of error messages</td>
+<td>UI or API response</td>
+<td>Screenshot / text</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="sla-tiers">SLA Tiers<a class="headerlink" href="#sla-tiers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Definition</th>
+<th>Initial Response SLA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P1 — Critical</strong></td>
+<td>Production environment down; no workaround; all provisioning blocked</td>
+<td>30 minutes (24x7)</td>
+</tr>
+<tr>
+<td><strong>P2 — Major</strong></td>
+<td>Significant functionality impacted; partial workaround available</td>
+<td>2 business hours (24x7)</td>
+</tr>
+<tr>
+<td><strong>P3 — Minor</strong></td>
+<td>Limited impact; workaround available; non-urgent</td>
+<td>Next business day</td>
+</tr>
+<tr>
+<td><strong>P4 — General</strong></td>
+<td>How-to questions, enhancement requests, documentation queries</td>
+<td>2 business days</td>
+</tr>
+</tbody>
+</table>
+<p>For P1 cases:
+1. Open the case via the portal immediately
+2. Call the Broadcom 24x7 support line and reference the case number — do not wait for an email response
+3. Request <strong>duty manager escalation</strong> if no engineer response within the SLA</p>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Open the SR via <a href="https://support.broadcom.com">https://support.broadcom.com</a> with all information listed above</li>
+<li>Set the correct priority — do not understate impact (P3 for a full production outage will receive next-business-day response)</li>
+<li>If no response within the SLA: use the portal <strong>Escalate</strong> button or call the support line with your case number</li>
+<li>For P1: escalate to duty manager immediately after the SLA window passes</li>
+<li>Engage your internal Broadcom TAM (Technical Account Manager) if available — TAMs can expedite case routing</li>
+</ol>
+<hr />
+<h2 id="pre-sr-diagnostic-checklist">Pre-SR Diagnostic Checklist<a class="headerlink" href="#pre-sr-diagnostic-checklist" title="Permanent link">&para;</a></h2>
+<p>Collect this before opening the SR — support will ask for all of it in the first response if it is not provided upfront:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Information to Collect Before Opening a Case
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Item | Where to Find | How to Collect |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Aria Automation version | `vracli version` or admin UI → About | CLI or UI |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| vSphere / vCenter version | vCenter About page | UI |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| NSX version | NSX Manager About page | UI |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| LCM version | LCM admin UI → Settings → System Details | UI |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Support bundle | Generated via `vracli support-bundle` | CLI (see above) |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Deployment event logs | UI: Deployments → deployment → History tab | UI or API |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Kubernetes pod logs | `kubectl logs &lt;pod&gt; -n prelude` | CLI |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Kubernetes pod status | `kubectl get pods --all-namespaces` | CLI |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Description of the issue with exact timestamps | — | Incident notes |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Steps to reproduce the issue | — | Incident notes |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Impact — how many users / deployments affected | — | Incident notes |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Timeline: last known good state → first failure | — | Incident notes |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Any actions taken so far (pod restarts, config changes) | — | Incident notes |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Screenshot or copy of error messages | UI or API response | Screenshot / text |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>---
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>## SLA Tiers
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>| Priority | Definition | Initial Response SLA |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>|---|---|---|
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| **P1 — Critical** | Production environment down; no workaround; all provisioning blocked | 30 minutes (24x7) |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| **P2 — Major** | Significant functionality impacted; partial workaround available | 2 business hours (24x7) |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| **P3 — Minor** | Limited impact; workaround available; non-urgent | Next business day |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| **P4 — General** | How-to questions, enhancement requests, documentation queries | 2 business days |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>For P1 cases:
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>1. Open the case via the portal immediately
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>2. Call the Broadcom 24x7 support line and reference the case number — do not wait for an email response
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>3. Request **duty manager escalation** if no engineer response within the SLA
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>---
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>## Escalation Path
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>1. Open the SR via [https://support.broadcom.com](https://support.broadcom.com) with all information listed above
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>2. Set the correct priority — do not understate impact (P3 for a full production outage will receive next-business-day response)
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>3. If no response within the SLA: use the portal **Escalate** button or call the support line with your case number
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>4. For P1: escalate to duty manager immediately after the SLA window passes
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>5. Engage your internal Broadcom TAM (Technical Account Manager) if available — TAMs can expedite case routing
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>---
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>## Pre-SR Diagnostic Checklist
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>Collect this before opening the SR — support will ask for all of it in the first response if it is not provided upfront:
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>```bash
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>ssh root@vra-prod-01.example.local
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a># System information
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>vracli version
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>vracli status
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a># Disk space
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>df -h /
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a># Pod status summary
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>kubectl get pods --all-namespaces | awk &#39;NR&gt;1 {print $4}&#39; | sort | uniq -c | sort -rn
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a># Failing pods
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>kubectl get pods --all-namespaces | grep -v &quot;Running\|Completed\|Succeeded&quot;
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a># Recent Kubernetes events (last 50)
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>kubectl get events --all-namespaces --sort-by=&#39;.metadata.creationTimestamp&#39; | tail -50
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a># VIDM connectivity (authentication dependency)
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a># Expected: {&quot;status&quot;: &quot;UP&quot;}
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a># Cloud account reachability (vCenter)
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>curl -sk -o /dev/null -w &quot;%{http_code}&quot; https://vcenter-prod.example.local/rest/com/vmware/cis/session
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a># Expected: 401 (reachable — authentication challenge)
-</code></pre></div></p>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># System information</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vracli<span class="w"> </span>version
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vracli<span class="w"> </span>status
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Disk space</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Pod status summary</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR&gt;1 {print $4}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Failing pods</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Running\|Completed\|Succeeded&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Recent Kubernetes events (last 50)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--all-namespaces<span class="w"> </span>--sort-by<span class="o">=</span><span class="s1">&#39;.metadata.creationTimestamp&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># VIDM connectivity (authentication dependency)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://vidm.example.local/SAAS/API/1.0/REST/system/health
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Expected: {&quot;status&quot;: &quot;UP&quot;}</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Cloud account reachability (vCenter)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter-prod.example.local/rest/com/vmware/cis/session
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Expected: 401 (reachable — authentication challenge)</span>
+</code></pre></div>
 <hr />
 <h2 id="useful-links">Useful Links<a class="headerlink" href="#useful-links" title="Permanent link">&para;</a></h2>
 <table>

@@ -3219,6 +3219,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#caching-and-stale-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching and Stale State
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3438,22 +3449,20 @@
 │   │        Cause A: on: branches filter does not match current branch → fix: adjust filter        │   │
 │   │       Cause B: workflow file not on default branch → fix: merge to default branch first       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Caching and Stale State
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```yaml
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Clear a cache by key via CLI
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>gh cache delete --repo owner/repo &quot;pip-cache-key-abc123&quot;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="caching-and-stale-state">Caching and Stale State<a class="headerlink" href="#caching-and-stale-state" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Clear a cache by key via CLI</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="l l-Scalar l-Scalar-Plain">gh cache delete --repo owner/repo &quot;pip-cache-key-abc123&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="l l-Scalar l-Scalar-Plain"># List all caches</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="l l-Scalar l-Scalar-Plain">gh cache list --repo owner/repo</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># List all caches
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>gh cache list --repo owner/repo
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Force cache miss by varying the key
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- uses: actions/cache@v4
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  with:
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    path: ~/.cache/pip
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    key: pip-${{ runner.os }}-${{ hashFiles(&#39;**/requirements.txt&#39;) }}-${{ github.run_id }}
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="l l-Scalar l-Scalar-Plain"># Force cache miss by varying the key</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="l l-Scalar l-Scalar-Plain">- uses</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/cache@v4</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">with</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.cache/pip</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip-${{ runner.os }}-${{ hashFiles(&#39;**/requirements.txt&#39;) }}-${{ github.run_id }}</span>
+</code></pre></div>
 
 
 

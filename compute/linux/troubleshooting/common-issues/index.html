@@ -3022,6 +3022,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#high-memory-oom" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Memory / OOM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#high-disk-io-or-latency" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3345,27 +3356,25 @@
 │  xfs_repair  = Offline XFS filesystem repair utility                                                  │
 │  fsck        = Filesystem check and repair; must be run on unmounted filesystem                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## High Memory / OOM
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Current memory state
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>free -h
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>cat /proc/meminfo | grep -E &quot;MemTotal|MemFree|MemAvailable|Cached|SwapUsed&quot;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="high-memory-oom">High Memory / OOM<a class="headerlink" href="#high-memory-oom" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Current memory state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>free<span class="w"> </span>-h
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;MemTotal|MemFree|MemAvailable|Cached|SwapUsed&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Processes using most memory</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%mem<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-15
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Processes using most memory
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ps aux --sort=-%mem | head -15
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># OOM killer activity
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>dmesg | grep -i &quot;oom\|killed process&quot; | tail -20
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>journalctl -k --since &quot;1 hour ago&quot; | grep -i oom
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># OOM killer activity</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;oom\|killed process&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>journalctl<span class="w"> </span>-k<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>oom
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Memory leak — watch a process over time</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>watch<span class="w"> </span>-n5<span class="w"> </span><span class="s2">&quot;ps -o pid,vsz,rss,comm -p &lt;PID&gt;&quot;</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Memory leak — watch a process over time
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>watch -n5 &quot;ps -o pid,vsz,rss,comm -p &lt;PID&gt;&quot;
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Huge pages usage
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>cat /proc/meminfo | grep -i huge
-</code></pre></div></p>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Huge pages usage</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>cat<span class="w"> </span>/proc/meminfo<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>huge
+</code></pre></div>
 <h2 id="high-disk-io-or-latency">High Disk I/O or Latency<a class="headerlink" href="#high-disk-io-or-latency" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Which device is busy?</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>

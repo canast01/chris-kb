@@ -4338,6 +4338,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#encryption-at-recovery-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encryption at Recovery Site
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management-for-srm-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management for SRM Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management for SRM Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replace-certificate-windows-srm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace Certificate (Windows SRM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sra-credential-storage-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4610,41 +4649,33 @@
 │  PKI cert      = replace self-signed with enterprise cert for compliance                              │
 │  Re-pair       = after cert replacement; required for site pair trust                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Enable encryption for VMs replicating over untrusted WAN links. For on-premises replication over private LAN, rely on network-level security instead.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Encryption at Recovery Site
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>When VMs fail over to the recovery site, they inherit the storage encryption state from the source:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- **vSAN encrypted at source → recovered VMs on encrypted vSAN at recovery:** encrypted throughout
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- **vSAN encrypted at source → recovered VMs on unencrypted datastore at recovery:** data is unencrypted at recovery — apply an encrypted storage policy at recovery site
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- **vSphere VM Encryption:** VM encryption keys are managed by vCenter KMS — if the KMS is unavailable at recovery site, encrypted VMs cannot start. Always include KMS in DR plan or use a shared KMS accessible from both sites.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>---
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>## Certificate Management for SRM Server
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>SRM Server uses an SSL certificate for HTTPS access (port 443) and inter-site communication (port 9086).
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>### Replace Certificate (Windows SRM)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```powershell
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Import new cert to Windows Certificate Store
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Import-PfxCertificate -FilePath srm-server.pfx `
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  -CertStoreLocation Cert:\LocalMachine\My `
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  -Password (ConvertTo-SecureString &quot;pfxpassword&quot; -AsPlainText -Force)
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Get thumbprint of new cert
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>$cert = Get-ChildItem Cert:\LocalMachine\My | Where-Object { $_.Subject -match &quot;srm-protected&quot; }
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>$cert.Thumbprint
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Configure SRM to use new cert via SRM admin interface:
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a># https://srm-protected.example.local:9086/admin → Certificate → Replace
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Or re-run SRM installer → Modify → update certificate
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Enable encryption for VMs replicating over untrusted WAN links. For on-premises replication over private LAN, rely on network-level security instead.</p>
+<hr />
+<h2 id="encryption-at-recovery-site">Encryption at Recovery Site<a class="headerlink" href="#encryption-at-recovery-site" title="Permanent link">&para;</a></h2>
+<p>When VMs fail over to the recovery site, they inherit the storage encryption state from the source:</p>
+<ul>
+<li><strong>vSAN encrypted at source → recovered VMs on encrypted vSAN at recovery:</strong> encrypted throughout</li>
+<li><strong>vSAN encrypted at source → recovered VMs on unencrypted datastore at recovery:</strong> data is unencrypted at recovery — apply an encrypted storage policy at recovery site</li>
+<li><strong>vSphere VM Encryption:</strong> VM encryption keys are managed by vCenter KMS — if the KMS is unavailable at recovery site, encrypted VMs cannot start. Always include KMS in DR plan or use a shared KMS accessible from both sites.</li>
+</ul>
+<hr />
+<h2 id="certificate-management-for-srm-server">Certificate Management for SRM Server<a class="headerlink" href="#certificate-management-for-srm-server" title="Permanent link">&para;</a></h2>
+<p>SRM Server uses an SSL certificate for HTTPS access (port 443) and inter-site communication (port 9086).</p>
+<h3 id="replace-certificate-windows-srm">Replace Certificate (Windows SRM)<a class="headerlink" href="#replace-certificate-windows-srm" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Import new cert to Windows Certificate Store</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Import-PfxCertificate</span> <span class="n">-FilePath</span> <span class="n">srm-server</span><span class="p">.</span><span class="n">pfx</span> <span class="p">`</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="n">-CertStoreLocation</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">`</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="n">-Password</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;pfxpassword&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Get thumbprint of new cert</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Subject</span> <span class="o">-match</span> <span class="s2">&quot;srm-protected&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Configure SRM to use new cert via SRM admin interface:</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># https://srm-protected.example.local:9086/admin → Certificate → Replace</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Or re-run SRM installer → Modify → update certificate</span>
+</code></pre></div>
 <p>After replacing the SRM Server cert, update the thumbprint at the remote site:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Recovery Site → Site Recovery → Site Pair → Edit → Accept new thumbprint
 </code></pre></div></p>

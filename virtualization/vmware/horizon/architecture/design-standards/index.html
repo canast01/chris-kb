@@ -4280,6 +4280,79 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#desktop-vm-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desktop VM Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Desktop VM Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-sizing-by-persona" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Sizing by Persona
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rds-host-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Host Sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#esxi-host-desktop-density" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Host Desktop Density
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Sizing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Sizing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instant-clone-storage-per-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instant Clone Storage Per Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#app-volumes-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4289,8 +4362,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#full-clone-pool-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4298,6 +4371,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4791,61 +4869,163 @@
 │  Profile share = Windows file share for DEM/FSLogix user profiles                                     │
 │  Pod           = group of Connection Servers in same broadcast domain                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Desktop VM Sizing
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Standard Sizing by Persona
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Persona | Typical Use Case | vCPU | RAM | OS Disk | Notes |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|---|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Task Worker | Call center, data entry, browser-only | 2 | 4 GB | 60 GB | High desktop density on ESXi |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Knowledge Worker | Office apps, email, Teams/Zoom | 2–4 | 6–8 GB | 60 GB | Majority of enterprise VDI |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Power User | Developer, analyst, multiple monitors | 4–8 | 8–16 GB | 80 GB | May need vGPU |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| GPU User | CAD, 3D, video editing | 4–8 | 16–32 GB | 80 GB | vGPU required (NVIDIA GRID) |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| RDS Session | Shared desktop/published app | N/A (host-level) | 2 GB/session | N/A | Size RDS host, not session |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### RDS Host Sizing
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| RDS Host Size | vCPU | RAM | Concurrent Sessions |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|---|---|---|---|
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Small | 8 | 32 GB | 20–30 |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Medium | 16 | 64 GB | 40–60 |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| Large | 32 | 128 GB | 80–120 |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Actual session density depends heavily on workload. Test with load simulation (LoginVSI or similar) before production sizing.
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>### ESXi Host Desktop Density
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>Rule of thumb for Instant Clone pools (no vGPU):
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Desktop Persona | Desktops per ESXi Host (dual-socket, 28–32 physical cores, 384 GB RAM) |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>|---|---|
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| Task Worker (2 vCPU / 4 GB) | 100–150 |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>| Knowledge Worker (4 vCPU / 8 GB) | 50–80 |
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>| Power User (8 vCPU / 16 GB) | 25–40 |
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>Apply a CPU over-commit ratio of 4:1 (vCPU:pCPU) for task workers, 3:1 for knowledge workers. Monitor CPU ready (%) — keep below 5% average.
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>---
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>## Storage Sizing
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>### Instant Clone Storage Per Pool
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>| Object | Size per Desktop | Notes |
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>|---|---|---|
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>| Golden image OS disk | 40–80 GB | Shared via replica — one copy per datastore |
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>| Replica VM disk | = Golden image | Read-only, shared across all children |
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>| Parent VM disk | Thin delta above replica | Small — typically &lt;1 GB |
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>| Child VM OS delta disk | 2–10 GB | Grows during session; reset on logoff |
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>| Child VM swap/memory | = Guest RAM | On same datastore; size accordingly |
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>**Practical formula:**
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>```text
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>Total datastore capacity = (Replica size × 1) + (N_desktops × avg_delta × 1.25)
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>Example: 60 GB replica + (200 desktops × 5 GB delta × 1.25) = 60 + 1250 = 1,310 GB per datastore
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="desktop-vm-sizing">Desktop VM Sizing<a class="headerlink" href="#desktop-vm-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="standard-sizing-by-persona">Standard Sizing by Persona<a class="headerlink" href="#standard-sizing-by-persona" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Persona</th>
+<th>Typical Use Case</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>OS Disk</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task Worker</td>
+<td>Call center, data entry, browser-only</td>
+<td>2</td>
+<td>4 GB</td>
+<td>60 GB</td>
+<td>High desktop density on ESXi</td>
+</tr>
+<tr>
+<td>Knowledge Worker</td>
+<td>Office apps, email, Teams/Zoom</td>
+<td>2–4</td>
+<td>6–8 GB</td>
+<td>60 GB</td>
+<td>Majority of enterprise VDI</td>
+</tr>
+<tr>
+<td>Power User</td>
+<td>Developer, analyst, multiple monitors</td>
+<td>4–8</td>
+<td>8–16 GB</td>
+<td>80 GB</td>
+<td>May need vGPU</td>
+</tr>
+<tr>
+<td>GPU User</td>
+<td>CAD, 3D, video editing</td>
+<td>4–8</td>
+<td>16–32 GB</td>
+<td>80 GB</td>
+<td>vGPU required (NVIDIA GRID)</td>
+</tr>
+<tr>
+<td>RDS Session</td>
+<td>Shared desktop/published app</td>
+<td>N/A (host-level)</td>
+<td>2 GB/session</td>
+<td>N/A</td>
+<td>Size RDS host, not session</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rds-host-sizing">RDS Host Sizing<a class="headerlink" href="#rds-host-sizing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>RDS Host Size</th>
+<th>vCPU</th>
+<th>RAM</th>
+<th>Concurrent Sessions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td>8</td>
+<td>32 GB</td>
+<td>20–30</td>
+</tr>
+<tr>
+<td>Medium</td>
+<td>16</td>
+<td>64 GB</td>
+<td>40–60</td>
+</tr>
+<tr>
+<td>Large</td>
+<td>32</td>
+<td>128 GB</td>
+<td>80–120</td>
+</tr>
+</tbody>
+</table>
+<p>Actual session density depends heavily on workload. Test with load simulation (LoginVSI or similar) before production sizing.</p>
+<h3 id="esxi-host-desktop-density">ESXi Host Desktop Density<a class="headerlink" href="#esxi-host-desktop-density" title="Permanent link">&para;</a></h3>
+<p>Rule of thumb for Instant Clone pools (no vGPU):</p>
+<table>
+<thead>
+<tr>
+<th>Desktop Persona</th>
+<th>Desktops per ESXi Host (dual-socket, 28–32 physical cores, 384 GB RAM)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task Worker (2 vCPU / 4 GB)</td>
+<td>100–150</td>
+</tr>
+<tr>
+<td>Knowledge Worker (4 vCPU / 8 GB)</td>
+<td>50–80</td>
+</tr>
+<tr>
+<td>Power User (8 vCPU / 16 GB)</td>
+<td>25–40</td>
+</tr>
+</tbody>
+</table>
+<p>Apply a CPU over-commit ratio of 4:1 (vCPU:pCPU) for task workers, 3:1 for knowledge workers. Monitor CPU ready (%) — keep below 5% average.</p>
+<hr />
+<h2 id="storage-sizing">Storage Sizing<a class="headerlink" href="#storage-sizing" title="Permanent link">&para;</a></h2>
+<h3 id="instant-clone-storage-per-pool">Instant Clone Storage Per Pool<a class="headerlink" href="#instant-clone-storage-per-pool" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Size per Desktop</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Golden image OS disk</td>
+<td>40–80 GB</td>
+<td>Shared via replica — one copy per datastore</td>
+</tr>
+<tr>
+<td>Replica VM disk</td>
+<td>= Golden image</td>
+<td>Read-only, shared across all children</td>
+</tr>
+<tr>
+<td>Parent VM disk</td>
+<td>Thin delta above replica</td>
+<td>Small — typically &lt;1 GB</td>
+</tr>
+<tr>
+<td>Child VM OS delta disk</td>
+<td>2–10 GB</td>
+<td>Grows during session; reset on logoff</td>
+</tr>
+<tr>
+<td>Child VM swap/memory</td>
+<td>= Guest RAM</td>
+<td>On same datastore; size accordingly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Practical formula:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Total datastore capacity = (Replica size × 1) + (N_desktops × avg_delta × 1.25)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Example: 60 GB replica + (200 desktops × 5 GB delta × 1.25) = 60 + 1250 = 1,310 GB per datastore
 </code></pre></div></p>
 <h3 id="app-volumes-storage">App Volumes Storage<a class="headerlink" href="#app-volumes-storage" title="Permanent link">&para;</a></h3>
 <table>

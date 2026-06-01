@@ -4338,6 +4338,67 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#built-in-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#permission-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#permission-evaluation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Evaluation Order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-custom-role-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Custom Role Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sso-domain-and-identity-sources" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4750,49 +4811,72 @@
 │  Audit         = review all admin-role assignments at least quarterly                                 │
 │  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Built-in Roles
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Role | Description |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Administrator | Full access to all objects |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Read-Only | View objects and properties; no configuration changes |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| No Access | Explicitly block access to an object subtree |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Virtual Machine User | Interact with (console, power on/off) but not configure VMs |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Virtual Machine Power User | Interact + snapshot + basic reconfiguration |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Resource Pool Administrator | Manage resource pools and child objects |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Network Administrator | Manage networks and distributed switches |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Datastore Consumer | Allocate space from datastores |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Permission Scopes
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- **Global Permission**: Applies across all vCenter instances in the SSO domain; use sparingly — it overrides all inventory-level restrictions
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- **Inventory Permission**: Applied at datacenter, cluster, folder, or individual object level
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- **Propagation**: &quot;Propagate to children&quot; applies the permission to all objects in that subtree; uncheck only when you need to isolate a specific object
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>### Permission Evaluation Order
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>vCenter evaluates permissions from the most specific object upward. A `No Access` role on a VM overrides an `Administrator` role on the parent cluster. Global permissions are evaluated last and can override inventory permissions if the user has no other permission set.
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>---
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>## Custom Roles
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Create custom roles for least-privilege: **Administration → Roles → New**
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>### Common Custom Role Patterns
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>**Backup Operator** — minimum privileges for VADP-based backup:
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>```text
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>VirtualMachine.Interact.CreateScreenshot
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>VirtualMachine.State.CreateSnapshot
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>VirtualMachine.State.RemoveSnapshot
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>VirtualMachine.State.RevertToSnapshot
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>VirtualMachine.Config.DiskLease
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>Datastore.Browse
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>Datastore.FileManagement
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>Global.DisableMethods
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>Global.EnableMethods
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>Full access to all objects</td>
+</tr>
+<tr>
+<td>Read-Only</td>
+<td>View objects and properties; no configuration changes</td>
+</tr>
+<tr>
+<td>No Access</td>
+<td>Explicitly block access to an object subtree</td>
+</tr>
+<tr>
+<td>Virtual Machine User</td>
+<td>Interact with (console, power on/off) but not configure VMs</td>
+</tr>
+<tr>
+<td>Virtual Machine Power User</td>
+<td>Interact + snapshot + basic reconfiguration</td>
+</tr>
+<tr>
+<td>Resource Pool Administrator</td>
+<td>Manage resource pools and child objects</td>
+</tr>
+<tr>
+<td>Network Administrator</td>
+<td>Manage networks and distributed switches</td>
+</tr>
+<tr>
+<td>Datastore Consumer</td>
+<td>Allocate space from datastores</td>
+</tr>
+</tbody>
+</table>
+<h3 id="permission-scopes">Permission Scopes<a class="headerlink" href="#permission-scopes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Global Permission</strong>: Applies across all vCenter instances in the SSO domain; use sparingly — it overrides all inventory-level restrictions</li>
+<li><strong>Inventory Permission</strong>: Applied at datacenter, cluster, folder, or individual object level</li>
+<li><strong>Propagation</strong>: "Propagate to children" applies the permission to all objects in that subtree; uncheck only when you need to isolate a specific object</li>
+</ul>
+<h3 id="permission-evaluation-order">Permission Evaluation Order<a class="headerlink" href="#permission-evaluation-order" title="Permanent link">&para;</a></h3>
+<p>vCenter evaluates permissions from the most specific object upward. A <code>No Access</code> role on a VM overrides an <code>Administrator</code> role on the parent cluster. Global permissions are evaluated last and can override inventory permissions if the user has no other permission set.</p>
+<hr />
+<h2 id="custom-roles">Custom Roles<a class="headerlink" href="#custom-roles" title="Permanent link">&para;</a></h2>
+<p>Create custom roles for least-privilege: <strong>Administration → Roles → New</strong></p>
+<h3 id="common-custom-role-patterns">Common Custom Role Patterns<a class="headerlink" href="#common-custom-role-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Backup Operator</strong> — minimum privileges for VADP-based backup:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VirtualMachine.Interact.CreateScreenshot
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VirtualMachine.State.CreateSnapshot
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VirtualMachine.State.RemoveSnapshot
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>VirtualMachine.State.RevertToSnapshot
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>VirtualMachine.Config.DiskLease
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Datastore.Browse
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Datastore.FileManagement
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Global.DisableMethods
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Global.EnableMethods
 </code></pre></div></p>
 <p><strong>VM Operator</strong> — day-to-day VM management without storage or host access:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VirtualMachine.Interact.PowerOn

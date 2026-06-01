@@ -3149,6 +3149,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Integration Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#outbound-rest-servicenow-calls-external" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outbound REST (ServiceNow calls external)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3578,25 +3595,21 @@
 │  Event connector = SNOW module that receives external events and creates incidents                    │
 │  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Outbound REST (ServiceNow calls external)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Configured via **System Web Services &gt; Outbound &gt; REST Message**. Each REST Message defines:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Base URL and authentication (Basic, OAuth 2.0, API Key header)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- HTTP methods (GET / POST / PUT / PATCH / DELETE)
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Variable substitution in URL and body
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- MID Server routing (for on-prem targets)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Business Rules, Flow Designer steps, or Script Includes invoke the message:
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```javascript
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>// Server-side script
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>var rm = new sn_ws.RESTMessageV2(&#39;PagerDuty_Create_Incident&#39;, &#39;post&#39;);
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>rm.setStringParameterNoEscape(&#39;routing_key&#39;, gs.getProperty(&#39;pd.routing.key&#39;));
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>rm.setStringParameterNoEscape(&#39;payload&#39;, JSON.stringify(pdPayload));
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>var response = rm.execute();
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>gs.log(&#39;PD response: &#39; + response.getStatusCode());
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="outbound-rest-servicenow-calls-external">Outbound REST (ServiceNow calls external)<a class="headerlink" href="#outbound-rest-servicenow-calls-external" title="Permanent link">&para;</a></h3>
+<p>Configured via <strong>System Web Services &gt; Outbound &gt; REST Message</strong>. Each REST Message defines:
+- Base URL and authentication (Basic, OAuth 2.0, API Key header)
+- HTTP methods (GET / POST / PUT / PATCH / DELETE)
+- Variable substitution in URL and body
+- MID Server routing (for on-prem targets)</p>
+<p>Business Rules, Flow Designer steps, or Script Includes invoke the message:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// Server-side script</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kd">var</span><span class="w"> </span><span class="nx">rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">sn_ws</span><span class="p">.</span><span class="nx">RESTMessageV2</span><span class="p">(</span><span class="s1">&#39;PagerDuty_Create_Incident&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;post&#39;</span><span class="p">);</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;routing_key&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">gs</span><span class="p">.</span><span class="nx">getProperty</span><span class="p">(</span><span class="s1">&#39;pd.routing.key&#39;</span><span class="p">));</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nx">rm</span><span class="p">.</span><span class="nx">setStringParameterNoEscape</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">pdPayload</span><span class="p">));</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kd">var</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">rm</span><span class="p">.</span><span class="nx">execute</span><span class="p">();</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nx">gs</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PD response: &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">getStatusCode</span><span class="p">());</span>
+</code></pre></div>
 <hr />
 <h2 id="soap-web-services">SOAP Web Services<a class="headerlink" href="#soap-web-services" title="Permanent link">&para;</a></h2>
 <p>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:</p>

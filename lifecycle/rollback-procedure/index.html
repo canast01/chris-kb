@@ -2818,6 +2818,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#method-2-package-patch-rollback-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2 — Package / Patch Rollback (Linux)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#method-3-configuration-revert" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3066,30 +3077,28 @@
 │    Backout steps = Documented reversal steps from RFC; must be tested before change execution         │
 │    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Expected time:** 5–15 minutes
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>!!! warning &quot;Data written after snapshot is lost&quot;
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    If the application wrote to a database since the snapshot was taken, coordinate with the database team — a DB restore may also be required.
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>## Method 2 — Package / Patch Rollback (Linux)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```bash
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># RHEL / Rocky — undo last dnf transaction
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>dnf history list
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>dnf history undo &lt;transaction-id&gt;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Expected time:</strong> 5–15 minutes</p>
+<div class="admonition warning">
+<p class="admonition-title">Data written after snapshot is lost</p>
+<p>If the application wrote to a database since the snapshot was taken, coordinate with the database team — a DB restore may also be required.</p>
+</div>
+<h2 id="method-2-package-patch-rollback-linux">Method 2 — Package / Patch Rollback (Linux)<a class="headerlink" href="#method-2-package-patch-rollback-linux" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># RHEL / Rocky — undo last dnf transaction</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>dnf<span class="w"> </span><span class="nb">history</span><span class="w"> </span>undo<span class="w"> </span>&lt;transaction-id&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Roll back to previous kernel</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>grubby<span class="w"> </span>--default-kernel
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>grubby<span class="w"> </span>--set-default<span class="w"> </span>/boot/vmlinuz-&lt;old-version&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>reboot
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Downgrade a specific package</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>dnf<span class="w"> </span>downgrade<span class="w"> </span>&lt;package-name&gt;
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Roll back to previous kernel
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>grubby --default-kernel
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>grubby --set-default /boot/vmlinuz-&lt;old-version&gt;
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>reboot
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Downgrade a specific package
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>dnf downgrade &lt;package-name&gt;
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Ubuntu
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>apt install &lt;package&gt;=&lt;previous-version&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Ubuntu</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>apt<span class="w"> </span>install<span class="w"> </span>&lt;package&gt;<span class="o">=</span>&lt;previous-version&gt;
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Windows — uninstall cumulative update</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">wusa</span> <span class="p">/</span><span class="n">uninstall</span> <span class="p">/</span><span class="n">kb</span><span class="p">:&lt;</span><span class="n">KBnumber</span><span class="p">&gt;</span> <span class="p">/</span><span class="n">quiet</span> <span class="p">/</span><span class="n">norestart</span>
 </code></pre></div>

@@ -3254,6 +3254,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#disk-space-alert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Space Alert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#service-monitor" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3510,39 +3521,36 @@
 │  Get-WindowsUpdateLog= converts ETW trace to readable Windows Update log                              │
 │  repadmin     = AD replication tool; output parsed by PS for reporting                                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Disk Space Alert
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Sends an alert when any drive falls below a threshold.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>&lt;#
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>.SYNOPSIS
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Disk space threshold alert — email if any drive is below threshold
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>#&gt;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>param(
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    [int]$ThresholdPct  = 15,
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    [string]$SmtpServer = &quot;smtp.internal.local&quot;,
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    [string]$From       = &quot;monitoring@internal.local&quot;,
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    [string]$To         = &quot;ops@internal.local&quot;
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>$alerts = Get-PSDrive -PSProvider FileSystem | Where-Object {
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    $total = $_.Used + $_.Free
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    $total -gt 0 -and ($_.Free / $total * 100) -lt $ThresholdPct
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>} | ForEach-Object {
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    $total  = $_.Used + $_.Free
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    $pct    = [math]::Round($_.Free / $total * 100, 1)
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    &quot;$($_.Name): $([math]::Round($_.Free/1GB,1)) GB free ($pct%)&quot;
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>}
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>if ($alerts) {
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    $body = &quot;Low disk space on $($env:COMPUTERNAME):`n`n&quot; + ($alerts -join &quot;`n&quot;)
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    Send-MailMessage -From $From -To $To -Subject &quot;ALERT: Disk space on $env:COMPUTERNAME&quot; `
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        -Body $body -SmtpServer $SmtpServer
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>}
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="disk-space-alert">Disk Space Alert<a class="headerlink" href="#disk-space-alert" title="Permanent link">&para;</a></h2>
+<p>Sends an alert when any drive falls below a threshold.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="cm">  Disk space threshold alert — email if any drive is below threshold</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="no">[int]</span><span class="nv">$ThresholdPct</span>  <span class="p">=</span> <span class="n">15</span><span class="p">,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="no">[string]</span><span class="nv">$SmtpServer</span> <span class="p">=</span> <span class="s2">&quot;smtp.internal.local&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="no">[string]</span><span class="nv">$From</span>       <span class="p">=</span> <span class="s2">&quot;monitoring@internal.local&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="no">[string]</span><span class="nv">$To</span>         <span class="p">=</span> <span class="s2">&quot;ops@internal.local&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$alerts</span> <span class="p">=</span> <span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nv">$total</span> <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Used</span> <span class="p">+</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Free</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="nv">$total</span> <span class="o">-gt</span> <span class="n">0</span> <span class="o">-and</span> <span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span> <span class="p">/</span> <span class="nv">$total</span> <span class="p">*</span> <span class="n">100</span><span class="p">)</span> <span class="o">-lt</span> <span class="nv">$ThresholdPct</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="nv">$total</span>  <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Used</span> <span class="p">+</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Free</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="nv">$pct</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span> <span class="p">/</span> <span class="nv">$total</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Free</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">))</span><span class="s2"> GB free ($pct%)&quot;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="p">}</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">if</span> <span class="p">(</span><span class="nv">$alerts</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="s2">&quot;Low disk space on </span><span class="p">$(</span><span class="nv">$env:COMPUTERNAME</span><span class="p">)</span><span class="s2">:</span><span class="se">`n`n</span><span class="s2">&quot;</span> <span class="p">+</span> <span class="p">(</span><span class="nv">$alerts</span> <span class="n">-join</span> <span class="s2">&quot;</span><span class="se">`n</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-From</span> <span class="nv">$From</span> <span class="n">-To</span> <span class="nv">$To</span> <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Disk space on $env:COMPUTERNAME&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="n">-SmtpServer</span> <span class="nv">$SmtpServer</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">}</span>
+</code></pre></div>
 <h2 id="service-monitor">Service Monitor<a class="headerlink" href="#service-monitor" title="Permanent link">&para;</a></h2>
 <p>Restarts stopped automatic services and logs the event.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cm">&lt;#</span>

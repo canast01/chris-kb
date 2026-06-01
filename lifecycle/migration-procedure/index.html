@@ -2829,6 +2829,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#phase-2-pre-migration-preparation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Pre-Migration Preparation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#phase-3-data-synchronisation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3155,26 +3166,24 @@
 │    DNS cutover    = Update DNS to point clients to new destination; fast client redirect              │
 │    Quiesce source = Stop writes to source for delta sync; creates RPO = zero at cutover               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Phase 2 — Pre-Migration Preparation
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># 1. Take backup immediately before migration
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Start-VBRJob -Job &quot;Production VMs&quot;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># 2. Take VM snapshot
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>New-Snapshot -VM &quot;HOSTNAME&quot; \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  -Name &quot;pre-migration-$(Get-Date -Format yyyyMMdd)&quot; \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  -Quiesce -Memory:$false
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># 3. Document current state
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>uname -a; hostname -f; ip addr; ip route
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>df -h; systemctl list-units --state=running --type=service
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>rpm -qa | sort &gt; /tmp/pre-migration-packages.txt
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># 4. Lower DNS TTL to 60s (24h before migration)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Allows fast DNS cutover with minimal propagation delay
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="phase-2-pre-migration-preparation">Phase 2 — Pre-Migration Preparation<a class="headerlink" href="#phase-2-pre-migration-preparation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Take backup immediately before migration</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Start-VBRJob<span class="w"> </span>-Job<span class="w"> </span><span class="s2">&quot;Production VMs&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Take VM snapshot</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>New-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="s2">&quot;HOSTNAME&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-Name<span class="w"> </span><span class="s2">&quot;pre-migration-</span><span class="k">$(</span>Get-Date<span class="w"> </span>-Format<span class="w"> </span>yyyyMMdd<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-Quiesce<span class="w"> </span>-Memory:<span class="nv">$false</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># 3. Document current state</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>uname<span class="w"> </span>-a<span class="p">;</span><span class="w"> </span>hostname<span class="w"> </span>-f<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>addr<span class="p">;</span><span class="w"> </span>ip<span class="w"> </span>route
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>df<span class="w"> </span>-h<span class="p">;</span><span class="w"> </span>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>running<span class="w"> </span>--type<span class="o">=</span>service
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>rpm<span class="w"> </span>-qa<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>&gt;<span class="w"> </span>/tmp/pre-migration-packages.txt
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># 4. Lower DNS TTL to 60s (24h before migration)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Allows fast DNS cutover with minimal propagation delay</span>
+</code></pre></div>
 <h2 id="phase-3-data-synchronisation">Phase 3 — Data Synchronisation<a class="headerlink" href="#phase-3-data-synchronisation" title="Permanent link">&para;</a></h2>
 <h3 id="vmware-vmotion-svmotion">VMware vMotion / svMotion<a class="headerlink" href="#vmware-vmotion-svmotion" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Live migration — no downtime</span>

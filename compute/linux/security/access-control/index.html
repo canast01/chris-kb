@@ -3091,6 +3091,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sensitive-file-permissions-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sensitive File Permissions Baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3524,24 +3535,71 @@
 │  audit2allow = Generate SELinux allow rule from audit denial log entries                              │
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Sensitive File Permissions Baseline
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| File | Owner | Permissions | Notes |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `/etc/passwd` | root:root | 644 | World-readable, no passwords |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `/etc/shadow` | root:root | 000 | Readable only by root |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `/etc/gshadow` | root:root | 000 | Group password hashes |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `/etc/sudoers` | root:root | 440 | Only via `visudo` |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `/etc/ssh/sshd_config` | root:root | 600 | SSH daemon config |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| `/root` | root:root | 700 | Root home directory |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| `/etc/cron.d/` | root:root | 700 | Cron job directory |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| `/var/log/audit/` | root:root | 700 | Audit log directory |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```bash
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Verify critical file permissions
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>stat -c &quot;%a %U %G %n&quot; /etc/passwd /etc/shadow /etc/sudoers /etc/ssh/sshd_config
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="sensitive-file-permissions-baseline">Sensitive File Permissions Baseline<a class="headerlink" href="#sensitive-file-permissions-baseline" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Owner</th>
+<th>Permissions</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/etc/passwd</code></td>
+<td>root:root</td>
+<td>644</td>
+<td>World-readable, no passwords</td>
+</tr>
+<tr>
+<td><code>/etc/shadow</code></td>
+<td>root:root</td>
+<td>000</td>
+<td>Readable only by root</td>
+</tr>
+<tr>
+<td><code>/etc/gshadow</code></td>
+<td>root:root</td>
+<td>000</td>
+<td>Group password hashes</td>
+</tr>
+<tr>
+<td><code>/etc/sudoers</code></td>
+<td>root:root</td>
+<td>440</td>
+<td>Only via <code>visudo</code></td>
+</tr>
+<tr>
+<td><code>/etc/ssh/sshd_config</code></td>
+<td>root:root</td>
+<td>600</td>
+<td>SSH daemon config</td>
+</tr>
+<tr>
+<td><code>/root</code></td>
+<td>root:root</td>
+<td>700</td>
+<td>Root home directory</td>
+</tr>
+<tr>
+<td><code>/etc/cron.d/</code></td>
+<td>root:root</td>
+<td>700</td>
+<td>Cron job directory</td>
+</tr>
+<tr>
+<td><code>/var/log/audit/</code></td>
+<td>root:root</td>
+<td>700</td>
+<td>Audit log directory</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify critical file permissions</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>stat<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;%a %U %G %n&quot;</span><span class="w"> </span>/etc/passwd<span class="w"> </span>/etc/shadow<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/ssh/sshd_config
+</code></pre></div>
 <h2 id="mandatory-access-control-selinux-rhel">Mandatory Access Control — SELinux (RHEL)<a class="headerlink" href="#mandatory-access-control-selinux-rhel" title="Permanent link">&para;</a></h2>
 <p>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.</p>
 <h3 id="selinux-mac-decision-flow">SELinux MAC Decision Flow<a class="headerlink" href="#selinux-mac-decision-flow" title="Permanent link">&para;</a></h3>

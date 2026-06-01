@@ -3734,6 +3734,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#splitter-health-check-on-esxi-rp4vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Splitter Health Check on ESXi (RP4VM)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3975,35 +3986,31 @@
 │  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Splitter Health Check on ESXi (RP4VM)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The RP4VM vSphere splitter is installed as a VIB on ESXi hosts. Use these commands directly on the ESXi host (SSH or ESXi shell).
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="splitter-health-check-on-esxi-rp4vm">Splitter Health Check on ESXi (RP4VM)<a class="headerlink" href="#splitter-health-check-on-esxi-rp4vm" title="Permanent link">&para;</a></h2>
+<p>The RP4VM vSphere splitter is installed as a VIB on ESXi hosts. Use these commands directly on the ESXi host (SSH or ESXi shell).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check RP4VM splitter VIB is installed</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>recoverpoint
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify the splitter driver is loaded</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vmkload_mod<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>splitter
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Check RP4VM splitter VIB is installed
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>esxcli software vib list | grep -i recoverpoint
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Verify the splitter driver is loaded
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>vmkload_mod -l | grep splitter
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check vmkernel log for splitter-related events
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>grep -i &quot;recoverpoint\|rp4vm\|splitter&quot; /var/log/vmkernel.log | tail -50
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># List all VMs with RP4VM splitter protection active
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>esxcli recoverpoint vm list
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Show splitter statistics for a specific VM (replace &lt;vmid&gt; with VM world ID)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>esxcli recoverpoint vm stats --vm-id &lt;vmid&gt;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Verify RPA connectivity from the ESXi splitter perspective
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>esxcli recoverpoint rpa list
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Check splitter-to-RPA link state
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>esxcli recoverpoint rpa stats
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check vmkernel log for splitter-related events</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;recoverpoint\|rp4vm\|splitter&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List all VMs with RP4VM splitter protection active</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>vm<span class="w"> </span>list
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show splitter statistics for a specific VM (replace &lt;vmid&gt; with VM world ID)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>vm<span class="w"> </span>stats<span class="w"> </span>--vm-id<span class="w"> </span>&lt;vmid&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Verify RPA connectivity from the ESXi splitter perspective</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>rpa<span class="w"> </span>list
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Check splitter-to-RPA link state</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>esxcli<span class="w"> </span>recoverpoint<span class="w"> </span>rpa<span class="w"> </span>stats
+</code></pre></div>
 <blockquote>
 <p>If <code>esxcli recoverpoint</code> commands are not available, the RP4VM VIB is not installed or has been corrupted. Re-deploy from the RecoverPoint Deployment Manager.</p>
 </blockquote>

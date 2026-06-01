@@ -3278,6 +3278,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#least-privilege-iam-for-terraform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least Privilege IAM for Terraform
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workspace-and-environment-separation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3507,21 +3518,18 @@
 │   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
 │   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Least Privilege IAM for Terraform
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Create a dedicated IAM role for Terraform with only the permissions required for the resources it manages.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Verify effective permissions of the Terraform role
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>aws iam simulate-principal-policy \
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  --policy-source-arn arn:aws:iam::123456789:role/terraform-automation \
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  --action-names s3:GetObject ec2:DescribeInstances \
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  --resource-arns &quot;*&quot;
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># List all policies attached to the Terraform role
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>aws iam list-attached-role-policies --role-name terraform-automation
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="least-privilege-iam-for-terraform">Least Privilege IAM for Terraform<a class="headerlink" href="#least-privilege-iam-for-terraform" title="Permanent link">&para;</a></h2>
+<p>Create a dedicated IAM role for Terraform with only the permissions required for the resources it manages.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify effective permissions of the Terraform role</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span>arn:aws:iam::123456789:role/terraform-automation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--action-names<span class="w"> </span>s3:GetObject<span class="w"> </span>ec2:DescribeInstances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">&quot;*&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all policies attached to the Terraform role</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-attached-role-policies<span class="w"> </span>--role-name<span class="w"> </span>terraform-automation
+</code></pre></div>
 <h2 id="workspace-and-environment-separation">Workspace and Environment Separation<a class="headerlink" href="#workspace-and-environment-separation" title="Permanent link">&para;</a></h2>
 <p>Use separate credentials and backends per environment to prevent a staging Terraform run from modifying production.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use workspace-specific state paths</span>

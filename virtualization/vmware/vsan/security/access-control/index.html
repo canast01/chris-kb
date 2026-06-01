@@ -4338,6 +4338,51 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#objects-and-permission-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objects and Permission Propagation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Roles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-roles-for-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Roles for vSAN
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Roles for vSAN">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vsan-operations-role-storage-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Operations Role (Storage Operator)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vsan-read-only-role-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4347,8 +4392,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#vsan-policy-administrator" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4356,6 +4401,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4741,74 +4791,110 @@
 │  Audit log     = vCenter event log; captures all disk/policy changes                                  │
 │  Qtrly review  = check admin accounts; remove stale assignments                                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Objects and Permission Propagation
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="objects-and-permission-propagation">Objects and Permission Propagation<a class="headerlink" href="#objects-and-permission-propagation" title="Permanent link">&para;</a></h3>
+<p>vCenter permissions are assigned to inventory objects (datacenter, cluster, host, VM, datastore) and optionally propagated to child objects.</p>
+<p><strong>vSAN-relevant objects:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Relevant For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vCenter root</td>
+<td>Global administration, KMS configuration</td>
+</tr>
+<tr>
+<td>Datacenter</td>
+<td>Cluster creation, datacenter-level policies</td>
+</tr>
+<tr>
+<td>Cluster</td>
+<td>vSAN configuration, health management, policy management</td>
+</tr>
+<tr>
+<td>Host</td>
+<td>Disk group management, maintenance mode</td>
+</tr>
+<tr>
+<td>Datastore (vSAN)</td>
+<td>VM provisioning on vSAN, storage policy assignment</td>
+</tr>
+<tr>
+<td>VM Storage Policy</td>
+<td>Creating and assigning storage policies</td>
+</tr>
+</tbody>
+</table>
+<p>Assign permissions at the <strong>cluster level</strong> for operators who manage vSAN. Use <code>Propagate to children</code> so permissions extend to hosts and datastores within the cluster.</p>
+<h3 id="built-in-roles">Built-in Roles<a class="headerlink" href="#built-in-roles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Relevant vSAN Access</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrator</td>
+<td>Full access to all vSAN operations</td>
+</tr>
+<tr>
+<td>Read Only</td>
+<td>View-only — can see health, capacity, object status</td>
+</tr>
+<tr>
+<td>No Access</td>
+<td>No access (used to explicitly block inheritance)</td>
+</tr>
+<tr>
+<td>Virtual Machine User</td>
+<td>No vSAN configuration access — can use vSAN-backed datastores</td>
+</tr>
+<tr>
+<td>Datastore Consumer</td>
+<td>Create VMs on datastores — includes vSAN datastores</td>
+</tr>
+</tbody>
+</table>
+<p>Built-in roles cannot be edited. Create custom roles for operator access models.</p>
+<hr />
+<h2 id="custom-roles-for-vsan">Custom Roles for vSAN<a class="headerlink" href="#custom-roles-for-vsan" title="Permanent link">&para;</a></h2>
+<h3 id="vsan-operations-role-storage-operator">vSAN Operations Role (Storage Operator)<a class="headerlink" href="#vsan-operations-role-storage-operator" title="Permanent link">&para;</a></h3>
+<p>Minimum privileges for a storage operator who manages disk groups, monitors health, and handles day-to-day vSAN operations without access to VM configuration or security settings.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Connect-VIServer</span> <span class="p">&lt;</span><span class="n">vcenter</span><span class="p">&gt;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vCenter permissions are assigned to inventory objects (datacenter, cluster, host, VM, datastore) and optionally propagated to child objects.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**vSAN-relevant objects:**
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Object | Relevant For |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| vCenter root | Global administration, KMS configuration |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Datacenter | Cluster creation, datacenter-level policies |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Cluster | vSAN configuration, health management, policy management |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Host | Disk group management, maintenance mode |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Datastore (vSAN) | VM provisioning on vSAN, storage policy assignment |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| VM Storage Policy | Creating and assigning storage policies |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Assign permissions at the **cluster level** for operators who manage vSAN. Use `Propagate to children` so permissions extend to hosts and datastores within the cluster.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>### Built-in Roles
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$vsanOperatorPrivileges</span> <span class="p">=</span> <span class="p">@(</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="c"># Host and cluster management</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;Host.Inventory.EditCluster&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;Host.Config.Storage&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;Host.Config.MaintenanceMode&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="c"># vSAN specific</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Execute&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="s2">&quot;VsanHealth.ClusterHealth.Get&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="s2">&quot;StorageProfile.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    <span class="c"># Datastore and storage policy</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="s2">&quot;Datastore.Browse&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="s2">&quot;Datastore.FileManagement&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="s2">&quot;StorageProfile.View&quot;</span><span class="p">,</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Role | Relevant vSAN Access |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|---|---|
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| Administrator | Full access to all vSAN operations |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Read Only | View-only — can see health, capacity, object status |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| No Access | No access (used to explicitly block inheritance) |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Virtual Machine User | No vSAN configuration access — can use vSAN-backed datastores |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>| Datastore Consumer | Create VMs on datastores — includes vSAN datastores |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Built-in roles cannot be edited. Create custom roles for operator access models.
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>---
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>## Custom Roles for vSAN
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>### vSAN Operations Role (Storage Operator)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Minimum privileges for a storage operator who manages disk groups, monitors health, and handles day-to-day vSAN operations without access to VM configuration or security settings.
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>```powershell
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>Connect-VIServer &lt;vcenter&gt;
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>$vsanOperatorPrivileges = @(
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    # Host and cluster management
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>    &quot;Host.Inventory.EditCluster&quot;,
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    &quot;Host.Config.Storage&quot;,
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    &quot;Host.Config.MaintenanceMode&quot;,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>    # vSAN specific
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>    &quot;VsanHealth.ClusterHealth.Execute&quot;,
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    &quot;VsanHealth.ClusterHealth.Get&quot;,
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    &quot;StorageProfile.View&quot;,
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    &quot;StorageProfile.Update&quot;,
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>    # Datastore and storage policy
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>    &quot;Datastore.Browse&quot;,
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>    &quot;Datastore.FileManagement&quot;,
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>    &quot;StorageProfile.View&quot;,
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>    # Task and event visibility
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>    &quot;Task.Create&quot;,
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>    &quot;Task.Update&quot;,
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>    &quot;Global.SystemTag&quot;,
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>    &quot;System.Anonymous&quot;, &quot;System.Read&quot;, &quot;System.View&quot;
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>)
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>New-VIRole -Name &quot;vSAN-StorageOperator&quot; `
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>    -Privilege (Get-VIPrivilege -Id $vsanOperatorPrivileges)
-</code></pre></div></p>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="c"># Task and event visibility</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="s2">&quot;Task.Create&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="s2">&quot;Task.Update&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="s2">&quot;Global.SystemTag&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="s2">&quot;System.Anonymous&quot;</span><span class="p">,</span> <span class="s2">&quot;System.Read&quot;</span><span class="p">,</span> <span class="s2">&quot;System.View&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;vSAN-StorageOperator&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="nv">$vsanOperatorPrivileges</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="vsan-read-only-role-monitoring">vSAN Read-Only Role (Monitoring)<a class="headerlink" href="#vsan-read-only-role-monitoring" title="Permanent link">&para;</a></h3>
 <p>For monitoring systems (Aria Operations, Nagios, custom scripts) that only need to read vSAN status.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">$monitorPrivileges</span> <span class="p">=</span> <span class="p">@(</span>

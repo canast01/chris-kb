@@ -3875,6 +3875,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#ebs-snapshot-manual" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EBS Snapshot — Manual
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#restore-ec2-from-ebs-snapshot" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4166,24 +4177,21 @@
 │  Snapshot lifecycle= Policy that transitions or deletes snapshots after N days                        │
 │  Incremental snapshot= After first full, EBS snapshots store only changed blocks                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## EBS Snapshot — Manual
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Create snapshot of an EBS volume
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws ec2 create-snapshot \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  --volume-id vol-0abc123def456789 \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  --description &quot;Pre-patch snapshot $(date +%Y-%m-%d)&quot; \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  --tag-specifications &#39;ResourceType=snapshot,Tags=[{Key=Name,Value=pre-patch},{Key=Environment,Value=prod}]&#39;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># List snapshots for a volume
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>aws ec2 describe-snapshots \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  --filters &quot;Name=volume-id,Values=vol-0abc123def456789&quot; \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  --query &#39;Snapshots[*].[SnapshotId,StartTime,State,Description]&#39; \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  --output table
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="ebs-snapshot-manual">EBS Snapshot — Manual<a class="headerlink" href="#ebs-snapshot-manual" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create snapshot of an EBS volume</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-snapshot<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--volume-id<span class="w"> </span>vol-0abc123def456789<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Pre-patch snapshot </span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=snapshot,Tags=[{Key=Name,Value=pre-patch},{Key=Environment,Value=prod}]&#39;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List snapshots for a volume</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-snapshots<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s2">&quot;Name=volume-id,Values=vol-0abc123def456789&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Snapshots[*].[SnapshotId,StartTime,State,Description]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
 <hr />
 <h2 id="restore-ec2-from-ebs-snapshot">Restore EC2 from EBS Snapshot<a class="headerlink" href="#restore-ec2-from-ebs-snapshot" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Create volume from snapshot</span>

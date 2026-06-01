@@ -3279,6 +3279,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#set-vm-and-vm-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set-VM and VM Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#snapshots" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3606,25 +3617,23 @@
 │   │       PowerCLI          = VMware.PowerCLI; Connect-VIServer then Get-VM, Start-VM, etc.       │   │
 │   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Set-VM and VM Configuration
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Change vCPU and memory (VM must be powered off for most changes)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-VM -Name web01 | Set-VM -NumCpu 4 -MemoryGB 8 -Confirm:$false
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="set-vm-and-vm-configuration">Set-VM and VM Configuration<a class="headerlink" href="#set-vm-and-vm-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Change vCPU and memory (VM must be powered off for most changes)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="n">web01</span> <span class="p">|</span> <span class="nb">Set-VM</span> <span class="n">-NumCpu</span> <span class="n">4</span> <span class="n">-MemoryGB</span> <span class="n">8</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Add a network adapter</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VM</span> <span class="n">web01</span> <span class="p">|</span> <span class="nb">New-NetworkAdapter</span> <span class="n">-NetworkName</span> <span class="s1">&#39;VM Network&#39;</span> <span class="n">-Type</span> <span class="n">VMXNET3</span> <span class="n">-StartConnected</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Add a network adapter
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-VM web01 | New-NetworkAdapter -NetworkName &#39;VM Network&#39; -Type VMXNET3 -StartConnected
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Add a hard disk</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-VM</span> <span class="n">web01</span> <span class="p">|</span> <span class="nb">New-HardDisk</span> <span class="n">-CapacityGB</span> <span class="n">100</span> <span class="n">-StorageFormat</span> <span class="n">Thin</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Add a hard disk
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-VM web01 | New-HardDisk -CapacityGB 100 -StorageFormat Thin -Confirm:$false
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Power operations
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Start-VM -VM web01 -Confirm:$false
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Stop-VM -VM web01 -Confirm:$false
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Restart-VM -VM web01 -Confirm:$false
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Suspend-VM -VM web01 -Confirm:$false
-</code></pre></div></p>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Power operations</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Start-VM</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Stop-VM</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Restart-VM</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Suspend-VM</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+</code></pre></div>
 <h3 id="snapshots">Snapshots<a class="headerlink" href="#snapshots" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Create a snapshot before patching</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Name</span> <span class="s1">&#39;Pre-patch-$(Get-Date -Format yyyyMMdd)&#39;</span> <span class="p">`</span>

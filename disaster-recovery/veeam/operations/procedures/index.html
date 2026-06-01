@@ -3898,6 +3898,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#backup-copy-job-setup-offsite-cloud-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Copy Job Setup (Offsite / Cloud Target)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backup Copy Job Setup (Offsite / Cloud Target)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sobr-capacity-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4170,35 +4198,30 @@
 │  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>After creation:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- [ ] Run the job once manually and verify success before relying on the schedule.
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- [ ] Confirm the restore point appears under **Home &gt; Backups**.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- [ ] Document the job name, scope, repository, and retention in the CMDB or runbook.
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>---
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>## Backup Copy Job Setup (Offsite / Cloud Target)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Backup copy jobs pull from a source backup job and write a secondary chain to an offsite or cloud repository. This is the primary mechanism for the 3-2-1 rule.
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>### Steps
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>1. Go to **Home &gt; Backup Copy &gt; VMware vSphere Backup...** (or Hyper-V equivalent).
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>2. Select the **source** — a specific backup job or all backups from a repository.
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>3. Select the **target repository** — object storage (S3-compatible, Azure Blob, Wasabi, etc.) or a remote Linux/Windows repo.
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>4. Set the **copy interval** (e.g., every 1 day) and configure GFS retention independently of the source job.
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>5. Enable **encryption** on the target if the repository is offsite or cloud.
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>```powershell
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># List existing backup copy jobs
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Get-VBRJob -Type BackupSync | Select-Object Name, LastResult, LastRun
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Check copy job sessions
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Get-VBRBackupSession | Where-Object { $_.JobType -eq &quot;BackupSync&quot; } |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    Sort-Object CreationTime -Descending | Select-Object -First 10 |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    Select-Object JobName, Result, CreationTime, EndTime
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>After creation:
+- [ ] Run the job once manually and verify success before relying on the schedule.
+- [ ] Confirm the restore point appears under <strong>Home &gt; Backups</strong>.
+- [ ] Document the job name, scope, repository, and retention in the CMDB or runbook.</p>
+<hr />
+<h2 id="backup-copy-job-setup-offsite-cloud-target">Backup Copy Job Setup (Offsite / Cloud Target)<a class="headerlink" href="#backup-copy-job-setup-offsite-cloud-target" title="Permanent link">&para;</a></h2>
+<p>Backup copy jobs pull from a source backup job and write a secondary chain to an offsite or cloud repository. This is the primary mechanism for the 3-2-1 rule.</p>
+<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to <strong>Home &gt; Backup Copy &gt; VMware vSphere Backup...</strong> (or Hyper-V equivalent).</li>
+<li>Select the <strong>source</strong> — a specific backup job or all backups from a repository.</li>
+<li>Select the <strong>target repository</strong> — object storage (S3-compatible, Azure Blob, Wasabi, etc.) or a remote Linux/Windows repo.</li>
+<li>Set the <strong>copy interval</strong> (e.g., every 1 day) and configure GFS retention independently of the source job.</li>
+<li>Enable <strong>encryption</strong> on the target if the repository is offsite or cloud.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List existing backup copy jobs</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">BackupSync</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check copy job sessions</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;BackupSync&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
+</code></pre></div>
 <hr />
 <h2 id="sobr-capacity-management">SOBR Capacity Management<a class="headerlink" href="#sobr-capacity-management" title="Permanent link">&para;</a></h2>
 <h3 id="offload-policy">Offload Policy<a class="headerlink" href="#offload-policy" title="Permanent link">&para;</a></h3>

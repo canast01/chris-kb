@@ -3163,6 +3163,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#2-slow-page-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Slow Page Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#3-search-index-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3558,49 +3569,45 @@
 │  Content index = Lucene index managed by Confluence; stored in CONFLUENCE_HOME/index                  │
 │  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 2. Slow Page Performance
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Symptoms**
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Page loads consistently exceed 3–5 seconds
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- `WARN SlowQueryChecker` entries in the log
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- High CPU on DB server; `pg_stat_activity` shows many long-running queries
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>**Root Causes**
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Inefficient CQL/Jira macro query loading on page render
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Missing database indexes (common after large content migrations)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Under-provisioned JVM heap causing frequent GC pressure
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Confluence search index out of date (forces fallback to DB)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- A single expensive Marketplace macro blocking page render
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="2-slow-page-performance">2. Slow Page Performance<a class="headerlink" href="#2-slow-page-performance" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms</strong></p>
+<ul>
+<li>Page loads consistently exceed 3–5 seconds</li>
+<li><code>WARN SlowQueryChecker</code> entries in the log</li>
+<li>High CPU on DB server; <code>pg_stat_activity</code> shows many long-running queries</li>
+</ul>
+<p><strong>Root Causes</strong></p>
+<ul>
+<li>Inefficient CQL/Jira macro query loading on page render</li>
+<li>Missing database indexes (common after large content migrations)</li>
+<li>Under-provisioned JVM heap causing frequent GC pressure</li>
+<li>Confluence search index out of date (forces fallback to DB)</li>
+<li>A single expensive Marketplace macro blocking page render</li>
+</ul>
+<p><strong>Diagnosis</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check for slow query warnings</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>grep<span class="w"> </span><span class="s2">&quot;SlowQuery\|SlowPageLoad\|Slow page&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Enable slow query logging at DB level (PostgreSQL)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;ALTER SYSTEM SET log_min_duration_statement = &#39;1000&#39;;&quot;</span><span class="w">  </span><span class="c1"># 1s threshold</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_reload_conf();&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check DB index health</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT schemaname, tablename, attname, n_distinct, correlation</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s2">      FROM pg_stats</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s2">      WHERE tablename = &#39;content&#39;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s2">      ORDER BY tablename, attname;&quot;</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>**Diagnosis**
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```bash
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Check for slow query warnings
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>grep &quot;SlowQuery\|SlowPageLoad\|Slow page&quot; \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  /var/atlassian/application-data/confluence/logs/atlassian-confluence.log \
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  | tail -20
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Enable slow query logging at DB level (PostgreSQL)
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>psql -h &quot;$DB_HOST&quot; -U &quot;$DB_USER&quot; -d &quot;$DB_NAME&quot; \
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  -c &quot;ALTER SYSTEM SET log_min_duration_statement = &#39;1000&#39;;&quot;  # 1s threshold
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>psql -h &quot;$DB_HOST&quot; -U &quot;$DB_USER&quot; -d &quot;$DB_NAME&quot; \
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  -c &quot;SELECT pg_reload_conf();&quot;
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Check DB index health
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>psql -h &quot;$DB_HOST&quot; -U &quot;$DB_USER&quot; -d &quot;$DB_NAME&quot; \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  -c &quot;SELECT schemaname, tablename, attname, n_distinct, correlation
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>      FROM pg_stats
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>      WHERE tablename = &#39;content&#39;
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>      ORDER BY tablename, attname;&quot;
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># Profile a page via Chrome DevTools or Confluence page info
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># Append ?pageProfiler=true to any page URL (admin only)
-</code></pre></div></p>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Profile a page via Chrome DevTools or Confluence page info</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Append ?pageProfiler=true to any page URL (admin only)</span>
+</code></pre></div>
 <p><strong>Fix</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Run VACUUM ANALYZE on the Confluence database</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>

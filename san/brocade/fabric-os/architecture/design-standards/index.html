@@ -3167,6 +3167,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vsan-fabric-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN / Fabric Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#isl-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ISL Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#security-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3435,40 +3457,51 @@
 │    FW tracking    = Firmware version matrix maintained; all switches in fabric same minor version     │
 │    Config naming  = Zone config names include date/ticket reference for auditability                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Examples:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Zone: `db01_0a-powermax01_0a` — host DB01 HBA0 port A to PowerMax array port 0A
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Alias: `db01_0a` (alias for the initiator WWPN), `powermax01_0a` (alias for target port)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Rules:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- One initiator per zone — never put two host WWPNs in the same zone
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Zones should contain: one host HBA port + required array target ports
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- No single-target zones without a matching initiator (orphan cleanup)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>---
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## VSAN / Fabric Design
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Production Fabric A: all switches in fabric A connected via ISLs
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Production Fabric B: all switches in fabric B — completely separate cable plant
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Switches must never be cabled between Fabric A and Fabric B
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>---
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>## ISL Standards
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Parameter | Standard |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>|---|---|
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Minimum ISLs per switch pair | 2 (trunk group) |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>| ISL speed | Equal to or greater than connected host/array port speed |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Trunk group configuration | `porttrunkarea` configured on ISL ports |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| FSPF cost | Default (auto) unless explicit traffic engineering is required |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Verify trunk status:
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>```bash
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>trunkshow   # All ISL trunks and member ports
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>islshow     # ISL utilisation
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Examples:
+- Zone: <code>db01_0a-powermax01_0a</code> — host DB01 HBA0 port A to PowerMax array port 0A
+- Alias: <code>db01_0a</code> (alias for the initiator WWPN), <code>powermax01_0a</code> (alias for target port)</p>
+<p>Rules:
+- One initiator per zone — never put two host WWPNs in the same zone
+- Zones should contain: one host HBA port + required array target ports
+- No single-target zones without a matching initiator (orphan cleanup)</p>
+<hr />
+<h2 id="vsan-fabric-design">VSAN / Fabric Design<a class="headerlink" href="#vsan-fabric-design" title="Permanent link">&para;</a></h2>
+<p>For Brocade, a single physical fabric spans all switches (unlike Cisco which uses VSANs):
+- Production Fabric A: all switches in fabric A connected via ISLs
+- Production Fabric B: all switches in fabric B — completely separate cable plant
+- Switches must never be cabled between Fabric A and Fabric B</p>
+<hr />
+<h2 id="isl-standards">ISL Standards<a class="headerlink" href="#isl-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Minimum ISLs per switch pair</td>
+<td>2 (trunk group)</td>
+</tr>
+<tr>
+<td>ISL speed</td>
+<td>Equal to or greater than connected host/array port speed</td>
+</tr>
+<tr>
+<td>Trunk group configuration</td>
+<td><code>porttrunkarea</code> configured on ISL ports</td>
+</tr>
+<tr>
+<td>FSPF cost</td>
+<td>Default (auto) unless explicit traffic engineering is required</td>
+</tr>
+</tbody>
+</table>
+<p>Verify trunk status:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>trunkshow<span class="w">   </span><span class="c1"># All ISL trunks and member ports</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>islshow<span class="w">     </span><span class="c1"># ISL utilisation</span>
 </code></pre></div></p>
 <hr />
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>

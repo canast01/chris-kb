@@ -3337,6 +3337,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#deleting-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deleting Branches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#tracking-remote-branches" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3671,26 +3682,24 @@
 │  .gitignore      = lists patterns for files Git should not track                                      │
 │  Short-lived     = feature branches should be merged within days, not weeks                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Deleting Branches
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Delete a merged local branch (safe — fails if unmerged)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git branch -d feature/PLAT-42-s3-lifecycle
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="deleting-branches">Deleting Branches<a class="headerlink" href="#deleting-branches" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Delete a merged local branch (safe — fails if unmerged)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>branch<span class="w"> </span>-d<span class="w"> </span>feature/PLAT-42-s3-lifecycle
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Force-delete an unmerged branch</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>branch<span class="w"> </span>-D<span class="w"> </span>feature/abandoned-experiment
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Force-delete an unmerged branch
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git branch -D feature/abandoned-experiment
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Delete a remote branch</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>--delete<span class="w"> </span>feature/PLAT-42-s3-lifecycle
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Delete a remote branch
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git push origin --delete feature/PLAT-42-s3-lifecycle
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Prune stale remote-tracking references
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git fetch --prune
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>git remote prune origin
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># One-liner: delete all local branches already merged into main
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>git branch --merged main | grep -v &#39;^* \|main\|master&#39; | xargs git branch -d
-</code></pre></div></p>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Prune stale remote-tracking references</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git<span class="w"> </span>fetch<span class="w"> </span>--prune
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>git<span class="w"> </span>remote<span class="w"> </span>prune<span class="w"> </span>origin
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># One-liner: delete all local branches already merged into main</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>git<span class="w"> </span>branch<span class="w"> </span>--merged<span class="w"> </span>main<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;^* \|main\|master&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>git<span class="w"> </span>branch<span class="w"> </span>-d
+</code></pre></div>
 <h2 id="tracking-remote-branches">Tracking Remote Branches<a class="headerlink" href="#tracking-remote-branches" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set upstream when pushing for the first time</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/PLAT-42-s3-lifecycle

@@ -2921,6 +2921,34 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#cpu-ready-common-causes-and-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU Ready — Common Causes and Fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-balloon-and-swap-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Balloon and Swap Investigation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Balloon and Swap Investigation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#memory-reclamation-states" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3326,44 +3354,63 @@
 │    Swap       = VMware swapping guest RAM to host swap file; causes severe performance impact         │
 │    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### CPU Ready — Common Causes and Fixes
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Cause | Indicator | Fix |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Host CPU overcommitted | Host %Used &gt;70%; many VMs on host | DRS migration; add ESXi host |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| VM has too many vCPUs | %CSTP high; VM rarely uses all vCPUs | Reduce vCPU count to match workload |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| vCPU hard limit set | %MLMTD &gt;0 | Remove or increase CPU limit on VM |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Hyper-threading contention | HT siblings competing | Adjust HT sharing policy in advanced settings |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>---
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="cpu-ready-common-causes-and-fixes">CPU Ready — Common Causes and Fixes<a class="headerlink" href="#cpu-ready-common-causes-and-fixes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Indicator</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host CPU overcommitted</td>
+<td>Host %Used &gt;70%; many VMs on host</td>
+<td>DRS migration; add ESXi host</td>
+</tr>
+<tr>
+<td>VM has too many vCPUs</td>
+<td>%CSTP high; VM rarely uses all vCPUs</td>
+<td>Reduce vCPU count to match workload</td>
+</tr>
+<tr>
+<td>vCPU hard limit set</td>
+<td>%MLMTD &gt;0</td>
+<td>Remove or increase CPU limit on VM</td>
+</tr>
+<tr>
+<td>Hyper-threading contention</td>
+<td>HT siblings competing</td>
+<td>Adjust HT sharing policy in advanced settings</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="memory-balloon-and-swap-investigation">Memory Balloon and Swap Investigation<a class="headerlink" href="#memory-balloon-and-swap-investigation" title="Permanent link">&para;</a></h2>
+<p>VMware uses a three-tier memory reclamation hierarchy: Balloon → Swap → Compress.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># In esxtop — press &#39;m&#39; for memory view</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Key columns for a VM:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># MCTLSZ  — current balloon size in MB (vmmemctl active)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1">#            &gt;0 = guest OS is being asked to give back memory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># SWPWRT  — swap write rate MB/s (hypervisor swapping VM pages to disk)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1">#            &gt;0 = serious; causes dramatic latency</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># MEMCTL%  — percentage of allocated VM memory being ballooned</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># GRANT    — memory granted to VM (may be less than configured)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># CNSM     — memory consumed by VM</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># TCHD     — memory touched (active working set)</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Memory Balloon and Swap Investigation
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>VMware uses a three-tier memory reclamation hierarchy: Balloon → Swap → Compress.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check balloon driver status inside Linux guest</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>balloon
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>lsmod<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmmemctl
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># In esxtop — press &#39;m&#39; for memory view
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Key columns for a VM:
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># MCTLSZ  — current balloon size in MB (vmmemctl active)
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>#            &gt;0 = guest OS is being asked to give back memory
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># SWPWRT  — swap write rate MB/s (hypervisor swapping VM pages to disk)
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>#            &gt;0 = serious; causes dramatic latency
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># MEMCTL%  — percentage of allocated VM memory being ballooned
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># GRANT    — memory granted to VM (may be less than configured)
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a># CNSM     — memory consumed by VM
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># TCHD     — memory touched (active working set)
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a># Check balloon driver status inside Linux guest
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>dmesg | grep -i balloon
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>lsmod | grep vmmemctl
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Check inside Windows guest (PowerShell)
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>Get-WmiObject Win32_PhysicalMemory | Measure-Object Capacity -Sum
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Check host-level memory pressure (ESXi host)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a># esxtop &#39;m&#39; → look at host row: free memory, swap in/out rates
-</code></pre></div></p>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Check inside Windows guest (PowerShell)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Get-WmiObject<span class="w"> </span>Win32_PhysicalMemory<span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Capacity<span class="w"> </span>-Sum
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Check host-level memory pressure (ESXi host)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># esxtop &#39;m&#39; → look at host row: free memory, swap in/out rates</span>
+</code></pre></div>
 <h3 id="memory-reclamation-states">Memory Reclamation States<a class="headerlink" href="#memory-reclamation-states" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

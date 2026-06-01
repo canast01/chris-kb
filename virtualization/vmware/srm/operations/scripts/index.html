@@ -4454,6 +4454,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#get-all-protected-vms-and-rpo-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Protected VMs and RPO Compliance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#get-last-test-failover-date-and-result" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4745,33 +4756,30 @@
 │  RTO vs target = compare achieved vs agreed RTO                                                       │
 │  Plan run date = stored in SRM DB; queryable via REST API                                             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Get All Protected VMs and RPO Compliance
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```powershell
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>$pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>$results = @()
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>foreach ($pg in $pgs) {
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    $vms = $srm.ExtensionData.Protection.ListProtectedVms($pg)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    foreach ($vm in $vms) {
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        # Get last replication time from vSphere Replication if applicable
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        $vrState = $vm.ReplicationState
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        $results += [PSCustomObject]@{
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            ProtectionGroup  = $pg.Name
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>            VMName           = $vm.Vm.Name
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            State            = $vm.State
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            ReplicationState = $vrState
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        }
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    }
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>}
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>$results | Export-Csv &quot;srm-protected-vms-$(Get-Date -Format yyyyMMdd).csv&quot; -NoTypeInformation
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Write-Host &quot;Exported $($results.Count) protected VMs&quot;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="get-all-protected-vms-and-rpo-compliance">Get All Protected VMs and RPO Compliance<a class="headerlink" href="#get-all-protected-vms-and-rpo-compliance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="c"># Get last replication time from vSphere Replication if applicable</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="nv">$vrState</span> <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">ReplicationState</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>            <span class="n">ProtectionGroup</span>  <span class="p">=</span> <span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>            <span class="n">VMName</span>           <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>            <span class="n">State</span>            <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">State</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="n">ReplicationState</span> <span class="p">=</span> <span class="nv">$vrState</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="p">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="p">}</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">}</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nv">$results</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="s2">&quot;srm-protected-vms-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">.csv&quot;</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Exported </span><span class="p">$(</span><span class="nv">$results</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> protected VMs&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="get-last-test-failover-date-and-result">Get Last Test Failover Date and Result<a class="headerlink" href="#get-last-test-failover-date-and-result" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">$plans</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Recovery</span><span class="p">.</span><span class="n">ListPlans</span><span class="p">()</span>

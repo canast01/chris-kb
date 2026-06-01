@@ -2895,6 +2895,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Diagnostic Flowchart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vmware-esxi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware ESXi
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3301,27 +3318,25 @@
 │    Test-NetConn  = PowerShell: tests TCP connectivity to specific host and port                       │
 │    traceroute    = Shows each hop to destination; identifies where path breaks                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### VMware ESXi
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># List all NICs and link state on ESXi host
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>esxcli network nic list
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Example output:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Name    PCI Device    Driver  Admin Status  Link Status  Speed  Duplex
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># vmnic0  0000:03:00.0  ixgbe   Up            Up           10000  Full
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># vmnic1  0000:03:00.1  ixgbe   Up            Down         0      Half  ← problem
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="vmware-esxi">VMware ESXi<a class="headerlink" href="#vmware-esxi" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># List all NICs and link state on ESXi host</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Name    PCI Device    Driver  Admin Status  Link Status  Speed  Duplex</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># vmnic0  0000:03:00.0  ixgbe   Up            Up           10000  Full</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># vmnic1  0000:03:00.1  ixgbe   Up            Down         0      Half  ← problem</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check NIC statistics</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>nic<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-n<span class="w"> </span>vmnic0
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Check NIC statistics
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>esxcli network nic stats get -n vmnic0
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check vSwitch uplink status</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Check vSwitch uplink status
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>esxcli network vswitch standard list
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Check distributed vSwitch uplinks
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>esxcli network vswitch dvs vmware list
-</code></pre></div></p>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Check distributed vSwitch uplinks</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list
+</code></pre></div>
 <hr />
 <h2 id="vlan-and-trunk-verification">VLAN and Trunk Verification<a class="headerlink" href="#vlan-and-trunk-verification" title="Permanent link">&para;</a></h2>
 <h3 id="cisco">Cisco<a class="headerlink" href="#cisco" title="Permanent link">&para;</a></h3>

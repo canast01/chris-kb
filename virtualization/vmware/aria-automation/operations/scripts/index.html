@@ -4464,6 +4464,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#blueprint-version-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blueprint Version Audit
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4736,47 +4747,43 @@
 │  kubectl           = Kubernetes CLI on vRA appliance; script to check pod health or restart           │
 │  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Blueprint Version Audit
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Lists all cloud templates with their version count and last modified date.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Blueprint-VersionAudit.ps1
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Lists all blueprints with version count and last modification date.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>param(
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    [Parameter(Mandatory)][string]$Server,
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    [Parameter(Mandatory)][string]$Username,
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    [Parameter(Mandatory)][SecureString]$Password
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>)
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>$PlainPass = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Password)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>)
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="blueprint-version-audit">Blueprint Version Audit<a class="headerlink" href="#blueprint-version-audit" title="Permanent link">&para;</a></h2>
+<p>Lists all cloud templates with their version count and last modified date.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Blueprint-VersionAudit.ps1</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Lists all blueprints with version count and last modification date.</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Server</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[string]</span><span class="nv">$Username</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span><span class="no">[SecureString]</span><span class="nv">$Password</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nv">$PlainPass</span> <span class="p">=</span> <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">PtrToStringAuto</span><span class="p">(</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="no">[System.Runtime.InteropServices.Marshal]</span><span class="p">::</span><span class="n">SecureStringToBSTR</span><span class="p">(</span><span class="nv">$Password</span><span class="p">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$LoginBody</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">username</span> <span class="p">=</span> <span class="nv">$Username</span><span class="p">;</span> <span class="n">password</span> <span class="p">=</span> <span class="nv">$PlainPass</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nv">$TokenResponse</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">POST</span> <span class="p">`</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/csp/gateway/am/api/login&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">-Body</span> <span class="nv">$LoginBody</span> <span class="n">-ContentType</span> <span class="s2">&quot;application/json&quot;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nv">$Token</span> <span class="p">=</span> <span class="nv">$TokenResponse</span><span class="p">.</span><span class="n">access_token</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nv">$Headers</span> <span class="p">=</span> <span class="p">@{</span> <span class="n">Authorization</span> <span class="p">=</span> <span class="s2">&quot;Bearer $Token&quot;</span> <span class="p">}</span>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>$LoginBody = @{ username = $Username; password = $PlainPass } | ConvertTo-Json
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>$TokenResponse = Invoke-RestMethod -Method POST `
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    -Uri &quot;https://$Server/csp/gateway/am/api/login&quot; `
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    -Body $LoginBody -ContentType &quot;application/json&quot;
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>$Token = $TokenResponse.access_token
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>$Headers = @{ Authorization = &quot;Bearer $Token&quot; }
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>$Blueprints = Invoke-RestMethod -Method GET `
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    -Uri &quot;https://$Server/blueprint/api/blueprints?`$top=200&quot; `
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    -Headers $Headers
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>$Blueprints.content | Select-Object name, projectName, status,
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    @{ Name = &quot;LastModified&quot;; Expression = { $_.updatedAt } },
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    @{ Name = &quot;Versions&quot;; Expression = {
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>        $BpVersions = Invoke-RestMethod -Method GET `
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>            -Uri &quot;https://$Server/blueprint/api/blueprints/$($_.id)/versions&quot; `
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>            -Headers $Headers
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>        $BpVersions.content.Count
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    }} | Format-Table -AutoSize
-</code></pre></div></p>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nv">$Blueprints</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="p">`</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/blueprint/api/blueprints?</span><span class="se">`$</span><span class="s2">top=200&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="n">-Headers</span> <span class="nv">$Headers</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nv">$Blueprints</span><span class="p">.</span><span class="n">content</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">name</span><span class="p">,</span> <span class="n">projectName</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    <span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;LastModified&quot;</span><span class="p">;</span> <span class="n">Expression</span> <span class="p">=</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">updatedAt</span> <span class="p">}</span> <span class="p">},</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    <span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;Versions&quot;</span><span class="p">;</span> <span class="n">Expression</span> <span class="p">=</span> <span class="p">{</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="nv">$BpVersions</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Method</span> <span class="n">GET</span> <span class="p">`</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>            <span class="n">-Uri</span> <span class="s2">&quot;https://$Server/blueprint/api/blueprints/</span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">id</span><span class="p">)</span><span class="s2">/versions&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>            <span class="n">-Headers</span> <span class="nv">$Headers</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        <span class="nv">$BpVersions</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    <span class="p">}}</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 
 
 

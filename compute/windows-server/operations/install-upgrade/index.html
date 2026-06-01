@@ -3254,6 +3254,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hotfix-and-patch-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hotfix and Patch Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#patching" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3561,26 +3572,24 @@
 │  Compatibility check= setup /compat scanonly; identifies blockers before upgrade                      │
 │  Generalise   = sysprep step to remove SIDs; must do before capturing image                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Hotfix and Patch Status
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Last 10 installed hotfixes
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="hotfix-and-patch-status">Hotfix and Patch Status<a class="headerlink" href="#hotfix-and-patch-status" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Last 10 installed hotfixes</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-HotFix</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">InstalledOn</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check Windows Update history</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-WUHistory</span>  <span class="c"># Requires PSWindowsUpdate module</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Check Windows Update history
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-WUHistory  # Requires PSWindowsUpdate module
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Pending updates check
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Install-Module PSWindowsUpdate -Force
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Get-WindowsUpdate
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># WSUS-managed patch status
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>$SearchResult = $UpdateSearcher.Search(&quot;IsInstalled=0 and Type=&#39;Software&#39;&quot;)
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>$SearchResult.Updates | Select-Object Title, MsrcSeverity
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Pending updates check</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Install-Module</span> <span class="n">PSWindowsUpdate</span> <span class="n">-Force</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-WindowsUpdate</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># WSUS-managed patch status</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$UpdateSession</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$UpdateSearcher</span> <span class="p">=</span> <span class="nv">$UpdateSession</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$SearchResult</span> <span class="p">=</span> <span class="nv">$UpdateSearcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0 and Type=&#39;Software&#39;&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nv">$SearchResult</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span>
+</code></pre></div>
 <hr />
 <h2 id="patching">Patching<a class="headerlink" href="#patching" title="Permanent link">&para;</a></h2>
 <p>Patch management for Windows Server using Windows Update, WSUS, and SCCM/Intune.</p>

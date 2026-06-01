@@ -4167,6 +4167,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#scg-registration-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SCG Registration Records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#audit-log-exports" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4520,45 +4531,69 @@
 │    90-day retention   = CloudIQ keeps 90 days of telemetry; older data rolled off automatically       │
 │    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Document for each notification rule:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Field | Example |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Rule name | `storage-ops-critical-email` |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Severity filter | CRITICAL |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Systems scope | All, or specific tag (`env:production`) |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Destination type | Email / Webhook |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Recipients / URL | `storage-ops@corp.example.com` / `https://hooks.slack.com/...` |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Created by | `admin@corp.example.com` |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Last reviewed | 2026-01-15 |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>### SCG Registration Records
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>The Secure Connect Gateway (SCG) is the on-premises component. Maintain a record of:
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Which storage systems are registered to which SCG appliance
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- The SCG management IP and version
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- Which systems are registered to both SCG appliances (for redundancy)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>This information is required if you need to rebuild or replace the SCG appliance — re-registration requires the management IP and credentials for each array.
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>```bash
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Export the list of devices registered to the SCG
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># From the SCG web UI: https://&lt;scg-ip&gt;:9443
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Settings → Registered Devices → Export to CSV
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Or query the CloudIQ API for all monitored systems
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>curl -s -X GET &quot;${BASE}/systems?limit=200&quot; \
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  -H &quot;Authorization: Bearer ${TOKEN}&quot; \
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  | python3 -c &quot;
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>import sys, json
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>data = json.load(sys.stdin)
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>print(&#39;system_name,type,health_score,location&#39;)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>for s in data.get(&#39;results&#39;, []):
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    print(f&#39;{s.get(\&quot;system_name\&quot;,\&quot;\&quot;)},{s.get(\&quot;type\&quot;,\&quot;\&quot;)},{s.get(\&quot;health_score\&quot;,\&quot;\&quot;)},{s.get(\&quot;location\&quot;,\&quot;\&quot;)}&#39;)
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>&quot; &gt; cloudiq_systems_$(date +%Y%m%d).csv
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Document for each notification rule:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rule name</td>
+<td><code>storage-ops-critical-email</code></td>
+</tr>
+<tr>
+<td>Severity filter</td>
+<td>CRITICAL</td>
+</tr>
+<tr>
+<td>Systems scope</td>
+<td>All, or specific tag (<code>env:production</code>)</td>
+</tr>
+<tr>
+<td>Destination type</td>
+<td>Email / Webhook</td>
+</tr>
+<tr>
+<td>Recipients / URL</td>
+<td><code>storage-ops@corp.example.com</code> / <code>https://hooks.slack.com/...</code></td>
+</tr>
+<tr>
+<td>Created by</td>
+<td><code>admin@corp.example.com</code></td>
+</tr>
+<tr>
+<td>Last reviewed</td>
+<td>2026-01-15</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scg-registration-records">SCG Registration Records<a class="headerlink" href="#scg-registration-records" title="Permanent link">&para;</a></h3>
+<p>The Secure Connect Gateway (SCG) is the on-premises component. Maintain a record of:</p>
+<ul>
+<li>Which storage systems are registered to which SCG appliance</li>
+<li>The SCG management IP and version</li>
+<li>Which systems are registered to both SCG appliances (for redundancy)</li>
+</ul>
+<p>This information is required if you need to rebuild or replace the SCG appliance — re-registration requires the management IP and credentials for each array.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Export the list of devices registered to the SCG</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># From the SCG web UI: https://&lt;scg-ip&gt;:9443</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Settings → Registered Devices → Export to CSV</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Or query the CloudIQ API for all monitored systems</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">BASE</span><span class="si">}</span><span class="s2">/systems?limit=200&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s2">print(&#39;system_name,type,health_score,location&#39;)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s2">for s in data.get(&#39;results&#39;, []):</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s2">    print(f&#39;{s.get(\&quot;system_name\&quot;,\&quot;\&quot;)},{s.get(\&quot;type\&quot;,\&quot;\&quot;)},{s.get(\&quot;health_score\&quot;,\&quot;\&quot;)},{s.get(\&quot;location\&quot;,\&quot;\&quot;)}&#39;)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>cloudiq_systems_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+</code></pre></div>
 <h3 id="audit-log-exports">Audit Log Exports<a class="headerlink" href="#audit-log-exports" title="Permanent link">&para;</a></h3>
 <p>CloudIQ's audit log records user logins, configuration changes, and API activity. The retention window in the CloudIQ portal is limited. Export the audit log regularly and retain the exports per your organisation's security policy (typically 90 days minimum, 12 months for PCI or HIPAA environments).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Export audit log via CloudIQ portal</span>

@@ -3906,6 +3906,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Architecture Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Configure Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-assign-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Assign Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4347,39 +4375,37 @@
 │    Compatibility    = Check RP4VM compatibility matrix; ESXi version must match supported list        │
 │    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>!!! note &quot;RPA Discovery&quot;
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    Deployment Manager discovers RPAs via broadcast on the management subnet. Ensure the management station is Layer 2 adjacent to the RPAs, or configure the RPA management IPs statically via the RPA front-panel LCD before running the wizard if the broadcast does not reach them.
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>### Step 3 — Configure Cluster
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Within the Deployment Manager wizard:
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>1. **Discover RPAs** — the wizard scans and lists all unconfigured RPAs found on the subnet.
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>2. **Assign cluster management IP** — static IP, shared by the cluster (VIP-style failover).
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>3. **Assign per-RPA IPs** — management, WAN, and (if applicable) iSCSI IPs per node.
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>4. **Configure NTP** — enter NTP server IPs; wizard verifies synchronisation.
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>5. **Configure DNS** — enter DNS server IPs and domain suffix.
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>6. **Set cluster name** — use the format `RP-&lt;site&gt;-CLUSTER-&lt;number&gt;` (e.g., `RP-DC1-CLUSTER-01`).
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>7. **Pair sites** — repeat wizard for Site B cluster, then link the two clusters.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>!!! warning &quot;WAN Latency&quot;
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    RecoverPoint synchronous replication (CDP) requires WAN RTT &lt; 5 ms for predictable RPO=0 performance. For higher latency links, use CLR (Continuous Long-distance Replication) asynchronous mode and size journals accordingly.
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>### Step 4 — Assign Storage
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>After cluster configuration, present the repository volume and gatekeeper devices to the RPAs using the array&#39;s masking/mapping tools:
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>```bash
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># On PowerMax — create a masking view for RPAs (Solutions Enabler example)
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>symaccess -sid &lt;SYMID&gt; create view -name MV_RPA_DC1 \
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  -sg SG_RPA_DC1 \
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  -pg PG_RPA_DC1_FC \
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  -host IG_RPA_DC1
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a># Verify gatekeepers are visible from boxmgmt
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>boxmgmt storage list_gks
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<div class="admonition note">
+<p class="admonition-title">RPA Discovery</p>
+<p>Deployment Manager discovers RPAs via broadcast on the management subnet. Ensure the management station is Layer 2 adjacent to the RPAs, or configure the RPA management IPs statically via the RPA front-panel LCD before running the wizard if the broadcast does not reach them.</p>
+</div>
+<h3 id="step-3-configure-cluster">Step 3 — Configure Cluster<a class="headerlink" href="#step-3-configure-cluster" title="Permanent link">&para;</a></h3>
+<p>Within the Deployment Manager wizard:</p>
+<ol>
+<li><strong>Discover RPAs</strong> — the wizard scans and lists all unconfigured RPAs found on the subnet.</li>
+<li><strong>Assign cluster management IP</strong> — static IP, shared by the cluster (VIP-style failover).</li>
+<li><strong>Assign per-RPA IPs</strong> — management, WAN, and (if applicable) iSCSI IPs per node.</li>
+<li><strong>Configure NTP</strong> — enter NTP server IPs; wizard verifies synchronisation.</li>
+<li><strong>Configure DNS</strong> — enter DNS server IPs and domain suffix.</li>
+<li><strong>Set cluster name</strong> — use the format <code>RP-&lt;site&gt;-CLUSTER-&lt;number&gt;</code> (e.g., <code>RP-DC1-CLUSTER-01</code>).</li>
+<li><strong>Pair sites</strong> — repeat wizard for Site B cluster, then link the two clusters.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">WAN Latency</p>
+<p>RecoverPoint synchronous replication (CDP) requires WAN RTT &lt; 5 ms for predictable RPO=0 performance. For higher latency links, use CLR (Continuous Long-distance Replication) asynchronous mode and size journals accordingly.</p>
+</div>
+<h3 id="step-4-assign-storage">Step 4 — Assign Storage<a class="headerlink" href="#step-4-assign-storage" title="Permanent link">&para;</a></h3>
+<p>After cluster configuration, present the repository volume and gatekeeper devices to the RPAs using the array's masking/mapping tools:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On PowerMax — create a masking view for RPAs (Solutions Enabler example)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symaccess<span class="w"> </span>-sid<span class="w"> </span>&lt;SYMID&gt;<span class="w"> </span>create<span class="w"> </span>view<span class="w"> </span>-name<span class="w"> </span>MV_RPA_DC1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-sg<span class="w"> </span>SG_RPA_DC1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-pg<span class="w"> </span>PG_RPA_DC1_FC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-host<span class="w"> </span>IG_RPA_DC1
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify gatekeepers are visible from boxmgmt</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>boxmgmt<span class="w"> </span>storage<span class="w"> </span>list_gks
+</code></pre></div>
 <hr />
 <h2 id="splitter-types">Splitter Types<a class="headerlink" href="#splitter-types" title="Permanent link">&para;</a></h2>
 <p>RecoverPoint uses a write-splitter to intercept host I/O and send a copy to the RPA for journal-based replication. Three splitter architectures are supported:</p>

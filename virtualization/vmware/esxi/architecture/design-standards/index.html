@@ -4280,6 +4280,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#bios-uefi-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BIOS / UEFI Baseline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmkernel-adapter-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMkernel Adapter Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ntp-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4606,48 +4628,111 @@
 │  N+1     = cluster design with capacity to lose 1 host without VM impact                              │
 │  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## BIOS / UEFI Baseline
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Configure the following on all physical hosts before installing ESXi:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Setting | Required Value | Reason |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|---|
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Hyperthreading | Enabled | Required for NUMA-aware scheduling |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Power Policy | High Performance | Prevent CPU throttling under load |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| C-States | Disabled or C1 only | Reduce latency jitter for VMs |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| IOMMU (VT-d / AMD-Vi) | Enabled | Required for DirectPath I/O (SR-IOV, GPU passthrough) |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Secure Boot | Enabled | Required for TPM 2.0 attestation |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| TPM 2.0 | Enabled | Host attestation; vSphere 7.0+ feature |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Serial Port | Disabled | Reduce attack surface |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| PXE Boot on management NIC | Disabled (unless Auto Deploy) | Prevent unintended re-provision |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| IPMI / iDRAC / iLO | Enabled, on dedicated OOB NIC | Out-of-band management |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>---
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>## VMkernel Adapter Layout
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Adapter | Service | MTU | Subnet |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|---|---|---|---|
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| vmk0 | Management | 1500 | Mgmt VLAN /24 |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| vmk1 | vMotion | 9000 | vMotion VLAN /24 |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| vmk2 | vSAN | 9000 | vSAN VLAN /24 |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>| vmk3 | NFS / iSCSI | 9000 | Storage VLAN /24 |
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>Verify MTU end-to-end:
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>```bash
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>vmkping -I vmk2 -d -s 8972 &lt;target-IP&gt;
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># -d = don&#39;t fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.</p>
+<hr />
+<h2 id="bios-uefi-baseline">BIOS / UEFI Baseline<a class="headerlink" href="#bios-uefi-baseline" title="Permanent link">&para;</a></h2>
+<p>Configure the following on all physical hosts before installing ESXi:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Required Value</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hyperthreading</td>
+<td>Enabled</td>
+<td>Required for NUMA-aware scheduling</td>
+</tr>
+<tr>
+<td>Power Policy</td>
+<td>High Performance</td>
+<td>Prevent CPU throttling under load</td>
+</tr>
+<tr>
+<td>C-States</td>
+<td>Disabled or C1 only</td>
+<td>Reduce latency jitter for VMs</td>
+</tr>
+<tr>
+<td>IOMMU (VT-d / AMD-Vi)</td>
+<td>Enabled</td>
+<td>Required for DirectPath I/O (SR-IOV, GPU passthrough)</td>
+</tr>
+<tr>
+<td>Secure Boot</td>
+<td>Enabled</td>
+<td>Required for TPM 2.0 attestation</td>
+</tr>
+<tr>
+<td>TPM 2.0</td>
+<td>Enabled</td>
+<td>Host attestation; vSphere 7.0+ feature</td>
+</tr>
+<tr>
+<td>Serial Port</td>
+<td>Disabled</td>
+<td>Reduce attack surface</td>
+</tr>
+<tr>
+<td>PXE Boot on management NIC</td>
+<td>Disabled (unless Auto Deploy)</td>
+<td>Prevent unintended re-provision</td>
+</tr>
+<tr>
+<td>IPMI / iDRAC / iLO</td>
+<td>Enabled, on dedicated OOB NIC</td>
+<td>Out-of-band management</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="vmkernel-adapter-layout">VMkernel Adapter Layout<a class="headerlink" href="#vmkernel-adapter-layout" title="Permanent link">&para;</a></h2>
+<p>Standard vmkernel layout for cluster hosts. All adapters are configured on the vDS:</p>
+<table>
+<thead>
+<tr>
+<th>Adapter</th>
+<th>Service</th>
+<th>MTU</th>
+<th>Subnet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vmk0</td>
+<td>Management</td>
+<td>1500</td>
+<td>Mgmt VLAN /24</td>
+</tr>
+<tr>
+<td>vmk1</td>
+<td>vMotion</td>
+<td>9000</td>
+<td>vMotion VLAN /24</td>
+</tr>
+<tr>
+<td>vmk2</td>
+<td>vSAN</td>
+<td>9000</td>
+<td>vSAN VLAN /24</td>
+</tr>
+<tr>
+<td>vmk3</td>
+<td>NFS / iSCSI</td>
+<td>9000</td>
+<td>Storage VLAN /24</td>
+</tr>
+</tbody>
+</table>
+<p>Jumbo frames (MTU 9000) require matching configuration on physical switch ports and upstream switches for storage and vMotion traffic.</p>
+<p>Verify MTU end-to-end:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;target-IP&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># -d = don&#39;t fragment, -s = payload size (8972 = 9000 - 28 byte IP+UDP header)</span>
+</code></pre></div>
 <hr />
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
 <p>All ESXi hosts must synchronise to the same NTP sources as vCenter. Clock skew &gt; 5 minutes causes authentication failures.</p>

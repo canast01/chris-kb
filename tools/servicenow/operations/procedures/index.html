@@ -3337,6 +3337,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#priority-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sla-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SLA Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#assignment-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3802,33 +3824,63 @@
 │  Revoke sess  = user.invalidateSessions() clears active login tokens                                  │
 │  Role inherit = group role automatically applies to all group members                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Priority Matrix
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Priority = f(Impact, Urgency)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| | Urgency 1 (Critical) | Urgency 2 (High) | Urgency 3 (Medium) | Urgency 4 (Low) |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|--|---------------------|-----------------|-------------------|----------------|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Impact 1 (Enterprise) | P1 | P2 | P2 | P3 |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Impact 2 (Department) | P2 | P2 | P3 | P3 |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Impact 3 (Group) | P2 | P3 | P3 | P4 |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Impact 4 (Individual) | P3 | P3 | P4 | P4 |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## SLA Targets
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```bash
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Query SLA records for an incident
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl -u user:token -G \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  &quot;https://your-instance.service-now.com/api/now/table/task_sla&quot; \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  --data-urlencode &#39;sysparm_query=task.number=INC0012345&#39; \
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  --data-urlencode &#39;sysparm_fields=sla.name,has_breached,time_left,stop_time&#39;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># List all breached SLAs
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>curl -u user:token -G \
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;https://your-instance.service-now.com/api/now/table/task_sla&quot; \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  --data-urlencode &#39;sysparm_query=has_breached=true^task.active=true&#39; \
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  --data-urlencode &#39;sysparm_fields=task.number,sla.name,stage&#39;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="priority-matrix">Priority Matrix<a class="headerlink" href="#priority-matrix" title="Permanent link">&para;</a></h2>
+<p>Priority = f(Impact, Urgency)</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Urgency 1 (Critical)</th>
+<th>Urgency 2 (High)</th>
+<th>Urgency 3 (Medium)</th>
+<th>Urgency 4 (Low)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Impact 1 (Enterprise)</td>
+<td>P1</td>
+<td>P2</td>
+<td>P2</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Impact 2 (Department)</td>
+<td>P2</td>
+<td>P2</td>
+<td>P3</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Impact 3 (Group)</td>
+<td>P2</td>
+<td>P3</td>
+<td>P3</td>
+<td>P4</td>
+</tr>
+<tr>
+<td>Impact 4 (Individual)</td>
+<td>P3</td>
+<td>P3</td>
+<td>P4</td>
+<td>P4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sla-targets">SLA Targets<a class="headerlink" href="#sla-targets" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Query SLA records for an incident</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/task_sla&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=task.number=INC0012345&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=sla.name,has_breached,time_left,stop_time&#39;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># List all breached SLAs</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-G<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.service-now.com/api/now/table/task_sla&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_query=has_breached=true^task.active=true&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s1">&#39;sysparm_fields=task.number,sla.name,stage&#39;</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>

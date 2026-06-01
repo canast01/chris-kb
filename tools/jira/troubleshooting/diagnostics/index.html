@@ -3149,6 +3149,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Diagnostic Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-parsing-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Parsing Commands
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3677,42 +3694,40 @@
 │  free -h        = system memory; check if OS is swapping under memory pressure                        │
 │  df -h          = disk usage; alert if JIRA_HOME volume exceeds 80% full                              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Log Parsing Commands
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># --- Error summary for today ---
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>LOG=/opt/atlassian/jira/logs/atlassian-jira.log
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>TODAY=$(date +%Y-%m-%d)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>grep &quot;^${TODAY}&quot; &quot;${LOG}&quot; | grep &quot;ERROR&quot; \
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  | sed &#39;s/.*ERROR \[.*\] //&#39; \
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  | sort | uniq -c | sort -rn | head -20
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># --- Extract unique error classes ---
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>grep &quot;^${TODAY}&quot; &quot;${LOG}&quot; | grep &quot;ERROR&quot; \
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  | grep -oE &#39;[A-Za-z]+Exception|[A-Za-z]+Error&#39; \
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>  | sort | uniq -c | sort -rn
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># --- Response time analysis from access log ---
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ACCESS_LOG=/opt/atlassian/jira/logs/localhost_access_log.$(date +%Y-%m-%d).txt
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>awk &#39;{print $NF}&#39; &quot;${ACCESS_LOG}&quot; \
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  | awk &#39;{sum+=$1; count++; if($1&gt;3000) slow++} END {
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>      printf &quot;Total requests: %d\n&quot;, count;
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>      printf &quot;Avg response: %.0fms\n&quot;, sum/count;
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>      printf &quot;Requests &gt; 3s: %d\n&quot;, slow
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    }&#39;
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># --- Find slowest URLs ---
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>awk &#39;{print $NF, $7}&#39; &quot;${ACCESS_LOG}&quot; \
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>  | sort -rn | head -20
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="log-parsing-commands">Log Parsing Commands<a class="headerlink" href="#log-parsing-commands" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># --- Error summary for today ---</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">LOG</span><span class="o">=</span>/opt/atlassian/jira/logs/atlassian-jira.log
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">TODAY</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="si">${</span><span class="nv">TODAY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/.*ERROR \[.*\] //&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># --- Extract unique error classes ---</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="si">${</span><span class="nv">TODAY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-oE<span class="w"> </span><span class="s1">&#39;[A-Za-z]+Exception|[A-Za-z]+Error&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>uniq<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># --- Response time analysis from access log ---</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nv">ACCESS_LOG</span><span class="o">=</span>/opt/atlassian/jira/logs/localhost_access_log.<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.txt
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ACCESS_LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{sum+=$1; count++; if($1&gt;3000) slow++} END {</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="s1">      printf &quot;Total requests: %d\n&quot;, count;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="s1">      printf &quot;Avg response: %.0fms\n&quot;, sum/count;</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="s1">      printf &quot;Requests &gt; 3s: %d\n&quot;, slow</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="s1">    }&#39;</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="c1"># --- Find slowest URLs ---</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>awk<span class="w"> </span><span class="s1">&#39;{print $NF, $7}&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">ACCESS_LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rn<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># --- LDAP errors today ---</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="si">${</span><span class="nv">TODAY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ldap\|cwd&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a># --- LDAP errors today ---
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>grep &quot;^${TODAY}&quot; &quot;${LOG}&quot; | grep -i &quot;ldap\|cwd&quot; | grep -i &quot;error\|warn&quot;
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a># --- Plugin errors today ---
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>grep &quot;^${TODAY}&quot; &quot;${LOG}&quot; | grep -i &quot;plugin\|addon&quot; | grep -i &quot;error&quot;
-</code></pre></div></p>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># --- Plugin errors today ---</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>grep<span class="w"> </span><span class="s2">&quot;^</span><span class="si">${</span><span class="nv">TODAY</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LOG</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|addon&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="jvm-heap-analysis">JVM Heap Analysis<a class="headerlink" href="#jvm-heap-analysis" title="Permanent link">&para;</a></h2>
 <h3 id="check-live-heap-usage">Check Live Heap Usage<a class="headerlink" href="#check-live-heap-usage" title="Permanent link">&para;</a></h3>

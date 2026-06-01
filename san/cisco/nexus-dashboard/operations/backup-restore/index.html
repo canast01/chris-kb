@@ -3520,6 +3520,56 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#post-restore-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Restore Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ndfc-zone-database-export-standalone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDFC Zone Database Export (Standalone)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="NDFC Zone Database Export (Standalone)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gui-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GUI Export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API Export
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3886,61 +3936,85 @@
 │  Certs re-issued= SSL certificates are regenerated fresh on restore; not restored                     │
 │  Version match  = Restore requires identical ND software version as backup source                     │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**If the ND management IP changed (new hardware):**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Update DNS records for the cluster management FQDN
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Update any switch-side SNMP trap destinations that send traps to ND
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Post-Restore Validation
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>If the ND management IP changed (new hardware):</strong>
+- Update DNS records for the cluster management FQDN
+- Update any switch-side SNMP trap destinations that send traps to ND</p>
+<h3 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All ND nodes healthy</td>
+<td><code>acs health</code> or Admin Console &gt; Nodes</td>
+</tr>
+<tr>
+<td>NDFC fabrics populated</td>
+<td>NDFC &gt; Fabrics — all switches visible</td>
+</tr>
+<tr>
+<td>Zone sets intact</td>
+<td>NDFC &gt; Zoning — all zone sets present</td>
+</tr>
+<tr>
+<td>Device aliases intact</td>
+<td>NDFC &gt; Device Alias</td>
+</tr>
+<tr>
+<td>LDAP authentication working</td>
+<td>Login with an AD account</td>
+</tr>
+<tr>
+<td>NDI anomalies visible (if NDI installed)</td>
+<td>NDI &gt; Dashboard</td>
+</tr>
+<tr>
+<td>Site registrations present</td>
+<td>Admin Console &gt; Infrastructure &gt; Sites</td>
+</tr>
+<tr>
+<td>TLS certificate valid</td>
+<td>Browser — no cert warning</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ndfc-zone-database-export-standalone">NDFC Zone Database Export (Standalone)<a class="headerlink" href="#ndfc-zone-database-export-standalone" title="Permanent link">&para;</a></h2>
+<p>In addition to cluster-level backups, export NDFC zone databases before every zone change:</p>
+<h3 id="gui-export">GUI Export<a class="headerlink" href="#gui-export" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Navigate to <strong>NDFC &gt; Fabrics &gt; [Fabric Name] &gt; Actions &gt; Export</strong>.</li>
+<li>Select export format: <strong>JSON</strong> (native NDFC format).</li>
+<li>Save with a timestamp: <code>DC1-FABRIC-A-zones-20260508.json</code>.</li>
+<li>Attach to the change management ticket.</li>
+</ol>
+<h3 id="rest-api-export">REST API Export<a class="headerlink" href="#rest-api-export" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate to ND</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://nd-dc1.corp.example.com/login<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;userName&quot;:&quot;svc-automation&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;local&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Check | Method |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| All ND nodes healthy | `acs health` or Admin Console &gt; Nodes |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| NDFC fabrics populated | NDFC &gt; Fabrics — all switches visible |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Zone sets intact | NDFC &gt; Zoning — all zone sets present |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Device aliases intact | NDFC &gt; Device Alias |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| LDAP authentication working | Login with an AD account |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| NDI anomalies visible (if NDI installed) | NDI &gt; Dashboard |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Site registrations present | Admin Console &gt; Infrastructure &gt; Sites |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| TLS certificate valid | Browser — no cert warning |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>---
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>## NDFC Zone Database Export (Standalone)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>In addition to cluster-level backups, export NDFC zone databases before every zone change:
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>### GUI Export
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>1. Navigate to **NDFC &gt; Fabrics &gt; [Fabric Name] &gt; Actions &gt; Export**.
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>2. Select export format: **JSON** (native NDFC format).
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>3. Save with a timestamp: `DC1-FABRIC-A-zones-20260508.json`.
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>4. Attach to the change management ticket.
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>### REST API Export
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>```bash
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a># Authenticate to ND
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>TOKEN=$(curl -sk -X POST https://nd-dc1.corp.example.com/login \
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  -d &#39;{&quot;userName&quot;:&quot;svc-automation&quot;,&quot;userPasswd&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:&quot;local&quot;}&#39; \
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  | python3 -c &quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;)
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># Get fabric list
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>FABRICS=$(curl -sk \
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>  &quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/fabrics&quot; \
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>  -H &quot;Authorization: Bearer ${TOKEN}&quot; \
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  | python3 -c &quot;import sys,json; [print(f[&#39;fabricName&#39;]) for f in json.load(sys.stdin)[&#39;DATA&#39;]]&quot;)
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a># Export zone database per fabric
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>for FABRIC in ${FABRICS}; do
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>  curl -sk \
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>    &quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/zoning?fabricName=${FABRIC}&quot; \
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>    -H &quot;Authorization: Bearer ${TOKEN}&quot; \
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>    -o &quot;${FABRIC}-zones-$(date +%Y%m%d).json&quot;
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>  echo &quot;Exported: ${FABRIC}&quot;
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>done
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get fabric list</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">FABRICS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/fabrics&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; [print(f[&#39;fabricName&#39;]) for f in json.load(sys.stdin)[&#39;DATA&#39;]]&quot;</span><span class="k">)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Export zone database per fabric</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">for</span><span class="w"> </span>FABRIC<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="si">${</span><span class="nv">FABRICS</span><span class="si">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="s2">&quot;https://nd-dc1.corp.example.com/appcenter/cisco/ndfc/api/v1/san/zoning?fabricName=</span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span>-o<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">-zones-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.json&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exported: </span><span class="si">${</span><span class="nv">FABRIC</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">done</span>
+</code></pre></div>
 <hr />
 <h2 id="backup-retention-policy">Backup Retention Policy<a class="headerlink" href="#backup-retention-policy" title="Permanent link">&para;</a></h2>
 <table>

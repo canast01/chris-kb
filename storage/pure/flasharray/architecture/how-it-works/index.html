@@ -3496,6 +3496,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#activecluster-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ActiveCluster (Pods)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#protection-groups" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3799,19 +3810,16 @@
 │  Zero-block    = Pattern-detected zero blocks stored as metadata only; highest dedup ratio            │
 │  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## ActiveCluster (Pods)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>A pod is the logical container for ActiveCluster synchronous replication. Volumes inside a pod are transparently accessible from both arrays with zero RPO — Purity synchronously replicates every write to the remote array before acknowledging to the host. A Purity Mediator tiebreaker service arbitrates split-brain events.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>purepod create oracle-pod
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>purepod add --array site-b-fa-01 oracle-pod   # stretch to remote array
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>purevol create --size 4T oracle-pod::oracle-data-01
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>purepod list                                   # show pods and stretch status
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>purepod list --mediator oracle-pod             # mediator connectivity status
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>purepod list --failover-preference oracle-pod
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="activecluster-pods">ActiveCluster (Pods)<a class="headerlink" href="#activecluster-pods" title="Permanent link">&para;</a></h2>
+<p>A pod is the logical container for ActiveCluster synchronous replication. Volumes inside a pod are transparently accessible from both arrays with zero RPO — Purity synchronously replicates every write to the remote array before acknowledging to the host. A Purity Mediator tiebreaker service arbitrates split-brain events.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>purepod<span class="w"> </span>create<span class="w"> </span>oracle-pod
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>purepod<span class="w"> </span>add<span class="w"> </span>--array<span class="w"> </span>site-b-fa-01<span class="w"> </span>oracle-pod<span class="w">   </span><span class="c1"># stretch to remote array</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>purevol<span class="w"> </span>create<span class="w"> </span>--size<span class="w"> </span>4T<span class="w"> </span>oracle-pod::oracle-data-01
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>purepod<span class="w"> </span>list<span class="w">                                   </span><span class="c1"># show pods and stretch status</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>purepod<span class="w"> </span>list<span class="w"> </span>--mediator<span class="w"> </span>oracle-pod<span class="w">             </span><span class="c1"># mediator connectivity status</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>purepod<span class="w"> </span>list<span class="w"> </span>--failover-preference<span class="w"> </span>oracle-pod
+</code></pre></div>
 <h2 id="protection-groups">Protection Groups<a class="headerlink" href="#protection-groups" title="Permanent link">&para;</a></h2>
 <p>Protection groups coordinate crash-consistent snapshots and async replication across multiple volumes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purepgroup<span class="w"> </span>create<span class="w"> </span>prod-oracle-pg

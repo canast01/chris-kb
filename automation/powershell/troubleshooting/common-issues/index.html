@@ -3278,6 +3278,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#powershell-remoting-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Remoting Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#debugging-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3512,31 +3523,29 @@
 │   │      Cause A: installed under different user scope → fix: Install-Module -Scope AllUsers      │   │
 │   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## PowerShell Remoting Issues
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Enable remoting on a target machine (run as admin on the target)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Enable-PSRemoting -Force -SkipNetworkProfileCheck
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Test connectivity before running commands
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Test-WSMan -ComputerName server01
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Test-NetConnection -ComputerName server01 -Port 5985
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Test basic remote session
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>$session = New-PSSession -ComputerName server01 -Credential (Get-Credential)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Invoke-Command -Session $session -ScriptBlock { hostname }
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Remove-PSSession $session
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Diagnose firewall — WinRM ports
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># HTTP:  5985
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># HTTPS: 5986
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Get-NetFirewallRule -DisplayName &quot;Windows Remote Management*&quot; | Select-Object DisplayName, Enabled
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Use SSL for secure remoting
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>$sessionOption = New-PSSessionOption -SkipCACheck -SkipCNCheck
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>New-PSSession -ComputerName server01 -UseSSL -SessionOption $sessionOption
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="powershell-remoting-issues">PowerShell Remoting Issues<a class="headerlink" href="#powershell-remoting-issues" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Enable remoting on a target machine (run as admin on the target)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span> <span class="n">-SkipNetworkProfileCheck</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Test connectivity before running commands</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="n">server01</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Port</span> <span class="n">5985</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Test basic remote session</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="n">hostname</span> <span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Diagnose firewall — WinRM ports</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># HTTP:  5985</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># HTTPS: 5986</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Get-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;Windows Remote Management*&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DisplayName</span><span class="p">,</span> <span class="n">Enabled</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c"># Use SSL for secure remoting</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nv">$sessionOption</span> <span class="p">=</span> <span class="nb">New-PSSessionOption</span> <span class="n">-SkipCACheck</span> <span class="n">-SkipCNCheck</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="n">server01</span> <span class="n">-UseSSL</span> <span class="n">-SessionOption</span> <span class="nv">$sessionOption</span>
+</code></pre></div>
 <h2 id="debugging-scripts">Debugging Scripts<a class="headerlink" href="#debugging-scripts" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Set strict mode to catch undefined variables and functions</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Set-StrictMode</span> <span class="n">-Version</span> <span class="n">Latest</span>

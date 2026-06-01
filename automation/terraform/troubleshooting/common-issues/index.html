@@ -3220,6 +3220,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#refresh-and-reconciliation-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refresh and Reconciliation Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#workspace-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3448,22 +3459,20 @@
 │   │        Fix: identify resource ID from error → terraform import resource.type.name <id>        │   │
 │   │  After import: terraform plan should show no changes if config matches the existing resource  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Refresh and Reconciliation Issues
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Manually refresh state from real infrastructure
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform apply -refresh-only
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="refresh-and-reconciliation-issues">Refresh and Reconciliation Issues<a class="headerlink" href="#refresh-and-reconciliation-issues" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Manually refresh state from real infrastructure</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-refresh-only
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Inspect what refresh would change</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-refresh<span class="o">=</span><span class="nb">true</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Inspect what refresh would change
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform plan -refresh=true
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Skip refresh when you know state is accurate (speeds up plan)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-refresh<span class="o">=</span><span class="nb">false</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Skip refresh when you know state is accurate (speeds up plan)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform plan -refresh=false
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Debug specific resource attributes
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform state show aws_instance.web01 | grep -i subnet
-</code></pre></div></p>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Debug specific resource attributes</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_instance.web01<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>subnet
+</code></pre></div>
 <h2 id="workspace-issues">Workspace Issues<a class="headerlink" href="#workspace-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check current workspace</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show

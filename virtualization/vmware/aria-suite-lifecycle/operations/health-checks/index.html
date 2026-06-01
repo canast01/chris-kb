@@ -4454,6 +4454,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#cluster-node-health-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Node Health via API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#locker-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4748,32 +4759,28 @@
 │  Pre-check Result    = LCM validation output; review before any upgrade action                        │
 │  Logscraper          = Run after health check failure to collect diagnostic logs                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>In the LCM UI:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- **Lifecycle Operations → Environments**: all environment cards should show green health indicators
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- **Locker → Certificates**: check for certificates expiring within 30 days
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- **Settings → My VMware**: verify bundle sync schedule last ran successfully
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>In the LCM UI:
+- <strong>Lifecycle Operations → Environments</strong>: all environment cards should show green health indicators
+- <strong>Locker → Certificates</strong>: check for certificates expiring within 30 days
+- <strong>Settings → My VMware</strong>: verify bundle sync schedule last ran successfully</p>
+<hr />
+<h2 id="cluster-node-health-via-api">Cluster Node Health via API<a class="headerlink" href="#cluster-node-health-via-api" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Authenticate and get a session token</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>---
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## Cluster Node Health via API
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Authenticate and get a session token
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>TOKEN=$(curl -sk -X POST &quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot; \
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  -d &#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39; | jq -r &#39;.token&#39;)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># List all environments and their health
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>curl -sk -H &quot;x-xenon-auth-token: $TOKEN&quot; \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments&quot; | \
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  jq &#39;.[] | {name: .environmentName, health: .environmentHealth}&#39;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Get all running requests (watch for stuck workflows)
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>curl -sk -H &quot;x-xenon-auth-token: $TOKEN&quot; \
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  &quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?state=RUNNING&quot; | \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  jq &#39;.[] | {id: .requestId, type: .requestType, startTime: .startTime}&#39;
-</code></pre></div></p>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># List all environments and their health</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name: .environmentName, health: .environmentHealth}&#39;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Get all running requests (watch for stuck workflows)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/requests?state=RUNNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {id: .requestId, type: .requestType, startTime: .startTime}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="locker-health-checks">Locker Health Checks<a class="headerlink" href="#locker-health-checks" title="Permanent link">&para;</a></h2>
 <p>The Locker stores certificates, passwords, and licences. Run these checks weekly and before any upgrade.</p>

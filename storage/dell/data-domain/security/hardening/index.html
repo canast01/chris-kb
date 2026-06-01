@@ -4042,6 +4042,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ssh-and-remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH and Remote Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#login-banner" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4430,31 +4441,30 @@
 │    OOB network   = Out-of-band management VLAN; DD management IP should only route from OOB           │
 │    Audit logging = DDOS logs all admin commands with user, timestamp, and command text                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### SSH and Remote Access
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- [ ] Disable SSH root login
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- [ ] Restrict SSH access to the admin jump host or bastion server IP only
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- [ ] Disable interactive SSH password authentication if key-based auth is configured
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- [ ] Set session idle timeout to 15 minutes
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- [ ] Disable the HTTP (non-TLS) management interface — enforce HTTPS only
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```bash
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Disable SSH root login
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>adminaccess set ssh root disabled
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="ssh-and-remote-access">SSH and Remote Access<a class="headerlink" href="#ssh-and-remote-access" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] Disable SSH root login</li>
+<li>[ ] Restrict SSH access to the admin jump host or bastion server IP only</li>
+<li>[ ] Disable interactive SSH password authentication if key-based auth is configured</li>
+<li>[ ] Set session idle timeout to 15 minutes</li>
+<li>[ ] Disable the HTTP (non-TLS) management interface — enforce HTTPS only</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Disable SSH root login</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ssh<span class="w"> </span>root<span class="w"> </span>disabled
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Restrict SSH to specific management IPs (repeat for each allowed host)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>adminaccess<span class="w"> </span>add<span class="w"> </span>ssh<span class="w"> </span>allowed-hosts<span class="w"> </span>&lt;jump-host-ip&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set session idle timeout (minutes)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>idle-timeout<span class="w"> </span><span class="m">15</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Disable plain HTTP; enforce HTTPS only</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>adminaccess<span class="w"> </span><span class="nb">set</span><span class="w"> </span>http-auth<span class="w"> </span>disabled
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Restrict SSH to specific management IPs (repeat for each allowed host)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>adminaccess add ssh allowed-hosts &lt;jump-host-ip&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Set session idle timeout (minutes)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>adminaccess set idle-timeout 15
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Disable plain HTTP; enforce HTTPS only
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>adminaccess set http-auth disabled
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Verify current adminaccess settings
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>adminaccess show
-</code></pre></div></p>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Verify current adminaccess settings</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>adminaccess<span class="w"> </span>show
+</code></pre></div>
 <h3 id="login-banner">Login Banner<a class="headerlink" href="#login-banner" title="Permanent link">&para;</a></h3>
 <p>A legal notice banner must be displayed before login to satisfy compliance requirements (PCI-DSS 8.6, CIS benchmarks).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set a login banner</span>

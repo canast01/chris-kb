@@ -3254,6 +3254,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#event-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#disk-and-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3566,25 +3577,23 @@
 │  nltest       = network logon test; /sc_query verifies secure channel to DC                           │
 │  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Event Logs
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Query event log (classic)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-EventLog -LogName System -EntryType Error -Newest 50
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-EventLog -LogName Application -EntryType Error,Warning -After (Get-Date).AddHours(-24)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Get-EventLog -LogName Security -InstanceId 4624,4625 -Newest 100
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Query using Get-WinEvent (more flexible)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-WinEvent -LogName System -MaxEvents 50
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-WinEvent -FilterHashtable @{LogName=&#39;System&#39;; Level=2; StartTime=(Get-Date).AddHours(-24)}
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="event-logs">Event Logs<a class="headerlink" href="#event-logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Query event log (classic)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-EntryType</span> <span class="n">Error</span> <span class="n">-Newest</span> <span class="n">50</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span><span class="n">Warning</span> <span class="n">-After</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="n">-InstanceId</span> <span class="n">4624</span><span class="p">,</span><span class="n">4625</span> <span class="n">-Newest</span> <span class="n">100</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Query using Get-WinEvent (more flexible)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="n">-MaxEvents</span> <span class="n">50</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)}</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Export event log</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">System</span> <span class="p">|</span> <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Temp</span><span class="p">\</span><span class="n">SystemEvents</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Export event log
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-EventLog -LogName System | Export-Csv C:\Temp\SystemEvents.csv -NoTypeInformation
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Clear event log (requires admin)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Clear-EventLog -LogName Application
-</code></pre></div></p>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Clear event log (requires admin)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Clear-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span>
+</code></pre></div>
 <h2 id="disk-and-storage">Disk and Storage<a class="headerlink" href="#disk-and-storage" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Physical disks</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">PartitionStyle</span><span class="p">,</span> <span class="n">OperationalStatus</span>

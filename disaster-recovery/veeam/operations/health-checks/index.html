@@ -3899,6 +3899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#sobr-capacity-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SOBR Capacity Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#tape-check-if-applicable" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4205,15 +4216,12 @@
 │  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### SOBR Capacity Check
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>In **Backup Infrastructure &gt; Scale-Out Repositories**, verify that no extent shows **Sealed** or **Unavailable** status. Check the free space on each performance tier extent.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Repository free space — all repos including SOBR extents
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Get-VBRRepository | Select-Object Name, @{N=&quot;FreeGB&quot;;E={[math]::Round($_.FreeSpace/1GB,1)}}, @{N=&quot;TotalGB&quot;;E={[math]::Round($_.TotalSpace/1GB,1)}}
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="sobr-capacity-check">SOBR Capacity Check<a class="headerlink" href="#sobr-capacity-check" title="Permanent link">&para;</a></h3>
+<p>In <strong>Backup Infrastructure &gt; Scale-Out Repositories</strong>, verify that no extent shows <strong>Sealed</strong> or <strong>Unavailable</strong> status. Check the free space on each performance tier extent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Repository free space — all repos including SOBR extents</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+</code></pre></div>
 <p>Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).</p>
 <h3 id="tape-check-if-applicable">Tape Check (if applicable)<a class="headerlink" href="#tape-check-if-applicable" title="Permanent link">&para;</a></h3>
 <ul>

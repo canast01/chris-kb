@@ -3222,6 +3222,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Authentication Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-mapping-via-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Mapping via RADIUS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-radius-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test RADIUS Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3639,36 +3667,55 @@
 │  SSH key        = RSA/ECDSA key pair for passwordless admin SSH; stored in authorized_keys            │
 │  Session timeout= idle session termination; Fabric OS default 30 minutes inactivity                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Role Mapping via RADIUS
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>RADIUS users receive their FabricOS role from the RADIUS server via the VSA (Vendor-Specific Attribute) `Foundry-Privilege-Level` or a role-map configured on the switch.
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="role-mapping-via-radius">Role Mapping via RADIUS<a class="headerlink" href="#role-mapping-via-radius" title="Permanent link">&para;</a></h3>
+<p>RADIUS users receive their FabricOS role from the RADIUS server via the VSA (Vendor-Specific Attribute) <code>Foundry-Privilege-Level</code> or a role-map configured on the switch.</p>
+<p><strong>Brocade VSA (Vendor ID 1588):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+<th>FabricOS Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>2</td>
+<td><code>admin</code> — full access</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>3</td>
+<td><code>switchadmin</code> — switch operations</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>5</td>
+<td><code>zoneadmin</code> — zone management only</td>
+</tr>
+<tr>
+<td>Foundry-Privilege-Level</td>
+<td>6</td>
+<td><code>operator</code> — read-only</td>
+</tr>
+</tbody>
+</table>
+<p>Configure the RADIUS server (Microsoft NPS / FreeRADIUS) to return the VSA based on Active Directory group membership:</p>
+<ul>
+<li>AD Group: <code>SAN-Admins</code> → <code>Foundry-Privilege-Level = 2</code></li>
+<li>AD Group: <code>SAN-Operators</code> → <code>Foundry-Privilege-Level = 6</code></li>
+</ul>
+<h3 id="test-radius-authentication">Test RADIUS Authentication<a class="headerlink" href="#test-radius-authentication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Validate RADIUS connection and user authentication</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aaaconfig<span class="w"> </span>--validate<span class="w"> </span>-user<span class="w"> </span>&lt;test-username&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># The switch connects to the RADIUS server and authenticates — output shows SUCCESS or failure reason</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>**Brocade VSA (Vendor ID 1588):**
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Attribute | Value | FabricOS Role |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>|---|---|---|
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Foundry-Privilege-Level | 2 | `admin` — full access |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Foundry-Privilege-Level | 3 | `switchadmin` — switch operations |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Foundry-Privilege-Level | 5 | `zoneadmin` — zone management only |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Foundry-Privilege-Level | 6 | `operator` — read-only |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Configure the RADIUS server (Microsoft NPS / FreeRADIUS) to return the VSA based on Active Directory group membership:
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- AD Group: `SAN-Admins` → `Foundry-Privilege-Level = 2`
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>- AD Group: `SAN-Operators` → `Foundry-Privilege-Level = 6`
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>### Test RADIUS Authentication
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>```bash
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Validate RADIUS connection and user authentication
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>aaaconfig --validate -user &lt;test-username&gt;
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># The switch connects to the RADIUS server and authenticates — output shows SUCCESS or failure reason
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Show RADIUS server reachability (from switch)
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a># The switch must have IP connectivity to the RADIUS server on the management VLAN
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>ping &lt;radius-server-ip&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Show RADIUS server reachability (from switch)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># The switch must have IP connectivity to the RADIUS server on the management VLAN</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ping<span class="w"> </span>&lt;radius-server-ip&gt;
+</code></pre></div>
 <p>If RADIUS authentication fails, the fallback to <code>LOCAL</code> authentication ensures break-glass access remains available. Always test RADIUS before relying on it.</p>
 <hr />
 <h2 id="tacacs-authentication">TACACS+ Authentication<a class="headerlink" href="#tacacs-authentication" title="Permanent link">&para;</a></h2>

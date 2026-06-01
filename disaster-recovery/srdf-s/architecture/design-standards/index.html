@@ -3724,6 +3724,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#bandwidth-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bandwidth Sizing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#target-volume-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4035,21 +4046,16 @@
 │  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Examples:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- `RDFG-S-DC1DC2-DB-01`
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- `RDFG-S-DC1DC2-APP-01`
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- `RDFG-S-DC1DC2-WEB-01`
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>---
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>## Bandwidth Sizing
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```text
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Examples:
+- <code>RDFG-S-DC1DC2-DB-01</code>
+- <code>RDFG-S-DC1DC2-APP-01</code>
+- <code>RDFG-S-DC1DC2-WEB-01</code></p>
+<hr />
+<h2 id="bandwidth-sizing">Bandwidth Sizing<a class="headerlink" href="#bandwidth-sizing" title="Permanent link">&para;</a></h2>
+<p>Every host write is replicated synchronously — bandwidth must sustain peak write throughput without queueing.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Required bandwidth (MB/s) = peak_write_throughput_MB_s × 1.25
+</code></pre></div>
 <p>Where 1.25 = 25% headroom for burst absorption.</p>
 <p>Measure peak write throughput:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symstat<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-i<span class="w"> </span><span class="m">5</span><span class="w"> </span>-c<span class="w"> </span><span class="m">12</span><span class="w">   </span><span class="c1"># 5-second samples, 12 cycles = 1 minute</span>

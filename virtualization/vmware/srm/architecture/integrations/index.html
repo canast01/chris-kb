@@ -4280,6 +4280,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#storage-replication-adapter-sra-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Replication Adapter (SRA) Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Replication Adapter (SRA) Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sra-registration-and-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SRA Registration and Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sra-for-pure-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4289,8 +4312,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#sra-for-dell-powerstore-emc" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4298,6 +4321,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4714,41 +4742,35 @@
 │  Protection group= set of VMs protected by same replication and plan                                  │
 │  Test due alarm = SRM reminds when DR test is overdue                                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Re-pairing is required if either SRM Server&#39;s certificate is rotated (thumbprint changes invalidate the trust).
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Storage Replication Adapter (SRA) Integration
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SRAs are vendor-provided plugins that give SRM control over array-level replication. Each SRA implements a defined interface (XML-based API) that SRM calls to:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- **Discover** replicated devices (LUNs, volumes, datastores).
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- **Test failover** — create writable snapshots of replicated volumes without breaking replication.
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- **Failover** — promote replicated volumes to writable, break replication.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- **Reverse replication** — re-establish replication in the opposite direction for failback.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- **Query replication state** — check RPO compliance and replication health.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SRA binaries are installed on the SRM Server (Windows: `C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\&lt;vendor&gt;\`, appliance: `/opt/vmware/srm/storage/sra/&lt;vendor&gt;/`).
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>### SRA Registration and Testing
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>After installing an SRA:
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>1. In SRM UI → Array Managers → **Add Array Manager**.
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>2. Select the SRA type from the drop-down (populated from installed SRAs).
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>3. Enter array credentials (username, password, array management IP/hostname).
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>4. SRM calls the SRA&#39;s `discoverArrays` command to validate connectivity.
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>5. Assign array pair (protected site array ↔ recovery site array).
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>6. Scan for replicated devices.
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>```bash
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># From SRM appliance: list installed SRAs
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>ls -la /opt/vmware/srm/storage/sra/
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a># Check SRA log for errors after an array scan
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>tail -f /var/log/vmware/srm/srm-sra.log
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Re-pairing is required if either SRM Server's certificate is rotated (thumbprint changes invalidate the trust).</p>
+<hr />
+<h2 id="storage-replication-adapter-sra-integration">Storage Replication Adapter (SRA) Integration<a class="headerlink" href="#storage-replication-adapter-sra-integration" title="Permanent link">&para;</a></h2>
+<p>SRAs are vendor-provided plugins that give SRM control over array-level replication. Each SRA implements a defined interface (XML-based API) that SRM calls to:</p>
+<ul>
+<li><strong>Discover</strong> replicated devices (LUNs, volumes, datastores).</li>
+<li><strong>Test failover</strong> — create writable snapshots of replicated volumes without breaking replication.</li>
+<li><strong>Failover</strong> — promote replicated volumes to writable, break replication.</li>
+<li><strong>Reverse replication</strong> — re-establish replication in the opposite direction for failback.</li>
+<li><strong>Query replication state</strong> — check RPO compliance and replication health.</li>
+</ul>
+<p>SRA binaries are installed on the SRM Server (Windows: <code>C:\Program Files\VMware\VMware vCenter Site Recovery Manager\storage\sra\&lt;vendor&gt;\</code>, appliance: <code>/opt/vmware/srm/storage/sra/&lt;vendor&gt;/</code>).</p>
+<h3 id="sra-registration-and-testing">SRA Registration and Testing<a class="headerlink" href="#sra-registration-and-testing" title="Permanent link">&para;</a></h3>
+<p>After installing an SRA:</p>
+<ol>
+<li>In SRM UI → Array Managers → <strong>Add Array Manager</strong>.</li>
+<li>Select the SRA type from the drop-down (populated from installed SRAs).</li>
+<li>Enter array credentials (username, password, array management IP/hostname).</li>
+<li>SRM calls the SRA's <code>discoverArrays</code> command to validate connectivity.</li>
+<li>Assign array pair (protected site array ↔ recovery site array).</li>
+<li>Scan for replicated devices.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From SRM appliance: list installed SRAs</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/opt/vmware/srm/storage/sra/
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SRA log for errors after an array scan</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/srm/srm-sra.log
+</code></pre></div>
 <h3 id="sra-for-pure-storage">SRA for Pure Storage<a class="headerlink" href="#sra-for-pure-storage" title="Permanent link">&para;</a></h3>
 <p>Pure Storage FlashArray SRA is available from Pure Storage support portal.</p>
 <p><strong>Installation (SRM appliance):</strong></p>

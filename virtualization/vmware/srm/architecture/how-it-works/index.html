@@ -4292,6 +4292,28 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#priority-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ip-customization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IP Customization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#custom-command-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4681,30 +4703,26 @@
 │  Bubble network= isolated test network; no production routing                                         │
 │  Reprotect     = reverse replication direction after failover                                         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Priority Groups
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- VMs in **Priority 1** power on first. SRM waits for them to complete before moving to Priority 2.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Within a priority group, VMs start concurrently (subject to host resource limits).
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Maximum of 5 priority groups. If you need finer ordering, use pre/post steps with `Wait for heartbeat` or custom scripts.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Recovery Plan steps within a VM&#39;s sequence:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  1. Suspend or shut down VM at protected site (planned migration only)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  2. Storage operations (SRA: promote LUN / VR: finalize disk)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  3. Configure network (apply IP customization)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  4. Pre-power-on commands (optional)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  5. Power on VM
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  6. Post-power-on commands (optional, typically wait for VM tools heartbeat)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### IP Customization
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Two approaches:
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>**Subnet-level mapping** — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>```text
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>VM at 10.10.0.50       →  Recovers at 10.20.0.50
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="priority-groups">Priority Groups<a class="headerlink" href="#priority-groups" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VMs in <strong>Priority 1</strong> power on first. SRM waits for them to complete before moving to Priority 2.</li>
+<li>Within a priority group, VMs start concurrently (subject to host resource limits).</li>
+<li>Maximum of 5 priority groups. If you need finer ordering, use pre/post steps with <code>Wait for heartbeat</code> or custom scripts.</li>
+<li>Recovery Plan steps within a VM's sequence:</li>
+<li>Suspend or shut down VM at protected site (planned migration only)</li>
+<li>Storage operations (SRA: promote LUN / VR: finalize disk)</li>
+<li>Configure network (apply IP customization)</li>
+<li>Pre-power-on commands (optional)</li>
+<li>Power on VM</li>
+<li>Post-power-on commands (optional, typically wait for VM tools heartbeat)</li>
+</ul>
+<h3 id="ip-customization">IP Customization<a class="headerlink" href="#ip-customization" title="Permanent link">&para;</a></h3>
+<p>Two approaches:</p>
+<p><strong>Subnet-level mapping</strong> — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VM at 10.10.0.50       →  Recovers at 10.20.0.50
+</code></pre></div>
 <p><strong>Per-VM customization</strong> — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.</p>
 <p>IP customization is applied using the Guest OS customization engine (VMware Tools required). If the VM does not have VMware Tools running, customization is skipped and the VM retains its protected-site IP (may cause routing issues at recovery site).</p>
 <h3 id="custom-command-steps">Custom Command Steps<a class="headerlink" href="#custom-command-steps" title="Permanent link">&para;</a></h3>

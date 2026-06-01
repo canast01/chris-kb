@@ -3909,6 +3909,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#eol-and-platform-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EOL and Platform Tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#firmware-upgrade-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firmware Upgrade Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#srdfa-to-srdfs-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4168,50 +4190,67 @@
 │  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## EOL and Platform Tracking
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Platform | Status | Why it matters |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| VMAX3 (950F/850F) | End of Service Life — no new SRDF features; firmware-only support | No new SRDF/A features; plan migration before security support ends |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| PowerMax 2000 | Current — supported with latest HYPERMAX OS | Full feature set including SRDF/A adaptive copy and Metro |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| PowerMax 8000 | Current — supported with latest HYPERMAX OS | Full feature set; higher throughput for large SRDF groups |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| PowerMax 9500 | Current — newest generation | Latest microcode features; recommended for new SRDF/A deployments |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Track array firmware versions and SRDF license expiry dates in the CMDB. SRDF licenses are array-bound (node-locked to serial number); a controller board replacement requires license re-application via Dell Support.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>---
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>## Firmware Upgrade Sequence
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```mermaid
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>flowchart TD
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    preCheck[&quot;Pre-Check: All Pairs Consistent\nsymrdf -g dgname -sid sid query&quot;]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    suspend[&quot;Suspend SRDF/A\nsymrdf -g dgname -sid sid suspend -noprompt&quot;]
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    verifySuspended[&quot;Verify Suspended State\nsymrdf -g dgname -sid sid query&quot;]
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    nduSource[&quot;NDU on Source Array\n(Non-Disruptive — host I/O unaffected)&quot;]
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    nduTarget[&quot;NDU on Target Array&quot;]
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    resume[&quot;Resume SRDF/A\nsymrdf -g dgname -sid sid resume -noprompt&quot;]
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    monitorResync[&quot;Monitor Delta Set Backlog\n(Burst transmission expected)&quot;]
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    verifyConsistent[&quot;Verify Consistent State\nsymrdf -g dgname -sid sid query&quot;]
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    closeWindow[&quot;Close Change Window&quot;]
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    preCheck --&gt; suspend
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    suspend --&gt; verifySuspended
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    verifySuspended --&gt; nduSource
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    nduSource --&gt; nduTarget
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    nduTarget --&gt; resume
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    resume --&gt; monitorResync
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>    monitorResync --&gt; verifyConsistent
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    verifyConsistent --&gt; closeWindow
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    style preCheck fill:#2563eb,color:#fff
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    style closeWindow fill:#15803d,color:#fff
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>    style suspend fill:#b45309,color:#fff
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    style resume fill:#b45309,color:#fff
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="eol-and-platform-tracking">EOL and Platform Tracking<a class="headerlink" href="#eol-and-platform-tracking" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Status</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VMAX3 (950F/850F)</td>
+<td>End of Service Life — no new SRDF features; firmware-only support</td>
+<td>No new SRDF/A features; plan migration before security support ends</td>
+</tr>
+<tr>
+<td>PowerMax 2000</td>
+<td>Current — supported with latest HYPERMAX OS</td>
+<td>Full feature set including SRDF/A adaptive copy and Metro</td>
+</tr>
+<tr>
+<td>PowerMax 8000</td>
+<td>Current — supported with latest HYPERMAX OS</td>
+<td>Full feature set; higher throughput for large SRDF groups</td>
+</tr>
+<tr>
+<td>PowerMax 9500</td>
+<td>Current — newest generation</td>
+<td>Latest microcode features; recommended for new SRDF/A deployments</td>
+</tr>
+</tbody>
+</table>
+<p>Track array firmware versions and SRDF license expiry dates in the CMDB. SRDF licenses are array-bound (node-locked to serial number); a controller board replacement requires license re-application via Dell Support.</p>
+<hr />
+<h2 id="firmware-upgrade-sequence">Firmware Upgrade Sequence<a class="headerlink" href="#firmware-upgrade-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    preCheck["Pre-Check: All Pairs Consistent\nsymrdf -g dgname -sid sid query"]
+    suspend["Suspend SRDF/A\nsymrdf -g dgname -sid sid suspend -noprompt"]
+    verifySuspended["Verify Suspended State\nsymrdf -g dgname -sid sid query"]
+    nduSource["NDU on Source Array\n(Non-Disruptive — host I/O unaffected)"]
+    nduTarget["NDU on Target Array"]
+    resume["Resume SRDF/A\nsymrdf -g dgname -sid sid resume -noprompt"]
+    monitorResync["Monitor Delta Set Backlog\n(Burst transmission expected)"]
+    verifyConsistent["Verify Consistent State\nsymrdf -g dgname -sid sid query"]
+    closeWindow["Close Change Window"]
+
+    preCheck --&gt; suspend
+    suspend --&gt; verifySuspended
+    verifySuspended --&gt; nduSource
+    nduSource --&gt; nduTarget
+    nduTarget --&gt; resume
+    resume --&gt; monitorResync
+    monitorResync --&gt; verifyConsistent
+    verifyConsistent --&gt; closeWindow
+
+    style preCheck fill:#2563eb,color:#fff
+    style closeWindow fill:#15803d,color:#fff
+    style suspend fill:#b45309,color:#fff
+    style resume fill:#b45309,color:#fff</code></pre>
 <h2 id="srdfa-to-srdfs-migration">SRDF/A to SRDF/S Migration<a class="headerlink" href="#srdfa-to-srdfs-migration" title="Permanent link">&para;</a></h2>
 <p>Migrating an existing SRDF/A group to synchronous (SRDF/S) requires:</p>
 <ol>

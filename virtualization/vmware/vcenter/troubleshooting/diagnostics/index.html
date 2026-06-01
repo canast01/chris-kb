@@ -4280,6 +4280,40 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#service-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Health
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Service Health">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#appliance-management-interface-vami" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appliance Management Interface (VAMI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-status-from-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Status from Shell
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#disk-partition-usage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4287,6 +4321,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4721,39 +4760,34 @@
 │  Stats rollup  = scheduled job; aggregates perf metrics; latency = problem                            │
 │  vpxd CPU      = high vCenter process CPU = query storm or stuck tasks                                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Service Health
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="service-health">Service Health<a class="headerlink" href="#service-health" title="Permanent link">&para;</a></h2>
+<h3 id="appliance-management-interface-vami">Appliance Management Interface (VAMI)<a class="headerlink" href="#appliance-management-interface-vami" title="Permanent link">&para;</a></h3>
+<p>Log into <code>https://&lt;vcenter&gt;:5480</code> to get an immediate overview:
+- <strong>Summary</strong> tab — CPU, memory, disk usage per partition
+- <strong>Services</strong> tab — status of every vCenter service (started/stopped)
+- <strong>Monitor</strong> tab — resource utilisation graphs
+- <strong>Networking</strong> tab — confirm IP, DNS, and hostname</p>
+<h3 id="service-status-from-shell">Service Status from Shell<a class="headerlink" href="#service-status-from-shell" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to VCSA as root or as a user with shell access</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Appliance Management Interface (VAMI)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Log into `https://&lt;vcenter&gt;:5480` to get an immediate overview:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- **Summary** tab — CPU, memory, disk usage per partition
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- **Services** tab — status of every vCenter service (started/stopped)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- **Monitor** tab — resource utilisation graphs
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- **Networking** tab — confirm IP, DNS, and hostname
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Service Status from Shell
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># SSH to VCSA as root or as a user with shell access
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Summary of all services</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Individual service checks</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vpxd<span class="w">              </span><span class="c1"># core vCenter daemon</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpostgres<span class="w">  </span><span class="c1"># embedded PostgreSQL</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-stsd<span class="w">       </span><span class="c1"># SSO token service</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-sts-idmd<span class="w">   </span><span class="c1"># SSO identity management daemon</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-lookupsvc<span class="w">  </span><span class="c1"># service registry / lookup service</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>service-control<span class="w"> </span>--status<span class="w"> </span>applmgmt<span class="w">          </span><span class="c1"># VAMI (port 5480)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vsphere-ui<span class="w">        </span><span class="c1"># vSphere Client (HTML5 UI)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-eam<span class="w">        </span><span class="c1"># ESX Agent Manager</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Summary of all services
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>service-control --status --all
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Individual service checks
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>service-control --status vpxd              # core vCenter daemon
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>service-control --status vmware-vpostgres  # embedded PostgreSQL
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>service-control --status vmware-stsd       # SSO token service
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>service-control --status vmware-sts-idmd   # SSO identity management daemon
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>service-control --status vmware-lookupsvc  # service registry / lookup service
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>service-control --status applmgmt          # VAMI (port 5480)
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>service-control --status vsphere-ui        # vSphere Client (HTML5 UI)
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>service-control --status vmware-eam        # ESX Agent Manager
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Alternative — vmon-cli (more granular)
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>vmon-cli --list
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>vmon-cli --status vpxd
-</code></pre></div></p>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Alternative — vmon-cli (more granular)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vmon-cli<span class="w"> </span>--list
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>vmon-cli<span class="w"> </span>--status<span class="w"> </span>vpxd
+</code></pre></div>
 <h3 id="disk-partition-usage">Disk Partition Usage<a class="headerlink" href="#disk-partition-usage" title="Permanent link">&para;</a></h3>
 <p>Full partitions are the most common cause of cascading vCenter failures. Check before and after any service restart.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>df<span class="w"> </span>-h

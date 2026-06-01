@@ -4290,6 +4290,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#vcenter-sync-failing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Sync Failing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nsx-topology-not-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Topology Not Visible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-flows-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Flows Visible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flow-data-is-stale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow Data Is Stale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-is-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI Is Slow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license-expired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        License Expired
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4538,129 +4604,124 @@
 │  LDAP Browser        = Tool like ldp.exe to manually test LDAP bind and search                        │
 │  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## vCenter Sync Failing
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Symptoms:** Data source shows &quot;Authentication failed&quot; or &quot;Certificate not trusted&quot;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>1. **Password changed on service account:**
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   ```
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   Settings → Data Sources → [vCenter] → Edit → update password → Save
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   ```
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>2. **vCenter certificate renewed/replaced:**
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   ```
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>   Settings → Data Sources → [vCenter] → Edit → Accept new certificate thumbprint
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   ```
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>3. **Service account lost permissions:**
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   ```
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   vCenter → Administration → Global Permissions
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   Verify svc-vrni-vc@corp.local has Read Only on root (propagating)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   ```
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>---
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>## NSX Topology Not Visible
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>**Symptoms:** VMs visible but NSX overlay segments, logical routers, and DFW rules are absent
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>1. **NSX data source not added:**
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>   ```
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>   Settings → Data Sources → NSX-T Managers → Add
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>   ```
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>2. **Insufficient API permissions:**
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>   ```
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>   NSX-T → System → User Management → verify Auditor role on svc-vrni-nsx
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>   ```
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>3. **NSX version not supported by this vRNI release:** Check vRNI release notes for NSX compatibility matrix
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>4. **NSX Manager unreachable from Collector:**
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>   ```bash
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>   # From Collector VM:
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>   curl -sk -u admin:&lt;pass&gt; https://&lt;nsx-manager&gt;/api/v1/cluster/status
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>   ```
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>---
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>## No Flows Visible
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>**Symptoms:** Flow queries return empty; application maps show no traffic
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>1. **NetFlow not configured on switches:**
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>   ```
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>   # Cisco IOS-XE: verify exporter
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>   show flow exporter
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>   show flow monitor cache
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>   # Should show flows destined to Collector IP
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>   ```
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>2. **UDP 2055 not reaching Collector:**
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>   ```bash
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>   # On Collector VM, capture traffic:
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>   sudo tcpdump -i eth0 -n udp port 2055 -c 20
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>   # If no packets appear — firewall is blocking UDP 2055
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>   ```
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>3. **ESXi IPFIX not enabled on vDS:**
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>   ```
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>   vCenter → Networking → [dvSwitch] → Configure → Netflow/IPFIX
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>   Verify: Collector IP = Collector VM IP, Port = 2055
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>   Active flow timeout: 60 seconds
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>   ```
-<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>---
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>## Flow Data Is Stale
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>**Symptoms:** Search results show only old flows; &quot;Last Updated&quot; timestamp is hours/days old
-<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>1. **Collector disk full:**
-<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>   ```bash
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>   ssh admin@&lt;collector-vm&gt;
-<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>   df -h
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>   sudo journalctl --vacuum-size=1G
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>   sudo systemctl restart hms
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>   ```
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>2. **Platform VM disk full:**
-<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>   ```bash
-<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>   ssh ubuntu@&lt;platform-vm&gt;
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>   df -h
-<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>   # If /data &gt; 90%: clear old config backups, expand VMDK
-<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>   ```
-<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>
-<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>3. **Collector overwhelmed:** High flow rate exceeding Collector capacity — add a second Collector and redistribute data sources
-<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>
-<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>---
-<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>
-<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>## UI Is Slow
-<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>
-<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>**Symptoms:** Dashboard takes &gt;30 seconds; searches time out
-<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>
-<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>1. **Browser cache:** Clear cache (Ctrl+Shift+R)
-<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>
-<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>2. **Platform VM resource contention:**
-<a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>   ```
-<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>   vCenter → [Platform VM] → Monitor → Performance → CPU Ready %
-<a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a>   # If CPU ready &gt; 5%, the VM is waiting for CPU — move host or adjust reservations
-<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>   ```
-<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>
-<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>3. **Query too broad:** Searches like `flows` without source/time filter scan millions of records — add filters: `flows where source_vm.name = &#39;X&#39; order by time desc`
-<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>
-<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>---
-<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>
-<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a>## License Expired
-<a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>
-<a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a>**Symptoms:** Banner &quot;License has expired&quot; on login; data collection may be halted
-<a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a>
-<a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a>```text
-<a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a>Settings → License → Enter new license key
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="vcenter-sync-failing">vCenter Sync Failing<a class="headerlink" href="#vcenter-sync-failing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Data source shows "Authentication failed" or "Certificate not trusted"</p>
+<ol>
+<li>
+<p><strong>Password changed on service account:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Settings → Data Sources → [vCenter] → Edit → update password → Save
 </code></pre></div></p>
+</li>
+<li>
+<p><strong>vCenter certificate renewed/replaced:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → Data Sources → [vCenter] → Edit → Accept new certificate thumbprint
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Service account lost permissions:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vCenter → Administration → Global Permissions
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Verify svc-vrni-vc@corp.local has Read Only on root (propagating)
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="nsx-topology-not-visible">NSX Topology Not Visible<a class="headerlink" href="#nsx-topology-not-visible" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> VMs visible but NSX overlay segments, logical routers, and DFW rules are absent</p>
+<ol>
+<li>
+<p><strong>NSX data source not added:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Settings → Data Sources → NSX-T Managers → Add
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Insufficient API permissions:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>NSX-T → System → User Management → verify Auditor role on svc-vrni-nsx
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>NSX version not supported by this vRNI release:</strong> Check vRNI release notes for NSX compatibility matrix</p>
+</li>
+<li>
+<p><strong>NSX Manager unreachable from Collector:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From Collector VM:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;pass&gt;<span class="w"> </span>https://&lt;nsx-manager&gt;/api/v1/cluster/status
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="no-flows-visible">No Flows Visible<a class="headerlink" href="#no-flows-visible" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Flow queries return empty; application maps show no traffic</p>
+<ol>
+<li>
+<p><strong>NetFlow not configured on switches:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># Cisco IOS-XE: verify exporter
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show flow exporter
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>show flow monitor cache
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a># Should show flows destined to Collector IP
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>UDP 2055 not reaching Collector:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On Collector VM, capture traffic:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>-c<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># If no packets appear — firewall is blocking UDP 2055</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>ESXi IPFIX not enabled on vDS:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter → Networking → [dvSwitch] → Configure → Netflow/IPFIX
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Verify: Collector IP = Collector VM IP, Port = 2055
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Active flow timeout: 60 seconds
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
+<h2 id="flow-data-is-stale">Flow Data Is Stale<a class="headerlink" href="#flow-data-is-stale" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Search results show only old flows; "Last Updated" timestamp is hours/days old</p>
+<ol>
+<li>
+<p><strong>Collector disk full:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ssh<span class="w"> </span>admin@&lt;collector-vm&gt;
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Platform VM disk full:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ssh<span class="w"> </span>ubuntu@&lt;platform-vm&gt;
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>df<span class="w"> </span>-h
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># If /data &gt; 90%: clear old config backups, expand VMDK</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Collector overwhelmed:</strong> High flow rate exceeding Collector capacity — add a second Collector and redistribute data sources</p>
+</li>
+</ol>
+<hr />
+<h2 id="ui-is-slow">UI Is Slow<a class="headerlink" href="#ui-is-slow" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Dashboard takes &gt;30 seconds; searches time out</p>
+<ol>
+<li>
+<p><strong>Browser cache:</strong> Clear cache (Ctrl+Shift+R)</p>
+</li>
+<li>
+<p><strong>Platform VM resource contention:</strong>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vCenter → [Platform VM] → Monitor → Performance → CPU Ready %
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a># If CPU ready &gt; 5%, the VM is waiting for CPU — move host or adjust reservations
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Query too broad:</strong> Searches like <code>flows</code> without source/time filter scan millions of records — add filters: <code>flows where source_vm.name = 'X' order by time desc</code></p>
+</li>
+</ol>
+<hr />
+<h2 id="license-expired">License Expired<a class="headerlink" href="#license-expired" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> Banner "License has expired" on login; data collection may be halted</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Settings → License → Enter new license key
+</code></pre></div>
 <p>After entering new key, verify data source collection resumes (check last-sync timestamps in Settings → Data Sources).</p>
 
 

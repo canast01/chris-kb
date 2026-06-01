@@ -3022,6 +3022,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#wsus-sccm-patch-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WSUS / SCCM Patch Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#monitoring-agent-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3317,27 +3328,24 @@
 │  DFS-R         = DFS Replication; multi-master file replication between servers                       │
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>GPOs are applied at the OU level by server role — infrastructure, database, application tiers each have a dedicated OU with role-specific policy.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## WSUS / SCCM Patch Management
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>GPOs are applied at the OU level by server role — infrastructure, database, application tiers each have a dedicated OU with role-specific policy.</p>
+<h2 id="wsus-sccm-patch-management">WSUS / SCCM Patch Management<a class="headerlink" href="#wsus-sccm-patch-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify WSUS client is configured</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span> <span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Select-Object</span> <span class="n">WUServer</span><span class="p">,</span> <span class="n">WUStatusServer</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Verify WSUS client is configured
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Get-ItemProperty -Path &quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot; |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    Select-Object WUServer, WUStatusServer
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Force WSUS detection (triggers check-in with WSUS server)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Or on newer Windows:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Force WSUS detection (triggers check-in with WSUS server)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>wuauclt /detectnow
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Or on newer Windows:
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>UsoClient StartScan
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Check pending updates
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>$Updates = $UpdateSearcher.Search(&quot;IsInstalled=0&quot;)
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>$Updates.Updates | Select-Object Title, MsrcSeverity
-</code></pre></div></p>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check pending updates</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$UpdateSession</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$UpdateSearcher</span> <span class="p">=</span> <span class="nv">$UpdateSession</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$Updates</span> <span class="p">=</span> <span class="nv">$UpdateSearcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$Updates</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span>
+</code></pre></div>
 <p>Maintenance windows control reboot scheduling:
 - Development: patching on Tuesdays, auto-reboot allowed
 - Staging: patching on Thursdays, auto-reboot after midnight

@@ -3022,6 +3022,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-security-event-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Security Event IDs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#searching-by-event-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Searching by Event ID
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exporting-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3367,45 +3389,94 @@
 │  procdump       = SysInternals; captures process memory dump for hang/crash analysis                  │
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Key Security Event IDs
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Event ID | Description |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| 4624 | Successful logon |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| 4625 | Failed logon |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| 4634 | Logoff |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| 4648 | Logon with explicit credentials (RunAs) |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| 4663 | Object access attempt |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| 4688 | Process creation |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| 4698 | Scheduled task created |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| 4719 | Audit policy changed |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| 4720 | User account created |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| 4732 | Member added to a local security group |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| 4740 | Account locked out |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| 4756 | Member added to a universal security group |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| 7036 | Service started or stopped |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| 41 | Kernel power — unexpected reboot |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| 6008 | Unexpected shutdown |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>## Searching by Event ID
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>```powershell
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Account lockouts in last hour
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;Security&#39;; Id=4740; StartTime=(Get-Date).AddHours(-1) } |
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    ForEach-Object {
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        $xml = [xml]$_.ToXml()
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        [PSCustomObject]@{
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            Time     = $_.TimeCreated
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            Account  = $xml.Event.EventData.Data | Where-Object Name -eq &#39;TargetUserName&#39; | Select-Object -ExpandProperty &#39;#text&#39;
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            CallerDC = $xml.Event.EventData.Data | Where-Object Name -eq &#39;SubjectDomainName&#39; | Select-Object -ExpandProperty &#39;#text&#39;
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        }
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    }
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Service stops (7034 = unexpected, 7036 = started/stopped)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;; Id=7034,7036; StartTime=(Get-Date).AddHours(-24) } |
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    Select-Object TimeCreated, Message | Format-List
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="key-security-event-ids">Key Security Event IDs<a class="headerlink" href="#key-security-event-ids" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event ID</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4624</td>
+<td>Successful logon</td>
+</tr>
+<tr>
+<td>4625</td>
+<td>Failed logon</td>
+</tr>
+<tr>
+<td>4634</td>
+<td>Logoff</td>
+</tr>
+<tr>
+<td>4648</td>
+<td>Logon with explicit credentials (RunAs)</td>
+</tr>
+<tr>
+<td>4663</td>
+<td>Object access attempt</td>
+</tr>
+<tr>
+<td>4688</td>
+<td>Process creation</td>
+</tr>
+<tr>
+<td>4698</td>
+<td>Scheduled task created</td>
+</tr>
+<tr>
+<td>4719</td>
+<td>Audit policy changed</td>
+</tr>
+<tr>
+<td>4720</td>
+<td>User account created</td>
+</tr>
+<tr>
+<td>4732</td>
+<td>Member added to a local security group</td>
+</tr>
+<tr>
+<td>4740</td>
+<td>Account locked out</td>
+</tr>
+<tr>
+<td>4756</td>
+<td>Member added to a universal security group</td>
+</tr>
+<tr>
+<td>7036</td>
+<td>Service started or stopped</td>
+</tr>
+<tr>
+<td>41</td>
+<td>Kernel power — unexpected reboot</td>
+</tr>
+<tr>
+<td>6008</td>
+<td>Unexpected shutdown</td>
+</tr>
+</tbody>
+</table>
+<h2 id="searching-by-event-id">Searching by Event ID<a class="headerlink" href="#searching-by-event-id" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Account lockouts in last hour</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="nv">$xml</span> <span class="p">=</span> <span class="no">[xml]</span><span class="nv">$_</span><span class="p">.</span><span class="n">ToXml</span><span class="p">()</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            <span class="n">Time</span>     <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TimeCreated</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            <span class="n">Account</span>  <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;TargetUserName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="s1">&#39;#text&#39;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>            <span class="n">CallerDC</span> <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;SubjectDomainName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="s1">&#39;#text&#39;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        <span class="p">}</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="p">}</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># Service stops (7034 = unexpected, 7036 = started/stopped)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">7034</span><span class="p">,</span><span class="n">7036</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+</code></pre></div>
 <h2 id="exporting-logs">Exporting Logs<a class="headerlink" href="#exporting-logs" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export Security log to EVTX file</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Security</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Security</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>

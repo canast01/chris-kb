@@ -3323,6 +3323,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Health Check Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-load-balancer-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Load Balancer Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3716,18 +3733,16 @@
 │  Scheduled jobs = Jira runs DB clean-up, indexing, and mail jobs on schedule                          │
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Check Load Balancer Pool
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># HAProxy stats (if applicable)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>echo &quot;show stat&quot; | socat stdio /var/run/haproxy/admin.sock \
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  | cut -d&#39;,&#39; -f1,2,18,19 | grep jira
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># AWS ALB — check target group health
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>aws elbv2 describe-target-health \
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  --target-group-arn arn:aws:elasticloadbalancing:eu-west-1:123456789:targetgroup/jira-tg/abc123
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="check-load-balancer-pool">Check Load Balancer Pool<a class="headerlink" href="#check-load-balancer-pool" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># HAProxy stats (if applicable)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;show stat&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>socat<span class="w"> </span>stdio<span class="w"> </span>/var/run/haproxy/admin.sock<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="s1">&#39;,&#39;</span><span class="w"> </span>-f1,2,18,19<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>jira
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># AWS ALB — check target group health</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-target-health<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--target-group-arn<span class="w"> </span>arn:aws:elasticloadbalancing:eu-west-1:123456789:targetgroup/jira-tg/abc123
+</code></pre></div>
 <p>Expected: All nodes show <code>healthy</code> / <code>UP</code>.</p>
 <hr />
 <h2 id="2-log-review">2. Log Review<a class="headerlink" href="#2-log-review" title="Permanent link">&para;</a></h2>

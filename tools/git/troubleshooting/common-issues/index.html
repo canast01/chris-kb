@@ -3175,6 +3175,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#fix-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix Procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#using-git-rerere-to-remember-resolutions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3821,28 +3832,26 @@
 │  git rm --cached = removes file/submodule from index without deleting from disk                       │
 │  cherry-pick     = apply specific commit to current branch; use to move work                          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Fix Procedure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># 1. Edit each conflicted file — remove markers, keep correct content
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vim src/config.go
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="fix-procedure">Fix Procedure<a class="headerlink" href="#fix-procedure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Edit each conflicted file — remove markers, keep correct content</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vim<span class="w"> </span>src/config.go
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Mark as resolved</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>add<span class="w"> </span>src/config.go
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># 2. Mark as resolved
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git add src/config.go
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Continue the merge</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git<span class="w"> </span>commit
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># 3. Continue the merge
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git commit
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># --- OR --- abort and start over</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git<span class="w"> </span>merge<span class="w"> </span>--abort
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># --- OR --- abort and start over
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git merge --abort
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># For rebase conflicts:
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>git rebase --abort      # abort
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># After fixing each file:
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>git add &lt;file&gt;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>git rebase --continue
-</code></pre></div></p>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># For rebase conflicts:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>git<span class="w"> </span>rebase<span class="w"> </span>--abort<span class="w">      </span><span class="c1"># abort</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># After fixing each file:</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>git<span class="w"> </span>add<span class="w"> </span>&lt;file&gt;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>git<span class="w"> </span>rebase<span class="w"> </span>--continue
+</code></pre></div>
 <h3 id="using-git-rerere-to-remember-resolutions">Using <code>git rerere</code> to Remember Resolutions<a class="headerlink" href="#using-git-rerere-to-remember-resolutions" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable rerere (re-use recorded resolution)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>rerere.enabled<span class="w"> </span><span class="nb">true</span>

@@ -2724,6 +2724,73 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Failure Domain Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-fault-tolerance-ft" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Fault Tolerance (FT)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-high-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage High Availability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage High Availability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raid-and-local-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAID and Local Redundancy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multipath-io-mpio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multipath I/O (MPIO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsan-stretched-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSAN Stretched Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3168,82 +3235,135 @@
 │    Fencing      = Isolate a failed node before failover to prevent split-brain                        │
 │    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>For variable host sizes, use the &quot;percentage of cluster resources&quot; policy rather than &quot;host failures cluster tolerates&quot; to get accurate reservations.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>**Heartbeat Datastores**
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Configure at least 2 datastore heartbeat targets on separate storage paths to prevent false-positive host isolation events. Use non-vSAN datastores (NFS or VMFS on external storage) as heartbeat targets in vSAN clusters to avoid circular dependency.
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>**Isolation Response**
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Default: &quot;Leave powered on&quot; — appropriate when the network, not the host, has failed. Set to &quot;Shut down and restart&quot; only when storage fencing ensures split-brain cannot occur (e.g., vSAN witness ensures quorum).
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>**Host Monitoring**
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Enable host monitoring. Set the PDL (Permanent Device Loss) response to &quot;Power off and restart VMs&quot; for vSAN clusters — PDL indicates the storage fabric, not just a transient path failure.
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>### vSphere Fault Tolerance (FT)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>FT provides zero-downtime protection (RTO ~0) for single VMs. Use cases are narrow due to cost and constraints.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Attribute | vSphere HA | vSphere FT |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>|-----------|-----------|------------|
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| RTO | 30–180 s (restart) | ~0 s (lockstep) |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| RPO | Loss of in-flight transactions | 0 |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| vCPU limit | No limit | 8 vCPU per VM |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Memory limit | No limit | No official limit (practical: &lt;128 GB) |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| Cost | Included in vSphere | Requires dedicated CPU reservation |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| Use case | All Tier 1/2 VMs | Tier 0: core network services, license servers |
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>FT requires a dedicated 10 GbE or 25 GbE logging network segment, isolated from vMotion traffic.
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>---
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>## Storage High Availability
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>### RAID and Local Redundancy
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>| RAID Level | Min Drives | Failure Tolerance | Write Penalty | Use Case |
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>|-----------|-----------|------------------|---------------|----------|
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>| RAID-1 | 2 | 1 drive | 2× | OS/boot volumes, small critical data |
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>| RAID-5 | 3 | 1 drive | 4× | General purpose (not recommended for &gt;4 TB drives) |
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>| RAID-6 | 4 | 2 drives | 6× | Archive, large spinning disk arrays |
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>| RAID-10 | 4 | 1 per mirrored pair | 2× | OLTP, high I/O databases |
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>| RAID-50 | 6 | 1 per RAID-5 set | 4× | Balanced capacity and performance |
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>For flash arrays (Dell PowerMax, Pure Storage, NetApp AFF), vendor-specific RAID-DP or parity schemes replace traditional RAID. Validate the effective drive failure tolerance with the vendor before deployment.
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>### Multipath I/O (MPIO)
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>Always configure multipath for SAN-attached storage. Two independent paths are the minimum for HA; four paths (two HBAs × two fabrics) are standard for Tier 0/1.
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>**Path selection policies:**
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>- **Round Robin** — distributes I/O across all active paths; preferred for uniform path speeds
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>- **Fixed (preferred)** — all I/O on one path; others are standby; used when paths have unequal bandwidth
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>- **MRU (Most Recently Used)** — stays on one path until it fails; least optimal; avoid for production
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>For VMware with Dell PowerMax: use VMware Native Multipathing (NMP) with the PowerPath/VE plugin and `RoundRobin` with I/O operations limit set to 1 (IOPS-based switching rather than byte-count switching).
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>### vSAN Stretched Cluster
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>vSAN Stretched Cluster extends a single cluster across two sites with a witness host in a third location (or vCenter). It provides RPO=0 and RTO measured in seconds for site-level failures.
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>```mermaid
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>graph LR
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    subgraph Site_A[&quot;Site A (Primary)&quot;]
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>        H1[&quot;ESXi Host 1\nvSAN Data&quot;]
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>        H2[&quot;ESXi Host 2\nvSAN Data&quot;]
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    end
-<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    subgraph Site_B[&quot;Site B (Secondary)&quot;]
-<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>        H3[&quot;ESXi Host 3\nvSAN Data&quot;]
-<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>        H4[&quot;ESXi Host 4\nvSAN Data&quot;]
-<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>    end
-<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>    subgraph Witness_Site[&quot;Witness Site / Cloud&quot;]
-<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>        W[&quot;vSAN Witness\n(metadata only)&quot;]
-<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>    end
-<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>    H1 &lt;--&gt;|&quot;Sync replication\n&lt;5ms RTT required&quot;| H3
-<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>    H2 &lt;--&gt;|&quot;Sync replication&quot;| H4
-<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a>    H1 &amp; H2 &lt;--&gt;|&quot;Witness heartbeat&quot;| W
-<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>    H3 &amp; H4 &lt;--&gt;|&quot;Witness heartbeat&quot;| W
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.</p>
+<p><strong>Heartbeat Datastores</strong>
+Configure at least 2 datastore heartbeat targets on separate storage paths to prevent false-positive host isolation events. Use non-vSAN datastores (NFS or VMFS on external storage) as heartbeat targets in vSAN clusters to avoid circular dependency.</p>
+<p><strong>Isolation Response</strong>
+Default: "Leave powered on" — appropriate when the network, not the host, has failed. Set to "Shut down and restart" only when storage fencing ensures split-brain cannot occur (e.g., vSAN witness ensures quorum).</p>
+<p><strong>Host Monitoring</strong>
+Enable host monitoring. Set the PDL (Permanent Device Loss) response to "Power off and restart VMs" for vSAN clusters — PDL indicates the storage fabric, not just a transient path failure.</p>
+<h3 id="vsphere-fault-tolerance-ft">vSphere Fault Tolerance (FT)<a class="headerlink" href="#vsphere-fault-tolerance-ft" title="Permanent link">&para;</a></h3>
+<p>FT provides zero-downtime protection (RTO ~0) for single VMs. Use cases are narrow due to cost and constraints.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>vSphere HA</th>
+<th>vSphere FT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTO</td>
+<td>30–180 s (restart)</td>
+<td>~0 s (lockstep)</td>
+</tr>
+<tr>
+<td>RPO</td>
+<td>Loss of in-flight transactions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>vCPU limit</td>
+<td>No limit</td>
+<td>8 vCPU per VM</td>
+</tr>
+<tr>
+<td>Memory limit</td>
+<td>No limit</td>
+<td>No official limit (practical: &lt;128 GB)</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>Included in vSphere</td>
+<td>Requires dedicated CPU reservation</td>
+</tr>
+<tr>
+<td>Use case</td>
+<td>All Tier 1/2 VMs</td>
+<td>Tier 0: core network services, license servers</td>
+</tr>
+</tbody>
+</table>
+<p>FT requires a dedicated 10 GbE or 25 GbE logging network segment, isolated from vMotion traffic.</p>
+<hr />
+<h2 id="storage-high-availability">Storage High Availability<a class="headerlink" href="#storage-high-availability" title="Permanent link">&para;</a></h2>
+<h3 id="raid-and-local-redundancy">RAID and Local Redundancy<a class="headerlink" href="#raid-and-local-redundancy" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>RAID Level</th>
+<th>Min Drives</th>
+<th>Failure Tolerance</th>
+<th>Write Penalty</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAID-1</td>
+<td>2</td>
+<td>1 drive</td>
+<td>2×</td>
+<td>OS/boot volumes, small critical data</td>
+</tr>
+<tr>
+<td>RAID-5</td>
+<td>3</td>
+<td>1 drive</td>
+<td>4×</td>
+<td>General purpose (not recommended for &gt;4 TB drives)</td>
+</tr>
+<tr>
+<td>RAID-6</td>
+<td>4</td>
+<td>2 drives</td>
+<td>6×</td>
+<td>Archive, large spinning disk arrays</td>
+</tr>
+<tr>
+<td>RAID-10</td>
+<td>4</td>
+<td>1 per mirrored pair</td>
+<td>2×</td>
+<td>OLTP, high I/O databases</td>
+</tr>
+<tr>
+<td>RAID-50</td>
+<td>6</td>
+<td>1 per RAID-5 set</td>
+<td>4×</td>
+<td>Balanced capacity and performance</td>
+</tr>
+</tbody>
+</table>
+<p>For flash arrays (Dell PowerMax, Pure Storage, NetApp AFF), vendor-specific RAID-DP or parity schemes replace traditional RAID. Validate the effective drive failure tolerance with the vendor before deployment.</p>
+<h3 id="multipath-io-mpio">Multipath I/O (MPIO)<a class="headerlink" href="#multipath-io-mpio" title="Permanent link">&para;</a></h3>
+<p>Always configure multipath for SAN-attached storage. Two independent paths are the minimum for HA; four paths (two HBAs × two fabrics) are standard for Tier 0/1.</p>
+<p><strong>Path selection policies:</strong>
+- <strong>Round Robin</strong> — distributes I/O across all active paths; preferred for uniform path speeds
+- <strong>Fixed (preferred)</strong> — all I/O on one path; others are standby; used when paths have unequal bandwidth
+- <strong>MRU (Most Recently Used)</strong> — stays on one path until it fails; least optimal; avoid for production</p>
+<p>For VMware with Dell PowerMax: use VMware Native Multipathing (NMP) with the PowerPath/VE plugin and <code>RoundRobin</code> with I/O operations limit set to 1 (IOPS-based switching rather than byte-count switching).</p>
+<h3 id="vsan-stretched-cluster">vSAN Stretched Cluster<a class="headerlink" href="#vsan-stretched-cluster" title="Permanent link">&para;</a></h3>
+<p>vSAN Stretched Cluster extends a single cluster across two sites with a witness host in a third location (or vCenter). It provides RPO=0 and RTO measured in seconds for site-level failures.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph Site_A["Site A (Primary)"]
+        H1["ESXi Host 1\nvSAN Data"]
+        H2["ESXi Host 2\nvSAN Data"]
+    end
+    subgraph Site_B["Site B (Secondary)"]
+        H3["ESXi Host 3\nvSAN Data"]
+        H4["ESXi Host 4\nvSAN Data"]
+    end
+    subgraph Witness_Site["Witness Site / Cloud"]
+        W["vSAN Witness\n(metadata only)"]
+    end
+    H1 &lt;--&gt;|"Sync replication\n&lt;5ms RTT required"| H3
+    H2 &lt;--&gt;|"Sync replication"| H4
+    H1 &amp; H2 &lt;--&gt;|"Witness heartbeat"| W
+    H3 &amp; H4 &lt;--&gt;|"Witness heartbeat"| W</code></pre>
 <p><strong>vSAN Stretched Cluster requirements:</strong>
 - Intersite latency: ≤5 ms RTT (synchronous replication)
 - Bandwidth: size for peak write throughput × 2 (all writes cross both sites)

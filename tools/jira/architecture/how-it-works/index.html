@@ -3164,6 +3164,39 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search-opensearch-elasticsearch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Search (OpenSearch / Elasticsearch)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-home-nfs-smb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Home (NFS / SMB)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#distributed-cache-hazelcast" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3547,43 +3580,83 @@
 │  Ehcache         = distributed cache; stores resolved permissions and issue data                      │
 │  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Database
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Jira requires a single shared relational database. Supported engines:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Engine | Supported Versions | Notes |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|---|
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| PostgreSQL | 14, 15, 16 | Recommended for new deployments |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| MySQL | 8.0 | Requires specific JDBC config |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Oracle | 19c | Supported, not recommended |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| SQL Server | 2019, 2022 | Enterprise license required |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>### Search (OpenSearch / Elasticsearch)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Parameter | Value |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>|---|---|
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Recommended version | OpenSearch 2.x / Elasticsearch 7.x |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Heap per node | 8–16 GB |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Minimum nodes | 3 (quorum) |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Replication factor | 1 |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Index rebuild trigger | Manual or after restore |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>### Shared Home (NFS / SMB)
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>All nodes mount a shared file system at the Jira shared home path (`/var/atlassian/application-data/jira/shared`). This share contains attachments, avatars, logos, export files, and plugin data.
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>```text
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>/var/atlassian/application-data/jira/
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>├── shared/               ← NFS/SMB mount (all nodes)
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   ├── attachments/
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   ├── avatars/
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   ├── export/
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   └── plugins/
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>├── log/                  ← Node-local
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>├── tmp/                  ← Node-local
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└── dbconfig.xml          ← Node-local (same content on each)
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="database">Database<a class="headerlink" href="#database" title="Permanent link">&para;</a></h3>
+<p>Jira requires a single shared relational database. Supported engines:</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Supported Versions</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>14, 15, 16</td>
+<td>Recommended for new deployments</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td>8.0</td>
+<td>Requires specific JDBC config</td>
+</tr>
+<tr>
+<td>Oracle</td>
+<td>19c</td>
+<td>Supported, not recommended</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>2019, 2022</td>
+<td>Enterprise license required</td>
+</tr>
+</tbody>
+</table>
+<h3 id="search-opensearch-elasticsearch">Search (OpenSearch / Elasticsearch)<a class="headerlink" href="#search-opensearch-elasticsearch" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recommended version</td>
+<td>OpenSearch 2.x / Elasticsearch 7.x</td>
+</tr>
+<tr>
+<td>Heap per node</td>
+<td>8–16 GB</td>
+</tr>
+<tr>
+<td>Minimum nodes</td>
+<td>3 (quorum)</td>
+</tr>
+<tr>
+<td>Replication factor</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Index rebuild trigger</td>
+<td>Manual or after restore</td>
+</tr>
+</tbody>
+</table>
+<h3 id="shared-home-nfs-smb">Shared Home (NFS / SMB)<a class="headerlink" href="#shared-home-nfs-smb" title="Permanent link">&para;</a></h3>
+<p>All nodes mount a shared file system at the Jira shared home path (<code>/var/atlassian/application-data/jira/shared</code>). This share contains attachments, avatars, logos, export files, and plugin data.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/var/atlassian/application-data/jira/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── shared/               ← NFS/SMB mount (all nodes)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ├── attachments/
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ├── avatars/
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── export/
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── plugins/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── log/                  ← Node-local
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── tmp/                  ← Node-local
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── dbconfig.xml          ← Node-local (same content on each)
+</code></pre></div>
 <p>NFS mount options:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>nfs-server:/jira-shared /var/atlassian/application-data/jira/shared \
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  nfs4 rw,sync,hard,intr,noatime,rsize=131072,wsize=131072 0 0

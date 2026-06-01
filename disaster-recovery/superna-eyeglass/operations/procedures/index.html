@@ -3899,6 +3899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#access-zone-activation-at-dr-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Zone Activation at DR Site
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#dns-cutover" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4237,29 +4248,27 @@
 │  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Access Zone Activation at DR Site
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># After failover is triggered — confirm DR access zones are active
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>egcli accesszone status --cluster &lt;dr-cluster&gt;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="access-zone-activation-at-dr-site">Access Zone Activation at DR Site<a class="headerlink" href="#access-zone-activation-at-dr-site" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># After failover is triggered — confirm DR access zones are active</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Confirm NFS exports are present on DR cluster</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi nfs exports list&quot;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Confirm NFS exports are present on DR cluster
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh admin@&lt;dr-cluster&gt; &quot;isi nfs exports list&quot;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Confirm SMB shares are present on DR cluster</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi smb shares list&quot;</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Confirm SMB shares are present on DR cluster
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ssh admin@&lt;dr-cluster&gt; &quot;isi smb shares list&quot;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Confirm SmartConnect zones are responding on DR VIP pool</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>nslookup<span class="w"> </span>&lt;dr-smartconnect-zone-name&gt;
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Confirm SmartConnect zones are responding on DR VIP pool
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>nslookup &lt;dr-smartconnect-zone-name&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Test NFS mount from a client (Linux)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>mount -t nfs &lt;dr-smartconnect-ip&gt;:/&lt;export_path&gt; /mnt/test
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>ls /mnt/test
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Test SMB access from a client (Windows)
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>net use Z: \\&lt;dr-cluster-ip&gt;\&lt;share_name&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Test NFS mount from a client (Linux)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dr-smartconnect-ip&gt;:/&lt;export_path&gt;<span class="w"> </span>/mnt/test
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ls<span class="w"> </span>/mnt/test
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Test SMB access from a client (Windows)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>net<span class="w"> </span>use<span class="w"> </span>Z:<span class="w"> </span><span class="se">\\</span>&lt;dr-cluster-ip&gt;<span class="se">\&lt;</span>share_name&gt;
+</code></pre></div>
 <h3 id="dns-cutover">DNS Cutover<a class="headerlink" href="#dns-cutover" title="Permanent link">&para;</a></h3>
 <p>Eyeglass automates DNS delegation updates if integrated with DNS; manual steps if not.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify Eyeglass DNS integration is configured</span>

@@ -3898,6 +3898,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#procedure-3-file-level-recovery-from-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Procedure 3: File-Level Recovery from Image
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#procedure-4-create-update-recovery-media" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4155,28 +4166,24 @@
 │  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Procedure 3: File-Level Recovery from Image
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="procedure-3-file-level-recovery-from-image">Procedure 3: File-Level Recovery from Image<a class="headerlink" href="#procedure-3-file-level-recovery-from-image" title="Permanent link">&para;</a></h2>
+<p><strong>When:</strong> Specific files or directories need to be recovered without a full restore.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Mount the RASR WIM image as a drive letter (Windows 10/2019+)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$imagePath</span> <span class="p">=</span> <span class="s2">&quot;\\nas01\rasr-images\prod\app01\app01_prod_20260510_001.wim&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$mountPath</span> <span class="p">=</span> <span class="s2">&quot;C:\rasr-mount&quot;</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**When:** Specific files or directories need to be recovered without a full restore.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Mount the RASR WIM image as a drive letter (Windows 10/2019+)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>$imagePath = &quot;\\nas01\rasr-images\prod\app01\app01_prod_20260510_001.wim&quot;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>$mountPath = &quot;C:\rasr-mount&quot;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$mountPath</span> <span class="n">-Force</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">dism</span> <span class="p">/</span><span class="nb">Mount-Image</span> <span class="p">/</span><span class="n">ImageFile</span><span class="p">:</span><span class="nv">$imagePath</span> <span class="p">/</span><span class="n">Index</span><span class="p">:</span><span class="n">1</span> <span class="p">/</span><span class="n">MountDir</span><span class="p">:</span><span class="nv">$mountPath</span> <span class="p">/</span><span class="n">ReadOnly</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Browse and copy required files</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-ChildItem</span> <span class="nv">$mountPath</span><span class="p">\</span><span class="n">Users</span><span class="p">\</span><span class="n">Administrator</span><span class="p">\</span><span class="n">AppData</span><span class="p">\</span><span class="n">Local</span><span class="p">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;$mountPath\Program Files\MyApp\config\app.conf&quot;</span> <span class="n">C</span><span class="p">:\</span><span class="n">Recovered</span><span class="p">\</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>New-Item -ItemType Directory -Path $mountPath -Force
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>dism /Mount-Image /ImageFile:$imagePath /Index:1 /MountDir:$mountPath /ReadOnly
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Browse and copy required files
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Get-ChildItem $mountPath\Users\Administrator\AppData\Local\
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Copy-Item &quot;$mountPath\Program Files\MyApp\config\app.conf&quot; C:\Recovered\
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Unmount when done
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>dism /Unmount-Image /MountDir:$mountPath /Discard
-</code></pre></div></p>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Unmount when done</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">dism</span> <span class="p">/</span><span class="n">Unmount-Image</span> <span class="p">/</span><span class="n">MountDir</span><span class="p">:</span><span class="nv">$mountPath</span> <span class="p">/</span><span class="n">Discard</span>
+</code></pre></div>
 <hr />
 <h2 id="procedure-4-create-update-recovery-media">Procedure 4: Create / Update Recovery Media<a class="headerlink" href="#procedure-4-create-update-recovery-media" title="Permanent link">&para;</a></h2>
 <p><strong>When:</strong> New server generation added; RASR agent updated; media hasn't been rebuilt in 6 months.</p>

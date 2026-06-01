@@ -3405,6 +3405,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#filesystem-backup-control-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filesystem Backup (Control Node)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#awx-aap-export" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3796,20 +3807,18 @@
 │   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
 │   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Filesystem Backup (Control Node)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Critical paths
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>rsync -avz --delete \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  /home/ansible/.ssh/ \
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  backup-server.example.com:/backups/ansible/ssh/$(date +%F)/
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Encrypted tar
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>tar czf - /home/ansible/.ssh/ | \
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  openssl enc -aes-256-cbc -pbkdf2 -pass file:/etc/ansible-backup.key | \
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  ssh backup-server &quot;cat &gt; /backups/ansible/ssh-$(date +%F).tar.gz.enc&quot;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="filesystem-backup-control-node">Filesystem Backup (Control Node)<a class="headerlink" href="#filesystem-backup-control-node" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Critical paths</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--delete<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>/home/ansible/.ssh/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>backup-server.example.com:/backups/ansible/ssh/<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>/
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Encrypted tar</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>tar<span class="w"> </span>czf<span class="w"> </span>-<span class="w"> </span>/home/ansible/.ssh/<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>file:/etc/ansible-backup.key<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>ssh<span class="w"> </span>backup-server<span class="w"> </span><span class="s2">&quot;cat &gt; /backups/ansible/ssh-</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.tar.gz.enc&quot;</span>
+</code></pre></div>
 <h2 id="awx-aap-export">AWX / AAP Export<a class="headerlink" href="#awx-aap-export" title="Permanent link">&para;</a></h2>
 <h3 id="awx-manage">awx-manage<a class="headerlink" href="#awx-manage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the AWX/AAP server</span>

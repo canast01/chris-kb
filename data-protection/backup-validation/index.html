@@ -2826,6 +2826,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Validation Workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#surebackup-verification-tests-per-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SureBackup Verification Tests (per VM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interpreting-surebackup-results-powershell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpreting SureBackup Results (PowerShell)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3225,26 +3253,47 @@
 │    RPO         = Recovery Point Objective; max data loss; validated by backup job frequency           │
 │    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### SureBackup Verification Tests (per VM)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Test | Description | Failure Meaning |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Heartbeat | VM powers on and VMware Tools respond | Backup is unbootable |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Ping | VM responds to ICMP inside isolated lab | OS or network stack corrupt |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Application test | Custom script validates service (e.g., SQL port 1433 open) | Application layer failed |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| VM screenshot | Captured for visual confirmation | No automated fail — human review |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>### Interpreting SureBackup Results (PowerShell)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```powershell
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Retrieve last SureBackup session results
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>$session = Get-VBRSureBackupSession | Sort-Object CreationTime -Descending | Select-Object -First 1
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>$session | Select-Object Name, State, Result, CreationTime, EndTime
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Per-VM task results
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>$session.GetTaskSessions() | Select-Object Name, Status, StartTime, StopTime | Format-Table -AutoSize
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="surebackup-verification-tests-per-vm">SureBackup Verification Tests (per VM)<a class="headerlink" href="#surebackup-verification-tests-per-vm" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Description</th>
+<th>Failure Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Heartbeat</td>
+<td>VM powers on and VMware Tools respond</td>
+<td>Backup is unbootable</td>
+</tr>
+<tr>
+<td>Ping</td>
+<td>VM responds to ICMP inside isolated lab</td>
+<td>OS or network stack corrupt</td>
+</tr>
+<tr>
+<td>Application test</td>
+<td>Custom script validates service (e.g., SQL port 1433 open)</td>
+<td>Application layer failed</td>
+</tr>
+<tr>
+<td>VM screenshot</td>
+<td>Captured for visual confirmation</td>
+<td>No automated fail — human review</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpreting-surebackup-results-powershell">Interpreting SureBackup Results (PowerShell)<a class="headerlink" href="#interpreting-surebackup-results-powershell" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Retrieve last SureBackup session results</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">Get-VBRSureBackupSession</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">$session</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Per-VM task results</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">$session</span><span class="p">.</span><span class="n">GetTaskSessions</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span><span class="p">,</span> <span class="n">StartTime</span><span class="p">,</span> <span class="n">StopTime</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+</code></pre></div>
 <p>Expected output columns: <code>Name</code> (VM name), <code>Status</code> (Success / Warning / Failed), timing. Any <code>Failed</code> row requires immediate investigation and re-run after remediation.</p>
 <hr />
 <h2 id="commvault-synthetic-full-verification">Commvault — Synthetic Full Verification<a class="headerlink" href="#commvault-synthetic-full-verification" title="Permanent link">&para;</a></h2>

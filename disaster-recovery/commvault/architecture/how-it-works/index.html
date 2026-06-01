@@ -3735,6 +3735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#mediaagent-and-deduplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MediaAgent and Deduplication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#storage-library-types" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4023,37 +4034,34 @@
 │  Synthetic Full = Full backup built from incremental chains on MA (no client re-read)                 │
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## MediaAgent and Deduplication
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```mermaid
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>flowchart LR
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    client([&quot;Client Agent\n(VM / DB / File)&quot;])
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    client --&gt;|&quot;raw data stream\nTCP 8403&quot;| ma[&quot;MediaAgent&quot;]
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    subgraph maBlock [MediaAgent Processing]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        direction TB
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        chunk[&quot;Chunk data into\nvariable blocks&quot;]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        hash[&quot;Hash each block\n(SHA-256)&quot;]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        ddb[(&quot;DDB\nDeduplication DB\nSSD-backed&quot;)]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>        chunk --&gt; hash
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>        hash --&gt;|&quot;block seen before?&quot;| ddb
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    end
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    ma --&gt; maBlock
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    ddb --&gt;|&quot;New block\nwrite to library&quot;| diskLib[(&quot;Disk Library\nPrimary copy&quot;)]
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    ddb --&gt;|&quot;Duplicate block\nskip write&quot;| dedupSave[&quot;Dedup saving\n(reference only)&quot;]
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    diskLib --&gt;|&quot;Aux copy&quot;| secondary[(&quot;Secondary copy\nOffsite / Cloud / Tape&quot;)]
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    classDef host fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    class ma,chunk,hash ctrl
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    class ddb,diskLib,secondary store
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    class client host
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    client(["Client Agent\n(VM / DB / File)"])
+    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
+
+    subgraph maBlock [MediaAgent Processing]
+        direction TB
+        chunk["Chunk data into\nvariable blocks"]
+        hash["Hash each block\n(SHA-256)"]
+        ddb[("DDB\nDeduplication DB\nSSD-backed")]
+        chunk --&gt; hash
+        hash --&gt;|"block seen before?"| ddb
+    end
+
+    ma --&gt; maBlock
+
+    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
+    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
+
+    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
+
+    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef host fill:#15803d,stroke:#166534,color:#fff
+    class ma,chunk,hash ctrl
+    class ddb,diskLib,secondary store
+    class client host</code></pre>
 <p>MediaAgent best practices:
 - Deploy one MediaAgent per site for local backups
 - Place DDB on SSD-backed storage — IOPS are critical for large dedup pools

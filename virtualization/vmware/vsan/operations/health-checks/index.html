@@ -4454,6 +4454,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#weekly-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly Checks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#performance-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4762,26 +4773,51 @@
 │  Free 30%      = vSAN needs headroom for resync; alert at &lt;25%                                        │
 │  Resync ETA    = estimate shown in vSAN performance health panel                                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Weekly Checks
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Check | Command / Location | Notes |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Storage policy compliance | vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant | All objects should be compliant; non-compliant triggers resync |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Capacity trend | vCenter → vSAN → Monitor → Capacity → Capacity History | Identify growth trends; flag if projected to hit 70% within 30 days |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Resync history | vCenter → vSAN → Monitor → Resyncing Objects → History | Confirm all resyncs completed; flag any that are stalled or recurring |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| vSAN health test detail | vCenter → vSAN → Monitor → Skyline Health | Expand any yellow/red items; review recommended actions |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Software version alignment | `esxcli system version get` on each host | All hosts in a cluster must run the same ESXi build |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```powershell
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check policy compliance across all VMs
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Get-VM | Get-SpbmEntityConfiguration | Where-Object {$_.ComplianceStatus -ne &quot;compliant&quot;} | Select Name,ComplianceStatus
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Cluster capacity summary
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Get-VsanSpaceUsage -Cluster (Get-Cluster) | Select FreeSpaceGB,TotalCapacityGB,UsedSpaceGB
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command / Location</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Storage policy compliance</td>
+<td>vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant</td>
+<td>All objects should be compliant; non-compliant triggers resync</td>
+</tr>
+<tr>
+<td>Capacity trend</td>
+<td>vCenter → vSAN → Monitor → Capacity → Capacity History</td>
+<td>Identify growth trends; flag if projected to hit 70% within 30 days</td>
+</tr>
+<tr>
+<td>Resync history</td>
+<td>vCenter → vSAN → Monitor → Resyncing Objects → History</td>
+<td>Confirm all resyncs completed; flag any that are stalled or recurring</td>
+</tr>
+<tr>
+<td>vSAN health test detail</td>
+<td>vCenter → vSAN → Monitor → Skyline Health</td>
+<td>Expand any yellow/red items; review recommended actions</td>
+</tr>
+<tr>
+<td>Software version alignment</td>
+<td><code>esxcli system version get</code> on each host</td>
+<td>All hosts in a cluster must run the same ESXi build</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check policy compliance across all VMs</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">ComplianceStatus</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Cluster capacity summary</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">TotalCapacityGB</span><span class="p">,</span><span class="n">UsedSpaceGB</span>
+</code></pre></div>
 <hr />
 <h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
 <p>Normal operating ranges for a healthy vSAN cluster. Values vary by workload — establish a baseline during steady-state and alert on deviation.</p>

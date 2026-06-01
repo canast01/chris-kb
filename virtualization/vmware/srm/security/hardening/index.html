@@ -4338,6 +4338,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#least-privilege-sra-service-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Least-Privilege SRA Service Accounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#rotate-sra-credentials" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4667,24 +4678,19 @@
 │  Patch SLA     = apply SRM patches within 30 days of release                                          │
 │  DR test evidence= required for DR compliance (ISO 22301, SOC 2)                                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Least-Privilege SRA Service Accounts
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SRA credentials should have minimum array permissions:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Pure Storage FlashArray:**
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Create API token with role: `readonly` for SRA discovery
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Create separate API token with role: `array_admin` only for failover operations
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Use the read-only token for normal operations; only use admin token during DR
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># On FlashArray (CLI):
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pureapitoken create --name srm-readonly --role readonly
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>pureapitoken create --name srm-failover --role storage_admin
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Use srm-readonly token in SRA — update to srm-failover only during DR
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="least-privilege-sra-service-accounts">Least-Privilege SRA Service Accounts<a class="headerlink" href="#least-privilege-sra-service-accounts" title="Permanent link">&para;</a></h2>
+<p>SRA credentials should have minimum array permissions:</p>
+<p><strong>Pure Storage FlashArray:</strong>
+- Create API token with role: <code>readonly</code> for SRA discovery
+- Create separate API token with role: <code>array_admin</code> only for failover operations
+- Use the read-only token for normal operations; only use admin token during DR</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On FlashArray (CLI):</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-readonly<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pureapitoken<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>srm-failover<span class="w"> </span>--role<span class="w"> </span>storage_admin
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Use srm-readonly token in SRA — update to srm-failover only during DR</span>
+</code></pre></div>
 <hr />
 <h2 id="rotate-sra-credentials">Rotate SRA Credentials<a class="headerlink" href="#rotate-sra-credentials" title="Permanent link">&para;</a></h2>
 <p>Rotate array credentials in SRM on a regular schedule (quarterly or when personnel changes):</p>

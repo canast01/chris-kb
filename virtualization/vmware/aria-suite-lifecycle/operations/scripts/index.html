@@ -4454,6 +4454,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#pre-upgrade-disk-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-Upgrade Disk Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#environment-health-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4748,37 +4759,33 @@
 │  Cert Rotate Script  = Triggers LCM cert rotation action via REST API                                 │
 │  CI/CD Integration   = Scripts run on schedule for drift detection and reporting                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Pre-Upgrade Disk Check
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Run on the LCM appliance as root before any upgrade workflow.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>#!/usr/bin/env bash
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Run on LCM appliance as root before any upgrade
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>THRESHOLD=80
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ALL_OK=true
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>for mount in / /data /tmp /var/log; do
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  if mountpoint -q &quot;$mount&quot;; then
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    used=$(df -h &quot;$mount&quot; | awk &#39;NR==2{print $5}&#39; | tr -d &#39;%&#39;)
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    echo &quot;$mount: ${used}% used&quot;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    if [[ $used -ge $THRESHOLD ]]; then
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>      echo &quot;  WARNING: $mount exceeds ${THRESHOLD}% — free space before upgrading&quot;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>      ALL_OK=false
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    fi
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  fi
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>done
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>if $ALL_OK; then
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  echo &quot;PASS: All filesystems within threshold&quot;
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>else
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  echo &quot;FAIL: Disk space check failed — do not proceed with upgrade&quot;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  exit 1
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>fi
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="pre-upgrade-disk-check">Pre-Upgrade Disk Check<a class="headerlink" href="#pre-upgrade-disk-check" title="Permanent link">&para;</a></h2>
+<p>Run on the LCM appliance as root before any upgrade workflow.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run on LCM appliance as root before any upgrade</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">THRESHOLD</span><span class="o">=</span><span class="m">80</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">ALL_OK</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">for</span><span class="w"> </span>mount<span class="w"> </span><span class="k">in</span><span class="w"> </span>/<span class="w"> </span>/data<span class="w"> </span>/tmp<span class="w"> </span>/var/log<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span>mountpoint<span class="w"> </span>-q<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nv">used</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2{print $5}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$mount</span><span class="s2">: </span><span class="si">${</span><span class="nv">used</span><span class="si">}</span><span class="s2">% used&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$used</span><span class="w"> </span>-ge<span class="w"> </span><span class="nv">$THRESHOLD</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;  WARNING: </span><span class="nv">$mount</span><span class="s2"> exceeds </span><span class="si">${</span><span class="nv">THRESHOLD</span><span class="si">}</span><span class="s2">% — free space before upgrading&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nv">ALL_OK</span><span class="o">=</span><span class="nb">false</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">done</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">if</span><span class="w"> </span><span class="nv">$ALL_OK</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: All filesystems within threshold&quot;</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">else</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL: Disk space check failed — do not proceed with upgrade&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="k">fi</span>
+</code></pre></div>
 <hr />
 <h2 id="environment-health-summary">Environment Health Summary<a class="headerlink" href="#environment-health-summary" title="Permanent link">&para;</a></h2>
 <p>Queries LCM API and prints the health status of all environments and products.</p>

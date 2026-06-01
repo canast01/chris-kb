@@ -3244,6 +3244,56 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#synchronisation-and-failover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synchronisation and Failover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml-20-single-sign-on" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML 2.0 Single Sign-On
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SAML 2.0 Single Sign-On">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jira-data-center-saml-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jira Data Center SAML Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure-ad-entra-id-enterprise-application-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure AD (Entra ID) Enterprise Application Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enforcing-sso-data-center" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3743,46 +3793,65 @@
 │  Rate limiting = no native Jira rate limit; implement at reverse proxy (nginx)                        │
 │  Assertion    = SAML XML signed by IdP; contains user attributes and groups                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Synchronisation and Failover
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Configure a secondary LDAP server for resilience.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Set synchronisation interval to 60 minutes (reduce load on DC).
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Enable incremental sync using `uSNChanged` attribute for large directories.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>---
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## SAML 2.0 Single Sign-On
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Jira Data Center SAML Configuration
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Administration → User Management → SAML 2.0 Single Sign-On
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Field | Value |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|---|---|
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| IdP Entity ID | From IdP metadata (e.g., `https://sts.windows.net/{tenant-id}/`) |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| IdP SSO URL | `https://login.microsoftonline.com/{tenant-id}/saml2` |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| IdP certificate | X.509 certificate from IdP metadata |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Attribute for username | `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name` |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| SP Entity ID | `https://jira.corp.example.com` |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| Assertion Consumer Service URL | `https://jira.corp.example.com/plugins/servlet/saml/auth` |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>### Azure AD (Entra ID) Enterprise Application Setup
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>```yaml
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>1. Azure Portal → Enterprise Applications → New Application → Jira SAML SSO
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>2. Single sign-on → SAML
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>3. Basic SAML Configuration:
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>   - Identifier (Entity ID): https://jira.corp.example.com
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>   - Reply URL: https://jira.corp.example.com/plugins/servlet/saml/auth
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>   - Sign on URL: https://jira.corp.example.com
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>4. Attributes &amp; Claims:
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>   - name: user.mail  (maps to Jira username)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>   - displayName: user.displayname
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>   - groups: user.groups  (map to Jira groups)
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>5. Download Federation Metadata XML
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>6. Upload to Jira SAML configuration
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="synchronisation-and-failover">Synchronisation and Failover<a class="headerlink" href="#synchronisation-and-failover" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Configure a secondary LDAP server for resilience.</li>
+<li>Set synchronisation interval to 60 minutes (reduce load on DC).</li>
+<li>Enable incremental sync using <code>uSNChanged</code> attribute for large directories.</li>
+</ul>
+<hr />
+<h2 id="saml-20-single-sign-on">SAML 2.0 Single Sign-On<a class="headerlink" href="#saml-20-single-sign-on" title="Permanent link">&para;</a></h2>
+<h3 id="jira-data-center-saml-configuration">Jira Data Center SAML Configuration<a class="headerlink" href="#jira-data-center-saml-configuration" title="Permanent link">&para;</a></h3>
+<p>Administration → User Management → SAML 2.0 Single Sign-On</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IdP Entity ID</td>
+<td>From IdP metadata (e.g., <code>https://sts.windows.net/{tenant-id}/</code>)</td>
+</tr>
+<tr>
+<td>IdP SSO URL</td>
+<td><code>https://login.microsoftonline.com/{tenant-id}/saml2</code></td>
+</tr>
+<tr>
+<td>IdP certificate</td>
+<td>X.509 certificate from IdP metadata</td>
+</tr>
+<tr>
+<td>Attribute for username</td>
+<td><code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name</code></td>
+</tr>
+<tr>
+<td>SP Entity ID</td>
+<td><code>https://jira.corp.example.com</code></td>
+</tr>
+<tr>
+<td>Assertion Consumer Service URL</td>
+<td><code>https://jira.corp.example.com/plugins/servlet/saml/auth</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="azure-ad-entra-id-enterprise-application-setup">Azure AD (Entra ID) Enterprise Application Setup<a class="headerlink" href="#azure-ad-entra-id-enterprise-application-setup" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="l l-Scalar l-Scalar-Plain">1. Azure Portal → Enterprise Applications → New Application → Jira SAML SSO</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="l l-Scalar l-Scalar-Plain">2. Single sign-on → SAML</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="l l-Scalar l-Scalar-Plain">3. Basic SAML Configuration</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Identifier (Entity ID)</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jira.corp.example.com</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Reply URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jira.corp.example.com/plugins/servlet/saml/auth</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Sign on URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://jira.corp.example.com</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">4. Attributes &amp; Claims</span><span class="p">:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.mail  (maps to Jira username)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.displayname</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">groups</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user.groups  (map to Jira groups)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="l l-Scalar l-Scalar-Plain">5. Download Federation Metadata XML</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="l l-Scalar l-Scalar-Plain">6. Upload to Jira SAML configuration</span>
+</code></pre></div>
 <h3 id="enforcing-sso-data-center">Enforcing SSO (Data Center)<a class="headerlink" href="#enforcing-sso-data-center" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># jira-config.properties — require SAML, disable local login</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">jira.saml.sso.loginpath.exclude</span><span class="o">=</span><span class="s">/rest/,/secure/Dashboard.jspa</span>

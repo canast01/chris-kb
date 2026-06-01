@@ -4346,8 +4346,41 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Authentication Stack">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identity Sources">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-sso-built-in-domain-vspherelocal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere SSO Built-in Domain (vsphere.local)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#active-directory-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#multi-factor-authentication" class="md-nav__link">
@@ -4803,52 +4836,63 @@
 │  Key retrieval = power-on of encrypted VM triggers KMS request                                        │
 │  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Identity Sources
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### vSphere SSO Built-in Domain (vsphere.local)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>The embedded SSO domain (`vsphere.local`) exists by default on every VCSA deployment. It contains:
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- `administrator@vsphere.local` — the initial super-administrator account.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Service accounts used by vSphere internal components.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>**Use of `vsphere.local` accounts in production:**
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- `administrator@vsphere.local` should be used only for break-glass access and initial configuration.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- All routine vSAN administration should use named accounts from an external identity source.
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- Create a minimum set of service accounts in `vsphere.local` for automation that cannot use AD (e.g., monitoring agents, backup integration).
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>### Active Directory Integration
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Integrate vCenter SSO with Active Directory to allow domain users to authenticate against vCenter.
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>**Configure AD identity source:**
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>vSphere Client → vCenter → Administration → Single Sign-On → Configuration → Identity Sources → Add
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| Field | Value |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>|---|---|
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| Identity Source Type | Active Directory (Integrated Windows Authentication) or Active Directory as LDAP Server |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| Domain Name | `example.com` |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>| Base DN for users | `OU=vSphere Admins,DC=example,DC=com` |
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>| Base DN for groups | `OU=vSphere Groups,DC=example,DC=com` |
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>| Domain alias | `EXAMPLE` |
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>**Integrated Windows Authentication** (recommended): Uses the machine account of the VCSA joined to the domain. Requires VCSA to be domain-joined.
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>**LDAP bind account** (alternative): Uses a dedicated service account with read-only access to the AD directory.
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>```bash
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># Join VCSA to Active Directory domain (from VCSA shell)
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>/opt/likewise/bin/domainjoin-cli join example.com Administrator
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a># Reboot VCSA after domain join
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>reboot
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.</p>
+<hr />
+<h2 id="identity-sources">Identity Sources<a class="headerlink" href="#identity-sources" title="Permanent link">&para;</a></h2>
+<h3 id="vsphere-sso-built-in-domain-vspherelocal">vSphere SSO Built-in Domain (vsphere.local)<a class="headerlink" href="#vsphere-sso-built-in-domain-vspherelocal" title="Permanent link">&para;</a></h3>
+<p>The embedded SSO domain (<code>vsphere.local</code>) exists by default on every VCSA deployment. It contains:</p>
+<ul>
+<li><code>administrator@vsphere.local</code> — the initial super-administrator account.</li>
+<li>Service accounts used by vSphere internal components.</li>
+</ul>
+<p><strong>Use of <code>vsphere.local</code> accounts in production:</strong></p>
+<ul>
+<li><code>administrator@vsphere.local</code> should be used only for break-glass access and initial configuration.</li>
+<li>All routine vSAN administration should use named accounts from an external identity source.</li>
+<li>Create a minimum set of service accounts in <code>vsphere.local</code> for automation that cannot use AD (e.g., monitoring agents, backup integration).</li>
+</ul>
+<h3 id="active-directory-integration">Active Directory Integration<a class="headerlink" href="#active-directory-integration" title="Permanent link">&para;</a></h3>
+<p>Integrate vCenter SSO with Active Directory to allow domain users to authenticate against vCenter.</p>
+<p><strong>Configure AD identity source:</strong></p>
+<p>vSphere Client → vCenter → Administration → Single Sign-On → Configuration → Identity Sources → Add</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity Source Type</td>
+<td>Active Directory (Integrated Windows Authentication) or Active Directory as LDAP Server</td>
+</tr>
+<tr>
+<td>Domain Name</td>
+<td><code>example.com</code></td>
+</tr>
+<tr>
+<td>Base DN for users</td>
+<td><code>OU=vSphere Admins,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Base DN for groups</td>
+<td><code>OU=vSphere Groups,DC=example,DC=com</code></td>
+</tr>
+<tr>
+<td>Domain alias</td>
+<td><code>EXAMPLE</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Integrated Windows Authentication</strong> (recommended): Uses the machine account of the VCSA joined to the domain. Requires VCSA to be domain-joined.</p>
+<p><strong>LDAP bind account</strong> (alternative): Uses a dedicated service account with read-only access to the AD directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Join VCSA to Active Directory domain (from VCSA shell)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/opt/likewise/bin/domainjoin-cli<span class="w"> </span>join<span class="w"> </span>example.com<span class="w"> </span>Administrator
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Reboot VCSA after domain join</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>reboot
+</code></pre></div>
 <p><strong>Post-join verification:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/opt/likewise/bin/lwsm<span class="w"> </span>status
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># lsass service should be running</span>

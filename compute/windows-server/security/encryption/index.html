@@ -3092,6 +3092,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#enable-bitlocker-on-os-drive-with-tpm-pin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enable BitLocker on OS Drive with TPM + PIN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enable-bitlocker-on-data-drives" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3536,22 +3547,20 @@
 │  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
 │  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Enable BitLocker on OS Drive with TPM + PIN
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Add a startup PIN protector (requires TPM + PIN policy in GPO)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Add-BitLockerKeyProtector -MountPoint &quot;C:&quot; -TpmAndPinProtector -Pin (Read-Host &quot;Enter PIN&quot; -AsSecureString)
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="enable-bitlocker-on-os-drive-with-tpm-pin">Enable BitLocker on OS Drive with TPM + PIN<a class="headerlink" href="#enable-bitlocker-on-os-drive-with-tpm-pin" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add a startup PIN protector (requires TPM + PIN policy in GPO)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-TpmAndPinProtector</span> <span class="n">-Pin</span> <span class="p">(</span><span class="nb">Read-Host</span> <span class="s2">&quot;Enter PIN&quot;</span> <span class="n">-AsSecureString</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Add a recovery password protector (MUST add before enabling)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Add-BitLockerKeyProtector</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-RecoveryPasswordProtector</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Add a recovery password protector (MUST add before enabling)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Add-BitLockerKeyProtector -MountPoint &quot;C:&quot; -RecoveryPasswordProtector
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Enable BitLocker encryption</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Enable-BitLocker</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="n">-EncryptionMethod</span> <span class="n">XtsAes256</span> <span class="n">-UsedSpaceOnly</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Enable BitLocker encryption
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Enable-BitLocker -MountPoint &quot;C:&quot; -EncryptionMethod XtsAes256 -UsedSpaceOnly
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Check encryption progress
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-BitLockerVolume -MountPoint &quot;C:&quot; | Select-Object VolumeStatus, EncryptionPercentage
-</code></pre></div></p>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check encryption progress</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-BitLockerVolume</span> <span class="n">-MountPoint</span> <span class="s2">&quot;C:&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VolumeStatus</span><span class="p">,</span> <span class="n">EncryptionPercentage</span>
+</code></pre></div>
 <h3 id="enable-bitlocker-on-data-drives">Enable BitLocker on Data Drives<a class="headerlink" href="#enable-bitlocker-on-data-drives" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Automatically unlock data drives when OS drive is unlocked</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Enable-BitLocker</span> <span class="n">-MountPoint</span> <span class="s2">&quot;D:&quot;</span> <span class="n">-EncryptionMethod</span> <span class="n">XtsAes256</span> <span class="n">-RecoveryPasswordProtector</span>

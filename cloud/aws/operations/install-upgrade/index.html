@@ -3886,6 +3886,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ami-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AMI Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#lambda-runtime-deprecation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4164,26 +4175,23 @@
 │  Compliance report= SSM Patch Manager scan result: compliant/non-compliant per instance               │
 │  Immutable upgrade= Never patch in place; always replace with pre-patched AMI                         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Major version upgrades require:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. Test in staging environment first
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. Create final snapshot before upgrade
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. Schedule change record with agreed rollback window
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4. Run application validation suite post-upgrade
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Major version upgrades require:
+1. Test in staging environment first
+2. Create final snapshot before upgrade
+3. Schedule change record with agreed rollback window
+4. Run application validation suite post-upgrade</p>
+<h2 id="ami-lifecycle">AMI Lifecycle<a class="headerlink" href="#ami-lifecycle" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create AMI from running instance</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-image<span class="w"> </span>--instance-id<span class="w"> </span>&lt;i-xxxx&gt;<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-app-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>--no-reboot
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List old AMIs (older than 90 days)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-images<span class="w"> </span>--owners<span class="w"> </span>self<span class="w"> </span>--query<span class="w"> </span><span class="s2">&quot;Images[?CreationDate&lt;=&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;90 days ago&#39;</span><span class="w"> </span>+%Y-%m-%dT%H:%M:%S<span class="k">)</span><span class="s2">&#39;].[ImageId,Name,CreationDate]&quot;</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## AMI Lifecycle
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Create AMI from running instance
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws ec2 create-image --instance-id &lt;i-xxxx&gt; --name &quot;prod-app-$(date +%Y%m%d)&quot; --no-reboot
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># List old AMIs (older than 90 days)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>aws ec2 describe-images --owners self --query &quot;Images[?CreationDate&lt;=&#39;$(date -d &#39;90 days ago&#39; +%Y-%m-%dT%H:%M:%S)&#39;].[ImageId,Name,CreationDate]&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Deregister old AMI (after confirming no launch templates reference it)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws ec2 deregister-image --image-id &lt;ami-xxxx&gt;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aws ec2 delete-snapshot --snapshot-id &lt;snap-xxxx&gt;
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Deregister old AMI (after confirming no launch templates reference it)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>deregister-image<span class="w"> </span>--image-id<span class="w"> </span>&lt;ami-xxxx&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>delete-snapshot<span class="w"> </span>--snapshot-id<span class="w"> </span>&lt;snap-xxxx&gt;
+</code></pre></div>
 <h2 id="lambda-runtime-deprecation">Lambda Runtime Deprecation<a class="headerlink" href="#lambda-runtime-deprecation" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List Lambda functions by runtime</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>lambda<span class="w"> </span>list-functions<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;Functions[*].[FunctionName,Runtime]&#39;</span><span class="w"> </span>--output<span class="w"> </span>table<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort

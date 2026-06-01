@@ -4324,6 +4324,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#common-causes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Causes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4364,7 +4386,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#common-causes" class="md-nav__link">
+  <a href="#common-causes_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Common Causes
@@ -4414,7 +4436,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#common-causes_1" class="md-nav__link">
+  <a href="#common-causes_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Common Causes
@@ -4514,7 +4536,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#common-causes_2" class="md-nav__link">
+  <a href="#common-causes_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Common Causes
@@ -4876,27 +4898,55 @@
 │  Edge uplink = VLAN uplink on Edge to physical switch; check tagging                                  │
 │  Resync      = NSX Manager pushes config to transport node again                                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Common Causes
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Cause | Diagnosis | Fix |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| MD5 password mismatch | Neighbour shows `Auth Failure` in logs | Match passwords on both sides |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| ASN mismatch | `get bgp config` — verify remote ASN | Correct in NSX policy or on router |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Physical link down | `get interface fp-eth0` — DOWN | Fix physical connectivity |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| MTU mismatch | BFD timers firing; route established then drops | Verify MTU on physical switch ports |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| BFD hold timer | BFD session flapping | Tune BFD timers to match physical path latency |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Underlay routing | Edge cannot reach peer IP | Add static route on Edge: `set appliance gw-route` |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>### Recovery
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>After fixing the root cause, BGP re-establishes automatically. No manual reset needed. Monitor:
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```bash
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># From Edge CLI — watch BGP state
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>get bgp neighbor summary
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># State should change from Active → OpenSent → Established within 30–60 seconds
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Diagnosis</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MD5 password mismatch</td>
+<td>Neighbour shows <code>Auth Failure</code> in logs</td>
+<td>Match passwords on both sides</td>
+</tr>
+<tr>
+<td>ASN mismatch</td>
+<td><code>get bgp config</code> — verify remote ASN</td>
+<td>Correct in NSX policy or on router</td>
+</tr>
+<tr>
+<td>Physical link down</td>
+<td><code>get interface fp-eth0</code> — DOWN</td>
+<td>Fix physical connectivity</td>
+</tr>
+<tr>
+<td>MTU mismatch</td>
+<td>BFD timers firing; route established then drops</td>
+<td>Verify MTU on physical switch ports</td>
+</tr>
+<tr>
+<td>BFD hold timer</td>
+<td>BFD session flapping</td>
+<td>Tune BFD timers to match physical path latency</td>
+</tr>
+<tr>
+<td>Underlay routing</td>
+<td>Edge cannot reach peer IP</td>
+<td>Add static route on Edge: <code>set appliance gw-route</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="recovery">Recovery<a class="headerlink" href="#recovery" title="Permanent link">&para;</a></h3>
+<p>After fixing the root cause, BGP re-establishes automatically. No manual reset needed. Monitor:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From Edge CLI — watch BGP state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># State should change from Active → OpenSent → Established within 30–60 seconds</span>
+</code></pre></div>
 <hr />
 <h2 id="geneve-tunnel-down-between-two-hosts">Geneve Tunnel Down Between Two Hosts<a class="headerlink" href="#geneve-tunnel-down-between-two-hosts" title="Permanent link">&para;</a></h2>
 <h3 id="symptom_1">Symptom<a class="headerlink" href="#symptom_1" title="Permanent link">&para;</a></h3>
@@ -4921,7 +4971,7 @@
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Test with the right MTU</span>
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk&lt;n&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
 </code></pre></div>
-<h3 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h3>
+<h3 id="common-causes_1">Common Causes<a class="headerlink" href="#common-causes_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -4982,7 +5032,7 @@
 <a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/groups/&lt;group-id&gt;/members/virtual-machines&quot;</span>
 </code></pre></div>
-<h3 id="common-causes_1">Common Causes<a class="headerlink" href="#common-causes_1" title="Permanent link">&para;</a></h3>
+<h3 id="common-causes_2">Common Causes<a class="headerlink" href="#common-causes_2" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -5076,7 +5126,7 @@
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
 </code></pre></div>
-<h3 id="common-causes_2">Common Causes<a class="headerlink" href="#common-causes_2" title="Permanent link">&para;</a></h3>
+<h3 id="common-causes_3">Common Causes<a class="headerlink" href="#common-causes_3" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

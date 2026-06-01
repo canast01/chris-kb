@@ -3233,6 +3233,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#errdisabled-port" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        errDisabled Port
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#host-cannot-see-storage" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3582,52 +3593,78 @@
 │  FSPF           = Fabric Shortest Path First; routing protocol determining ISL paths                  │
 │  CRC error      = Frame checksum failure; indicates physical layer problem                            │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Resolution by cause:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Cause | Indicator | Fix |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Fibre cable failure | `not-connected` reason; no Rx optical power | Replace fibre cable |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Failed SFP | Rx power very low or absent in transceiver output | Replace SFP |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| HBA not sending FLOGI | Port up but no FLOGI entry | Check host HBA driver, firmware, and link state |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| VSAN not assigned | Port up but device missing from `show flogi database` | `vsan database` → `vsan &lt;id&gt; interface fc&lt;x/y&gt;` |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Speed mismatch | Port negotiates down repeatedly | Force speed: `switchport speed &lt;8000|16000|32000&gt;` |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| errDisabled | See errDisabled section below | Resolve root cause, then `no shutdown` |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>---
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## errDisabled Port
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>**Symptom:** `show interface brief` shows `errDisabled`. NX-OS automatically disabled the port after detecting a fault.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```mermaid
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>flowchart TD
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  A[&quot;Port in errDisabled\n(show interface brief)&quot;] --&gt; B[&quot;Read error reason\n(show interface fc1/4)&quot;]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  B --&gt; C{&quot;errDisabled reason?&quot;}
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  C --&gt;|&quot;fcot-not-present&quot;| D[&quot;Reseat or replace SFP&quot;]
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  C --&gt;|&quot;link-failure-count-exceeded&quot;| E[&quot;Replace SFP → test\nReplace cable → test\nCheck peer HBA/port&quot;]
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  C --&gt;|&quot;isolation&quot;| F[&quot;Resolve VSAN merge conflict\nCheck show trunk — allowed VSANs\nCheck fcdomain domain-list&quot;]
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  C --&gt;|&quot;rcf-failure&quot;| G[&quot;Assign unique static domain ID\nbefore ISL reconnect&quot;]
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  C --&gt;|&quot;cfg-invalid&quot;| H[&quot;Fix VSAN assignment\nor port mode config&quot;]
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  D &amp; E &amp; F &amp; G &amp; H --&gt; I{&quot;Root cause\nresolved?&quot;}
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  I --&gt;|&quot;No — do not re-enable&quot;| J[&quot;Collect show tech-support\nOpen Cisco TAC case&quot;]
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  I --&gt;|&quot;Yes&quot;| K[&quot;shutdown → no shutdown\nVerify state = up&quot;]
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  classDef decision fill:#b45309,stroke:#92400e,color:#fff
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  classDef good fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  class C,I decision
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  class D,E,F,G,H fix
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  class J warn
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  class K good
-</code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check reason</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Look for: &quot;Port is in error-disabled state&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check log for the triggering event</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;err\|disabled\|fc1/4&quot;</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Resolution by cause:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Indicator</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fibre cable failure</td>
+<td><code>not-connected</code> reason; no Rx optical power</td>
+<td>Replace fibre cable</td>
+</tr>
+<tr>
+<td>Failed SFP</td>
+<td>Rx power very low or absent in transceiver output</td>
+<td>Replace SFP</td>
+</tr>
+<tr>
+<td>HBA not sending FLOGI</td>
+<td>Port up but no FLOGI entry</td>
+<td>Check host HBA driver, firmware, and link state</td>
+</tr>
+<tr>
+<td>VSAN not assigned</td>
+<td>Port up but device missing from <code>show flogi database</code></td>
+<td><code>vsan database</code> → <code>vsan &lt;id&gt; interface fc&lt;x/y&gt;</code></td>
+</tr>
+<tr>
+<td>Speed mismatch</td>
+<td>Port negotiates down repeatedly</td>
+<td>Force speed: <code>switchport speed &lt;8000|16000|32000&gt;</code></td>
+</tr>
+<tr>
+<td>errDisabled</td>
+<td>See errDisabled section below</td>
+<td>Resolve root cause, then <code>no shutdown</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="errdisabled-port">errDisabled Port<a class="headerlink" href="#errdisabled-port" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> <code>show interface brief</code> shows <code>errDisabled</code>. NX-OS automatically disabled the port after detecting a fault.</p>
+<pre class="mermaid"><code>flowchart TD
+  A["Port in errDisabled\n(show interface brief)"] --&gt; B["Read error reason\n(show interface fc1/4)"]
+  B --&gt; C{"errDisabled reason?"}
+  C --&gt;|"fcot-not-present"| D["Reseat or replace SFP"]
+  C --&gt;|"link-failure-count-exceeded"| E["Replace SFP → test\nReplace cable → test\nCheck peer HBA/port"]
+  C --&gt;|"isolation"| F["Resolve VSAN merge conflict\nCheck show trunk — allowed VSANs\nCheck fcdomain domain-list"]
+  C --&gt;|"rcf-failure"| G["Assign unique static domain ID\nbefore ISL reconnect"]
+  C --&gt;|"cfg-invalid"| H["Fix VSAN assignment\nor port mode config"]
+  D &amp; E &amp; F &amp; G &amp; H --&gt; I{"Root cause\nresolved?"}
+  I --&gt;|"No — do not re-enable"| J["Collect show tech-support\nOpen Cisco TAC case"]
+  I --&gt;|"Yes"| K["shutdown → no shutdown\nVerify state = up"]
+
+  classDef decision fill:#b45309,stroke:#92400e,color:#fff
+  classDef fix fill:#1e3a5f,stroke:#3b82f6,color:#e0f2fe
+  classDef warn fill:#991b1b,stroke:#7f1d1d,color:#fff
+  classDef good fill:#15803d,stroke:#166534,color:#fff
+  class C,I decision
+  class D,E,F,G,H fix
+  class J warn
+  class K good</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check reason</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Look for: &quot;Port is in error-disabled state&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check log for the triggering event</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;err\|disabled\|fc1/4&quot;</span>
 </code></pre></div>
 <p><strong>Never re-enable an errDisabled port without first resolving the root cause.</strong> The port will immediately errDisable again.</p>
 <table>
@@ -3667,32 +3704,32 @@
 </tbody>
 </table>
 <p><strong>Recovery after resolving root cause:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>shutdown
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Confirm state returns to &#39;up&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>shutdown
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>no<span class="w"> </span>shutdown
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm state returns to &#39;up&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="host-cannot-see-storage">Host Cannot See Storage<a class="headerlink" href="#host-cannot-see-storage" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> A host reports no FC storage paths. A newly connected server cannot discover any LUNs. Multipath shows one fewer path than expected.</p>
 <p><strong>Structured triage:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Is the host HBA logged into the fabric?</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-pwwn&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 2. Is the storage target logged in?</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;storage-pwwn&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># 3. Is there a zone pairing these two devices?</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span>&lt;host-pwwn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># 4. Is the zoneset containing that zone currently active?</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 5. Are both ports in the same VSAN?</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;host-port&gt;
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;storage-port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Is the host HBA logged into the fabric?</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;host-pwwn&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. Is the storage target logged in?</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;storage-pwwn&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. Is there a zone pairing these two devices?</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>zone<span class="w"> </span>member<span class="w"> </span>pwwn<span class="w"> </span>&lt;host-pwwn&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 4. Is the zoneset containing that zone currently active?</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 5. Are both ports in the same VSAN?</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;host-port&gt;
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>show<span class="w"> </span>vsan<span class="w"> </span>membership<span class="w"> </span>interface<span class="w"> </span>fc&lt;storage-port&gt;
 </code></pre></div>
 <p><strong>Decision tree:</strong></p>
 <pre class="mermaid"><code>flowchart TD
@@ -3714,14 +3751,14 @@
 <hr />
 <h2 id="zoning-zone-set-not-activating">Zoning: Zone Set Not Activating<a class="headerlink" href="#zoning-zone-set-not-activating" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>zoneset activate</code> fails or does not propagate across the fabric.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check zone status</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check for pending changes in enhanced mode</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Retry activate</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>&lt;zoneset-name&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check zone status</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check for pending changes in enhanced mode</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>zone<span class="w"> </span>commit<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Retry activate</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>&lt;zoneset-name&gt;<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p><strong>Common blockers:</strong></p>
 <table>
@@ -3763,19 +3800,19 @@
 <hr />
 <h2 id="isl-down-or-isolated">ISL Down or Isolated<a class="headerlink" href="#isl-down-or-isolated" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>show topology</code> shows a missing ISL link between switches, or a VSAN shows as <code>isolated</code> on the ISL port.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check ISL port state</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1<span class="w"> </span>counters<span class="w"> </span>errors
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check trunk state and VSAN allowance</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>show<span class="w"> </span>trunk
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check port-channel membership if applicable</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check for VSAN isolation reason</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>show<span class="w"> </span>vsan
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check ISL port state</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>interface<span class="w"> </span>fc2/1<span class="w"> </span>counters<span class="w"> </span>errors
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check trunk state and VSAN allowance</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>trunk
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check port-channel membership if applicable</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check for VSAN isolation reason</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>show<span class="w"> </span>vsan
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>show<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
 </code></pre></div>
 <p><strong>Isolation causes and fixes:</strong></p>
 <table>
@@ -3812,14 +3849,14 @@
 <hr />
 <h2 id="domain-id-conflict">Domain ID Conflict<a class="headerlink" href="#domain-id-conflict" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> After connecting a new MDS switch or recovering from a network partition, a VSAN goes isolated. <code>show fcdomain</code> shows a conflict.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <p><strong>Resolution:</strong></p>
 <ol>
 <li>Shut the ISL connecting the two switches: <code>interface fc2/1</code> → <code>shutdown</code></li>
 <li>On the new or conflicting switch, assign a unique static domain ID:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">4</span><span class="w"> </span>static<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fcdomain<span class="w"> </span>domain<span class="w"> </span><span class="m">4</span><span class="w"> </span>static<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div></li>
 <li>Bring the ISL back up: <code>no shutdown</code></li>
 <li>Verify: <code>show fcdomain domain-list vsan 10</code> — each switch should have a unique ID</li>
@@ -3827,14 +3864,14 @@
 <hr />
 <h2 id="flogi-instability-port-flapping">FLOGI Instability / Port Flapping<a class="headerlink" href="#flogi-instability-port-flapping" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> <code>show logging</code> contains repeated <code>link down</code>/<code>link up</code> or <code>FLOGI accepted</code>/<code>rejected</code> events on the same port. This degrades fabric stability and can cause I/O disruptions on dependent zones.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Identify flapping port</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;link down\|link up\|flogi&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check error counters on the suspect port</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>counters<span class="w"> </span>errors
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check optical power levels</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>transceiver
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Identify flapping port</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;link down\|link up\|flogi&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Check error counters on the suspect port</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>counters<span class="w"> </span>errors
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Check optical power levels</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/6<span class="w"> </span>transceiver
 </code></pre></div>
 <p><strong>Resolution:</strong></p>
 <ol>
@@ -3847,29 +3884,29 @@
 <hr />
 <h2 id="high-cpu-slow-cli">High CPU / Slow CLI<a class="headerlink" href="#high-cpu-slow-cli" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> CLI responses are slow; <code>show system resources</code> shows CPU &gt; 80%.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check overall CPU and memory</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>show<span class="w"> </span>system<span class="w"> </span>resources
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Find top CPU consumers</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>processes<span class="w"> </span>cpu<span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Check if caused by port flap storm (many FLOGI events)</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-ci<span class="w"> </span><span class="s2">&quot;link down&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check overall CPU and memory</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>show<span class="w"> </span>system<span class="w"> </span>resources
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Find top CPU consumers</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>show<span class="w"> </span>processes<span class="w"> </span>cpu<span class="w"> </span>sort<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Check if caused by port flap storm (many FLOGI events)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">200</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-ci<span class="w"> </span><span class="s2">&quot;link down&quot;</span>
 </code></pre></div>
 <p>If the high CPU is caused by FLOGI storms (many link events in the log), shut the offending port. If CPU is high without an obvious cause, collect <code>show tech-support</code> and open a TAC case.</p>
 <hr />
 <h2 id="configuration-lost-after-reload">Configuration Lost After Reload<a class="headerlink" href="#configuration-lost-after-reload" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Changes made before a reload (zone updates, VSAN changes, new device aliases) are missing after the switch comes back up.</p>
 <p><strong>Cause:</strong> <code>copy running-config startup-config</code> was not run after the changes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Always run this after every configuration change</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Verify startup config was updated</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>show<span class="w"> </span>startup-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;changed-item&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Always run this after every configuration change</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify startup config was updated</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>show<span class="w"> </span>startup-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;changed-item&gt;
 </code></pre></div>
 <p>For large changes, also take a checkpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>checkpoint<span class="w"> </span>post-change
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>show<span class="w"> </span>checkpoint<span class="w"> </span>summary
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>checkpoint<span class="w"> </span>post-change
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>show<span class="w"> </span>checkpoint<span class="w"> </span>summary
 </code></pre></div>
 <hr />
 <h2 id="known-issues-reference">Known Issues Reference<a class="headerlink" href="#known-issues-reference" title="Permanent link">&para;</a></h2>

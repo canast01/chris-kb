@@ -4349,6 +4349,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#active-directory-integration-via-vidm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory Integration via VIDM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#api-service-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4639,52 +4661,42 @@
 │  Lockout           = Account locked after N failed logins; admin must unlock via vIDM                 │
 │  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Provide:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- VIDM hostname: `vidm.example.local`
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Admin credentials for VIDM
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Accept the VIDM certificate (or ensure it is trusted by the Aria Automation appliance)
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>After configuration, all Aria Automation users authenticate via VIDM. The local `admin` account becomes a fallback that authenticates via VIDM using the `System Domain`.
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>---
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Active Directory Integration via VIDM
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>AD integration is configured in VIDM, not in Aria Automation directly:
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>1. **VIDM console → Identity &amp; Access Management → Directories → Add Directory**
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>2. Select **Active Directory over LDAP/LDAPS**
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>3. Provide:
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>   - Domain: `corp.local`
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>   - Domain controllers: `dc01.example.local:636`, `dc02.example.local:636`
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   - Bind DN: `CN=svc-vidm,OU=Service Accounts,DC=corp,DC=local`
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   - Bind password
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   - Base DN for user search: `DC=corp,DC=local`
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>4. Select OUs to sync (choose specific OUs, not the full domain)
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>5. Set sync schedule: every 60 minutes
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>After sync, AD users can log into Aria Automation using their domain credentials via the VIDM login page.
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>---
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>## API Authentication
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>All Aria Automation REST API calls require a Bearer token obtained from VIDM.
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>**Acquire a token (local admin account):**
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>```bash
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>TOKEN=$(curl -sk -X POST \
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  &quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot; \
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  -d &#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39; | \
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>  jq -r &#39;.token&#39;)
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a># Use in subsequent requests
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>curl -sk -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>  &quot;https://vra-prod-01.example.local/iaas/api/zones&quot; | jq &#39;.&#39;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Provide:
+- VIDM hostname: <code>vidm.example.local</code>
+- Admin credentials for VIDM
+- Accept the VIDM certificate (or ensure it is trusted by the Aria Automation appliance)</p>
+<p>After configuration, all Aria Automation users authenticate via VIDM. The local <code>admin</code> account becomes a fallback that authenticates via VIDM using the <code>System Domain</code>.</p>
+<hr />
+<h2 id="active-directory-integration-via-vidm">Active Directory Integration via VIDM<a class="headerlink" href="#active-directory-integration-via-vidm" title="Permanent link">&para;</a></h2>
+<p>AD integration is configured in VIDM, not in Aria Automation directly:</p>
+<ol>
+<li><strong>VIDM console → Identity &amp; Access Management → Directories → Add Directory</strong></li>
+<li>Select <strong>Active Directory over LDAP/LDAPS</strong></li>
+<li>Provide:</li>
+<li>Domain: <code>corp.local</code></li>
+<li>Domain controllers: <code>dc01.example.local:636</code>, <code>dc02.example.local:636</code></li>
+<li>Bind DN: <code>CN=svc-vidm,OU=Service Accounts,DC=corp,DC=local</code></li>
+<li>Bind password</li>
+<li>Base DN for user search: <code>DC=corp,DC=local</code></li>
+<li>Select OUs to sync (choose specific OUs, not the full domain)</li>
+<li>Set sync schedule: every 60 minutes</li>
+</ol>
+<p>After sync, AD users can log into Aria Automation using their domain credentials via the VIDM login page.</p>
+<hr />
+<h2 id="api-authentication">API Authentication<a class="headerlink" href="#api-authentication" title="Permanent link">&para;</a></h2>
+<p>All Aria Automation REST API calls require a Bearer token obtained from VIDM.</p>
+<p><strong>Acquire a token (local admin account):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Use in subsequent requests</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+</code></pre></div>
 <p><strong>Acquire a token (AD user):</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>

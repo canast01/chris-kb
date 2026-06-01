@@ -2829,6 +2829,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#sql-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3110,28 +3121,26 @@
 │    RMAN validate= Oracle checks backup set integrity; reports any corrupt blocks found                │
 │    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### SQL Server
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```sql
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>-- Last backup per database
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SELECT d.name AS database_name,
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>       MAX(b.backup_finish_date) AS last_backup,
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>       b.type AS backup_type
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>FROM sys.databases d
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>LEFT JOIN msdb.dbo.backupset b ON d.name = b.database_name
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>WHERE d.database_id &gt; 4  -- exclude system DBs
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>GROUP BY d.name, b.type
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ORDER BY d.name, b.type;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>-- Failed backup jobs last 24h
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>SELECT j.name AS job_name, h.run_date, h.run_time, h.message
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>FROM msdb.dbo.sysjobs j
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>JOIN msdb.dbo.sysjobhistory h ON j.job_id = h.job_id
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>WHERE j.name LIKE &#39;%backup%&#39;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  AND h.run_status = 0  -- 0 = failed
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  AND h.run_date &gt;= CONVERT(int, CONVERT(varchar, GETDATE()-1, 112));
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Last backup per database</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">database_name</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">       </span><span class="k">MAX</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">backup_finish_date</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">last_backup</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">       </span><span class="n">b</span><span class="p">.</span><span class="k">type</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">backup_type</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">databases</span><span class="w"> </span><span class="n">d</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">LEFT</span><span class="w"> </span><span class="k">JOIN</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">backupset</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">database_name</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">database_id</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">4</span><span class="w">  </span><span class="c1">-- exclude system DBs</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="k">type</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="k">type</span><span class="p">;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">-- Failed backup jobs last 24h</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">job_name</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_date</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_time</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">message</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">FROM</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">sysjobs</span><span class="w"> </span><span class="n">j</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">msdb</span><span class="p">.</span><span class="n">dbo</span><span class="p">.</span><span class="n">sysjobhistory</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">job_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">job_id</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%backup%&#39;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w">  </span><span class="c1">-- 0 = failed</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">h</span><span class="p">.</span><span class="n">run_date</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="w"> </span><span class="k">CONVERT</span><span class="p">(</span><span class="nb">varchar</span><span class="p">,</span><span class="w"> </span><span class="n">GETDATE</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">112</span><span class="p">));</span>
+</code></pre></div>
 <h2 id="backup-file-integrity-check">Backup File Integrity Check<a class="headerlink" href="#backup-file-integrity-check" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — verify backup with pgBackRest</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>check

@@ -3735,6 +3735,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recovery-media-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Media Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-and-validation-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test and Validation Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#access-control-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4029,41 +4051,89 @@
 │  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Recovery Media Standards
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Requirement | Standard |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Media format | ISO file stored on the recovery share alongside images |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| iDRAC mapping | Pre-mapped and tested quarterly — do not wait until an incident |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| WinPE version match | Media must match the server generation&#39;s driver pack (14G/15G/16G) |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Media refresh cycle | Rebuild media after each RASR agent update |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Physical USB | One USB per rack; labeled with server generation and last verified date |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Test and Validation Schedule
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Test type | Frequency | Scope | Evidence required |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|---|---|---|---|
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| **Boot media test** | Quarterly | Boot WinPE from iDRAC; confirm network access and share connectivity | Screenshot of share connection from WinPE |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| **Full restore test** | Semi-annually | Restore to an isolated VM; verify OS boots | Restore completion log + screenshot |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| **Partial restore test** | Quarterly | File-level recovery from image | File hash comparison |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| **Schedule verification** | Monthly | Confirm backups are completing per schedule | Backup log review + OMSA alert check |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>```powershell
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Monthly schedule verification script
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>$servers = @(&quot;app01&quot;, &quot;db02&quot;, &quot;web01&quot;)
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>foreach ($server in $servers) {
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    $img = Get-ChildItem &quot;\\nas01\rasr-images\prod\$server\&quot; |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>           Sort-Object LastWriteTime -Descending | Select-Object -First 1
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    $age = (Get-Date) - $img.LastWriteTime
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    [PSCustomObject]@{
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        Server     = $server
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        LastImage  = $img.LastWriteTime
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>        AgeHours   = [math]::Round($age.TotalHours, 1)
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        Status     = if ($age.TotalHours -lt 26) {&quot;OK&quot;} else {&quot;ALERT — overdue&quot;}
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    }
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>} | Format-Table
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="recovery-media-standards">Recovery Media Standards<a class="headerlink" href="#recovery-media-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Media format</td>
+<td>ISO file stored on the recovery share alongside images</td>
+</tr>
+<tr>
+<td>iDRAC mapping</td>
+<td>Pre-mapped and tested quarterly — do not wait until an incident</td>
+</tr>
+<tr>
+<td>WinPE version match</td>
+<td>Media must match the server generation's driver pack (14G/15G/16G)</td>
+</tr>
+<tr>
+<td>Media refresh cycle</td>
+<td>Rebuild media after each RASR agent update</td>
+</tr>
+<tr>
+<td>Physical USB</td>
+<td>One USB per rack; labeled with server generation and last verified date</td>
+</tr>
+</tbody>
+</table>
+<h2 id="test-and-validation-schedule">Test and Validation Schedule<a class="headerlink" href="#test-and-validation-schedule" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Test type</th>
+<th>Frequency</th>
+<th>Scope</th>
+<th>Evidence required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Boot media test</strong></td>
+<td>Quarterly</td>
+<td>Boot WinPE from iDRAC; confirm network access and share connectivity</td>
+<td>Screenshot of share connection from WinPE</td>
+</tr>
+<tr>
+<td><strong>Full restore test</strong></td>
+<td>Semi-annually</td>
+<td>Restore to an isolated VM; verify OS boots</td>
+<td>Restore completion log + screenshot</td>
+</tr>
+<tr>
+<td><strong>Partial restore test</strong></td>
+<td>Quarterly</td>
+<td>File-level recovery from image</td>
+<td>File hash comparison</td>
+</tr>
+<tr>
+<td><strong>Schedule verification</strong></td>
+<td>Monthly</td>
+<td>Confirm backups are completing per schedule</td>
+<td>Backup log review + OMSA alert check</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Monthly schedule verification script</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span> <span class="s2">&quot;db02&quot;</span><span class="p">,</span> <span class="s2">&quot;web01&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nv">$img</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="s2">&quot;\\nas01\rasr-images\prod\$server\&quot;</span> <span class="p">|</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>           <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nv">$age</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="n">Server</span>     <span class="p">=</span> <span class="nv">$server</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="n">LastImage</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="n">AgeHours</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span> <span class="o">-lt</span> <span class="n">26</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;ALERT — overdue&quot;</span><span class="p">}</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+</code></pre></div>
 <h2 id="access-control-standards">Access Control Standards<a class="headerlink" href="#access-control-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

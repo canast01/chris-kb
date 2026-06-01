@@ -4825,25 +4825,22 @@
 │  Port 9443      = VCSA appliance management HTTPS (VAMI)                                              │
 │  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Never upgrade ESXi before vCenter.** A newer ESXi host is not supported by an older vCenter.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```mermaid
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>graph TD
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    backup[&quot;1. File-based backup of vCenter\n(VAMI → Backup)&quot;]
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    interop[&quot;2. Check interop matrix\n(vCenter × ESXi × NSX × vSAN)&quot;]
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    vcUpgrade[&quot;3. Upgrade vCenter Server\n(Stage 1: deploy / Stage 2: migrate)&quot;]
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    vsanUpgrade[&quot;4. Upgrade vSAN\n(vSAN upgrade wizard in vCenter)&quot;]
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    nsxUpgrade[&quot;5. Upgrade NSX Manager\n(if deployed)&quot;]
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    esxiUpgrade[&quot;6. Upgrade ESXi hosts\n(vLCM — one cluster at a time)&quot;]
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    vmhw[&quot;7. Update VM hardware version\n(optional — check guest OS compat)&quot;]
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    tools[&quot;8. Update VMware Tools\n(all powered-on VMs)&quot;]
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    backup --&gt; interop --&gt; vcUpgrade --&gt; vsanUpgrade --&gt; nsxUpgrade --&gt; esxiUpgrade --&gt; vmhw --&gt; tools
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    class backup,interop,vcUpgrade,vsanUpgrade,nsxUpgrade,esxiUpgrade,vmhw,tools step
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Never upgrade ESXi before vCenter.</strong> A newer ESXi host is not supported by an older vCenter.</p>
+<pre class="mermaid"><code>graph TD
+    backup["1. File-based backup of vCenter\n(VAMI → Backup)"]
+    interop["2. Check interop matrix\n(vCenter × ESXi × NSX × vSAN)"]
+    vcUpgrade["3. Upgrade vCenter Server\n(Stage 1: deploy / Stage 2: migrate)"]
+    vsanUpgrade["4. Upgrade vSAN\n(vSAN upgrade wizard in vCenter)"]
+    nsxUpgrade["5. Upgrade NSX Manager\n(if deployed)"]
+    esxiUpgrade["6. Upgrade ESXi hosts\n(vLCM — one cluster at a time)"]
+    vmhw["7. Update VM hardware version\n(optional — check guest OS compat)"]
+    tools["8. Update VMware Tools\n(all powered-on VMs)"]
+
+    backup --&gt; interop --&gt; vcUpgrade --&gt; vsanUpgrade --&gt; nsxUpgrade --&gt; esxiUpgrade --&gt; vmhw --&gt; tools
+
+    classDef step fill:#2563eb,stroke:#1d4ed8,color:#fff
+    class backup,interop,vcUpgrade,vsanUpgrade,nsxUpgrade,esxiUpgrade,vmhw,tools step</code></pre>
 <h2 id="vcenter-upgrade-procedure-vcsa">vCenter Upgrade Procedure (VCSA)<a class="headerlink" href="#vcenter-upgrade-procedure-vcsa" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Take a <strong>file-based backup</strong> of vCenter (VAMI → Backup)</li>

@@ -3765,6 +3765,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-inheritance-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Inheritance Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#resource-lock-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4144,45 +4166,69 @@
 │  Global unique   = Some Azure resource names (storage, ACR) must be globally unique                   │
 │  Platform sub    = Dedicated subscriptions for management, connectivity, and identity                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Security Standards
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Control | Standard |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Defender for Cloud | Enabled on all subscriptions; recommendations remediated to &lt; 10% unhealthy |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Azure Policy | CIS Azure Benchmark conformance pack assigned at root Management Group |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Diagnostic settings | All resources → Log Analytics; Key Vault, NSG, Firewall also to Event Hub |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| VNet flow logs | Enabled on all VNets; 90-day retention |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Key Vault | Soft delete + purge protection enabled; private endpoint required for production |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Encryption | All disks CMK or PMK (minimum); storage SSE with Microsoft-managed keys minimum |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| NSG rules | Description field mandatory; inbound ANY:ANY from internet denied by default |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## RBAC Inheritance Model
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>```mermaid
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>flowchart TD
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    mgRoot[&quot;Tenant Root\nManagement Group&quot;]
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    mgPlatform[&quot;mg-platform\nManagement Group&quot;]
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    mgLandingZones[&quot;mg-landingzones\nManagement Group&quot;]
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    mgProd[&quot;mg-production\nManagement Group&quot;]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    subProd[&quot;Production\nSubscription&quot;]
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    rg[&quot;Resource Group\nrg-prod-euw-app&quot;]
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    resource[&quot;Resource\nVM · Storage · Key Vault&quot;]
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    mgRoot --&gt;|&quot;RBAC inherited&quot;| mgPlatform
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    mgRoot --&gt;|&quot;RBAC inherited&quot;| mgLandingZones
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    mgLandingZones --&gt;|&quot;RBAC inherited&quot;| mgProd
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    mgProd --&gt;|&quot;RBAC inherited&quot;| subProd
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    subProd --&gt;|&quot;RBAC inherited&quot;| rg
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    rg --&gt;|&quot;RBAC inherited&quot;| resource
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Defender for Cloud</td>
+<td>Enabled on all subscriptions; recommendations remediated to &lt; 10% unhealthy</td>
+</tr>
+<tr>
+<td>Azure Policy</td>
+<td>CIS Azure Benchmark conformance pack assigned at root Management Group</td>
+</tr>
+<tr>
+<td>Diagnostic settings</td>
+<td>All resources → Log Analytics; Key Vault, NSG, Firewall also to Event Hub</td>
+</tr>
+<tr>
+<td>VNet flow logs</td>
+<td>Enabled on all VNets; 90-day retention</td>
+</tr>
+<tr>
+<td>Key Vault</td>
+<td>Soft delete + purge protection enabled; private endpoint required for production</td>
+</tr>
+<tr>
+<td>Encryption</td>
+<td>All disks CMK or PMK (minimum); storage SSE with Microsoft-managed keys minimum</td>
+</tr>
+<tr>
+<td>NSG rules</td>
+<td>Description field mandatory; inbound ANY:ANY from internet denied by default</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rbac-inheritance-model">RBAC Inheritance Model<a class="headerlink" href="#rbac-inheritance-model" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    mgRoot["Tenant Root\nManagement Group"]
+    mgPlatform["mg-platform\nManagement Group"]
+    mgLandingZones["mg-landingzones\nManagement Group"]
+    mgProd["mg-production\nManagement Group"]
+    subProd["Production\nSubscription"]
+    rg["Resource Group\nrg-prod-euw-app"]
+    resource["Resource\nVM · Storage · Key Vault"]
+
+    mgRoot --&gt;|"RBAC inherited"| mgPlatform
+    mgRoot --&gt;|"RBAC inherited"| mgLandingZones
+    mgLandingZones --&gt;|"RBAC inherited"| mgProd
+    mgProd --&gt;|"RBAC inherited"| subProd
+    subProd --&gt;|"RBAC inherited"| rg
+    rg --&gt;|"RBAC inherited"| resource</code></pre>
 <h2 id="resource-lock-standards">Resource Lock Standards<a class="headerlink" href="#resource-lock-standards" title="Permanent link">&para;</a></h2>
 <p>Apply locks to prevent accidental deletion of production infrastructure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add delete lock to production resource group</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-rg-lock&quot;</span><span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--lock-type<span class="w"> </span>CanNotDelete
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List locks</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>lock<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add delete lock to production resource group</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-rg-lock&quot;</span><span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--lock-type<span class="w"> </span>CanNotDelete
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List locks</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>lock<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
 </code></pre></div>
 <h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
 <p>Azure resources may only be deployed in:
@@ -4264,18 +4310,18 @@
 <p>Tags are enforced via Azure Policy <code>Require tag on resources</code>. Any resource missing mandatory tags is flagged in the compliance dashboard within 24 hours.</p>
 <h2 id="subscription-structure">Subscription Structure<a class="headerlink" href="#subscription-structure" title="Permanent link">&para;</a></h2>
 <p>Subscriptions are organised by workload and environment, not by team. Each production workload gets a dedicated subscription to enforce blast radius isolation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Management Group: Corp
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── Platform
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── sub-identity-prod           # Domain controllers, ADCS
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   └── sub-management-prod         # Log Analytics, Backup, Automation
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>├── Landing Zones
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── sub-app01-prod
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   ├── sub-app01-dev
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   ├── sub-app02-prod
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   └── sub-app02-dev
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>└── Sandbox
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    └── sub-sandbox
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Management Group: Corp
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Platform
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   ├── sub-identity-prod           # Domain controllers, ADCS
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   └── sub-management-prod         # Log Analytics, Backup, Automation
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>├── Landing Zones
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   ├── sub-app01-prod
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   ├── sub-app01-dev
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   ├── sub-app02-prod
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   └── sub-app02-dev
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>└── Sandbox
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    └── sub-sandbox
 </code></pre></div>
 <p>Each landing zone subscription inherits policy from its management group. Do not place prod and non-prod workloads in the same subscription.</p>
 <h2 id="baseline-configuration-requirements">Baseline Configuration Requirements<a class="headerlink" href="#baseline-configuration-requirements" title="Permanent link">&para;</a></h2>

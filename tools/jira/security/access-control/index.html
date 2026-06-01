@@ -3210,6 +3210,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#project-permission-schemes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Permission Schemes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Permission Schemes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-permission-scheme-hardened-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Permission Scheme — Hardened Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-permission-scheme-via-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Permission Scheme via API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#project-roles" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3575,64 +3614,106 @@
 │  Issue inherit     = issue security can be inherited from parent issue                                │
 │  Audit log         = Admin &gt; Audit Log; records permission and scheme changes                         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Critical control:** Remove `jira-software-users` from global Browse Users permission if the user directory is large — it can expose all usernames to every authenticated user.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Project Permission Schemes
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Each project uses a permission scheme that maps actions to roles, groups, or users.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### Default Permission Scheme — Hardened Version
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Permission | Grantee |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|---|---|
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Browse Projects | Project Role: Viewer, Developer, QA, PM |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Create Issues | Project Role: Developer, QA, PM |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Edit Issues | Project Role: Developer, QA, PM |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Assign Issues | Project Role: Developer, PM |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Close Issues | Project Role: Developer, QA, PM |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Resolve Issues | Project Role: Developer, QA |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Delete Issues | Project Role: PM |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Manage Sprints | Project Role: PM |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| View Development Tools | Project Role: Developer |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| Administer Projects | Project Role: PM |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Transition Issues | Project Role: Developer, QA, PM |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| Schedule Issues | Project Role: PM |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| View Voters and Watchers | Project Role: Developer, QA, PM |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>| Manage Watchers | Project Role: PM |
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>### Creating a Permission Scheme via API
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>```bash
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Create a new permission scheme
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  -X POST \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  &quot;https://jira.corp.example.com/rest/api/2/permissionscheme&quot; \
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  -d &#39;{
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    &quot;name&quot;: &quot;Hardened Project Scheme&quot;,
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    &quot;description&quot;: &quot;Least-privilege project permissions&quot;,
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    &quot;permissions&quot;: [
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>      {
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        &quot;permission&quot;: &quot;BROWSE_PROJECTS&quot;,
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>        &quot;holder&quot;: {&quot;type&quot;: &quot;projectRole&quot;, &quot;parameter&quot;: &quot;Viewer&quot;}
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>      },
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>      {
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>        &quot;permission&quot;: &quot;CREATE_ISSUES&quot;,
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>        &quot;holder&quot;: {&quot;type&quot;: &quot;projectRole&quot;, &quot;parameter&quot;: &quot;Developer&quot;}
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>      }
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>    ]
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>  }&#39;
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a># Assign a permission scheme to a project
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>  -X PUT \
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>  &quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/permissionscheme&quot; \
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>  -d &#39;{&quot;id&quot;: 10200}&#39;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p><strong>Critical control:</strong> Remove <code>jira-software-users</code> from global Browse Users permission if the user directory is large — it can expose all usernames to every authenticated user.</p>
+<hr />
+<h2 id="project-permission-schemes">Project Permission Schemes<a class="headerlink" href="#project-permission-schemes" title="Permanent link">&para;</a></h2>
+<p>Each project uses a permission scheme that maps actions to roles, groups, or users.</p>
+<h3 id="default-permission-scheme-hardened-version">Default Permission Scheme — Hardened Version<a class="headerlink" href="#default-permission-scheme-hardened-version" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Grantee</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Browse Projects</td>
+<td>Project Role: Viewer, Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Create Issues</td>
+<td>Project Role: Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Edit Issues</td>
+<td>Project Role: Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Assign Issues</td>
+<td>Project Role: Developer, PM</td>
+</tr>
+<tr>
+<td>Close Issues</td>
+<td>Project Role: Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Resolve Issues</td>
+<td>Project Role: Developer, QA</td>
+</tr>
+<tr>
+<td>Delete Issues</td>
+<td>Project Role: PM</td>
+</tr>
+<tr>
+<td>Manage Sprints</td>
+<td>Project Role: PM</td>
+</tr>
+<tr>
+<td>View Development Tools</td>
+<td>Project Role: Developer</td>
+</tr>
+<tr>
+<td>Administer Projects</td>
+<td>Project Role: PM</td>
+</tr>
+<tr>
+<td>Transition Issues</td>
+<td>Project Role: Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Schedule Issues</td>
+<td>Project Role: PM</td>
+</tr>
+<tr>
+<td>View Voters and Watchers</td>
+<td>Project Role: Developer, QA, PM</td>
+</tr>
+<tr>
+<td>Manage Watchers</td>
+<td>Project Role: PM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-a-permission-scheme-via-api">Creating a Permission Scheme via API<a class="headerlink" href="#creating-a-permission-scheme-via-api" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a new permission scheme</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/permissionscheme&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;name&quot;: &quot;Hardened Project Scheme&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;description&quot;: &quot;Least-privilege project permissions&quot;,</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;permissions&quot;: [</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      {</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">        &quot;permission&quot;: &quot;BROWSE_PROJECTS&quot;,</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">        &quot;holder&quot;: {&quot;type&quot;: &quot;projectRole&quot;, &quot;parameter&quot;: &quot;Viewer&quot;}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">      },</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">      {</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">        &quot;permission&quot;: &quot;CREATE_ISSUES&quot;,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">        &quot;holder&quot;: {&quot;type&quot;: &quot;projectRole&quot;, &quot;parameter&quot;: &quot;Developer&quot;}</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">      }</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">    ]</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Assign a permission scheme to a project</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/permissionscheme&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;id&quot;: 10200}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="project-roles">Project Roles<a class="headerlink" href="#project-roles" title="Permanent link">&para;</a></h2>
 <p>Project Roles define positions within a project (Developer, QA, PM). Users and groups are assigned to roles per-project.</p>

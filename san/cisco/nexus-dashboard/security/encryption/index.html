@@ -3331,6 +3331,78 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#nd-to-managed-switch-communication-ssh-and-snmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND to Managed Switch Communication (SSH and SNMP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nd-cluster-internal-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Cluster Internal Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ldap-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LDAP Traffic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-at-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data at Rest
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data at Rest">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#stored-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stored Credentials
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-secret-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Secret Encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#backup-encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3634,51 +3706,36 @@
 │  Auto-renew     = ND does not auto-renew certs; monitor expiry and replace manually                   │
 │  Disk encryption= OS-level feature (LUKS) optional on bare-metal ND deployments                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### ND to Managed Switch Communication (SSH and SNMP)
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="nd-to-managed-switch-communication-ssh-and-snmp">ND to Managed Switch Communication (SSH and SNMP)<a class="headerlink" href="#nd-to-managed-switch-communication-ssh-and-snmp" title="Permanent link">&para;</a></h3>
+<p>NDFC uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
+- SSH v2 enforced on managed switches: <code>show ssh server</code> on each MDS
+- RSA keys ≥ 2048-bit: <code>show crypto key mypubkey rsa</code> on each MDS
+- NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: <strong>NDFC &gt; Fabrics &gt; [Fabric] &gt; Edit Switch &gt; Reset Host Key</strong></p>
+<p>SNMP polling uses SNMPv3 with <code>authPriv</code> (SHA auth + AES-128 priv). Configure on managed switches per the <a href="../../architecture/design-standards/">Design Standards</a> page.</p>
+<h3 id="nd-cluster-internal-communication">ND Cluster Internal Communication<a class="headerlink" href="#nd-cluster-internal-communication" title="Permanent link">&para;</a></h3>
+<p>Inter-node cluster communication (Kubernetes, etcd, Kafka) uses mutual TLS (mTLS) with internally managed certificates. These are managed automatically by ND and do not require operator attention under normal circumstances.</p>
+<h3 id="ldap-traffic">LDAP Traffic<a class="headerlink" href="#ldap-traffic" title="Permanent link">&para;</a></h3>
+<p>Use port 636 (LDAPS) for all LDAP connections. Import the corporate CA certificate to ensure proper trust chain validation. Never use plain LDAP port 389 in production — it transmits bind credentials in cleartext.</p>
+<hr />
+<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
+<h3 id="stored-credentials">Stored Credentials<a class="headerlink" href="#stored-credentials" title="Permanent link">&para;</a></h3>
+<p>ND stores the following sensitive data encrypted at rest in its internal database (Keycloak + PostgreSQL):
+- LDAP bind DN password
+- TACACS+ shared key
+- Switch SSH usernames and passwords (via NDFC)
+- SNMPv3 auth and priv passwords (via NDFC)
+- SMTP authentication credentials
+- Backup encryption passphrase</p>
+<p>Encryption keys are managed by the ND platform's internal key management service (Vault). Keys are tied to the cluster instance and are included in cluster backups.</p>
+<h3 id="kubernetes-secret-encryption">Kubernetes Secret Encryption<a class="headerlink" href="#kubernetes-secret-encryption" title="Permanent link">&para;</a></h3>
+<p>ND stores application credentials and configuration in Kubernetes Secrets. Kubernetes Secrets are base64-encoded by default, but ND enables etcd encryption at rest for Secrets using AES-GCM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>NDFC uses SSH (port 22) for all configuration push operations to MDS switches. Ensure:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- SSH v2 enforced on managed switches: `show ssh server` on each MDS
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- RSA keys ≥ 2048-bit: `show crypto key mypubkey rsa` on each MDS
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- NDFC stores switch host keys on first connection; if a switch is replaced, remove the old host key from NDFC: **NDFC &gt; Fabrics &gt; [Fabric] &gt; Edit Switch &gt; Reset Host Key**
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>SNMP polling uses SNMPv3 with `authPriv` (SHA auth + AES-128 priv). Configure on managed switches per the [Design Standards](../../architecture/design-standards/index.md) page.
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>### ND Cluster Internal Communication
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Inter-node cluster communication (Kubernetes, etcd, Kafka) uses mutual TLS (mTLS) with internally managed certificates. These are managed automatically by ND and do not require operator attention under normal circumstances.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### LDAP Traffic
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Use port 636 (LDAPS) for all LDAP connections. Import the corporate CA certificate to ensure proper trust chain validation. Never use plain LDAP port 389 in production — it transmits bind credentials in cleartext.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>---
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>## Data at Rest
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>### Stored Credentials
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ND stores the following sensitive data encrypted at rest in its internal database (Keycloak + PostgreSQL):
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>- LDAP bind DN password
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>- TACACS+ shared key
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>- Switch SSH usernames and passwords (via NDFC)
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>- SNMPv3 auth and priv passwords (via NDFC)
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>- SMTP authentication credentials
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>- Backup encryption passphrase
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Encryption keys are managed by the ND platform&#39;s internal key management service (Vault). Keys are tied to the cluster instance and are included in cluster backups.
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>### Kubernetes Secret Encryption
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>ND stores application credentials and configuration in Kubernetes Secrets. Kubernetes Secrets are base64-encoded by default, but ND enables etcd encryption at rest for Secrets using AES-GCM:
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>```bash
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>ssh ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># Verify etcd encryption is enabled (should be configured by ND platform)
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>kubectl get secret -n kube-system encryptionconfig -o yaml 2&gt;/dev/null | grep -i &quot;aes\|secretbox&quot;
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a># Expected: encryption configuration present
-</code></pre></div></p>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Verify etcd encryption is enabled (should be configured by ND platform)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>kubectl<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span>encryptionconfig<span class="w"> </span>-o<span class="w"> </span>yaml<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;aes\|secretbox&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Expected: encryption configuration present</span>
+</code></pre></div>
 <h3 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h3>
 <p>ND backups are encrypted with a passphrase using AES-256 when encryption is enabled. Configure under <strong>Admin Console &gt; Operations &gt; Backup &gt; Settings &gt; Enable Encryption</strong>:</p>
 <ol>

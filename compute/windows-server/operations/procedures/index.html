@@ -3254,6 +3254,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#maintenance-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintenance Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Maintenance Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#weekly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Weekly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monthly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monthly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quarterly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quarterly
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reboot-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reboot Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-operational-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Operational Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#service-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3648,71 +3720,68 @@
 │  mailbox        = Exchange/365 mailbox; license must be unassigned on decom                           │
 │  TOTP MFA       = time-based one-time password; enforced via Azure AD CA                              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Maintenance Tasks
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Weekly
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Review Windows Update compliance for all servers
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Check backup job success in Veeam or Windows Server Backup
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Review Defender threat detection log
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- Verify DC replication health: `repadmin /replsummary`
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>- Check certificate expiry for IIS and LDAPS: `Get-ChildItem Cert:\LocalMachine\My`
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>### Monthly
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="maintenance-tasks">Maintenance Tasks<a class="headerlink" href="#maintenance-tasks" title="Permanent link">&para;</a></h2>
+<h3 id="weekly">Weekly<a class="headerlink" href="#weekly" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review Windows Update compliance for all servers</li>
+<li>Check backup job success in Veeam or Windows Server Backup</li>
+<li>Review Defender threat detection log</li>
+<li>Verify DC replication health: <code>repadmin /replsummary</code></li>
+<li>Check certificate expiry for IIS and LDAPS: <code>Get-ChildItem Cert:\LocalMachine\My</code></li>
+</ul>
+<h3 id="monthly">Monthly<a class="headerlink" href="#monthly" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Apply Patch Tuesday updates per patching cadence</li>
+<li>Review local administrator accounts: <code>Get-LocalGroupMember -Group Administrators</code></li>
+<li>Rotate LAPS passwords if manual override has been set</li>
+<li>Review scheduled task inventory for orphaned tasks</li>
+<li>Check system uptime and schedule reboots if &gt; 30 days without patching</li>
+</ul>
+<h3 id="quarterly">Quarterly<a class="headerlink" href="#quarterly" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review and test backup restores</li>
+<li>Verify cluster health (if WSFC): <code>Test-Cluster</code></li>
+<li>Audit services set to Automatic that are stopped</li>
+<li>Review GPO application: <code>gpresult /h c:\temp\gpresult.html</code></li>
+<li>Review Event Log custom views for recurring errors</li>
+</ul>
+<h2 id="reboot-procedure">Reboot Procedure<a class="headerlink" href="#reboot-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Notify application owners and update change record</li>
+<li>Verify no active user sessions: <code>query session</code></li>
+<li>Check cluster ownership if clustered: <code>Get-ClusterGroup</code></li>
+<li>Initiate graceful shutdown of application services</li>
+<li>Reboot: <code>Restart-Computer -Force</code></li>
+<li>Verify services start cleanly post-reboot: <code>Get-Service | Where-Object {$_.StartType -eq 'Automatic' -and $_.Status -ne 'Running'}</code></li>
+<li>Confirm event log is clean (no critical errors in first 15 minutes)</li>
+<li>Notify application owners and close change record</li>
+</ol>
+<h2 id="common-operational-commands">Common Operational Commands<a class="headerlink" href="#common-operational-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check active RDP sessions</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">query</span> <span class="n">session</span> <span class="p">/</span><span class="n">server</span><span class="p">:&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check currently logged-on users</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-CimInstance</span> <span class="n">Win32_LoggedOnUser</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Antecedent</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Check open network connections</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">netstat</span> <span class="n">-ano</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">ESTABLISHED</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check DNS resolution</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Resolve-DnsName</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span> <span class="n">-Server</span> <span class="p">&lt;</span><span class="n">dns-server</span><span class="p">&gt;</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>- Apply Patch Tuesday updates per patching cadence
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>- Review local administrator accounts: `Get-LocalGroupMember -Group Administrators`
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>- Rotate LAPS passwords if manual override has been set
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- Review scheduled task inventory for orphaned tasks
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>- Check system uptime and schedule reboots if &gt; 30 days without patching
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Test connectivity to remote host and port</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Check Group Policy last applied</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">gpresult</span> <span class="p">/</span><span class="nb">r</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>### Quarterly
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>- Review and test backup restores
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>- Verify cluster health (if WSFC): `Test-Cluster`
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>- Audit services set to Automatic that are stopped
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>- Review GPO application: `gpresult /h c:\temp\gpresult.html`
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>- Review Event Log custom views for recurring errors
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>## Reboot Procedure
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>1. Notify application owners and update change record
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>2. Verify no active user sessions: `query session`
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>3. Check cluster ownership if clustered: `Get-ClusterGroup`
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>4. Initiate graceful shutdown of application services
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>5. Reboot: `Restart-Computer -Force`
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>6. Verify services start cleanly post-reboot: `Get-Service | Where-Object {$_.StartType -eq &#39;Automatic&#39; -and $_.Status -ne &#39;Running&#39;}`
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>7. Confirm event log is clean (no critical errors in first 15 minutes)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>8. Notify application owners and close change record
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>## Common Operational Commands
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>```powershell
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a># Check active RDP sessions
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>query session /server:&lt;hostname&gt;
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a># Check currently logged-on users
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>Get-CimInstance Win32_LoggedOnUser | Select-Object Antecedent
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a># Check open network connections
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>netstat -ano | findstr ESTABLISHED
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a># Check DNS resolution
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>Resolve-DnsName &lt;hostname&gt; -Server &lt;dns-server&gt;
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a># Test connectivity to remote host and port
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>Test-NetConnection -ComputerName &lt;target&gt; -Port 443
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a># Check Group Policy last applied
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>gpresult /r
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a># Force Group Policy refresh
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>gpupdate /force
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a># Check domain membership
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>dsregcmd /status
-</code></pre></div></p>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Force Group Policy refresh</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">gpupdate</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Check domain membership</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">dsregcmd</span> <span class="p">/</span><span class="n">status</span>
+</code></pre></div>
 <hr />
 <h2 id="service-management">Service Management<a class="headerlink" href="#service-management" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check service status</span>

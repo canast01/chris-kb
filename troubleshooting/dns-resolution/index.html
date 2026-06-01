@@ -2899,6 +2899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#reverse-ptr-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reverse (PTR) Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#srv-records-critical-for-adkerberos" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3281,23 +3292,21 @@
 │    TTL         = Time To Live; cached record duration; lower TTL speeds propagation                   │
 │    PTR record  = Reverse DNS record; IP → hostname; required for many services and logs               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Reverse (PTR) Resolution
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Reverse lookup — critical for Kerberos and NFS
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dig -x 10.10.1.55
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Expected output:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># ;; ANSWER SECTION:
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># 55.1.10.10.in-addr.arpa. 3600 IN PTR app01.corp.example.com.
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="reverse-ptr-resolution">Reverse (PTR) Resolution<a class="headerlink" href="#reverse-ptr-resolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Reverse lookup — critical for Kerberos and NFS</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dig<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.10.1.55
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Expected output:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># ;; ANSWER SECTION:</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 55.1.10.10.in-addr.arpa. 3600 IN PTR app01.corp.example.com.</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># nslookup equivalent</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>nslookup<span class="w"> </span><span class="m">10</span>.10.1.55
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># nslookup equivalent
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>nslookup 10.10.1.55
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Check which reverse zone owns the IP range
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>dig SOA 1.10.10.in-addr.arpa
-</code></pre></div></p>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check which reverse zone owns the IP range</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>dig<span class="w"> </span>SOA<span class="w"> </span><span class="m">1</span>.10.10.in-addr.arpa
+</code></pre></div>
 <h3 id="srv-records-critical-for-adkerberos">SRV Records (critical for AD/Kerberos)<a class="headerlink" href="#srv-records-critical-for-adkerberos" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Locate Kerberos KDC for a domain</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dig<span class="w"> </span>_kerberos._tcp.corp.example.com<span class="w"> </span>SRV

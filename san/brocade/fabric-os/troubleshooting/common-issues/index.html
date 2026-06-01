@@ -3167,6 +3167,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#incident-notes-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Incident Notes Template
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#port-is-offline-no_light" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Port Is Offline / No_Light
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#host-cannot-see-storage-lun-access-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3520,50 +3542,72 @@
 │  supportshow     = generates full diagnostic tech-support bundle for TAC upload                       │
 │  HA reboot       = High Availability failover; active CP reboots to standby CP                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Document the output of each command in the incident record before proceeding.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>---
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>## Incident Notes Template
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Document the output of each command in the incident record before proceeding.</p>
+<hr />
+<h2 id="incident-notes-template">Incident Notes Template<a class="headerlink" href="#incident-notes-template" title="Permanent link">&para;</a></h2>
+<p>Capture these fields at the start of every incident:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Symptom</td>
+<td>What is failing — host can't see storage, port offline, fabric segmented</td>
+</tr>
+<tr>
+<td>Start time</td>
+<td>When the problem began (and timezone)</td>
+</tr>
+<tr>
+<td>Impact</td>
+<td>Which hosts, LUNs, or workloads are affected</td>
+</tr>
+<tr>
+<td>Switch/port</td>
+<td>Affected switch hostname, domain ID, slot/port</td>
+</tr>
+<tr>
+<td>Error message</td>
+<td>Exact text from <code>errshow</code> or SANnav alert</td>
+</tr>
+<tr>
+<td>Recent changes</td>
+<td>Any changes in the previous 24 hours — firmware, cabling, zoning</td>
+</tr>
+<tr>
+<td>What was checked</td>
+<td>Commands run and output summary</td>
+</tr>
+<tr>
+<td>Next action</td>
+<td>What you are doing next</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="port-is-offline-no_light">Port Is Offline / No_Light<a class="headerlink" href="#port-is-offline-no_light" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms:</strong> <code>switchshow</code> shows a port in <code>No_Light</code>, <code>No_Module</code>, or <code>Offline</code> state. The connected host or storage device is not logging into the fabric.</p>
+<p><strong>Triage:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check port state and detail</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>portshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check if port is administratively disabled</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>portshow<span class="w"> </span>&lt;slot/port&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>admin
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Capture these fields at the start of every incident:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Field | Notes |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Symptom | What is failing — host can&#39;t see storage, port offline, fabric segmented |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Start time | When the problem began (and timezone) |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Impact | Which hosts, LUNs, or workloads are affected |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Switch/port | Affected switch hostname, domain ID, slot/port |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Error message | Exact text from `errshow` or SANnav alert |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>| Recent changes | Any changes in the previous 24 hours — firmware, cabling, zoning |
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| What was checked | Commands run and output summary |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Next action | What you are doing next |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>---
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>## Port Is Offline / No_Light
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>**Symptoms:** `switchshow` shows a port in `No_Light`, `No_Module`, or `Offline` state. The connected host or storage device is not logging into the fabric.
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>**Triage:**
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>```bash
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Check port state and detail
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>portshow &lt;slot/port&gt;
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Check if port is administratively disabled
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>portshow &lt;slot/port&gt; | grep -i admin
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Check SFP optical levels — power in/out should be within spec
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>sfpshow &lt;slot/port&gt;
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a># Check port error log for recent events
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>portlogshow &lt;slot/port&gt;
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a># Check port error counters
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>portstatsshow &lt;slot/port&gt;
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check SFP optical levels — power in/out should be within spec</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sfpshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check port error log for recent events</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check port error counters</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>portstatsshow<span class="w"> </span>&lt;slot/port&gt;
+</code></pre></div>
 <p><strong>Resolution steps:</strong></p>
 <ol>
 <li>Confirm SFP is fully seated — remove and re-seat if in doubt.</li>

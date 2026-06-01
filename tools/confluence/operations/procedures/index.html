@@ -3337,6 +3337,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#page-history-and-versioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page History and Versioning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#page-permissions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3741,33 +3752,58 @@
 │  Reindex SOP    = Admin &gt; Content Indexing &gt; Rebuild; during off-peak; takes 30+ min for large        │
 │  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| Macro | Purpose | Common Config |
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|-------|---------|--------------|
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Table of Contents | Page nav | Min heading H2, max H3 |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| Children Display | Show sub-pages | depth=1, sort=title |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Jira Issues | Live ticket list | JQL filter |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Status | Visual badge | Yellow / Green / Red |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Code Block | Syntax highlight | Language: bash, python, yaml |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Page History and Versioning
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<table>
+<thead>
+<tr>
+<th>Macro</th>
+<th>Purpose</th>
+<th>Common Config</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Table of Contents</td>
+<td>Page nav</td>
+<td>Min heading H2, max H3</td>
+</tr>
+<tr>
+<td>Children Display</td>
+<td>Show sub-pages</td>
+<td>depth=1, sort=title</td>
+</tr>
+<tr>
+<td>Jira Issues</td>
+<td>Live ticket list</td>
+<td>JQL filter</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Visual badge</td>
+<td>Yellow / Green / Red</td>
+</tr>
+<tr>
+<td>Code Block</td>
+<td>Syntax highlight</td>
+<td>Language: bash, python, yaml</td>
+</tr>
+</tbody>
+</table>
+<h2 id="page-history-and-versioning">Page History and Versioning<a class="headerlink" href="#page-history-and-versioning" title="Permanent link">&para;</a></h2>
+<p>Confluence stores every save as a numbered version. You can compare and restore.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get version history for a page</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/version&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restore a specific version</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;operationKey&quot;: &quot;restore&quot;, &quot;params&quot;: {&quot;versionNumber&quot;: 4}}&#39;</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Confluence stores every save as a numbered version. You can compare and restore.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Get version history for a page
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>curl -u user:token \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  &quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/version&quot;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Restore a specific version
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -u user:token -X POST \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;https://your-instance.atlassian.net/wiki/rest/api/content/12345/version&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  -d &#39;{&quot;operationKey&quot;: &quot;restore&quot;, &quot;params&quot;: {&quot;versionNumber&quot;: 4}}&#39;
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Compare versions in the UI:
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Page → ... menu → Page History → select two versions → Compare
-</code></pre></div></p>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Compare versions in the UI:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Page → ... menu → Page History → select two versions → Compare</span>
+</code></pre></div>
 <p>Add a version comment when saving: <strong>Edit → Save → enter comment</strong> — this helps trace why content changed.</p>
 <h2 id="page-permissions">Page Permissions<a class="headerlink" href="#page-permissions" title="Permanent link">&para;</a></h2>
 <p>Restrict access at the page level in addition to space-level controls.</p>

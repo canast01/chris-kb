@@ -3226,6 +3226,45 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#role-assignment-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Assignment Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ipfilter-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IPfilter Policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IPfilter Policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-and-apply-an-ipfilter-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Apply an IPfilter Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#modify-an-existing-ipfilter-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3581,58 +3620,80 @@
 │  SNMPv3         = SNMP version 3; provides authentication and encryption for SNMP                     │
 │  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Role Assignment Standards
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Team | Assigned Role | Justification |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| SAN engineering | `switchadmin` | Full switch operations excluding security config |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| Zone management team | `zoneadmin` | Zone changes without access to switch config |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| NOC / monitoring | `operator` | Read-only access for monitoring and triage |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Security engineering | `securityadmin` | Certificate and policy management only |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Break-glass (vault) | `admin` | Emergency full access — restricted to vault retrieval |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>---
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## IPfilter Policy
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>IPfilter restricts which source IP addresses or subnets can reach the switch management plane. This is the primary network-layer control for management access — even if an attacker has valid credentials, they cannot connect from an unauthorised source IP.
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>### Create and Apply an IPfilter Policy
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>```bash
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Create a new IPv4 IPfilter policy
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ipfilter --create san_mgmt_policy -type ipv4
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Allow SSH from management subnet
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>ipfilter --addrule san_mgmt_policy \
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>  -sip 10.10.100.0/24 -dp 22 -proto tcp -act permit
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="role-assignment-standards">Role Assignment Standards<a class="headerlink" href="#role-assignment-standards" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Team</th>
+<th>Assigned Role</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAN engineering</td>
+<td><code>switchadmin</code></td>
+<td>Full switch operations excluding security config</td>
+</tr>
+<tr>
+<td>Zone management team</td>
+<td><code>zoneadmin</code></td>
+<td>Zone changes without access to switch config</td>
+</tr>
+<tr>
+<td>NOC / monitoring</td>
+<td><code>operator</code></td>
+<td>Read-only access for monitoring and triage</td>
+</tr>
+<tr>
+<td>Security engineering</td>
+<td><code>securityadmin</code></td>
+<td>Certificate and policy management only</td>
+</tr>
+<tr>
+<td>Break-glass (vault)</td>
+<td><code>admin</code></td>
+<td>Emergency full access — restricted to vault retrieval</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ipfilter-policy">IPfilter Policy<a class="headerlink" href="#ipfilter-policy" title="Permanent link">&para;</a></h2>
+<p>IPfilter restricts which source IP addresses or subnets can reach the switch management plane. This is the primary network-layer control for management access — even if an attacker has valid credentials, they cannot connect from an unauthorised source IP.</p>
+<h3 id="create-and-apply-an-ipfilter-policy">Create and Apply an IPfilter Policy<a class="headerlink" href="#create-and-apply-an-ipfilter-policy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a new IPv4 IPfilter policy</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ipfilter<span class="w"> </span>--create<span class="w"> </span>san_mgmt_policy<span class="w"> </span>-type<span class="w"> </span>ipv4
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Allow SSH from management subnet</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>san_mgmt_policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-sip<span class="w"> </span><span class="m">10</span>.10.100.0/24<span class="w"> </span>-dp<span class="w"> </span><span class="m">22</span><span class="w"> </span>-proto<span class="w"> </span>tcp<span class="w"> </span>-act<span class="w"> </span>permit
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Allow HTTPS from management subnet</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>san_mgmt_policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-sip<span class="w"> </span><span class="m">10</span>.10.100.0/24<span class="w"> </span>-dp<span class="w"> </span><span class="m">443</span><span class="w"> </span>-proto<span class="w"> </span>tcp<span class="w"> </span>-act<span class="w"> </span>permit
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Allow SNMP v3 from monitoring server only</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>san_mgmt_policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span>-sip<span class="w"> </span><span class="m">10</span>.10.50.10/32<span class="w"> </span>-dp<span class="w"> </span><span class="m">161</span><span class="w"> </span>-proto<span class="w"> </span>udp<span class="w"> </span>-act<span class="w"> </span>permit
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Allow SNMP traps (outbound — no inbound rule needed)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Allow NTP (switch initiates to NTP server — no inbound rule needed)</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1"># Default-deny all other inbound traffic</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>san_mgmt_policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span>-sip<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>-dp<span class="w"> </span><span class="m">0</span><span class="w"> </span>-proto<span class="w"> </span>any<span class="w"> </span>-act<span class="w"> </span>deny
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># Save the policy (writes to persistent storage)</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>ipfilter<span class="w"> </span>--save<span class="w"> </span>san_mgmt_policy
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a># Allow HTTPS from management subnet
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>ipfilter --addrule san_mgmt_policy \
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>  -sip 10.10.100.0/24 -dp 443 -proto tcp -act permit
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a># Allow SNMP v3 from monitoring server only
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>ipfilter --addrule san_mgmt_policy \
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>  -sip 10.10.50.10/32 -dp 161 -proto udp -act permit
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Allow SNMP traps (outbound — no inbound rule needed)
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a># Allow NTP (switch initiates to NTP server — no inbound rule needed)
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a># Default-deny all other inbound traffic
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>ipfilter --addrule san_mgmt_policy \
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>  -sip 0.0.0.0/0 -dp 0 -proto any -act deny
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a># Save the policy (writes to persistent storage)
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>ipfilter --save san_mgmt_policy
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a># Activate the policy (takes effect immediately — verify SSH access before activating)
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>ipfilter --activate san_mgmt_policy
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a># Verify the active policy
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>ipfilter --show san_mgmt_policy
-</code></pre></div></p>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># Activate the policy (takes effect immediately — verify SSH access before activating)</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>ipfilter<span class="w"> </span>--activate<span class="w"> </span>san_mgmt_policy
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Verify the active policy</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>san_mgmt_policy
+</code></pre></div>
 <blockquote>
 <p><strong>Warning:</strong> Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.</p>
 </blockquote>

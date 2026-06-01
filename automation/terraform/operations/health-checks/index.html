@@ -3395,6 +3395,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#using-terraform-plan-for-drift-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using terraform plan for Drift Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#terraform-import" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3668,27 +3679,25 @@
 │   │   force-unlock   = removes DynamoDB lock entry; only run if certain no apply is in progress   │   │
 │   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Using terraform plan for Drift Detection
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Standard drift detection run
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform plan -detailed-exitcode
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Exit codes:
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># 0 = no changes (no drift)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># 1 = error
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># 2 = changes detected (drift or config changes)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Capture in a script
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>terraform plan -detailed-exitcode -out=tfplan
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>STATUS=$?
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>if [ $STATUS -eq 2 ]; then
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>  echo &quot;Drift or pending changes detected&quot;
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>elif [ $STATUS -eq 0 ]; then
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  echo &quot;Infrastructure matches configuration — no drift&quot;
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>fi
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="using-terraform-plan-for-drift-detection">Using terraform plan for Drift Detection<a class="headerlink" href="#using-terraform-plan-for-drift-detection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Standard drift detection run</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Exit codes:</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># 0 = no changes (no drift)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># 1 = error</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 2 = changes detected (drift or config changes)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Capture in a script</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode<span class="w"> </span>-out<span class="o">=</span>tfplan
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">STATUS</span><span class="o">=</span><span class="nv">$?</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$STATUS</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Drift or pending changes detected&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$STATUS</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Infrastructure matches configuration — no drift&quot;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">fi</span>
+</code></pre></div>
 <h3 id="terraform-import">terraform import<a class="headerlink" href="#terraform-import" title="Permanent link">&para;</a></h3>
 <p>Import real resources into state that were created outside Terraform.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Import an existing AWS EC2 instance</span>

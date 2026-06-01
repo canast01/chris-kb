@@ -3994,6 +3994,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#components" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4281,27 +4292,23 @@
 │    DD Boost lib  = Plugin installed in backup app (NBU, Networker, Veeam); enables client dedup       │
 │    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Data Path
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```mermaid
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>graph TD
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    client([&quot;Backup Client&quot;])
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    dsp[&quot;DDBoost Library\n(source-side dedup filter)\n~50% traffic reduction&quot;]
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    sisl[&quot;SISL Engine\n(segment fingerprinting + locality filter)&quot;]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    nvram[&quot;NVRAM Write Cache\n(power-safe)&quot;]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    store[&quot;[(DDFS Segment Store)]\n(deduplicated + compressed)&quot;]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    repl[&quot;DD Replicator\n(async delta sync — TCP 2051)&quot;]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    remote[&quot;Remote Data Domain&quot;]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    client --&gt;|&quot;DDBoost over IP&quot;| dsp
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    dsp --&gt;|&quot;unique segments only&quot;| sisl
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    sisl --&gt; nvram
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    nvram --&gt; store
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    store --&gt; repl --&gt; remote
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.</p>
+<h2 id="data-path">Data Path<a class="headerlink" href="#data-path" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TD
+    client(["Backup Client"])
+    dsp["DDBoost Library\n(source-side dedup filter)\n~50% traffic reduction"]
+    sisl["SISL Engine\n(segment fingerprinting + locality filter)"]
+    nvram["NVRAM Write Cache\n(power-safe)"]
+    store["[(DDFS Segment Store)]\n(deduplicated + compressed)"]
+    repl["DD Replicator\n(async delta sync — TCP 2051)"]
+    remote["Remote Data Domain"]
+
+    client --&gt;|"DDBoost over IP"| dsp
+    dsp --&gt;|"unique segments only"| sisl
+    sisl --&gt; nvram
+    nvram --&gt; store
+    store --&gt; repl --&gt; remote</code></pre>
 <p>DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.</p>
 <h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
 <table>
@@ -4407,14 +4414,14 @@
 </tbody>
 </table>
 <h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>filesys<span class="w"> </span>status<span class="w">                    </span><span class="c1"># filesystem enabled/disabled state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>space<span class="w">                </span><span class="c1"># pre/post-compression capacity</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w">          </span><span class="c1"># global dedup ratio (healthy = 20:1+)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>replication<span class="w"> </span>show<span class="w">                  </span><span class="c1"># replication context states</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">              </span><span class="c1"># connected backup servers</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>alerts<span class="w"> </span>show<span class="w"> </span>current<span class="w">               </span><span class="c1"># active hardware/software alerts</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>system<span class="w"> </span>show<span class="w">                       </span><span class="c1"># hardware health (fans, PSUs, disks)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mtree<span class="w"> </span>list<span class="w">                        </span><span class="c1"># all MTrees and their quota status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>filesys<span class="w"> </span>status<span class="w">                    </span><span class="c1"># filesystem enabled/disabled state</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>space<span class="w">                </span><span class="c1"># pre/post-compression capacity</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w">          </span><span class="c1"># global dedup ratio (healthy = 20:1+)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>replication<span class="w"> </span>show<span class="w">                  </span><span class="c1"># replication context states</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">              </span><span class="c1"># connected backup servers</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>alerts<span class="w"> </span>show<span class="w"> </span>current<span class="w">               </span><span class="c1"># active hardware/software alerts</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>system<span class="w"> </span>show<span class="w">                       </span><span class="c1"># hardware health (fans, PSUs, disks)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>mtree<span class="w"> </span>list<span class="w">                        </span><span class="c1"># all MTrees and their quota status</span>
 </code></pre></div>
 
 

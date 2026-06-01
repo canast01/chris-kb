@@ -3178,6 +3178,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#sannav-gui-slow-or-unresponsive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SANnav GUI Slow or Unresponsive
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ldap-authentication-fails" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3512,38 +3523,34 @@
 │  journalctl      = Linux systemd log; check for SANnav service errors and restarts                    │
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>3. Confirm the SANnav service account (`sannav_svc`) has the **admin** role on the switch — zoning operations require admin privileges.
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<ol>
+<li>Confirm the SANnav service account (<code>sannav_svc</code>) has the <strong>admin</strong> role on the switch — zoning operations require admin privileges.</li>
+</ol>
+<hr />
+<h2 id="sannav-gui-slow-or-unresponsive">SANnav GUI Slow or Unresponsive<a class="headerlink" href="#sannav-gui-slow-or-unresponsive" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> The SANnav web UI takes &gt; 30 seconds to load pages; sessions time out frequently.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## SANnav GUI Slow or Unresponsive
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check CPU and memory</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>free<span class="w"> </span>-h
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Symptom:** The SANnav web UI takes &gt; 30 seconds to load pages; sessions time out frequently.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**Resolution:**
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ssh admin@sannav-dc1.corp.example.com
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Check CPU and memory
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>top -b -n 1 | head -20
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>free -h
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check disk I/O</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check disk space — PostgreSQL growth is the most common cause</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/opt/sannav
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/sannav/data/postgres/
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/sannav/data/influxdb/
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check for slow queries in PostgreSQL</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT query, calls, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;&quot;</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Check disk I/O
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>iostat -x 1 5
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Check disk space — PostgreSQL growth is the most common cause
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>df -h /opt/sannav
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>du -sh /opt/sannav/data/postgres/
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>du -sh /opt/sannav/data/influxdb/
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Check for slow queries in PostgreSQL
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>sudo -u postgres psql -c &quot;SELECT query, calls, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;&quot;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Restart services if memory leak is suspected
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>sannav restart
-</code></pre></div></p>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Restart services if memory leak is suspected</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>sannav<span class="w"> </span>restart
+</code></pre></div>
 <p>If disk is &gt; 85% full: purge old performance data. Navigate to <strong>Administration &gt; System &gt; Data Retention</strong> and reduce the retention period for historical data.</p>
 <hr />
 <h2 id="ldap-authentication-fails">LDAP Authentication Fails<a class="headerlink" href="#ldap-authentication-fails" title="Permanent link">&para;</a></h2>

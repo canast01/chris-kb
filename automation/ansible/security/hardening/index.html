@@ -3289,6 +3289,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#known-hosts-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Hosts Management
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3653,23 +3664,21 @@
 │   │        Network policy    = Kubernetes NetworkPolicy restricting AWX pod ingress/egress        │   │
 │   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Known Hosts Management
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Pre-populate known_hosts — never use StrictHostKeyChecking=no
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ansible all -i inventory/ -m ansible.builtin.known_hosts \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  -a &quot;name={{ inventory_hostname }} key={{ lookup(&#39;pipe&#39;, &#39;ssh-keyscan -t ed25519 &#39; + inventory_hostname) }}&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Or populate via playbook before first run
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- name: Scan and register host keys
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  ansible.builtin.known_hosts:
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    name: &quot;{{ item }}&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    key: &quot;{{ lookup(&#39;pipe&#39;, &#39;ssh-keyscan -t ed25519 &#39; + item) }}&quot;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    state: present
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  loop: &quot;{{ groups[&#39;all&#39;] }}&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  delegate_to: localhost
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="known-hosts-management">Known Hosts Management<a class="headerlink" href="#known-hosts-management" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Pre-populate known_hosts — never use StrictHostKeyChecking=no</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.known_hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-a<span class="w"> </span><span class="s2">&quot;name={{ inventory_hostname }} key={{ lookup(&#39;pipe&#39;, &#39;ssh-keyscan -t ed25519 &#39; + inventory_hostname) }}&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Or populate via playbook before first run</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>-<span class="w"> </span>name:<span class="w"> </span>Scan<span class="w"> </span>and<span class="w"> </span>register<span class="w"> </span>host<span class="w"> </span>keys
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>ansible.builtin.known_hosts:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>name:<span class="w"> </span><span class="s2">&quot;{{ item }}&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>key:<span class="w"> </span><span class="s2">&quot;{{ lookup(&#39;pipe&#39;, &#39;ssh-keyscan -t ed25519 &#39; + item) }}&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>state:<span class="w"> </span>present
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>loop:<span class="w"> </span><span class="s2">&quot;{{ groups[&#39;all&#39;] }}&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>delegate_to:<span class="w"> </span>localhost
+</code></pre></div>
 <h2 id="awx-aap-hardening">AWX / AAP Hardening<a class="headerlink" href="#awx-aap-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="network-exposure">Network Exposure<a class="headerlink" href="#network-exposure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restrict AWX ingress — only allow from known CIDRs</span>

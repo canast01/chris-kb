@@ -3920,6 +3920,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#operations-on-storage-groups-cg-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operations on Storage Groups (CG-based)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#device-level-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4199,41 +4210,37 @@
 │  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Operations on Storage Groups (CG-based)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>SRDF/A operations are performed on Composite Groups (CG) or Storage Groups (SG). Using `-cg` is recommended for SRDF/A to ensure consistency across all devices.
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="operations-on-storage-groups-cg-based">Operations on Storage Groups (CG-based)<a class="headerlink" href="#operations-on-storage-groups-cg-based" title="Permanent link">&para;</a></h2>
+<p>SRDF/A operations are performed on Composite Groups (CG) or Storage Groups (SG). Using <code>-cg</code> is recommended for SRDF/A to ensure consistency across all devices.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Suspend SRDF/A (pause replication — hold at DR site)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span><span class="nb">suspend</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Resume SRDF/A after suspend</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>resume
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Suspend SRDF/A (pause replication — hold at DR site)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod suspend
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Resume SRDF/A after suspend
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod resume
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Update (force a manual sync cycle)
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod update
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Failover — activate R2 devices for production use at DR site
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failover
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Failover without establishing reverse replication
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failover -nop
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Failback — return to normal after failover (resync R2 to R1)
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod failback
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Establish / re-establish SRDF/A pair (from scratch or after failover)
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod establish
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Split (break mirror, R1 and R2 both R/W — for maintenance)
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod split
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Swap personalities (R1 becomes R2, DR site becomes source)
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>symrdf -sid 000123456789 -rdfg 10 -cg cg_oracle_prod swap
-</code></pre></div></p>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Update (force a manual sync cycle)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>update
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Failover — activate R2 devices for production use at DR site</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>failover
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Failover without establishing reverse replication</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>failover<span class="w"> </span>-nop
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Failback — return to normal after failover (resync R2 to R1)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>failback
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Establish / re-establish SRDF/A pair (from scratch or after failover)</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>establish
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Split (break mirror, R1 and R2 both R/W — for maintenance)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>split
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Swap personalities (R1 becomes R2, DR site becomes source)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123456789</span><span class="w"> </span>-rdfg<span class="w"> </span><span class="m">10</span><span class="w"> </span>-cg<span class="w"> </span>cg_oracle_prod<span class="w"> </span>swap
+</code></pre></div>
 <hr />
 <h2 id="device-level-operations">Device-Level Operations<a class="headerlink" href="#device-level-operations" title="Permanent link">&para;</a></h2>
 <p>For per-device inspection or scripted operations:</p>

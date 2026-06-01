@@ -3221,6 +3221,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#tls-at-tomcat-direct-confluence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS at Tomcat (Direct Confluence)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3611,26 +3622,23 @@
 │  Key rotation = replacing encryption keys annually; requires planned maintenance window               │
 │  cert         = X.509 certificate; signed by internal CA or public CA (Let's Encrypt)                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### TLS at Tomcat (Direct Confluence)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>If not using a reverse proxy, configure TLS in Confluence&#39;s embedded Tomcat:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Generate a certificate and import into a Java keystore
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>keytool -genkeypair -alias confluence \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  -keyalg RSA -keysize 4096 \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  -validity 365 \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  -keystore /opt/atlassian/confluence/conf/keystore.jks \
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  -storepass changeit \
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  -dname &quot;CN=confluence.example.local,O=Corp,C=GB&quot;
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Import a CA-signed certificate
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>keytool -importcert -alias corp-ca \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  -file /tmp/corp-ca.cer \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  -keystore /opt/atlassian/confluence/conf/keystore.jks \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  -storepass changeit -noprompt
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="tls-at-tomcat-direct-confluence">TLS at Tomcat (Direct Confluence)<a class="headerlink" href="#tls-at-tomcat-direct-confluence" title="Permanent link">&para;</a></h3>
+<p>If not using a reverse proxy, configure TLS in Confluence's embedded Tomcat:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate a certificate and import into a Java keystore</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>keytool<span class="w"> </span>-genkeypair<span class="w"> </span>-alias<span class="w"> </span>confluence<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-keyalg<span class="w"> </span>RSA<span class="w"> </span>-keysize<span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-validity<span class="w"> </span><span class="m">365</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-keystore<span class="w"> </span>/opt/atlassian/confluence/conf/keystore.jks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-dname<span class="w"> </span><span class="s2">&quot;CN=confluence.example.local,O=Corp,C=GB&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Import a CA-signed certificate</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span>-alias<span class="w"> </span>corp-ca<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/corp-ca.cer<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-keystore<span class="w"> </span>/opt/atlassian/confluence/conf/keystore.jks<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit<span class="w"> </span>-noprompt
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cm">&lt;!-- /opt/atlassian/confluence/conf/server.xml — SSL Connector --&gt;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">&lt;Connector</span><span class="w"> </span><span class="na">port=</span><span class="s">&quot;8443&quot;</span><span class="w"> </span><span class="na">maxHttpHeaderSize=</span><span class="s">&quot;8192&quot;</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">           </span><span class="na">maxThreads=</span><span class="s">&quot;150&quot;</span><span class="w"> </span><span class="na">minSpareThreads=</span><span class="s">&quot;25&quot;</span><span class="w"> </span><span class="na">maxSpareThreads=</span><span class="s">&quot;75&quot;</span>

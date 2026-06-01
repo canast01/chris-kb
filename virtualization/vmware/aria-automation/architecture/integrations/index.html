@@ -4302,6 +4302,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#active-directory-ldap-user-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory / LDAP (User Authentication)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-gitlab-pipeline-scm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub / GitLab (Pipeline SCM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#servicenow-approval-workflows" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4608,46 +4630,41 @@
 │  Event broker     = vRA pub-sub system; publishes events to subscribed ABX or Orchestrator wf         │
 │  Cost integration = Aria Operations cost data surfaced in vRA to show estimated spend per item        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Active Directory / LDAP (User Authentication)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>User authentication is handled by **VMware Workspace ONE Access (vIDM)**, which is deployed as part of the Aria Automation appliance or as a standalone service.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Configure the LDAP/AD directory sync in Workspace ONE Access.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Users and groups sync to Workspace ONE Access; assign them to Aria Automation projects via the Aria Automation UI (**Infrastructure &gt; Administration &gt; Projects &gt; Users**).
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Supports SAML 2.0 federated identity for enterprise SSO.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## GitHub / GitLab (Pipeline SCM)
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="active-directory-ldap-user-authentication">Active Directory / LDAP (User Authentication)<a class="headerlink" href="#active-directory-ldap-user-authentication" title="Permanent link">&para;</a></h2>
+<p>User authentication is handled by <strong>VMware Workspace ONE Access (vIDM)</strong>, which is deployed as part of the Aria Automation appliance or as a standalone service.</p>
+<ul>
+<li>Configure the LDAP/AD directory sync in Workspace ONE Access.</li>
+<li>Users and groups sync to Workspace ONE Access; assign them to Aria Automation projects via the Aria Automation UI (<strong>Infrastructure &gt; Administration &gt; Projects &gt; Users</strong>).</li>
+<li>Supports SAML 2.0 federated identity for enterprise SSO.</li>
+</ul>
+<hr />
+<h2 id="github-gitlab-pipeline-scm">GitHub / GitLab (Pipeline SCM)<a class="headerlink" href="#github-gitlab-pipeline-scm" title="Permanent link">&para;</a></h2>
+<p>Aria Automation Pipelines integrates with Git repositories for pipeline trigger (push/PR events) and blueprint/template version control.</p>
+<ul>
+<li>Go to <strong>Pipelines &gt; Endpoints &gt; Add Endpoint &gt; GitHub</strong> or <strong>GitLab</strong>.</li>
+<li>Provide repository URL and a personal access token with repo read/write permissions.</li>
+<li>Configure webhooks in the Git repository to trigger pipelines on push events.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add GitHub integration</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://&lt;vra-fqdn&gt;/blueprint/api/integrations<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;integrationType&quot;: &quot;github&quot;,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;name&quot;: &quot;github-blueprints&quot;,</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;config&quot;: {</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">      &quot;url&quot;: &quot;https://github.com/example-org/vra-blueprints&quot;,</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">      &quot;token&quot;: &quot;&lt;personal-access-token&gt;&quot;,</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">      &quot;branch&quot;: &quot;main&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">    }</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">  }&#39;</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Aria Automation Pipelines integrates with Git repositories for pipeline trigger (push/PR events) and blueprint/template version control.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- Go to **Pipelines &gt; Endpoints &gt; Add Endpoint &gt; GitHub** or **GitLab**.
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- Provide repository URL and a personal access token with repo read/write permissions.
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- Configure webhooks in the Git repository to trigger pipelines on push events.
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```bash
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Add GitHub integration
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>curl -sk -X POST -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  https://&lt;vra-fqdn&gt;/blueprint/api/integrations \
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  -d &#39;{
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    &quot;integrationType&quot;: &quot;github&quot;,
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    &quot;name&quot;: &quot;github-blueprints&quot;,
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    &quot;config&quot;: {
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>      &quot;url&quot;: &quot;https://github.com/example-org/vra-blueprints&quot;,
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>      &quot;token&quot;: &quot;&lt;personal-access-token&gt;&quot;,
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>      &quot;branch&quot;: &quot;main&quot;
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    }
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  }&#39;
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a># Sync blueprints from GitHub
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>curl -sk -X POST -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  &quot;https://&lt;vra-fqdn&gt;/blueprint/api/integrations/&lt;integration-id&gt;/sync&quot;
-</code></pre></div></p>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Sync blueprints from GitHub</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vra-fqdn&gt;/blueprint/api/integrations/&lt;integration-id&gt;/sync&quot;</span>
+</code></pre></div>
 <hr />
 <h2 id="servicenow-approval-workflows">ServiceNow (Approval Workflows)<a class="headerlink" href="#servicenow-approval-workflows" title="Permanent link">&para;</a></h2>
 <p>The <strong>Aria Automation ITSM Integration plugin</strong> for ServiceNow enables approval workflows where deployment requests in Aria Automation create ServiceNow change requests or approval tickets.</p>

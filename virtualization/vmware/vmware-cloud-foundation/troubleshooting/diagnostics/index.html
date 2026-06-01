@@ -4292,6 +4292,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#ssh-to-sddc-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSH to SDDC Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sddc-manager-services" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4792,26 +4803,24 @@
 │  /var/log/vmware= SDDC Mgr log root; multiple component subdirectories                                │
 │  Root access   = SOS requires root; access via sudo after SSH                                         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### SSH to SDDC Manager
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># SSH as vcf user, then sudo
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh vcf@sddc-manager.corp.example.com
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>sudo su -
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h3 id="ssh-to-sddc-manager">SSH to SDDC Manager<a class="headerlink" href="#ssh-to-sddc-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH as vcf user, then sudo</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>vcf@sddc-manager.corp.example.com
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>sudo<span class="w"> </span>su<span class="w"> </span>-
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Real-time log tail (LCM operations)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm-debug.log
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Real-time log tail (LCM operations)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>tail -f /var/log/vmware/vcf/lcm/lcm-debug.log
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Real-time ops manager log</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/operationsmanager/ops-manager.log
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Real-time ops manager log
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>tail -f /var/log/vmware/vcf/operationsmanager/ops-manager.log
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Search for errors in the last hour</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>vmware-vcf-lcm<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>--no-pager
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Search for errors in the last hour
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>journalctl -u vmware-vcf-lcm --since &quot;1 hour ago&quot; --no-pager
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Find all ERROR entries in LCM debug log
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>grep -i &#39;ERROR\|FATAL\|Exception&#39; /var/log/vmware/vcf/lcm/lcm-debug.log | tail -100
-</code></pre></div></p>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Find all ERROR entries in LCM debug log</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;ERROR\|FATAL\|Exception&#39;</span><span class="w"> </span>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+</code></pre></div>
 <h3 id="sddc-manager-services">SDDC Manager Services<a class="headerlink" href="#sddc-manager-services" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check all VCF service statuses</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span><span class="s1">&#39;vmware-vcf-*&#39;</span><span class="w"> </span>--no-pager

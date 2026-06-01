@@ -3302,6 +3302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#3-restrict-management-network-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Restrict Management Network Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-configure-external-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3728,33 +3739,61 @@
 │  Patch window   = Defined maintenance period for applying ND software updates                         │
 │  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 3. Restrict Management Network Access
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Use firewall or network ACL controls to limit access to the ND management interface:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Source | Destination | Port | Protocol | Action |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Management subnet | ND mgmt IPs | 443 | HTTPS | Allow |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Jump host / VPN subnet | ND mgmt IPs | 22 | SSH | Allow |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Switch management subnet | ND data IPs | 22, 161, 162, 514 | TCP/UDP | Allow |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Any | ND mgmt IPs | 443, 22 | TCP | Deny (default) |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ND does not provide a built-in host firewall UI. Apply ACLs on the upstream switch or firewall in front of the ND management network. Do not expose the ND management interface to the open internet.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>On the ND node OS (for emergency access control):
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```bash
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Check firewall status (ND appliance uses firewalld)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>sudo firewall-cmd --list-all
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Restrict SSH to management subnet
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>sudo firewall-cmd --permanent --remove-service=ssh
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>sudo firewall-cmd --permanent --add-rich-rule=&#39;rule family=&quot;ipv4&quot; source address=&quot;10.10.0.0/24&quot; service name=&quot;ssh&quot; accept&#39;
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>sudo firewall-cmd --reload
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="3-restrict-management-network-access">3. Restrict Management Network Access<a class="headerlink" href="#3-restrict-management-network-access" title="Permanent link">&para;</a></h2>
+<p>Use firewall or network ACL controls to limit access to the ND management interface:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management subnet</td>
+<td>ND mgmt IPs</td>
+<td>443</td>
+<td>HTTPS</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Jump host / VPN subnet</td>
+<td>ND mgmt IPs</td>
+<td>22</td>
+<td>SSH</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Switch management subnet</td>
+<td>ND data IPs</td>
+<td>22, 161, 162, 514</td>
+<td>TCP/UDP</td>
+<td>Allow</td>
+</tr>
+<tr>
+<td>Any</td>
+<td>ND mgmt IPs</td>
+<td>443, 22</td>
+<td>TCP</td>
+<td>Deny (default)</td>
+</tr>
+</tbody>
+</table>
+<p>ND does not provide a built-in host firewall UI. Apply ACLs on the upstream switch or firewall in front of the ND management network. Do not expose the ND management interface to the open internet.</p>
+<p>On the ND node OS (for emergency access control):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check firewall status (ND appliance uses firewalld)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--list-all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Restrict SSH to management subnet</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--remove-service<span class="o">=</span>ssh
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--add-rich-rule<span class="o">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.10.0.0/24&quot; service name=&quot;ssh&quot; accept&#39;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>sudo<span class="w"> </span>firewall-cmd<span class="w"> </span>--reload
+</code></pre></div>
 <hr />
 <h2 id="4-configure-external-authentication">4. Configure External Authentication<a class="headerlink" href="#4-configure-external-authentication" title="Permanent link">&para;</a></h2>
 <p>Do not run production with local accounts only. Configure LDAP, TACACS+, or SAML:</p>

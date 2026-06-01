@@ -4280,6 +4280,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#upgrade-gets-stuck-or-times-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Gets Stuck or Times Out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nfs-mount-lost-during-operation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4588,33 +4599,61 @@
 │  installer.log       = Deployment log; shows exact step and error for failures                        │
 │  df -h               = Disk usage check; first step for any disk-related issue                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| Error Code | Meaning | Resolution |
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|---|---|---|
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| `VRLCM_ERR_001` | DNS resolution failure | Fix A/PTR records; verify from LCM node with `nslookup` |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| `VRLCM_ERR_012` | Insufficient disk space on `/data` | Free space or expand NFS share; minimum 50 GB free per product |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `VRLCM_ERR_023` | OVA/PAK checksum mismatch | Re-download bundle; verify SHA256 against Broadcom portal |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `VRLCM_ERR_031` | vCenter connectivity failure | Check credentials, firewall port 443, and vCenter certificate trust |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `VRLCM_ERR_045` | NTP time drift too large | Fix NTP source on LCM or product appliance; restart `chronyd` |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `VRLCM_ERR_057` | VIDM registration failed | Verify VIDM FQDN, credentials, and TLS certificate trust |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>---
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Upgrade Gets Stuck or Times Out
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Symptoms: upgrade request stays in `RUNNING` state for more than 2 hours; no progress on the workflow screen.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```bash
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Check if product appliance VMs are powered on and responsive
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ping &lt;product-fqdn&gt;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ssh admin@&lt;product-fqdn&gt; &quot;vracli status&quot;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Check LCM application log for timeout or error
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>grep -i &quot;timeout\|error\|exception&quot; /var/log/vmware/vrlcm/lcm-app.log | tail -100
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Check if the upgrade agent on the product appliance is running
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>ssh root@&lt;product-fqdn&gt; &quot;systemctl status vra-appliance-agent&quot;
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<table>
+<thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+<th>Resolution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>VRLCM_ERR_001</code></td>
+<td>DNS resolution failure</td>
+<td>Fix A/PTR records; verify from LCM node with <code>nslookup</code></td>
+</tr>
+<tr>
+<td><code>VRLCM_ERR_012</code></td>
+<td>Insufficient disk space on <code>/data</code></td>
+<td>Free space or expand NFS share; minimum 50 GB free per product</td>
+</tr>
+<tr>
+<td><code>VRLCM_ERR_023</code></td>
+<td>OVA/PAK checksum mismatch</td>
+<td>Re-download bundle; verify SHA256 against Broadcom portal</td>
+</tr>
+<tr>
+<td><code>VRLCM_ERR_031</code></td>
+<td>vCenter connectivity failure</td>
+<td>Check credentials, firewall port 443, and vCenter certificate trust</td>
+</tr>
+<tr>
+<td><code>VRLCM_ERR_045</code></td>
+<td>NTP time drift too large</td>
+<td>Fix NTP source on LCM or product appliance; restart <code>chronyd</code></td>
+</tr>
+<tr>
+<td><code>VRLCM_ERR_057</code></td>
+<td>VIDM registration failed</td>
+<td>Verify VIDM FQDN, credentials, and TLS certificate trust</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="upgrade-gets-stuck-or-times-out">Upgrade Gets Stuck or Times Out<a class="headerlink" href="#upgrade-gets-stuck-or-times-out" title="Permanent link">&para;</a></h2>
+<p>Symptoms: upgrade request stays in <code>RUNNING</code> state for more than 2 hours; no progress on the workflow screen.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check if product appliance VMs are powered on and responsive</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping<span class="w"> </span>&lt;product-fqdn&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ssh<span class="w"> </span>admin@&lt;product-fqdn&gt;<span class="w"> </span><span class="s2">&quot;vracli status&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check LCM application log for timeout or error</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;timeout\|error\|exception&quot;</span><span class="w"> </span>/var/log/vmware/vrlcm/lcm-app.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check if the upgrade agent on the product appliance is running</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ssh<span class="w"> </span>root@&lt;product-fqdn&gt;<span class="w"> </span><span class="s2">&quot;systemctl status vra-appliance-agent&quot;</span>
+</code></pre></div>
 <p>If the upgrade is truly stuck (no log activity for 30+ minutes):
 1. Do NOT power off product VMs — this risks split-brain state
 2. Open a Broadcom SR with the LCM log bundle and the request ID

@@ -3254,6 +3254,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#log-archivalsh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log-archival.sh
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#patch-status-reportsh" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3521,22 +3532,19 @@
 │  jinja2      = Python template engine; used by Ansible for config file rendering                      │
 │  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## log-archival.sh
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Compresses rotated logs older than 30 days to NFS archive:
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>#!/bin/bash
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ARCHIVE_PATH=&quot;/mnt/nfs-archive/logs/$(hostname)&quot;
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>LOG_PATH=&quot;/var/log&quot;
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>mkdir -p &quot;$ARCHIVE_PATH&quot;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>find &quot;$LOG_PATH&quot; -name &quot;*.log-*&quot; -mtime +30 -type f | while read f; do
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    gzip -9 &quot;$f&quot; &amp;&amp; mv &quot;${f}.gz&quot; &quot;$ARCHIVE_PATH/&quot; &amp;&amp; \
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    logger &quot;Archived $f to $ARCHIVE_PATH&quot;
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>done
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<h2 id="log-archivalsh">log-archival.sh<a class="headerlink" href="#log-archivalsh" title="Permanent link">&para;</a></h2>
+<p>Compresses rotated logs older than 30 days to NFS archive:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">ARCHIVE_PATH</span><span class="o">=</span><span class="s2">&quot;/mnt/nfs-archive/logs/</span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">LOG_PATH</span><span class="o">=</span><span class="s2">&quot;/var/log&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ARCHIVE_PATH</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG_PATH</span><span class="s2">&quot;</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.log-*&quot;</span><span class="w"> </span>-mtime<span class="w"> </span>+30<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>f<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>gzip<span class="w"> </span>-9<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$f</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>mv<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">f</span><span class="si">}</span><span class="s2">.gz&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ARCHIVE_PATH</span><span class="s2">/&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>logger<span class="w"> </span><span class="s2">&quot;Archived </span><span class="nv">$f</span><span class="s2"> to </span><span class="nv">$ARCHIVE_PATH</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">done</span>
+</code></pre></div>
 <h2 id="patch-status-reportsh">patch-status-report.sh<a class="headerlink" href="#patch-status-reportsh" title="Permanent link">&para;</a></h2>
 <p>Reports pending updates and last patch date:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>

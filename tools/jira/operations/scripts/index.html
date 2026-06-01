@@ -3315,6 +3315,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#2-user-audit-script" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. User Audit Script
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. User Audit Script">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#inactive-user-report-sql" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3322,6 +3334,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -3616,63 +3633,59 @@
 │  Reindex poll   = GET /rest/api/2/reindex → check currentProgress and type                            │
 │  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## 2. User Audit Script
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Lists all Jira users, their active status, group memberships, and last login.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>#!/bin/bash
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># jira-user-audit.sh — Export user list with status and groups
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>OUTPUT=&quot;/tmp/jira-user-audit-$(date +%Y%m%d).csv&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>echo &quot;Username,Display Name,Email,Active,Groups&quot; &gt; &quot;${OUTPUT}&quot;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<hr />
+<h2 id="2-user-audit-script">2. User Audit Script<a class="headerlink" href="#2-user-audit-script" title="Permanent link">&para;</a></h2>
+<p>Lists all Jira users, their active status, group memberships, and last login.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># jira-user-audit.sh — Export user list with status and groups</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">&quot;/tmp/jira-user-audit-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.csv&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Username,Display Name,Email,Active,Groups&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">START_AT</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">MAX_RESULTS</span><span class="o">=</span><span class="m">200</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">while</span><span class="w"> </span>true<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="nv">RESPONSE</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user/search?username=.&amp;maxResults=</span><span class="si">${</span><span class="nv">MAX_RESULTS</span><span class="si">}</span><span class="s2">&amp;startAt=</span><span class="si">${</span><span class="nv">START_AT</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>START_AT=0
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>MAX_RESULTS=200
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>while true; do
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  RESPONSE=$(curl -s -u &quot;${JIRA_USER}:${JIRA_TOKEN}&quot; \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;${JIRA_URL}/rest/api/2/user/search?username=.&amp;maxResults=${MAX_RESULTS}&amp;startAt=${START_AT}&quot;)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  COUNT=$(echo &quot;${RESPONSE}&quot; | python3 -c &quot;import sys,json; print(len(json.load(sys.stdin)))&quot;)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  if [ &quot;${COUNT}&quot; -eq 0 ]; then
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    break
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  fi
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nv">COUNT</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RESPONSE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(len(json.load(sys.stdin)))&quot;</span><span class="k">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">COUNT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="k">break</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="c1"># For each user, get group membership</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="nv">USERNAMES</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">RESPONSE</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s2">for u in json.load(sys.stdin):</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s2">    print(u[&#39;name&#39;])</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="s2">&quot;</span><span class="k">)</span>
 <a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  # For each user, get group membership
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  USERNAMES=$(echo &quot;${RESPONSE}&quot; | python3 -c &quot;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>import sys, json
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>for u in json.load(sys.stdin):
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    print(u[&#39;name&#39;])
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>&quot;)
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  while read -r USERNAME; do
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    USER_DATA=$(curl -s -u &quot;${JIRA_USER}:${JIRA_TOKEN}&quot; \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>      &quot;${JIRA_URL}/rest/api/2/user?username=${USERNAME}&amp;expand=groups&quot;)
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    echo &quot;${USER_DATA}&quot; | python3 -c &quot;
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>import sys, json
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>u = json.load(sys.stdin)
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>groups = &#39;; &#39;.join(g[&#39;name&#39;] for g in u.get(&#39;groups&#39;, {}).get(&#39;items&#39;, []))
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>print(&#39;,&#39;.join([
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    u.get(&#39;name&#39;,&#39;&#39;),
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>    u.get(&#39;displayName&#39;,&#39;&#39;).replace(&#39;,&#39;,&#39;&#39;),
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    u.get(&#39;emailAddress&#39;,&#39;&#39;),
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>    str(u.get(&#39;active&#39;, False)),
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>    groups
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>]))
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>&quot; &gt;&gt; &quot;${OUTPUT}&quot;
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>  done &lt;&lt;&lt; &quot;${USERNAMES}&quot;
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>  START_AT=$((START_AT + COUNT))
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>  echo &quot;Processed ${START_AT} users...&quot;
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>done
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>echo &quot;User audit saved: ${OUTPUT}&quot;
-</code></pre></div></p>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>USERNAME<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="nv">USER_DATA</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user?username=</span><span class="si">${</span><span class="nv">USERNAME</span><span class="si">}</span><span class="s2">&amp;expand=groups&quot;</span><span class="k">)</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USER_DATA</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="s2">u = json.load(sys.stdin)</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="s2">groups = &#39;; &#39;.join(g[&#39;name&#39;] for g in u.get(&#39;groups&#39;, {}).get(&#39;items&#39;, []))</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s2">print(&#39;,&#39;.join([</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="s2">    u.get(&#39;name&#39;,&#39;&#39;),</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="s2">    u.get(&#39;displayName&#39;,&#39;&#39;).replace(&#39;,&#39;,&#39;&#39;),</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="s2">    u.get(&#39;emailAddress&#39;,&#39;&#39;),</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="s2">    str(u.get(&#39;active&#39;, False)),</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="s2">    groups</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="s2">]))</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUTPUT</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">  </span><span class="k">done</span><span class="w"> </span><span class="o">&lt;&lt;&lt;</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">USERNAMES</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">  </span><span class="nv">START_AT</span><span class="o">=</span><span class="k">$((</span><span class="nv">START_AT</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">COUNT</span><span class="k">))</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Processed </span><span class="si">${</span><span class="nv">START_AT</span><span class="si">}</span><span class="s2"> users...&quot;</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="k">done</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;User audit saved: </span><span class="si">${</span><span class="nv">OUTPUT</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h3 id="inactive-user-report-sql">Inactive User Report (SQL)<a class="headerlink" href="#inactive-user-report-sql" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Users who have not logged in for 90+ days</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">user_name</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">lower_display_name</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email_address</span><span class="p">,</span>

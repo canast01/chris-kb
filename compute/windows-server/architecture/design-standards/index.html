@@ -3022,6 +3022,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#drive-letter-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drive Letter Conventions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powershell-remoting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerShell Remoting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#winrm-configuration-baseline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3355,36 +3377,59 @@
 │  Object audit  = logs file/folder access; apply selectively to avoid log flood                        │
 │  Logon audit   = logs interactive, network, and Kerberos logons                                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>All servers must be placed in the correct OU before applying GPOs. Computer accounts should not remain in the default `Computers` container.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Drive Letter Conventions
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Drive | Purpose | Notes |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|-------|---------|-------|
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| C: | Operating system | Minimum 100 GB; OS and program files only |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| D: | Data / application files | Size based on workload |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| E: | Logs | Application and IIS logs |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| T: | TempDB (SQL Server) | High-IOPS volume; separate spindle or tier |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| X: | Backup staging | Optional; separate from data |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## PowerShell Remoting
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>PowerShell remoting (WinRM) must be enabled on all managed servers:
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>```powershell
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Enable PowerShell remoting
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Enable-PSRemoting -Force
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Verify WinRM is running
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Get-Service WinRM
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># Test remote connectivity
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Test-WSMan -ComputerName &lt;servername&gt;
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a># Connect remotely
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>Enter-PSSession -ComputerName &lt;servername&gt; -Credential (Get-Credential)
-</code></pre></div></p>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>All servers must be placed in the correct OU before applying GPOs. Computer accounts should not remain in the default <code>Computers</code> container.</p>
+<h2 id="drive-letter-conventions">Drive Letter Conventions<a class="headerlink" href="#drive-letter-conventions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Drive</th>
+<th>Purpose</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C:</td>
+<td>Operating system</td>
+<td>Minimum 100 GB; OS and program files only</td>
+</tr>
+<tr>
+<td>D:</td>
+<td>Data / application files</td>
+<td>Size based on workload</td>
+</tr>
+<tr>
+<td>E:</td>
+<td>Logs</td>
+<td>Application and IIS logs</td>
+</tr>
+<tr>
+<td>T:</td>
+<td>TempDB (SQL Server)</td>
+<td>High-IOPS volume; separate spindle or tier</td>
+</tr>
+<tr>
+<td>X:</td>
+<td>Backup staging</td>
+<td>Optional; separate from data</td>
+</tr>
+</tbody>
+</table>
+<h2 id="powershell-remoting">PowerShell Remoting<a class="headerlink" href="#powershell-remoting" title="Permanent link">&para;</a></h2>
+<p>PowerShell remoting (WinRM) must be enabled on all managed servers:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Enable PowerShell remoting</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Enable-PSRemoting</span> <span class="n">-Force</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify WinRM is running</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Service</span> <span class="n">WinRM</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Test remote connectivity</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Connect remotely</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Enter-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">servername</span><span class="p">&gt;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+</code></pre></div>
 <p>WinRM listener configuration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View WinRM listeners</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">winrm</span> <span class="n">enumerate</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">listener</span>

@@ -3476,6 +3476,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#ndi-not-receiving-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NDI Not Receiving Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nd-ui-certificate-warning-after-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND UI Certificate Warning After Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#nd-backup-failing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3755,77 +3777,73 @@
 │  kubectl describe= Kubernetes command showing pod events and failure reason                           │
 │  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common causes:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- SNMP credentials changed on switches: update in NDFC fabric settings
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Switch SNMP ACL blocking ND data IP: update switch ACL
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- PM database full: navigate to **NDFC &gt; Settings &gt; Data Retention** and reduce retention
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>---
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## NDI Not Receiving Telemetry
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>**Symptom:** NDI dashboard shows no flow data or anomaly data is stale (&gt; 30 minutes).
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>**Resolution:**
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>1. Verify the streaming telemetry connection from managed switches to ND:
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   - For MDS (SAN Insights): telemetry is pulled via NDFC, not streamed directly; verify NDFC-to-switch connectivity
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   - For ACI: verify APIC connectivity to ND
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2. Check NDI flow collector pods:
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>   ```bash
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   kubectl get pods -n ndi | grep collector
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   kubectl logs -n ndi deployment/ndi-flow-collector --tail=100 | grep -i &quot;error&quot;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>   ```
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>3. Verify the NDI license is applied:
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>   - Navigate to **Admin Console &gt; System &gt; Licensing** — confirm NDI Insights license is valid
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>4. For ACI sites: verify the APIC is registered in NDI:
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>   - Navigate to **NDI &gt; Manage &gt; Sites** — confirm site status is **Online**
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>---
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>## ND UI Certificate Warning After Upgrade
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>**Symptom:** After an ND upgrade, browsers show a certificate warning on the ND management URL.
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>**Cause:** ND upgrades may reset the TLS certificate to a self-signed default in some versions.
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>**Resolution:**
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>```bash
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>ssh ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a># Check the current active certificate
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>acs certificates show
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a># If it shows the ND self-signed cert: the custom cert was lost
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a># Re-import the corporate CA certificate
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>acs certificates import \
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>  --key /tmp/nd.key \
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>  --cert /tmp/nd-bundle.crt \
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>  --name nd-dc1-cert
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a># Activate the certificate
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>acs certificates activate --name nd-dc1-cert
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
+<p>Common causes:
+- SNMP credentials changed on switches: update in NDFC fabric settings
+- Switch SNMP ACL blocking ND data IP: update switch ACL
+- PM database full: navigate to <strong>NDFC &gt; Settings &gt; Data Retention</strong> and reduce retention</p>
+<hr />
+<h2 id="ndi-not-receiving-telemetry">NDI Not Receiving Telemetry<a class="headerlink" href="#ndi-not-receiving-telemetry" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> NDI dashboard shows no flow data or anomaly data is stale (&gt; 30 minutes).</p>
+<p><strong>Resolution:</strong></p>
+<ol>
+<li>Verify the streaming telemetry connection from managed switches to ND:</li>
+<li>For MDS (SAN Insights): telemetry is pulled via NDFC, not streamed directly; verify NDFC-to-switch connectivity</li>
+<li>
+<p>For ACI: verify APIC connectivity to ND</p>
+</li>
+<li>
+<p>Check NDI flow collector pods:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>collector
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>ndi<span class="w"> </span>deployment/ndi-flow-collector<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error&quot;</span>
 </code></pre></div></p>
+</li>
+<li>
+<p>Verify the NDI license is applied:</p>
+</li>
+<li>
+<p>Navigate to <strong>Admin Console &gt; System &gt; Licensing</strong> — confirm NDI Insights license is valid</p>
+</li>
+<li>
+<p>For ACI sites: verify the APIC is registered in NDI:</p>
+</li>
+<li>Navigate to <strong>NDI &gt; Manage &gt; Sites</strong> — confirm site status is <strong>Online</strong></li>
+</ol>
+<hr />
+<h2 id="nd-ui-certificate-warning-after-upgrade">ND UI Certificate Warning After Upgrade<a class="headerlink" href="#nd-ui-certificate-warning-after-upgrade" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> After an ND upgrade, browsers show a certificate warning on the ND management URL.</p>
+<p><strong>Cause:</strong> ND upgrades may reset the TLS certificate to a self-signed default in some versions.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Check the current active certificate</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>acs<span class="w"> </span>certificates<span class="w"> </span>show
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If it shows the ND self-signed cert: the custom cert was lost</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Re-import the corporate CA certificate</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>acs<span class="w"> </span>certificates<span class="w"> </span>import<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--key<span class="w"> </span>/tmp/nd.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--cert<span class="w"> </span>/tmp/nd-bundle.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--name<span class="w"> </span>nd-dc1-cert
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Activate the certificate</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>acs<span class="w"> </span>certificates<span class="w"> </span>activate<span class="w"> </span>--name<span class="w"> </span>nd-dc1-cert
+</code></pre></div>
 <p>Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.</p>
 <hr />
 <h2 id="nd-backup-failing">ND Backup Failing<a class="headerlink" href="#nd-backup-failing" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Scheduled backup does not complete; backup history shows errors.</p>
 <p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Test remote backup connectivity</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check backup status and last error</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>acs<span class="w"> </span>backup<span class="w"> </span>status
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check backup logs</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>acs<span class="w"> </span>system<span class="w"> </span>logs<span class="w"> </span>--component<span class="w"> </span>backup<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Test remote backup connectivity</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Check backup status and last error</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>acs<span class="w"> </span>backup<span class="w"> </span>status
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check backup logs</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>acs<span class="w"> </span>system<span class="w"> </span>logs<span class="w"> </span>--component<span class="w"> </span>backup<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
 </code></pre></div>
 <p>Common causes:</p>
 <table>
