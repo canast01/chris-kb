@@ -3116,29 +3116,29 @@ This policy defines mandatory retention periods, storage tier assignments, and d
 │    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">---</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Log Retention Implementation
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">## Log Retention Implementation</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### SIEM — Splunk Index Retention
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">### SIEM — Splunk Index Retention</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```ini
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># /opt/splunk/etc/system/local/indexes.conf
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="na">```ini</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># /opt/splunk/etc/system/local/indexes.conf</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>[security_logs]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>homePath   = $SPLUNK_DB/security_logs/db
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>coldPath   = $SPLUNK_DB/security_logs/colddb
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>thawedPath = $SPLUNK_DB/security_logs/thaweddb
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>frozenTimePeriodInSecs = 63072000   # 2 years = 730 days online
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>coldToFrozenDir = /mnt/archive/splunk/security_logs  # cold storage path
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>maxDataSize = auto_high_volume
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">[security_logs]</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="na">homePath</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/security_logs/db</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="na">coldPath</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/security_logs/colddb</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="na">thawedPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/security_logs/thaweddb</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="na">frozenTimePeriodInSecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">63072000</span><span class="w">   </span><span class="c1"># 2 years = 730 days online</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="na">coldToFrozenDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/mnt/archive/splunk/security_logs</span><span class="w">  </span><span class="c1"># cold storage path</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="na">maxDataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">auto_high_volume</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>[audit_logs]
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>homePath   = $SPLUNK_DB/audit_logs/db
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>coldPath   = $SPLUNK_DB/audit_logs/colddb
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>thawedPath = $SPLUNK_DB/audit_logs/thaweddb
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>frozenTimePeriodInSecs = 157680000  # 5 years archive
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>coldToFrozenDir = /mnt/archive/splunk/audit_logs
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">[audit_logs]</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="na">homePath</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/audit_logs/db</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="na">coldPath</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/audit_logs/colddb</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="na">thawedPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$SPLUNK_DB/audit_logs/thaweddb</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="na">frozenTimePeriodInSecs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">157680000</span><span class="w">  </span><span class="c1"># 5 years archive</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="na">coldToFrozenDir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/mnt/archive/splunk/audit_logs</span>
 </code></pre></div></p>
 <h3 id="windows-event-log-forwarding-and-retention">Windows Event Log Forwarding and Retention<a class="headerlink" href="#windows-event-log-forwarding-and-retention" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Set Windows Event Log max size and retention policy on source systems via GPO</span>

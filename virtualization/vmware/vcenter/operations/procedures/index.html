@@ -4815,23 +4815,23 @@ Procedures reference covering Pre-Maintenance Steps, Restarting Services Safely,
 │  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Service restart order for manual recovery:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. `vmware-vpostgres` — database must be running before vpxd
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. `vmware-stsd` — SSO token service
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. `vpxd` — core vCenter service
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4. `vsphere-ui` — vSphere Client (if needed)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Service</span> <span class="n">restart</span> <span class="n">order</span> <span class="k">for</span> <span class="n">manual</span> <span class="n">recovery</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">1</span><span class="p">.</span> <span class="p">`</span><span class="n">vmware-vpostgres</span><span class="p">`</span> <span class="err">—</span> <span class="n">database</span> <span class="n">must</span> <span class="n">be</span> <span class="n">running</span> <span class="n">before</span> <span class="n">vpxd</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">2</span><span class="p">.</span> <span class="p">`</span><span class="n">vmware-stsd</span><span class="p">`</span> <span class="err">—</span> <span class="n">SSO</span> <span class="n">token</span> <span class="n">service</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">3</span><span class="p">.</span> <span class="p">`</span><span class="n">vpxd</span><span class="p">`</span> <span class="err">—</span> <span class="n">core</span> <span class="n">vCenter</span> <span class="n">service</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">4</span><span class="p">.</span> <span class="p">`</span><span class="n">vsphere-ui</span><span class="p">`</span> <span class="err">—</span> <span class="n">vSphere</span> <span class="n">Client</span> <span class="p">(</span><span class="k">if</span> <span class="n">needed</span><span class="p">)</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>---
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">---</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Adding an ESXi Host to vCenter
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c">## Adding an ESXi Host to vCenter</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```powershell
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Via PowerCLI
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>$dc = Get-Datacenter -Name &quot;DC-LON&quot;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>$cluster = Get-Cluster -Name &quot;CL-LON-PROD&quot;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>$cred = Get-Credential   # ESXi root credentials
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Via PowerCLI</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nv">$dc</span> <span class="p">=</span> <span class="nb">Get-Datacenter</span> <span class="n">-Name</span> <span class="s2">&quot;DC-LON&quot;</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;CL-LON-PROD&quot;</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nv">$cred</span> <span class="p">=</span> <span class="nb">Get-Credential</span>   <span class="c"># ESXi root credentials</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Add-VMHost -Name &quot;esxi-05.example.local&quot; -Location $cluster -User root -Password $cred.GetNetworkCredential().Password -Force
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-05.example.local&quot;</span> <span class="n">-Location</span> <span class="nv">$cluster</span> <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="nv">$cred</span><span class="p">.</span><span class="n">GetNetworkCredential</span><span class="p">().</span><span class="n">Password</span> <span class="n">-Force</span>
 </code></pre></div></p>
 <p>Via UI: <strong>vCenter → Datacenter or Cluster → Actions → Add Host</strong>. Enter FQDN, root credentials, and accept the host thumbprint.</p>
 <p>Post-add checks:

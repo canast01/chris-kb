@@ -4688,52 +4688,52 @@ Integrations reference covering NSX-T Integration, Physical Switch Integration �
 │  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Physical Switch Integration — NetFlow/IPFIX
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c">## Physical Switch Integration — NetFlow/IPFIX</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Cisco IOS-XE — NetFlow v9
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c">### Cisco IOS-XE — NetFlow v9</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```ios
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>! Step 1: Define the exporter
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>flow exporter AON-EXPORTER
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> destination 10.10.10.50
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> source GigabitEthernet0/0/0
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> transport udp 2055
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> export-protocol netflow-v9
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> template data timeout 60
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a> option interface-table timeout 60
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a> option application-table timeout 60
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>!
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>! Step 2: Define a flow record
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>flow record AON-RECORD
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a> match ipv4 source address
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a> match ipv4 destination address
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> match transport source-port
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a> match transport destination-port
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a> match ip protocol
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a> match ip tos
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a> match interface input
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a> collect counter bytes long
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a> collect counter packets long
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a> collect timestamp sys-uptime first
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a> collect timestamp sys-uptime last
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a> collect transport tcp flags
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>!
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>! Step 3: Define the flow monitor
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>flow monitor AON-MONITOR
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a> exporter AON-EXPORTER
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a> cache timeout active 60
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a> cache timeout inactive 15
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a> record AON-RECORD
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>!
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>! Step 4: Apply to uplink/access interfaces
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>interface GigabitEthernet1/0/1
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a> ip flow monitor AON-MONITOR input
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a> ip flow monitor AON-MONITOR output
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>!
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>! Verification
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>show flow exporter AON-EXPORTER statistics
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>show flow monitor AON-MONITOR cache
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>show flow monitor AON-MONITOR statistics
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">```</span><span class="n">ios</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">!</span> <span class="n">Step</span> <span class="n">1</span><span class="p">:</span> <span class="n">Define</span> <span class="n">the</span> <span class="n">exporter</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">flow</span> <span class="n">exporter</span> <span class="n">AON-EXPORTER</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a> <span class="n">destination</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">50</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a> <span class="n">source</span> <span class="n">GigabitEthernet0</span><span class="p">/</span><span class="n">0</span><span class="p">/</span><span class="n">0</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a> <span class="n">transport</span> <span class="n">udp</span> <span class="n">2055</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a> <span class="nb">export-protocol</span> <span class="n">netflow-v9</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a> <span class="n">template</span> <span class="n">data</span> <span class="n">timeout</span> <span class="n">60</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a> <span class="n">option</span> <span class="n">interface-table</span> <span class="n">timeout</span> <span class="n">60</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a> <span class="n">option</span> <span class="n">application-table</span> <span class="n">timeout</span> <span class="n">60</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">!</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">!</span> <span class="n">Step</span> <span class="n">2</span><span class="p">:</span> <span class="n">Define</span> <span class="n">a</span> <span class="n">flow</span> <span class="n">record</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">flow</span> <span class="n">record</span> <span class="n">AON-RECORD</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a> <span class="n">match</span> <span class="n">ipv4</span> <span class="n">source</span> <span class="n">address</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a> <span class="n">match</span> <span class="n">ipv4</span> <span class="n">destination</span> <span class="n">address</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> <span class="n">match</span> <span class="n">transport</span> <span class="n">source-port</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a> <span class="n">match</span> <span class="n">transport</span> <span class="n">destination-port</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a> <span class="n">match</span> <span class="n">ip</span> <span class="n">protocol</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a> <span class="n">match</span> <span class="n">ip</span> <span class="n">tos</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a> <span class="n">match</span> <span class="n">interface</span> <span class="n">input</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a> <span class="n">collect</span> <span class="n">counter</span> <span class="n">bytes</span> <span class="n">long</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a> <span class="n">collect</span> <span class="n">counter</span> <span class="n">packets</span> <span class="n">long</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a> <span class="n">collect</span> <span class="n">timestamp</span> <span class="n">sys-uptime</span> <span class="n">first</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a> <span class="n">collect</span> <span class="n">timestamp</span> <span class="n">sys-uptime</span> <span class="n">last</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a> <span class="n">collect</span> <span class="n">transport</span> <span class="n">tcp</span> <span class="n">flags</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="p">!</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="p">!</span> <span class="n">Step</span> <span class="n">3</span><span class="p">:</span> <span class="n">Define</span> <span class="n">the</span> <span class="n">flow</span> <span class="n">monitor</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="n">flow</span> <span class="n">monitor</span> <span class="n">AON-MONITOR</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a> <span class="n">exporter</span> <span class="n">AON-EXPORTER</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a> <span class="n">cache</span> <span class="n">timeout</span> <span class="n">active</span> <span class="n">60</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a> <span class="n">cache</span> <span class="n">timeout</span> <span class="n">inactive</span> <span class="n">15</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a> <span class="n">record</span> <span class="n">AON-RECORD</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="p">!</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="p">!</span> <span class="n">Step</span> <span class="n">4</span><span class="p">:</span> <span class="n">Apply</span> <span class="n">to</span> <span class="n">uplink</span><span class="p">/</span><span class="n">access</span> <span class="n">interfaces</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="n">interface</span> <span class="n">GigabitEthernet1</span><span class="p">/</span><span class="n">0</span><span class="p">/</span><span class="n">1</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a> <span class="n">ip</span> <span class="n">flow</span> <span class="n">monitor</span> <span class="n">AON-MONITOR</span> <span class="n">input</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a> <span class="n">ip</span> <span class="n">flow</span> <span class="n">monitor</span> <span class="n">AON-MONITOR</span> <span class="n">output</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="p">!</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="p">!</span> <span class="n">Verification</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="n">show</span> <span class="n">flow</span> <span class="n">exporter</span> <span class="n">AON-EXPORTER</span> <span class="n">statistics</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="n">show</span> <span class="n">flow</span> <span class="n">monitor</span> <span class="n">AON-MONITOR</span> <span class="n">cache</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="n">show</span> <span class="n">flow</span> <span class="n">monitor</span> <span class="n">AON-MONITOR</span> <span class="n">statistics</span>
 </code></pre></div></p>
 <h3 id="cisco-nx-os-netflow-v9">Cisco NX-OS — NetFlow v9<a class="headerlink" href="#cisco-nx-os-netflow-v9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>feature netflow

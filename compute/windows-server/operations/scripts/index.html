@@ -3504,46 +3504,46 @@ Scripts reference covering Script Deployment and Scheduling, Disk Space Alert, S
 │  repadmin     = AD replication tool; output parsed by PS for reporting                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Service Monitor
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">## Service Monitor</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Restarts stopped automatic services and logs the event.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">Restarts</span> <span class="n">stopped</span> <span class="n">automatic</span> <span class="n">services</span> <span class="n">and</span> <span class="n">logs</span> <span class="n">the</span> <span class="n">event</span><span class="p">.</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>&lt;#
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>.SYNOPSIS
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Monitors critical services and attempts restart on failure
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>#&gt;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="cm">  Monitors critical services and attempts restart on failure</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="cm">#&gt;</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>param(
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    [string[]]$Services = @(&#39;W32Time&#39;, &#39;EventLog&#39;, &#39;WinRM&#39;, &#39;wuauserv&#39;),
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    [string]$LogPath    = &quot;C:\Logs\ServiceMonitor.log&quot;
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="no">[string[]]</span><span class="nv">$Services</span> <span class="p">=</span> <span class="p">@(</span><span class="s1">&#39;W32Time&#39;</span><span class="p">,</span> <span class="s1">&#39;EventLog&#39;</span><span class="p">,</span> <span class="s1">&#39;WinRM&#39;</span><span class="p">,</span> <span class="s1">&#39;wuauserv&#39;</span><span class="p">),</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="no">[string]</span><span class="nv">$LogPath</span>    <span class="p">=</span> <span class="s2">&quot;C:\Logs\ServiceMonitor.log&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">)</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>function Write-Log {
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    param([string]$Message)
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    $entry = &quot;$(Get-Date -Format &#39;yyyy-MM-dd HH:mm:ss&#39;) | $Message&quot;
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    Add-Content -Path $LogPath -Value $entry
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    Write-Host $entry
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>}
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">function</span> <span class="nb">Write-Log</span> <span class="p">{</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$Message</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="nv">$entry</span> <span class="p">=</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd HH:mm:ss&#39;</span><span class="p">)</span><span class="s2"> | $Message&quot;</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="nb">Add-Content</span> <span class="n">-Path</span> <span class="nv">$LogPath</span> <span class="n">-Value</span> <span class="nv">$entry</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="nb">Write-Host</span> <span class="nv">$entry</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">}</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>foreach ($svc in $Services) {
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    $s = Get-Service -Name $svc -ErrorAction SilentlyContinue
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    if (-not $s) {
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        Write-Log &quot;WARNING: Service &#39;$svc&#39; not found on this server&quot;
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        continue
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    }
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    if ($s.Status -ne &#39;Running&#39;) {
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        Write-Log &quot;ALERT: Service &#39;$($s.DisplayName)&#39; is $($s.Status) — attempting restart&quot;
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        try {
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            Start-Service -Name $svc -ErrorAction Stop
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            Write-Log &quot;INFO: Service &#39;$($s.DisplayName)&#39; restarted successfully&quot;
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        } catch {
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            Write-Log &quot;ERROR: Failed to restart &#39;$($s.DisplayName)&#39;: $_&quot;
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        }
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    } else {
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        Write-Log &quot;OK: Service &#39;$($s.DisplayName)&#39; is running&quot;
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    }
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>}
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$svc</span> <span class="k">in</span> <span class="nv">$Services</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="nv">$s</span> <span class="p">=</span> <span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="nv">$s</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="nb">Write-Log</span> <span class="s2">&quot;WARNING: Service &#39;$svc&#39; not found on this server&quot;</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="k">continue</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="p">}</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s1">&#39;Running&#39;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="nb">Write-Log</span> <span class="s2">&quot;ALERT: Service &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">DisplayName</span><span class="p">)</span><span class="s2">&#39; is </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Status</span><span class="p">)</span><span class="s2"> — attempting restart&quot;</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            <span class="nb">Start-Service</span> <span class="n">-Name</span> <span class="nv">$svc</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            <span class="nb">Write-Log</span> <span class="s2">&quot;INFO: Service &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">DisplayName</span><span class="p">)</span><span class="s2">&#39; restarted successfully&quot;</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="nb">Write-Log</span> <span class="s2">&quot;ERROR: Failed to restart &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">DisplayName</span><span class="p">)</span><span class="s2">&#39;: $_&quot;</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="p">}</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        <span class="nb">Write-Log</span> <span class="s2">&quot;OK: Service &#39;</span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">DisplayName</span><span class="p">)</span><span class="s2">&#39; is running&quot;</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="p">}</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="p">}</span>
 </code></pre></div></p>
 <h2 id="event-log-query">Event Log Query<a class="headerlink" href="#event-log-query" title="Permanent link">&para;</a></h2>
 <p>Extracts events matching specific IDs for incident investigation.</p>

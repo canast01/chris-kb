@@ -3706,26 +3706,26 @@
 │  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### HTTPS Certificate Management
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">### HTTPS Certificate Management</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>NX-OS uses a self-signed certificate by default. For enterprise environments, replace with a CA-signed certificate.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">NX</span><span class="o">-</span><span class="n">OS</span> <span class="n">uses</span> <span class="n">a</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span> <span class="n">by</span> <span class="n">default</span><span class="o">.</span> <span class="n">For</span> <span class="n">enterprise</span> <span class="n">environments</span><span class="p">,</span> <span class="n">replace</span> <span class="k">with</span> <span class="n">a</span> <span class="n">CA</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span><span class="o">.</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Generate a new self-signed certificate
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>crypto ca trustpoint LOCAL-CA
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  enrollment self-signed
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  subject-name CN=mds-sw01.corp.example.com
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Generate a new self-signed certificate</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">trustpoint</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">enrollment</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">subject</span><span class="o">-</span><span class="n">name</span> <span class="n">CN</span><span class="o">=</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">corp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Generate the keypair and certificate
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>crypto key generate rsa label mds-ssl-key modulus 2048
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>crypto ca enroll LOCAL-CA
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Generate the keypair and certificate</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">crypto</span> <span class="n">key</span> <span class="n">generate</span> <span class="n">rsa</span> <span class="n">label</span> <span class="n">mds</span><span class="o">-</span><span class="n">ssl</span><span class="o">-</span><span class="n">key</span> <span class="n">modulus</span> <span class="mi">2048</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">enroll</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
 <a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Display the current certificate
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>show crypto ca certificates
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Display the current certificate</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">show</span> <span class="n">crypto</span> <span class="n">ca</span> <span class="n">certificates</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Import a CA-signed certificate (PEM format via TFTP/SCP)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>copy tftp://&lt;server&gt;/mds-sw01.pem bootflash:mds-sw01.pem
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>crypto ca import LOCAL-CA certificate
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Import a CA-signed certificate (PEM format via TFTP/SCP)</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">copy</span> <span class="n">tftp</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">server</span><span class="o">&gt;/</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span> <span class="n">bootflash</span><span class="p">:</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="kn">import</span><span class="w"> </span><span class="nn">LOCAL</span><span class="o">-</span><span class="n">CA</span> <span class="n">certificate</span>
 </code></pre></div></p>
 <hr />
 <h2 id="snmpv3-encrypted-snmp">SNMPv3 (Encrypted SNMP)<a class="headerlink" href="#snmpv3-encrypted-snmp" title="Permanent link">&para;</a></h2>

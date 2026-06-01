@@ -3069,36 +3069,36 @@ Brings a new physical server, VM, or cloud instance into full production managem
 │    Vault entry   = Admin credentials stored in CyberArk/vault; no shared spreadsheet creds            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## 2. OS Hardening and Security Baseline
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">## 2. OS Hardening and Security Baseline</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Apply CIS baseline via Ansible
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ansible-playbook -i inventory/ security/cis-baseline.yml --limit &lt;hostname&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">bash</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Apply CIS baseline via Ansible</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">ansible-playbook</span> <span class="n">-i</span> <span class="n">inventory</span><span class="p">/</span> <span class="n">security</span><span class="p">/</span><span class="n">cis-baseline</span><span class="p">.</span><span class="n">yml</span> <span class="p">-</span><span class="n">-limit</span> <span class="p">&lt;</span><span class="n">hostname</span><span class="p">&gt;</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># SELinux enforcing
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sed -i &#39;s/^SELINUX=.*/SELINUX=enforcing/&#39; /etc/selinux/config
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>setenforce 1
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># SELinux enforcing</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">sed</span> <span class="n">-i</span> <span class="s1">&#39;s/^SELINUX=.*/SELINUX=enforcing/&#39;</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">selinux</span><span class="p">/</span><span class="n">config</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">setenforce</span> <span class="n">1</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Disable unnecessary services
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>systemctl disable --now bluetooth avahi-daemon cups rpcbind postfix
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Disable unnecessary services</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">systemctl</span> <span class="n">disable</span> <span class="p">-</span><span class="n">-now</span> <span class="n">bluetooth</span> <span class="n">avahi-daemon</span> <span class="n">cups</span> <span class="n">rpcbind</span> <span class="n">postfix</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># SSH hardening
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>cat &gt; /etc/ssh/sshd_config.d/hardening.conf &lt;&lt;EOF
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>PermitRootLogin no
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>PasswordAuthentication no
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>MaxAuthTries 3
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ClientAliveInterval 300
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>ClientAliveCountMax 2
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>X11Forwarding no
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>AllowGroups sshusers admins
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>EOF
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>systemctl reload sshd
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># SSH hardening</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">cat </span><span class="p">&gt;</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">ssh</span><span class="p">/</span><span class="n">sshd_config</span><span class="p">.</span><span class="n">d</span><span class="p">/</span><span class="n">hardening</span><span class="p">.</span><span class="n">conf</span> <span class="p">&lt;&lt;</span><span class="n">EOF</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">PermitRootLogin</span> <span class="n">no</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">PasswordAuthentication</span> <span class="n">no</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">MaxAuthTries</span> <span class="n">3</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="n">ClientAliveInterval</span> <span class="n">300</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">ClientAliveCountMax</span> <span class="n">2</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">X11Forwarding</span> <span class="n">no</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">AllowGroups</span> <span class="n">sshusers</span> <span class="n">admins</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">EOF</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="n">systemctl</span> <span class="n">reload</span> <span class="n">sshd</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Host firewall
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>firewall-cmd --set-default-zone=drop
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>firewall-cmd --permanent --add-service=ssh
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>firewall-cmd --permanent --add-rich-rule=&#39;rule family=&quot;ipv4&quot; source address=&quot;10.0.0.0/8&quot; service name=&quot;ssh&quot; accept&#39;
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>firewall-cmd --reload
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c"># Host firewall</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="n">firewall-cmd</span> <span class="p">-</span><span class="n">-set-default-zone</span><span class="p">=</span><span class="n">drop</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">firewall-cmd</span> <span class="p">-</span><span class="n">-permanent</span> <span class="p">-</span><span class="n">-add-service</span><span class="p">=</span><span class="n">ssh</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">firewall-cmd</span> <span class="p">-</span><span class="n">-permanent</span> <span class="p">-</span><span class="n">-add-rich-rule</span><span class="p">=</span><span class="s1">&#39;rule family=&quot;ipv4&quot; source address=&quot;10.0.0.0/8&quot; service name=&quot;ssh&quot; accept&#39;</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="n">firewall-cmd</span> <span class="p">-</span><span class="n">-reload</span>
 </code></pre></div></p>
 <h3 id="cyberark-pam-registration">CyberArk PAM Registration<a class="headerlink" href="#cyberark-pam-registration" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">CyberArk UI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Accounts → Safes → &lt;Environment&gt;-Safe → Add Account</span>

@@ -3841,30 +3841,30 @@ Procedures reference covering Change Readiness, Incident Triage, Maintenance Win
 │   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Scheduled Tasks for Automated Reports
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">### Scheduled Tasks for Automated Reports</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Create a scheduled task to run a report script daily
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>$action  = New-ScheduledTaskAction -Execute &#39;powershell.exe&#39; `
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>               -Argument &#39;-NonInteractive -File C:\Scripts\daily-report.ps1&#39;
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>$trigger = New-ScheduledTaskTrigger -Daily -At &#39;06:00AM&#39;
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -RunOnlyIfNetworkAvailable
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Create a scheduled task to run a report script daily</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">$action</span>  <span class="p">=</span> <span class="nb">New-ScheduledTaskAction</span> <span class="n">-Execute</span> <span class="s1">&#39;powershell.exe&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>               <span class="n">-Argument</span> <span class="s1">&#39;-NonInteractive -File C:\Scripts\daily-report.ps1&#39;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">$trigger</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskTrigger</span> <span class="n">-Daily</span> <span class="n">-At</span> <span class="s1">&#39;06:00AM&#39;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">$settings</span> <span class="p">=</span> <span class="nb">New-ScheduledTaskSettingsSet</span> <span class="n">-StartWhenAvailable</span> <span class="n">-RunOnlyIfNetworkAvailable</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Register-ScheduledTask `
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    -TaskName   &#39;DailyServerReport&#39; `
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    -TaskPath   &#39;\Automation\&#39; `
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    -Action     $action `
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    -Trigger    $trigger `
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    -Settings   $settings `
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    -RunLevel   Highest `
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    -Description &#39;Generate and email daily server report&#39;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">Register-ScheduledTask</span> <span class="p">`</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">-TaskName</span>   <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">-TaskPath</span>   <span class="s1">&#39;\Automation\&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">-Action</span>     <span class="nv">$action</span> <span class="p">`</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">-Trigger</span>    <span class="nv">$trigger</span> <span class="p">`</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">-Settings</span>   <span class="nv">$settings</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">-RunLevel</span>   <span class="n">Highest</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">-Description</span> <span class="s1">&#39;Generate and email daily server report&#39;</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Run the task immediately for testing
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>Start-ScheduledTask -TaskPath &#39;\Automation\&#39; -TaskName &#39;DailyServerReport&#39;
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># Run the task immediately for testing</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">Start-ScheduledTask</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># Check last run result
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Get-ScheduledTaskInfo -TaskPath &#39;\Automation\&#39; -TaskName &#39;DailyServerReport&#39; |
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    Select-Object LastRunTime, LastTaskResult
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Check last run result</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskPath</span> <span class="s1">&#39;\Automation\&#39;</span> <span class="n">-TaskName</span> <span class="s1">&#39;DailyServerReport&#39;</span> <span class="p">|</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span>
 </code></pre></div></p>
 <h3 id="report-format-reference">Report Format Reference<a class="headerlink" href="#report-format-reference" title="Permanent link">&para;</a></h3>
 <table>

@@ -3600,28 +3600,28 @@ Integrations reference covering PowerCLI VM Management Flow, Windows.
 │   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Snapshots
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">### Snapshots</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Create a snapshot before patching
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>New-Snapshot -VM web01 -Name &#39;Pre-patch-$(Get-Date -Format yyyyMMdd)&#39; `
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    -Description &#39;Snapshot before OS patching&#39; -Memory:$false -Quiesce:$false
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Create a snapshot before patching</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Name</span> <span class="s1">&#39;Pre-patch-$(Get-Date -Format yyyyMMdd)&#39;</span> <span class="p">`</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">-Description</span> <span class="s1">&#39;Snapshot before OS patching&#39;</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span> <span class="n">-Quiesce</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># List all snapshots for a VM
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Get-Snapshot -VM web01
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># List all snapshots for a VM</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># List all snapshots across all VMs (useful for audit)
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Get-VM | Get-Snapshot | Select-Object VM, Name, Created, SizeMB |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    Sort-Object Created | Format-Table -AutoSize
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># List all snapshots across all VMs (useful for audit)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span> <span class="n">SizeMB</span> <span class="p">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Revert to a snapshot
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Set-VM -VM web01 -Snapshot (Get-Snapshot -VM web01 -Name &#39;Pre-patch-*&#39;) -Confirm:$false
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c"># Revert to a snapshot</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Name</span> <span class="s1">&#39;Pre-patch-*&#39;</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Remove a specific snapshot
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Remove-Snapshot -Snapshot (Get-Snapshot -VM web01 -Name &#39;Pre-patch-*&#39;) -Confirm:$false
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c"># Remove a specific snapshot</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">Remove-Snapshot</span> <span class="n">-Snapshot</span> <span class="p">(</span><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="n">-Name</span> <span class="s1">&#39;Pre-patch-*&#39;</span><span class="p">)</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Remove all snapshots for a VM
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Get-Snapshot -VM web01 | Remove-Snapshot -RemoveChildren -Confirm:$false
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c"># Remove all snapshots for a VM</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">Get-Snapshot</span> <span class="n">-VM</span> <span class="n">web01</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-RemoveChildren</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div></p>
 <h3 id="datastores-and-storage">Datastores and Storage<a class="headerlink" href="#datastores-and-storage" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all datastores with capacity info</span>

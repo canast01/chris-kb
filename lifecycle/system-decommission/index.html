@@ -3094,28 +3094,28 @@ Safely removes a server, VM, or cloud instance from production — preventing or
 │    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Data Category | Decision | Signed Off |
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|---|
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Application data | Archive / Delete | ☐ |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| Log files | Archive / Delete | ☐ |
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Database data | Archive / Migrate | ☐ |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| SSL certificates | Revoke | ☐ |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| SSH keys | Rotate on dependents | ☐ |
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">|</span> <span class="n">Data</span> <span class="n">Category</span> <span class="o">|</span> <span class="n">Decision</span> <span class="o">|</span> <span class="n">Signed</span> <span class="n">Off</span> <span class="o">|</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="o">|---|---|---|</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">|</span> <span class="n">Application</span> <span class="n">data</span> <span class="o">|</span> <span class="n">Archive</span> <span class="o">/</span> <span class="n">Delete</span> <span class="o">|</span> <span class="err">☐</span> <span class="o">|</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="o">|</span> <span class="n">Log</span> <span class="n">files</span> <span class="o">|</span> <span class="n">Archive</span> <span class="o">/</span> <span class="n">Delete</span> <span class="o">|</span> <span class="err">☐</span> <span class="o">|</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">|</span> <span class="n">Database</span> <span class="n">data</span> <span class="o">|</span> <span class="n">Archive</span> <span class="o">/</span> <span class="n">Migrate</span> <span class="o">|</span> <span class="err">☐</span> <span class="o">|</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="o">|</span> <span class="n">SSL</span> <span class="n">certificates</span> <span class="o">|</span> <span class="n">Revoke</span> <span class="o">|</span> <span class="err">☐</span> <span class="o">|</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="o">|</span> <span class="n">SSH</span> <span class="n">keys</span> <span class="o">|</span> <span class="n">Rotate</span> <span class="n">on</span> <span class="n">dependents</span> <span class="o">|</span> <span class="err">☐</span> <span class="o">|</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>## 4. Remove from Monitoring
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">## 4. Remove from Monitoring</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```bash
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Prometheus — remove from scrape targets
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Edit prometheus/targets/linux_hosts.yml — delete host entry
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Prometheus — remove from scrape targets</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Edit prometheus/targets/linux_hosts.yml — delete host entry</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># Verify no active alerts for this host
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>curl -s &quot;http://prometheus:9090/api/v1/alerts&quot; | \
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  python3 -c &quot;import sys,json; [print(a) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if &#39;&lt;hostname&gt;&#39; in str(a)]&quot;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Verify no active alerts for this host</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">curl</span> <span class="o">-</span><span class="n">s</span> <span class="s2">&quot;http://prometheus:9090/api/v1/alerts&quot;</span> <span class="o">|</span> \
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>  <span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import sys,json; [print(a) for a in json.load(sys.stdin)[&#39;data&#39;][&#39;alerts&#39;] if &#39;&lt;hostname&gt;&#39; in str(a)]&quot;</span>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Zabbix — disable host via API
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>curl -s -X POST http://zabbix.example.com/api_jsonrpc.php \
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  -d &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;host.update&quot;,&quot;params&quot;:{&quot;hostid&quot;:&quot;&lt;id&gt;&quot;,&quot;status&quot;:1},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}&#39;
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Zabbix — disable host via API</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">curl</span> <span class="o">-</span><span class="n">s</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">zabbix</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">api_jsonrpc</span><span class="o">.</span><span class="n">php</span> \
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> \
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>  <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;method&quot;:&quot;host.update&quot;,&quot;params&quot;:{&quot;hostid&quot;:&quot;&lt;id&gt;&quot;,&quot;status&quot;:1},&quot;auth&quot;:&quot;&lt;token&gt;&quot;,&quot;id&quot;:1}&#39;</span>
 </code></pre></div></p>
 <h2 id="5-remove-from-backup">5. Remove from Backup<a class="headerlink" href="#5-remove-from-backup" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Veeam — remove from backup job</span>

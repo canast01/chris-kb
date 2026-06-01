@@ -4175,40 +4175,40 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 │  jobdetails     = qlist subcommand returning verbose per-phase timing and error codes                 │
 │  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">---</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Restore Operations
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">## Restore Operations</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### Restore Workflow Decision Tree
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">### Restore Workflow Decision Tree</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```mermaid
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>flowchart TD
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    restoreStart([&quot;Restore request received&quot;])
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    restoreStart --&gt; q1{What needs\nto be restored?}
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="err">```</span><span class="n">mermaid</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">flowchart</span> <span class="n">TD</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">restoreStart</span><span class="p">([</span><span class="s2">&quot;Restore request received&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">restoreStart</span> <span class="o">--&gt;</span> <span class="n">q1</span><span class="p">{</span><span class="n">What</span> <span class="n">needs</span>\<span class="n">nto</span> <span class="n">be</span> <span class="n">restored</span><span class="err">?</span><span class="p">}</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    q1 --&gt;|&quot;One or more files&quot;| q2{Windows\nor Linux?}
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    q1 --&gt;|&quot;Entire volume\nor VM disk&quot;| volumeRestore[&quot;Volume-level restore\nqoperation restore\n-subclient -topath&quot;]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    q1 --&gt;|&quot;Full VM&quot;| vmRestore[&quot;Full VM restore\n(VSA subclient)\nrestore to alternate location&quot;]
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    q1 --&gt;|&quot;Application data\n(SQL, Oracle, Exchange)&quot;| appRestore[&quot;Application-aware restore\nPoint-in-time log replay\nor granular item restore&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">q1</span> <span class="o">--&gt;|</span><span class="s2">&quot;One or more files&quot;</span><span class="o">|</span> <span class="n">q2</span><span class="p">{</span><span class="n">Windows</span>\<span class="n">nor</span> <span class="n">Linux</span><span class="err">?</span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">q1</span> <span class="o">--&gt;|</span><span class="s2">&quot;Entire volume</span><span class="se">\n</span><span class="s2">or VM disk&quot;</span><span class="o">|</span> <span class="n">volumeRestore</span><span class="p">[</span><span class="s2">&quot;Volume-level restore</span><span class="se">\n</span><span class="s2">qoperation restore</span><span class="se">\n</span><span class="s2">-subclient -topath&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">q1</span> <span class="o">--&gt;|</span><span class="s2">&quot;Full VM&quot;</span><span class="o">|</span> <span class="n">vmRestore</span><span class="p">[</span><span class="s2">&quot;Full VM restore</span><span class="se">\n</span><span class="s2">(VSA subclient)</span><span class="se">\n</span><span class="s2">restore to alternate location&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">q1</span> <span class="o">--&gt;|</span><span class="s2">&quot;Application data</span><span class="se">\n</span><span class="s2">(SQL, Oracle, Exchange)&quot;</span><span class="o">|</span> <span class="n">appRestore</span><span class="p">[</span><span class="s2">&quot;Application-aware restore</span><span class="se">\n</span><span class="s2">Point-in-time log replay</span><span class="se">\n</span><span class="s2">or granular item restore&quot;</span><span class="p">]</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    q2 --&gt;|&quot;Windows&quot;| winFlr[&quot;File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath&quot;]
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    q2 --&gt;|&quot;Linux&quot;| linFlr[&quot;File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath&quot;]
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">q2</span> <span class="o">--&gt;|</span><span class="s2">&quot;Windows&quot;</span><span class="o">|</span> <span class="n">winFlr</span><span class="p">[</span><span class="s2">&quot;File-level restore</span><span class="se">\n</span><span class="s2">browse from catalog</span><span class="se">\n</span><span class="s2">qoperation restore -subclient -topath&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">q2</span> <span class="o">--&gt;|</span><span class="s2">&quot;Linux&quot;</span><span class="o">|</span> <span class="n">linFlr</span><span class="p">[</span><span class="s2">&quot;File-level restore</span><span class="se">\n</span><span class="s2">browse from catalog</span><span class="se">\n</span><span class="s2">qoperation restore -subclient -topath&quot;</span><span class="p">]</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    volumeRestore --&gt; verifyDest[&quot;Verify destination\nhas sufficient space&quot;]
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    vmRestore --&gt; verifyDest
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    appRestore --&gt; verifyDest
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    winFlr --&gt; verifyDest
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    linFlr --&gt; verifyDest
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">volumeRestore</span> <span class="o">--&gt;</span> <span class="n">verifyDest</span><span class="p">[</span><span class="s2">&quot;Verify destination</span><span class="se">\n</span><span class="s2">has sufficient space&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">vmRestore</span> <span class="o">--&gt;</span> <span class="n">verifyDest</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">appRestore</span> <span class="o">--&gt;</span> <span class="n">verifyDest</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">winFlr</span> <span class="o">--&gt;</span> <span class="n">verifyDest</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">linFlr</span> <span class="o">--&gt;</span> <span class="n">verifyDest</span>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    verifyDest --&gt; execute[&quot;Execute restore\nMonitor in Job Controller&quot;]
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    execute --&gt; validate([&quot;Validate restored\ndata integrity&quot;])
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="n">verifyDest</span> <span class="o">--&gt;</span> <span class="n">execute</span><span class="p">[</span><span class="s2">&quot;Execute restore</span><span class="se">\n</span><span class="s2">Monitor in Job Controller&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="n">execute</span> <span class="o">--&gt;</span> <span class="n">validate</span><span class="p">([</span><span class="s2">&quot;Validate restored</span><span class="se">\n</span><span class="s2">data integrity&quot;</span><span class="p">])</span>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    class q1,q2 decision
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    class restoreStart,validate terminal
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">classDef</span> <span class="n">action</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#2563eb,stroke:#1d4ed8,color:#fff</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="n">classDef</span> <span class="n">decision</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#b45309,stroke:#92400e,color:#fff</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">classDef</span> <span class="n">terminal</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#15803d,stroke:#166534,color:#fff</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">volumeRestore</span><span class="p">,</span><span class="n">vmRestore</span><span class="p">,</span><span class="n">appRestore</span><span class="p">,</span><span class="n">winFlr</span><span class="p">,</span><span class="n">linFlr</span><span class="p">,</span><span class="n">verifyDest</span><span class="p">,</span><span class="n">execute</span> <span class="n">action</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">q1</span><span class="p">,</span><span class="n">q2</span> <span class="n">decision</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">restoreStart</span><span class="p">,</span><span class="n">validate</span> <span class="n">terminal</span>
 </code></pre></div></p>
 <p>Always verify destination and time range before executing a restore.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore to original location at a point in time</span>

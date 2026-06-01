@@ -4693,27 +4693,27 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 │  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Attribute mapping in vIDM:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- NameID → user email
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Groups attribute → AD groups synced to vIDM (map to vRNI roles)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Attribute</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">vIDM</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">-</span> <span class="n">NameID</span> <span class="err">→</span> <span class="n">user</span> <span class="n">email</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">-</span> <span class="n">Groups</span> <span class="n">attribute</span> <span class="err">→</span> <span class="n">AD</span> <span class="n">groups</span> <span class="n">synced</span> <span class="n">to</span> <span class="n">vIDM</span> <span class="p">(</span><span class="nb">map</span> <span class="n">to</span> <span class="n">vRNI</span> <span class="n">roles</span><span class="p">)</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>---
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">---</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## API Token Authentication
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">## API Token Authentication</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Create long-lived tokens in UI (Settings → API Tokens → Generate Token). Store in secrets manager — never hard-code.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">Create</span> <span class="n">long</span><span class="o">-</span><span class="n">lived</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">UI</span> <span class="p">(</span><span class="n">Settings</span> <span class="err">→</span> <span class="n">API</span> <span class="n">Tokens</span> <span class="err">→</span> <span class="n">Generate</span> <span class="n">Token</span><span class="p">)</span><span class="o">.</span> <span class="n">Store</span> <span class="ow">in</span> <span class="n">secrets</span> <span class="n">manager</span> <span class="err">—</span> <span class="n">never</span> <span class="n">hard</span><span class="o">-</span><span class="n">code</span><span class="o">.</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Session token (short-lived — for interactive scripting)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>TOKEN=$(curl -sk -X POST \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  https://vrni.example.local/api/ni/auth/token \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  -d &#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39; \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  | python3 -c &quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;)
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">TOKEN</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> \
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">vrni</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">local</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">ni</span><span class="o">/</span><span class="n">auth</span><span class="o">/</span><span class="n">token</span> \
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> \
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span> \
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="o">|</span> <span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="p">)</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Use token
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>curl -sk -H &quot;Authorization: NetworkInsight $TOKEN&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Use token</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Authorization: NetworkInsight $TOKEN&quot;</span> \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  <span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>

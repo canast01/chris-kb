@@ -3496,66 +3496,66 @@ Escalation paths for Git platform incidents, support ticket procedures, data col
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Data to Collect Before Escalating
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">## Data to Collect Before Escalating</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Collect this data immediately when a P1/P2 incident begins — do not wait until you open the ticket.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Collect<span class="w"> </span>this<span class="w"> </span>data<span class="w"> </span>immediately<span class="w"> </span>when<span class="w"> </span>a<span class="w"> </span>P1/P2<span class="w"> </span>incident<span class="w"> </span>begins<span class="w"> </span>—<span class="w"> </span><span class="k">do</span><span class="w"> </span>not<span class="w"> </span><span class="nb">wait</span><span class="w"> </span><span class="k">until</span><span class="w"> </span>you<span class="w"> </span>open<span class="w"> </span>the<span class="w"> </span>ticket.
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>#!/usr/bin/env bash
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># collect-platform-diagnostics.sh — run on GitLab server
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Requires: sudo access to gitlab-ctl / gitlab-rake
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>set -euo pipefail
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="sb">```</span>bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1">#!/usr/bin/env bash</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># collect-platform-diagnostics.sh — run on GitLab server</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Requires: sudo access to gitlab-ctl / gitlab-rake</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>OUT_DIR=&quot;/tmp/gitlab-diag-$(date +%Y%m%d-%H%M%S)&quot;
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>mkdir -p &quot;$OUT_DIR&quot;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">OUT_DIR</span><span class="o">=</span><span class="s2">&quot;/tmp/gitlab-diag-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M%S<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>echo &quot;Collecting diagnostics to $OUT_DIR ...&quot;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Collecting diagnostics to </span><span class="nv">$OUT_DIR</span><span class="s2"> ...&quot;</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Service status
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>sudo gitlab-ctl status &gt; &quot;$OUT_DIR/ctl-status.txt&quot; 2&gt;&amp;1
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Service status</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/ctl-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Disk usage
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>df -h &gt; &quot;$OUT_DIR/disk-usage.txt&quot;
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>du -sh /var/opt/gitlab/git-data &gt;&gt; &quot;$OUT_DIR/disk-usage.txt&quot;
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Disk usage</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/opt/gitlab/git-data<span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/disk-usage.txt&quot;</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a># Recent logs (last 500 lines each)
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>for svc in gitaly puma sidekiq postgresql nginx; do
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  sudo gitlab-ctl tail &quot;$svc&quot; 2&gt;&amp;1 | head -500 &gt; &quot;$OUT_DIR/log-${svc}.txt&quot; || true
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>done
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># Recent logs (last 500 lines each)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="k">for</span><span class="w"> </span>svc<span class="w"> </span><span class="k">in</span><span class="w"> </span>gitaly<span class="w"> </span>puma<span class="w"> </span>sidekiq<span class="w"> </span>postgresql<span class="w"> </span>nginx<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="w">  </span>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>tail<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$svc</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-500<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/log-</span><span class="si">${</span><span class="nv">svc</span><span class="si">}</span><span class="s2">.txt&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="k">done</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a># Rails check
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>sudo gitlab-rake gitlab:check SANITIZE=true &gt; &quot;$OUT_DIR/gitlab-check.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="c1"># Rails check</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitlab-check.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a># Environment info
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>sudo gitlab-rake gitlab:env:info &gt; &quot;$OUT_DIR/env-info.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="c1"># Environment info</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:env:info<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/env-info.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a># Geo status (if applicable)
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>sudo gitlab-rake geo:status &gt; &quot;$OUT_DIR/geo-status.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="c1"># Geo status (if applicable)</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>geo:status<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/geo-status.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a># Background migration status
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>sudo gitlab-rails runner &quot;
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>  puts Gitlab::Database::BackgroundMigration::BatchedMigration
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>         .where(status: [:active, :queued])
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>         .count
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>&quot; &gt; &quot;$OUT_DIR/bg-migrations.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="c1"># Background migration status</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="s2">  puts Gitlab::Database::BackgroundMigration::BatchedMigration</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="s2">         .where(status: [:active, :queued])</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="s2">         .count</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="s2">&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/bg-migrations.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a># System resources
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>top -b -n 1 &gt; &quot;$OUT_DIR/top.txt&quot; 2&gt;&amp;1 || true
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>free -h &gt; &quot;$OUT_DIR/memory.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="c1"># System resources</span>
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/top.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/memory.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a># Package version
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>dpkg -l gitlab-ee 2&gt;/dev/null || rpm -q gitlab-ee 2&gt;/dev/null &gt; &quot;$OUT_DIR/version.txt&quot;
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="c1"># Package version</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>dpkg<span class="w"> </span>-l<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span>rpm<span class="w"> </span>-q<span class="w"> </span>gitlab-ee<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/version.txt&quot;</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a># Gitaly gRPC health
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>/opt/gitlab/embedded/bin/grpc_health_probe \
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>  -addr=unix:///var/opt/gitlab/gitaly/gitaly.socket \
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>  &gt; &quot;$OUT_DIR/gitaly-health.txt&quot; 2&gt;&amp;1 || true
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="c1"># Gitaly gRPC health</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>/opt/gitlab/embedded/bin/grpc_health_probe<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="w">  </span>-addr<span class="o">=</span>unix:///var/opt/gitlab/gitaly/gitaly.socket<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a><span class="w">  </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUT_DIR</span><span class="s2">/gitaly-health.txt&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a># Bundle and archive
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>tar -czf &quot;${OUT_DIR}.tar.gz&quot; -C &quot;$(dirname $OUT_DIR)&quot; &quot;$(basename $OUT_DIR)&quot;
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a><span class="c1"># Bundle and archive</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span><span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>basename<span class="w"> </span><span class="nv">$OUT_DIR</span><span class="k">)</span><span class="s2">&quot;</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>echo &quot;Diagnostics bundle: ${OUT_DIR}.tar.gz&quot;
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>echo &quot;Review for secrets before uploading to vendor support portal.&quot;
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Diagnostics bundle: </span><span class="si">${</span><span class="nv">OUT_DIR</span><span class="si">}</span><span class="s2">.tar.gz&quot;</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Review for secrets before uploading to vendor support portal.&quot;</span>
 </code></pre></div></p>
 <h3 id="data-collection-checklist">Data Collection Checklist<a class="headerlink" href="#data-collection-checklist" title="Permanent link">&para;</a></h3>
 <ul>

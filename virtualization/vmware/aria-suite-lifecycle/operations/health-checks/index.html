@@ -4744,25 +4744,25 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Locker Health Checks
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">## Locker Health Checks</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The Locker stores certificates, passwords, and licences. Run these checks weekly and before any upgrade.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The<span class="w"> </span>Locker<span class="w"> </span>stores<span class="w"> </span>certificates,<span class="w"> </span>passwords,<span class="w"> </span>and<span class="w"> </span>licences.<span class="w"> </span>Run<span class="w"> </span>these<span class="w"> </span>checks<span class="w"> </span>weekly<span class="w"> </span>and<span class="w"> </span>before<span class="w"> </span>any<span class="w"> </span>upgrade.
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># List all certificates and days-to-expiry
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>TOKEN=$(curl -sk -X POST &quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot; \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  -d &#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39; | jq -r &#39;.token&#39;)
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sb">```</span>bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># List all certificates and days-to-expiry</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/authz/api/v2/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl -sk -H &quot;x-xenon-auth-token: $TOKEN&quot; \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates&quot; | \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  jq &#39;.certificates[] | {alias: .alias, expiry: .expirationDate, days: .daysToExpiry}&#39; | \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  jq -s &#39;sort_by(.days)&#39;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/locker/api/v2/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.certificates[] | {alias: .alias, expiry: .expirationDate, days: .daysToExpiry}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>jq<span class="w"> </span>-s<span class="w"> </span><span class="s1">&#39;sort_by(.days)&#39;</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># List all passwords stored in Locker
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -sk -H &quot;x-xenon-auth-token: $TOKEN&quot; \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords&quot; | \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  jq &#39;.passwords[] | {alias: .alias, username: .userName}&#39;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># List all passwords stored in Locker</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-xenon-auth-token: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="s2">&quot;https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.passwords[] | {alias: .alias, username: .userName}&#39;</span>
 </code></pre></div></p>
 <p>UI path: <strong>LCM → Locker → Certificates</strong> — columns show Alias, Subject, Expiry, and Status. Sort by Expiry to identify near-term renewals.</p>
 <table>

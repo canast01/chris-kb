@@ -4059,31 +4059,31 @@
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">---</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## VSS Diagnostics
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c">## VSS Diagnostics</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>RASR uses Windows Volume Shadow Copy Service (VSS) for consistent image capture. VSS failures cause backup aborts.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">RASR</span> <span class="n">uses</span> <span class="n">Windows</span> <span class="n">Volume</span> <span class="n">Shadow</span> <span class="nb">Copy </span><span class="n">Service</span> <span class="p">(</span><span class="n">VSS</span><span class="p">)</span> <span class="k">for</span> <span class="n">consistent</span> <span class="n">image</span> <span class="n">capture</span><span class="p">.</span> <span class="n">VSS</span> <span class="n">failures</span> <span class="n">cause</span> <span class="n">backup</span> <span class="n">aborts</span><span class="p">.</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Check all VSS writer states — all should show &quot;Stable&quot;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>vssadmin list writers | Select-String -Pattern &quot;Writer name:|State:|Last error:&quot;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Check all VSS writer states — all should show &quot;Stable&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">vssadmin</span> <span class="n">list</span> <span class="n">writers</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;Writer name:|State:|Last error:&quot;</span>
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Common problematic writers:
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Microsoft Hyper-V VSS Writer — if Hyper-V is installed
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># SQL Server VSS Writer — if SQL is installed
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Registry Writer, System Writer — always present
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Common problematic writers:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Microsoft Hyper-V VSS Writer — if Hyper-V is installed</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># SQL Server VSS Writer — if SQL is installed</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Registry Writer, System Writer — always present</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Restart VSS and related services to clear stuck writers
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Restart-Service -Name VSS, vds -Force
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Start-Sleep -Seconds 10
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c"># Restart VSS and related services to clear stuck writers</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">VSS</span><span class="p">,</span> <span class="n">vds</span> <span class="n">-Force</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="nb">Start-Sleep</span> <span class="n">-Seconds</span> <span class="n">10</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Restart specific writers if needed
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>Restart-Service -Name SQLWriter    # SQL Server VSS writer
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>Restart-Service -Name wbengine     # Windows Backup VSS writer
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c"># Restart specific writers if needed</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">SQLWriter</span>    <span class="c"># SQL Server VSS writer</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">wbengine</span>     <span class="c"># Windows Backup VSS writer</span>
 <a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Re-check writers after restart
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>vssadmin list writers | Select-String -Pattern &quot;Writer name:|State:|Last error:&quot;
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c"># Re-check writers after restart</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="n">vssadmin</span> <span class="n">list</span> <span class="n">writers</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;Writer name:|State:|Last error:&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="scheduled-task-diagnostics">Scheduled Task Diagnostics<a class="headerlink" href="#scheduled-task-diagnostics" title="Permanent link">&para;</a></h2>

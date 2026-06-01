@@ -3218,24 +3218,24 @@ Backup validation is the systematic process of confirming that backup data is in
 │    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Expected output columns: `Name` (VM name), `Status` (Success / Warning / Failed), timing. Any `Failed` row requires immediate investigation and re-run after remediation.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Expected</span> <span class="n">output</span> <span class="n">columns</span><span class="p">:</span> <span class="p">`</span><span class="n">Name</span><span class="p">`</span> <span class="p">(</span><span class="n">VM</span> <span class="n">name</span><span class="p">),</span> <span class="p">`</span><span class="n">Status</span><span class="p">`</span> <span class="p">(</span><span class="n">Success</span> <span class="p">/</span> <span class="n">Warning</span> <span class="p">/</span> <span class="n">Failed</span><span class="p">),</span> <span class="n">timing</span><span class="p">.</span> <span class="n">Any</span> <span class="p">`</span><span class="n">Failed</span><span class="p">`</span> <span class="n">row</span> <span class="n">requires</span> <span class="n">immediate</span> <span class="n">investigation</span> <span class="n">and</span> <span class="n">re-run</span> <span class="n">after</span> <span class="n">remediation</span><span class="p">.</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>---
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">---</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>## Commvault — Synthetic Full Verification
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c">## Commvault — Synthetic Full Verification</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Commvault&#39;s Data Verification runs data integrity checks on backup images stored in the CommVault MediaAgent without requiring a full restore.
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">Commvault</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">Data</span> <span class="n">Verification</span> <span class="n">runs</span> <span class="n">data</span> <span class="n">integrity</span> <span class="n">checks</span> <span class="n">on</span> <span class="n">backup</span> <span class="n">images</span> <span class="n">stored</span> <span class="k">in</span> <span class="n">the</span> <span class="n">CommVault</span> <span class="n">MediaAgent</span> <span class="n">without</span> <span class="n">requiring</span> <span class="n">a</span> <span class="n">full</span> <span class="n">restore</span><span class="p">.</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```powershell
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Trigger Data Verification from CommVault PowerShell SDK
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>$client = Get-CVClient -Name &quot;SQL-PROD-01&quot;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>$subClient = Get-CVSubClient -ClientName &quot;SQL-PROD-01&quot; -AppName &quot;SQL Server&quot; -Name &quot;default&quot;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Trigger Data Verification from CommVault PowerShell SDK</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$client</span> <span class="p">=</span> <span class="nb">Get-CVClient</span> <span class="n">-Name</span> <span class="s2">&quot;SQL-PROD-01&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$subClient</span> <span class="p">=</span> <span class="nb">Get-CVSubClient</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;default&quot;</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Queue a Data Verification job
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Start-CVDataVerification -ClientName &quot;SQL-PROD-01&quot; `
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    -SubClientName &quot;default&quot; `
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    -AppName &quot;SQL Server&quot; `
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    -VerificationType &quot;DataOnly&quot;
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Queue a Data Verification job</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Start-CVDataVerification</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">-SubClientName</span> <span class="s2">&quot;default&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="p">`</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">-VerificationType</span> <span class="s2">&quot;DataOnly&quot;</span>
 </code></pre></div></p>
 <p>For GUI-driven verification: <strong>CommCell Console → Backup Sets → Right-click subclient → Data Verification → Run Now</strong>.</p>
 <p>Verification checks:

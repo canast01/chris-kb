@@ -4573,103 +4573,103 @@ Design Standards reference covering Cluster Configuration, Stretched Cluster Arc
 │  LLDP         = Link Layer Discovery Protocol; used for vSAN net health                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Stretched cluster requirements:**
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">**</span><span class="n">Stretched</span> <span class="n">cluster</span> <span class="n">requirements</span><span class="p">:**</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Item | Requirement |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Minimum hosts | 2 per site (4 total) + 1 witness |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Witness | vSAN Witness Appliance (OVA) — not a full ESXi host |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Inter-site latency | ≤ 5 ms RTT for standard workloads; ≤ 1 ms for latency-sensitive |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Inter-site bandwidth | 10 GbE minimum; size for full resync of one site&#39;s data |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Witness network | Low-bandwidth sufficient (metadata only — no data I/O) |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| vCenter | Must be accessible from both sites (deploy on shared management cluster or separate) |
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">|</span> <span class="n">Item</span> <span class="p">|</span> <span class="n">Requirement</span> <span class="p">|</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">|---|---|</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">|</span> <span class="n">Minimum</span> <span class="n">hosts</span> <span class="p">|</span> <span class="n">2</span> <span class="n">per</span> <span class="n">site</span> <span class="p">(</span><span class="n">4</span> <span class="n">total</span><span class="p">)</span> <span class="p">+</span> <span class="n">1</span> <span class="n">witness</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="p">|</span> <span class="n">Witness</span> <span class="p">|</span> <span class="n">vSAN</span> <span class="n">Witness</span> <span class="n">Appliance</span> <span class="p">(</span><span class="n">OVA</span><span class="p">)</span> <span class="err">—</span> <span class="n">not</span> <span class="n">a</span> <span class="n">full</span> <span class="n">ESXi</span> <span class="n">host</span> <span class="p">|</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">|</span> <span class="n">Inter-site</span> <span class="n">latency</span> <span class="p">|</span> <span class="err">≤</span> <span class="n">5</span> <span class="n">ms</span> <span class="n">RTT</span> <span class="k">for</span> <span class="n">standard</span> <span class="n">workloads</span><span class="p">;</span> <span class="err">≤</span> <span class="n">1</span> <span class="n">ms</span> <span class="k">for</span> <span class="n">latency-sensitive</span> <span class="p">|</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">|</span> <span class="n">Inter-site</span> <span class="n">bandwidth</span> <span class="p">|</span> <span class="n">10</span> <span class="n">GbE</span> <span class="n">minimum</span><span class="p">;</span> <span class="n">size</span> <span class="k">for</span> <span class="n">full</span> <span class="n">resync</span> <span class="n">of</span> <span class="n">one</span> <span class="n">site</span><span class="s1">&#39;s data |</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">| Witness network | Low-bandwidth sufficient (metadata only — no data I/O) |</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">| vCenter | Must be accessible from both sites (deploy on shared management cluster or separate) |</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>**Failure domain behaviour:**
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">**Failure domain behaviour:**</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- **Site A failure:** VMs restart on Site B; witness maintains quorum. RTO depends on HA admission control settings.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- **Site B failure:** Same as above, reversed.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- **Witness failure:** Cluster continues operating but loses quorum arbitration capability — fix immediately.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- **Split-brain (both sites lose connectivity to each other):** vSAN pauses I/O on the site that cannot reach the witness. Preferred site takes precedence if configured.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">- **Site A failure:** VMs restart on Site B; witness maintains quorum. RTO depends on HA admission control settings.</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">- **Site B failure:** Same as above, reversed.</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">- **Witness failure:** Cluster continues operating but loses quorum arbitration capability — fix immediately.</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">- **Split-brain (both sites lose connectivity to each other):** vSAN pauses I/O on the site that cannot reach the witness. Preferred site takes precedence if configured.</span>
 <a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>**VM affinity:** Use VM-to-Host affinity groups to pin VMs to a preferred site. Without affinity, DRS may migrate VMs across sites, increasing cross-site I/O.
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">**VM affinity:** Use VM-to-Host affinity groups to pin VMs to a preferred site. Without affinity, DRS may migrate VMs across sites, increasing cross-site I/O.</span>
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>---
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">---</span>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>## Storage Policy Baseline
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="s1">## Storage Policy Baseline</span>
 <a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>Define storage policies in vCenter before provisioning VMs. Assign policies by workload tier.
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="s1">Define storage policies in vCenter before provisioning VMs. Assign policies by workload tier.</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Workload Tier | Policy Name | FTT | RAID | Checksum | Notes |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>|---|---|---|---|---|---|
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>| Tier-1 Databases | `VSAN-T1-FTT2-RAID6` | 2 | RAID-6 | Enabled | 6+ node cluster required |
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>| Tier-2 General | `VSAN-T2-FTT1-RAID5` | 1 | RAID-5 | Enabled | 4+ node cluster required |
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>| Dev/Test | `VSAN-DEV-FTT1-RAID1` | 1 | RAID-1 | Enabled | 3+ node cluster |
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>| Stretched Cluster | `VSAN-STRETCH-FTT1-SITE` | 1 | RAID-1 per site | Enabled | Affinity rule per site |
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="s1">| Workload Tier | Policy Name | FTT | RAID | Checksum | Notes |</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="s1">|---|---|---|---|---|---|</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="s1">| Tier-1 Databases | `VSAN-T1-FTT2-RAID6` | 2 | RAID-6 | Enabled | 6+ node cluster required |</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="s1">| Tier-2 General | `VSAN-T2-FTT1-RAID5` | 1 | RAID-5 | Enabled | 4+ node cluster required |</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="s1">| Dev/Test | `VSAN-DEV-FTT1-RAID1` | 1 | RAID-1 | Enabled | 3+ node cluster |</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="s1">| Stretched Cluster | `VSAN-STRETCH-FTT1-SITE` | 1 | RAID-1 per site | Enabled | Affinity rule per site |</span>
 <a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>**Object space reservation:** Set to 0% unless workloads require thick provisioning. Thin provisioning is the default for vSAN.
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="s1">**Object space reservation:** Set to 0% unless workloads require thick provisioning. Thin provisioning is the default for vSAN.</span>
 <a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>**Flash read cache reservation:** Set to 0% for all-flash clusters (not applicable). OSA hybrid clusters may benefit from a non-zero value for latency-sensitive workloads.
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="s1">**Flash read cache reservation:** Set to 0% for all-flash clusters (not applicable). OSA hybrid clusters may benefit from a non-zero value for latency-sensitive workloads.</span>
 <a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>**Checksum:** Enable object checksum on all production storage policies. Checksum detects silent data corruption at the component level and triggers resync automatically.
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="s1">**Checksum:** Enable object checksum on all production storage policies. Checksum detects silent data corruption at the component level and triggers resync automatically.</span>
 <a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>**Capacity overhead by FTT and RAID method:**
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="s1">**Capacity overhead by FTT and RAID method:**</span>
 <a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>| FTT | RAID Method | Minimum Hosts | Space Overhead |
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>|---|---|---|---|
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>| 1 | RAID-1 (Mirroring) | 3 | 2× |
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>| 1 | RAID-5 (Erasure Coding) | 4 | 1.33× |
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>| 2 | RAID-6 (Erasure Coding) | 6 | 1.5× |
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>| 2 | RAID-1 (Mirroring) | 5 | 3× |
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>| 3 | RAID-1 (Mirroring) | 7 | 4× |
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="s1">| FTT | RAID Method | Minimum Hosts | Space Overhead |</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="s1">|---|---|---|---|</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="s1">| 1 | RAID-1 (Mirroring) | 3 | 2× |</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="s1">| 1 | RAID-5 (Erasure Coding) | 4 | 1.33× |</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="s1">| 2 | RAID-6 (Erasure Coding) | 6 | 1.5× |</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="s1">| 2 | RAID-1 (Mirroring) | 5 | 3× |</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="s1">| 3 | RAID-1 (Mirroring) | 7 | 4× |</span>
 <a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>---
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="s1">---</span>
 <a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>## Naming Conventions
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="s1">## Naming Conventions</span>
 <a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>Consistent naming makes multi-cluster environments manageable and aligns with vCenter inventory organisation.
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="s1">Consistent naming makes multi-cluster environments manageable and aligns with vCenter inventory organisation.</span>
 <a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>| Object | Pattern | Example |
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>|---|---|---|
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>| vSAN Cluster | `VSAN-&lt;SITE&gt;-&lt;NN&gt;` | `VSAN-LON-01` |
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>| Storage Policy (Tier-1) | `VSAN-T1-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-T1-FTT2-RAID6` |
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>| Storage Policy (Tier-2) | `VSAN-T2-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-T2-FTT1-RAID5` |
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>| Storage Policy (Dev) | `VSAN-DEV-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-DEV-FTT1-RAID1` |
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>| Stretched Cluster Policy | `VSAN-STRETCH-&lt;tag&gt;` | `VSAN-STRETCH-FTT1-SITE` |
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>| Witness Appliance | `vsanwitness-&lt;site&gt;` | `vsanwitness-lon` |
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="s1">| Object | Pattern | Example |</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="s1">|---|---|---|</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="s1">| vSAN Cluster | `VSAN-&lt;SITE&gt;-&lt;NN&gt;` | `VSAN-LON-01` |</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="s1">| Storage Policy (Tier-1) | `VSAN-T1-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-T1-FTT2-RAID6` |</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="s1">| Storage Policy (Tier-2) | `VSAN-T2-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-T2-FTT1-RAID5` |</span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="s1">| Storage Policy (Dev) | `VSAN-DEV-FTT&lt;n&gt;-RAID&lt;n&gt;` | `VSAN-DEV-FTT1-RAID1` |</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="s1">| Stretched Cluster Policy | `VSAN-STRETCH-&lt;tag&gt;` | `VSAN-STRETCH-FTT1-SITE` |</span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="s1">| Witness Appliance | `vsanwitness-&lt;site&gt;` | `vsanwitness-lon` |</span>
 <a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>Disk group components are not individually named in vSAN (managed at the host level). Document the physical disk-to-disk-group mapping in the host build record.
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="s1">Disk group components are not individually named in vSAN (managed at the host level). Document the physical disk-to-disk-group mapping in the host build record.</span>
 <a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>---
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="s1">---</span>
 <a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>## Capacity Management
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="s1">## Capacity Management</span>
 <a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>vSAN capacity management requires proactive monitoring. Resync operations during host failures or upgrades consume capacity above and beyond normal usage.
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="s1">vSAN capacity management requires proactive monitoring. Resync operations during host failures or upgrades consume capacity above and beyond normal usage.</span>
 <a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>**Alert thresholds:**
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="s1">**Alert thresholds:**</span>
 <a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>| Threshold | Action |
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>|---|---|
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>| 70% used capacity | Alert — plan cluster expansion or data migration |
-<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>| 80% used capacity | Escalation alert — immediate action required; vSAN operations reserve is at risk |
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>| &gt; 80% used capacity | vSAN may refuse new write operations or object provisioning |
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="s1">| Threshold | Action |</span>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="s1">|---|---|</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="s1">| 70% used capacity | Alert — plan cluster expansion or data migration |</span>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="s1">| 80% used capacity | Escalation alert — immediate action required; vSAN operations reserve is at risk |</span>
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="s1">| &gt; 80% used capacity | vSAN may refuse new write operations or object provisioning |</span>
 <a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>**Capacity reserve (slack):**
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="s1">**Capacity reserve (slack):**</span>
 <a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>Always maintain a minimum 30% free capacity:
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="s1">Always maintain a minimum 30% free capacity:</span>
 <a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>- 10% for vSAN operations reserve (internal metadata and resync)
-<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>- 10% for resync buffer during host maintenance (one host&#39;s worth of data must be resynced)
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>- 10% operational headroom
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="s1">- 10% for vSAN operations reserve (internal metadata and resync)</span>
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="s1">- 10% for resync buffer during host maintenance (one host&#39;</span><span class="n">s</span> <span class="n">worth</span> <span class="n">of</span> <span class="n">data</span> <span class="n">must</span> <span class="n">be</span> <span class="n">resynced</span><span class="p">)</span>
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="p">-</span> <span class="n">10</span><span class="p">%</span> <span class="n">operational</span> <span class="n">headroom</span>
 <a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>**Monitoring commands:**
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="p">**</span><span class="n">Monitoring</span> <span class="n">commands</span><span class="p">:**</span>
 <a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>
-<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>```bash
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a># Check cluster capacity from any ESXi host
-<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>esxcli vsan storage list
-<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>esxcli vsan cluster get
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="p">```</span><span class="n">bash</span>
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="c"># Check cluster capacity from any ESXi host</span>
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a><span class="n">esxcli</span> <span class="n">vsan</span> <span class="n">storage</span> <span class="n">list</span>
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="n">esxcli</span> <span class="n">vsan</span> <span class="n">cluster</span> <span class="n">get</span>
 <a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>
-<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a># PowerCLI capacity overview
-<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>Get-VsanSpaceUsage -Cluster &lt;clustername&gt;
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="c"># PowerCLI capacity overview</span>
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">&lt;</span><span class="n">clustername</span><span class="p">&gt;</span>
 </code></pre></div></p>
 <p>Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.</p>
 

@@ -4622,16 +4622,16 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 </li>
 <li>
 <p><strong>Wrong array credentials</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Test credentials against array directly:
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>curl -sk -H &quot;x-auth-token: &lt;api-token&gt;&quot; https://&lt;flasharray-ip&gt;/api/2.0/array
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># Should return 200 OK
-</code></pre></div></p>
+<code>python
+   Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
+   Test credentials against array directly:
+   curl -sk -H "x-auth-token: &lt;api-token&gt;" https://&lt;flasharray-ip&gt;/api/2.0/array
+   # Should return 200 OK</code></p>
 </li>
 <li>
 <p><strong>Network connectivity from SRM Server to array management IP</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Test-NetConnection &lt;flasharray-ip&gt; -Port 443
-</code></pre></div></p>
+<code>powershell
+   Test-NetConnection &lt;flasharray-ip&gt; -Port 443</code></p>
 </li>
 </ol>
 <hr />
@@ -4640,21 +4640,18 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 <ol>
 <li>
 <p><strong>Manual step timeout</strong>: Recovery Plan has a manual approval step that no one has approved
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Site Recovery → Recovery Plans → [plan] → [current run] → Steps
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Find the step waiting for input → click to complete/skip
-</code></pre></div></p>
+   <code>Site Recovery → Recovery Plans → [plan] → [current run] → Steps
+   Find the step waiting for input → click to complete/skip</code></p>
 </li>
 <li>
 <p><strong>VM power-on timeout</strong>: VM at recovery site taking too long to power on (resource contention)
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter (Recovery) → Recent Tasks → look for power-on task on the stuck VM
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Check ESXi host resources at recovery site
-</code></pre></div></p>
+   <code>vCenter (Recovery) → Recent Tasks → look for power-on task on the stuck VM
+   Check ESXi host resources at recovery site</code></p>
 </li>
 <li>
 <p><strong>Force cancel if stuck &gt;30 minutes</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Site Recovery → Recovery Plans → [plan] → Cancel
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Note: cancellation may leave partial state — check VMs manually
-</code></pre></div></p>
+   <code>Site Recovery → Recovery Plans → [plan] → Cancel
+   Note: cancellation may leave partial state — check VMs manually</code></p>
 </li>
 </ol>
 <hr />
@@ -4663,23 +4660,23 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 <ol>
 <li>
 <p><strong>RPO lag exceeds configured RPO</strong>: Replication is not keeping up
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Site Recovery → Replication → vSphere Replication
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Find the VMs in the PG → check &quot;Lag&quot; column
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>Investigate: network bandwidth, ESXi CPU on source host, source datastore I/O
-</code></pre></div></p>
+<code>text
+   Site Recovery → Replication → vSphere Replication
+   Find the VMs in the PG → check "Lag" column
+   Investigate: network bandwidth, ESXi CPU on source host, source datastore I/O</code></p>
 </li>
 <li>
 <p><strong>VM snapshot inconsistency</strong> (for ABR protection groups):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Check storage array — verify snapshot exists for the replication group
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SRA may need to re-discover: Site Recovery → Storage → Array Pairs → Discover Devices
-</code></pre></div></p>
+<code>text
+   Check storage array — verify snapshot exists for the replication group
+   SRA may need to re-discover: Site Recovery → Storage → Array Pairs → Discover Devices</code></p>
 </li>
 <li>
 <p><strong>vSphere Replication appliance unreachable</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-protected.example.local<span class="w"> </span><span class="m">31031</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nc<span class="w"> </span>-vz<span class="w"> </span>vra-protected.example.local<span class="w"> </span><span class="m">44046</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Both should be open</span>
-</code></pre></div></p>
+   <code>bash
+   nc -vz vra-protected.example.local 31031
+   nc -vz vra-protected.example.local 44046
+   # Both should be open</code></p>
 </li>
 </ol>
 <hr />
@@ -4688,21 +4685,20 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 <ol>
 <li>
 <p><strong>Network mapping missing</strong>: The test network not mapped to an isolated portgroup
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Site Recovery → Recovery Plans → [plan] → Test Networks
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Map each protected network to an isolated portgroup at recovery site
-</code></pre></div></p>
+   <code>Site Recovery → Recovery Plans → [plan] → Test Networks
+   Map each protected network to an isolated portgroup at recovery site</code></p>
 </li>
 <li>
 <p><strong>Placeholder VM stale</strong>: Placeholder VM at recovery site has incorrect config
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># Delete placeholder VM from recovery site vCenter
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a># Site Recovery → Protection → [PG] → Configure → adds placeholder VMs back automatically
-</code></pre></div></p>
+<code>sql
+   # Delete placeholder VM from recovery site vCenter
+   # Site Recovery → Protection → [PG] → Configure → adds placeholder VMs back automatically</code></p>
 </li>
 <li>
 <p><strong>Resource pool or datastore insufficient at recovery site</strong>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Check recovery site CPU/RAM/storage capacity before running test
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Verify resource mappings in Site Recovery → Site Pair → Inventory Mappings
-</code></pre></div></p>
+<code>text
+   Check recovery site CPU/RAM/storage capacity before running test
+   Verify resource mappings in Site Recovery → Site Pair → Inventory Mappings</code></p>
 </li>
 </ol>
 <hr />
@@ -4711,17 +4707,16 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 <ol>
 <li>
 <p><strong>VM not re-protected</strong>: Must run "Reprotect" after DR before failback
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Site Recovery → Protection → [PG] → Reprotect
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Wait for initial sync to complete (status: OK)
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Then run Planned Migration back to protected site
-</code></pre></div></p>
+   <code>Site Recovery → Protection → [PG] → Reprotect
+   Wait for initial sync to complete (status: OK)
+   Then run Planned Migration back to protected site</code></p>
 </li>
 <li>
 <p><strong>Protected site not fully restored</strong>: Protected site vCenter or SRM not running
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Verify: vCenter at protected site is operational
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Verify: SRM service running at protected site
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Verify: site pairing is Connected
-</code></pre></div></p>
+<code>bash
+   Verify: vCenter at protected site is operational
+   Verify: SRM service running at protected site
+   Verify: site pairing is Connected</code></p>
 </li>
 </ol>
 

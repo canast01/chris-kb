@@ -3091,23 +3091,23 @@
 │    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Capture:** CN, SANs, issuing CA, expiry date, key algorithm.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Capture:**<span class="w"> </span>CN,<span class="w"> </span>SANs,<span class="w"> </span>issuing<span class="w"> </span>CA,<span class="w"> </span>expiry<span class="w"> </span>date,<span class="w"> </span>key<span class="w"> </span>algorithm.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Step 2 — Generate Private Key and CSR
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">## Step 2 — Generate Private Key and CSR</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># RSA 2048 (minimum); prefer RSA 4096 or ECDSA P-256 for new certs
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>openssl req -new -newkey rsa:4096 -nodes \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    -keyout &lt;hostname&gt;.key \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    -out &lt;hostname&gt;.csr \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    -subj &quot;/CN=&lt;hostname&gt;/O=&lt;org&gt;/C=GB&quot;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sb">```</span>bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># RSA 2048 (minimum); prefer RSA 4096 or ECDSA P-256 for new certs</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>-keyout<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>-out<span class="w"> </span>&lt;hostname&gt;.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=&lt;hostname&gt;/O=&lt;org&gt;/C=GB&quot;</span>
 <a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># With SANs (required for modern browsers)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>openssl req -new -newkey rsa:4096 -nodes \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    -keyout &lt;hostname&gt;.key \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    -out &lt;hostname&gt;.csr \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    -config &lt;(cat /etc/ssl/openssl.cnf &lt;(printf &quot;\n[SAN]\nsubjectAltName=DNS:&lt;hostname&gt;,DNS:&lt;alias&gt;&quot;)) \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    -reqexts SAN
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># With SANs (required for modern browsers)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>-keyout<span class="w"> </span>&lt;hostname&gt;.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>-out<span class="w"> </span>&lt;hostname&gt;.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>-config<span class="w"> </span>&lt;<span class="o">(</span>cat<span class="w"> </span>/etc/ssl/openssl.cnf<span class="w"> </span>&lt;<span class="o">(</span><span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;\n[SAN]\nsubjectAltName=DNS:&lt;hostname&gt;,DNS:&lt;alias&gt;&quot;</span><span class="o">))</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>-reqexts<span class="w"> </span>SAN
 </code></pre></div></p>
 <h2 id="step-3-submit-to-ca">Step 3 — Submit to CA<a class="headerlink" href="#step-3-submit-to-ca" title="Permanent link">&para;</a></h2>
 <p><strong>Internal (ADCS):</strong>

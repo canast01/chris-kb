@@ -4752,36 +4752,36 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 │  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">---</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Service Startup Order
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">## Service Startup Order</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Services must start in the correct dependency order or vpxd will fail to initialise:
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">Services</span> <span class="n">must</span> <span class="n">start</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">correct</span> <span class="n">dependency</span> <span class="n">order</span> <span class="ow">or</span> <span class="n">vpxd</span> <span class="n">will</span> <span class="n">fail</span> <span class="n">to</span> <span class="n">initialise</span><span class="p">:</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```mermaid
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>graph TD
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    vpostgres[&quot;vmware-vpostgres\n(PostgreSQL database)&quot;]
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    stsd[&quot;vmware-stsd\n(SSO token service)&quot;]
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    idmd[&quot;vmware-sts-idmd\n(identity management)&quot;]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    vpxd[&quot;vpxd\n(core vCenter daemon)&quot;]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    ui[&quot;vsphere-ui\n(HTML5 Client)&quot;]
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    eam[&quot;vmware-eam\n(ESX Agent Manager)&quot;]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="err">```</span><span class="n">mermaid</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">graph</span> <span class="n">TD</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">vpostgres</span><span class="p">[</span><span class="s2">&quot;vmware-vpostgres</span><span class="se">\n</span><span class="s2">(PostgreSQL database)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">stsd</span><span class="p">[</span><span class="s2">&quot;vmware-stsd</span><span class="se">\n</span><span class="s2">(SSO token service)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">idmd</span><span class="p">[</span><span class="s2">&quot;vmware-sts-idmd</span><span class="se">\n</span><span class="s2">(identity management)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">vpxd</span><span class="p">[</span><span class="s2">&quot;vpxd</span><span class="se">\n</span><span class="s2">(core vCenter daemon)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">ui</span><span class="p">[</span><span class="s2">&quot;vsphere-ui</span><span class="se">\n</span><span class="s2">(HTML5 Client)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">eam</span><span class="p">[</span><span class="s2">&quot;vmware-eam</span><span class="se">\n</span><span class="s2">(ESX Agent Manager)&quot;</span><span class="p">]</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    vpostgres --&gt; stsd
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    stsd --&gt; idmd
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    idmd --&gt; vpxd
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    vpxd --&gt; ui
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    vpxd --&gt; eam
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">vpostgres</span> <span class="o">--&gt;</span> <span class="n">stsd</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">stsd</span> <span class="o">--&gt;</span> <span class="n">idmd</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">idmd</span> <span class="o">--&gt;</span> <span class="n">vpxd</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">vpxd</span> <span class="o">--&gt;</span> <span class="n">ui</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">vpxd</span> <span class="o">--&gt;</span> <span class="n">eam</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    classDef db fill:#1d4ed8,stroke:#1e40af,color:#fff
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    classDef sso fill:#7c3aed,stroke:#6d28d9,color:#fff
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    classDef core fill:#b45309,stroke:#92400e,color:#fff
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    classDef svc fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">classDef</span> <span class="n">db</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#1d4ed8,stroke:#1e40af,color:#fff</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">classDef</span> <span class="n">sso</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#7c3aed,stroke:#6d28d9,color:#fff</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="n">classDef</span> <span class="n">core</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#b45309,stroke:#92400e,color:#fff</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">classDef</span> <span class="n">svc</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#15803d,stroke:#166534,color:#fff</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    class vpostgres db
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    class stsd,idmd sso
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    class vpxd core
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    class ui,eam svc
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">vpostgres</span> <span class="n">db</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">stsd</span><span class="p">,</span><span class="n">idmd</span> <span class="n">sso</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">vpxd</span> <span class="n">core</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">ui</span><span class="p">,</span><span class="n">eam</span> <span class="n">svc</span>
 </code></pre></div></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manual restart in dependency order</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all

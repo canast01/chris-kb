@@ -3793,35 +3793,35 @@ Managing Python versions correctly is critical. A mishandled upgrade can silentl
 │   │      Re-create venv= after Python upgrade; venv is tied to a specific interpreter binary      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">---</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Upgrading Python Without Breaking Automation
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c">## Upgrading Python Without Breaking Automation</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Pre-upgrade assessment
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c">### Pre-upgrade assessment</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Before upgrading Python on any host running production automation:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Before</span> <span class="n">upgrading</span> <span class="n">Python</span> <span class="n">on</span> <span class="n">any</span> <span class="n">host</span> <span class="n">running</span> <span class="n">production</span> <span class="n">automation</span><span class="p">:</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># 1. Inventory all automation using Python on this host
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>find /opt /home -name &quot;*.py&quot; -not -path &quot;*/.venv/*&quot; -not -path &quot;*/__pycache__/*&quot; 2&gt;/dev/null
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>find /etc/cron* /etc/systemd/system -name &quot;*.service&quot; -exec grep -l python {} \;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">```</span><span class="n">bash</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># 1. Inventory all automation using Python on this host</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">find</span> <span class="p">/</span><span class="n">opt</span> <span class="p">/</span><span class="n">home</span> <span class="n">-name</span> <span class="s2">&quot;*.py&quot;</span> <span class="o">-not</span> <span class="n">-path</span> <span class="s2">&quot;*/.venv/*&quot;</span> <span class="o">-not</span> <span class="n">-path</span> <span class="s2">&quot;*/__pycache__/*&quot;</span> <span class="n">2</span><span class="p">&gt;/</span><span class="n">dev</span><span class="p">/</span><span class="n">null</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">find</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">cron</span><span class="p">*</span> <span class="p">/</span><span class="n">etc</span><span class="p">/</span><span class="n">systemd</span><span class="p">/</span><span class="n">system</span> <span class="n">-name</span> <span class="s2">&quot;*.service&quot;</span> <span class="n">-exec</span> <span class="n">grep</span> <span class="n">-l</span> <span class="n">python</span> <span class="p">{}</span> <span class="p">\;</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># 2. Document current Python version used by each automation
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>for venv in /opt/automation/*/venv /opt/automation/*/.venv; do
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    echo &quot;=== $venv ===&quot;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    $venv/bin/python --version 2&gt;/dev/null
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>done
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># 2. Document current Python version used by each automation</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">for</span> <span class="n">venv</span> <span class="k">in</span> <span class="p">/</span><span class="n">opt</span><span class="p">/</span><span class="n">automation</span><span class="p">/*/</span><span class="n">venv</span> <span class="p">/</span><span class="n">opt</span><span class="p">/</span><span class="n">automation</span><span class="p">/*/.</span><span class="n">venv</span><span class="p">;</span> <span class="k">do</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="nb">echo </span><span class="s2">&quot;=== $venv ===&quot;</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="nv">$venv</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">python</span> <span class="p">-</span><span class="n">-version</span> <span class="n">2</span><span class="p">&gt;/</span><span class="n">dev</span><span class="p">/</span><span class="n">null</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">done</span>
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># 3. Check for Python-version-specific packages
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>pip list | grep -i &#39;python2\|py2\|six&#39;   # py2 compat libraries signal migration risk
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c"># 3. Check for Python-version-specific packages</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">pip</span> <span class="n">list</span> <span class="p">|</span> <span class="n">grep</span> <span class="n">-i</span> <span class="s1">&#39;python2\|py2\|six&#39;</span>   <span class="c"># py2 compat libraries signal migration risk</span>
 <a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># 4. Test against new Python version before upgrading production
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>pyenv install 3.12.3
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>pyenv local 3.12.3
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>python -m venv /tmp/test-venv-312
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>source /tmp/test-venv-312/bin/activate
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>pip install -r requirements.txt
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>pytest tests/
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c"># 4. Test against new Python version before upgrading production</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">pyenv</span> <span class="n">install</span> <span class="n">3</span><span class="p">.</span><span class="n">12</span><span class="p">.</span><span class="n">3</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="n">pyenv</span> <span class="n">local</span> <span class="n">3</span><span class="p">.</span><span class="n">12</span><span class="p">.</span><span class="n">3</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">python</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="nb">test-venv</span><span class="p">-</span><span class="n">312</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="n">source</span> <span class="p">/</span><span class="n">tmp</span><span class="p">/</span><span class="nb">test-venv</span><span class="p">-</span><span class="n">312</span><span class="p">/</span><span class="n">bin</span><span class="p">/</span><span class="n">activate</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">pytest</span> <span class="n">tests</span><span class="p">/</span>
 </code></pre></div></p>
 <h3 id="safe-upgrade-procedure">Safe upgrade procedure<a class="headerlink" href="#safe-upgrade-procedure" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1: Install new Python version (alongside existing)</span>

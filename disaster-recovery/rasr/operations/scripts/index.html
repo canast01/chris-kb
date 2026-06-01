@@ -4258,126 +4258,126 @@ Scripts reference covering Script Inventory, New-RASRImage, Test-RASRImageAge, R
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">---</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Remove-OldRASRImages
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c">## Remove-OldRASRImages</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Deletes RASR images on a share that exceed the configured retention count, keeping the most recent N images.
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">Deletes</span> <span class="n">RASR</span> <span class="n">images</span> <span class="n">on</span> <span class="n">a</span> <span class="n">share</span> <span class="n">that</span> <span class="n">exceed</span> <span class="n">the</span> <span class="n">configured</span> <span class="n">retention</span> <span class="n">count</span><span class="p">,</span> <span class="n">keeping</span> <span class="n">the</span> <span class="n">most</span> <span class="n">recent</span> <span class="n">N</span> <span class="n">images</span><span class="p">.</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```powershell
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>&lt;#
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>.SYNOPSIS
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    Removes RASR images from a share that exceed the retention count.
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>.PARAMETER SharePath
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    UNC path to the RASR image directory.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>.PARAMETER RetentionCount
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    Number of most-recent images to keep. Images beyond this count are deleted.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>.PARAMETER WhatIf
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    Show which files would be deleted without actually deleting them.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>#&gt;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>function Remove-OldRASRImages {
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    [CmdletBinding(SupportsShouldProcess)]
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    param(
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        [Parameter(Mandatory)]
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        [string]$SharePath,
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="cm">    Removes RASR images from a share that exceed the retention count.</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="cm">    UNC path to the RASR image directory.</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="sd">.PARAMETER</span><span class="cm"> RetentionCount</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="cm">    Number of most-recent images to keep. Images beyond this count are deleted.</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="sd">.PARAMETER</span><span class="cm"> WhatIf</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="cm">    Show which files would be deleted without actually deleting them.</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="k">function</span> <span class="nb">Remove-OldRASRImages</span> <span class="p">{</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">SupportsShouldProcess</span><span class="p">)]</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
 <a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        [int]$RetentionCount = 4
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    )
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        <span class="no">[int]</span><span class="nv">$RetentionCount</span> <span class="p">=</span> <span class="n">4</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="p">)</span>
 <a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    $images = Get-ChildItem -Path $SharePath -Filter &quot;*.rasr&quot; -ErrorAction Stop |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>              Sort-Object LastWriteTime -Descending
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span> <span class="p">|</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>              <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span>
 <a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    if ($images.Count -le $RetentionCount) {
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        Write-Host &quot;Nothing to remove: $($images.Count) image(s) present, retention is $RetentionCount.&quot;
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        return
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    }
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-le</span> <span class="nv">$RetentionCount</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Nothing to remove: </span><span class="p">$(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) present, retention is $RetentionCount.&quot;</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        <span class="k">return</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="p">}</span>
 <a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    $toDelete = $images | Select-Object -Skip $RetentionCount
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    <span class="nv">$toDelete</span> <span class="p">=</span> <span class="nv">$images</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Skip</span> <span class="nv">$RetentionCount</span>
 <a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    foreach ($img in $toDelete) {
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>        if ($PSCmdlet.ShouldProcess($img.FullName, &quot;Delete old RASR image&quot;)) {
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>            Remove-Item -Path $img.FullName -Force
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>            Write-Host &quot;Deleted: $($img.Name) (age: $([math]::Round(((Get-Date) - $img.LastWriteTime).TotalDays,1)) days)&quot;
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        }
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    }
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$toDelete</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$PSCmdlet</span><span class="p">.</span><span class="n">ShouldProcess</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">,</span> <span class="s2">&quot;Delete old RASR image&quot;</span><span class="p">))</span> <span class="p">{</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>            <span class="nb">Remove-Item</span> <span class="n">-Path</span> <span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-Force</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>            <span class="nb">Write-Host</span> <span class="s2">&quot;Deleted: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> (age: </span><span class="p">$(</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span><span class="p">).</span><span class="n">TotalDays</span><span class="p">,</span><span class="n">1</span><span class="p">))</span><span class="s2"> days)&quot;</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>        <span class="p">}</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>    <span class="p">}</span>
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    Write-Host &quot;Retention cleanup complete. Kept $RetentionCount most-recent image(s).&quot;
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>}
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Retention cleanup complete. Kept $RetentionCount most-recent image(s).&quot;</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="p">}</span>
 <a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a># Example:
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -RetentionCount 4
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -WhatIf
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c"># Example:</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -RetentionCount 4</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="c"># Remove-OldRASRImages -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; -WhatIf</span>
 <a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>
 <a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>---
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="p">---</span>
 <a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>## Test-RASRImageIntegrity
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="c">## Test-RASRImageIntegrity</span>
 <a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>Iterates all RASR images on a share and runs `rasrutil.exe /verify` against each. Outputs a pass/fail report.
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="n">Iterates</span> <span class="n">all</span> <span class="n">RASR</span> <span class="n">images</span> <span class="n">on</span> <span class="n">a</span> <span class="n">share</span> <span class="n">and</span> <span class="n">runs</span> <span class="p">`</span><span class="n">rasrutil</span><span class="p">.</span><span class="n">exe</span> <span class="p">/</span><span class="n">verify</span><span class="p">`</span> <span class="n">against</span> <span class="n">each</span><span class="p">.</span> <span class="n">Outputs</span> <span class="n">a</span> <span class="n">pass</span><span class="p">/</span><span class="n">fail</span> <span class="n">report</span><span class="p">.</span>
 <a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>```powershell
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>&lt;#
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>.SYNOPSIS
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>    Verifies the integrity of all RASR images on a network share.
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>.PARAMETER SharePath
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>    UNC path to the image directory.
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>.PARAMETER ShareUser
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>    Credential username.
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>.PARAMETER SharePassword
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>    Credential password.
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>#&gt;
-<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>function Test-RASRImageIntegrity {
-<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>    [CmdletBinding()]
-<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>    param(
-<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>        [Parameter(Mandatory)]
-<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>        [string]$SharePath,
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="cm">&lt;#</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="cm">    Verifies the integrity of all RASR images on a network share.</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePath</span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="cm">    UNC path to the image directory.</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="sd">.PARAMETER</span><span class="cm"> ShareUser</span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="cm">    Credential username.</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="sd">.PARAMETER</span><span class="cm"> SharePassword</span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="cm">    Credential password.</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="cm">#&gt;</span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="k">function</span> <span class="nb">Test-RASRImageIntegrity</span> <span class="p">{</span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">Mandatory</span><span class="p">)]</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>        <span class="no">[string]</span><span class="nv">$SharePath</span><span class="p">,</span>
 <a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>
-<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>        [string]$ShareUser,
-<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>        [string]$SharePassword
-<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>    )
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>        <span class="no">[string]</span><span class="nv">$ShareUser</span><span class="p">,</span>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a>        <span class="no">[string]</span><span class="nv">$SharePassword</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a>    <span class="p">)</span>
 <a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a>
-<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>    $RASRBin = &quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a>    <span class="nv">$RASRBin</span> <span class="p">=</span> <span class="s2">&quot;C:\Program Files\Dell\RASR\rasrutil.exe&quot;</span>
 <a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>
-<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>    if ($ShareUser -and $SharePassword) {
-<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>        net use $SharePath /user:$ShareUser $SharePassword 2&gt;$null | Out-Null
-<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>    }
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$ShareUser</span> <span class="o">-and</span> <span class="nv">$SharePassword</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a>        <span class="n">net</span> <span class="n">use</span> <span class="nv">$SharePath</span> <span class="p">/</span><span class="n">user</span><span class="p">:</span><span class="nv">$ShareUser</span> <span class="nv">$SharePassword</span> <span class="n">2</span><span class="p">&gt;</span><span class="nv">$null</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>    <span class="p">}</span>
 <a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a>
-<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>    $images = Get-ChildItem -Path $SharePath -Filter &quot;*.rasr&quot; | Sort-Object LastWriteTime
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a>    <span class="nv">$images</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="n">-Path</span> <span class="nv">$SharePath</span> <span class="n">-Filter</span> <span class="s2">&quot;*.rasr&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span>
 <a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a>
-<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>    if ($images.Count -eq 0) {
-<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>        Write-Warning &quot;No images found in $SharePath&quot;
-<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>        return
-<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>    }
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$images</span><span class="p">.</span><span class="n">Count</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;No images found in $SharePath&quot;</span>
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>        <span class="k">return</span>
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a>    <span class="p">}</span>
 <a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a>
-<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>    $results = @()
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a>    <span class="nv">$results</span> <span class="p">=</span> <span class="p">@()</span>
 <a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>
-<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>    foreach ($img in $images) {
-<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>        Write-Host &quot;Verifying: $($img.Name) ...&quot;
-<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>        $proc = Start-Process -FilePath $RASRBin `
-<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>                              -ArgumentList &quot;/verify /source `&quot;$($img.FullName)`&quot;&quot; `
-<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>                              -Wait -PassThru -NoNewWindow
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$img</span> <span class="k">in</span> <span class="nv">$images</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;Verifying: </span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> ...&quot;</span>
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a>        <span class="nv">$proc</span> <span class="p">=</span> <span class="nb">Start-Process</span> <span class="n">-FilePath</span> <span class="nv">$RASRBin</span> <span class="p">`</span>
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a>                              <span class="n">-ArgumentList</span> <span class="s2">&quot;/verify /source </span><span class="se">`&quot;</span><span class="p">$(</span><span class="nv">$img</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="se">`&quot;</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a>                              <span class="n">-Wait</span> <span class="n">-PassThru</span> <span class="n">-NoNewWindow</span>
 <a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a>
-<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>        $results += [PSCustomObject]@{
-<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>            ImageName  = $img.Name
-<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>            SizeGB     = [math]::Round($img.Length / 1GB, 2)
-<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>            LastWrite  = $img.LastWriteTime
-<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>            Status     = if ($proc.ExitCode -eq 0) { &quot;PASS&quot; } else { &quot;FAIL (code $($proc.ExitCode))&quot; }
-<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>        }
-<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>    }
+<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>        <span class="nv">$results</span> <span class="p">+=</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a>            <span class="n">ImageName</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a>            <span class="n">SizeGB</span>     <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$img</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a>            <span class="n">LastWrite</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
+<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a>            <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span> <span class="o">-eq</span> <span class="n">0</span><span class="p">)</span> <span class="p">{</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> <span class="s2">&quot;FAIL (code </span><span class="p">$(</span><span class="nv">$proc</span><span class="p">.</span><span class="n">ExitCode</span><span class="p">)</span><span class="s2">)&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a>        <span class="p">}</span>
+<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a>    <span class="p">}</span>
 <a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>
-<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>    $results | Format-Table -AutoSize
+<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a>    <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
 <a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a>
-<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>    $failed = $results | Where-Object { $_.Status -ne &quot;PASS&quot; }
-<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>    if ($failed) {
-<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>        Write-Warning &quot;$($failed.Count) image(s) failed integrity check.&quot;
-<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>    } else {
-<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>        Write-Host &quot;All $($results.Count) image(s) passed integrity check.&quot;
-<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>    }
-<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a>}
+<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a>    <span class="nv">$failed</span> <span class="p">=</span> <span class="nv">$results</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Status</span> <span class="o">-ne</span> <span class="s2">&quot;PASS&quot;</span> <span class="p">}</span>
+<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$failed</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$failed</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) failed integrity check.&quot;</span>
+<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a>        <span class="nb">Write-Host</span> <span class="s2">&quot;All </span><span class="p">$(</span><span class="nv">$results</span><span class="p">.</span><span class="n">Count</span><span class="p">)</span><span class="s2"> image(s) passed integrity check.&quot;</span>
+<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a>    <span class="p">}</span>
+<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a><span class="p">}</span>
 <a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>
-<a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a># Example:
-<a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a># Test-RASRImageIntegrity -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; `
-<a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a>#                         -ShareUser &quot;CORP\svc-rasr&quot; -SharePassword &quot;S3cr3t!&quot;
+<a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a><span class="c"># Example:</span>
+<a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a><span class="c"># Test-RASRImageIntegrity -SharePath &quot;\\nas01\rasr-images\SERVER01&quot; `</span>
+<a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a><span class="c">#                         -ShareUser &quot;CORP\svc-rasr&quot; -SharePassword &quot;S3cr3t!&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="new-rasrscheduledtask">New-RASRScheduledTask<a class="headerlink" href="#new-rasrscheduledtask" title="Permanent link">&para;</a></h2>

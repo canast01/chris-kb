@@ -3560,28 +3560,28 @@ Commands, syntax, and quick reference. All commands are PowerShell unless noted 
 │  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Disk and Storage
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">## Disk and Storage</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Physical disks
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Get-Disk | Select-Object Number, FriendlyName, Size, PartitionStyle, OperationalStatus
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Physical disks</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Number</span><span class="p">,</span> <span class="n">FriendlyName</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">PartitionStyle</span><span class="p">,</span> <span class="n">OperationalStatus</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Partitions
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-Partition | Select-Object DiskNumber, PartitionNumber, DriveLetter, Size, Type
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Partitions</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-Partition</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DiskNumber</span><span class="p">,</span> <span class="n">PartitionNumber</span><span class="p">,</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="nb">Type</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Volumes
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-Volume | Select-Object DriveLetter, FileSystemLabel, FileSystem, Size, SizeRemaining, HealthStatus
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Volumes</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-Volume</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">DriveLetter</span><span class="p">,</span> <span class="n">FileSystemLabel</span><span class="p">,</span> <span class="n">FileSystem</span><span class="p">,</span> <span class="n">Size</span><span class="p">,</span> <span class="n">SizeRemaining</span><span class="p">,</span> <span class="n">HealthStatus</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Drive space (quick)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-PSDrive -PSProvider FileSystem
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Drive space (quick)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-PSDrive</span> <span class="n">-PSProvider</span> <span class="n">FileSystem</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Initialise and format a new disk
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>Initialize-Disk -Number &lt;n&gt; -PartitionStyle GPT
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>New-Partition -DiskNumber &lt;n&gt; -UseMaximumSize -DriveLetter D
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>Format-Volume -DriveLetter D -FileSystem NTFS -NewFileSystemLabel &quot;Data&quot; -Confirm:$false
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Initialise and format a new disk</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">Initialize-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span> <span class="n">-PartitionStyle</span> <span class="n">GPT</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">New-Partition</span> <span class="n">-DiskNumber</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span> <span class="n">-UseMaximumSize</span> <span class="n">-DriveLetter</span> <span class="n">D</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="nb">Format-Volume</span> <span class="n">-DriveLetter</span> <span class="n">D</span> <span class="n">-FileSystem</span> <span class="n">NTFS</span> <span class="n">-NewFileSystemLabel</span> <span class="s2">&quot;Data&quot;</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Extend a volume
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Resize-Partition -DriveLetter D -Size (Get-PartitionSupportedSize -DriveLetter D).SizeMax
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c"># Extend a volume</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">Resize-Partition</span> <span class="n">-DriveLetter</span> <span class="n">D</span> <span class="n">-Size</span> <span class="p">(</span><span class="nb">Get-PartitionSupportedSize</span> <span class="n">-DriveLetter</span> <span class="n">D</span><span class="p">).</span><span class="n">SizeMax</span>
 </code></pre></div></p>
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># IP configuration</span>

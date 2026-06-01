@@ -4611,8 +4611,8 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 </li>
 <li>
 <p><strong>Customization spec fails:</strong> Check vCenter Tasks and Events for the provisioning VM
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vCenter → Monitor → Tasks — filter by the stuck desktop VM name
-</code></pre></div></p>
+<code>text
+   vCenter → Monitor → Tasks — filter by the stuck desktop VM name</code></p>
 </li>
 </ol>
 <hr />
@@ -4621,25 +4621,23 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 <ol>
 <li>
 <p><strong>Pool is exhausted — all desktops assigned or in use:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Horizon Console → Inventory → Desktops → [pool]
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Check: Available count — if 0, all desktops are in use or error
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Increase pool size or add headroom
-</code></pre></div></p>
+   <code>Horizon Console → Inventory → Desktops → [pool]
+   Check: Available count — if 0, all desktops are in use or error
+   Increase pool size or add headroom</code></p>
 </li>
 <li>
 <p><strong>All desktops in error state:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-HVDesktop</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-win10-float&quot;</span> <span class="p">|</span> 
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="nb">Group-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># If all are ERROR: bulk-delete and let pool reprovision</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Get-HVDesktop</span> <span class="n">-PoolName</span> <span class="s2">&quot;pool-win10-float&quot;</span> <span class="p">|</span> 
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Base</span><span class="p">.</span><span class="n">BasicState</span> <span class="o">-eq</span> <span class="s2">&quot;ERROR&quot;</span> <span class="p">}</span> <span class="p">|</span> 
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  <span class="nb">Remove-HVDesktop</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-</code></pre></div></p>
+   <code>powershell
+   Get-HVDesktop -PoolName "pool-win10-float" | 
+     Group-Object { $_.Base.BasicState } | Select Name, Count
+   # If all are ERROR: bulk-delete and let pool reprovision
+   Get-HVDesktop -PoolName "pool-win10-float" | 
+     Where-Object { $_.Base.BasicState -eq "ERROR" } | 
+     Remove-HVDesktop -Confirm:$false</code></p>
 </li>
 <li>
 <p><strong>Entitlement missing:</strong> User is not entitled to the pool
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Horizon Console → [pool] → Entitlements → verify user&#39;s AD group is listed
-</code></pre></div></p>
+   <code>Horizon Console → [pool] → Entitlements → verify user's AD group is listed</code></p>
 </li>
 </ol>
 <hr />
@@ -4648,13 +4646,13 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 <ol>
 <li>
 <p><strong>Horizon Agent not running in the desktop VM:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># From Connection Server:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">$desktop</span> <span class="p">=</span> <span class="nb">Get-HVDesktop</span> <span class="n">-VMName</span> <span class="s2">&quot;win10-042&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># Get the VM IP, then check remotely:</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">desktop-ip</span><span class="p">&gt;</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Agent&quot;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># If stopped: reset the desktop (reboot)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Reset-HVMachine</span> <span class="n">-HVMachineName</span> <span class="s2">&quot;win10-042&quot;</span>
-</code></pre></div></p>
+   <code>powershell
+   # From Connection Server:
+   $desktop = Get-HVDesktop -VMName "win10-042"
+   # Get the VM IP, then check remotely:
+   Get-Service -ComputerName &lt;desktop-ip&gt; -Name "VMware Horizon View Agent"
+   # If stopped: reset the desktop (reboot)
+   Reset-HVMachine -HVMachineName "win10-042"</code></p>
 </li>
 <li>
 <p><strong>Display protocol (Blast/PCoIP) port blocked:</strong> Check NSG or firewall rules between Horizon Client and the UAG/Connection Server</p>
@@ -4669,23 +4667,23 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 <ol>
 <li>
 <p><strong>DEM profile migration:</strong> First-time migration of legacy profile to DEM can take minutes — expected behavior
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>DEM Management Console → Monitor → check profile migration queue
-</code></pre></div></p>
+<code>text
+   DEM Management Console → Monitor → check profile migration queue</code></p>
 </li>
 <li>
 <p><strong>AppStack mount failure (App Volumes):</strong> AppStack VMDK attachment is slow or failing
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>App Volumes Manager → Activity → check for stuck attach operations
-</code></pre></div></p>
+<code>text
+   App Volumes Manager → Activity → check for stuck attach operations</code></p>
 </li>
 <li>
 <p><strong>Antivirus scanning user profile on login:</strong> AV exclusions needed
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Exclude from scanning: %APPDATA%, %USERPROFILE%, DEM config share (\\server\dem-config)
-</code></pre></div></p>
+<code>sql
+   Exclude from scanning: %APPDATA%, %USERPROFILE%, DEM config share (\\server\dem-config)</code></p>
 </li>
 <li>
 <p><strong>Network drive mapping slow:</strong> Group Policy login script timing out on drive mapping
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Enable asynchronous user Group Policy processing to prevent blocking login
-</code></pre></div></p>
+<code>text
+   Enable asynchronous user Group Policy processing to prevent blocking login</code></p>
 </li>
 </ol>
 <hr />
@@ -4694,13 +4692,13 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 <ol>
 <li>
 <p><strong>Certificate mismatch:</strong> Connection Server cert thumbprint in UAG config doesn't match the current CS cert
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Get current CS cert thumbprint:</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>horizon-cs01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-fingerprint<span class="w"> </span>-sha1<span class="w"> </span>-noout
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Compare to thumbprint in UAG:</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>UAG<span class="w"> </span>Admin<span class="w"> </span>UI<span class="w"> </span>→<span class="w"> </span>Edge<span class="w"> </span>Service<span class="w"> </span>Settings<span class="w"> </span>→<span class="w"> </span>Horizon<span class="w"> </span>→<span class="w"> </span>Thumbprint
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Update if different</span>
-</code></pre></div></p>
+   <code>bash
+   # Get current CS cert thumbprint:
+   echo | openssl s_client -connect horizon-cs01.example.local:443 2&gt;/dev/null \
+     | openssl x509 -fingerprint -sha1 -noout
+   # Compare to thumbprint in UAG:
+   UAG Admin UI → Edge Service Settings → Horizon → Thumbprint
+   # Update if different</code></p>
 </li>
 <li>
 <p><strong>Firewall between UAG and Connection Server:</strong> TCP 443 from UAG backend NIC to Connection Server must be open</p>
@@ -4712,16 +4710,16 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 <ol>
 <li>
 <p><strong>App Volumes Manager unreachable from desktop VM:</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a># From desktop VM:
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Test-NetConnection appvol-mgr.example.local -Port 443
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a># Must succeed — if failed, firewall or DNS issue
-</code></pre></div></p>
+<code>powershell
+   # From desktop VM:
+   Test-NetConnection appvol-mgr.example.local -Port 443
+   # Must succeed — if failed, firewall or DNS issue</code></p>
 </li>
 <li>
 <p><strong>VMDK attachment failure in vCenter:</strong> AppStack VMDK is already attached to another VM (from a previous failed detach)
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>App Volumes Manager → AppStacks → [stack] → Assignments → check for stale attachments
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>OR: vCenter → locate AppStack VMDK → detach from any VM it&#39;s currently attached to
-</code></pre></div></p>
+<code>sql
+   App Volumes Manager → AppStacks → [stack] → Assignments → check for stale attachments
+   OR: vCenter → locate AppStack VMDK → detach from any VM it's currently attached to</code></p>
 </li>
 </ol>
 

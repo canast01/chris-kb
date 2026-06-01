@@ -3501,19 +3501,19 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
 │   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Workspace and Environment Separation
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">##</span><span class="w"> </span><span class="n">Workspace</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">Environment</span><span class="w"> </span><span class="n">Separation</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Use separate credentials and backends per environment to prevent a staging Terraform run from modifying production.
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">Use</span><span class="w"> </span><span class="n">separate</span><span class="w"> </span><span class="n">credentials</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">backends</span><span class="w"> </span><span class="n">per</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">prevent</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">staging</span><span class="w"> </span><span class="n">Terraform</span><span class="w"> </span><span class="n">run</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">modifying</span><span class="w"> </span><span class="n">production</span><span class="p">.</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```hcl
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Use workspace-specific state paths
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>terraform {
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  backend &quot;s3&quot; {
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    bucket = &quot;myorg-terraform-state&quot;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    key    = &quot;env/${terraform.workspace}/terraform.tfstate&quot;
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    region = &quot;eu-west-1&quot;
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  }
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>}
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">```</span><span class="n">hcl</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="o">#</span><span class="w"> </span><span class="n">Use</span><span class="w"> </span><span class="n">workspace</span><span class="o">-</span><span class="k">specific</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="n">paths</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">terraform</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="n">backend</span><span class="w"> </span><span class="ss">&quot;s3&quot;</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;myorg-terraform-state&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="k">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;env/${terraform.workspace}/terraform.tfstate&quot;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ss">&quot;eu-west-1&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="err">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="err">}</span>
 </code></pre></div></p>
 <h2 id="access-control-reference">Access Control Reference<a class="headerlink" href="#access-control-reference" title="Permanent link">&para;</a></h2>
 <table>

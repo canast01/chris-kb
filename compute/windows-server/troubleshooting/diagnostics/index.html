@@ -3361,20 +3361,20 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Exporting Logs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">## Exporting Logs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```powershell
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Export Security log to EVTX file
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>wevtutil epl Security C:\Logs\Security-$(Get-Date -Format &#39;yyyyMMdd&#39;).evtx
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Export Security log to EVTX file</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Security</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Security</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Export filtered events to XML
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;; Level=2 } -MaxEvents 500 |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    Export-Clixml C:\Logs\SystemErrors.xml
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Export filtered events to XML</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="nb">Export-Clixml</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">SystemErrors</span><span class="p">.</span><span class="n">xml</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Export to CSV for analysis
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;; Level=2; StartTime=(Get-Date).AddDays(-7) } |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    Select-Object TimeCreated, Id, LevelDisplayName, Message |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    Export-Csv C:\Logs\SystemErrors.csv -NoTypeInformation
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Export to CSV for analysis</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">SystemErrors</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
 </code></pre></div></p>
 <h2 id="event-log-forwarding-wef">Event Log Forwarding (WEF)<a class="headerlink" href="#event-log-forwarding-wef" title="Permanent link">&para;</a></h2>
 <p>Windows Event Forwarding collects events centrally from multiple servers.</p>

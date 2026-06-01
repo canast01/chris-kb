@@ -3098,21 +3098,21 @@ Health checks and troubleshooting for common infrastructure integration points: 
 │    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Active Directory / LDAP Integration
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">## Active Directory / LDAP Integration</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># SSSD on Linux
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl status sssd
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sssctl domain-status &lt;domain&gt;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>id &lt;ad-user&gt;               # should return AD UID + groups
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># SSSD on Linux</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">systemctl</span> <span class="n">status</span> <span class="n">sssd</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">sssctl</span> <span class="n">domain</span><span class="o">-</span><span class="n">status</span> <span class="o">&lt;</span><span class="n">domain</span><span class="o">&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">id</span> <span class="o">&lt;</span><span class="n">ad</span><span class="o">-</span><span class="n">user</span><span class="o">&gt;</span>               <span class="c1"># should return AD UID + groups</span>
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Winbind
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>wbinfo -t                  # test trust to domain
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>wbinfo -u | head -5        # list domain users
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>net ads info               # show DC and site info
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Winbind</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">wbinfo</span> <span class="o">-</span><span class="n">t</span>                  <span class="c1"># test trust to domain</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">wbinfo</span> <span class="o">-</span><span class="n">u</span> <span class="o">|</span> <span class="n">head</span> <span class="o">-</span><span class="mi">5</span>        <span class="c1"># list domain users</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">net</span> <span class="n">ads</span> <span class="n">info</span>               <span class="c1"># show DC and site info</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># LDAP reachability
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ldapsearch -x -H ldap://&lt;dc-hostname&gt; -b &quot;dc=corp,dc=example,dc=com&quot; &quot;(sAMAccountName=testuser)&quot; cn mail
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># LDAP reachability</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">ldapsearch</span> <span class="o">-</span><span class="n">x</span> <span class="o">-</span><span class="n">H</span> <span class="n">ldap</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">dc</span><span class="o">-</span><span class="n">hostname</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">b</span> <span class="s2">&quot;dc=corp,dc=example,dc=com&quot;</span> <span class="s2">&quot;(sAMAccountName=testuser)&quot;</span> <span class="n">cn</span> <span class="n">mail</span>
 </code></pre></div></p>
 <h2 id="database-connection-pooling">Database Connection Pooling<a class="headerlink" href="#database-connection-pooling" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PgBouncer status</span>

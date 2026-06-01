@@ -3995,71 +3995,71 @@ How It Works reference covering Overview, Component Topology, MediaAgent and Ded
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>MediaAgent best practices:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Deploy one MediaAgent per site for local backups
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- DDB free space: maintain ≥ 20% free at all times
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Single DDB should not manage more than 60 TB of deduped data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">MediaAgent</span> <span class="n">best</span> <span class="n">practices</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="o">-</span> <span class="n">Deploy</span> <span class="n">one</span> <span class="n">MediaAgent</span> <span class="n">per</span> <span class="n">site</span> <span class="k">for</span> <span class="n">local</span> <span class="n">backups</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">-</span> <span class="n">Place</span> <span class="n">DDB</span> <span class="n">on</span> <span class="n">SSD</span><span class="o">-</span><span class="n">backed</span> <span class="n">storage</span> <span class="err">—</span> <span class="n">IOPS</span> <span class="n">are</span> <span class="n">critical</span> <span class="k">for</span> <span class="n">large</span> <span class="n">dedup</span> <span class="n">pools</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="o">-</span> <span class="n">DDB</span> <span class="n">free</span> <span class="n">space</span><span class="p">:</span> <span class="n">maintain</span> <span class="err">≥</span> <span class="mi">20</span><span class="o">%</span> <span class="n">free</span> <span class="n">at</span> <span class="nb">all</span> <span class="n">times</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">-</span> <span class="n">Single</span> <span class="n">DDB</span> <span class="n">should</span> <span class="ow">not</span> <span class="n">manage</span> <span class="n">more</span> <span class="n">than</span> <span class="mi">60</span> <span class="n">TB</span> <span class="n">of</span> <span class="n">deduped</span> <span class="n">data</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## Storage Library Types
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1">## Storage Library Types</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Type | Use Case | Notes |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|---|
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Disk Library (Dedup) | Primary backup target | SSD recommended for DDB |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Cloud Library (S3) | Long-term retention | AWS S3, Azure Blob, GCP |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Tape Library | Offsite/archival | Via SAN-attached or NDMP |
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Hyperscale X | Integrated scale-out | CommVault managed hardware; minimum 3-node cluster |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="o">|</span> <span class="n">Type</span> <span class="o">|</span> <span class="n">Use</span> <span class="n">Case</span> <span class="o">|</span> <span class="n">Notes</span> <span class="o">|</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="o">|---|---|---|</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="o">|</span> <span class="n">Disk</span> <span class="n">Library</span> <span class="p">(</span><span class="n">Dedup</span><span class="p">)</span> <span class="o">|</span> <span class="n">Primary</span> <span class="n">backup</span> <span class="n">target</span> <span class="o">|</span> <span class="n">SSD</span> <span class="n">recommended</span> <span class="k">for</span> <span class="n">DDB</span> <span class="o">|</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="o">|</span> <span class="n">Cloud</span> <span class="n">Library</span> <span class="p">(</span><span class="n">S3</span><span class="p">)</span> <span class="o">|</span> <span class="n">Long</span><span class="o">-</span><span class="n">term</span> <span class="n">retention</span> <span class="o">|</span> <span class="n">AWS</span> <span class="n">S3</span><span class="p">,</span> <span class="n">Azure</span> <span class="n">Blob</span><span class="p">,</span> <span class="n">GCP</span> <span class="o">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="o">|</span> <span class="n">Tape</span> <span class="n">Library</span> <span class="o">|</span> <span class="n">Offsite</span><span class="o">/</span><span class="n">archival</span> <span class="o">|</span> <span class="n">Via</span> <span class="n">SAN</span><span class="o">-</span><span class="n">attached</span> <span class="ow">or</span> <span class="n">NDMP</span> <span class="o">|</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="o">|</span> <span class="n">Hyperscale</span> <span class="n">X</span> <span class="o">|</span> <span class="n">Integrated</span> <span class="n">scale</span><span class="o">-</span><span class="n">out</span> <span class="o">|</span> <span class="n">CommVault</span> <span class="n">managed</span> <span class="n">hardware</span><span class="p">;</span> <span class="n">minimum</span> <span class="mi">3</span><span class="o">-</span><span class="n">node</span> <span class="n">cluster</span> <span class="o">|</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>## Port Requirements
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1">## Port Requirements</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Source | Destination | Port | Purpose |
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>|---|---|---|---|
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Clients | CommServe | 8400 | Job requests |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Clients | MediaAgent | 8403 | Data movement |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| CommServe | MediaAgent | 8400 | Job orchestration |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| Browser (admin) | Command Center | 443 | Web UI |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="o">|</span> <span class="n">Source</span> <span class="o">|</span> <span class="n">Destination</span> <span class="o">|</span> <span class="n">Port</span> <span class="o">|</span> <span class="n">Purpose</span> <span class="o">|</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="o">|---|---|---|---|</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="o">|</span> <span class="n">Clients</span> <span class="o">|</span> <span class="n">CommServe</span> <span class="o">|</span> <span class="mi">8400</span> <span class="o">|</span> <span class="n">Job</span> <span class="n">requests</span> <span class="o">|</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="o">|</span> <span class="n">Clients</span> <span class="o">|</span> <span class="n">MediaAgent</span> <span class="o">|</span> <span class="mi">8403</span> <span class="o">|</span> <span class="n">Data</span> <span class="n">movement</span> <span class="o">|</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="o">|</span> <span class="n">CommServe</span> <span class="o">|</span> <span class="n">MediaAgent</span> <span class="o">|</span> <span class="mi">8400</span> <span class="o">|</span> <span class="n">Job</span> <span class="n">orchestration</span> <span class="o">|</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="o">|</span> <span class="n">Browser</span> <span class="p">(</span><span class="n">admin</span><span class="p">)</span> <span class="o">|</span> <span class="n">Command</span> <span class="n">Center</span> <span class="o">|</span> <span class="mi">443</span> <span class="o">|</span> <span class="n">Web</span> <span class="n">UI</span> <span class="o">|</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>## Multi-Site Topology
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1">## Multi-Site Topology</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>```mermaid
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>flowchart TD
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    subgraph primarySite [Primary Site]
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        cs[&quot;CommServe\n(command &amp; control)&quot;]
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        ma1[&quot;MediaAgent\ndc1-ma-01&quot;]
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        diskLib1[(&quot;Disk Library\nDDB — Primary&quot;)]
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        clients1([&quot;VMs / DBs / Files\nSite A&quot;])
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        clients1 --&gt; ma1
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        ma1 --&gt; diskLib1
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        ma1 --&gt; cs
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    end
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="err">```</span><span class="n">mermaid</span>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="n">flowchart</span> <span class="n">TD</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    <span class="n">subgraph</span> <span class="n">primarySite</span> <span class="p">[</span><span class="n">Primary</span> <span class="n">Site</span><span class="p">]</span>
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">cs</span><span class="p">[</span><span class="s2">&quot;CommServe</span><span class="se">\n</span><span class="s2">(command &amp; control)&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="n">ma1</span><span class="p">[</span><span class="s2">&quot;MediaAgent</span><span class="se">\n</span><span class="s2">dc1-ma-01&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        <span class="n">diskLib1</span><span class="p">[(</span><span class="s2">&quot;Disk Library</span><span class="se">\n</span><span class="s2">DDB — Primary&quot;</span><span class="p">)]</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        <span class="n">clients1</span><span class="p">([</span><span class="s2">&quot;VMs / DBs / Files</span><span class="se">\n</span><span class="s2">Site A&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="n">clients1</span> <span class="o">--&gt;</span> <span class="n">ma1</span>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="n">ma1</span> <span class="o">--&gt;</span> <span class="n">diskLib1</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="n">ma1</span> <span class="o">--&gt;</span> <span class="n">cs</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="n">end</span>
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    subgraph drSite [DR / Secondary Site]
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        ma2[&quot;MediaAgent\ndc2-ma-01&quot;]
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        diskLib2[(&quot;Disk Library\nDDB — DR copy&quot;)]
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        clients2([&quot;VMs / DBs / Files\nSite B&quot;])
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        clients2 --&gt; ma2
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        ma2 --&gt; diskLib2
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        ma2 --&gt; cs
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    end
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    <span class="n">subgraph</span> <span class="n">drSite</span> <span class="p">[</span><span class="n">DR</span> <span class="o">/</span> <span class="n">Secondary</span> <span class="n">Site</span><span class="p">]</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        <span class="n">ma2</span><span class="p">[</span><span class="s2">&quot;MediaAgent</span><span class="se">\n</span><span class="s2">dc2-ma-01&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="n">diskLib2</span><span class="p">[(</span><span class="s2">&quot;Disk Library</span><span class="se">\n</span><span class="s2">DDB — DR copy&quot;</span><span class="p">)]</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="n">clients2</span><span class="p">([</span><span class="s2">&quot;VMs / DBs / Files</span><span class="se">\n</span><span class="s2">Site B&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="n">clients2</span> <span class="o">--&gt;</span> <span class="n">ma2</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        <span class="n">ma2</span> <span class="o">--&gt;</span> <span class="n">diskLib2</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        <span class="n">ma2</span> <span class="o">--&gt;</span> <span class="n">cs</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    <span class="n">end</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    subgraph cloudTier [Cloud / Tape Tier]
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        cloud[(&quot;Cloud Library\nS3 / Azure Blob\nlong-term retention&quot;)]
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        tape[(&quot;Tape Library\narchival / compliance&quot;)]
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    end
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="n">subgraph</span> <span class="n">cloudTier</span> <span class="p">[</span><span class="n">Cloud</span> <span class="o">/</span> <span class="n">Tape</span> <span class="n">Tier</span><span class="p">]</span>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="n">cloud</span><span class="p">[(</span><span class="s2">&quot;Cloud Library</span><span class="se">\n</span><span class="s2">S3 / Azure Blob</span><span class="se">\n</span><span class="s2">long-term retention&quot;</span><span class="p">)]</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="n">tape</span><span class="p">[(</span><span class="s2">&quot;Tape Library</span><span class="se">\n</span><span class="s2">archival / compliance&quot;</span><span class="p">)]</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    <span class="n">end</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    diskLib1 --&gt;|&quot;aux copy\n(scheduled)&quot;| diskLib2
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    diskLib2 --&gt;|&quot;aux copy\n(scheduled)&quot;| cloud
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    diskLib1 --&gt;|&quot;aux copy&quot;| tape
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    cs --&gt; webUI[&quot;Command Center\nWeb UI — port 443&quot;]
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    <span class="n">diskLib1</span> <span class="o">--&gt;|</span><span class="s2">&quot;aux copy</span><span class="se">\n</span><span class="s2">(scheduled)&quot;</span><span class="o">|</span> <span class="n">diskLib2</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    <span class="n">diskLib2</span> <span class="o">--&gt;|</span><span class="s2">&quot;aux copy</span><span class="se">\n</span><span class="s2">(scheduled)&quot;</span><span class="o">|</span> <span class="n">cloud</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    <span class="n">diskLib1</span> <span class="o">--&gt;|</span><span class="s2">&quot;aux copy&quot;</span><span class="o">|</span> <span class="n">tape</span>
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    <span class="n">cs</span> <span class="o">--&gt;</span> <span class="n">webUI</span><span class="p">[</span><span class="s2">&quot;Command Center</span><span class="se">\n</span><span class="s2">Web UI — port 443&quot;</span><span class="p">]</span>
 <a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    classDef host fill:#15803d,stroke:#166534,color:#fff
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>    class cs,ma1,ma2 ctrl
-<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    class diskLib1,diskLib2,tape store
-<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    class clients1,clients2 host
-<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    class cloud,webUI cloud
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    <span class="n">classDef</span> <span class="n">ctrl</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#2563eb,stroke:#1d4ed8,color:#fff</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    <span class="n">classDef</span> <span class="n">store</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#7c3aed,stroke:#6d28d9,color:#fff</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    <span class="n">classDef</span> <span class="n">host</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#15803d,stroke:#166534,color:#fff</span>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    <span class="n">classDef</span> <span class="n">cloud</span> <span class="n">fill</span><span class="p">:</span><span class="c1">#0f766e,stroke:#0d5f58,color:#fff</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">cs</span><span class="p">,</span><span class="n">ma1</span><span class="p">,</span><span class="n">ma2</span> <span class="n">ctrl</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">diskLib1</span><span class="p">,</span><span class="n">diskLib2</span><span class="p">,</span><span class="n">tape</span> <span class="n">store</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">clients1</span><span class="p">,</span><span class="n">clients2</span> <span class="n">host</span>
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">cloud</span><span class="p">,</span><span class="n">webUI</span> <span class="n">cloud</span>
 </code></pre></div></p>
 
 

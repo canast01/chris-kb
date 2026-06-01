@@ -3054,28 +3054,28 @@ Validates that infrastructure is prepared to receive a new workload, application
 │    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## 2. Network Readiness
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">## 2. Network Readiness</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Confirm VLAN exists on target switch/fabric
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>show vlan id &lt;vlan_id&gt;                 # Cisco
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-VDPortgroup -VDSwitch vDS-Prod     # VMware distributed switch
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">bash</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Confirm VLAN exists on target switch/fabric</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">show</span> <span class="n">vlan</span> <span class="n">id</span> <span class="p">&lt;</span><span class="n">vlan_id</span><span class="p">&gt;</span>                 <span class="c"># Cisco</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">Get-VDPortgroup</span> <span class="n">-VDSwitch</span> <span class="n">vDS-Prod</span>     <span class="c"># VMware distributed switch</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Confirm IP address allocated and not in use
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>ping -c 1 &lt;planned-ip&gt; &amp;&amp; echo &quot;IP IN USE&quot; || echo &quot;IP available&quot;
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>nmap -sn &lt;planned-ip&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Confirm IP address allocated and not in use</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">ping</span> <span class="n">-c</span> <span class="n">1</span> <span class="p">&lt;</span><span class="n">planned-ip</span><span class="p">&gt;</span> <span class="p">&amp;&amp;</span> <span class="nb">echo </span><span class="s2">&quot;IP IN USE&quot;</span> <span class="p">||</span> <span class="nb">echo </span><span class="s2">&quot;IP available&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">nmap</span> <span class="n">-sn</span> <span class="p">&lt;</span><span class="n">planned-ip</span><span class="p">&gt;</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># DNS A record created
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>nslookup &lt;planned-hostname&gt;.example.com
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>dig +short &lt;planned-hostname&gt;.example.com
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># DNS A record created</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">nslookup</span> <span class="p">&lt;</span><span class="n">planned-hostname</span><span class="p">&gt;.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">dig</span> <span class="p">+</span><span class="n">short</span> <span class="p">&lt;</span><span class="n">planned-hostname</span><span class="p">&gt;.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Firewall rules in place (test from source to destination)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>nc -zv &lt;destination-ip&gt; &lt;port&gt;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>curl -sk --connect-timeout 5 https://&lt;destination&gt;:&lt;port&gt;/
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Firewall rules in place (test from source to destination)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">nc</span> <span class="n">-zv</span> <span class="p">&lt;</span><span class="n">destination-ip</span><span class="p">&gt;</span> <span class="p">&lt;</span><span class="n">port</span><span class="p">&gt;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">curl </span><span class="n">-sk</span> <span class="p">-</span><span class="n">-connect-timeout</span> <span class="n">5</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">destination</span><span class="p">&gt;:&lt;</span><span class="n">port</span><span class="p">&gt;/</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># NTP reachability
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>chronyc sources -v | grep &quot;^*&quot;        # confirm preferred source
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>ntpdate -q ntp.example.com
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c"># NTP reachability</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">chronyc</span> <span class="n">sources</span> <span class="n">-v</span> <span class="p">|</span> <span class="n">grep</span> <span class="s2">&quot;^*&quot;</span>        <span class="c"># confirm preferred source</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="n">ntpdate</span> <span class="n">-q</span> <span class="n">ntp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
 </code></pre></div></p>
 <table>
 <thead>

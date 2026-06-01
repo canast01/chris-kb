@@ -4611,31 +4611,31 @@ Encryption reference covering TLS Certificate Replacement, Verifying Certificate
 │  Cert expiry alert = vRLI shows warning banner when cert expires within 30 days                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="na">---</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Log Ingestion Transport Encryption
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">## Log Ingestion Transport Encryption</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Log data is forwarded to Aria Ops for Logs over several channels with varying encryption support:
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="na">Log data is forwarded to Aria Ops for Logs over several channels with varying encryption support</span><span class="o">:</span>
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Protocol | Port | Encrypted | Recommended For |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| cfapi (TLS) | 9543 | Yes — TLS 1.2+ | LI Agent on Linux/Windows VMs |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| cfapi (no TLS) | 9000 | No | Lab only |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Syslog TCP | 1514 | No (unless wrapped in TLS) | Legacy devices with TCP syslog |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Syslog UDP | 514 | No | ESXi hosts (no TLS option on ESXi syslog) |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="na">| Protocol | Port | Encrypted | Recommended For |</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="na">|---|---|---|---|</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="na">| cfapi (TLS) | 9543 | Yes — TLS 1.2+ | LI Agent on Linux/Windows VMs |</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="na">| cfapi (no TLS) | 9000 | No | Lab only |</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="na">| Syslog TCP | 1514 | No (unless wrapped in TLS) | Legacy devices with TCP syslog |</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="na">| Syslog UDP | 514 | No | ESXi hosts (no TLS option on ESXi syslog) |</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>For sensitive environments, use the LI Agent (cfapi/TLS on port 9543) instead of raw syslog where possible. ESXi syslog over UDP 514 is accepted as a known limitation of the ESXi syslog implementation — ESXi does not support TLS for syslog.
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="na">For sensitive environments, use the LI Agent (cfapi/TLS on port 9543) instead of raw syslog where possible. ESXi syslog over UDP 514 is accepted as a known limitation of the ESXi syslog implementation — ESXi does not support TLS for syslog.</span>
 <a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Configure the LI Agent to use TLS:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="na">Configure the LI Agent to use TLS</span><span class="o">:</span>
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```ini
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># /var/lib/loginsight-agent/liagent.ini
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>[server]
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>hostname=vrli-prod-01.example.local
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>port=9543
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>proto=cfapi
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>ssl=yes
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>ssl_ca_path=/etc/ssl/certs/corp-ca.pem
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="na">```ini</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># /var/lib/loginsight-agent/liagent.ini</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">[server]</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="na">hostname</span><span class="o">=</span><span class="s">vrli-prod-01.example.local</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="na">port</span><span class="o">=</span><span class="s">9543</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="na">proto</span><span class="o">=</span><span class="s">cfapi</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="na">ssl</span><span class="o">=</span><span class="s">yes</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="na">ssl_ca_path</span><span class="o">=</span><span class="s">/etc/ssl/certs/corp-ca.pem</span>
 </code></pre></div></p>
 <hr />
 <h2 id="data-at-rest-encryption">Data at Rest Encryption<a class="headerlink" href="#data-at-rest-encryption" title="Permanent link">&para;</a></h2>

@@ -3764,20 +3764,20 @@ Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Re
 │   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Use `-target` sparingly — it creates drift between the plan and real state if overused.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Use</span><span class="w"> </span><span class="o">`-</span><span class="n">target</span><span class="o">`</span><span class="w"> </span><span class="n">sparingly</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="n">creates</span><span class="w"> </span><span class="n">drift</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">plan</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="nb">real</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">overused</span><span class="p">.</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Passing Variables at Apply Time
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">###</span><span class="w"> </span><span class="n">Passing</span><span class="w"> </span><span class="n">Variables</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="k">Time</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Inline variable values
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>terraform apply -var=&quot;instance_type=t3.medium&quot; -var=&quot;region=eu-west-1&quot;
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="o">#</span><span class="w"> </span><span class="n">Inline</span><span class="w"> </span><span class="k">variable</span><span class="w"> </span><span class="k">values</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">terraform</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">-</span><span class="n">var</span><span class="o">=</span><span class="ss">&quot;instance_type=t3.medium&quot;</span><span class="w"> </span><span class="o">-</span><span class="n">var</span><span class="o">=</span><span class="ss">&quot;region=eu-west-1&quot;</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># From a var file
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>terraform apply -var-file=&quot;envs/production.tfvars&quot;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="n">file</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">terraform</span><span class="w"> </span><span class="n">apply</span><span class="w"> </span><span class="o">-</span><span class="n">var</span><span class="o">-</span><span class="n">file</span><span class="o">=</span><span class="ss">&quot;envs/production.tfvars&quot;</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># From environment variables (TF_VAR_ prefix)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>export TF_VAR_db_password=&quot;s3cretpassword&quot;
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform apply
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">environment</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="p">(</span><span class="n">TF_VAR_</span><span class="w"> </span><span class="k">prefix</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">export</span><span class="w"> </span><span class="n">TF_VAR_db_password</span><span class="o">=</span><span class="ss">&quot;s3cretpassword&quot;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">terraform</span><span class="w"> </span><span class="n">apply</span>
 </code></pre></div></p>
 <h3 id="apply-in-cicd-pipelines">Apply in CI/CD Pipelines<a class="headerlink" href="#apply-in-cicd-pipelines" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># GitHub Actions example</span>

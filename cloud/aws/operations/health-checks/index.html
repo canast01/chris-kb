@@ -4205,26 +4205,26 @@ Health Checks reference covering Quick Account Health Overview, RDS Health, EKS 
 │  Route 53 health = External probe; fails DNS failover if endpoint unreachable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">---</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## EKS Cluster Health
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="n">EKS</span><span class="w"> </span><span class="k">Cluster</span><span class="w"> </span><span class="n">Health</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Cluster status
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws eks describe-cluster --name my-cluster \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  --query &#39;cluster.[name,status,version,endpoint]&#39; --output table
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">#</span><span class="w"> </span><span class="k">Cluster</span><span class="w"> </span><span class="n">status</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="k">cluster</span><span class="w"> </span><span class="c1">--name my-cluster \</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="c1">--query &#39;cluster.[name,status,version,endpoint]&#39; --output table</span>
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Node group status
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws eks list-nodegroups --cluster-name my-cluster --output text | \
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  xargs -I{} aws eks describe-nodegroup \
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --cluster-name my-cluster \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    --nodegroup-name {} \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    --query &#39;nodegroup.[nodegroupName,status,scalingConfig.desiredSize,health.issues]&#39;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="o">#</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="n">status</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="n">list</span><span class="o">-</span><span class="n">nodegroups</span><span class="w"> </span><span class="c1">--cluster-name my-cluster --output text | \</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="n">xargs</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="err">{}</span><span class="w"> </span><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="k">describe</span><span class="o">-</span><span class="n">nodegroup</span><span class="w"> </span><span class="err">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="c1">--cluster-name my-cluster \</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="c1">--nodegroup-name {} \</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="c1">--query &#39;nodegroup.[nodegroupName,status,scalingConfig.desiredSize,health.issues]&#39;</span>
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># After kubeconfig update — node and pod health
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>aws eks update-kubeconfig --name my-cluster --region eu-west-1
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>kubectl get nodes -o wide
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>kubectl get pods -A | grep -v Running | grep -v Completed
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="o">#</span><span class="w"> </span><span class="k">After</span><span class="w"> </span><span class="n">kubeconfig</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">node</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">pod</span><span class="w"> </span><span class="n">health</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="n">aws</span><span class="w"> </span><span class="n">eks</span><span class="w"> </span><span class="k">update</span><span class="o">-</span><span class="n">kubeconfig</span><span class="w"> </span><span class="c1">--name my-cluster --region eu-west-1</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">kubectl</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="n">wide</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">kubectl</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="n">pods</span><span class="w"> </span><span class="o">-</span><span class="n">A</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="w"> </span><span class="n">Running</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="o">-</span><span class="n">v</span><span class="w"> </span><span class="n">Completed</span>
 </code></pre></div></p>
 <hr />
 <h2 id="load-balancer-health">Load Balancer Health<a class="headerlink" href="#load-balancer-health" title="Permanent link">&para;</a></h2>

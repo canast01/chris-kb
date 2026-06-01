@@ -3310,20 +3310,20 @@ Integration with other platforms and external systems.
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Maintenance windows control reboot scheduling:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Development: patching on Tuesdays, auto-reboot allowed
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Staging: patching on Thursdays, auto-reboot after midnight
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Production: patching on scheduled maintenance windows, manual reboot approval required
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Maintenance</span> <span class="n">windows</span> <span class="n">control</span> <span class="n">reboot</span> <span class="n">scheduling</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">-</span> <span class="n">Development</span><span class="p">:</span> <span class="n">patching</span> <span class="n">on</span> <span class="n">Tuesdays</span><span class="p">,</span> <span class="n">auto-reboot</span> <span class="n">allowed</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">-</span> <span class="n">Staging</span><span class="p">:</span> <span class="n">patching</span> <span class="n">on</span> <span class="n">Thursdays</span><span class="p">,</span> <span class="n">auto-reboot</span> <span class="n">after</span> <span class="n">midnight</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">-</span> <span class="n">Production</span><span class="p">:</span> <span class="n">patching</span> <span class="n">on</span> <span class="n">scheduled</span> <span class="n">maintenance</span> <span class="n">windows</span><span class="p">,</span> <span class="n">manual</span> <span class="n">reboot</span> <span class="n">approval</span> <span class="n">required</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>## Monitoring Agent Deployment
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c">## Monitoring Agent Deployment</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```powershell
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Aria Operations Windows guest agent — deploy via Ansible or SCCM
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Verify agent is running
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-Service &quot;VMware Aria Operations Agent&quot; | Select-Object Status
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Aria Operations Windows guest agent — deploy via Ansible or SCCM</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Verify agent is running</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Aria Operations Agent&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># SCOM agent — verify management group registration
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-SCOMAgent -ComputerName $env:COMPUTERNAME | Select-Object Name, HealthState, ManagementGroup
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># SCOM agent — verify management group registration</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Get-SCOMAgent</span> <span class="n">-ComputerName</span> <span class="nv">$env:COMPUTERNAME</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HealthState</span><span class="p">,</span> <span class="n">ManagementGroup</span>
 </code></pre></div></p>
 <h2 id="backup-agent-deployment">Backup Agent Deployment<a class="headerlink" href="#backup-agent-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Agent for Windows</strong>:

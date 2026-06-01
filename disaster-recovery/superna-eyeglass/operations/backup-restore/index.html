@@ -4239,27 +4239,27 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Restore to New/Replacement Appliance
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c">### Restore to New/Replacement Appliance</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># 1. Deploy new Eyeglass OVA (same version as backup)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a># 2. Complete initial setup wizard (network, hostname)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">bash</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># 1. Deploy new Eyeglass OVA (same version as backup)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># 2. Complete initial setup wizard (network, hostname)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># 3. Copy backup file to new appliance
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>scp eyeglass-backup-&lt;date&gt;.tar.gz admin@&lt;new-eyeglass-ip&gt;:/home/admin/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># 3. Copy backup file to new appliance</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">scp</span> <span class="n">eyeglass-backup</span><span class="p">-&lt;</span><span class="n">date</span><span class="p">&gt;.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span> <span class="n">admin</span><span class="p">@&lt;</span><span class="nb">new-eyeglass</span><span class="n">-ip</span><span class="p">&gt;:/</span><span class="n">home</span><span class="p">/</span><span class="n">admin</span><span class="p">/</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># 4. SSH to new appliance
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ssh admin@&lt;new-eyeglass-ip&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># 4. SSH to new appliance</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">ssh</span> <span class="n">admin</span><span class="p">@&lt;</span><span class="nb">new-eyeglass</span><span class="n">-ip</span><span class="p">&gt;</span>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># 5. Import and restore the backup
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>igls backup import --file /home/admin/eyeglass-backup-&lt;date&gt;.tar.gz
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>igls backup restore --id &lt;imported-backup-id&gt;
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># 5. Import and restore the backup</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">igls</span> <span class="n">backup</span> <span class="n">import</span> <span class="p">-</span><span class="o">-file</span> <span class="p">/</span><span class="n">home</span><span class="p">/</span><span class="n">admin</span><span class="p">/</span><span class="n">eyeglass-backup</span><span class="p">-&lt;</span><span class="n">date</span><span class="p">&gt;.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">igls</span> <span class="n">backup</span> <span class="n">restore</span> <span class="p">-</span><span class="n">-id</span> <span class="p">&lt;</span><span class="n">imported-backup-id</span><span class="p">&gt;</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># 6. Verify cluster connections
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>igls clusters list
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c"># 6. Verify cluster connections</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="n">igls</span> <span class="n">clusters</span> <span class="n">list</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># 7. Re-enter cluster credentials (passwords are not stored in backup)
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>igls clusters update-credentials --cluster &lt;cluster-name&gt;
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c"># 7. Re-enter cluster credentials (passwords are not stored in backup)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="n">igls</span> <span class="n">clusters</span> <span class="nb">update-credentials</span> <span class="p">-</span><span class="n">-cluster</span> <span class="p">&lt;</span><span class="n">cluster-name</span><span class="p">&gt;</span>
 </code></pre></div></p>
 <p><strong>Note:</strong> Cluster passwords and API tokens are not included in backups for security. After restore, re-enter credentials for each managed PowerScale cluster.</p>
 <hr />

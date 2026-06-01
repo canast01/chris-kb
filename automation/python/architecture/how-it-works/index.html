@@ -3453,33 +3453,33 @@ Python is the dominant language for infrastructure automation, data pipelines, a
 │   │     concurrent.futures = ThreadPoolExecutor / ProcessPoolExecutor; simpler parallelism API    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="o">---</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Async Patterns
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1">## Async Patterns</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Use `asyncio` when automation involves high concurrency (many API calls, multiple SSH connections).
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">Use</span> <span class="err">`</span><span class="n">asyncio</span><span class="err">`</span> <span class="n">when</span> <span class="n">automation</span> <span class="n">involves</span> <span class="n">high</span> <span class="n">concurrency</span> <span class="p">(</span><span class="n">many</span> <span class="n">API</span> <span class="n">calls</span><span class="p">,</span> <span class="n">multiple</span> <span class="n">SSH</span> <span class="n">connections</span><span class="p">)</span><span class="o">.</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Scenario | Use asyncio? |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>|---|---|
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Many concurrent HTTP/API calls | Yes |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Multiple SSH connections in parallel | Yes (with `asyncssh`) |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| CPU-bound data processing | No — use `multiprocessing` |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Simple sequential script | No — adds unnecessary complexity |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="o">|</span> <span class="n">Scenario</span> <span class="o">|</span> <span class="n">Use</span> <span class="n">asyncio</span><span class="err">?</span> <span class="o">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="o">|---|---|</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="o">|</span> <span class="n">Many</span> <span class="n">concurrent</span> <span class="n">HTTP</span><span class="o">/</span><span class="n">API</span> <span class="n">calls</span> <span class="o">|</span> <span class="n">Yes</span> <span class="o">|</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="o">|</span> <span class="n">Multiple</span> <span class="n">SSH</span> <span class="n">connections</span> <span class="ow">in</span> <span class="n">parallel</span> <span class="o">|</span> <span class="n">Yes</span> <span class="p">(</span><span class="k">with</span> <span class="err">`</span><span class="n">asyncssh</span><span class="err">`</span><span class="p">)</span> <span class="o">|</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="o">|</span> <span class="n">CPU</span><span class="o">-</span><span class="n">bound</span> <span class="n">data</span> <span class="n">processing</span> <span class="o">|</span> <span class="n">No</span> <span class="err">—</span> <span class="n">use</span> <span class="err">`</span><span class="n">multiprocessing</span><span class="err">`</span> <span class="o">|</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="o">|</span> <span class="n">Simple</span> <span class="n">sequential</span> <span class="n">script</span> <span class="o">|</span> <span class="n">No</span> <span class="err">—</span> <span class="n">adds</span> <span class="n">unnecessary</span> <span class="n">complexity</span> <span class="o">|</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>```python
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>import asyncio
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>import aiohttp
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="err">```</span><span class="n">python</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>async def fetch_widget(session, name, semaphore):
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    async with semaphore:
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        async with session.get(f&quot;/api/widgets/{name}&quot;) as resp:
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            resp.raise_for_status()
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            return await resp.json()
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_widget</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">semaphore</span><span class="p">):</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">semaphore</span><span class="p">:</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="k">async</span> <span class="k">with</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/api/widgets/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="k">return</span> <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>async def fetch_all(names):
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    sem = asyncio.Semaphore(10)
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    async with aiohttp.ClientSession(base_url=&quot;https://api.example.com&quot;) as s:
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        return await asyncio.gather(*[fetch_widget(s, n, sem) for n in names])
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_all</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    <span class="n">sem</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Semaphore</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">fetch_widget</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">sem</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">])</span>
 </code></pre></div></p>
 <hr />
 <h2 id="containerisation-with-docker">Containerisation with Docker<a class="headerlink" href="#containerisation-with-docker" title="Permanent link">&para;</a></h2>

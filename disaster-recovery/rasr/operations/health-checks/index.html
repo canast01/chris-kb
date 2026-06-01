@@ -4168,18 +4168,18 @@
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### 4. VSS Writer Health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">###</span><span class="w"> </span><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">Writer</span><span class="w"> </span><span class="n">Health</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```powershell
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check VSS writers are in stable state
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>$writers = vssadmin list writers 2&gt;&amp;1
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>$failed = $writers | Select-String &quot;State: \[8\] Failed&quot;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>if ($failed) {
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    Write-Warning &quot;FAIL: VSS writers in failed state:&quot;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    $failed
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>} else {
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    Write-Host &quot;PASS: All VSS writers stable&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>}
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">stable</span><span class="w"> </span><span class="k">state</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vssadmin</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="err">$</span><span class="n">failed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Select</span><span class="o">-</span><span class="n">String</span><span class="w"> </span><span class="ss">&quot;State: \[8\] Failed&quot;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">failed</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="n">Warning</span><span class="w"> </span><span class="ss">&quot;FAIL: VSS writers in failed state:&quot;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="err">$</span><span class="n">failed</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="k">Host</span><span class="w"> </span><span class="ss">&quot;PASS: All VSS writers stable&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="err">}</span>
 </code></pre></div></p>
 <h3 id="5-idrac-media-mapping-test">5. iDRAC Media Mapping Test<a class="headerlink" href="#5-idrac-media-mapping-test" title="Permanent link">&para;</a></h3>
 <p>Test via iDRAC web UI (cannot be scripted without Redfish):</p>

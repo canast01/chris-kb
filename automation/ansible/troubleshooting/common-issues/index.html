@@ -3446,31 +3446,31 @@
 │   │               Fix: rebuild EE image with collection included if running via AWX               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Common Module Errors
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">## Common Module Errors</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Module not found / collection missing
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ansible-galaxy collection install community.general
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sb">```</span>bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Module not found / collection missing</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>community.general
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Verify collection is installed
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ansible-galaxy collection list
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify collection is installed</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># &quot;Temporary failure in name resolution&quot; during package install
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Usually a DNS issue on the managed host — test with:
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ansible webservers -m shell -a &quot;nslookup archive.ubuntu.com&quot;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># &quot;Temporary failure in name resolution&quot; during package install</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Usually a DNS issue on the managed host — test with:</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>ansible<span class="w"> </span>webservers<span class="w"> </span>-m<span class="w"> </span>shell<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;nslookup archive.ubuntu.com&quot;</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># &quot;changed=0&quot; but task should have changed — check idempotency logic
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ansible-playbook site.yml --check --diff
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># &quot;changed=0&quot; but task should have changed — check idempotency logic</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>ansible-playbook<span class="w"> </span>site.yml<span class="w"> </span>--check<span class="w"> </span>--diff
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Register output to inspect what a command returns
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>- name: Check service status
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  ansible.builtin.command: systemctl is-active nginx
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>  register: svc_result
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  ignore_errors: true
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Register output to inspect what a command returns</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>-<span class="w"> </span>name:<span class="w"> </span>Check<span class="w"> </span>service<span class="w"> </span>status
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span>ansible.builtin.command:<span class="w"> </span>systemctl<span class="w"> </span>is-active<span class="w"> </span>nginx
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span>register:<span class="w"> </span>svc_result
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span>ignore_errors:<span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>- name: Show result
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>  ansible.builtin.debug:
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    var: svc_result
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>-<span class="w"> </span>name:<span class="w"> </span>Show<span class="w"> </span>result
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span>ansible.builtin.debug:
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="w">    </span>var:<span class="w"> </span>svc_result
 </code></pre></div></p>
 <h2 id="fact-gathering-issues">Fact Gathering Issues<a class="headerlink" href="#fact-gathering-issues" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manually gather facts for a host</span>
