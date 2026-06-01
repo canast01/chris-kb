@@ -41,6 +41,7 @@
            ▼
   Confirm with owner; clear monitoring alert
 ```
+```
 ┌────────────────────────────────────── Runbook — Service Restart ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -75,6 +76,7 @@
 │    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **Stop here if** logs show a configuration error or missing dependency — fix the root cause before restarting, otherwise the service will fail again immediately.

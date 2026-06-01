@@ -18,6 +18,7 @@ sudo apt-get update && sudo apt-get install terraform
 # Verify
 terraform version
 ```
+```
 ┌──────────────────────────────────── Terraform — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Install Terraform: tfenv for version management; or direct binary from releases.hashicorp.com │   │
@@ -40,6 +41,7 @@ terraform version
 │   │     required_version= constraint in versions.tf; prevents running wrong Terraform version     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Upgrade Terraform In-Place

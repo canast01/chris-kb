@@ -32,6 +32,7 @@ flowchart LR
         auditCmds["ausearch · aureport\nauditd"]
     end
 ```
+```
 ┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │  Command-line reference for day-to-day Linux administration tasks.                                    │
@@ -73,6 +74,7 @@ flowchart LR
 │  symlink     = Symbolic link; pointer to another path, can cross filesystems                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Process Management

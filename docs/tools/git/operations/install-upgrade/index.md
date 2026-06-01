@@ -26,6 +26,7 @@ sudo apt-get install -y git
 # Upgrade only
 sudo apt-get install --only-upgrade git
 ```
+```
 ┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │  Git client and server installation, upgrade paths, and self-hosted platform setup.                   │
@@ -69,6 +70,7 @@ sudo apt-get install --only-upgrade git
 │  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Windows

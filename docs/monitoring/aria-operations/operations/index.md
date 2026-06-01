@@ -33,6 +33,7 @@ Any failed check should be raised in the team channel and tracked in the ops log
 4. Acknowledge all reviewed alerts
 5. Add notes to ServiceNow ticket referencing the alert name and object
 ```
+```
 ┌──────────────────────────────────── Aria Operations — Operations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -75,6 +76,7 @@ Any failed check should be raised in the team channel and tracked in the ops log
 │  Cassandra ring    = Distributed DB health; vracli cassandra status shows ring state                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 If a Remote Collector goes Offline, check:

@@ -30,6 +30,7 @@ psql -U postgres -c "SELECT now() AS current_time;"
 
 # Update application connection string / DNS to point at new primary
 ```
+```
 ┌──────────────────────────────────── Database — Failover Procedure ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ psql -U postgres -c "SELECT now() AS current_time;"
 │    Split-brain    = Two nodes both believe they are primary; never promote without fencing            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### MySQL — MHA (Master High Availability)

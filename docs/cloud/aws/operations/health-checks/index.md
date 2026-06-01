@@ -19,6 +19,7 @@ aws health describe-events \
 # Current caller identity (confirm correct account/role)
 aws sts get-caller-identity
 ```
+```
 ┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Health verification procedures for EC2 instances, load balancers, RDS, and services.                 │
@@ -64,6 +65,7 @@ aws sts get-caller-identity
 │  Route 53 health = External probe; fails DNS failover if endpoint unreachable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

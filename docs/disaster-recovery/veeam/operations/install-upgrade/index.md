@@ -34,6 +34,7 @@ flowchart TD
     class jobCheck decision
     class start,done terminal
 ```
+```
 ┌────────────────────────────────────── Veeam — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -84,6 +85,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Store the config backup off the Backup Server — it is useless if the server hosting it is lost.

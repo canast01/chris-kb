@@ -22,6 +22,7 @@ Always attach a support bundle when opening a case.
 ```text
 Administration > Support > Generate Support Bundle
 ```
+```
 ┌───────────────────────────────────── Aria Operations Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │  SR process, P1/P2 severity definitions, and TAM engagement for Aria Operations.                      │
@@ -65,6 +66,7 @@ Administration > Support > Generate Support Bundle
 │  Upgrade Corruption  = Data or config damaged by failed upgrade; always P1/P2                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

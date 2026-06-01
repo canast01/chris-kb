@@ -55,6 +55,7 @@ flowchart TD
     B -- Veeam Rep --> Z[Get-VBRJob type Replica\nCheck last session result]
     Z --> AA[Review session log\nCheck network path to replica host]
 ```
+```
 ┌───────────────────────────────── Replication Failure Troubleshooting ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -89,6 +90,7 @@ flowchart TD
 │    RPO breach  = Lag exceeds configured RPO target; escalate immediately as DR goal at risk           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### SRDF Error Codes

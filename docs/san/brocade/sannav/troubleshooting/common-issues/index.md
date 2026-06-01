@@ -48,6 +48,7 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 # Step 4: If traps arrive but are discarded, check community/credential mismatch
 # Ensure SNMPv3 credentials on switch match what SANnav has configured
 ```
+```
 ┌─────────────────────────── Brocade SANnav — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │
 │  Common SANnav issues: switch unreachable, zone push fail, auth error, stale data, UI slow.           │
@@ -93,6 +94,7 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 If disk is > 85% full: purge old performance data. Navigate to **Administration > System > Data Retention** and reduce the retention period for historical data.

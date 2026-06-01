@@ -63,6 +63,7 @@ autosupport send <case-number>
 support bundle generate
 # Bundle is saved to /ddr/var/support/ — download via SCP or SFTP
 ```
+```
 ┌───────────────────────────────────── Dell Data Domain Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -89,6 +90,7 @@ support bundle generate
 │    Maintenance window= Coordinate hardware replacement with ops team; some replacements hot-swap      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 1. **Online case** — open via [https://www.dell.com/support](https://www.dell.com/support) for non-urgent issues

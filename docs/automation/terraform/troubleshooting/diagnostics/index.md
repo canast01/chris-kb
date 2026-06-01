@@ -33,6 +33,7 @@ graph LR
     symptom --> debugLog
     debugLog --> resolved
 ```
+```
 ┌─────────────────────────────────────── Terraform — Diagnostics ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Terraform diagnostic sequence: capture logs → inspect plan JSON → check state → verify auth  │   │
@@ -52,6 +53,7 @@ graph LR
 │   │       .resource_changes= JSON field listing all planned changes with before/after values      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## State Inspection

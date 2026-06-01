@@ -107,6 +107,7 @@ CONTACT:
 Primary: Chris Anastasiadis, platform-team@example.com, +44-xxx-xxx-xxxx
 Secondary: [Platform Lead name + contact]
 ```
+```
 ┌──────────────────────────────────────── ServiceNow Escalation ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -150,6 +151,7 @@ Secondary: [Platform Lead name + contact]
 │  Reproduce   = confirm issue in sub-production instance to isolate platform vs config                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Rollback Request Criteria

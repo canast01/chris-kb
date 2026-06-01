@@ -24,6 +24,7 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
+```
 ┌───────────────────────────────────── GitHub Actions — Hardening ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Harden GitHub Actions against supply chain attacks, secret exposure, and privilege abuse   │   │
@@ -46,6 +47,7 @@ flowchart TD
 │   │ Audit log        = org-level log of all Actions events; export to SIEM for long-term retention│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Branch Protection

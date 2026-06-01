@@ -30,6 +30,7 @@ graph LR
     checkLogs -->|Warnings| devMode
     devMode --> resolved
 ```
+```
 ┌──────────────────────────────────────── Python — Diagnostics ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Python diagnostic sequence: reproduce → inspect traceback → pdb debug → add logging      │   │
@@ -50,6 +51,7 @@ graph LR
 │   │   -W error       = treat warnings as errors; catches deprecation warnings before they break   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Import and Module Diagnostics

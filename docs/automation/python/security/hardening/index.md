@@ -30,6 +30,7 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
+```
 ┌───────────────────────────────────────── Python — Hardening ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Harden Python automation: input validation, subprocess safety, dep pinning, pre-commit hooks │   │
@@ -52,6 +53,7 @@ flowchart TD
 │   │   SBOM          = Software Bill of Materials; list all deps + versions for compliance audit   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## File and Permission Security

@@ -28,6 +28,7 @@ sequenceDiagram
     Admin->>Admin: version — confirm both CPs on new FOS
     Admin->>Fabric: switchshow, fabricshow — verify fabric intact
 ```
+```
 ┌─────────────────────────────── Brocade Fabric OS — Install and Upgrade ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -80,6 +81,7 @@ sequenceDiagram
 │    One fabric     = Upgrade one fabric completely before touching the peer fabric                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 3. Connect ISL cables to the edge ports of the core switch.

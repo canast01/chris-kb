@@ -41,6 +41,7 @@ Pre-Change Baseline Sequence
                           ▼
                  PROCEED WITH CHANGE
 ```
+```
 ┌─────────────────────────────── Pre-Change Checks — Before Maintenance ────────────────────────────────┐
 │                                                                                                       │
 │    Verify platform is healthy before any host maintenance, upgrade, or config change                  │
@@ -73,6 +74,7 @@ Pre-Change Baseline Sequence
 │    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## 3. Active Alarms

@@ -19,6 +19,7 @@ boxmgmt cg check_cg <CG-name>
 boxmgmt list cg
 boxmgmt system status
 ```
+```
 ┌──────────────────────────────────── RecoverPoint — Common Issues ─────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -56,6 +57,7 @@ boxmgmt system status
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **RP4VM software splitter (ESXi):**

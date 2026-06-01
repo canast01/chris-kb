@@ -29,6 +29,7 @@ Pure1 > Administration > Single Sign-On > Configure
   - role claim → Admin or Read-only (via IdP group claim)
 - Enable SCIM for automatic user provisioning/deprovisioning
 ```
+```
 ┌────────────────────────────────────────── Pure1 — Security ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ Pure1 > Administration > Single Sign-On > Configure
 │  API key rotation = RSA key pair rotated annually per security policy                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Authentication Flow (RSA Key)

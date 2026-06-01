@@ -32,6 +32,7 @@ ansible-playbook -i inventory/ baseline-check.yml --check --diff
 # Show facts (current config state)
 ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 ```
+```
 ┌───────────────────────────── Inventory — Configuration Management (CMDB) ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,6 +63,7 @@ ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 │    Reconciliation= Compare discovered data vs CMDB; find stale or missing records                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Drift Detection — Linux

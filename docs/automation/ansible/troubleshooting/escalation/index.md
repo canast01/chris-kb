@@ -24,6 +24,7 @@ flowchart LR
     L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
     L3 --> Vendor[Red Hat Support\nor GitHub issue]
 ```
+```
 ┌──────────────────────────────────────── Ansible — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Escalate Ansible issues when: AWX pod crash-loops, Vault key lost, bulk playbook failures   │   │
@@ -47,6 +48,7 @@ flowchart LR
 │   │          SLA              = AAP Premium: 1-hour response for Sev 1; Standard: 4 hours         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## Community Escalation (Open Source)

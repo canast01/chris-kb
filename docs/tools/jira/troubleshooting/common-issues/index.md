@@ -45,6 +45,7 @@ grep "Pause Full" /opt/atlassian/jira/logs/gc.log | tail -20
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)
 jcmd "${JIRA_PID}" GC.heap_info
 ```
+```
 ┌──────────────────────────────────────── Jira — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -88,6 +89,7 @@ jcmd "${JIRA_PID}" GC.heap_info
 │  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Analyse with Eclipse Memory Analyser Tool (MAT) to identify leaking object graph.

@@ -36,6 +36,7 @@ kubectl describe pod <pod-name> -n prelude
 # List services
 kubectl get svc -n prelude
 ```
+```
 ┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │
@@ -79,6 +80,7 @@ kubectl get svc -n prelude
 │  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Deployments

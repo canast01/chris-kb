@@ -33,6 +33,7 @@ flowchart TD
     class q1,snapQ decision
     class fail terminal
 ```
+```
 ┌──────────────────────────────────────── Veeam — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -70,6 +71,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.

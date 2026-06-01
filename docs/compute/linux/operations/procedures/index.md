@@ -22,6 +22,7 @@ dpkg -l | awk 'NR>5' > /tmp/pre-change-packages.txt   # Ubuntu
 # Capture running kernel
 uname -r
 ```
+```
 ┌──────────────────────────────────── Linux Operations — Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ uname -r
 │  certbot     = ACME client for Let's Encrypt; automates TLS cert issuance and renewal                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Memory

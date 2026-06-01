@@ -26,6 +26,7 @@ curl -u user:token \
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
 ```
+```
 ┌──────────────────────────────────── Confluence — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,6 +70,7 @@ curl -u user:token \
 │  WAL          = Write-Ahead Log; PostgreSQL durability mechanism, source for replication              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Note: updating a template does not retroactively change pages already created from it.

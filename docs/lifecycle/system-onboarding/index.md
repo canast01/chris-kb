@@ -16,6 +16,7 @@ flowchart LR
     E --> F[CMDB &\nDocumentation]
     F --> G[Handover to\nApp / Ops Team]
 ```
+```
 ┌────────────────────────────────────────── System Onboarding ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -49,6 +50,7 @@ flowchart LR
 │    Vault entry   = Admin credentials stored in CyberArk/vault; no shared spreadsheet creds            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## 2. OS Hardening and Security Baseline

@@ -70,6 +70,7 @@ ls -lh /opt/sannav/backups/
 scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
     bkp-user@backup-server.corp.example.com:/backups/sannav/dc1/
 ```
+```
 ┌───────────────────────────────── Brocade SANnav — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │  SANnav backup covers config DB, performance data, zone snapshots, and switch firmware.               │
@@ -115,6 +116,7 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 │  Restore test    = quarterly test of full restore to validate backup integrity                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

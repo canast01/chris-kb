@@ -57,6 +57,7 @@ flowchart TD
     U -- No --> V[Fix CDP / add OCSP proxy]
     U -- Yes --> W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]
 ```
+```
 ┌─────────────────────────────────────── Authentication Failures ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -92,6 +93,7 @@ flowchart TD
 │    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### 3. Clock Skew Detection

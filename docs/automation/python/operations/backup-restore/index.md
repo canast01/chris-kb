@@ -38,6 +38,7 @@ git ls-files --others --exclude-standard
 git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
 ```
+```
 ┌────────────────────────────────────── Python — Backup & Restore ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Python script backup: git is the source of truth; include lock file for reproducibility    │   │
@@ -60,6 +61,7 @@ git push origin v1.4.2
 │   │     Python version = document in .python-version (pyenv) or pyproject.toml requires-python    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Offline package cache (air-gapped environments)

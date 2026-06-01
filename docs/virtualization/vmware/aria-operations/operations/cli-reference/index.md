@@ -44,6 +44,7 @@ Aria Operations — CLI Command Reference Map
 │  GET  /api/cluster/nodes        node status         │
 └─────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
@@ -87,6 +88,7 @@ Aria Operations — CLI Command Reference Map
 │  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Adapter Management

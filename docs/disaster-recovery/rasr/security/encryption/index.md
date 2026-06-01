@@ -37,6 +37,7 @@ pstcli --action show --object cluster | grep -i encrypt
 # View individual drive encryption status
 uemcli /stor/drive show -detail | grep -i encrypt
 ```
+```
 ┌────────────────────────────────────────── RASR — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -76,6 +77,7 @@ uemcli /stor/drive show -detail | grep -i encrypt
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ```bash

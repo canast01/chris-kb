@@ -35,6 +35,7 @@ smartctl -a /dev/sda | grep -E "Serial|Model|Capacity|Health"
 ip link show | awk '/^[0-9]/{print $2}'
 ethtool <interface> | grep -E "Speed|Duplex"
 ```
+```
 ┌───────────────────────────────────── Inventory — Asset Tracking ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -70,6 +71,7 @@ ethtool <interface> | grep -E "Speed|Duplex"
 │    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Azure

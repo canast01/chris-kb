@@ -36,6 +36,7 @@ Open `https://<vra-fqdn>:5480` in a browser.
 ```text
 Lifecycle Management → Backup → Add Backup Location
 ```
+```
 ┌──────────────────────────────── Aria Automation — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │  Backup covers vRA Postgres DB, Orchestrator, file-based config, and vIDM state.                      │
@@ -79,6 +80,7 @@ Lifecycle Management → Backup → Add Backup Location
 │  NFS backup target = Network storage mount where backup archives are written and retained             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Recommended:

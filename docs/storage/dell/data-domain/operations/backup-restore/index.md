@@ -30,6 +30,7 @@ graph TD
     ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
     ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
 ```
+```
 ┌───────────────────────────────── Dell Data Domain Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ graph TD
 │    Resume rep       = After DR recovery, resume replication and resync from primary                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Resume after the restore completes:

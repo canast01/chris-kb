@@ -37,6 +37,7 @@ SCG admin UI > System Settings > About
 Note the installed version and compare to the latest on Dell Support Portal:
 support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 ```
+```
 ┌────────────────────────────────── Dell AIOps — Lifecycle Management ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 │  Admin CLI = aiops-admin command-line tool for backup, upgrade, and service management                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## API Lifecycle

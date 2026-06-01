@@ -24,6 +24,7 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
+```
 ┌─────────────────────────────────────── Python — CLI Reference ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │         Essential Python CLI commands for development, testing, and package management        │   │
@@ -52,6 +53,7 @@ graph LR
 │   │  ruff         = replaces flake8 + black + isort; configured in [tool.ruff] in pyproject.toml  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

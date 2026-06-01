@@ -44,6 +44,7 @@ tc qdisc add dev eth0 root netem loss 20%
 # Remove after test
 tc qdisc del dev eth0 root
 ```
+```
 ┌──────────────────────────────────── Performance — Failure Testing ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -73,6 +74,7 @@ tc qdisc del dev eth0 root
 │    Rollback       = Restore normal state after test; documented before injection starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Application Resilience Tests

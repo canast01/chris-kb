@@ -63,6 +63,7 @@ flowchart TD
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff
 ```
+```
 ┌─────────────────────────────────────── SRDF/S — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -100,6 +101,7 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

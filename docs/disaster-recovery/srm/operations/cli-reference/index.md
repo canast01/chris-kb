@@ -39,6 +39,7 @@ flowchart TD
     class vm1,vm2,vm3,vm4 vm
     class step1,step2,step3,step4,step5,step6 step
 ```
+```
 ┌───────────────────────────────────────── SRM — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

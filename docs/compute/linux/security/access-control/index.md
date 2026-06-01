@@ -30,6 +30,7 @@ chmod 1775 /opt/shared
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
 ```
+```
 ┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  Access control on Linux: DAC permissions, SELinux MAC, ACLs, and sudo delegation.                    │
@@ -71,6 +72,7 @@ chmod 2775 /opt/projects
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Mandatory Access Control — SELinux (RHEL)

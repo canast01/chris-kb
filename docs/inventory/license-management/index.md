@@ -33,6 +33,7 @@ rpm -qa --qf "%{NAME} %{VERSION}-%{RELEASE}\n" | sort
 # Running processes (for unlicensed software audit)
 ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
 ```
+```
 ┌─────────────────────────────────── Inventory — License Management ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,6 +64,7 @@ ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
 │    SCCM         = Microsoft System Center; discovers installed software for licence counting          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## License Utilisation — Common Products

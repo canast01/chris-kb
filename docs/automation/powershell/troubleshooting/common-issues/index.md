@@ -25,6 +25,7 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
+```
 ┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                       Most frequent PowerShell failures and their fixes                       │   │
@@ -49,6 +50,7 @@ flowchart TD
 │   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Debugging Scripts

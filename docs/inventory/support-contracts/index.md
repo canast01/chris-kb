@@ -36,6 +36,7 @@ awk -F',' 'NR>1 {
   if (days < 0) printf "EXPIRED: %s | %s | %d days ago | Owner: %s\n", $1, $2, -days, $5
 }' support-contracts.csv
 ```
+```
 ┌──────────────────────────────────── Inventory — Support Contracts ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -71,6 +72,7 @@ awk -F',' 'NR>1 {
 │    SLA breach   = Vendor misses response time; escalate to account manager immediately                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Renewal Process

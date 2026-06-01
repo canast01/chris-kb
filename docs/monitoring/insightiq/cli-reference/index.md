@@ -25,6 +25,7 @@ tail -f /var/log/insightiq/insightiq.log
 # Check disk space (InsightIQ database can grow large)
 df -h /home/insightiq
 ```
+```
 ┌────────────────────────────────────── InsightIQ — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ df -h /home/insightiq
 │  Backup target = NFS mount or local directory configured in iiq_config                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

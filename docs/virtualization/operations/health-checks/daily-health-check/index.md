@@ -47,6 +47,7 @@ Morning Check Sequence
   │    All success? ├─── OK ──►  DONE — record results
   └─────────────────┘
 ```
+```
 ┌──────────────────────────────── Daily Health Check — Morning Sequence ────────────────────────────────┐
 │                                                                                                       │
 │    Run every morning; target completion under 15 minutes; document failures in the change log         │
@@ -74,6 +75,7 @@ Morning Check Sequence
 │    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## 3. Cluster HA / DRS

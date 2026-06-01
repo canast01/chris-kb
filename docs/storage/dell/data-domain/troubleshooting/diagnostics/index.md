@@ -23,6 +23,7 @@ flowchart TD
     K -->|No| M["support bundle generate\nEscalate to Dell"]
     D & F & H & J & L & M --> Z([Resolution])
 ```
+```
 ┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ flowchart TD
 │    alerts show    = Check for active hardware or software alerts; review before escalating            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

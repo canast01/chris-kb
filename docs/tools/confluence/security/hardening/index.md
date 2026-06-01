@@ -18,6 +18,7 @@ Administrator account policy:
 - Admin accounts reviewed and recertified quarterly
 - Admin sessions expire after 60–120 minutes (configure via session timeout)
 ```
+```
 ┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,6 +62,7 @@ Administrator account policy:
 │  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Security Configuration Hardening

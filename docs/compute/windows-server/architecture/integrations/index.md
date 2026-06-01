@@ -24,6 +24,7 @@ flowchart TD
     dc --- sysvol
     client -->|"GPO download"| sysvol
 ```
+```
 ┌──────────────────────────────────── Windows Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server integrations: Azure AD, VMware, monitoring tools, and enterprise apps.                │
@@ -67,6 +68,7 @@ flowchart TD
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Maintenance windows control reboot scheduling:

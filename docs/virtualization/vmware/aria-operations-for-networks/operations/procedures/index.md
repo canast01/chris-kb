@@ -41,6 +41,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
     "enabled": true
   }' | python3 -m json.tool
 ```
+```
 ┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │
@@ -84,6 +85,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 │  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Verify in AON within 5–10 minutes:

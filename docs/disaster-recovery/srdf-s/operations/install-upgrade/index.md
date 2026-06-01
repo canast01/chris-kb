@@ -22,6 +22,7 @@ Verify current version:
 ```bash
 symcfg list -v | grep "Microcode"
 ```
+```
 ┌───────────────────────────────────── SRDF/S — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ symcfg list -v | grep "Microcode"
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

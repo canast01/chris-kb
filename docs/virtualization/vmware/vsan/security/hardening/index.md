@@ -37,6 +37,7 @@ HARDENING LAYERS
   │  └── Aria Operations → SCG compliance score          │
   └──────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────────── vSAN — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN hardening includes ESXi host hardening, vSAN network isolation, data-at-rest                    │
@@ -82,6 +83,7 @@ HARDENING LAYERS
 │  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Service baseline:**

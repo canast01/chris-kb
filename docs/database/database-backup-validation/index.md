@@ -19,6 +19,7 @@ pgbackrest --stanza=<stanza-name> info --output=json | jq '.[] | .backup[-1]'
 # Check WAL archiving is current
 psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;"
 ```
+```
 ┌──────────────────────────────────── Database — Backup Validation ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_w
 │    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Backup File Integrity Check

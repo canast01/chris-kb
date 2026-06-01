@@ -27,6 +27,7 @@ flowchart TD
     uiCheck -->|"Context issue"| dumpCtx --> identify
     uiCheck -->|"Logs clear"| runLogs --> identify
 ```
+```
 ┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │GitHub Actions diagnostic sequence: enable debug → inspect logs → check runner → verify secrets│   │
@@ -46,6 +47,7 @@ flowchart TD
 │   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Inspecting Workflow Runs

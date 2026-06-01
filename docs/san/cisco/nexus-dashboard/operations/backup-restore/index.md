@@ -74,6 +74,7 @@ acs backup status
 # List available backups
 acs backup list
 ```
+```
 ┌───────────────────────── Cisco Nexus Dashboard — Operations Backup & Restore ─────────────────────────┐
 │                                                                                                       │
 │  Cluster configuration backup to remote storage; restore via UI or CLI for DR recovery.               │
@@ -119,6 +120,7 @@ acs backup list
 │  Version match  = Restore requires identical ND software version as backup source                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

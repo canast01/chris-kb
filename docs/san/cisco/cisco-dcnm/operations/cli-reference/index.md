@@ -37,6 +37,7 @@ systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
 ```
+```
 ┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM management CLI and key NX-OS MDS commands for fabric operations and troubleshooting.            │
@@ -82,6 +83,7 @@ systemctl restart dcnm-events
 │  netstat -tlnp    = verify DCNM port 443 is listening; basic health check                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Network Diagnostics

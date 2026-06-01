@@ -45,6 +45,7 @@ ssh version 2
 show ssh server
 show users
 ```
+```
 ┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
 │                                                                                                       │
 │  Management-plane TLS and FC-SP fabric encryption protecting MDS switch communications.               │
@@ -90,6 +91,7 @@ show users
 │  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### HTTPS Certificate Management

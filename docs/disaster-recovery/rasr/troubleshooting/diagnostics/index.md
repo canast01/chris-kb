@@ -34,6 +34,7 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
     Select-Object TimeCreated, Id, LevelDisplayName, Message |
     Export-Csv "C:\Temp\RASR-AppEvents.csv" -NoTypeInformation
 ```
+```
 ┌───────────────────────────────────────── RASR — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -73,6 +74,7 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

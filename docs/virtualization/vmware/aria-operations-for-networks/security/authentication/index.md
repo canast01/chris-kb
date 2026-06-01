@@ -31,6 +31,7 @@ Change password:
 ```text
 Settings → My Account → Change Password
 ```
+```
 ┌───────────────────────────────────────── vRNI Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Local, LDAP, vIDM SSO, and API token authentication methods for vRNI.                                │
@@ -74,6 +75,7 @@ Settings → My Account → Change Password
 │  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 Attribute mapping in vIDM:

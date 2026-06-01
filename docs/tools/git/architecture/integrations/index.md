@@ -42,6 +42,7 @@ jobs:
       - name: Test
         run: go test -race ./...
 ```
+```
 ┌───────────────────────────────────────── Git — Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Git integrations: CI/CD pipelines, issue tracking, IaC tools, and IDE plugins.                       │
@@ -85,6 +86,7 @@ jobs:
 │  Artifact       = built output (container, binary) published on tag push to registry                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Predefined CI/CD variables:

@@ -20,6 +20,7 @@ Hierarchy:
       └── Space Permissions (who can access and edit within a space)
               └── Page Restrictions (who can view/edit a specific page)
 ```
+```
 ┌───────────────────────────────────── Confluence — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,6 +63,7 @@ Hierarchy:
 │  Audit trail       = Admin > Audit Log records all permission changes with timestamp                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ```yaml

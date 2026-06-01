@@ -30,6 +30,7 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
+```
 ┌──────────────────────────────────────── Terraform — Hardening ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Terraform hardening: secure state backend, restrict apply access, scan configs, pin versions │   │
@@ -52,6 +53,7 @@ graph LR
 │   │       CloudTrail on S3= logs every GetObject/PutObject on state bucket; full audit trail      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## Dependency and Provider Security

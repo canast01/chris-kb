@@ -16,6 +16,7 @@ Encrypted Property Groups store sensitive key-value pairs at the Aria Automation
 ```text
 Infrastructure → Configure → Property Groups → New Property Group → Encrypted
 ```
+```
 ┌──────────────────────────────────── Aria Automation — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  vRA encrypts data in transit (TLS 1.2+) and at rest (vRA secrets store + vCenter D@RE).              │
@@ -59,6 +60,7 @@ Infrastructure → Configure → Property Groups → New Property Group → Encr
 │  Cert expiry alert = LCM warns 30 days before cert expiry; schedule rotation in advance               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```yaml
 
 Provide:

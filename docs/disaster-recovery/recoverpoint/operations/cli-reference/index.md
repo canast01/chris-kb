@@ -50,6 +50,7 @@ flowchart TD
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
 ```
+```
 ┌──────────────────────────────────── RecoverPoint — CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -90,6 +91,7 @@ flowchart TD
 │    failback         = CLI command to reverse replication after failover; requires resync first        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### Image Access (CG Operations)

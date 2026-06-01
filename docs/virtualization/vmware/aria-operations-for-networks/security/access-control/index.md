@@ -32,6 +32,7 @@ Settings → Authentication → LDAP → Configure
   Group Attribute: memberOf
   Test Connection → "Connection successful"
 ```
+```
 ┌───────────────────────────────────────── vRNI Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Admin and Member roles, LDAP group mapping, and access control for vRNI.                             │
@@ -75,6 +76,7 @@ Settings → Authentication → LDAP → Configure
 │  Audit Log            = Records user login, config changes, and data source edits                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Disable unused local accounts:

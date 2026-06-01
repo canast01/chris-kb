@@ -33,6 +33,7 @@ EKS CLI: Cluster → Nodes → Workloads
          │proxy   │   │         │   │            │
          └────────┘   └─────────┘   └────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — EKS ────────────────────────────────────────────┐
 │                                                                                                       │
 │  EKS CLI commands for cluster management, node groups, add-ons, and kubeconfig.                       │
@@ -78,6 +79,7 @@ EKS CLI: Cluster → Nodes → Workloads
 │  IRSA            = IAM Roles for Service Accounts; pods assume IAM roles via OIDC                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Fargate Profiles

@@ -49,6 +49,7 @@ Post-Change Validation Flow
                 ▼
          CLOSE CHANGE RECORD
 ```
+```
 ┌─────────────────────────────────────── Post-Change Validation ────────────────────────────────────────┐
 │                                                                                                       │
 │    Run after any change — maintenance, upgrade, patch, or config modification                         │
@@ -76,6 +77,7 @@ Post-Change Validation Flow
 │    Monitoring alert = Any new alert fired after change = likely caused by the change; triage          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## NSX (if change was NSX-related)

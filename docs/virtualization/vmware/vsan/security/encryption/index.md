@@ -22,6 +22,7 @@ vCenter (Key Management Service client)
                     └── Data Encryption Key (DEK) — per disk group
                             └── Encrypted data on disk
 ```
+```
 ┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
@@ -67,6 +68,7 @@ vCenter (Key Management Service client)
 │  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **From vCenter UI:**

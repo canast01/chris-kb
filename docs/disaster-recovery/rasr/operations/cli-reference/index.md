@@ -12,6 +12,7 @@ CLI Reference reference covering rasrutil.exe — Primary Command-Line Interface
 ```text
 C:\Program Files\Dell\RASR\rasrutil.exe
 ```
+```
 ┌──────────────────────────────────────── RASR — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ C:\Program Files\Dell\RASR\rasrutil.exe
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

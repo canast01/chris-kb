@@ -66,6 +66,7 @@ for r in d.get('results', []):
 "
 # Expected: action=DROP
 ```
+```
 ┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  CIS NSX benchmark, API security, DFW default-deny, and lockdown posture.                             │
@@ -111,6 +112,7 @@ for r in d.get('results', []):
 │  NTP         = time sync; required for cert validity and log correlation                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

@@ -14,6 +14,7 @@ All vCenter and NSX cloud accounts must show a green status indicator:
 ```text
 Infrastructure → Connections → Cloud Accounts
 ```
+```
 ┌─────────────────────────────────── Aria Automation — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │  Daily health checks cover service status, cloud account sync, Orchestrator, and vIDM.                │
@@ -57,6 +58,7 @@ Infrastructure → Connections → Cloud Accounts
 │  Catalog visible   = Consumer role user sees expected items in self-service portal                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

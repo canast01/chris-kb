@@ -86,6 +86,7 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
+```
 ┌──────────────────────────────────────── Ansible — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │        Common Ansible ops: rolling OS patching, credential rotation, inventory cleanup        │   │
@@ -108,6 +109,7 @@ graph LR
 │   │     pre_tasks     = tasks that run before roles in a play; use for health checks and drain    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Tags

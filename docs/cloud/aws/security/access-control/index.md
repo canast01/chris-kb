@@ -41,6 +41,7 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
   ]
 }
 ```
+```
 ┌─────────────────────────── AWS Access Control — Least-Privilege IAM Design ───────────────────────────┐
 │                                                                                                       │
 │  Layered access control using IAM policies, SCPs, permission boundaries, and resource policies.       │
@@ -86,6 +87,7 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
 │  Wildcard action = iam:* or s3:* in a policy grants all actions — avoid in production                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

@@ -29,6 +29,7 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
+```
 ┌───────────────────────────────────── CloudIQ — Scripts Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Pagination = Handling limit/offset for large result sets in API responses                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Create ServiceNow Incident on CRITICAL Alert (Event-Driven)

@@ -100,6 +100,7 @@ flowchart TD
     P --> Q[Runbook Updated if Required]
     Q --> R[Report Signed Off\nFiled in GRC System]
 ```
+```
 ┌───────────────────────────────── Data Protection — Recovery Testing ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -135,6 +136,7 @@ flowchart TD
 │    Restore report    = Formal record of test result; filed for audit evidence                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```yaml
 
 DataLabs is ideal for:

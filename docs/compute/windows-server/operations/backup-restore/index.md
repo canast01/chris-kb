@@ -18,6 +18,7 @@ Start-Process -Wait -FilePath "VeeamAgentWindows.exe" -ArgumentList "/silent /ac
 # Verify service is running
 Get-Service -Name "Veeam Agent for Microsoft Windows"
 ```
+```
 ┌───────────────────────────────── Windows Server — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server backup strategies: VSS-based backups, AD backup, and Hyper-V checkpoints.             │
@@ -61,6 +62,7 @@ Get-Service -Name "Veeam Agent for Microsoft Windows"
 │  Test restore = periodic recovery drill; validates backup integrity                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Windows Server Backup (WSB)

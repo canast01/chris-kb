@@ -10,6 +10,7 @@ Sizing guidelines, design standards, and best practices.
 ```text
 <site>-<role>-<nn>
 ```
+```
 ┌────────────────────────────────────── Linux — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@ Sizing guidelines, design standards, and best practices.
 │  XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Sudo access granted via AD group membership:

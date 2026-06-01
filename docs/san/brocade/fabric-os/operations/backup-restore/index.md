@@ -28,6 +28,7 @@ flowchart TD
     style change fill:#2563eb,color:#fff
     style failure fill:#dc2626,color:#fff
 ```
+```
 ┌─────────────────────────────── Brocade Fabric OS — Backup and Restore ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -80,6 +81,7 @@ flowchart TD
 │    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Restore Notes

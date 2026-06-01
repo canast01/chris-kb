@@ -53,6 +53,7 @@ flowchart TD
   class REJECT badNode
   class AAA,FCSP decisionNode
 ```
+```
 ┌───────────────────────────────── Cisco MDS — Security Authentication ─────────────────────────────────┐
 │                                                                                                       │
 │  Multi-layer authentication covering management plane, fabric login, and data-plane security.         │
@@ -98,6 +99,7 @@ flowchart TD
 │  FLOGI          = Fabric Login; N_Port to switch handshake where FC-SP auth occurs                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### TACACS+ Key Encryption

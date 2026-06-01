@@ -31,6 +31,7 @@ get service http
 get service manager
 get service controller
 ```
+```
 ┌───────────────────────────────────────── NSX — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX Manager CLI, Edge Node CLI, and REST API commands for operations.                                │
@@ -76,6 +77,7 @@ get service controller
 │  node-uuid     = unique ID of NSX appliance; used in API paths                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### NTP and Time

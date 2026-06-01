@@ -41,6 +41,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
   "https://<vra-fqdn>/iaas/api/cloud-accounts/<account-id>/data-collection"
 ```
+```
 ┌─────────────────────────────────── Aria Automation — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  Aria Automation integrates with identity, monitoring, ITSM, and cloud endpoints.                     │
@@ -84,6 +85,7 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 │  Cost integration = Aria Operations cost data surfaced in vRA to show estimated spend per item        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

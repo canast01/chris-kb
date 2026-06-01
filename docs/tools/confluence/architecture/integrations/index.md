@@ -22,6 +22,7 @@ The Confluence–Jira integration is Atlassian's flagship integration and runs b
 Confluence Admin URL:
   https://confluence.example.com/admin/applinks/listApplicationLinks.action
 ```
+```
 ┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ Confluence Admin URL:
 │  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.

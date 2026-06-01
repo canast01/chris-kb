@@ -45,6 +45,7 @@ Escalation Path — Broadcom / VMware Support
   │       for prolonged P1 outages                 │
   └─────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate vCenter issues to VMware GSS when self-service troubleshooting exhausts                     │
@@ -90,6 +91,7 @@ Escalation Path — Broadcom / VMware Support
 │  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 **From VCSA shell (`vm-support` bundle):**

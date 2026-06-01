@@ -26,6 +26,7 @@ flowchart LR
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
 ```
+```
 ┌─────────────────────────────── Data Protection — Data Retention Policy ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,6 +64,7 @@ flowchart LR
 │    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```ini
 
 ---

@@ -27,6 +27,7 @@ curl -s -X POST \
   -d '{"key":"value"}' \
   https://api.example.com/v1/resource | jq .
 ```
+```
 ┌─────────────────────────────────── Integration — API Connectivity ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,6 +59,7 @@ curl -s -X POST \
 │    openssl s_client= Test TLS handshake; shows cert chain, expiry, cipher negotiated                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Authentication Checks

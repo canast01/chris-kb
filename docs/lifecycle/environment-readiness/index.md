@@ -18,6 +18,7 @@ flowchart TD
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
 ```
+```
 ┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -51,6 +52,7 @@ flowchart TD
 │    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## 2. Network Readiness

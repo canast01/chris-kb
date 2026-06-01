@@ -28,6 +28,7 @@ authentication roles assign role backup-operator group <ldap-group-name>
 # List current users and roles
 user show
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,6 +64,7 @@ user show
 │    Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Log entries include: user logins, configuration changes, retention lock events, filesystem operations, and administrative commands. The audit log should be forwarded to a SIEM that retains logs for at least 12 months.

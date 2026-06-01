@@ -26,6 +26,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  └──────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │
@@ -71,6 +72,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  Replication lag= time delta between protected and recovery replica                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

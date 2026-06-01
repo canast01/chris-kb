@@ -25,6 +25,7 @@ chronyc makestep
 # Show recent drift history
 chronyc tracking | grep -E "offset|frequency|drift"
 ```
+```
 ┌────────────────────────────── Integration — Time Synchronization (NTP) ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ chronyc tracking | grep -E "offset|frequency|drift"
 │    w32tm        = Windows NTP tool; /query /status shows source, stratum, offset                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## ntpd (Legacy)

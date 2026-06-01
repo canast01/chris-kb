@@ -24,6 +24,7 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_3 # Should succeed
 openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer
 ```
+```
 ┌────────────────────────────────────────── NSX — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │
 │  IPSec VPN, L2 VPN, TLS API, GENEVE overlay, and NSX certificate management.                          │
@@ -69,6 +70,7 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
 │  Policy-based= IPSec with selectors; legacy; no dynamic routing                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 When FIPS mode is enabled, NSX Manager, Edge nodes, and ESXi host agents must all run FIPS-compliant builds.

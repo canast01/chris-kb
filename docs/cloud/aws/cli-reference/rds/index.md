@@ -32,6 +32,7 @@ RDS CLI: Instances · Snapshots · Events
   └──────────────┘ │  replica     │ └──────────────────┘
                    └──────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — RDS ────────────────────────────────────────────┐
 │                                                                                                       │
 │  RDS CLI commands for instance lifecycle, snapshots, parameter groups, and failover.                  │
@@ -77,6 +78,7 @@ RDS CLI: Instances · Snapshots · Events
 │  Maintenance window= Weekly scheduled time for RDS to apply updates                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Parameter Groups

@@ -47,6 +47,7 @@ flowchart TD
     class vcenter host
     class obj cloud
 ```
+```
 ┌──────────────────────────────────────── Veeam — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -90,6 +91,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

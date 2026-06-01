@@ -25,6 +25,7 @@ cat /var/lib/nd/version.txt
 # View logs
 kubectl logs -n nd-base <pod_name>
 ```
+```
 ┌─────────────────────────────────── Nexus Dashboard — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ kubectl logs -n nd-base <pod_name>
 │  APIC Read-Only = Minimum privilege for NDI APIC credentials: Observer role                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

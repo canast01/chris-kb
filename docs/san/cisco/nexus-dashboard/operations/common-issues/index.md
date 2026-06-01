@@ -35,6 +35,7 @@ kubectl get nodes
 # Check failing pods on the affected node
 kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname> | grep -v Running
 ```
+```
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
 │                                                                                                       │
 │  Frequent ND operational issues: cluster quorum loss, app failures, site disconnects.                 │
@@ -80,6 +81,7 @@ kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname>
 │  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.

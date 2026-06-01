@@ -25,6 +25,7 @@ flowchart TD
     D --> D2[Index]
     D --> D3[Plugins / Avatars]
 ```
+```
 ┌─────────────────────────────────── Confluence — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ flowchart TD
 │  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`

@@ -58,6 +58,7 @@ while (gr.next()) {
     gs.print(gr.getValue('name') + ' | ' + gr.getValue('duration') + ' | ' + gr.getValue('thread'));
 }
 ```
+```
 ┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐                                                    │
@@ -109,6 +110,7 @@ while (gr.next()) {
 │  Sched jobs = background scheduled tasks; excessive jobs starve user threads                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Resolution

@@ -24,6 +24,7 @@ curl -sk -X GET \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
 ```
+```
 ┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -68,6 +69,7 @@ curl -sk -X GET \
 │  Data node = Worker node; adding nodes scales collection capacity linearly                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ## Performance Degradation

@@ -16,6 +16,7 @@ show vlan id <id>
 show interfaces trunk
 show interface <int> status
 ```
+```
 ┌────────────────────────────────── Networking — Switching & Routing ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@ show interface <int> status
 │    IPAM         = IP Address Management; tracks allocations; prevents duplicate IPs                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Configure a Trunk Port

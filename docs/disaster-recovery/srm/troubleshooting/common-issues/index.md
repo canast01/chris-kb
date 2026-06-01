@@ -35,6 +35,7 @@ flowchart TD
     class q1,planFailed decision
     class start terminal
 ```
+```
 ┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -72,6 +73,7 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 1. SRM → Configure → Array Managers → check status

@@ -26,6 +26,7 @@ realm join -U administrator corp.example.com
 realm list
 id administrator@corp.example.com
 ```
+```
 ┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -56,6 +57,7 @@ id administrator@corp.example.com
 │    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Restrict Login to AD Groups

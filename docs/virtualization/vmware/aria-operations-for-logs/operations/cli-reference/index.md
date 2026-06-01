@@ -28,6 +28,7 @@ li-admin log-collection-status
 # Show current storage usage
 li-admin storage
 ```
+```
 ┌────────────────────────────── Aria Operations for Logs — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  vRLI management uses the REST API, VAMI, and limited SSH commands on the appliance.                  │
@@ -71,6 +72,7 @@ li-admin storage
 │  API bearer token  = Auth via POST /api/v1/sessions; returns sessionId for API calls                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

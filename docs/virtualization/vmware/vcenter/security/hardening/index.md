@@ -44,6 +44,7 @@ vCenter Hardening Layers
   │  SIEM alerts: LoginFailure, PermissionAdded, admin@  │
   └──────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── vCenter Server — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter hardening follows the VMware Security Hardening Guide and CIS benchmark;                     │
@@ -89,6 +90,7 @@ vCenter Hardening Layers
 │  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

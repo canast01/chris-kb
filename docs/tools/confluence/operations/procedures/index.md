@@ -37,6 +37,7 @@ curl -u user:token -X PUT \
   -H "Content-Type: application/json" \
   -d '{"version":{"number":4},"type":"page","title":"Updated Title","body":{"storage":{"value":"<p>New content</p>","representation":"storage"}}}'
 ```
+```
 ┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -80,6 +81,7 @@ curl -u user:token -X PUT \
 │  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 Add a version comment when saving: **Edit → Save → enter comment** — this helps trace why content changed.

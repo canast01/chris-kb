@@ -55,6 +55,7 @@ curl -s -u "${USER}:${TOKEN}" \
 
 echo "XML backup triggered at ${TIMESTAMP}"
 ```
+```
 ┌────────────────────────────────────── Jira — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -98,6 +99,7 @@ echo "XML backup triggered at ${TIMESTAMP}"
 │  Verify       = compare row counts: SELECT count(*) FROM jiraissue;                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Run this as a cron job:

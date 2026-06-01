@@ -46,6 +46,7 @@ resources:
       networkType: existing
       name: VLAN-100-Servers
 ```
+```
 ┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
 │  Collect vRA logs and support bundle before engaging VMware support for complex issues.               │
@@ -89,6 +90,7 @@ resources:
 │  VMware SR         = Support Request; opened with support bundle attached for complex issues          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

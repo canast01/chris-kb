@@ -33,6 +33,7 @@ Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow,
 6. Action during approved change window
 7. Post-action: monitor health score for improvement over next 2–4 hours
 ```
+```
 ┌─────────────────────────────────────── Dell AIOps — Operations ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
@@ -61,4 +62,5 @@ Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow,
 │  Procurement plan = Capacity expansion request based on AIOps forecast data                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

@@ -37,6 +37,7 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
 ```
+```
 ┌─────────────────────────────────────── SRDF/A — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -74,6 +75,7 @@ echo "Current lag: ${LAG} seconds"
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

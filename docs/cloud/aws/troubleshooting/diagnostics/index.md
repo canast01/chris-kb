@@ -16,6 +16,7 @@ aws sts get-caller-identity
 # Check profile in use
 aws configure list
 ```
+```
 ┌─────────────────────────────── AWS Diagnostics — Investigation Toolset ───────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic tools and investigation procedures for AWS infrastructure and application issues.         │
@@ -61,6 +62,7 @@ aws configure list
 │  aws support     = Open AWS support case via CLI with describe-trusted-advisor-checks                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

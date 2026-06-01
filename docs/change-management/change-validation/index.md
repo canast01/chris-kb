@@ -32,6 +32,7 @@ journalctl -u <service-name> --since "10 minutes ago" | grep -i error
 # HTTP endpoint health
 curl -sf http://localhost:<port>/health && echo "OK"
 ```
+```
 ┌────────────────────────────────────────── Change Validation ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -66,6 +67,7 @@ curl -sf http://localhost:<port>/health && echo "OK"
 │    Baseline        = Pre-change metric snapshot; used as comparison target for post-change check      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Monitoring Verification

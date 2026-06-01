@@ -34,6 +34,7 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 [System.Environment]::Is64BitOperatingSystem
 [System.Environment]::Is64BitProcess
 ```
+```
 ┌─────────────────────────────────────── PowerShell — Escalation ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Escalate PowerShell issues to: infra team (remoting), vendor support (module bugs), Microsoft │   │
@@ -56,6 +57,7 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 │   │   WinRM event log  = Event Viewer → Microsoft → Windows → WinRM for connection error details  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 (paste $Error[0].Exception.Message here)
 ```text

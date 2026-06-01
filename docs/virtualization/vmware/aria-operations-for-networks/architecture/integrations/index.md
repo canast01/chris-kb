@@ -48,6 +48,7 @@ curl -k -u 'svc-aon:PASSWORD' \
   https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
 ```
+```
 ┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX-T, vCenter, AWS/Azure, Splunk, and ServiceNow integrations for vRNI.                             │
@@ -91,6 +92,7 @@ curl -k -u 'svc-aon:PASSWORD' \
 │  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Physical Switch Integration — NetFlow/IPFIX

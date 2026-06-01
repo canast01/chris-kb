@@ -23,6 +23,7 @@ Get-WinEvent -LogName System -MaxEvents 50 |
 Get-Service -Name LanmanWorkstation, lmhosts | Start-Service
 Start-Service RASRAgent
 ```
+```
 ┌──────────────────────────────────────── RASR — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -60,6 +61,7 @@ Start-Service RASRAgent
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### WinPE cannot see local disks

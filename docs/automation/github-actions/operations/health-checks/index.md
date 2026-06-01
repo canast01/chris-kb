@@ -24,6 +24,7 @@ flowchart TD
     result -->|No| ok(["Health check passed"])
     result -->|Yes| investigate(["Investigate and remediate"])
 ```
+```
 ┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
@@ -46,6 +47,7 @@ flowchart TD
 │   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ```bash

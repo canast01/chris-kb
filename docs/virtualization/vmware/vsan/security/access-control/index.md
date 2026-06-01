@@ -32,6 +32,7 @@ vSAN RBAC MODEL
                        ├── Host-02
                        └── vSAN Datastore  ◄── inherits (propagate=true)
 ```
+```
 ┌──────────────────────────────────────── vSAN — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN access control is managed through vCenter RBAC; dedicated vSAN admin                            │
@@ -77,6 +78,7 @@ vSAN RBAC MODEL
 │  Qtrly review  = check admin accounts; remove stale assignments                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### vSAN Read-Only Role (Monitoring)

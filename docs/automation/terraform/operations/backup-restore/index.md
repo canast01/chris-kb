@@ -20,6 +20,7 @@ aws s3 cp s3://my-tf-state/project/terraform.tfstate \
 # Pull remote state locally for inspection
 terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 ```
+```
 ┌──────────────────────────────────── Terraform — Backup & Restore ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     TF backup: git repo for .tf; S3 versioning for state file; .terraform.lock.hcl in git     │   │
@@ -42,6 +43,7 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   │    State corruption = most common: concurrent apply or force-unlock; check integrity first    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Checklist Before Destructive Operations

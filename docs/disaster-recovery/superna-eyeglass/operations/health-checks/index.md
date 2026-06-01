@@ -40,6 +40,7 @@ flowchart TD
     result -->|Yes| ok([DR Ready - Score 100%])
     result -->|No| investigate([Investigate and remediate])
 ```
+```
 ┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -77,6 +78,7 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | SyncIQ Status | Meaning | Action |

@@ -20,6 +20,7 @@ Global Permissions
         └── Issue Security Scheme (per project)
               └── Issue Security Level (per issue)
 ```
+```
 ┌──────────────────────────────────────── Jira — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,6 +63,7 @@ Global Permissions
 │  Audit log         = Admin > Audit Log; records permission and scheme changes                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

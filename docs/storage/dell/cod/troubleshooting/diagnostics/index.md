@@ -34,6 +34,7 @@ symcfg -sid <SID> discover
 # Review SYMCLI audit log for COD activations
 symaudit -sid <SID> list -action "license"
 ```
+```
 ┌──────────────────────────────────────── Dell COD Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ symaudit -sid <SID> list -action "license"
 │    Duplicate apply = Applying same key twice; array reports already activated; not an error           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 3. Check current license state:

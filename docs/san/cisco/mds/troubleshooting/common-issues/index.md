@@ -35,6 +35,7 @@ show port-channel summary
 # 7. Check domain IDs for conflict
 show fcdomain domain-list vsan 10
 ```
+```
 ┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
 │                                                                                                       │
 │  Most frequent MDS fabric issues: FLOGI failures, E_Port isolation, zoning errors.                    │
@@ -80,6 +81,7 @@ show fcdomain domain-list vsan 10
 │  CRC error      = Frame checksum failure; indicates physical layer problem                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ```bash

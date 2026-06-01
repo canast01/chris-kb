@@ -45,6 +45,7 @@ uemcli /sys/auth/ldapgroup create -name "CORP\\DR-Operators" -role recovery_mana
 # View LDAP group role assignments
 uemcli /sys/auth/ldapgroup show
 ```
+```
 ┌──────────────────────────────────────── RASR — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ uemcli /sys/auth/ldapgroup show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### UEFI Boot Order Lock

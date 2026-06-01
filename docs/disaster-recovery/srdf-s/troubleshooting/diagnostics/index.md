@@ -40,6 +40,7 @@ flowchart TD
     style resolved fill:#15803d,color:#fff
     style notifyNetwork fill:#b45309,color:#fff
 ```
+```
 ┌──────────────────────────────────────── SRDF/S — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -79,6 +80,7 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

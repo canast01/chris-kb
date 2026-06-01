@@ -28,6 +28,7 @@ provider "aws" {
   # Never: hardcoded credentials in .tf files
 }
 ```
+```
 ┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform integrates with CI/CD, secret managers, monitoring, and ITSM via providers and APIs │   │
@@ -49,6 +50,7 @@ provider "aws" {
 │   │  Vault provider= reads secrets from Vault at apply time; writes dynamic credentials to state  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```hcl
 
 ---

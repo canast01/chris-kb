@@ -90,6 +90,7 @@ sudo keytool -import -trustcacerts -alias corp-ldap-ca \
 # Restart SANnav to pick up new truststore
 sudo sannav restart
 ```
+```
 ┌─────────────────────────────────── Brocade SANnav — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  SANnav auth: TACACS+/LDAP for GUI, REST API tokens, MFA via SSO, local fallback.                     │
@@ -135,6 +136,7 @@ sudo sannav restart
 │  Break-glass     = local admin account used only when TACACS+ is unreachable                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Track certificate expiry; renew at least 30 days before expiry. SANnav will issue a warning alert when the certificate is within the warning threshold if certificate monitoring is enabled.

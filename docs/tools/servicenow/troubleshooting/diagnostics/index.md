@@ -40,6 +40,7 @@ Node ID:                app-node-02
 Instance started:       2026-05-01 03:14:22 UTC
 JVM version:            17.0.11
 ```
+```
 ┌─────────────────────────────────────── ServiceNow Diagnostics ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -84,6 +85,7 @@ JVM version:            17.0.11
 │  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 **Action:** Disable the offending Business Rule and investigate the script logic.

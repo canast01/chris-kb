@@ -24,6 +24,7 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
+```
 ┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
@@ -46,6 +47,7 @@ flowchart TD
 │   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | Scope | Registration Level | Shared Across |

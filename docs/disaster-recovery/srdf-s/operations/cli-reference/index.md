@@ -42,6 +42,7 @@ flowchart TD
     style cmdFailover fill:#be123c,color:#fff
     style cmdFailback fill:#7c3aed,color:#fff
 ```
+```
 ┌─────────────────────────────────────── SRDF/S — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

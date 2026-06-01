@@ -52,6 +52,7 @@ flowchart LR
   EVENT --> CT1
   P0 -.->|"MPIO promotes P1\nas Active/Optimised"| P1
 ```
+```
 ┌─────────────────────────────────── Pure FlashArray — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -106,6 +107,7 @@ flowchart LR
 │  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Protection Groups

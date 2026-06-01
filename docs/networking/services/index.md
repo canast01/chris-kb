@@ -22,6 +22,7 @@ nslookup <hostname>
 dig <hostname>
 dig <hostname> @<dns_server_ip>    # query a specific server directly
 ```
+```
 ┌──────────────────────────────────── Networking — Network Services ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@ dig <hostname> @<dns_server_ip>    # query a specific server directly
 │    SNAT         = Source NAT on load balancer; ensures response traffic returns via LB                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 #### 3. Test DNS Server Reachability

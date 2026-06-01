@@ -46,6 +46,7 @@ Common Issues reference covering Issue Reference, Error Code Reference, Replicat
 replication disable <context>
 replication enable <context>
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -79,4 +80,5 @@ replication enable <context>
 │    Expire backups   = Delete old backup images via backup application; cleaning then frees space      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

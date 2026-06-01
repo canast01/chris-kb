@@ -24,6 +24,7 @@ flowchart TD
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
 ```
+```
 ┌───────────────────────────────────────────── IRE Restore ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ flowchart TD
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Database Restore

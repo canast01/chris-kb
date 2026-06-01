@@ -65,6 +65,7 @@ flowchart TD
     O -- No --> J
     P --> J
 ```
+```
 ┌────────────────────────────────── Data Protection — Data Governance ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -97,6 +98,7 @@ flowchart TD
 │    Access review = Periodic check that all current permissions are still appropriate and needed       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 2. **Distribute to Data Owners** — send CSV report to relevant Data Owner via secure channel with 5-business-day response deadline.

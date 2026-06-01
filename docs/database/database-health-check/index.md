@@ -23,6 +23,7 @@ systemctl status mssql-server   # Linux
 # Windows:
 Get-Service -Name MSSQLSERVER
 ```
+```
 ┌──────────────────────────────────── Database — Daily Health Check ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ Get-Service -Name MSSQLSERVER
 │    Wait event      = Reason a session is not running; categorised by type (I/O, lock, CPU, etc.)      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## SQL Server Health Checks

@@ -36,6 +36,7 @@ scp /var/backup/dcnm/dcnm-db-$(date +%Y%m%d-%H%M).sql.gz \
 # List backups
 ls -lh /var/backup/dcnm/
 ```
+```
 ┌─────────────────────────────────── Cisco DCNM — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  DCNM backup covers the config DB, zone snapshots, NX-OS configs, and topology data.                  │
@@ -81,6 +82,7 @@ ls -lh /var/backup/dcnm/
 │  Restore test    = quarterly test of full DCNM restore to validate backup integrity                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

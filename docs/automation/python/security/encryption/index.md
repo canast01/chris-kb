@@ -30,6 +30,7 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
+```
 ┌───────────────────────────────────────── Python — Encryption ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Python encryption: cryptography library for AES/RSA; TLS via ssl/requests; key management   │   │
@@ -51,6 +52,7 @@ graph TD
 │   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Encrypting Local Files with cryptography

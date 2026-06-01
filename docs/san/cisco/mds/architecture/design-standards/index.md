@@ -12,6 +12,7 @@
 ```text
 <site>-mds-sw<nn>
 ```
+```
 ┌────────────────────────────────── Cisco MDS 9000 — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  MDS design principles: dual-fabric A/B, VSAN per workload, PortChannel ISLs, ISSU.                   │
@@ -57,6 +58,7 @@
 │  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## ISL Standards

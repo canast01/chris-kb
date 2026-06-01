@@ -28,6 +28,7 @@ logger -n vrli-prod-01.example.local -P 514 -d "test ingestion check"
 # Check ingestion log for parse failures or drops
 grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log | tail -50
 ```
+```
 ┌────────────────────────────── Aria Operations for Logs — Common Issues ───────────────────────────────┐
 │                                                                                                       │
 │  Common vRLI issues: disk full, missing sources, alert failures, LDAP auth errors.                    │
@@ -71,6 +72,7 @@ grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log 
 │  Worker overloaded = Worker CPU/RAM at limit; scale out by adding another worker VM                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 For Windows agents:

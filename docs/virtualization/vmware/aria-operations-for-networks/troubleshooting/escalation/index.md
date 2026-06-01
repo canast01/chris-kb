@@ -49,6 +49,7 @@ ls /data/support-bundles/
 # Transfer via SCP:
 scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
 ```
+```
 ┌─────────────────────────────────────────── vRNI Escalation ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation triggers, Support Request process, and TAM engagement for vRNI.                           │
@@ -92,6 +93,7 @@ scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
 │  RCA                 = Root Cause Analysis; provided by GSS after P1/P2 resolution                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

@@ -47,6 +47,7 @@ curl -sk -u 'admin:password' \
   }' \
   "https://<nsx-manager>/api/v1/node/aaa/auth-policy"
 ```
+```
 ┌──────────────────────────────────────── NSX — Authentication ─────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX SSO via vCenter, local admin, LDAP identity source, and API token auth.                          │
@@ -92,6 +93,7 @@ curl -sk -u 'admin:password' \
 │  Session timeout = idle session expiry; configurable in NSX                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Use LDAPS (port 636) in production. If using LDAP (port 389) with STARTTLS, set `"use_starttls": true` and provide the CA certificate.

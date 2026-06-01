@@ -38,6 +38,7 @@ AUTOMATION FLOW
                  ├── Exit code (0=PASS, 1=WARN, 2=CRIT)
                  └── Alert / notification (email, webhook)
 ```
+```
 ┌───────────────────────────────────── vSAN — Operational Scripts ──────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI and esxcli scripts automate vSAN health checks, capacity reporting,                         │
@@ -82,6 +83,7 @@ AUTOMATION FLOW
 │  Capacity report= UsedCapacity/TotalCapacity per datastore per host                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **What you should see**

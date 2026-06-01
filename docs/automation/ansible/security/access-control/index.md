@@ -19,6 +19,7 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
+```
 ┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │
@@ -41,6 +42,7 @@ graph TD
 │   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Sudoers — Scope Privilege Escalation

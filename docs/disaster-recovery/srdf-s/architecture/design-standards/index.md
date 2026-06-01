@@ -40,6 +40,7 @@ graph LR
     linkLabel -->|"ack to R1"| r1
     linkLabel --> r2
 ```
+```
 ┌────────────────────────────────────── SRDF/S — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ graph LR
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Where 1.25 = 25% headroom for burst absorption.

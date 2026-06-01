@@ -32,6 +32,7 @@ graph TD
     rpaB --> drJournal["DR Journal Volumes"]
     drJournal --> drReplica["DR Replica Volumes"]
 ```
+```
 ┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ graph TD
 │    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

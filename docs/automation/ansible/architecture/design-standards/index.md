@@ -34,6 +34,7 @@ ansible-project/
 │   └── postgresql/
 └── molecule/
 ```
+```
 ┌───────────────────────────────────── Ansible — Design Standards ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Ansible design standards enforce consistency, security, and maintainability across playbooks │   │
@@ -60,6 +61,7 @@ ansible-project/
 │   │          no_log: true  = suppress task output for tasks handling passwords or secrets         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## Module Standards

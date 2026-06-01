@@ -23,6 +23,7 @@ acs logs --type alert
 # Check ND cluster node connectivity
 acs nodes
 ```
+```
 ┌────────────────────────────────── Nexus Dashboard — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ acs nodes
 │  Epoch gap = NDI shows missing epochs when telemetry interrupted                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Common upgrade failure points:

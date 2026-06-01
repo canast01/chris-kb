@@ -28,6 +28,7 @@ SELECT indexname,
 FROM pg_indexes
 ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
+```
 ┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,6 +59,7 @@ ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 │    Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Filesystem / Volume Capacity

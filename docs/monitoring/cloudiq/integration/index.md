@@ -38,6 +38,7 @@ CloudIQ portal > Settings > Notifications > Add Notification Rule
     "assignment_group": "storage-ops"
   }
 ```
+```
 ┌───────────────────────────────────── CloudIQ — Integration Guide ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -66,6 +67,7 @@ CloudIQ portal > Settings > Notifications > Add Notification Rule
 │  Bi-directional = ServiceNow incident closure reflected back to CloudIQ alert state                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Aria Operations Integration

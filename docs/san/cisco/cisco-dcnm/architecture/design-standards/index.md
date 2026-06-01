@@ -82,6 +82,7 @@ no zone default-zone permit vsan 10
 show zone status vsan 10
 # Mode: Basic, Default-zone: deny
 ```
+```
 ┌──────────────────────────────────── Cisco DCNM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM design: HA deployment, management VLAN, RBAC, TLS, backup, and scale limits.                    │
@@ -127,6 +128,7 @@ show zone status vsan 10
 │  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

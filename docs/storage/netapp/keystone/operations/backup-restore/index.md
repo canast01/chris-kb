@@ -27,6 +27,7 @@ scp admin@<keystone-collector-ip>:/tmp/ks-config-$(date +%Y%m%d).tar.gz ./
 # Verify configuration is parseable
 tar -tzf ks-config-<date>.tar.gz
 ```
+```
 ┌─────────────────────────── NetApp Keystone — Operations: Backup & Restore ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -79,6 +80,7 @@ tar -tzf ks-config-<date>.tar.gz
 │    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Restore Keystone Collector Configuration

@@ -37,6 +37,7 @@ DIAGNOSTIC TOOL CHAIN
                           ▼
                  Upload to Broadcom case
 ```
+```
 ┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN diagnostics use the health UI, esxcli, RVC, cmmds-tool, and support bundle                      │
@@ -82,6 +83,7 @@ DIAGNOSTIC TOOL CHAIN
 │  SMART         = disk self-test; pre-failure indicator                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

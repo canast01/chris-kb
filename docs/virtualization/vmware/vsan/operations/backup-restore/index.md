@@ -40,6 +40,7 @@ BACKUP FLOW — vSAN VM TO TARGET
          ▼
   VM powered on + validated
 ```
+```
 ┌─────────────────────────────────────── vSAN — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │
@@ -84,6 +85,7 @@ BACKUP FLOW — vSAN VM TO TARGET
 │  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **Reset CBT if incremental backups are failing:**

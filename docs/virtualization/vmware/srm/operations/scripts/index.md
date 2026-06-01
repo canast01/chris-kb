@@ -21,6 +21,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  └──────────────────────┘      └──────────────────────────┘  │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────── VMware SRM — Operational Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │  SRM operational scripts use PowerCLI, srm-util, and the REST API to automate                         │
@@ -66,6 +67,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  Plan run date = stored in SRM DB; queryable via REST API                                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

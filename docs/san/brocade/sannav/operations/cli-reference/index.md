@@ -42,6 +42,7 @@ sannav version
 # Show license summary
 sannav license
 ```
+```
 ┌─────────────────────────────────── Brocade SANnav — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav management CLI: sannav-admin for system tasks; FOS CLI for fabric operations.                 │
@@ -87,6 +88,7 @@ sannav license
 │  curl            = command-line HTTP client; used to test SANnav REST API endpoints                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Network Configuration

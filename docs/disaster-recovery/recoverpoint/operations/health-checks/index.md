@@ -61,6 +61,7 @@ links statistics
 # Cluster quorum state
 cluster quorum check
 ```
+```
 ┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -99,6 +100,7 @@ cluster quorum check
 │    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | RPO Tier | Target | Alert Threshold |

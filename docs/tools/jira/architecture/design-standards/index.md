@@ -35,6 +35,7 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 ```text
 <Team/Domain> — <Product/Initiative>
 ```
+```
 ┌─────────────────────────────────────── Jira — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -78,6 +79,7 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 │  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | Status | Category | Description |

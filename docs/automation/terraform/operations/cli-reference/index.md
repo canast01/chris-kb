@@ -42,6 +42,7 @@ graph TD
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
 ```
+```
 ┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │              Essential Terraform CLI commands for daily infrastructure operations             │   │
@@ -70,6 +71,7 @@ graph TD
 │   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

@@ -60,6 +60,7 @@ symcfg -sid <sid> list -disk
 # Show only thin/EFD disks with capacity summary
 symcfg -sid <sid> list -disk -thin
 ```
+```
 ┌─────────────────────────────────────── Dell COD CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -98,6 +99,7 @@ symcfg -sid <sid> list -disk -thin
 │    Solutions Enabler= Dell software toolkit for PowerMax management automation                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

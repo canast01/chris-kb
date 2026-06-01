@@ -32,6 +32,7 @@ flowchart TD
     authOk -- Yes --> sessionLimit
     sessionLimit --> resolved
 ```
+```
 ┌─────────────────────────── Windows Server — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │
 │  Step-by-step resolution for services, boot failures, high CPU/RAM, and network connectivity.         │
@@ -78,6 +79,7 @@ flowchart TD
 │  procexp        = SysInternals Process Explorer; shows handles, threads, DLLs per process             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## High Memory

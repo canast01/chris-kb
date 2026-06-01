@@ -29,6 +29,7 @@ mkfs.xfs /dev/mapper/secure-data
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
 ```
+```
 ┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │
@@ -70,6 +71,7 @@ mount /dev/mapper/secure-data /mnt/secure-data
 │  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Persistent Mount via /etc/crypttab and /etc/fstab

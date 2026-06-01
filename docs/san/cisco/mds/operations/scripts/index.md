@@ -126,6 +126,7 @@ Edit these lines near the top of the script:
 chmod +x mds_fabric_health.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 ```
+```
 ┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  MDS scripting: NX-API, Ansible cisco.nxos, Python NETCONF, zone automation, reports.                 │
@@ -171,6 +172,7 @@ MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 │  Port error daily= parse show interface fc counters; alert on CRC increase                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 **What you should see**

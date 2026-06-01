@@ -32,6 +32,7 @@ curl -sk -X POST \
   -H "Content-Type: multipart/form-data" \
   -F "file=@nd-insights-4.2.1.tar.gz"
 ```
+```
 ┌─────────────────────────────────── Nexus Dashboard — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,6 +61,7 @@ curl -sk -X POST \
 │  Cisco TAC = Technical Assistance Centre; Smart Call Home auto-opens cases                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Common Integration Issues

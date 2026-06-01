@@ -28,6 +28,7 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │  └───────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │
@@ -73,6 +74,7 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │  Network mapping= maps source portgroup to recovery portgroup                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

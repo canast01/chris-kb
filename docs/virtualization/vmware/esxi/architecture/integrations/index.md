@@ -30,6 +30,7 @@ ESXi Integration Map
           │      NBD / SAN                             │
           └────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────────── ESXi — Integrations ─────────────────────────────────────────┐
 │                                                                                                       │
 │  ESXi integrates with vCenter, storage arrays, AD, backup agents, monitoring.                         │
@@ -75,6 +76,7 @@ ESXi Integration Map
 │  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 Ensure the NFS vmkernel adapter is on the correct VLAN and the NFS server export allows the ESXi management/NFS IP.

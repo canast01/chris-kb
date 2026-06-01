@@ -22,6 +22,7 @@ licenseShow        # installed licenses
 chassisShow        # chassis hardware inventory
 slotShow           # blade/slot population
 ```
+```
 ┌────────────────────────────────── Brocade Fabric OS — CLI Reference ──────────────────────────────────┐
 │                                                                                                       │
 │  Fabric OS CLI commands: fabric management, port control, zoning, diagnostics, firmware.              │
@@ -67,6 +68,7 @@ slotShow           # blade/slot population
 │  FCAP            = Fibre Channel Authentication Protocol; cert-based switch auth                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Fan, Power, Temperature

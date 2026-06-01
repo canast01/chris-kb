@@ -19,6 +19,7 @@ def get_token(host, username, password):
     resp.raise_for_status()
     return resp.json()["token"]
 ```
+```
 ┌───────────────────────────────── Aria Operations — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,6 +63,7 @@ def get_token(host, username, password):
 │  Retry logic = Exponential backoff pattern for handling 429/503 from Aria Ops API                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Script Inventory

@@ -106,6 +106,7 @@ cd ~/Desktop
 chmod +x dd_health_check.sh
 DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_health_check.sh
 ```
+```
 ┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -141,6 +142,7 @@ DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_health_check.sh
 │    support bundle = DD diagnostic archive; ssh extraction copies to local filesystem                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **What you should see**

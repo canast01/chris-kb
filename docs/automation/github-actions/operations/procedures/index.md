@@ -27,6 +27,7 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
+```
 ┌───────────────────────────────────── GitHub Actions — Procedures ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Common GitHub Actions procedures: secret rotation, runner re-registration, workflow migration │   │
@@ -49,6 +50,7 @@ flowchart TD
 │   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ```yaml

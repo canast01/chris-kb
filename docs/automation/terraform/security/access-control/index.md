@@ -25,6 +25,7 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
+```
 ┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │
@@ -46,6 +47,7 @@ graph TD
 │   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Workspace and Environment Separation

@@ -75,6 +75,7 @@ show interface brief   # all ports up
 show vsan             # all VSANs active
 show zoneset active   # zoning intact
 ```
+```
 ┌──────────────────────────────── Cisco MDS 9000 — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │  MDS initial setup: rack, cable, NX-OS boot, initial config; ISSU upgrade procedure.                  │
@@ -120,6 +121,7 @@ show zoneset active   # zoning intact
 │  show system health= post-upgrade health check; all modules should be online                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 5. Configure VSANs on the ISL trunk port to allow only the required VSANs.

@@ -20,6 +20,7 @@
    7 days to expiry ──► Emergency change; on-call engineer engaged
    0 days           ──► Certificate expired — service unavailable to clients
 ```
+```
 ┌──────────────────────────────────── Runbook — Certificate Renewal ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -57,6 +58,7 @@
 │    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **Capture:** CN, SANs, issuing CA, expiry date, key algorithm.

@@ -80,6 +80,7 @@ acs cluster init \
 acs health
 # Wait until all nodes show Healthy
 ```
+```
 ┌──────────────────────── Cisco Nexus Dashboard — Operations Install & Upgrade ─────────────────────────┐
 │                                                                                                       │
 │  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
@@ -125,6 +126,7 @@ acs health
 │  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.

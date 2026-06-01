@@ -24,6 +24,7 @@ graph LR
   class HA host
   class HB dr
 ```
+```
 ┌──────────────────────────────────────── SRDF/S — How It Works ────────────────────────────────────────┐
 │                                                                                                       │
 │    SRDF/S data flow — from source to target through the protection pipeline:                          │
@@ -78,6 +79,7 @@ graph LR
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## RTT Requirements

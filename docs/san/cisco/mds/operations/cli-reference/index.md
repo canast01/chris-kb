@@ -22,6 +22,7 @@ show system uptime
 show license usage
 show feature           # enabled features (zone, dpvm, fcsp, etc.)
 ```
+```
 ┌─────────────────────────────────── Cisco MDS 9000 — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS NX-OS CLI: fabric commands, zone commands, port commands, diagnostics.                           │
@@ -67,6 +68,7 @@ show feature           # enabled features (zone, dpvm, fcsp, etc.)
 │  show tech-support= full diagnostic bundle for Cisco TAC escalation                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 All modules should show status `ok`. A `failed` or `powered-dn` module requires immediate investigation.

@@ -74,6 +74,7 @@ fi
 
 echo "Done. Repositories in: $DEST_DIR"
 ```
+```
 ┌────────────────────────────────────── Git — Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
 │  Shell scripts and hooks for automating Git operations: cleanup, audit, and enforcement.              │
@@ -117,6 +118,7 @@ echo "Done. Repositories in: $DEST_DIR"
 │  Batch delete     = gh api /repos/{owner}/{repo}/branches/{branch} -X DELETE                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

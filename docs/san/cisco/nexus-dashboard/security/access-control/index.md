@@ -101,6 +101,7 @@ curl -sk -X POST https://nd-dc1.corp.example.com/nexus/api/v1/users \
     "roles": [{"name": "Viewer", "sites": [{"name": "DC1-SAN"}, {"name": "DC2-SAN"}]}]
   }' | python3 -m json.tool
 ```
+```
 ┌─────────────────────────── Cisco Nexus Dashboard — Security Access Control ───────────────────────────┐
 │                                                                                                       │
 │  RBAC model with local and AAA-backed users; per-app roles scoped to tenant or site.                  │
@@ -146,6 +147,7 @@ curl -sk -X POST https://nd-dc1.corp.example.com/nexus/api/v1/users \
 │  Audit retention= How long ND retains access logs before purging (default 90 days)                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

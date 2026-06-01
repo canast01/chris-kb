@@ -48,6 +48,7 @@ var ldap = new GlideLDAP();
 var result = ldap.getGroups('username@corp.example.com');
 gs.info('LDAP test result: ' + JSON.stringify(result));
 ```
+```
 ┌────────────────────────────────────── ServiceNow Authentication ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐                                                    │
@@ -91,6 +92,7 @@ gs.info('LDAP test result: ' + JSON.stringify(result));
 │  Duo        = MFA provider; push notification to mobile app for approval                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### ServiceNow IdP Configuration

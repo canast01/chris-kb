@@ -18,6 +18,7 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 # Memory available
 free -h | awk '/Mem/ {print "Available:", $7}'
 ```
+```
 ┌───────────────────────────────── Performance — Resource Optimisation ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -47,6 +48,7 @@ free -h | awk '/Mem/ {print "Available:", $7}'
 │    Snapshot chain= Each snapshot added to chain; long chains slow reads; delete after use             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Azure — Cost Optimization

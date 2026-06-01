@@ -40,6 +40,7 @@ If LCM is already deployed and Aria Automation needs to be added:
 ```text
 LCM → Lifecycle Operations → Environments → select or create environment → Add Product → Aria Automation
 ```
+```
 ┌──────────────────────────────── Aria Automation — Install and Upgrade ────────────────────────────────┐
 │                                                                                                       │
 │  Aria Automation is deployed and upgraded via Aria Suite LCM; manual OVA only for new installs.       │
@@ -83,6 +84,7 @@ LCM → Lifecycle Operations → Environments → select or create environment �
 │  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

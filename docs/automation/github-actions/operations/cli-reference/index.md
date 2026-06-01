@@ -30,6 +30,7 @@ apt update && apt install gh -y
 gh --version
 gh auth login
 ```
+```
 ┌─────────────────────────────────── GitHub Actions — CLI Reference ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   GitHub CLI (gh) is the primary tool for interacting with GitHub Actions from the terminal   │   │
@@ -58,6 +59,7 @@ gh auth login
 │   │         gh api       = raw API calls; use for endpoints not covered by gh subcommands         │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Environment Management

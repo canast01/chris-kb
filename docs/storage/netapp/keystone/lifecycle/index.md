@@ -30,6 +30,7 @@ The Keystone Collector reports consumption telemetry continuously. NetApp aggreg
 ```text
 Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst rate)
 ```
+```
 ┌───────────────────────────────────── NetApp Keystone — Lifecycle ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst r
 │    HW lead time       = 30-60 days for new AFF/FAS nodes post-amendment                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Collector VM OS Maintenance

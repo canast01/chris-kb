@@ -34,6 +34,7 @@ Add-ADGroupMember -Identity "GG-ServerAdmins" -Members "jsmith"
 # View group members
 Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountName, objectClass
 ```
+```
 ┌─────────────────────────────────── Windows Server — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  Access control enforced through AD groups, NTFS ACLs, share permissions, and privileged access.      │
@@ -80,6 +81,7 @@ Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountNa
 │  Protected Users= AD security group; blocks NTLM, unconstrained delegation, DES                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Just Enough Administration (JEA)

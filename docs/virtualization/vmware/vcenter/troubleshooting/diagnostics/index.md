@@ -49,6 +49,7 @@ Diagnostic Chain — Priority Order
   │     │  /usr/bin/vm-support  →  upload to Broadcom case
   └─────┘
 ```
+```
 ┌──────────────────────────────────── vCenter Server — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter diagnostics use log bundles, service status checks, and database queries                     │
@@ -94,6 +95,7 @@ Diagnostic Chain — Priority Order
 │  vpxd CPU      = high vCenter process CPU = query storm or stuck tasks                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Disk Partition Usage

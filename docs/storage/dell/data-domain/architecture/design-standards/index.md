@@ -31,6 +31,7 @@ graph TD
     nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
     cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
 ```
+```
 ┌────────────────────────────────── Dell Data Domain Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -66,6 +67,7 @@ graph TD
 │    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.

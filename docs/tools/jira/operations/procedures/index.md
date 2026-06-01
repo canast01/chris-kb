@@ -22,6 +22,7 @@ Example:
   Terraform so that storage costs are automatically optimised without manual
   cleanup scripts.
 ```
+```
 ┌──────────────────────────────────── Jira — Operations Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -65,6 +66,7 @@ Example:
 │  Backup verify  = check pg_dump file exists and is non-zero size after cron run                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 Estimation tips:

@@ -78,6 +78,7 @@ curl -sk -u 'admin:password' \
 curl -sk -u 'admin:password' \
   -O "https://<nsx-manager>/api/v1/node/support-bundles/download/<bundle-id>"
 ```
+```
 ┌────────────────────────────────────────── NSX — Escalation ───────────────────────────────────────────┐
 │                                                                                                       │
 │  VMware GSS escalation, pre-escalation steps, severity matrix, bundle contents.                       │
@@ -123,6 +124,7 @@ curl -sk -u 'admin:password' \
 │  Config export = API GET of all NSX config; provides GSS full picture                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Key files within the ESXi support bundle for NSX:

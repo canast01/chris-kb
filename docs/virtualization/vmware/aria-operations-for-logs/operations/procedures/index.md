@@ -14,6 +14,7 @@ lost connectivity to the server
 not responding
 connection refused
 ```
+```
 ┌──────────────────────────────── Aria Operations for Logs — Procedures ────────────────────────────────┐
 │                                                                                                       │
 │  Common operational procedures: add sources, rotate certs, manage disk, adjust alerts.                │
@@ -57,6 +58,7 @@ connection refused
 │  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### vMotion Failures

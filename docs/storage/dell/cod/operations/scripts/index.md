@@ -91,6 +91,7 @@ Open a terminal on the Solutions Enabler host (Linux).
 chmod +x cod_capacity_report.sh
 SID=000123456789 ./cod_capacity_report.sh
 ```
+```
 ┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -125,6 +126,7 @@ SID=000123456789 ./cod_capacity_report.sh
 │    symlic             = Solutions Enabler license command; requires SYMAPI connectivity               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **What you should see**

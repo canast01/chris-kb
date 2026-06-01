@@ -46,6 +46,7 @@ VCSA Backup & Restore Architecture
                                            │  hosts, API    │
                                            └────────────────┘
 ```
+```
 ┌────────────────────────────────── vCenter Server — Backup & Restore ──────────────────────────────────┐
 │                                                                                                       │
 │  vCenter provides built-in file-based backup via VAMI; image-level backup via                         │
@@ -91,6 +92,7 @@ VCSA Backup & Restore Architecture
 │  Tarball      = compressed archive format used by VCSA file-based backup                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Prerequisites

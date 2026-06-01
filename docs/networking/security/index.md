@@ -23,6 +23,7 @@ nc -zv destination-host port
 telnet destination-host port
 ss -tulnp
 ```
+```
 ┌──────────────────────────────────── Networking — Network Security ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ ss -tulnp
 │    PAT            = Port Address Translation; maps multiple private IPs to one public IP+port         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Test Connectivity Through a Firewall

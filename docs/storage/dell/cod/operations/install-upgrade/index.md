@@ -26,6 +26,7 @@ Frame upgrade or replacement?
         ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
         └── NO  → Entitlement remains active until frame decommission
 ```
+```
 ┌───────────────────────────────────── Dell COD Install / Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,6 +59,7 @@ Frame upgrade or replacement?
 │    CMDB update           = Record activation date, TB added, cumulative totals per array              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Cross-reference this output against the Dell License Management Portal to confirm the portal record matches what the array reports. Discrepancies must be resolved with Dell before the next capacity review.

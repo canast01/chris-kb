@@ -24,6 +24,7 @@ flowchart TD
     submit --> monitor
     monitor -->|"SLA breach"| escalateTAM
 ```
+```
 ┌───────────────────────────── Windows Server — Troubleshooting Escalation ─────────────────────────────┐
 │                                                                                                       │
 │  Escalation path: internal L2/L3 → Microsoft Premier/TAC → CSS with diagnostic bundle.                │
@@ -70,6 +71,7 @@ flowchart TD
 │  CSAT           = Customer Satisfaction survey; sent after Microsoft case closure                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Common Issue Reference

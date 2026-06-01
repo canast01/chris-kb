@@ -22,6 +22,7 @@ flowchart LR
 
     gitRepo --> ansible --> copy --> cron --> output --> siem
 ```
+```
 ┌──────────────────────────────────── Linux — Scripts & Automation ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ flowchart LR
 │  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## patch-status-report.sh

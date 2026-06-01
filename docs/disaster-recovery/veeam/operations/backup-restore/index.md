@@ -27,6 +27,7 @@ flowchart TD
     H --> J
     I --> J
 ```
+```
 ┌────────────────────────────────────── Veeam — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
@@ -68,6 +69,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 This performs a Storage vMotion in the background. The VM remains live throughout.

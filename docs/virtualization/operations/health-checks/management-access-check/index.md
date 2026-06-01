@@ -36,6 +36,7 @@ Management Access Check Flow
   │  └─ Hardware     No disk / NIC / PSU alerts         │
   └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
 │                                                                                                       │
 │    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │
@@ -65,6 +66,7 @@ Management Access Check Flow
 │    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Checks to perform in vCenter UI:

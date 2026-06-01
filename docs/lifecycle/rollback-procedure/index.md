@@ -21,6 +21,7 @@ flowchart TD
     H --> I[Validate rollback]
     I --> J[Incident report\nand change re-plan]
 ```
+```
 ┌───────────────────────────────────────── Rollback Procedure ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -56,6 +57,7 @@ flowchart TD
 │    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ```powershell

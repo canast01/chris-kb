@@ -83,6 +83,7 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
+```
 ┌───────────────────────────────────────── Python — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Common Python operational procedures: new project setup, dependency audit, release packaging │   │
@@ -105,6 +106,7 @@ graph TD
 │   │    internal PyPI= host with Nexus, Artifactory, or devpi; configure with pip.conf index-url   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ```python

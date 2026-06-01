@@ -53,6 +53,7 @@ flowchart TD
     U -- Yes --> V[Working set exceeds cache\nTiering or capacity expansion needed]
     U -- No --> W[Check for snapshot/replication I/O\nSchedule during maintenance window]
 ```
+```
 ┌─────────────────────────────────── Storage Latency Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -88,6 +89,7 @@ flowchart TD
 │    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### esxtop Storage Threshold Summary

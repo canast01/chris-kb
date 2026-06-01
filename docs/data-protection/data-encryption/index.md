@@ -27,6 +27,7 @@ dmsetup ls --target crypt
 # Dump LUKS header info
 cryptsetup luksDump /dev/sdb
 ```
+```
 ┌────────────────────────────────── Data Protection — Data Encryption ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ cryptsetup luksDump /dev/sdb
 │    TLS 1.3    = Latest TLS version; removes weak ciphers; mandatory for public-facing services        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Disable weak protocols (nginx):**

@@ -27,6 +27,7 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │                  │  └────────────┘  │                        │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon procedures: update golden image, push to pool, manage sessions,                       │
@@ -72,6 +73,7 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Users in the group can now connect to the pool from Horizon Client or HTML access.

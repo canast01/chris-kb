@@ -49,6 +49,7 @@ flowchart TD
     L -->|Yes| N["Run test DDBoost backup\nConfirm job success"]
     N --> O([Close Window])
 ```
+```
 ┌───────────────────────────────────── Dell Data Domain Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ flowchart TD
 │    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Replication State

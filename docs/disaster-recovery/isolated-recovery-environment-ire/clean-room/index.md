@@ -26,6 +26,7 @@ graph LR
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
 ```
+```
 ┌─────────────────────────────────────────── IRE Clean Room ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -55,6 +56,7 @@ graph LR
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Common Issues

@@ -34,6 +34,7 @@ SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
+```
 ┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LI
 │    VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ```sql

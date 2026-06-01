@@ -33,6 +33,7 @@ sequenceDiagram
     Storage-->>HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin
 ```
+```
 ┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ sequenceDiagram
 │    OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

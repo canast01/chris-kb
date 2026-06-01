@@ -16,6 +16,7 @@ Settings → Support → Download Support Bundle
   Select: Platform + All Collectors
   Download and attach to VMware Support case
 ```
+```
 ┌────────────────────────────────────────── vRNI Diagnostics ───────────────────────────────────────────┐
 │                                                                                                       │
 │  app.log analysis, REST API diagnostic checks, and support bundle for vRNI.                           │
@@ -59,6 +60,7 @@ Settings → Support → Download Support Bundle
 │  Collector Log Level = Adjust in collector config for verbose debugging output                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ---

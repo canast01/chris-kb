@@ -32,6 +32,7 @@ def get_token():
 TOKEN = get_token()
 HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "application/json"}
 ```
+```
 ┌──────────────────────────────────────────── vRNI Scripts ─────────────────────────────────────────────┐
 │                                                                                                       │
 │  REST API scripts for flow querying, data source management, and config export in vRNI.               │
@@ -75,6 +76,7 @@ HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "applicat
 │  CI/CD Integration   = Scripts run in pipelines for automated config drift detection                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ---

@@ -60,6 +60,7 @@ def process_widgets(
 
     return len(results)
 ```
+```
 ┌────────────────────────────────────── Python — Design Standards ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python design standards: PEP 8 style, type hints, docstrings, testing, and dependency pinning │   │
@@ -82,6 +83,7 @@ def process_widgets(
 │   │   pip compile  = pip-tools; pip-compile requirements.in → requirements.txt with pinned deps   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### Structured JSON Logging (`structlog`)

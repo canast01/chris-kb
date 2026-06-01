@@ -17,6 +17,7 @@ flowchart LR
     F -->|Go| G[Proceed with Upgrade]
     F -->|No-Go| H[Defer — remediate\nblocker first]
 ```
+```
 ┌────────────────────────────────────────── Upgrade Readiness ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -50,6 +51,7 @@ flowchart LR
 │    Known issues   = Vendor-published list of bugs in release; check for impact on your environment    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | Health Check | Pass Criteria |

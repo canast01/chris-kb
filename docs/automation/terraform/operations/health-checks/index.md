@@ -30,6 +30,7 @@ flowchart TD
     parsePlan --> alertOps
     alertOps --> remediate
 ```
+```
 ┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │
@@ -52,6 +53,7 @@ flowchart TD
 │   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### terraform import

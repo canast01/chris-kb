@@ -49,6 +49,7 @@ graph LR
     applyProd -->|OK| done
     applyProd -->|Fail| abort
 ```
+```
 ┌───────────────────────────────────────── Terraform — Scripts ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Terraform utility scripts: drift report, stale lock check, state backup, plan summary     │   │
@@ -68,6 +69,7 @@ graph LR
 │   │         -detailed-exitcode= exit 0: no changes, exit 1: error, exit 2: changes present        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **What you should see**

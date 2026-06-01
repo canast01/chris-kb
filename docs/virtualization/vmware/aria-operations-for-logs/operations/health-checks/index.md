@@ -17,6 +17,7 @@ curl -sk -u 'admin:<password>' \
 
 # Expected: all nodes state = "ACTIVE"
 ```
+```
 ┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
 │                                                                                                       │
 │  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │
@@ -60,6 +61,7 @@ curl -sk -u 'admin:<password>' \
 │  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Via UI: **Administration → Agents** — agents with a last check-in older than 15 minutes are potentially offline.

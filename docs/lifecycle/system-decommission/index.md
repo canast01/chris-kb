@@ -18,6 +18,7 @@ flowchart TD
     G --> H[Reclaim resources\nor delete VM]
     H --> I[CMDB and\ndocumentation update]
 ```
+```
 ┌───────────────────────────────────────── System Decommission ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -52,6 +53,7 @@ flowchart TD
 │    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 | Data Category | Decision | Signed Off |

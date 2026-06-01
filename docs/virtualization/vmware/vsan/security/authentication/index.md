@@ -23,6 +23,7 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
                 ├── Active Directory (LDAP / Integrated Windows Auth)
                 └── OpenLDAP
 ```
+```
 ┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │
@@ -68,6 +69,7 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
 │  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 **Post-join verification:**

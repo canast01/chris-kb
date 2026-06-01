@@ -50,6 +50,7 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 [ ] Recent changes: upgrade, plugin install, config change, DB maintenance
 [ ] Whether the issue is intermittent or constant
 ```
+```
 ┌───────────────────────────────── Confluence — Escalation Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -93,6 +94,7 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 │  SLA            = Atlassian support SLA: P1 1hr response, P2 4hr, P3/P4 next business day             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

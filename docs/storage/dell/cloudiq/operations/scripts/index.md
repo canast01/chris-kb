@@ -147,6 +147,7 @@ set CLOUDIQ_CLIENT_ID=your-client-id
 set CLOUDIQ_CLIENT_SECRET=your-client-secret
 python cloudiq_alert_poller.py
 ```
+```
 ┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -182,6 +183,7 @@ python cloudiq_alert_poller.py
 │    /v1/metrics        = Telemetry endpoint: query capacity, performance, alerts by system             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **What you should see**

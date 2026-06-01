@@ -12,6 +12,7 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 ```text
 <source-cluster>-<target-cluster>-<zone-or-path>
 ```
+```
 ┌───────────────────────────────── Superna Eyeglass — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -54,6 +55,7 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Viewing Policies

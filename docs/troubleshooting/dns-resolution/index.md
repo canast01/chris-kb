@@ -52,6 +52,7 @@ flowchart TD
     U -- No --> V[Fix forwarder IP\nCheck connectivity to remote DNS]
     U -- Yes --> W[Check local forwarder config\nnslookup -type=SOA domain]
 ```
+```
 ┌─────────────────────────────────── DNS Resolution Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -86,6 +87,7 @@ flowchart TD
 │    PTR record  = Reverse DNS record; IP → hostname; required for many services and logs               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### SRV Records (critical for AD/Kerberos)

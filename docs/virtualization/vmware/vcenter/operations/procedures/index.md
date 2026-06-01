@@ -42,6 +42,7 @@ VCSA Procedure Flow — Maintenance Window
   │                                                  │
   └──────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────── vCenter Server — Common Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  Routine vCenter procedures: certificate renewal, host add/remove, cluster                            │
@@ -87,6 +88,7 @@ VCSA Procedure Flow — Maintenance Window
 │  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Service restart order for manual recovery:

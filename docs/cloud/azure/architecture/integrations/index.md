@@ -20,6 +20,7 @@ flowchart LR
 
     request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
 ```
+```
 ┌────────────────────────────────── Azure Architecture — Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │  Azure integrates with on-premises via ExpressRoute/VPN, AD sync, and hybrid networking.              │
@@ -65,6 +66,7 @@ flowchart LR
 │  Azure Sentinel  = Cloud-native SIEM/SOAR; ingests logs and generates security alerts                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Azure AD Connect (Hybrid Identity)

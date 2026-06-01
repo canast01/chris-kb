@@ -64,6 +64,7 @@ flowchart TD
     Q -- No --> S[Issue may be inside guest\nSSH into VM; check top/iostat/netstat]
     S --> T[Correlate with recent changes\nSnapshot? New workload? Config change?]
 ```
+```
 ┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -98,6 +99,7 @@ flowchart TD
 │    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Memory Reclamation States

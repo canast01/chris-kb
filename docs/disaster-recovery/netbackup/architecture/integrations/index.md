@@ -46,6 +46,7 @@ flowchart TD
     class vadp,cyberark source
     class opscenter,siem ops
 ```
+```
 ┌──────────────────────────────── NetBackup — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -87,6 +88,7 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Alert on: `backup failed`, `policy modified`, `client deleted`, `catalog backup failed`.

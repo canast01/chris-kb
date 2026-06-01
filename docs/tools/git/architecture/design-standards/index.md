@@ -28,6 +28,7 @@ chore(deps): upgrade boto3 to 1.34.0
 docs(runbook): add k8s drain procedure
 refactor(cache): replace in-memory store with Redis
 ```
+```
 ┌─────────────────────────────────────── Git — Design Standards ────────────────────────────────────────┐
 │                                                                                                       │
 │  Branching strategy, commit conventions, and repository standards for team-managed Git repos.         │
@@ -71,6 +72,7 @@ refactor(cache): replace in-memory store with Redis
 │  Changelog    = auto-generated from conventional commits by tools like release-it                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Cherry-Picking

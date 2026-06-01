@@ -93,6 +93,7 @@ jstat -gcutil ${DCNM_PID} 1s 5
 # 5. OS-level resource snapshot
 top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
 ```
+```
 ┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
 │                                                                                                       │
 │  DCNM escalation: internal L2/L3 → Cisco TAC with log bundle, case severity, remote.                  │
@@ -138,6 +139,7 @@ top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
 │  No config changes= freeze all DCNM and MDS changes during active incident                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### For Performance / DB Issues

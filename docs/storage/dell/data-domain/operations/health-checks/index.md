@@ -24,6 +24,7 @@ flowchart TD
     L -->|No| N([All checks passed])
     D & G & J & M --> N
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -57,6 +58,7 @@ flowchart TD
 │    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Health Check — Pre-Change

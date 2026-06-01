@@ -26,6 +26,7 @@ grep -i "error\|exception\|fail" /var/log/loginsight/runtime.log | tail -100
 grep -i "error\|drop"           /var/log/loginsight/ingestion.log | tail -50
 grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail -50
 ```
+```
 ┌─────────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────┐
 │                                                                                                       │
 │  Diagnose vRLI problems using system monitor, runtime logs, API checks, and support bundle.           │
@@ -69,6 +70,7 @@ grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail 
 │  VMware SR         = Support Request; provide bundle + timeline + version details                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.

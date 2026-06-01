@@ -55,6 +55,7 @@ Administration → User Management → User Directories → Add Directory → Mi
   <attribute name="ldap.usessl" value="true"/>
 </directory>
 ```
+```
 ┌──────────────────────────────────────── Jira — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -98,6 +99,7 @@ Administration → User Management → User Directories → Add Directory → Mi
 │  Assertion    = SAML XML signed by IdP; contains user attributes and groups                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Enforcing SSO (Data Center)

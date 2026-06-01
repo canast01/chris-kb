@@ -41,6 +41,7 @@ KEY PROCEDURE FLOWS
          ▼
   Monitor until compliant
 ```
+```
 ┌────────────────────────────────────── vSAN — Common Procedures ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN operational procedures: disk replacement, host removal, policy update,                          │
@@ -86,6 +87,7 @@ KEY PROCEDURE FLOWS
 │  30% free       = minimum headroom for resync operations                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 **From vCenter UI:**

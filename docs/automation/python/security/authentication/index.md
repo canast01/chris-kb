@@ -26,6 +26,7 @@ graph TD
     apiKey --> bearerHeader
     bearerHeader --> apiEndpoint
 ```
+```
 ┌─────────────────────────────────────── Python — Authentication ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Python authentication: boto3 credential chain, paramiko SSH key, requests auth classes    │   │
@@ -47,6 +48,7 @@ graph TD
 │   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ```python

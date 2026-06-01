@@ -38,6 +38,7 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 7. Release closure
    → RFC closed; release notes published; team briefed
 ```
+```
 ┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 │    Go/No-Go call  = Release decision meeting T-1h; all dependencies and pre-checks confirmed          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Go / No-Go Decision

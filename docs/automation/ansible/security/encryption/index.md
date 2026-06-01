@@ -25,6 +25,7 @@ graph LR
     vcKeyFile -->|decrypt at runtime| playbook
     playbook -->|over SSH| managedHost["Managed Host"]
 ```
+```
 ┌──────────────────────────────────────── Ansible — Encryption ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Ansible encryption: Vault (var files), SSH transport (TLS), AWX credential encryption     │   │
@@ -47,6 +48,7 @@ graph LR
 │   │   encrypt_string = encrypts a single string value; embed inline in plain YAML variable files  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Recommended Layout

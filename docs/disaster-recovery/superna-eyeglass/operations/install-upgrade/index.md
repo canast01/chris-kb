@@ -22,6 +22,7 @@ flowchart TD
 
     exportCfg --> deployOVA --> importCfg --> verifyScore --> validate24h --> decommOld --> done
 ```
+```
 ┌──────────────────────────────── Superna Eyeglass — Install & Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 If Eyeglass shows API errors after OneFS upgrade, check if an Eyeglass update is required to support the new OneFS version.

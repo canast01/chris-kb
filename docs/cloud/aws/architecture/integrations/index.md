@@ -19,6 +19,7 @@ flowchart LR
 
     upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
 ```
+```
 ┌─────────────────────────────────── AWS Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │  AWS platform integrates with on-prem identity, monitoring, ITSM, and CI/CD tooling.                  │
@@ -64,6 +65,7 @@ flowchart LR
 │  CloudFormation = AWS native IaC; stack-based resource provisioning and updates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **AD Connector** (proxy authentication to on-premises AD without replication):

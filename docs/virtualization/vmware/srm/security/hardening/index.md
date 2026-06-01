@@ -26,6 +26,7 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 │                              └──────────────────────────┘    │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────── VMware SRM — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │  SRM hardening: restrict failover to authorised users, enforce TLS 1.2+, isolate                      │
@@ -71,6 +72,7 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 │  DR test evidence= required for DR compliance (ISO 22301, SOC 2)                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

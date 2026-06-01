@@ -28,6 +28,7 @@ EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
                                         │  (cross-region)  │
                                         └──────────────────┘
 ```
+```
 ┌──────────────────────────────────────── AWS CLI — EC2 Storage ────────────────────────────────────────┐
 │                                                                                                       │
 │  EBS volume and snapshot CLI commands for provisioning, attaching, and DR operations.                 │
@@ -73,4 +74,5 @@ EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
 │  Nitro           = AWS hypervisor; allows online volume modifications without reboot                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

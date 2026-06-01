@@ -30,6 +30,7 @@ Create an object permission policy:
 ```text
 Administration → Access Control → Object Permissions → Add Permission
 ```
+```
 ┌─────────────────────────────────── Aria Operations Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │  Admin, Content Admin, General User, and Read-only roles with group mapping.                          │
@@ -73,6 +74,7 @@ Administration → Access Control → Object Permissions → Add Permission
 │  Local Account        = vROps-internal account; use for break-glass only                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | AD Group | Aria Operations Role | Object Scope |

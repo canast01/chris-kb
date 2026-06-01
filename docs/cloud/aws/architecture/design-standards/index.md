@@ -60,6 +60,7 @@ flowchart LR
     glacier -->|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive -->|"Expiration rule"| expire
 ```
+```
 ┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │
 │  Standards covering account structure, tagging, naming, networking, and security baseline.            │
@@ -105,6 +106,7 @@ flowchart LR
 │  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Security Standards

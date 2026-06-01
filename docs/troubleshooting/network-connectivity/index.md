@@ -50,6 +50,7 @@ flowchart TD
     Q -- No --> R[See DNS Resolution guide]
     Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
 ```
+```
 ┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ flowchart TD
 │    traceroute    = Shows each hop to destination; identifies where path breaks                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

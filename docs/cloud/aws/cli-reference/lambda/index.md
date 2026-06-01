@@ -35,6 +35,7 @@ Lambda CLI: Deploy → Invoke → Monitor
   │  filter-log-events "ERROR"        │
   └───────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────────── AWS CLI — Lambda ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Lambda CLI commands for function deploy, invoke, configuration, and log retrieval.                   │
@@ -80,6 +81,7 @@ Lambda CLI: Deploy → Invoke → Monitor
 │  ECR             = Elastic Container Registry; source for Lambda container image                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Event Source Mappings (SQS / Kinesis triggers)

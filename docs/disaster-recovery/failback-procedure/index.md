@@ -32,6 +32,7 @@ purecli drive list | grep -v healthy
 show interface fc brief           # Cisco MDS
 switchshow                        # Brocade
 ```
+```
 ┌──────────────────────────────────────── DR Failback Procedure ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,6 +62,7 @@ switchshow                        # Brocade
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **Wait for replication to catch up:**

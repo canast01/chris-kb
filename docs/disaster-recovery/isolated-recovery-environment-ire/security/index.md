@@ -36,6 +36,7 @@ $ireAdmins  = (Invoke-Command -ComputerName ire-dc01  { Get-ADGroupMember Admini
 Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndicator -eq "=="}
 # Should return empty — no overlapping accounts
 ```
+```
 ┌──────────────────────────────────────────── IRE Security ─────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -65,6 +66,7 @@ Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndic
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Audit Logging

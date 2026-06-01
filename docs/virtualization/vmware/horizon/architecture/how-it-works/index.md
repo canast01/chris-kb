@@ -44,6 +44,7 @@ VMware Horizon is a broker-based VDI and published application delivery platform
          |
    [DEM Config Share] <-- GPO applies DEM Agent
 ```
+```
 ┌──────────────────────────────────── VMware Horizon — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon delivers virtualised desktops and apps via Connection Servers that broker                    │
@@ -89,6 +90,7 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 │  Farm            = collection of RDS hosts for app/desktop delivery                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### External Client via UAG

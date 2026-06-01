@@ -77,6 +77,7 @@ flowchart TD
     A --> K{Archive or\ncloud tiering?}
     K -->|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]
 ```
+```
 ┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -107,6 +108,7 @@ flowchart TD
 │    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Where:

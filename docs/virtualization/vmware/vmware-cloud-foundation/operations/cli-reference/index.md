@@ -38,6 +38,7 @@ VCF CLI Tool Map — Where to Run What
 │  /var/log/vmware/vcf/domainmanager/dm.log           │
 └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
@@ -83,6 +84,7 @@ VCF CLI Tool Map — Where to Run What
 │  upgrade-status= show current upgrade state across all components                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

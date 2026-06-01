@@ -39,6 +39,7 @@ Password Policy Controls (enforced via Host Profile)
 │  /Config/Etc/issue             = login banner text        │
 └──────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
@@ -84,6 +85,7 @@ Password Policy Controls (enforced via Host Profile)
 │  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### List and Remove Unused Local Accounts

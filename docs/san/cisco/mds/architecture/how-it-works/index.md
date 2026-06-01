@@ -29,6 +29,7 @@ graph TB
   class H1A,H2A,H1B,H2B host
   class FA_CT0,PM_A,FA_CT1,PM_B storage
 ```
+```
 ┌──────────────────────────────────── Cisco MDS 9000 — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS operation: HBA FLOGI → Name Server → zoning lookup → PLOGI → I/O flow.                           │
@@ -74,4 +75,5 @@ graph TB
 │  ITL             = Initiator-Target-LUN; FC I/O flow identifier for analytics                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

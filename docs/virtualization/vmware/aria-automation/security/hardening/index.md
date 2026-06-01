@@ -12,6 +12,7 @@ The `admin` account is a local system account in the VIDM System Domain. Change 
 ```text
 VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Password
 ```
+```
 ┌───────────────────────────────────── Aria Automation — Hardening ─────────────────────────────────────┐
 │                                                                                                       │
 │  Harden vRA by disabling unused services, enforcing TLS, MFA, and minimal access.                     │
@@ -55,6 +56,7 @@ VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Pass
 │  SIEM integration  = Security Information and Event Management; aggregates vRA and vIDM logs          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **Via vracli (standalone deployments):**

@@ -23,6 +23,7 @@ purearray list --network
 # Set proxy if needed
 purearray set --proxy https://<proxy-host>:<port>
 ```
+```
 ┌────────────────────────────────────── Pure1 — Integration Guide ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -51,6 +52,7 @@ purearray set --proxy https://<proxy-host>:<port>
 │  Email = Pure1 SMTP notification for proactive alerts; configure in org settings                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.

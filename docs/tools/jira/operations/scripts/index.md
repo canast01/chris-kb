@@ -14,6 +14,7 @@ export JIRA_DB_NAME="jiradb"
 export JIRA_DB_USER="jira"
 export PGPASSWORD="${JIRA_DB_PASSWORD}"
 ```
+```
 ┌────────────────────────────────────── Jira — Operations Scripts ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -43,6 +44,7 @@ export PGPASSWORD="${JIRA_DB_PASSWORD}"
 │  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Inactive User Report (SQL)

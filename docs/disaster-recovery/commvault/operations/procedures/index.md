@@ -19,6 +19,7 @@ qlist jobs
 # Check CommServe services status
 qlist services
 ```
+```
 ┌───────────────────────────── Commvault Operational Procedures — Runbooks ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,6 +70,7 @@ qlist services
 │  SQL Log Ship   = Transaction log replication from primary CSDB to DR CommServe                       │
 │  Mount Path     = File system path on MediaAgent where disk library chunks are stored                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Alternatively: Command Center → Storage → System Backup → Run Now. Verify the backup completes before proceeding with any change.

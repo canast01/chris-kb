@@ -40,6 +40,7 @@ CloudWatch CLI: Metrics → Alarms → Logs
   │  logs tail --follow  │
   └──────────────────────┘
 ```
+```
 ┌──────────────────────────────────────── AWS CLI — CloudWatch ─────────────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch CLI commands for metrics, alarms, log groups, dashboards, and insights.                   │
@@ -85,4 +86,5 @@ CloudWatch CLI: Metrics → Alarms → Logs
 │  put-metric-alarm= Creates/updates alarm; defines threshold, period, evaluation count                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

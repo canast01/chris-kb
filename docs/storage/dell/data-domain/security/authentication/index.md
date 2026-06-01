@@ -34,6 +34,7 @@ graph TD
     adminUser --> ddboostUser
     ddCLI --> auditLog
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,6 +70,7 @@ graph TD
 │    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### LDAP Role Mapping

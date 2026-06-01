@@ -38,6 +38,7 @@ git diff
 # Use a 3-way diff tool
 git mergetool
 ```
+```
 ┌───────────────────────────────────────── Git — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Common Git problems: detached HEAD, wrong commits, line endings, and submodule errors.               │
@@ -81,6 +82,7 @@ git mergetool
 │  cherry-pick     = apply specific commit to current branch; use to move work                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Using `git rerere` to Remember Resolutions

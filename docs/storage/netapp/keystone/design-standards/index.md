@@ -45,6 +45,7 @@ volume modify \
 # List volumes with their comments to verify tagging
 volume show -fields vserver,volume,comment | grep keystone
 ```
+```
 ┌───────────────────────────────── NetApp Keystone — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -97,6 +98,7 @@ volume show -fields vserver,volume,comment | grep keystone
 │    Retrieve policy  = Controls if tiered data read back to SSD (on-demand vs never)                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

@@ -57,6 +57,7 @@ CONF_PID=$(pgrep -f confluence | head -1)
 jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 # "O" column = Old generation %. Alert if > 90% consistently
 ```
+```
 ┌───────────────────────────────────── Confluence — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -100,6 +101,7 @@ jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 │  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Fix**

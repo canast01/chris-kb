@@ -66,6 +66,7 @@ for p in plugins:
 
 cat /tmp/jira-plugins-before.txt
 ```
+```
 ┌───────────────────────────────────── Jira — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -109,6 +110,7 @@ cat /tmp/jira-plugins-before.txt
 │  PostgreSQL 14 = minimum recommended for Jira 9.x; check matrix for exact version                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Install Jira

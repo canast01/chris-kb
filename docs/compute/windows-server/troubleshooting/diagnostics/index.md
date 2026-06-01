@@ -34,6 +34,7 @@ flowchart LR
     psLog --> wef
     wef --> siem
 ```
+```
 ┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostics: event log analysis, performance data collection, network traces, memory dumps.          │
@@ -80,6 +81,7 @@ flowchart LR
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Exporting Logs

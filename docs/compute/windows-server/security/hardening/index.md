@@ -28,6 +28,7 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 # Run Policy Analyzer (GUI tool) — compare live settings vs. baseline
 # PolicyAnalyzer.exe from SCT
 ```
+```
 ┌───────────────────────────────────── Windows Server — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  OS hardening: CIS Benchmark baseline, GPO policies, attack surface reduction, Defender.              │
@@ -74,6 +75,7 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 │  Defender ATP   = Microsoft Defender for Endpoint; EDR platform with SIEM integration                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Security Event Log Size

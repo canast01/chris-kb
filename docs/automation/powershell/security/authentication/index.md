@@ -36,6 +36,7 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
+```
 ┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
@@ -57,6 +58,7 @@ graph TD
 │   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Authentication Reference

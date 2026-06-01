@@ -48,6 +48,7 @@ flowchart TD
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff
 ```
+```
 ┌─────────────────────────────────────── SRDF/S — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ flowchart TD
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **WAN Latency Impact on Write Performance:**

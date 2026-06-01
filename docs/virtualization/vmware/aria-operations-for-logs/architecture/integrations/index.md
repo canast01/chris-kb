@@ -18,6 +18,7 @@ In Aria Operations for Logs UI:
 ```text
 Administration → Integrations → Aria Operations → Add vRealize Operations Connection
 ```
+```
 ┌─────────────────────────────── Aria Operations for Logs — Integrations ───────────────────────────────┐
 │                                                                                                       │
 │  vRLI integrates with VMware products, SIEM, ITSM, and cloud logging targets.                         │
@@ -61,6 +62,7 @@ Administration → Integrations → Aria Operations → Add vRealize Operations 
 │  Custom field      = User-defined regex extractor creating a queryable field from log text            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 **Configure ESXi syslog via esxcli (single host):**

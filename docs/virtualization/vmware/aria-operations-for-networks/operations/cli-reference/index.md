@@ -18,6 +18,7 @@ sudo -i
 # Or use sudo for individual commands
 sudo systemctl status vrni-platform
 ```
+```
 ┌───────────────────────────────────────── vRNI CLI Reference ──────────────────────────────────────────┐
 │                                                                                                       │
 │  REST API endpoints, VAMI management, and SSH appliance commands for vRNI.                            │
@@ -61,6 +62,7 @@ sudo systemctl status vrni-platform
 │  SSH                 = Secure Shell; admin access to appliance CLI on port 22                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```yaml
 
 Output format:

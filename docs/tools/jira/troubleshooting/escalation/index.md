@@ -36,6 +36,7 @@ flowchart TD
     style DONE fill:#2d8a4e,color:#fff
     style VENDOR fill:#c0392b,color:#fff
 ```
+```
 ┌──────────────────────────────────── Jira — Escalation Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -79,6 +80,7 @@ flowchart TD
 │  Critical escalation = request via Atlassian account team for P1 outages                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Resolution Notification

@@ -28,6 +28,7 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
+```
 ┌─────────────────────────────────────── PowerShell — Hardening ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell hardening: logging, execution control, JEA, AMSI, code signing — deploy via GPO  │   │
@@ -50,6 +51,7 @@ graph TD
 │   │AMSI bypass    = attackers attempt to disable; monitor for AMSI-related events in security logs│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Audit and Event Log

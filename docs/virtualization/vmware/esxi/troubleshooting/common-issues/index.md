@@ -37,6 +37,7 @@ ESXi Common Issue Resolution Paths
 │  └── esxcli system ntp set + /etc/init.d/ntpd restart  │
 └────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Host disconnect, PSOD, storage APD/PDL, VM power-on failures, and fixes.                             │
@@ -82,6 +83,7 @@ ESXi Common Issue Resolution Paths
 │  vmk0     = management VMkernel adapter; ping test first step                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 2. **Check for clock skew** — certificate validation fails if the host clock is more than 5 minutes off:

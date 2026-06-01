@@ -23,6 +23,7 @@ flowchart TD
     errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
     checkPath --> fixPerms["chmod / chown\noutput directory"]
 ```
+```
 ┌─────────────────────────────────────── Python — Common Issues ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                    Most frequent Python automation failures and their fixes                   │   │
@@ -48,6 +49,7 @@ flowchart TD
 │   │           Fix: export REQUESTS_CA_BUNDLE=/etc/ssl/certs/corp-ca.pem in shell profile          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## API and Network Timeouts

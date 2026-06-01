@@ -46,6 +46,7 @@ pyenv local 3.12.3
 python --version
 which python   # Should point to ~/.pyenv/shims/python
 ```
+```
 ┌───────────────────────────────────── Python — Install & Upgrade ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Install Python: pyenv for version management; system Python for server automation       │   │
@@ -68,6 +69,7 @@ which python   # Should point to ~/.pyenv/shims/python
 │   │      Re-create venv= after Python upgrade; venv is tied to a specific interpreter binary      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

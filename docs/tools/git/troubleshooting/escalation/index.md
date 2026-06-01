@@ -23,6 +23,7 @@ flowchart TD
     L2 -->|Corruption / data loss confirmed| EMERG
     L3 -->|Vendor escalation| EMERG
 ```
+```
 ┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation paths for Git issues: corrupt repos, leaked secrets, and access incidents.                │
@@ -66,6 +67,7 @@ flowchart TD
 │  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

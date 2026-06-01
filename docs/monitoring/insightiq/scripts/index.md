@@ -21,6 +21,7 @@ def iiq_get(path: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
+```
 ┌──────────────────────────────────── InsightIQ — Scripts Reference ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -51,6 +52,7 @@ def iiq_get(path: str, params: dict = None) -> dict:
 │  Python requests = pip install requests; standard HTTP library for InsightIQ API                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Automated Weekly Report Generation

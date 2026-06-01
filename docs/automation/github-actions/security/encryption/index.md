@@ -22,6 +22,7 @@ flowchart LR
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
 ```
+```
 ┌───────────────────────────────────── GitHub Actions — Encryption ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    GitHub Actions encrypts secrets at rest and in transit; secrets masked in all log output   │   │
@@ -44,6 +45,7 @@ flowchart LR
 │   │    Env scope       = set secret as env var at job level; available to all steps in that job   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ## Masking Dynamic Values

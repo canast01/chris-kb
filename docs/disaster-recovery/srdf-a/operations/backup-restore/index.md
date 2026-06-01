@@ -33,6 +33,7 @@ export SYMCLI_SID=000123456789
 # Or use -sid flag on each command
 symrdf -sid 000123456789 query -g <rdf_group>
 ```
+```
 ┌────────────────────────────────────── SRDF/A — Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
@@ -74,6 +75,7 @@ symrdf -sid 000123456789 query -g <rdf_group>
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

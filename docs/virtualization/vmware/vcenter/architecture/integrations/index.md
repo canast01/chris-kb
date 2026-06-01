@@ -39,6 +39,7 @@ vCenter Integration Map
   │    └── Lookup Service             ← registry     │
   └──────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter integrates with identity, storage, network, backup, and monitoring                           │
@@ -83,6 +84,7 @@ vCenter Integration Map
 │  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 - **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain

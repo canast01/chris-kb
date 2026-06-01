@@ -39,6 +39,7 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
 ```
+```
 ┌───────────────────────────────────── SRDF/A — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -89,6 +90,7 @@ symrdf -g <dgname> -sid <r1_sid> query
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## SRDF/A to SRDF/S Migration

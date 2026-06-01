@@ -63,6 +63,7 @@ flowchart TD
     class hA,hB host
     class spA,spB splitter
 ```
+```
 ┌────────────────────────────────── RecoverPoint — Install & Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -103,6 +104,7 @@ flowchart TD
 │    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

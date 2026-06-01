@@ -35,6 +35,7 @@ git remote add origin <url>
 git remote remove <name>
 git remote set-url origin <new_url>
 ```
+```
 ┌───────────────────────────────────────── Git — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Essential Git CLI commands grouped by workflow area with common flags and usage patterns.            │
@@ -78,6 +79,7 @@ git remote set-url origin <new_url>
 │  log --graph       = ASCII graph of branch/merge topology in terminal                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

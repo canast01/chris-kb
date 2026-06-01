@@ -46,6 +46,7 @@ cleanup() {
 }
 trap cleanup EXIT
 ```
+```
 ┌───────────────────────────── Cisco Nexus Dashboard — Operations Scripts ──────────────────────────────┐
 │                                                                                                       │
 │  Automation scripts for ND backup, health reporting, site management, and upgrades.                   │
@@ -91,6 +92,7 @@ trap cleanup EXIT
 │  Cert expiry check= Script querying ND cert store and alerting when < 30 days remain                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ---

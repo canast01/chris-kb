@@ -35,6 +35,7 @@ flowchart TD
     hardware -- No --> changed
     changed --> resources --> services --> resolve
 ```
+```
 ┌────────────────────────────────── Linux — Common Operational Issues ──────────────────────────────────┐
 │                                                                                                       │
 │  Recurring Linux issues and their triage steps for quick resolution.                                  │
@@ -76,6 +77,7 @@ flowchart TD
 │  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## High Disk I/O or Latency

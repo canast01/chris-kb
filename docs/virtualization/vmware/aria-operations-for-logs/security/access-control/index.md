@@ -22,6 +22,7 @@ Aria Operations for Logs uses a simple two-tier RBAC model: users are either adm
 ```text
 Administration → Authentication → Active Directory → Configure
 ```
+```
 ┌────────────────────────────── Aria Operations for Logs — Access Control ──────────────────────────────┐
 │                                                                                                       │
 │  vRLI access is controlled by built-in roles and AD group mappings via LDAP integration.              │
@@ -65,6 +66,7 @@ Administration → Authentication → Active Directory → Configure
 │  MFA               = Not native to vRLI; enforce MFA via vIDM if SSO integrated                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 | AD Group | Aria Ops for Logs Role |

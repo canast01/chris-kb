@@ -25,6 +25,7 @@ apt update && apt install -y veeam
 veeam --version
 veeamconfig ui   # Opens text-based configuration UI
 ```
+```
 ┌────────────────────────────────────── Linux — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ veeamconfig ui   # Opens text-based configuration UI
 │  NBU         = NetBackup; Veritas enterprise backup platform with agent and catalog                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Run a Backup Job Manually

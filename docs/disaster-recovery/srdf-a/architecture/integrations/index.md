@@ -33,6 +33,7 @@ graph TD
     r1array -->|"SRDF/A async replication"| r2array
     srmProd <-->|"SRM pairing channel"| srmDr
 ```
+```
 ┌───────────────────────────────── SRDF/A — Architecture Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -74,4 +75,5 @@ graph TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

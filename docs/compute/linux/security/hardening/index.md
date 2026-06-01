@@ -35,6 +35,7 @@ flowchart TD
     kernel --> mac --> auth --> audit
     fs --> audit
 ```
+```
 ┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
 │                                                                                                       │
 │  CIS benchmark-aligned Linux hardening: kernel, network, packages, and auditing.                      │
@@ -76,6 +77,7 @@ flowchart TD
 │  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Kernel Hardening — sysctl

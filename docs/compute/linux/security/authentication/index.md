@@ -28,6 +28,7 @@ passwd -S username
 # List all accounts with UID >= 1000 (non-system)
 awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 ```
+```
 ┌─────────────────────────────────────── Linux — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  Linux authentication: PAM stack, SSH keys, MFA, LDAP/Kerberos, and audit logging.                    │
@@ -69,6 +70,7 @@ awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 │  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## PAM — Pluggable Authentication Modules

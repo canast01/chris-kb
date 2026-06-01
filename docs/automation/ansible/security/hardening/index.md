@@ -38,6 +38,7 @@ AllowAgentForwarding no
 EOF
 systemctl reload sshd
 ```
+```
 ┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    Harden Ansible control node and AWX to reduce attack surface and block unauthorised use    │   │
@@ -61,6 +62,7 @@ systemctl reload sshd
 │   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## AWX / AAP Hardening

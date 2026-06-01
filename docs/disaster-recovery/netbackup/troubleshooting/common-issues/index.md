@@ -45,6 +45,7 @@ tail -200 /usr/openv/netbackup/logs/bpcd/log.<yyyymmdd>
 # Review bpbrm log on master
 tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 ```
+```
 ┌────────────────────────────────────── NetBackup — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
@@ -82,6 +83,7 @@ tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

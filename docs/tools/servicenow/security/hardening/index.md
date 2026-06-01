@@ -52,6 +52,7 @@ Object.keys(criticalProps).forEach(function(prop) {
   gs.info('[' + status + '] ' + prop + ': expected=' + expected + ' actual=' + actual);
 });
 ```
+```
 ┌──────────────────────────────────────── ServiceNow Hardening ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐                                                    │
@@ -103,6 +104,7 @@ Object.keys(criticalProps).forEach(function(prop) {
 │  Script review= security check of Business Rules/Client Scripts before promotion                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

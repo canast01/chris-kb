@@ -31,6 +31,7 @@ vCenter CLI Interfaces
   │  └──────────────────────┘   │           │                          │
   └─────────────────────────────┘           └──────────────────────────┘
 ```
+```
 ┌─────────────────────────────────── vCenter Server — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter is primarily managed via the HTML5 UI, but PowerCLI, govc, and the                           │
@@ -76,6 +77,7 @@ vCenter CLI Interfaces
 │  SSH enable     = VAMI > Access > SSH login; off by default                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

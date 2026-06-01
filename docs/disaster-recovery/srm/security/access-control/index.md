@@ -22,6 +22,7 @@ Privileges to include:
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
 ```
+```
 ┌──────────────────────────────────────── SRM — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ Privileges to include:
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Exporting Recovery History for Compliance

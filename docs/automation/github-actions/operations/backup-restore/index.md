@@ -52,6 +52,7 @@ EOF
 chmod +x /usr/local/bin/github-repo-mirror.sh
 echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 ```
+```
 ┌────────────────────────────────── GitHub Actions — Backup & Restore ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   GitHub Actions workflow state lives in the git repo — workflow YAML is the source of truth  │   │
@@ -75,6 +76,7 @@ echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 │   │        OIDC trust      = re-configure cloud OIDC trust relationship if repo moves orgs        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Recreate Secrets After Repository Loss

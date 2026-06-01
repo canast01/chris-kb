@@ -10,6 +10,7 @@ Capacity forecasting predicts when a resource will be exhausted based on histori
 ```text
 Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 ```
+```
 ┌───────────────────────────────── Performance — Capacity Forecasting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -39,6 +40,7 @@ Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 │    Overcommit   = Allocating more vCPU/RAM than physical; acceptable with headroom tracking           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Pure FlashArray:**

@@ -44,6 +44,7 @@ iostat -x 5 12 > /tmp/iostat-baseline.txt
 free -m
 vmstat -S M 5 12
 ```
+```
 ┌────────────────────────────────────── Performance — Baselining ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -73,6 +74,7 @@ vmstat -S M 5 12
 │    Deviation    = Metric outside normal range; signals regression or capacity issue                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Documenting the Baseline

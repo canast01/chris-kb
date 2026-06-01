@@ -29,6 +29,7 @@ Protected Site                        Recovery Site
 ```
          │                                      │
          └──── Replication (ABR or VR) ─────────┘
+```
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM orchestrates VM failover between a protected site and recovery site using                        │
@@ -74,6 +75,7 @@ Protected Site                        Recovery Site
 │  Reprotect     = reverse replication direction after failover                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Per-VM customization** — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.

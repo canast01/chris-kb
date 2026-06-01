@@ -47,6 +47,7 @@ curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>"}' | jq '.token'
 ```
+```
 ┌────────────────────────────── Commvault Backup and Restore — Procedures ──────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -103,6 +104,7 @@ curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
 │  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
 │  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### File-Level Recovery (Guest Files)

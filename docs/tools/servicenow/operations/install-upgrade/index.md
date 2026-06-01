@@ -48,6 +48,7 @@ flowchart TD
     K -- Fail --> L --> J
     K -- Pass --> M --> N --> O --> P
 ```
+```
 ┌────────────────────────────────── ServiceNow — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │  ServiceNow upgrade process: SN delivers patches; tenant validates and activates via HI.              │
@@ -91,6 +92,7 @@ flowchart TD
 │  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Upgrading Plugins

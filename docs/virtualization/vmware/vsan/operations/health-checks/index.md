@@ -38,6 +38,7 @@ vSAN HEALTH CHECK SCOPE
            ▼
   Skyline Health (vCenter UI) + esxcli vsan health cluster list
 ```
+```
 ┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN health checks verify cluster, network, disk, and object health; run daily                       │
@@ -83,6 +84,7 @@ vSAN HEALTH CHECK SCOPE
 │  Resync ETA    = estimate shown in vSAN performance health panel                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

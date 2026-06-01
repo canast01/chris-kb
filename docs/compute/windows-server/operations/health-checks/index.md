@@ -30,6 +30,7 @@ flowchart TD
     rebootCheck -- No --> allGood
     rebootCheck -- Yes --> investigate
 ```
+```
 ┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Regular health checks: disk, AD replication, services, and event log review.                         │
@@ -73,6 +74,7 @@ flowchart TD
 │  LAPS          = auto-rotated local admin password; check rotation age                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Disk Space

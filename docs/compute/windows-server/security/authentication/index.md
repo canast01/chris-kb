@@ -25,6 +25,7 @@ sequenceDiagram
     server-->>client: AP-REP — mutual auth confirmation
     client->>server: Application request (authorised session)
 ```
+```
 ┌─────────────────────────────────── Windows Server — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  Authentication stack: Kerberos primary, NTLM fallback, certificate-based, MFA enforcement.           │
@@ -71,6 +72,7 @@ sequenceDiagram
 │  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ```cmd

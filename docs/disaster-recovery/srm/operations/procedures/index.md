@@ -39,6 +39,7 @@ flowchart TD
     class assess decision
     class start,pm,fo terminal
 ```
+```
 ┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -78,6 +79,7 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### Test Failover Procedure

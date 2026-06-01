@@ -30,6 +30,7 @@ flowchart TB
     eyeglass -->|"DNS cutover\nzone delegation"| dns
     eyeglass -->|"SNMP traps\nsyslog events"| siem
 ```
+```
 ┌──────────────────────────── Superna Eyeglass — Architecture Integrations ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -71,6 +72,7 @@ flowchart TB
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Syslog / SIEM

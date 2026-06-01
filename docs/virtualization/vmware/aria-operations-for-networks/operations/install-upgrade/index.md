@@ -73,6 +73,7 @@ curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n
 ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
 ```
+```
 ┌─────────────────────────────────────── vRNI Install & Upgrade ────────────────────────────────────────┐
 │                                                                                                       │
 │  OVA deployment, PAK upgrade process, and pre-requisites for Aria Operations for Networks.            │
@@ -116,6 +117,7 @@ sudo systemctl status vrni-platform nginx cassandra
 │  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Prepare for Upgrade

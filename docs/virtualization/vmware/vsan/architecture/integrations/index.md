@@ -42,6 +42,7 @@ vSAN INTEGRATION MAP
   │  host, IP pool req.   │   │                      │
   └───────────────────────┘   └──────────────────────┘
 ```
+```
 ┌───────────────────────────────────────── vSAN — Integrations ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN integrates with vCenter for management, NSX for micro-segmentation,                             │
@@ -87,6 +88,7 @@ vSAN INTEGRATION MAP
 │  Inline enc= ESA encrypts data as it enters the storage layer                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Key vCenter-managed vSAN functions:

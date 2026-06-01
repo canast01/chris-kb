@@ -14,6 +14,7 @@ Aria Operations ships with a self-signed certificate. Replace with a CA-signed c
 ```text
 Administration → Certificates → Replace Certificate
 ```
+```
 ┌───────────────────────────────────── Aria Operations Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │  TLS, LDAPS, certificate management, and data encryption for Aria Operations (vROps).                 │
@@ -57,6 +58,7 @@ Administration → Certificates → Replace Certificate
 │  Self-Signed Default = vROps ships with self-signed cert; replace for production                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

@@ -38,6 +38,7 @@ flowchart TD
     style STATE fill:#1565c0,color:#fff
     style LOCK fill:#c62828,color:#fff
 ```
+```
 ┌────────────────────────────────────── Terraform — How It Works ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │           terraform init → plan → apply is the core workflow; destroy reverses apply          │   │
@@ -59,6 +60,7 @@ flowchart TD
 │   │    State lock    = prevents concurrent terraform apply; acquired on apply, released on done   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```hcl
 
 ---

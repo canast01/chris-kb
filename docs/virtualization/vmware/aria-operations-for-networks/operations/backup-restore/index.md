@@ -47,6 +47,7 @@ TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 echo "Token: $TOKEN"
 ```
+```
 ┌──────────────────────────────────────── vRNI Backup & Restore ────────────────────────────────────────┐
 │                                                                                                       │
 │  Configuration export via REST API and full restore steps for Aria Operations for Networks.           │
@@ -90,6 +91,7 @@ echo "Token: $TOKEN"
 │  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ```bash

@@ -29,6 +29,7 @@ graph TD
         cloudEnc["D@RE before cloud offload\nCloud provider does NOT hold keys"]
     end
 ```
+```
 ┌───────────────────────────────────── Dell Data Domain Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -65,6 +66,7 @@ graph TD
 │    Key escrow   = Backup copy of encryption key in separate secure vault; needed for recovery         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Enable Encryption at Initial Commissioning

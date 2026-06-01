@@ -28,6 +28,7 @@ flowchart TD
     maps -->|"BB credit zero"| slowDrain["bottleneckmon --show\nDisable slow drain port"]
     maps -->|"ISL util high"| islAdd["Add ISL capacity\ncheck trunk group"]
 ```
+```
 ┌────────────────────────── Brocade Fabric OS — Troubleshooting Common Issues ──────────────────────────┐
 │                                                                                                       │
 │  Common Fabric OS issues: ISL bounce, zone merge fail, port offline, MAPS alerts, login err.          │
@@ -73,6 +74,7 @@ flowchart TD
 │  HA reboot       = High Availability failover; active CP reboots to standby CP                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **Resolution steps:**

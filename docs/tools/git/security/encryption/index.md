@@ -29,6 +29,7 @@ Host github.com gitlab.corp.example.com
     MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
     HostKeyAlgorithms ssh-ed25519,rsa-sha2-512
 ```
+```
 ┌────────────────────────────────────────── Git — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Encryption in transit (TLS/SSH), commit signing (GPG/SSH), and encrypted secret storage.             │
@@ -72,6 +73,7 @@ Host github.com gitlab.corp.example.com
 │  No --insecure= never disable TLS cert verification; risk of MITM attack                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **TLS version enforcement** (server-side, nginx/Apache reverse proxy in front of GitLab):

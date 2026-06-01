@@ -90,6 +90,7 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
+```
 ┌─────────────────────────────────────── PowerShell — Procedures ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Common PowerShell operational procedures: bulk host operations, AD queries, module updates  │   │
@@ -112,6 +113,7 @@ flowchart TD
 │   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Scheduled Tasks for Automated Reports

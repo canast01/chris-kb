@@ -23,6 +23,7 @@ vracli services
 tail -f /data/vcops/log/analytics.log
 tail -f /data/vcops/log/collector.log
 ```
+```
 ┌─────────────────────────────────── Aria Operations — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -65,6 +66,7 @@ tail -f /data/vcops/log/collector.log
 │  proxy set         = Configures HTTP proxy for Aria Ops outbound internet connectivity                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

@@ -16,6 +16,7 @@ curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \
   -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}" \
   | jq -r '.access_token'
 ```
+```
 ┌───────────────────────────────── Dell AIOps — CLI and API Reference ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -46,6 +47,7 @@ curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \
 │  Rate limit = API enforces per-client limits; retry with exponential backoff on 429                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Anomalies

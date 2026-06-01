@@ -49,6 +49,7 @@ flowchart TD
     style ALERT_CLUSTER fill:#c0392b,color:#fff
     style ALERT_PERF fill:#e67e22,color:#fff
 ```
+```
 ┌──────────────────────────────────────── Jira — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -79,6 +80,7 @@ flowchart TD
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```yaml
 
 Expected: All nodes show `healthy` / `UP`.

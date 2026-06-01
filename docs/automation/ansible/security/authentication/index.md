@@ -18,6 +18,7 @@ ssh-keygen -t ed25519 -C "ansible-control@prod" -f ~/.ssh/ansible_ed25519 -N ""
 # RSA 4096 — for legacy systems that don't support Ed25519
 ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 ```
+```
 ┌────────────────────────────────────── Ansible — Authentication ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Ansible uses SSH key authentication for Linux targets and WinRM/Kerberos for Windows targets │   │
@@ -40,6 +41,7 @@ ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 │   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## WinRM Authentication (Windows Targets)

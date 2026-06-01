@@ -18,6 +18,7 @@ flowchart TD
     G -->|Yes| H[Declare success\nRemove snapshot\nClose change ticket]
     G -->|No| I[Rollback decision\nor targeted fix]
 ```
+```
 ┌─────────────────────────────────────── Post-Upgrade Validation ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -51,6 +52,7 @@ flowchart TD
 │    Error rate     = Application error rate; an increase post-upgrade indicates regression             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### VMware ESXi

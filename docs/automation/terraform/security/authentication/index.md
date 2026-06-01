@@ -25,6 +25,7 @@ graph LR
     envVars --> tfProvider
     tfProvider --> cloudAPI
 ```
+```
 ┌───────────────────────────────────── Terraform — Authentication ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform provider authentication: OIDC (CI), IAM instance profile (EC2), CLI profile (local) │   │
@@ -46,6 +47,7 @@ graph LR
 │   │  Vault agent    = injects secrets into env before terraform runs; no secrets in process args  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Google Cloud

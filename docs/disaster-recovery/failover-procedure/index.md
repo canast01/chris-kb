@@ -20,6 +20,7 @@ Before initiating failover, confirm:
 symrdf -g <rdfgroup> query
 # Confirm R2 volumes are Synchronized or Consistent before failing over
 ```
+```
 ┌──────────────────────────────────────── DR Failover Procedure ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -49,6 +50,7 @@ symrdf -g <rdfgroup> query
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### VM Failover — VMware SRM

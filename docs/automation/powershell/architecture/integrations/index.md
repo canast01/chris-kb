@@ -35,6 +35,7 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
+```
 ┌────────────────────────────────────── PowerShell — Integrations ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell integrates with Microsoft ecosystem and infrastructure platforms via modules    │   │
@@ -56,6 +57,7 @@ graph LR
 │   │        Az module         = Connect-AzAccount; then Get-AzVM, New-AzResourceGroup, etc.        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Snapshots

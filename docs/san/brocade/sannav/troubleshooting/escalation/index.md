@@ -85,6 +85,7 @@ uptime
 # Any changes made before the issue (upgrade, configuration change, network change)
 # Steps already taken to troubleshoot
 ```
+```
 ┌───────────────────────────── Brocade SANnav — Troubleshooting Escalation ─────────────────────────────┐
 │                                                                                                       │
 │  SANnav escalation: internal L2/L3 → Broadcom TAC with log bundle, case, and access.                  │
@@ -130,6 +131,7 @@ uptime
 │  No changes      = freeze all fabric and SANnav changes during active incident                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### For Performance Issues

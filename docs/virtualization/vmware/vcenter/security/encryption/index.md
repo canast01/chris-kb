@@ -38,6 +38,7 @@ vSphere Encryption Key Flow
   │  vCenter ──TLS──▶ ESXi :443 (host management)      │
   └────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── vCenter Server — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter encrypts management traffic via TLS and integrates with external KMS                         │
@@ -83,6 +84,7 @@ vSphere Encryption Key Flow
 │  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## vSphere Trust Authority (vTA)

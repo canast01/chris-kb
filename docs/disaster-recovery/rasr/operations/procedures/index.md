@@ -34,6 +34,7 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
 ```
+```
 ┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -73,6 +74,7 @@ Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -Fi
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

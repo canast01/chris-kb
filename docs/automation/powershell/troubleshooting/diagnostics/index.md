@@ -32,6 +32,7 @@ flowchart TD
     style O fill:#c62828,color:#fff
     style N fill:#2e7d32,color:#fff
 ```
+```
 ┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell diagnostic sequence: check error object → enable verbose → trace script execution │   │
@@ -52,6 +53,7 @@ flowchart TD
 │   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 > Warning: `-Trace 2` is very verbose. Redirect output to a file for scripts with large loops: `Set-PSDebug -Trace 2; .\MyScript.ps1 *>&1 | Out-File trace.txt`

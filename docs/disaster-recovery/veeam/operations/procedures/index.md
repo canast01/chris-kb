@@ -33,6 +33,7 @@ sequenceDiagram
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
 ```
+```
 ┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ sequenceDiagram
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

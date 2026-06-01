@@ -27,6 +27,7 @@ passwd admin
 # Change default OS root password (if accessible)
 sudo passwd root
 ```
+```
 ┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │  SANnav hardening: disable defaults, TACACS+ enforce, TLS, RBAC, patch management.                    │
@@ -72,6 +73,7 @@ sudo passwd root
 │  Staging test    = validate SANnav upgrade in non-prod before production rollout                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

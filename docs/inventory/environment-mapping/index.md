@@ -52,6 +52,7 @@ For each application, document:
 - TLS cert: *.payments.example.com — expires 2027-03-01
 - Secrets: vault path `secret/payments/db_password`, `secret/payments/fraud_api_key`
 ```
+```
 ┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -81,6 +82,7 @@ For each application, document:
 │    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Change Impact Assessment

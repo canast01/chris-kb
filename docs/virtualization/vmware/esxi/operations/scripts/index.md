@@ -36,6 +36,7 @@ Script Execution Flow (PowerCLI example)
 │           └── Report: PASS / WARNING / CRITICAL       │
 └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
@@ -81,6 +82,7 @@ Script Execution Flow (PowerCLI example)
 │  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

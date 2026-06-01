@@ -28,6 +28,7 @@ graph TB
   class SRC,ADMIN host
   class WEBCON mgmt
 ```
+```
 ┌─────────────────────────────── Commvault — How It Works: Job Lifecycle ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -96,6 +97,7 @@ graph TB
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 MediaAgent best practices:

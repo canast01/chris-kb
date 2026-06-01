@@ -27,6 +27,7 @@ Authentication requirements:
 - Required for recovery operators: "Recovery Manager" or equivalent role
 - MFA: Enable for all management plane access where supported
 ```
+```
 ┌──────────────────────────────────────── RASR — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -66,6 +67,7 @@ Authentication requirements:
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Recovery Media Authentication

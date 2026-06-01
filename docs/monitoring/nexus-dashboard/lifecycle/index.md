@@ -35,6 +35,7 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 7. Notify network operations team — brief service interruptions may occur per node during rolling upgrade
 8. Schedule the upgrade in the change management system
 ```
+```
 ┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 │  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Replacing a Failed Node

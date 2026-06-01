@@ -30,6 +30,7 @@ keystone-collector list-arrays
 keystone-collector upgrade --check     # dry-run
 keystone-collector upgrade --apply
 ```
+```
 ┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ keystone-collector upgrade --apply
 │    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Keystone Portal API

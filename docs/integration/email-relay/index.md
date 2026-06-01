@@ -38,6 +38,7 @@ After editing `main.cf`, reload without dropping the queue:
 ```bash
 postfix reload
 ```
+```
 ┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -68,6 +69,7 @@ postfix reload
 │    Relay allow  = List of IPs permitted to relay through SMTP server without auth (use sparingly)     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ---

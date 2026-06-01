@@ -18,6 +18,7 @@ Role
                     ├── Record-level (specific conditions)
                     └── Field-level (specific fields)
 ```
+```
 ┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,6 +62,7 @@ Role
 │  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ```javascript

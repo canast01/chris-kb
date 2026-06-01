@@ -27,6 +27,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │  └───────────────────────────┘                                   │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │
@@ -70,6 +71,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │  GSS SR Attachment   = Logscraper archive + support bundle required for P1/P2                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Key services and expected states:

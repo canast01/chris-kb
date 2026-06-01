@@ -38,6 +38,7 @@ flowchart TD
     REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
     REPL -- Clear --> OK
 ```
+```
 ┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │
@@ -81,6 +82,7 @@ flowchart TD
 │  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.

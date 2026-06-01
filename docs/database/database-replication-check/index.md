@@ -24,6 +24,7 @@ SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();
 SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes
 FROM pg_replication_slots;
 ```
+```
 ┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -54,6 +55,7 @@ FROM pg_replication_slots;
 │    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ```bash

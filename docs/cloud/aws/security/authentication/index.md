@@ -32,6 +32,7 @@ aws sso-admin list-permission-sets \
 aws sso login --profile prod
 # Or configure SSO profile in ~/.aws/config:
 ```
+```
 ┌───────────────────────────── AWS Authentication — SSO, MFA & Credentials ─────────────────────────────┐
 │                                                                                                       │
 │  Authentication to AWS via IAM Identity Center SSO, MFA enforcement, and access keys.                 │
@@ -77,6 +78,7 @@ aws sso login --profile prod
 │  Short-lived token= Temporary STS credential; expires after max 12h; no rotation needed               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

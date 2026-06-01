@@ -33,6 +33,7 @@ flowchart LR
 
     counters -->|"threshold exceeded"| alert
 ```
+```
 ┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostics: error logs, portshow, MAPS rules, raslog, supportshow, and port tests.                  │
@@ -78,6 +79,7 @@ flowchart LR
 │  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Environmental Sensors

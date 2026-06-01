@@ -27,6 +27,7 @@ graph LR
   class STG_A,STG_B store
   class H_A host
 ```
+```
 ┌───────────────────────────────────── RecoverPoint — How It Works ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ graph LR
 │    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 | Environment Write Rate | Minimum Journal Size | Recommended Retention |

@@ -28,6 +28,7 @@ graph LR
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
 ```
+```
 ┌──────────────────────────────────────── Python — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     Python integrates with cloud, storage, monitoring, and ITSM platforms via vendor SDKs     │   │
@@ -49,6 +50,7 @@ graph LR
 │   │       Exit codes  = scripts should exit 0 on success, 1+ on failure; CI checks exit code      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ### Pagination

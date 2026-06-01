@@ -42,6 +42,7 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
+```
 ┌───────────────────────────────── Superna Eyeglass — Backup & Restore ─────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
@@ -83,6 +84,7 @@ flowchart LR
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Restore to New/Replacement Appliance

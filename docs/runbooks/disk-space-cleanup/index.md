@@ -38,6 +38,7 @@
            ▼
   Document what was removed; close ticket
 ```
+```
 ┌──────────────────────────────────── Runbook — Disk Space Cleanup ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -74,6 +75,7 @@
 │    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## Step 3 — Package Cache

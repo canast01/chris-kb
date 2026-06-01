@@ -51,6 +51,7 @@ flowchart TD
     C -- Authentication --> T[Check service account in job\nTest-ADServiceAccount]
     T --> U[Reset password\nVerify AD group membership]
 ```
+```
 ┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,7 @@ flowchart TD
 │    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### VSS Error Investigation

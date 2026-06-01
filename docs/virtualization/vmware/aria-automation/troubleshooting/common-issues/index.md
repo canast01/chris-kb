@@ -19,6 +19,7 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
   && echo "YAML OK" || echo "YAML syntax error"
 ```
+```
 ┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │  Common vRA issues: failed requests, data collection errors, SSO failures, Orchestrator faults.       │
@@ -62,6 +63,7 @@ python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
 │  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 If the VM was created in vCenter but the deployment is stuck:

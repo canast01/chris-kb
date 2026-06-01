@@ -24,6 +24,7 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
+```
 ┌────────────────────────────── Brocade Fabric OS — Operations Procedures ──────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -76,6 +77,7 @@ flowchart TD
 │    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Create Aliases

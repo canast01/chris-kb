@@ -55,6 +55,7 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
   -servername dcnm-dc1.corp.example.com </dev/null 2>/dev/null \
   | openssl x509 -noout -subject -issuer -enddate
 ```
+```
 ┌─────────────────────────────────────── Cisco DCNM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM encryption: TLS 1.2/1.3 management, SNMPv3 privacy, OS disk encryption at rest.                 │
@@ -100,6 +101,7 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
 │  syslog TLS      = encrypted syslog forwarding; audit events protected in transit                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### DCNM to LDAP (LDAPS)

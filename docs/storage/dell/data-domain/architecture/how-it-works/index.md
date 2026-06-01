@@ -26,6 +26,7 @@ graph TB
   class CLOUD cloud
   class DDDR dr
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -66,6 +67,7 @@ graph TB
 │    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.

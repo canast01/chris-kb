@@ -33,6 +33,7 @@ ESXi CLI Tool Map
 │  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth     │
 └─────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │
@@ -78,6 +79,7 @@ ESXi CLI Tool Map
 │  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ```bash

@@ -11,6 +11,7 @@ export SN_INSTANCE="https://mycompany.service-now.com"
 export SN_USER="api_svc_account"
 export SN_PASS="your-password"
 ```
+```
 ┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │  GlideRecord scripts, background scripts, and automation used in day-to-day operations.               │
@@ -54,6 +55,7 @@ export SN_PASS="your-password"
 │  addQuery()       = adds WHERE clause condition to GlideRecord query                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 **Expected CSV format:**

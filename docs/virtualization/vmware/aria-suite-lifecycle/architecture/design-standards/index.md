@@ -27,6 +27,7 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 │  └─────────────────────────┘                                    │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────── Aria Suite LCM Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │  Environment sizing, product grouping, and naming standards for Aria Suite Lifecycle Manager.         │
@@ -70,6 +71,7 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 │  Pre-check           = LCM validation before deploy/upgrade: disk, DNS, certs                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 | Product | Short Name | Example |

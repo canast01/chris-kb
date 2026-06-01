@@ -38,6 +38,7 @@
            ▼
   Update ticket with lockout source
 ```
+```
 ┌────────────────────────────────────── Runbook — Account Unlock ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -80,6 +81,7 @@
 │    Service account= Non-interactive account; lockout = service failing; update credential source      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Key fields in Event ID 4740:

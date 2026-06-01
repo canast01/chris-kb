@@ -34,6 +34,7 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 // System Web Services → Outbound → REST Messages
 // Open REST Message → HTTP Methods → SSL enforcement: Enforce SSL/TLS
 ```
+```
 ┌──────────────────────────────────────── ServiceNow Encryption ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -82,6 +83,7 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 │  Cipher suite= agreed TLS algorithms; ServiceNow enforces strong suites only                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

@@ -33,6 +33,7 @@ Before escalating to Dell support, work through the standard diagnostic steps:
    - SCG admin UI > Systems > [System] > Edit > Test Connection
    - Ensure the service account has not expired or been locked
 ```
+```
 ┌────────────────────────────────────── CloudIQ — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -64,6 +65,7 @@ Before escalating to Dell support, work through the standard diagnostic steps:
 │  Proxy check = If gateway VM uses proxy, verify proxy allows cloudiq.dell.com:443                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Alert Notifications Not Delivered

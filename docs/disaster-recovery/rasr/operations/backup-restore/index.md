@@ -35,6 +35,7 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /user DOMAIN\svc-rasr /p
 :: With compression and verbose output
 rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\rasr-backup.log /user DOMAIN\svc-rasr /pass P@ssw0rd!
 ```
+```
 ┌─────────────────────────────────────── RASR — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │
@@ -76,6 +77,7 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\r
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Phase 3 — Map Network Share

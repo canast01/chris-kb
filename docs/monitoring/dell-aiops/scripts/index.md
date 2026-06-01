@@ -29,6 +29,7 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
+```
 ┌─────────────────────────────────── Dell AIOps — Scripts Reference ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,6 +60,7 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Requests library = pip install requests; standard Python HTTP client                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```python
 
 ## Weekly Health Score Report

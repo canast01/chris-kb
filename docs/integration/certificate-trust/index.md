@@ -31,6 +31,7 @@ update-ca-trust extract
 # Verify
 trust list | grep "internal-ca"
 ```
+```
 ┌─────────────────────────────────── Integration — Certificate Trust ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ trust list | grep "internal-ca"
 │    GPO          = Group Policy Object; deploys CA cert to all domain machines automatically           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## Verify a Certificate Chain

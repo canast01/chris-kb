@@ -28,6 +28,7 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
+```
 ┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      PS encryption: SecureString in-memory, DPAPI user-scope, SecretManagement for vaults     │   │
@@ -49,6 +50,7 @@ graph TD
 │   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Encryption Reference

@@ -36,6 +36,7 @@ git remote update --prune
 git fsck --full
 git count-objects -vH
 ```
+```
 ┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │  Git backup strategies: mirror clones, bundle exports, and recovery from history.                     │
@@ -79,6 +80,7 @@ git count-objects -vH
 │  Webhook           = must be updated to point to restored remote URL                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

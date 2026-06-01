@@ -30,6 +30,7 @@ esxcli vsan storage list
 # 6. Network connectivity between hosts
 esxcli vsan debug network test
 ```
+```
 ┌──────────────────────────────────────── vSAN — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Common vSAN issues: degraded components, resync stalls, disk failures, network                       │
@@ -75,6 +76,7 @@ esxcli vsan debug network test
 │  Capacity 70%  = alert threshold; keep 30% free for resync headroom                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Why VMs Slow Down During Resync

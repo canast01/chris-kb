@@ -32,6 +32,7 @@ VPC CLI: Network Resource Hierarchy
   │  └─────────────────────┘                             │
   └──────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — VPC ────────────────────────────────────────────┐
 │                                                                                                       │
 │  VPC CLI commands for network creation, subnets, routing, security groups, and peering.               │
@@ -77,4 +78,5 @@ VPC CLI: Network Resource Hierarchy
 │  Nitro card      = AWS-built network card handling VPC packet forwarding                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

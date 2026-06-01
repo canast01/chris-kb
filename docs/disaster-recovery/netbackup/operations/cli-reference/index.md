@@ -56,6 +56,7 @@ flowchart TD
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage
 ```
+```
 ┌────────────────────────────────────── NetBackup — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -99,6 +100,7 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Run restores from the CLI. Always verify client name, backup time, and policy before executing.

@@ -46,6 +46,7 @@ uemcli /sys/setting set -loginBanner "Authorised access only. All sessions are l
 uemcli /sys/security show
 uemcli /sys/setting show
 ```
+```
 ┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -86,6 +87,7 @@ uemcli /sys/setting show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## iDRAC Hardening

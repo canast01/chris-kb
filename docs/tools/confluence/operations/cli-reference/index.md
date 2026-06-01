@@ -20,6 +20,7 @@ export CF_URL="https://confluence.example.com"
 export CF_TOKEN="<your-PAT-here>"
 export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 ```
+```
 ┌───────────────────────────────────── Confluence — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -50,6 +51,7 @@ export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 │  Heap dump = -XX:+HeapDumpOnOutOfMemoryError in JVM_SUPPORT_RECOMMENDED_ARGS                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Users and Groups

@@ -27,6 +27,7 @@ graph TD
     tfApply --> stateFile
     stateFile --> s3Encrypted
 ```
+```
 ┌─────────────────────────────────────── Terraform — Encryption ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   TF encryption: state at rest (S3 SSE-KMS), transit TLS, mark secrets as sensitive outputs   │   │
@@ -48,6 +49,7 @@ graph TD
 │   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```hcl
 
 ```hcl

@@ -77,6 +77,7 @@ curl -sk -u 'admin:password' \
   }' \
   "https://<nsx-manager>/api/v1/cluster/backups/config"
 ```
+```
 ┌────────────────────────────────────── NSX — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │  NSX Manager cluster backup via SFTP, scheduling, and full restore procedure.                         │
@@ -122,6 +123,7 @@ curl -sk -u 'admin:password' \
 │  Policy API  = NSX policy REST API; primary management interface                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Periodic restore tests are essential. A backup that cannot be restored has no value. Schedule a restore drill quarterly in a non-production environment.

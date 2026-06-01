@@ -95,6 +95,7 @@ flowchart TD
     style validateApp fill:#15803d,color:#fff
     style waitSite fill:#6b7280,color:#fff
 ```
+```
 ┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -134,6 +135,7 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 | RPO Factor | How to Check | Acceptable Threshold |

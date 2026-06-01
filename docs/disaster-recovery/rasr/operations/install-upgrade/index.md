@@ -73,6 +73,7 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 # Verify CLI is accessible
 & "C:\Program Files\Dell\RASR\rasrutil.exe" /?
 ```
+```
 ┌────────────────────────────────────── RASR — Install & Upgrade ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -123,6 +124,7 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 The ISO can be stored on the NAS and mounted via iDRAC virtual media for remote recovery.

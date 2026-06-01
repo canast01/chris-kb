@@ -23,6 +23,7 @@ graph TD
     svcAccount --> auditLog
     iamRole --> auditLog
 ```
+```
 ┌─────────────────────────────────────── Python — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python access control: who can run scripts, API auth, file permissions, repo branch protection│   │
@@ -44,6 +45,7 @@ graph TD
 │   │    chmod 750    = owner execute, group execute, no world access; protect sensitive scripts    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ```bash

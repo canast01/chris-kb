@@ -37,6 +37,7 @@ curl -sk -u 'admin:password' \
   }' \
   "https://<nsx-manager>/policy/api/v1/infra/domains/default/groups/sg-web-tier"
 ```
+```
 ┌────────────────────────────────────── NSX — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Segment creation, T0/T1 gateway config, DFW rule changes, and change control.                        │
@@ -82,6 +83,7 @@ curl -sk -u 'admin:password' \
 │  CR          = Change Request; ITSM record authorising change                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 **Step 4 — Functional test**

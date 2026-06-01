@@ -29,6 +29,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 │     └──────────┘ └──────────┘   └─────────────┘                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── Aria Suite LCM Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │  vIDM, vCenter, all Aria products, NFS/S3 content store integrations for LCM.                         │
@@ -72,6 +73,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 │  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## NSX-T Integration (Optional)

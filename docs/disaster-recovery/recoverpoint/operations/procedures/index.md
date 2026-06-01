@@ -132,6 +132,7 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
+```
 ┌────────────────────────────────────── RecoverPoint — Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -170,6 +171,7 @@ flowchart TD
 │    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ### Post-Failover Validation

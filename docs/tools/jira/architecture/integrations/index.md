@@ -54,6 +54,7 @@ graph LR
     J <-->|REST API| SCRIPTS
     J <-->|REST API| EXT
 ```
+```
 ┌────────────────────────────────── Jira — Architecture Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -96,6 +97,7 @@ graph LR
 │  Crowd        = optional Atlassian SSO server; centralized auth if not using SAML                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Commit Message Convention

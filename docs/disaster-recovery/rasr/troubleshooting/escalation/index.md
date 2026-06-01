@@ -53,6 +53,7 @@ Copy-Item "$logDir\*.log" $archive
 # Also collect RASR application event log
 Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$archive\RASR-AppEvents.csv" -NoTypeInformation
 ```
+```
 ┌────────────────────────────────────────── RASR — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -92,6 +93,7 @@ Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$arch
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ### Error Codes to Include

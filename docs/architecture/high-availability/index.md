@@ -85,6 +85,7 @@ graph TD
     SW_ToR_A --> Host2
     SW_ToR_B --> Host3
 ```
+```
 ┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -115,6 +116,7 @@ graph TD
 │    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 **vSAN Stretched Cluster requirements:**

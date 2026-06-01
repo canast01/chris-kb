@@ -43,6 +43,7 @@ flowchart LR
     style F fill:#1565c0,color:#fff
     style I fill:#2e7d32,color:#fff
 ```
+```
 ┌────────────────────────────────────── PowerShell — How It Works ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell execution: script parsed to AST → pipeline stages → cmdlet execution → output   │   │
@@ -64,6 +65,7 @@ flowchart LR
 │   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

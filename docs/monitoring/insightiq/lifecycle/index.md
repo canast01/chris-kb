@@ -25,6 +25,7 @@ Key compatibility rules:
 5. Download the InsightIQ upgrade package from the NetApp Support Portal
 6. Verify available disk space: InsightIQ requires at least 10 GB free on the OS disk for upgrade staging
 ```
+```
 ┌────────────────────────────────── InsightIQ — Lifecycle Management ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -53,6 +54,7 @@ Key compatibility rules:
 │  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 Backup files should be replicated to an external backup target (NAS, S3-compatible, or enterprise backup solution).

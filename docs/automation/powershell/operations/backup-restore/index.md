@@ -24,6 +24,7 @@ foreach ($p in $ProfilePaths) {
     }
 }
 ```
+```
 ┌──────────────────────────────────── PowerShell — Backup & Restore ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    PowerShell script backup: store all .ps1/.psm1/.psd1 in git — git is the source of truth   │   │
@@ -46,6 +47,7 @@ foreach ($p in $ProfilePaths) {
 │   │      Scheduled task = Export-ScheduledTask | Out-File; Import via Register-ScheduledTask      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Restore Checklist

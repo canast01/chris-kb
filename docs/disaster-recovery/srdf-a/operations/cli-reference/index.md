@@ -47,6 +47,7 @@ flowchart TD
     style need fill:#2563eb,color:#fff
     style cmdFailover fill:#be123c,color:#fff
 ```
+```
 ┌─────────────────────────────────────── SRDF/A — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -90,6 +91,7 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

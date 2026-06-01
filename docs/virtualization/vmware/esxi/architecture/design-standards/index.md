@@ -34,6 +34,7 @@ ESXi Host Design Checklist — Standard Layout
 │  NTP: 2+ servers matching vCenter NTP sources            │
 └──────────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │  Hardware sizing, HA cluster design, and build standards for ESXi deployments.                        │
@@ -79,6 +80,7 @@ ESXi Host Design Checklist — Standard Layout
 │  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ---

@@ -32,6 +32,7 @@ flowchart LR
     journalSrc --> rsyslogSrc --> siemDst
     journalctl --> grep
 ```
+```
 ┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic tools and techniques for deep Linux system investigation.                                 │
@@ -73,6 +74,7 @@ flowchart LR
 │  /proc/PID   = Virtual filesystem exposing process state: maps, fd, stat, cmdline                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```bash
 
 ## Audit Log (auditd)

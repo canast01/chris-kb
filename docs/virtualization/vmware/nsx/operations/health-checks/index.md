@@ -42,6 +42,7 @@ get corfu-cluster status
 get services | grep -v " running"
 # The above grep shows any service NOT in running state — output should be empty
 ```
+```
 ┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Daily/weekly health runbook: cluster, transport nodes, edges, and DFW state.                         │
@@ -87,6 +88,7 @@ get services | grep -v " running"
 │  BGP session = Edge peering with physical router; must be Established                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### BGP Neighbor Health (Edge CLI)

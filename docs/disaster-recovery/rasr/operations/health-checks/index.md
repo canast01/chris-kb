@@ -30,6 +30,7 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
                        Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
 } | Format-List
 ```
+```
 ┌──────────────────────────────────────── RASR — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -67,6 +68,7 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### 4. VSS Writer Health

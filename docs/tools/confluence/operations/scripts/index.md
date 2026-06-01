@@ -21,6 +21,7 @@ export PGPASSWORD="<db-password>"
 export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
 ```
+```
 ┌─────────────────────────────────── Confluence — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -50,6 +51,7 @@ export BACKUP_DIR="/backup/confluence"
 │  Poll loop      = reindex.sh polls /rest/api/index/reindexAll until status=DONE                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

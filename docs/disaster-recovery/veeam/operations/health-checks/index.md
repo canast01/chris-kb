@@ -31,6 +31,7 @@ sequenceDiagram
     VBR-->>VBR: Record verification result in job session
     note over VBR: Failure = backup not confirmed restorable\nEscalate immediately
 ```
+```
 ┌──────────────────────────────────────── Veeam — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -68,6 +69,7 @@ sequenceDiagram
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).

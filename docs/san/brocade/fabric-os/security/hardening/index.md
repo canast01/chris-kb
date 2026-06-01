@@ -29,6 +29,7 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
+```
 ┌─────────────────────────────── Brocade Fabric OS — Security Hardening ────────────────────────────────┐
 │                                                                                                       │
 │  Hardening: disable legacy protocols, enforce RBAC, enable security policies, patch FOS.              │
@@ -74,6 +75,7 @@ flowchart TD
 │  IP whitelist    = management source IP restriction; configured via acp filter command                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Remove Default SNMP Community Strings

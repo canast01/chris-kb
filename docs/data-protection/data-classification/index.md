@@ -35,6 +35,7 @@ Get-Label | Select-Object DisplayName, Priority, IsDefault, Guid
 # Check label policy assignments
 Get-LabelPolicy | Select-Object Name, Labels, Users, Workloads
 ```
+```
 ┌──────────────────────────────── Data Protection — Data Classification ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -72,6 +73,7 @@ Get-LabelPolicy | Select-Object Name, Labels, Users, Workloads
 │    Reclassification   = Formal review to raise or lower a classification based on changed context     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Classification Workflow

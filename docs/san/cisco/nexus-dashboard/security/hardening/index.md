@@ -25,6 +25,7 @@ passwd ndadmin
 # Use a password meeting corporate complexity policy (20+ characters)
 # Store in vault; treat as break-glass
 ```
+```
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
 │                                                                                                       │
 │  Hardening checklist: replace default certs, restrict access, enable AAA, audit logging.              │
@@ -70,6 +71,7 @@ passwd ndadmin
 │  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```text
 
 ---

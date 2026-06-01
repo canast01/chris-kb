@@ -38,6 +38,7 @@ Health Check Coverage Map
   Weekly ──▶ datastore capacity, certificate expiry
   Pre-change ──▶ backup current, HA capacity, no migrations
 ```
+```
 ┌─────────────────────────────────── vCenter Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Regular vCenter health checks verify service state, certificate validity, database                   │
@@ -83,6 +84,7 @@ Health Check Coverage Map
 │  certmgr      = /usr/lib/vmware-vmca/bin/certool for cert inspection                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Key partitions to monitor:

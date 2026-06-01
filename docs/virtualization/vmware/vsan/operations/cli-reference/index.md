@@ -33,6 +33,7 @@ CLI TOOL CHAIN
                            ▼
                vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
 ```
+```
 ┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN CLI operations use esxcli on hosts, RVC (Ruby vSphere Console), PowerCLI,                       │
@@ -78,6 +79,7 @@ CLI TOOL CHAIN
 │  Test-VsanCluster= PowerCLI; triggers health check run                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### Skyline Health (vSphere Client Context)

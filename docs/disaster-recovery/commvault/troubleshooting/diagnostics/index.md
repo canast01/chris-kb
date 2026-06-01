@@ -30,6 +30,7 @@ flowchart TD
     class q1 decision
     class alert terminal
 ```
+```
 ┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -73,4 +74,5 @@ flowchart TD
 │  -verbose flag  = qlist flag enabling detailed per-object output for all list commands                │
 │  Log Rotation   = Commvault auto-rotates logs at size limit; old logs archived to .gz                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```

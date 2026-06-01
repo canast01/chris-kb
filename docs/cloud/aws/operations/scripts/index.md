@@ -115,6 +115,7 @@ Open the saved file and update these values near the top:
 cd ~/Desktop
 bash aws-health-check.sh
 ```
+```
 ┌──────────────────────────────── AWS Operations — Scripts & Automation ────────────────────────────────┐
 │                                                                                                       │
 │  Operational scripts for resource inventory, cost reporting, and routine automation tasks.            │
@@ -160,6 +161,7 @@ bash aws-health-check.sh
 │  Root usage detect= CloudTrail filter for events where userIdentity.type = Root                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 **What you should see**

@@ -26,6 +26,7 @@ graph TB
   class FA,PM store
   class H1,H2 host
 ```
+```
 ┌────────────────────────────────── Brocade Fabric OS — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -78,6 +79,7 @@ graph TB
 │    BRCD exchange  = Brocade-specific capability exchange over E_Port during fabric init               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## Name Server and Fabric Services

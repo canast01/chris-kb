@@ -33,6 +33,7 @@ flowchart TD
     selinux -- Yes --> allOk
     selinux -- No --> investigate
 ```
+```
 ┌──────────────────────────────────────── Linux — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -75,6 +76,7 @@ flowchart TD
 │  NIC error counters= rx_errors/tx_errors on interface; indicate cabling or driver issues              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ## CPU and Load

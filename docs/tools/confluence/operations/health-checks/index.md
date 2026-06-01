@@ -32,6 +32,7 @@ flowchart TD
     L -- Yes --> M[Review scheduled jobs\nfor failures]
     M --> N([Health Check Complete\nLog result])
 ```
+```
 ┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -60,6 +61,7 @@ flowchart TD
 │  System Info = Admin > System Information; shows memory, JVM version, and config                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 Response states:

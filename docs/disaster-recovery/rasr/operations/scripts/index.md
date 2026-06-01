@@ -100,6 +100,7 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
+```
 ┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -139,6 +140,7 @@ function New-RASRImage {
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```powershell
 
 ---

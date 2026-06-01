@@ -26,6 +26,7 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 │  Support Bundle: Site Recovery → Summary → Download          │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────── VMware SRM — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
 │  SRM diagnostics use support bundles, SRM Server logs, vSphere Replication logs,                      │
@@ -71,6 +72,7 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 │  ProgramData   = Windows hidden folder; SRM writes logs here                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ---

@@ -21,6 +21,7 @@ ESXi Host (OSA)
 └── Disk Group 2 (optional, up to 5 per host)
     └── ...
 ```
+```
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -66,6 +67,7 @@ ESXi Host (OSA)
 │  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 
 ### Object Placement — FTT=1 RAID-5 (4 hosts minimum)

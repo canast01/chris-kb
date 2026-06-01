@@ -29,6 +29,7 @@ flowchart TD
     ready -->|Yes| triggerFO
     triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
 ```
+```
 ┌──────────────────────────────────── Superna Eyeglass — Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -68,6 +69,7 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ### DNS Cutover

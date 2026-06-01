@@ -20,6 +20,7 @@ Admin > Sites > Add Site
 - Password: stored in secrets manager
 - For NDO (multi-site): add all APIC clusters across all sites
 ```
+```
 ┌───────────────────────────────── Nexus Dashboard — Integration Guide ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -48,6 +49,7 @@ Admin > Sites > Add Site
 │  SMTP = Email notification for NDI events; configured in ND admin settings                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```sql
 
 ## ServiceNow ITSM Integration
