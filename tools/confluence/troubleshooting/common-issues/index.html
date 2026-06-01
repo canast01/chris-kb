@@ -3163,6 +3163,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#2-slow-page-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Slow Page Performance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#3-search-index-failure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3562,24 +3573,58 @@ Reference table of the most frequent Confluence operational problems, with root 
 <a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>**Fix**
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>```bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># 1. Run VACUUM ANALYZE on the Confluence database
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>psql -h &quot;$DB_HOST&quot; -U &quot;$DB_USER&quot; -d &quot;$DB_NAME&quot; \
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  -c &quot;VACUUM ANALYZE;&quot;
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a># 2. Rebuild the search index (reduces DB fallback queries)
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a># 3. Disable profiling macro or limit results in Jira Issues macros
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a># Edit affected pages: reduce JQL result counts, add caching
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a># 4. Enable macro performance warnings
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a># Admin &gt; General Configuration &gt; Logging &gt; 
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>#   com.atlassian.confluence.macro = WARN
 </code></pre></div></p>
+<hr />
+<h2 id="2-slow-page-performance">2. Slow Page Performance<a class="headerlink" href="#2-slow-page-performance" title="Permanent link">&para;</a></h2>
+<p><strong>Symptoms</strong></p>
+<ul>
+<li>Pages take &gt; 5 seconds to load; <code>pageload</code> timer in browser &gt; 5 000 ms</li>
+<li>PostgreSQL slow query log shows queries &gt; 1 s on Confluence tables</li>
+<li>JVM GC log shows frequent GC pauses (&gt; 500 ms)</li>
+<li>High CPU on Confluence host during page renders</li>
+</ul>
+<p><strong>Common Root Causes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Cause</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing DB index on a Confluence table</td>
+<td><code>pg_stat_activity</code> slow queries; <code>EXPLAIN ANALYZE</code></td>
+</tr>
+<tr>
+<td>JQL macro fetching large result sets</td>
+<td>Edit page → inspect Jira Issues macros; reduce row limit</td>
+</tr>
+<tr>
+<td>JVM heap too small → GC pressure</td>
+<td>GC log pause frequency; increase <code>-Xmx</code> in <code>setenv.sh</code></td>
+</tr>
+<tr>
+<td>Macro performance warning suppressed</td>
+<td>Enable <code>com.atlassian.confluence.macro = WARN</code> in logging</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fix</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Run VACUUM ANALYZE on the Confluence database</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_HOST</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DB_NAME</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;VACUUM ANALYZE;&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># 2. Rebuild the search index (reduces DB fallback queries)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing &gt; Rebuild</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># 3. Disable profiling macro or limit results in Jira Issues macros</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Edit affected pages: reduce JQL result counts, add caching</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 4. Enable macro performance warnings</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Admin &gt; General Configuration &gt; Logging &gt; </span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   com.atlassian.confluence.macro = WARN</span>
+</code></pre></div>
 <hr />
 <h2 id="3-search-index-failure">3. Search Index Failure<a class="headerlink" href="#3-search-index-failure" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms</strong></p>
