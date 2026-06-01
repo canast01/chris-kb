@@ -77,7 +77,7 @@
 
 Both `seat` and `common` must be included in every vCenter backup for complete SRM recovery.
 
-### Backup Schedule Recommendation
+## Backup Schedule Recommendation
 
 | Component | Frequency | Retention |
 |---|---|---|

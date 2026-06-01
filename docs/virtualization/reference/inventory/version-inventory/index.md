@@ -58,7 +58,7 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### PowerCLI
+## PowerCLI
 
 ```powershell
 # ESXi version for all hosts in a cluster

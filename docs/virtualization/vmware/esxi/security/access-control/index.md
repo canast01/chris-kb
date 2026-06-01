@@ -89,7 +89,7 @@ vim-cmd hostsvc/lockdown_mode_enter
 vim-cmd hostsvc/lockdown_mode_exit    # to disable
 ```
 
-### Exception Users
+## Exception Users
 
 Exception users in Normal Lockdown can still connect directly to the host via SSH. Keep this list minimal:
 

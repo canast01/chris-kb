@@ -81,7 +81,7 @@ Protected: 10.10.0.0/24  →  Recovery: 10.20.0.0/24
 ```
 Requires SRM IP customization rules (subnet-level mapping). DNS updates required at recovery.
 
-### Test Network Design
+## Test Network Design
 
 For test failovers, create isolated port groups with no uplink assignment:
 

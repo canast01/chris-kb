@@ -72,7 +72,7 @@ curl -s -u "$USER:$PASS" \
 | `sysparm_exclude_reference_link` | Suppress reference links | `true` |
 | `sysparm_view` | View name for field selection | `mobile` |
 
-### POST — Create Record
+## POST — Create Record
 
 ```bash
 # Create an incident

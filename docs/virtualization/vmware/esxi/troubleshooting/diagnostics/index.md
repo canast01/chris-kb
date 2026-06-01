@@ -74,7 +74,7 @@ ESXi Diagnostic Data Sources
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Common Issues
+## Common Issues
 
 - Failed or stuck tasks
 - Certificate, DNS, or authentication issues

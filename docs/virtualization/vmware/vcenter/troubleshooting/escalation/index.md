@@ -108,7 +108,7 @@ vm-support
 NSX Manager UI → System → Support Bundle → Generate
 ```
 
-### Severity Levels
+## Severity Levels
 
 | Severity | Definition | VMware Response Target |
 |---|---|---|

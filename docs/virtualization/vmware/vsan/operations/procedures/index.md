@@ -84,7 +84,7 @@ KEY PROCEDURE FLOWS
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Add a Disk Group to an Existing Host
+## Add a Disk Group to an Existing Host
 
 Adding a disk group increases per-host storage capacity and I/O parallelism.
 

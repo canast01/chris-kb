@@ -82,7 +82,7 @@ VCF Bring-Up and Lifecycle Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Bundle Management
+## Bundle Management
 
 ```bash
 # SDDC Manager UI — Lifecycle Management → Bundle Management

@@ -84,7 +84,7 @@ Aria Operations — Alert Lifecycle
 
 6. Cancel alerts only after the underlying issue is fully resolved — not as a suppression mechanism
 
-### Maintenance Windows
+## Maintenance Windows
 
 Create a maintenance schedule to suppress alerts for planned work:
 

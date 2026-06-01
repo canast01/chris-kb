@@ -84,7 +84,7 @@ schtasks /create /tn "Horizon ADAM Backup" /tr ^
 - Event database (SQL — backed up separately)
 - Connection Server service account passwords (re-entered at restore time)
 
-### Verify the Backup
+## Verify the Backup
 
 ```powershell
 # Check file was created and is non-zero

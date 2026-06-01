@@ -78,7 +78,7 @@ Password Policy Controls (enforced via Host Profile)
 
 Store root passwords in the organisation's secrets vault (CyberArk, HashiCorp Vault, or equivalent). Each host should have a **unique** root password — password reuse across hosts increases blast radius if one password is compromised.
 
-### Create a Break-Glass Local Account
+## Create a Break-Glass Local Account
 
 ```bash
 # On each ESXi host

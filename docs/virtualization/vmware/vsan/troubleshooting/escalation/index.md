@@ -87,7 +87,7 @@ ESCALATION PATH
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Information Template
+## Information Template
 
 Prepare the following information before submitting the case:
 

@@ -66,7 +66,7 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Windows Hardening of Connection Server
+## Windows Hardening of Connection Server
 
 ```powershell
 # Disable unused services

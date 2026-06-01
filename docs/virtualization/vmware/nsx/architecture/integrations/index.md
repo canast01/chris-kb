@@ -57,7 +57,7 @@
 
 Once registered, vCenter clusters appear under **System → Fabric → Hosts**. Use them to apply transport node profiles at cluster scope.
 
-### Host Transport Node Profiles
+## Host Transport Node Profiles
 
 A Transport Node Profile (TNP) captures the NSX configuration applied to every ESXi host in a cluster: which VDS/vSS uplinks carry TEP traffic, which Transport Zones are included, and which IP pool allocates TEP addresses.
 

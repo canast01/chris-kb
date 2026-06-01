@@ -78,7 +78,7 @@ ESXi Common Issue Resolution Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Resolution Steps
+## Resolution Steps
 
 1. **Restart management agents** (attempt first — low risk, no VM impact):
 

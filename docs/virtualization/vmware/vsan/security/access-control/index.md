@@ -75,7 +75,7 @@ vSAN RBAC MODEL
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Objects and Permission Propagation
+## Objects and Permission Propagation
 
 vCenter permissions are assigned to inventory objects (datacenter, cluster, host, VM, datastore) and optionally propagated to child objects.
 

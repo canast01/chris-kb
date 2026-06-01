@@ -88,7 +88,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 
 Bundles are downloaded automatically on a configured schedule or manually triggered.
 
-### Async Patches
+## Async Patches
 
 Async patches allow individual component updates (e.g., ESXi security patch) between full VCF releases.
 

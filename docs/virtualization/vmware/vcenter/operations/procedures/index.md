@@ -83,7 +83,7 @@ VCSA Procedure Flow — Maintenance Window
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Pre-Maintenance Steps
+## Pre-Maintenance Steps
 
 1. Take a VCSA backup via VAMI → Backup, or confirm last backup is current (< 24 hours old)
 2. Snapshot the VCSA VM if running virtualised on a separate vCenter (do not use as primary recovery method)

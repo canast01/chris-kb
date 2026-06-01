@@ -92,7 +92,7 @@ Include in weekly health check:
 - Confirm backup files exist on target (SSH to backup server and list directory)
 - Confirm retention is working (old files being pruned)
 
-### Alert on Backup Failure
+## Alert on Backup Failure
 
 Create a vCenter alarm or monitoring rule to alert if the backup job has not completed within 25 hours. Backup failure silently means no recovery path exists.
 

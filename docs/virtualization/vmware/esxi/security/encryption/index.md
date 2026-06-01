@@ -77,7 +77,7 @@ ESXi Encryption Stack
 
 NKP backup is critical — if vCenter is lost without a NKP backup, all VMs encrypted with that provider become unrecoverable.
 
-### Encrypt a VM
+## Encrypt a VM
 
 ```powershell
 # PowerCLI — encrypt an existing VM

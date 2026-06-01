@@ -2,7 +2,7 @@
 
 Managed identities give Azure resources an identity in Entra ID without requiring credentials in code or config.
 
-### User-Assigned
+## User-Assigned
 
 ```bash
 # Create

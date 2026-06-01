@@ -75,7 +75,7 @@ VCF Authentication Flow
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Common Issues
+## Common Issues
 
 - Failed or stuck tasks.
 - Certificate, DNS, or authentication issues.

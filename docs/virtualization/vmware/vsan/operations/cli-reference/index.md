@@ -76,7 +76,7 @@ CLI TOOL CHAIN
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Capacity & Objects
+## Capacity & Objects
 
 ```bash
 # Datastore info

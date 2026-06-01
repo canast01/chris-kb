@@ -2,7 +2,7 @@
 
 Entra ID (Azure AD) groups are the primary mechanism for managing access at scale.
 
-### PowerShell
+## PowerShell
 
 ```powershell
 # List groups

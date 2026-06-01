@@ -72,7 +72,7 @@
 
 Store backup archives off the LCM appliance (NFS, S3, or external storage).
 
-### LCM Recovery
+## LCM Recovery
 
 If LCM appliance is lost:
 1. Deploy fresh LCM OVA from Easy Installer

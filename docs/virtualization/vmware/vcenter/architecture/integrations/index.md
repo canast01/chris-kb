@@ -84,7 +84,7 @@ vCenter Integration Map
 - **NBD/NBDSSL** — network-based transfer over LAN; fallback mode
 - **SAN** — FC/iSCSI direct access; requires backup proxy on same SAN fabric
 
-### Veeam Backup & Replication
+## Veeam Backup & Replication
 
 - Registers vCenter as a managed server in Veeam Console
 - Uses VADP for VM backup; leverages Changed Block Tracking (CBT)

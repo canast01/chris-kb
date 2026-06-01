@@ -69,7 +69,7 @@
 
 Run from an elevated command prompt on a Connection Server (or a machine with network access to the CS, using `-c` flag).
 
-### Session Management
+## Session Management
 
 ```cmd
 :: List all active sessions

@@ -209,9 +209,9 @@ Contact: chris.anastasiadis@example.com (+30 210 XXX XXXX)
 |---|---|
 | Confluence release notes | https://confluence.atlassian.com/doc/confluence-release-notes |
 | Known issues | https://jira.atlassian.com/projects/CONFSERVER |
-| Upgrade notes | https://confluence.atlassian.com/doc/confluence-upgrade-guide |
-| Supported platforms | https://confluence.atlassian.com/doc/supported-platforms |
-| Data Center docs | https://confluence.atlassian.com/enterprise/confluence-data-center |
+| Upgrade notes | https://confluence.atlassian.com/doc/upgrading-confluence-4578.html |
+| Supported platforms | https://confluence.atlassian.com/doc/supported-platforms-207488198.html |
+| Data Center docs | https://confluence.atlassian.com/doc/confluence-data-center-790795844.html |
 
 ---
 

@@ -76,7 +76,7 @@ VCF Common Failure Points — Quick Reference
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
-### Common Issues
+## Common Issues
 
 - Failed or stuck tasks.
 - Certificate, DNS, or authentication issues.

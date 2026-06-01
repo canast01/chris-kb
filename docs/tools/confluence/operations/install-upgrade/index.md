@@ -23,7 +23,7 @@ This page covers the end-to-end upgrade procedure for Confluence Data Center, in
 
 ### 14 Days Before Upgrade
 
-- [ ] Review the [Confluence upgrade matrix](https://confluence.atlassian.com/doc/confluence-upgrade-matrix) for your current → target version
+- [ ] Review the [Confluence upgrade matrix](https://confluence.atlassian.com/doc/confluence-upgrade-matrix-960695895.html) for your current → target version
 - [ ] Check **Marketplace App Compatibility**: Admin > Manage Apps > set "Filter by version" to the target version
 - [ ] Review **Known Issues** in the Confluence release notes for the target version
 - [ ] Confirm Java version compatibility — upgrade Java separately if needed

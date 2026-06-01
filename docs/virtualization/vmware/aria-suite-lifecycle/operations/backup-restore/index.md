@@ -73,7 +73,7 @@ Get-Snapshot -VM (Get-VM "lcm-prod-01") -Name "pre-upgrade-*" |
   Remove-Snapshot -Confirm:$false
 ```
 
-### Option 2 — VADP-Compatible Backup (Preferred for Production)
+## Option 2 — VADP-Compatible Backup (Preferred for Production)
 
 Use your enterprise backup solution (Veeam, Commvault, Veritas) to back up the LCM appliance VM with application-consistent quiesce. Schedule nightly full or incremental backups. Retain at least 14 daily restore points.
 

@@ -64,7 +64,7 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 
 Store the new password in the organisation's secrets vault. The `mystic` account is the equivalent of an admin account — losing it requires Dell support-assisted recovery.
 
-### LDAP Integration (Active Directory)
+## LDAP Integration (Active Directory)
 
 Configure AD authentication for VxRail Manager:
 

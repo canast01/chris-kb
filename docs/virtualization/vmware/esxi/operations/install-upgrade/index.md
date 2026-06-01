@@ -92,7 +92,7 @@ Verify image depot is synced:
 vCenter → Lifecycle Manager → Settings → Patch Setup → Sync Updates
 ```
 
-### vSphere Update Manager (VUM) — Legacy
+## vSphere Update Manager (VUM) — Legacy
 
 Baseline-based approach: attach a patch or upgrade baseline to a cluster, scan for compliance, remediate. Still available in vSphere 7; not available in vSphere 8 for cluster-level management.
 

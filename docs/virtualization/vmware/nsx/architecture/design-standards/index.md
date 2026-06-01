@@ -57,7 +57,7 @@
 
 The three-node NSX Manager cluster uses sequential numbering. Site codes should match vCenter and ESXi naming (`lon` for London, `ams` for Amsterdam, etc.).
 
-### Segments (Logical Switches)
+## Segments (Logical Switches)
 
 ```text
 Format: seg-<environment>-<function>-<vlan_or_subnet>
