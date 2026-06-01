@@ -4273,36 +4273,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#supported-configurations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Configurations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compliance-checks-in-sddc-manager" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compliance Checks in SDDC Manager
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -4494,137 +4464,92 @@
 Design Standards reference covering Supported Configurations, Compliance Checks in SDDC Manager.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Physical and Logical Design Requirements
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Underlay Network (physical)                        │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ToR Switch A ─────────────── ToR Switch B          │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│       │   (dual uplinks, LACP or active-active)     │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│       └────────── ESXi Hosts ─────────────┘         │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                   vmk0  vmk1  vmk2  vmkX            │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                   Mgmt  vMot  vSAN  TEP             │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                   VLAN  VLAN  VLAN  VLAN            │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└─────────────────────────────────────────────────────┘
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                         │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                         ▼
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  VMkernel Requirements (per host)                   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                     │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  vmk0  Management      ≥ 1 GbE   VCF-managed VDS    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  vmk1  vMotion         ≥ 10 GbE  VCF-managed VDS    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  vmk2  vSAN            ≥ 10 GbE  VCF-managed VDS    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  vmkX  NSX TEP         ≥ 10 GbE  VCF-managed VDS    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                     │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Standard vSwitches are NOT supported               │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└─────────────────────────────────────────────────────┘
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                         │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                         ▼
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Management Domain Minimum Build                    │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                     │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  4 x ESXi hosts (vSAN-Ready Node, HCL-validated)    │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  SDDC Manager   4 vCPU / 16 GB  (8/24 recommended)  │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  vCenter        small 14 GB RAM (medium 24 GB)      │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  NSX Manager    3-node cluster                      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                     │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  DNS: forward + reverse for all FQDNs before deploy │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  NTP: all components synchronised                   │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└─────────────────────────────────────────────────────┘
+<p>VCF Physical and Logical Design Requirements
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Underlay Network (physical)                        │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ToR Switch A ─────────────── ToR Switch B          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│       │   (dual uplinks, LACP or active-active)     │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│       └────────── ESXi Hosts ─────────────┘         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                   vmk0  vmk1  vmk2  vmkX            │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                   Mgmt  vMot  vSAN  TEP             │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                   VLAN  VLAN  VLAN  VLAN            │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
-│                                                                                                       │
-│  VCF design standards define domain layout, host sizing, VLAN scheme, NSX topology,                   │
-│  and upgrade sequencing following VMware VCF design guidance.                                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Domain Design                 │  │                Network Design               │   │
-│   │          1 mgmt domain: min 4 hosts          │  │           VLANs: mgmt/vSAN/vMotion          │   │
-│   │             1+ workload domains              │  │          NSX overlay: VXLAN/GENEVE          │   │
-│   │            Separate VC per domain            │  │            25GbE minimum uplinks            │   │
-│   │           NSX: shared or dedicated           │  │             MTU 9000: all VLANs             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Mgmt domain hosts VCF tooling; workload domains host applications.                                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Upgrade Standards               │  │               Sizing Standards              │   │
-│   │           SDDC Mgr: upgrade via UI           │  │            Mgmt hosts: 512GB RAM+           │   │
-│   │         Bundle: download from depot          │  │         Workload: right-size for app        │   │
-│   │          Upgrade order: VCF defined          │  │             vSAN: HCL disks only            │   │
-│   │         Pre-check: run before apply          │  │             NVMe/SSD: ESA or OSA            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Servers must be on VCF HCL; 25GbE TOR switches; dedicated management network;                        │
-│  separate OOB management (iDRAC/iLO) for host lifecycle.                                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Management domain= first VCF domain; hosts SDDC Manager + shared infra                               │
-│  Workload domain = application cluster; separate lifecycle from mgmt                                  │
-│  SDDC Manager  = automation hub; upgrade bundles applied here                                         │
-│  Bundle        = VCF update package; downloaded from VMware depot                                     │
-│  Pre-check     = automated readiness validation before applying bundle                                │
-│  NSX shared    = one NSX manager serving multiple domains                                             │
-│  NSX dedicated = per-domain NSX manager for isolation                                                 │
-│  GENEVE        = NSX-T overlay protocol; replaced VXLAN                                               │
-│  MTU 9000      = jumbo frames; required for all VCF network segments                                  │
-│  OOB           = Out-of-Band management; iDRAC/iLO for host power/BIOS                                │
-│  HCL           = Hardware Compatibility List; VCF-specific requirements                               │
-│  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="supported-configurations">Supported Configurations<a class="headerlink" href="#supported-configurations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>Supported</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vSAN ESA (Express Storage Architecture)</td>
-<td>VCF 5.1+</td>
-<td>Requires NVMe drives</td>
-</tr>
-<tr>
-<td>vSAN OSA (Original Storage Architecture)</td>
-<td>All versions</td>
-<td>Hybrid and all-flash</td>
-</tr>
-<tr>
-<td>Stretched clusters</td>
-<td>Yes</td>
-<td>Requires witness host</td>
-</tr>
-<tr>
-<td>NSX Federation</td>
-<td>VCF 4.3+</td>
-<td>Cross-site policy management</td>
-</tr>
-<tr>
-<td>Workload domains with FC storage</td>
-<td>No</td>
-<td>VCF uses vSAN only for principal storage</td>
-</tr>
-</tbody>
-</table>
-<h2 id="compliance-checks-in-sddc-manager">Compliance Checks in SDDC Manager<a class="headerlink" href="#compliance-checks-in-sddc-manager" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SDDC Manager UI — run before any upgrade:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Lifecycle Management → Precheck</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Precheck validates:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># - DNS resolution for all components</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># - NTP synchronisation</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># - Certificate expiry</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># - vSAN health</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># - Network pool capacity</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># - Password rotation status</span>
+                         │
+                         ▼
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  VMkernel Requirements (per host)                   │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│                                                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  vmk0  Management      ≥ 1 GbE   VCF-managed VDS    │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  vmk1  vMotion         ≥ 10 GbE  VCF-managed VDS    │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  vmk2  vSAN            ≥ 10 GbE  VCF-managed VDS    │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  vmkX  NSX TEP         ≥ 10 GbE  VCF-managed VDS    │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                     │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  Standard vSwitches are NOT supported               │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
+                         │
+                         ▼
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>
+</code></pre></div>
+┌─────────────────────────────────────────────────────┐
+│  Management Domain Minimum Build                    │
+│                                                     │
+│  4 x ESXi hosts (vSAN-Ready Node, HCL-validated)    │
+│  SDDC Manager   4 vCPU / 16 GB  (8/24 recommended)  │
+│  vCenter        small 14 GB RAM (medium 24 GB)      │
+│  NSX Manager    3-node cluster                      │
+│                                                     │
+│  DNS: forward + reverse for all FQDNs before deploy │
+│  NTP: all components synchronised                   │
+└─────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  VCF design standards define domain layout, host sizing, VLAN scheme, NSX topology,                   │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│  and upgrade sequencing following VMware VCF design guidance.                                         │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│                                                                                                       │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   │                Domain Design                 │  │                Network Design               │   │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   │          1 mgmt domain: min 4 hosts          │  │           VLANs: mgmt/vSAN/vMotion          │   │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   │             1+ workload domains              │  │          NSX overlay: VXLAN/GENEVE          │   │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   │            Separate VC per domain            │  │            25GbE minimum uplinks            │   │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   │           NSX: shared or dedicated           │  │             MTU 9000: all VLANs             │   │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│                                                                                                       │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│  Mgmt domain hosts VCF tooling; workload domains host applications.                                   │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│                                                                                                       │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│                                                                                                       │
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   │              Upgrade Standards               │  │               Sizing Standards              │   │
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│   │           SDDC Mgr: upgrade via UI           │  │            Mgmt hosts: 512GB RAM+           │   │
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│   │         Bundle: download from depot          │  │         Workload: right-size for app        │   │
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│   │          Upgrade order: VCF defined          │  │             vSAN: HCL disks only            │   │
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│   │         Pre-check: run before apply          │  │             NVMe/SSD: ESA or OSA            │   │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│                                                                                                       │
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│  Servers must be on VCF HCL; 25GbE TOR switches; dedicated management network;                        │
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>│  separate OOB management (iDRAC/iLO) for host lifecycle.                                              │
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>│                                                                                                       │
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>│                                                                                                       │
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>│  Management domain= first VCF domain; hosts SDDC Manager + shared infra                               │
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>│  Workload domain = application cluster; separate lifecycle from mgmt                                  │
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>│  SDDC Manager  = automation hub; upgrade bundles applied here                                         │
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>│  Bundle        = VCF update package; downloaded from VMware depot                                     │
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>│  Pre-check     = automated readiness validation before applying bundle                                │
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>│  NSX shared    = one NSX manager serving multiple domains                                             │
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>│  NSX dedicated = per-domain NSX manager for isolation                                                 │
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>│  GENEVE        = NSX-T overlay protocol; replaced VXLAN                                               │
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>│  MTU 9000      = jumbo frames; required for all VCF network segments                                  │
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>│  OOB           = Out-of-Band management; iDRAC/iLO for host power/BIOS                                │
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>│  HCL           = Hardware Compatibility List; VCF-specific requirements                               │
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>│  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a>│                                                                                                       │
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 
 
 

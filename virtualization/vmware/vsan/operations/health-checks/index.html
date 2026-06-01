@@ -4454,28 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#weekly-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Weekly Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performance Baseline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#network-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4777,103 +4755,27 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 │  Free 30%      = vSAN needs headroom for resync; alert at &lt;25%                                        │
 │  Resync ETA    = estimate shown in vSAN performance health panel                                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command / Location</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Storage policy compliance</td>
-<td>vCenter → vSAN → Monitor → Virtual Objects → filter Non-Compliant</td>
-<td>All objects should be compliant; non-compliant triggers resync</td>
-</tr>
-<tr>
-<td>Capacity trend</td>
-<td>vCenter → vSAN → Monitor → Capacity → Capacity History</td>
-<td>Identify growth trends; flag if projected to hit 70% within 30 days</td>
-</tr>
-<tr>
-<td>Resync history</td>
-<td>vCenter → vSAN → Monitor → Resyncing Objects → History</td>
-<td>Confirm all resyncs completed; flag any that are stalled or recurring</td>
-</tr>
-<tr>
-<td>vSAN health test detail</td>
-<td>vCenter → vSAN → Monitor → Skyline Health</td>
-<td>Expand any yellow/red items; review recommended actions</td>
-</tr>
-<tr>
-<td>Software version alignment</td>
-<td><code>esxcli system version get</code> on each host</td>
-<td>All hosts in a cluster must run the same ESXi build</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check policy compliance across all VMs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ComplianceStatus</span> <span class="o">-ne</span> <span class="s2">&quot;compliant&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">ComplianceStatus</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Cluster capacity summary</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VsanSpaceUsage</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span><span class="p">)</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">TotalCapacityGB</span><span class="p">,</span><span class="n">UsedSpaceGB</span>
-</code></pre></div>
-<hr />
-<h2 id="performance-baseline">Performance Baseline<a class="headerlink" href="#performance-baseline" title="Permanent link">&para;</a></h2>
-<p>Normal operating ranges for a healthy vSAN cluster. Values vary by workload — establish a baseline during steady-state and alert on deviation.</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>Typical Healthy Range</th>
-<th>Investigate If</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Read latency (all-flash OSA)</td>
-<td>&lt; 1 ms</td>
-<td>&gt; 5 ms sustained</td>
-</tr>
-<tr>
-<td>Write latency (all-flash OSA)</td>
-<td>&lt; 2 ms</td>
-<td>&gt; 10 ms sustained</td>
-</tr>
-<tr>
-<td>Read latency (ESA)</td>
-<td>&lt; 0.5 ms</td>
-<td>&gt; 2 ms sustained</td>
-</tr>
-<tr>
-<td>Write latency (ESA)</td>
-<td>&lt; 1 ms</td>
-<td>&gt; 5 ms sustained</td>
-</tr>
-<tr>
-<td>Cache read hit ratio (OSA)</td>
-<td>&gt; 90% (all-flash has no read cache — N/A)</td>
-<td>&lt; 70% on hybrid OSA</td>
-</tr>
-<tr>
-<td>Resync throughput</td>
-<td>0 MB/s during steady state</td>
-<td>&gt; 0 sustained without active maintenance</td>
-</tr>
-<tr>
-<td>Congestion</td>
-<td>0</td>
-<td>Any non-zero value</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Per-host latency and IOPS from ESXi shell</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>perf<span class="w"> </span>query<span class="w"> </span>-e<span class="w"> </span>host-domclient<span class="w"> </span>-st<span class="w"> </span><span class="m">2024</span>-01-01T00:00:00
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Performance Baseline
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Normal operating ranges for a healthy vSAN cluster. Values vary by workload — establish a baseline during steady-state and alert on deviation.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Metric | Typical Healthy Range | Investigate If |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Read latency (all-flash OSA) | &lt; 1 ms | &gt; 5 ms sustained |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Write latency (all-flash OSA) | &lt; 2 ms | &gt; 10 ms sustained |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Read latency (ESA) | &lt; 0.5 ms | &gt; 2 ms sustained |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Write latency (ESA) | &lt; 1 ms | &gt; 5 ms sustained |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Cache read hit ratio (OSA) | &gt; 90% (all-flash has no read cache — N/A) | &lt; 70% on hybrid OSA |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Resync throughput | 0 MB/s during steady state | &gt; 0 sustained without active maintenance |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Congestion | 0 | Any non-zero value |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Per-host latency and IOPS from ESXi shell
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>esxcli vsan perf query -e host-domclient -st 2024-01-01T00:00:00
+</code></pre></div></p>
 <hr />
 <h2 id="network-health">Network Health<a class="headerlink" href="#network-health" title="Permanent link">&para;</a></h2>
 <table>
@@ -4907,9 +4809,9 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run from each host — test against all other vSAN vmk IPs</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host2-vsan-ip&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;host3-vsan-ip&gt;
 </code></pre></div>
 <hr />
 <h2 id="stretched-cluster-checks">Stretched Cluster Checks<a class="headerlink" href="#stretched-cluster-checks" title="Permanent link">&para;</a></h2>
@@ -4950,8 +4852,8 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check witness appliance connectivity</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcStretchedClusterSystem-vsan-stretched-cluster-system&quot;</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check witness appliance connectivity</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcStretchedClusterSystem-vsan-stretched-cluster-system&quot;</span> <span class="p">|</span> <span class="p">%{</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetWitnessHosts</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)}</span>
 </code></pre></div>
 <hr />
 <h2 id="change-readiness">Change Readiness<a class="headerlink" href="#change-readiness" title="Permanent link">&para;</a></h2>

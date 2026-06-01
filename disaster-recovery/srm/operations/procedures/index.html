@@ -3898,112 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#test-failover-non-disruptive-dr-drill" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover (Non-Disruptive DR Drill)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Test Failover (Non-Disruptive DR Drill)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-failover-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover Procedure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#common-test-failover-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Test Failover Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#planned-migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Migration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Planned Migration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pre-migration-checklist" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-Migration Checklist
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#planned-migration-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Planned Migration Procedure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#emergency-failover-disaster-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency Failover (Disaster Recovery)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Emergency Failover (Disaster Recovery)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#emergency-failover-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency Failover Procedure
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#reprotect" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4335,135 +4229,85 @@
 │  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.</p>
-<hr />
-<h2 id="test-failover-non-disruptive-dr-drill">Test Failover (Non-Disruptive DR Drill)<a class="headerlink" href="#test-failover-non-disruptive-dr-drill" title="Permanent link">&para;</a></h2>
-<p>Test failover powers on recovered VMs in an isolated bubble network without disrupting production replication or the protected site.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant SRM as SRM Server
-    participant SRA as SRA / vSphere Rep
-    participant Storage as DR Storage
-    participant ESXI as Recovery ESXi
-
-    Admin-&gt;&gt;SRM: Click Test on Recovery Plan
-    SRM-&gt;&gt;SRM: Optional — replicate recent changes
-    SRM-&gt;&gt;SRA: Create test snapshot / FlexClone of replica LUNs
-    SRA-&gt;&gt;Storage: Snapshot replica volumes (non-disruptive)
-    Storage--&gt;&gt;SRA: Snapshot ready
-    SRM-&gt;&gt;ESXI: Present snapshot datastores (read-only for production, R/W for test)
-    ESXI--&gt;&gt;SRM: Datastores accessible
-    SRM-&gt;&gt;ESXI: Register VMs from snapshot datastores
-    SRM-&gt;&gt;ESXI: Power on VMs in defined boot sequence (bubble network)
-    ESXI--&gt;&gt;SRM: VMs online
-    SRM-&gt;&gt;SRM: Execute per-step delays and post-power-on scripts
-    SRM--&gt;&gt;Admin: Test running — validate services
-    Admin-&gt;&gt;SRM: Click Cleanup
-    SRM-&gt;&gt;ESXI: Power off test VMs
-    SRM-&gt;&gt;SRA: Remove test snapshot / FlexClone
-    SRA-&gt;&gt;Storage: Delete snapshot
-    SRM--&gt;&gt;Admin: Test cleanup complete; generate test report</code></pre>
-<h3 id="test-failover-procedure">Test Failover Procedure<a class="headerlink" href="#test-failover-procedure" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Recovery Plans</strong> &gt; select plan &gt; <strong>Test</strong>.</li>
-<li>When prompted, choose whether to sync recent changes before test (recommended).</li>
-<li>SRM creates isolated snapshot datastores at the recovery site.</li>
-<li>Monitor the recovery steps in the <strong>Recovery Steps</strong> tab — each step shows status, duration, and any errors.</li>
-<li>Once all VMs are powered on, validate application functionality within the bubble network.</li>
-<li>Click <strong>Cleanup</strong> to tear down the test environment. Do not leave test environments running longer than needed — stale snapshots can fill journal/snapshot space.</li>
-</ol>
-<div class="admonition tip">
-<p class="admonition-title">RTO Measurement</p>
-<p>Record the elapsed time shown in the <strong>Recovery Steps</strong> pane at the point when the last application health check passes. This is your actual RTO — compare against the tier target RTO in the standards document.</p>
-</div>
-<h3 id="common-test-failover-issues">Common Test Failover Issues<a class="headerlink" href="#common-test-failover-issues" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>Resolution</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM fails to power on — datastore inaccessible</td>
-<td>Snapshot not created by SRA</td>
-<td>Check SRA logs; verify array replication is healthy</td>
-</tr>
-<tr>
-<td>IP customisation not applied</td>
-<td>Missing IP customisation rule for VM</td>
-<td>Add rule in Recovery Plan &gt; IP Customisation</td>
-</tr>
-<tr>
-<td>Post-power-on script fails</td>
-<td>Script path not accessible from SRM service account</td>
-<td>Fix UNC path; verify service account permissions</td>
-</tr>
-<tr>
-<td>VM registers on wrong datastore</td>
-<td>Datastore mapping misconfigured</td>
-<td>Update datastore mapping in Site Recovery &gt; Array Managers</td>
-</tr>
-<tr>
-<td>Test cleanup hangs</td>
-<td>Snapshot deletion failed at array</td>
-<td>Manually delete snapshot at array; then retry cleanup</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="planned-migration">Planned Migration<a class="headerlink" href="#planned-migration" title="Permanent link">&para;</a></h2>
-<p>A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.</p>
-<h3 id="pre-migration-checklist">Pre-Migration Checklist<a class="headerlink" href="#pre-migration-checklist" title="Permanent link">&para;</a></h3>
-<ul>
-<li>[ ] Both sites and SRM servers are reachable and healthy</li>
-<li>[ ] Replication is healthy with zero or acceptable backlog (RPO at target)</li>
-<li>[ ] Recovery plan has been tested successfully within the last quarter</li>
-<li>[ ] Change record approved; maintenance window scheduled</li>
-<li>[ ] Application owners notified; application shutdown pre-steps completed if required</li>
-<li>[ ] DNS/load balancer changes prepared (or scripted in recovery plan)</li>
-</ul>
-<h3 id="planned-migration-procedure">Planned Migration Procedure<a class="headerlink" href="#planned-migration-procedure" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Recovery Plans</strong> &gt; select plan &gt; <strong>Run</strong> &gt; <strong>Planned Migration</strong>.</li>
-<li>SRM confirms both sites are connected — if the protected site is unreachable, it refuses to run Planned Migration (use Emergency Failover instead).</li>
-<li>SRM executes pre-power-off scripts (if configured).</li>
-<li>SRM quiesces and powers off protected-site VMs in reverse boot order (web → app → DB → infra).</li>
-<li>A final replication sync is triggered and completed — ensuring zero data loss.</li>
-<li>SRM presents replica datastores at the recovery site.</li>
-<li>VMs are registered and powered on at the recovery site in the defined boot sequence.</li>
-<li>Post-power-on scripts execute (DNS updates, load balancer re-point, etc.).</li>
-<li>Validate services, then close the change record.</li>
-</ol>
-<div class="admonition warning">
-<p class="admonition-title">No Rollback After Planned Migration</p>
-<p>Once VMs are powered on at the recovery site, the original protected site is unpowered. To return to the original site, run <strong>Reprotect</strong> followed by a reverse failover.</p>
-</div>
-<hr />
-<h2 id="emergency-failover-disaster-recovery">Emergency Failover (Disaster Recovery)<a class="headerlink" href="#emergency-failover-disaster-recovery" title="Permanent link">&para;</a></h2>
-<p>Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.</p>
-<h3 id="emergency-failover-procedure">Emergency Failover Procedure<a class="headerlink" href="#emergency-failover-procedure" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Declare disaster and invoke the DR change record.</li>
-<li>Navigate to <strong>Recovery Plans</strong> &gt; select plan &gt; <strong>Run</strong> &gt; <strong>Disaster Recovery</strong>.</li>
-<li>SRM will warn that the protected site is not reachable and that data loss may occur — confirm.</li>
-<li>SRM presents the last-good replica datastores at the recovery site.</li>
-<li>VMs are registered and powered on in the defined boot sequence.</li>
-<li>No pre-power-off or final sync steps are performed (protected site is down).</li>
-<li>Post-power-on scripts execute.</li>
-<li>Validate services and notify stakeholders.</li>
-<li>Document the actual RPO: check the replication lag or journal timestamp at the time of failure.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># After failover, check SRDF or RecoverPoint state for data loss assessment</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># PowerMax SRDF example</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SYMID&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;RDFG&gt;<span class="w"> </span>query
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># RecoverPoint — check journal recovery point timestamp</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_all
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Test Failover Procedure
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>1. Navigate to **Recovery Plans** &gt; select plan &gt; **Test**.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>2. When prompted, choose whether to sync recent changes before test (recommended).
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>3. SRM creates isolated snapshot datastores at the recovery site.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>4. Monitor the recovery steps in the **Recovery Steps** tab — each step shows status, duration, and any errors.
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>5. Once all VMs are powered on, validate application functionality within the bubble network.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>6. Click **Cleanup** to tear down the test environment. Do not leave test environments running longer than needed — stale snapshots can fill journal/snapshot space.
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>!!! tip &quot;RTO Measurement&quot;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    Record the elapsed time shown in the **Recovery Steps** pane at the point when the last application health check passes. This is your actual RTO — compare against the tier target RTO in the standards document.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>### Common Test Failover Issues
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>| Symptom | Likely Cause | Resolution |
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>|---|---|---|
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| VM fails to power on — datastore inaccessible | Snapshot not created by SRA | Check SRA logs; verify array replication is healthy |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| IP customisation not applied | Missing IP customisation rule for VM | Add rule in Recovery Plan &gt; IP Customisation |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| Post-power-on script fails | Script path not accessible from SRM service account | Fix UNC path; verify service account permissions |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| VM registers on wrong datastore | Datastore mapping misconfigured | Update datastore mapping in Site Recovery &gt; Array Managers |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Test cleanup hangs | Snapshot deletion failed at array | Manually delete snapshot at array; then retry cleanup |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>---
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>## Planned Migration
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>A planned migration gracefully shuts down VMs at the protected site, performs a final replication sync, then powers them on at the recovery site. Both sites must be operational.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>### Pre-Migration Checklist
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>- [ ] Both sites and SRM servers are reachable and healthy
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>- [ ] Replication is healthy with zero or acceptable backlog (RPO at target)
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>- [ ] Recovery plan has been tested successfully within the last quarter
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>- [ ] Change record approved; maintenance window scheduled
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>- [ ] Application owners notified; application shutdown pre-steps completed if required
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>- [ ] DNS/load balancer changes prepared (or scripted in recovery plan)
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>### Planned Migration Procedure
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>1. Navigate to **Recovery Plans** &gt; select plan &gt; **Run** &gt; **Planned Migration**.
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>2. SRM confirms both sites are connected — if the protected site is unreachable, it refuses to run Planned Migration (use Emergency Failover instead).
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>3. SRM executes pre-power-off scripts (if configured).
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>4. SRM quiesces and powers off protected-site VMs in reverse boot order (web → app → DB → infra).
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>5. A final replication sync is triggered and completed — ensuring zero data loss.
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>6. SRM presents replica datastores at the recovery site.
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>7. VMs are registered and powered on at the recovery site in the defined boot sequence.
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>8. Post-power-on scripts execute (DNS updates, load balancer re-point, etc.).
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>9. Validate services, then close the change record.
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>!!! warning &quot;No Rollback After Planned Migration&quot;
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    Once VMs are powered on at the recovery site, the original protected site is unpowered. To return to the original site, run **Reprotect** followed by a reverse failover.
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>---
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>## Emergency Failover (Disaster Recovery)
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>Used when the protected site is unavailable. VMs are powered on from the most recent replica image. Some data loss is expected depending on RPO at the time of failure.
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>### Emergency Failover Procedure
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>1. Declare disaster and invoke the DR change record.
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>2. Navigate to **Recovery Plans** &gt; select plan &gt; **Run** &gt; **Disaster Recovery**.
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>3. SRM will warn that the protected site is not reachable and that data loss may occur — confirm.
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>4. SRM presents the last-good replica datastores at the recovery site.
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>5. VMs are registered and powered on in the defined boot sequence.
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>6. No pre-power-off or final sync steps are performed (protected site is down).
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>7. Post-power-on scripts execute.
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>8. Validate services and notify stakeholders.
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>9. Document the actual RPO: check the replication lag or journal timestamp at the time of failure.
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>
+<a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>```bash
+<a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a># After failover, check SRDF or RecoverPoint state for data loss assessment
+<a id="__codelineno-0-73" name="__codelineno-0-73" href="#__codelineno-0-73"></a># PowerMax SRDF example
+<a id="__codelineno-0-74" name="__codelineno-0-74" href="#__codelineno-0-74"></a>symrdf -sid &lt;SYMID&gt; -rdfg &lt;RDFG&gt; query
+<a id="__codelineno-0-75" name="__codelineno-0-75" href="#__codelineno-0-75"></a>
+<a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a># RecoverPoint — check journal recovery point timestamp
+<a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>boxmgmt cg check_all
+</code></pre></div></p>
 <hr />
 <h2 id="reprotect">Reprotect<a class="headerlink" href="#reprotect" title="Permanent link">&para;</a></h2>
 <p>After any failover (planned or emergency), the recovered VMs are now running at the recovery site without replication. Reprotect reverses the replication direction so the recovery site becomes the new protected site.</p>

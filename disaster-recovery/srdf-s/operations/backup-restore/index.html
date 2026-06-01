@@ -3920,62 +3920,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#unplanned-failover-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unplanned Failover Procedure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Unplanned Failover Procedure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#unplanned-failover-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unplanned Failover Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#link-suspension-and-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Link Suspension and Recovery
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Link Suspension and Recovery">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#suspend-replication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Suspend Replication
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#resume-replication" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4317,73 +4261,59 @@ Backup & Restore reference covering SRDF/S Overview, SYMCLI Command Reference, U
 │  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>A planned <code>failover</code> without <code>-force</code> verifies synchronization first and will abort if data could be lost.</p>
-<hr />
-<h2 id="unplanned-failover-procedure">Unplanned Failover Procedure<a class="headerlink" href="#unplanned-failover-procedure" title="Permanent link">&para;</a></h2>
-<p>When the R1 site suffers an outage and the SRDF link is severed, a forced failover is required.</p>
-<h3 id="unplanned-failover-steps">Unplanned Failover Steps<a class="headerlink" href="#unplanned-failover-steps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Confirm R1 site is confirmed down (not a transient network issue)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Expected state: Link shows Suspended or R1 Not Ready</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Caution:** In a synchronous pair, forced failover during an outage is effectively zero-data-loss if the link was synchronized before the failure. If the link had suspended writes (e.g., network drop was not immediate), up to the in-flight writes may be lost.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># 2. Suspend the SRDF link (if not already suspended by the array)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-force
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 3. Force failover — promote R2 devices to RW</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>failover<span class="w"> </span>-force
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Link Suspension and Recovery
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Link suspension halts replication without breaking the SRDF pair. This is used for planned maintenance on the link or array, or as an intermediate step before failover.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### Suspend Replication
 <a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># 4. Verify R2 devices are now in RW state</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># 5. Present R2 volumes to DR hosts and start workloads</span>
-</code></pre></div>
-<p><strong>Caution:</strong> In a synchronous pair, forced failover during an outage is effectively zero-data-loss if the link was synchronized before the failure. If the link had suspended writes (e.g., network drop was not immediate), up to the in-flight writes may be lost.</p>
-<hr />
-<h2 id="link-suspension-and-recovery">Link Suspension and Recovery<a class="headerlink" href="#link-suspension-and-recovery" title="Permanent link">&para;</a></h2>
-<p>Link suspension halts replication without breaking the SRDF pair. This is used for planned maintenance on the link or array, or as an intermediate step before failover.</p>
-<h3 id="suspend-replication">Suspend Replication<a class="headerlink" href="#suspend-replication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Suspend SRDF replication (I/O continues on R1, no longer replicated)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span><span class="nb">suspend</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Query suspended state</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># R1 St = WD, Link = Suspended</span>
-</code></pre></div>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Suspend SRDF replication (I/O continues on R1, no longer replicated)
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>symrdf -sg PROD_SG suspend
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Query suspended state
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>symrdf -sg PROD_SG query
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># R1 St = WD, Link = Suspended
+</code></pre></div></p>
 <h3 id="resume-replication">Resume Replication<a class="headerlink" href="#resume-replication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Resume SRDF — re-syncs changed tracks from R1 to R2</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>resume
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Monitor sync progress — watch Tracks/% fields</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Resume SRDF — re-syncs changed tracks from R1 to R2</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>resume
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Monitor sync progress — watch Tracks/% fields</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query<span class="w"> </span>-detail
 </code></pre></div>
 <p>During suspension, host I/O continues on R1 with no added latency. Invalid tracks accumulate. On resume, only delta tracks are resynced — not a full copy.</p>
 <hr />
 <h2 id="symrdf-restore-after-r1-site-recovery">symrdf restore — After R1 Site Recovery<a class="headerlink" href="#symrdf-restore-after-r1-site-recovery" title="Permanent link">&para;</a></h2>
 <p>After the primary site is recovered and R1 is back online, restore re-establishes R1 as the source using R2 as the authoritative copy. Use this when R1 volumes are stale relative to R2 (i.e., production has been running on R2 during outage).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Verify R1 array and volumes are accessible</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1_SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;device_range&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 2. Restore — overwrites R1 with R2 content, then flips direction</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#    This is a DESTRUCTIVE operation on R1 volumes — confirm before running</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>restore<span class="w"> </span>-force
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Monitor resync from R2 to R1</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query<span class="w"> </span>-detail
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Watch: Sync% and Invalid Tracks decrease</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># 4. Wait for full synchronization</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>verify<span class="w"> </span>-consistent
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># 5. Confirm synchronized — then fail back to R1</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>failover
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Now R1 is promoted back to RW, R2 returns to WD</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># 6. Start production workloads on R1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Verify R1 array and volumes are accessible</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symdev<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;R1_SID&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;device_range&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. Restore — overwrites R1 with R2 content, then flips direction</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">#    This is a DESTRUCTIVE operation on R1 volumes — confirm before running</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>restore<span class="w"> </span>-force
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. Monitor resync from R2 to R1</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Watch: Sync% and Invalid Tracks decrease</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># 4. Wait for full synchronization</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>verify<span class="w"> </span>-consistent
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 5. Confirm synchronized — then fail back to R1</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>failover
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Now R1 is promoted back to RW, R2 returns to WD</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># 6. Start production workloads on R1</span>
 </code></pre></div>
 <h3 id="alternative-establish-reverse-sync-r2-to-r1">Alternative: Establish (Reverse Sync — R2 to R1)<a class="headerlink" href="#alternative-establish-reverse-sync-r2-to-r1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># establish syncs from the current &quot;source&quot; (post-failover this is R2) to R1</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>establish<span class="w"> </span>-force
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># establish syncs from the current &quot;source&quot; (post-failover this is R2) to R1</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-sg<span class="w"> </span>PROD_SG<span class="w"> </span>establish<span class="w"> </span>-force
 </code></pre></div>
 <p><code>restore</code> and <code>establish</code> differ in that <code>restore</code> explicitly reverses R1/R2 roles before syncing; <code>establish</code> syncs in the current direction. After a failover where R2 is active, <code>restore</code> is the correct command to recover R1.</p>
 <hr />

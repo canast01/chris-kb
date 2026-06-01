@@ -3634,25 +3634,25 @@
 An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB).
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        COMMUNITY STRING FLOW (SNMPv1/v2c)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  NMS (monitoring server)        Device (switch/router)      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌─────────────────────┐        ┌────────────────────────┐  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ GET request         │        │ community ACL check    │  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ community: &quot;mon-ro&quot; ├──────►│ &quot;mon-ro&quot; matches RO    │  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ OID: sysDescr.0     │        │ NMS IP in access-list  │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └─────────────────────┘        └──────────┬─────────────┘  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                            │ OK             │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ┌─────────────────────┐        ┌──────────▼─────────────┐  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │ OID value returned  │◄───────│ MIB lookup             │  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │ &quot;Cisco IOS 17.3&quot;    │        │ returns OID value      │  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └─────────────────────┘        └────────────────────────┘  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                             │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  RO community: GET/GETNEXT/GETBULK only                     │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  RW community: all ops + SET (device config change) — risk! │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  All traffic is PLAINTEXT — use SNMPv3 for production       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└─────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    COMMUNITY STRING FLOW (SNMPv1/v2c)
 </code></pre></div>
+<p><code>┌─────────────────────────────────────────────────────────────┐
+│  NMS (monitoring server)        Device (switch/router)      │
+│  ┌─────────────────────┐        ┌────────────────────────┐  │
+│  │ GET request         │        │ community ACL check    │  │
+│  │ community: "mon-ro" ├──────►│ "mon-ro" matches RO    │  │
+│  │ OID: sysDescr.0     │        │ NMS IP in access-list  │  │
+│  └─────────────────────┘        └──────────┬─────────────┘  │
+│                                            │ OK             │
+│  ┌─────────────────────┐        ┌──────────▼─────────────┐  │
+│  │ OID value returned  │◄───────│ MIB lookup             │  │
+│  │ "Cisco IOS 17.3"    │        │ returns OID value      │  │
+│  └─────────────────────┘        └────────────────────────┘  │
+│                                                             │
+│  RO community: GET/GETNEXT/GETBULK only                     │
+│  RW community: all ops + SET (device config change) — risk! │
+│  All traffic is PLAINTEXT — use SNMPv3 for production       │
+└─────────────────────────────────────────────────────────────┘</code>
 Community strings provide no encryption.</p>
 <div class="admonition warning">
 <p class="admonition-title">SNMPv2c security</p>

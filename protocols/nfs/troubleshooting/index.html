@@ -3623,26 +3623,26 @@
 NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues, Performance Tuning, Export Configuration Reference and 2 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  1. nc -zv &lt;server&gt; 2049 ── fail ──► firewall / routing     │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│          │ ok                                                │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│          ▼                                                   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  2. showmount -e &lt;server&gt; ─ no export ► check /etc/exports  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│          │ export visible                                    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│          ▼                                                   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  3. Mount attempt fails? ── yes ───► check export ACL (IP)  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│          │ mounts ok                                         │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│          ▼                                                   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  4. Stale file handle? ──── yes ───► umount -l; remount     │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│          │ no                                                │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│          ▼                                                   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  5. Permission denied? ──── yes ───► check UID/GID mapping  │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│          │ no                        check root_squash       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│          ▼                                                   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  6. Check server exports &amp; network (nfsstat -c for retrans) │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
 </code></pre></div>
+<p><code>┌──────────────────────────────────────────────────────────────┐
+│  1. nc -zv &lt;server&gt; 2049 ── fail ──► firewall / routing     │
+│          │ ok                                                │
+│          ▼                                                   │
+│  2. showmount -e &lt;server&gt; ─ no export ► check /etc/exports  │
+│          │ export visible                                    │
+│          ▼                                                   │
+│  3. Mount attempt fails? ── yes ───► check export ACL (IP)  │
+│          │ mounts ok                                         │
+│          ▼                                                   │
+│  4. Stale file handle? ──── yes ───► umount -l; remount     │
+│          │ no                                                │
+│          ▼                                                   │
+│  5. Permission denied? ──── yes ───► check UID/GID mapping  │
+│          │ no                        check root_squash       │
+│          ▼                                                   │
+│  6. Check server exports &amp; network (nfsstat -c for retrans) │
+└──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="diagnostic-flow">Diagnostic Flow<a class="headerlink" href="#diagnostic-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     A[NFS issue reported] --&gt; B{Mount succeeds?}

@@ -4292,28 +4292,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#priority-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Priority Groups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ip-customization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IP Customization
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#custom-command-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4652,17 +4630,20 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 <li>SRM Server registers as a vCenter extension and appears under <strong>Site Recovery</strong> in the vSphere Client</li>
 </ul>
 <p>The two SRM Servers form a <strong>site pair</strong>. Communication between them uses TCP 443 and TCP 9086. The pairing is authenticated via certificate thumbprint exchange — each site must trust the other's SSL certificate.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Protected Site                        Recovery Site
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────┐               ┌─────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  SRM Server         │◄──── TCP 9086 ─►│  SRM Server         │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ESXi Hosts         │               │  ESXi Hosts         │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  Production VMs     │               │  Placeholder VMs    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  Storage Array A    │               │  Storage Array B    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└─────────────────────┘               └─────────────────────┘
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>         │                                      │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         └──── Replication (ABR or VR) ─────────┘
+<p>Protected Site                        Recovery Site
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
+┌─────────────────────┐               ┌─────────────────────┐
+│  vCenter Server     │◄──── TCP 443 ─►│  vCenter Server     │
+│  SRM Server         │◄──── TCP 9086 ─►│  SRM Server         │
+│  ESXi Hosts         │               │  ESXi Hosts         │
+│  Production VMs     │               │  Placeholder VMs    │
+│  Storage Array A    │               │  Storage Array B    │
+└─────────────────────┘               └─────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+</code></pre></div>
+         │                                      │
+         └──── Replication (ABR or VR) ─────────┘
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM orchestrates VM failover between a protected site and recovery site using                        │
@@ -4707,26 +4688,8 @@ How It Works (VMware Platform) reference covering Site Topology, Test Failover W
 │  Bubble network= isolated test network; no production routing                                         │
 │  Reprotect     = reverse replication direction after failover                                         │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="priority-groups">Priority Groups<a class="headerlink" href="#priority-groups" title="Permanent link">&para;</a></h3>
-<ul>
-<li>VMs in <strong>Priority 1</strong> power on first. SRM waits for them to complete before moving to Priority 2.</li>
-<li>Within a priority group, VMs start concurrently (subject to host resource limits).</li>
-<li>Maximum of 5 priority groups. If you need finer ordering, use pre/post steps with <code>Wait for heartbeat</code> or custom scripts.</li>
-<li>Recovery Plan steps within a VM's sequence:</li>
-<li>Suspend or shut down VM at protected site (planned migration only)</li>
-<li>Storage operations (SRA: promote LUN / VR: finalize disk)</li>
-<li>Configure network (apply IP customization)</li>
-<li>Pre-power-on commands (optional)</li>
-<li>Power on VM</li>
-<li>Post-power-on commands (optional, typically wait for VM tools heartbeat)</li>
-</ul>
-<h3 id="ip-customization">IP Customization<a class="headerlink" href="#ip-customization" title="Permanent link">&para;</a></h3>
-<p>Two approaches:</p>
-<p><strong>Subnet-level mapping</strong> — define a source subnet and a target subnet. SRM translates any static IP in the source range to the corresponding address in the target range.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Source: 10.10.0.0/24  →  Target: 10.20.0.0/24
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VM at 10.10.0.50       →  Recovers at 10.20.0.50
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <p><strong>Per-VM customization</strong> — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.</p>
 <p>IP customization is applied using the Guest OS customization engine (VMware Tools required). If the VM does not have VMware Tools running, customization is skipped and the VM retains its protected-site IP (may cause routing issues at recovery site).</p>
 <h3 id="custom-command-steps">Custom Command Steps<a class="headerlink" href="#custom-command-steps" title="Permanent link">&para;</a></h3>

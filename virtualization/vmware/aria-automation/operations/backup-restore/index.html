@@ -4476,28 +4476,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#scheduling-automatic-backups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scheduling Automatic Backups
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restore-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#post-restore-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4838,26 +4816,29 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 │  Data collection   = vRA process syncing resource inventory from cloud accounts post-restore          │
 │  NFS backup target = Network storage mount where backup archives are written and retained             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="scheduling-automatic-backups">Scheduling Automatic Backups<a class="headerlink" href="#scheduling-automatic-backups" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>VAMI → Lifecycle Management → Backup → Schedule
-</code></pre></div>
-<p>Recommended:
-- Frequency: Daily
-- Time: 02:00 (off-peak)
-- Retention: 14 copies
-- Enable email notification on failure: requires SMTP configured in VAMI</p>
-<hr />
-<h2 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h2>
-<p>Restore from backup replaces the entire Aria Automation platform state. All configuration changes made after the backup point are lost. Running cloud resources are not affected.</p>
-<p><strong>Prerequisites:</strong>
-- Aria Automation cluster is deployed and accessible (the cluster must exist to restore into)
-- Backup file accessible from NFS/SFTP
-- Backup passphrase available</p>
-<p><strong>Via VAMI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VAMI → Lifecycle Management → Backup → Restore → select backup → enter passphrase → Restore
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Recommended:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Frequency: Daily
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Time: 02:00 (off-peak)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Retention: 14 copies
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Enable email notification on failure: requires SMTP configured in VAMI
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>---
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Restore Procedure
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Restore from backup replaces the entire Aria Automation platform state. All configuration changes made after the backup point are lost. Running cloud resources are not affected.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>**Prerequisites:**
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Aria Automation cluster is deployed and accessible (the cluster must exist to restore into)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Backup file accessible from NFS/SFTP
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- Backup passphrase available
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>**Via VAMI:**
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>```text
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>VAMI → Lifecycle Management → Backup → Restore → select backup → enter passphrase → Restore
+</code></pre></div></p>
 <p>The restore process:
 1. Stops all Aria Automation services
 2. Restores the PostgreSQL database
@@ -4865,10 +4846,10 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 4. Restarts all services</p>
 <p>Expect 20–40 minutes for a restore depending on database size.</p>
 <p><strong>Via CLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>list<span class="w">                         </span><span class="c1"># list available backups</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vracli<span class="w"> </span>restore<span class="w"> </span>start<span class="w"> </span>--backup-id<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># start restore from a specific backup</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vracli<span class="w"> </span>restore<span class="w"> </span>status<span class="w">                       </span><span class="c1"># monitor progress</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>list<span class="w">                         </span><span class="c1"># list available backups</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vracli<span class="w"> </span>restore<span class="w"> </span>start<span class="w"> </span>--backup-id<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># start restore from a specific backup</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>restore<span class="w"> </span>status<span class="w">                       </span><span class="c1"># monitor progress</span>
 </code></pre></div>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
@@ -4888,14 +4869,14 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 <hr />
 <h2 id="vm-level-backup-for-disaster-recovery">VM-Level Backup for Disaster Recovery<a class="headerlink" href="#vm-level-backup-for-disaster-recovery" title="Permanent link">&para;</a></h2>
 <p>For full platform DR (including recovery to a different vCenter or site), use VADP-compatible backup of all Aria Automation appliance VMs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — snapshot all vRA VMs before a change or backup window</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;vra-*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="p">`</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      <span class="n">-Name</span> <span class="s2">&quot;pre-change-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      <span class="n">-Quiesce</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: snapshot complete&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — snapshot all vRA VMs before a change or backup window</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;vra-*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="p">`</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      <span class="n">-Name</span> <span class="s2">&quot;pre-change-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      <span class="n">-Quiesce</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: snapshot complete&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>For clustered deployments, back up all 3 nodes together — inconsistent snapshots across nodes can cause database split-brain on restore.</p>
 

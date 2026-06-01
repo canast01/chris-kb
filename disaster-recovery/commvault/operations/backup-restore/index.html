@@ -3931,56 +3931,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restore-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Restore Types">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#full-vm-restore-vmware" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full VM Restore (VMware)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#file-level-recovery-guest-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File-Level Recovery (Guest Files)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#in-place-restore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Place Restore
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#out-of-place-restore" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4327,57 +4277,25 @@ Backup & Restore reference covering Backup Types, Backup Job Execution, Restore 
 │  qoperation     = CLI to trigger on-demand backup: execschedule or backup subcommand                  │
 │  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
 │  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="restore-types">Restore Types<a class="headerlink" href="#restore-types" title="Permanent link">&para;</a></h2>
-<h3 id="full-vm-restore-vmware">Full VM Restore (VMware)<a class="headerlink" href="#full-vm-restore-vmware" title="Permanent link">&para;</a></h3>
-<p>Restores the entire VM to a hypervisor — either in-place or to an alternate location.</p>
-<p><strong>Steps (CommCell Console):</strong></p>
-<ol>
-<li><strong>Protected VMs</strong> → right-click VM → <strong>Browse and Restore</strong>.</li>
-<li>Select recovery point (date/time or specific job).</li>
-<li>Choose <strong>Virtual Machine</strong> → <strong>Restore as VM</strong>.</li>
-<li>Select destination host, datastore, and network.</li>
-<li>Optionally power on after restore.</li>
-</ol>
-<p><strong>Via REST API:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://commserve.example.com/webconsole/api/v4/VM/Recover&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authtoken: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="s1">    &quot;taskInfo&quot;: {</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">      &quot;task&quot;: {&quot;taskType&quot;: 1},</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">      &quot;subTasks&quot;: [{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">        &quot;subTask&quot;: {&quot;subTaskType&quot;: 3, &quot;operationType&quot;: 1001},</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">        &quot;options&quot;: {</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">          &quot;restoreOptions&quot;: {</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">            &quot;virtualServerRestoreOptions&quot;: {</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">              &quot;diskLevelVMRestoreOption&quot;: {</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">                &quot;restoreToDefaultHost&quot;: false,</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">                &quot;esxHost&quot;: &quot;esx01.example.com&quot;,</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">                &quot;dataStore&quot;: &quot;DS_Production&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">              }</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="s1">            }</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="s1">          }</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="s1">        }</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="s1">      }]</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="s1">    }</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<h3 id="file-level-recovery-guest-files">File-Level Recovery (Guest Files)<a class="headerlink" href="#file-level-recovery-guest-files" title="Permanent link">&para;</a></h3>
-<p>Mounts the backup as a virtual volume and presents individual files.</p>
-<ol>
-<li>Right-click the VM → <strong>Browse and Restore</strong> → <strong>Guest Files and Folders</strong>.</li>
-<li>Browse to the path, select files → <strong>Restore</strong>.</li>
-<li>Choose destination: original location or alternate path/client.</li>
-</ol>
-<h3 id="in-place-restore">In-Place Restore<a class="headerlink" href="#in-place-restore" title="Permanent link">&para;</a></h3>
-<p>Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Subclient → Restore → In-Place → Overwrite existing data: Yes
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### File-Level Recovery (Guest Files)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Mounts the backup as a virtual volume and presents individual files.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Right-click the VM → **Browse and Restore** → **Guest Files and Folders**.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. Browse to the path, select files → **Restore**.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Choose destination: original location or alternate path/client.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### In-Place Restore
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```text
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Subclient → Restore → In-Place → Overwrite existing data: Yes
+</code></pre></div></p>
 <h3 id="out-of-place-restore">Out-of-Place Restore<a class="headerlink" href="#out-of-place-restore" title="Permanent link">&para;</a></h3>
 <p>Restores to an alternate destination — different VM, datastore, or file path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Subclient → Restore → Out-of-Place → Specify destination client and path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Subclient → Restore → Out-of-Place → Specify destination client and path
 </code></pre></div>
 <hr />
 <h2 id="dr-copy-verification">DR Copy Verification<a class="headerlink" href="#dr-copy-verification" title="Permanent link">&para;</a></h2>
@@ -4390,7 +4308,7 @@ Backup & Restore reference covering Backup Types, Backup Job Execution, Restore 
 <li>Review the validation report for missing, corrupt, or aged jobs.</li>
 </ol>
 <p><strong>Command line (via <code>qoperation</code>):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_ValidateCopy<span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;StoragePolicyName&quot;</span><span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;CopyName&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_ValidateCopy<span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;StoragePolicyName&quot;</span><span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;CopyName&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="restore-decision-flowchart">Restore Decision Flowchart<a class="headerlink" href="#restore-decision-flowchart" title="Permanent link">&para;</a></h2>

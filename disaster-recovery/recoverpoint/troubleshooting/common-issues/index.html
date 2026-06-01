@@ -3724,28 +3724,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#splitter-communication-failure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Splitter Communication Failure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rpo-violation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RPO Violation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#failover-did-not-complete-cleanly" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3987,37 +3965,27 @@
 │  CDP           = Continuous Data Protection; every write journaled, not just scheduled snaps          │
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p><strong>Resolution:</strong>
-1. Identify which CG is generating excess writes
-2. Expand journal volume (can be done non-disruptively on most arrays)
-3. If link is down and journal is exhausted, a full resync may be required after link restoration
-4. Review if RPO target is realistic for the write rate</p>
-<hr />
-<h2 id="splitter-communication-failure">Splitter Communication Failure<a class="headerlink" href="#splitter-communication-failure" title="Permanent link">&para;</a></h2>
-<p><strong>Symptoms:</strong> CG shows <code>Splitter connection problem</code>; writes may be blocked or split-brain situation.</p>
-<p><strong>PowerMax hardware splitter:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On PowerMax (via Solutions Enabler / SYMCLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check splitter registration in RP</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>boxmgmt<span class="w"> </span>splitter<span class="w"> </span>status<span class="w"> </span>&lt;splitter-name&gt;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**RP4VM software splitter (ESXi):**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>- Check ESXi host kernel module: `esxcli software vib list | grep rp`
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- Restart splitter on ESXi if needed (requires brief I/O pause — schedule maintenance)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>---
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>## RPO Violation
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**Symptoms:** RPO alarm fires; CG reports lag exceeding threshold.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>**Diagnostic Steps:**
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>1. Check WAN link utilization — is bandwidth saturated?
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>2. Check write rate increase (application change or batch job)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>3. Verify RPA cluster load — distribute CGs if one RPA is overloaded
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>4. Review journal state for overflow
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>boxmgmt cg check_cg &lt;CG-name&gt;
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>boxmgmt system performance
 </code></pre></div></p>
-<p><strong>RP4VM software splitter (ESXi):</strong>
-- Check ESXi host kernel module: <code>esxcli software vib list | grep rp</code>
-- Restart splitter on ESXi if needed (requires brief I/O pause — schedule maintenance)</p>
-<hr />
-<h2 id="rpo-violation">RPO Violation<a class="headerlink" href="#rpo-violation" title="Permanent link">&para;</a></h2>
-<p><strong>Symptoms:</strong> RPO alarm fires; CG reports lag exceeding threshold.</p>
-<p><strong>Diagnostic Steps:</strong>
-1. Check WAN link utilization — is bandwidth saturated?
-2. Check write rate increase (application change or batch job)
-3. Verify RPA cluster load — distribute CGs if one RPA is overloaded
-4. Review journal state for overflow</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>check_cg<span class="w"> </span>&lt;CG-name&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>boxmgmt<span class="w"> </span>system<span class="w"> </span>performance
-</code></pre></div>
 <hr />
 <h2 id="failover-did-not-complete-cleanly">Failover Did Not Complete Cleanly<a class="headerlink" href="#failover-did-not-complete-cleanly" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> After a failover, CG is stuck in <code>Failover in progress</code> or production site does not become accessible on DR.</p>
@@ -4026,8 +3994,8 @@
 2. Check image access logs in RPMA
 3. If failover is incomplete, use <code>Enable Image Access</code> manually for the desired recovery point
 4. After application validation, use <code>Recover Production</code> to complete the failover</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>&lt;copy-name&gt;
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>recover_production<span class="w"> </span>&lt;CG-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>enable_image_access<span class="w"> </span>&lt;CG-name&gt;<span class="w"> </span>&lt;copy-name&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>boxmgmt<span class="w"> </span>cg<span class="w"> </span>recover_production<span class="w"> </span>&lt;CG-name&gt;
 </code></pre></div>
 <p><strong>If re-sync is required after failover:</strong>
 - Use <code>Direct Access</code> mode to start recovery, then initiate resync back to production</p>

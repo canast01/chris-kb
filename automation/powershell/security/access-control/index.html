@@ -3336,17 +3336,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rbac-with-active-directory-groups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC with Active Directory Groups
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#least-privilege-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3571,24 +3560,8 @@
 │   │.psrc file   = Role Capability file; defines VisibleCmdlets, VisibleFunctions, VisibleProviders│   │
 │   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="rbac-with-active-directory-groups">RBAC with Active Directory Groups<a class="headerlink" href="#rbac-with-active-directory-groups" title="Permanent link">&para;</a></h2>
-<p>Scope script access by checking group membership at runtime.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check if the current user is in an AD group</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">function</span> <span class="nb">Test-GroupMembership</span> <span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$GroupName</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="nv">$user</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsIdentity]</span><span class="p">::</span><span class="n">GetCurrent</span><span class="p">()</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nv">$principal</span> <span class="p">=</span> <span class="no">[System.Security.Principal.WindowsPrincipal]</span><span class="nv">$user</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nv">$group</span> <span class="p">=</span> <span class="no">[System.Security.Principal.NTAccount]</span><span class="nv">$GroupName</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nv">$sid</span> <span class="p">=</span> <span class="nv">$group</span><span class="p">.</span><span class="n">Translate</span><span class="p">(</span><span class="no">[System.Security.Principal.SecurityIdentifier]</span><span class="p">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="nv">$principal</span><span class="p">.</span><span class="n">IsInRole</span><span class="p">(</span><span class="nv">$sid</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">if</span> <span class="p">(</span><span class="o">-not</span> <span class="p">(</span><span class="nb">Test-GroupMembership</span> <span class="s1">&#39;DOMAIN\Operators&#39;</span><span class="p">))</span> <span class="p">{</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nb">Write-Error</span> <span class="s2">&quot;Access denied — requires Operators group membership&quot;</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">exit</span> <span class="n">1</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="least-privilege-reference">Least Privilege Reference<a class="headerlink" href="#least-privilege-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

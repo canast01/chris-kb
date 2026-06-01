@@ -3178,28 +3178,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sannav-gui-slow-or-unresponsive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SANnav GUI Slow or Unresponsive
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ldap-authentication-fails" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LDAP Authentication Fails
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#firmware-upgrade-stuck-or-failed" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3524,51 +3502,30 @@
 │  journalctl      = Linux systemd log; check for SANnav service errors and restarts                    │
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<ol>
-<li>Confirm the SANnav service account (<code>sannav_svc</code>) has the <strong>admin</strong> role on the switch — zoning operations require admin privileges.</li>
-</ol>
-<hr />
-<h2 id="sannav-gui-slow-or-unresponsive">SANnav GUI Slow or Unresponsive<a class="headerlink" href="#sannav-gui-slow-or-unresponsive" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom:</strong> The SANnav web UI takes &gt; 30 seconds to load pages; sessions time out frequently.</p>
-<p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>If disk is &gt; 85% full: purge old performance data. Navigate to **Administration &gt; System &gt; Data Retention** and reduce the retention period for historical data.
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check CPU and memory</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>free<span class="w"> </span>-h
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## LDAP Authentication Fails
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check disk I/O</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check disk space — PostgreSQL growth is the most common cause</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>df<span class="w"> </span>-h<span class="w"> </span>/opt/sannav
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/sannav/data/postgres/
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>du<span class="w"> </span>-sh<span class="w"> </span>/opt/sannav/data/influxdb/
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check for slow queries in PostgreSQL</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT query, calls, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Restart services if memory leak is suspected</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>sannav<span class="w"> </span>restart
-</code></pre></div>
-<p>If disk is &gt; 85% full: purge old performance data. Navigate to <strong>Administration &gt; System &gt; Data Retention</strong> and reduce the retention period for historical data.</p>
-<hr />
-<h2 id="ldap-authentication-fails">LDAP Authentication Fails<a class="headerlink" href="#ldap-authentication-fails" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom:</strong> Users cannot log in with AD credentials; login page shows "Invalid credentials" or "LDAP error."</p>
-<p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP connectivity from SANnav appliance</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>ldap.corp.example.com:636<span class="w"> </span>-brief
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: CONNECTED with no certificate errors</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Test bind with the service account</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ldap.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-w<span class="w"> </span>&lt;bind-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>sAMAccountName<span class="w"> </span>mail
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Expected: returns the test user&#39;s attributes</span>
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Symptom:** Users cannot log in with AD credentials; login page shows &quot;Invalid credentials&quot; or &quot;LDAP error.&quot;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**Resolution:**
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Test LDAP connectivity from SANnav appliance
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>openssl s_client -connect ldap.corp.example.com:636 -brief
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Expected: CONNECTED with no certificate errors
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Test bind with the service account
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ldapsearch -H ldaps://ldap.corp.example.com \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  -D &quot;CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com&quot; \
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  -w &lt;bind-password&gt; \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -b &quot;DC=corp,DC=example,DC=com&quot; \
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;(sAMAccountName=testuser)&quot; sAMAccountName mail
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Expected: returns the test user&#39;s attributes
+</code></pre></div></p>
 <p>Common LDAP issues:</p>
 <table>
 <thead>
@@ -3609,22 +3566,22 @@
 <li>Navigate to <strong>Image Management &gt; Upgrade Status</strong> and note the error message.</li>
 <li>SSH to the switch and check FOS firmware download status:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the switch (FOS CLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>firmwareshow
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Shows current and backup partition firmware</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If the switch is in firmware download state, check progress:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>firmwaredownload<span class="w"> </span>--status
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># If upgrade is stuck, check system logs on the switch</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>errdump
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the switch (FOS CLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>firmwareshow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Shows current and backup partition firmware</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If the switch is in firmware download state, check progress:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>firmwaredownload<span class="w"> </span>--status
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># If upgrade is stuck, check system logs on the switch</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>errdump
 </code></pre></div>
 <ol>
 <li>If the switch rebooted and SANnav shows it as failed, the switch may be on the new firmware and healthy:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify switch firmware from SANnav after reconnect</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Inventory &gt; Switches &gt; [Switch] &gt; Details</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># If firmware matches target, mark the upgrade as complete in SANnav</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify switch firmware from SANnav after reconnect</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Inventory &gt; Switches &gt; [Switch] &gt; Details</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># If firmware matches target, mark the upgrade as complete in SANnav</span>
 </code></pre></div>
 <ol>
 <li>Common failure causes:</li>
@@ -3659,20 +3616,20 @@
 <h2 id="backup-failing-to-remote-target">Backup Failing to Remote Target<a class="headerlink" href="#backup-failing-to-remote-target" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Scheduled or manual backups fail with a remote transfer error.</p>
 <p><strong>Resolution:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test SCP connectivity from SANnav to backup server</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>scp<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>sannav-bkp@backup-server.corp.example.com:/backups/sannav/
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If this fails, investigate:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># - SSH key or password authentication to backup server</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># - Firewall between SANnav and backup server (TCP 22)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># - Write permissions on the remote backup directory</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Check SANnav backup logs</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;backup\|transfer\|ERROR&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test SCP connectivity from SANnav to backup server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>scp<span class="w"> </span>/tmp/testfile.txt<span class="w"> </span>sannav-bkp@backup-server.corp.example.com:/backups/sannav/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># If this fails, investigate:</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># - SSH key or password authentication to backup server</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># - Firewall between SANnav and backup server (TCP 22)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># - Write permissions on the remote backup directory</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check SANnav backup logs</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;backup\|transfer\|ERROR&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <p>If remote transfer is configured via NFS, verify NFS mount is active:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>backup
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># If not mounted: sudo mount -a</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>df<span class="w"> </span>-h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>backup
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># If not mounted: sudo mount -a</span>
 </code></pre></div></p>
 
 

@@ -3782,36 +3782,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#cluster-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cluster Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hci-node-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HCI Node Cluster
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3967,85 +3937,68 @@
 HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Managed as a system through VxRail Manager — all firmware, vSphere, and vSAN upgrades go through the LCM workflow via Composite Bundle, never independently.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VxRail Node Anatomy + Cluster Connectivity
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  VxRail Node (PowerEdge)                                     │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Intel   │ │  up to   │ │  vSAN disk group             │  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  Xeon    │ │  6 TB    │ │  cache tier + data tier      │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └──────────┘ └──────────┘ └──────────────────────────────┘  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  ┌──────────────────────┐   ┌───────────────────────────────┐│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Dual-port 25/100GbE │   │  iDRAC (OOB management)       ││
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     ││
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  └──────────┬───────────┘   └───────────────────────────────┘│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└─────────────┼────────────────────────────────────────────────┘
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>              │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>   ┌──────────▼──────────────────────────────────┐
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   │  vSphere Distributed Switch (VDS)            │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>   │  vmk0: mgmt · vmk1: vMotion                 │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>   │  vmk2: vSAN  · vmk3: VxRail mgmt            │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>   └──────────┬──────────────────────────────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>              │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>   ┌──────────▼──────────────────────────────────┐
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>   │  Top-of-Rack / Aggregation Switch            │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>   │  MTU 9000 on vSAN and vMotion VLANs          │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>   └─────────────────────────────────────────────┘
+<p>VxRail Node Anatomy + Cluster Connectivity
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  VxRail Node (PowerEdge)                                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────┐ ┌──────────┐ ┌──────────────────────────────┐  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  CPU(s)  │ │  RAM     │ │  NVMe Cache + Capacity Disks │  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Intel   │ │  up to   │ │  vSAN disk group             │  │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  Xeon    │ │  6 TB    │ │  cache tier + data tier      │  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  └──────────┘ └──────────┘ └──────────────────────────────┘  │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ┌──────────────────────┐   ┌───────────────────────────────┐│
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Dual-port 25/100GbE │   │  iDRAC (OOB management)       ││
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  mgmt · vSAN · vMtn  │   │  hardware health · RACADM     ││
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └──────────┬───────────┘   └───────────────────────────────┘│
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└─────────────┼────────────────────────────────────────────────┘
 </code></pre></div>
-<p><img alt="VxRail Architecture" src="../../../assets/vxrail-architecture-overview.svg" /></p>
-<div class="kb-grid kb-grid-3">
-<a class="kb-card" href="how-it-works/"><strong>How It Works</strong><span>How it works, integrations, and design standards.</span></a>
-<a class="kb-card" href="../integration/"><strong>Integration</strong><span>Integration with vCenter, NSX, Aria Operations, and Dell SupportAssist.</span></a>
-<a class="kb-card" href="../design-standards/"><strong>Design Standards</strong><span>Sizing, VMkernel network design, vSAN policy, and cluster configuration best practices.</span></a>
-</div>
-
-<h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Minimum cluster size</td>
-<td>3 nodes (FTT=1 vSAN RAID-1 or RAID-5 with 4+ nodes)</td>
-</tr>
-<tr>
-<td>Maximum cluster size</td>
-<td>64 nodes</td>
-</tr>
-<tr>
-<td>Node types</td>
-<td>All-flash, NVMe, hybrid (spinning + cache tier)</td>
-</tr>
-<tr>
-<td>Dedicated management nodes</td>
-<td>Optional — separate nodes for vCenter and management VMs</td>
-</tr>
-<tr>
-<td>Stretched cluster</td>
-<td>2 data sites + 1 witness; requires stretched vSAN</td>
-</tr>
-</tbody>
-</table>
-<h2 id="hci-node-cluster">HCI Node Cluster<a class="headerlink" href="#hci-node-cluster" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TB
-  VXM["VxRail Manager\n(lifecycle management)"] --&gt; VCSA["vCenter Server"]
-  VXM --&gt; NODES["VxRail Cluster\n3 – 64 nodes"]
-  NODES --&gt; N1["VxRail Node 1\nvSAN cache + capacity"]
-  NODES --&gt; N2["Node 2"]
-  NODES --&gt; N3["Node N…"]
-  N1 &amp; N2 &amp; N3 --&gt; DS[("vSAN Datastore")]
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  class VXM,VCSA mgmt
-  class NODES ctrl
-  class N1,N2,N3 host
-  class DS store</code></pre>
+              │
+   ┌──────────▼──────────────────────────────────┐
+   │  vSphere Distributed Switch (VDS)            │
+   │  vmk0: mgmt · vmk1: vMotion                 │
+   │  vmk2: vSAN  · vmk3: VxRail mgmt            │
+   └──────────┬──────────────────────────────────┘
+              │
+   ┌──────────▼──────────────────────────────────┐
+   │  Top-of-Rack / Aggregation Switch            │
+   │  MTU 9000 on vSAN and vMotion VLANs          │
+   └─────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&lt;div class=&quot;kb-grid kb-grid-3&quot;&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>&lt;a class=&quot;kb-card&quot; href=&quot;how-it-works/&quot;&gt;&lt;strong&gt;How It Works&lt;/strong&gt;&lt;span&gt;How it works, integrations, and design standards.&lt;/span&gt;&lt;/a&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>&lt;a class=&quot;kb-card&quot; href=&quot;../integration/&quot;&gt;&lt;strong&gt;Integration&lt;/strong&gt;&lt;span&gt;Integration with vCenter, NSX, Aria Operations, and Dell SupportAssist.&lt;/span&gt;&lt;/a&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>&lt;a class=&quot;kb-card&quot; href=&quot;../design-standards/&quot;&gt;&lt;strong&gt;Design Standards&lt;/strong&gt;&lt;span&gt;Sizing, VMkernel network design, vSAN policy, and cluster configuration best practices.&lt;/span&gt;&lt;/a&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&lt;/div&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Cluster Topology
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Parameter | Value |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|---|---|
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Minimum cluster size | 3 nodes (FTT=1 vSAN RAID-1 or RAID-5 with 4+ nodes) |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Maximum cluster size | 64 nodes |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Node types | All-flash, NVMe, hybrid (spinning + cache tier) |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Dedicated management nodes | Optional — separate nodes for vCenter and management VMs |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Stretched cluster | 2 data sites + 1 witness; requires stretched vSAN |
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>## HCI Node Cluster
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```mermaid
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>graph TB
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  VXM[&quot;VxRail Manager\n(lifecycle management)&quot;] --&gt; VCSA[&quot;vCenter Server&quot;]
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  VXM --&gt; NODES[&quot;VxRail Cluster\n3 – 64 nodes&quot;]
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  NODES --&gt; N1[&quot;VxRail Node 1\nvSAN cache + capacity&quot;]
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  NODES --&gt; N2[&quot;Node 2&quot;]
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  NODES --&gt; N3[&quot;Node N…&quot;]
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  N1 &amp; N2 &amp; N3 --&gt; DS[(&quot;vSAN Datastore&quot;)]
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  classDef mgmt fill:#b45309,stroke:#92400e,color:#fff
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  classDef host fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  class VXM,VCSA mgmt
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  class NODES ctrl
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  class N1,N2,N3 host
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  class DS store
+</code></pre></div></p>
 
 
 

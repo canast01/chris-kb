@@ -3706,36 +3706,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#on-call-triage-srdfa-lag-alert" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        On-Call Triage — SRDF/A Lag Alert
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-command-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Command Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -3948,44 +3918,6 @@ Diagnostics reference covering On-Call Triage — SRDF/A Lag Alert, Diagnostic C
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<blockquote>
-<p>Part of the <a href="../../">SRDF/A</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="on-call-triage-srdfa-lag-alert">On-Call Triage — SRDF/A Lag Alert<a class="headerlink" href="#on-call-triage-srdfa-lag-alert" title="Permanent link">&para;</a></h2>
-<p>When an SRDF/A lag alert fires:</p>
-<ol>
-<li>SSH to a host with SYMCLI access and run <code>symrdf -g &lt;dgname&gt; -sid &lt;r1_sid&gt; query</code> — confirm current pair state.</li>
-<li>Check if the WAN link is up (network team or monitoring dashboard).</li>
-<li>Identify whether this is a transient spike or sustained lag:</li>
-<li>Transient (&lt; 5 minutes, recovering) — monitor and document.</li>
-<li>Sustained (&gt; 10 minutes, growing delta queue) — engage storage and network teams.</li>
-<li>If RPO has breached the agreed threshold, escalate to the change/incident management process.</li>
-<li>Document the lag window, peak RPO exposure, and resolution in the incident ticket.</li>
-</ol>
-<hr />
-<h2 id="diagnostic-command-reference">Diagnostic Command Reference<a class="headerlink" href="#diagnostic-command-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check SRDF group and pair states</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Detailed view including cycle time, lag, and DSE state</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query<span class="w"> </span>-detail
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check SRDF group connectivity and link detail</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>-v
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check SRDF director port state on R1 array</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Show delta marks and cycle lag for a group</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;group_num&gt;<span class="w"> </span>list<span class="w"> </span>-delta
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Review array events (last 30 events filtered to SRDF)</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SRDF\|suspend&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Check target array thin pool utilisation</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>list<span class="w"> </span>-pool<span class="w"> </span>-thin<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Pool|Used|Free&quot;</span>
 </code></pre></div>
 
 

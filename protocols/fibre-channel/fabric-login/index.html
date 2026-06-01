@@ -3629,34 +3629,37 @@
 Fabric login is the process by which FC ports register with the fabric and establish communication paths.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        FC LOGIN SEQUENCE
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────┐        ┌───────────┐        ┌───────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│ Host HBA │        │ FC Switch │        │  Storage  │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│          │        │(Name Svr) │        │  Target   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└────┬─────┘        └─────┬─────┘        └─────┬─────┘
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>     │  1. FLOGI           │                    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>     │ ──────────────────► │                    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>     │  ACC (FC_ID assigned)│                   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>     │ ◄────────────────── │                    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>     │  2. PLOGI (to NS)   │                    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>     │ ──────────────────► │                    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>     │  ACC                │                    │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>     │ ◄────────────────── │                    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>     │  3. RFT_ID / RPN_ID │                    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>     │ ──────────────────► │                    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>     │                     │  4. PLOGI (port-to-port)
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>     │ ───────────────────────────────────────► │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>     │                     │  ACC               │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>     │ ◄─────────────────────────────────────── │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>     │                     │  5. PRLI (SCSI session)
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>     │ ───────────────────────────────────────► │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>     │                     │  ACC (target ready) │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>     │ ◄─────────────────────────────────────── │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>     │                     │  I/O can begin     │
+<div class="highlight"><pre><span></span><code>    FC LOGIN SEQUENCE
 </code></pre></div>
-Login failures prevent hosts from seeing storage.</p>
+<p><code>┌──────────┐        ┌───────────┐        ┌───────────┐
+│ Host HBA │        │ FC Switch │        │  Storage  │
+│          │        │(Name Svr) │        │  Target   │
+└────┬─────┘        └─────┬─────┘        └─────┬─────┘</code>
+     │  1. FLOGI           │                    │
+     │ ──────────────────► │                    │
+     │  ACC (FC_ID assigned)│                   │
+     │ ◄────────────────── │                    │
+     │  2. PLOGI (to NS)   │                    │
+     │ ──────────────────► │                    │
+     │  ACC                │                    │
+     │ ◄────────────────── │                    │
+     │  3. RFT_ID / RPN_ID │                    │
+     │ ──────────────────► │                    │
+     │                     │  4. PLOGI (port-to-port)
+     │ ───────────────────────────────────────► │
+     │                     │  ACC               │
+     │ ◄─────────────────────────────────────── │
+     │                     │  5. PRLI (SCSI session)
+     │ ───────────────────────────────────────► │
+     │                     │  ACC (target ready) │
+     │ ◄─────────────────────────────────────── │
+     │                     │  I/O can begin     │
+```
+Login failures prevent hosts from seeing storage.
+</p>
 <h2 id="login-sequence">Login Sequence<a class="headerlink" href="#login-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
+<p><code>mermaid
+sequenceDiagram
     participant HBA as Host HBA
     participant SW as FC Switch
     participant NS as Name Server
@@ -3671,7 +3674,7 @@ Login failures prevent hosts from seeing storage.</p>
     HBA-&gt;&gt;TGT: PLOGI — Port Login to target WWPN
     TGT--&gt;&gt;HBA: ACC
     HBA-&gt;&gt;TGT: PRLI — Process Login (SCSI)
-    TGT--&gt;&gt;HBA: ACC (target ready)</code></pre>
+    TGT--&gt;&gt;HBA: ACC (target ready)</code></p>
 <h2 id="login-stages">Login Stages<a class="headerlink" href="#login-stages" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -3701,30 +3704,30 @@ Login failures prevent hosts from seeing storage.</p>
 </table>
 <h2 id="viewing-login-state">Viewing Login State<a class="headerlink" href="#viewing-login-state" title="Permanent link">&para;</a></h2>
 <h3 id="brocade-fos">Brocade FOS<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show fabric logins on this switch</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nsshow
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show logins across all switches</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nsallshow
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show FLOGI database (ports logged into this switch&#39;s F_ports)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Online
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Per-port FLOGI details</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show fabric logins on this switch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsshow
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show logins across all switches</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nsallshow
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show FLOGI database (ports logged into this switch&#39;s F_ports)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>switchshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Online
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Per-port FLOGI details</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
 </code></pre></div>
 <h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># FLOGI database — who is logged in to the fabric</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Name server — all registered ports</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># PLOGI state between two ports</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>show<span class="w"> </span>topology
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Detailed port login info</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># FLOGI database — who is logged in to the fabric</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Name server — all registered ports</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show<span class="w"> </span>fcns<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># PLOGI state between two ports</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>topology
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Detailed port login info</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
 </code></pre></div>
 <h2 id="common-login-failures">Common Login Failures<a class="headerlink" href="#common-login-failures" title="Permanent link">&para;</a></h2>
 <table>
@@ -3764,17 +3767,17 @@ Login failures prevent hosts from seeing storage.</p>
 </tbody>
 </table>
 <h2 id="useful-diagnostic-commands">Useful Diagnostic Commands<a class="headerlink" href="#useful-diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Brocade — port error counters (CRC, loss-of-sync)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>porterrshow
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Brocade — port statistics</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>portstatshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Cisco MDS — interface counters</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify FCID assigned to a WWPN</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn-last-4-chars&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Brocade — port error counters (CRC, loss-of-sync)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>porterrshow
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Brocade — port statistics</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>portstatshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Cisco MDS — interface counters</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1<span class="w"> </span>counters
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify FCID assigned to a WWPN</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn-last-4-chars&gt;
 </code></pre></div>
 
 

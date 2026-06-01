@@ -3233,17 +3233,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#isl-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ISL Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#aaa-authentication-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3528,80 +3517,20 @@
 │  TACACS+ via ISE = Cisco ISE provides TACACS+ for all MDS admin auth                                  │
 │  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Examples:
-- Zone: <code>db01_0a-powermax01_0a</code>
-- Alias: <code>db01_0a</code> (WWPN alias for host HBA port), <code>powermax01_0a</code> (WWPN alias for target)</p>
-<p>Rules:
-- Enhanced zoning (enhanced zone mode) must be enabled on all VSANs: <code>zone mode enhanced vsan &lt;id&gt;</code>
-- One initiator per zone (single-initiator zoning)
-- Zone members always referenced by alias — never hard-coded WWPNs directly in zone definitions</p>
-<pre class="mermaid"><code>graph TD
-  subgraph "Fabric A — DC1"
-    SW1["dc1-mds-sw01\n(odd — Fabric A)"]
-    SW3["dc1-mds-sw03\n(odd — Fabric A)"]
-    subgraph "VSAN 10 — Production A"
-      ZS10["Zone Set: dc1-fabA-prod"]
-      Z1["Zone: db01_0a-powermax01_0a"]
-      Z2["Zone: esxi01_0a-fa01_ct0_p0"]
-    end
-    subgraph "VSAN 20 — Replication A"
-      ZS20["Zone Set: dc1-fabA-repl"]
-    end
-  end
-
-  subgraph "Fabric B — DC1"
-    SW2["dc1-mds-sw02\n(even — Fabric B)"]
-    SW4["dc1-mds-sw04\n(even — Fabric B)"]
-    subgraph "VSAN 11 — Production B"
-      ZS11["Zone Set: dc1-fabB-prod"]
-    end
-    subgraph "VSAN 21 — Replication B"
-      ZS21["Zone Set: dc1-fabB-repl"]
-    end
-  end
-
-  ZS10 --&gt; Z1 &amp; Z2
-  SW1 --- SW3
-  SW2 --- SW4
-  SW1 &lt;--&gt;|"ISL"| SW2
-
-  classDef sw fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef zs fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef z fill:#b45309,stroke:#92400e,color:#fff
-  class SW1,SW2,SW3,SW4 sw
-  class ZS10,ZS11,ZS20,ZS21 zs
-  class Z1,Z2 z</code></pre>
-<h2 id="isl-standards">ISL Standards<a class="headerlink" href="#isl-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Port-channel ISLs</td>
-<td>Minimum 2 physical links per channel group</td>
-</tr>
-<tr>
-<td>ISL speed</td>
-<td>32G Fibre Channel minimum for new deployments</td>
-</tr>
-<tr>
-<td>Load balancing</td>
-<td>Source-ID/Destination-ID exchange-based (<code>port-channel load-balance src-dst-oxid</code>)</td>
-</tr>
-<tr>
-<td>Trunk mode</td>
-<td>Enabled on ISL ports: <code>switchport trunk mode on</code></td>
-</tr>
-</tbody>
-</table>
-<p>Verify port-channel ISL:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show<span class="w"> </span>interface<span class="w"> </span>san-port-channel<span class="w"> </span><span class="m">1</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## ISL Standards
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Parameter | Standard |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Port-channel ISLs | Minimum 2 physical links per channel group |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| ISL speed | 32G Fibre Channel minimum for new deployments |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Load balancing | Source-ID/Destination-ID exchange-based (`port-channel load-balance src-dst-oxid`) |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Trunk mode | Enabled on ISL ports: `switchport trunk mode on` |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Verify port-channel ISL:
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>show port-channel summary
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>show interface san-port-channel 1
 </code></pre></div></p>
 <h2 id="aaa-authentication-standards">AAA / Authentication Standards<a class="headerlink" href="#aaa-authentication-standards" title="Permanent link">&para;</a></h2>
 <table>

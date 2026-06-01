@@ -3278,28 +3278,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#least-privilege-iam-for-terraform" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Least Privilege IAM for Terraform
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workspace-and-environment-separation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workspace and Environment Separation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#access-control-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3522,29 +3500,21 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
 │   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
 │   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="least-privilege-iam-for-terraform">Least Privilege IAM for Terraform<a class="headerlink" href="#least-privilege-iam-for-terraform" title="Permanent link">&para;</a></h2>
-<p>Create a dedicated IAM role for Terraform with only the permissions required for the resources it manages.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Verify effective permissions of the Terraform role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>aws<span class="w"> </span>iam<span class="w"> </span>simulate-principal-policy<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--policy-source-arn<span class="w"> </span>arn:aws:iam::123456789:role/terraform-automation<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--action-names<span class="w"> </span>s3:GetObject<span class="w"> </span>ec2:DescribeInstances<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--resource-arns<span class="w"> </span><span class="s2">&quot;*&quot;</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># List all policies attached to the Terraform role</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-attached-role-policies<span class="w"> </span>--role-name<span class="w"> </span>terraform-automation
-</code></pre></div>
-<h2 id="workspace-and-environment-separation">Workspace and Environment Separation<a class="headerlink" href="#workspace-and-environment-separation" title="Permanent link">&para;</a></h2>
-<p>Use separate credentials and backends per environment to prevent a staging Terraform run from modifying production.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use workspace-specific state paths</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myorg-terraform-state&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;env/${terraform.workspace}/terraform.tfstate&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Workspace and Environment Separation
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Use separate credentials and backends per environment to prevent a staging Terraform run from modifying production.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```hcl
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Use workspace-specific state paths
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>terraform {
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  backend &quot;s3&quot; {
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    bucket = &quot;myorg-terraform-state&quot;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    key    = &quot;env/${terraform.workspace}/terraform.tfstate&quot;
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    region = &quot;eu-west-1&quot;
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  }
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>}
+</code></pre></div></p>
 <h2 id="access-control-reference">Access Control Reference<a class="headerlink" href="#access-control-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

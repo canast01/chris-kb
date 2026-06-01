@@ -4404,7 +4404,57 @@
 <div class="kb-summary">
 The CyberArk Vault stores credentials that protect the entire organization. Loss of the Vault with no tested backup means total recovery failure.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────── Security Cyberark Operations — Backup and Restore ──────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Cyberark backup: snapshots, replication, and external backup application integration     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Snapshot → replicate to DR → verify → document → test restore                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             Core            │  │       Primary service       │  │        Main function        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          Management         │  │        Control plane        │  │         Admin access        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: Security Cyberark Operations infrastructure · management network · monitoring            │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Cyberark           = Security Cyberark Operations platform overview and core concepts              │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Management         = management console and command-line interface for administration              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Monitoring         = health and performance monitoring dashboards and alerting                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Security           = access control, authentication, and encryption configuration                  │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Backup             = backup and recovery procedures and schedule configuration                     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Upgrade            = software version upgrades and firmware patching procedures                    │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Escalation         = vendor support escalation path and severity triage process                    │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Documentation      = vendor knowledge base and official product documentation                      │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Change management  = change ticket requirements for production modifications                       │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Audit log          = admin action logging for compliance and security review                       │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>This page covers Vault server key backup, database-level backup via PACLI, Disaster Recovery Vault configuration, full restore procedures, and DR failover.</p>
 <hr />
 <h2 id="backup-architecture-overview">Backup Architecture Overview<a class="headerlink" href="#backup-architecture-overview" title="Permanent link">&para;</a></h2>
@@ -4447,113 +4497,113 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
 <h2 id="server-key-backup">Server Key Backup<a class="headerlink" href="#server-key-backup" title="Permanent link">&para;</a></h2>
 <p>The Vault Server Key (<code>server.key</code>) is the master encryption key. Without it, the Vault database is unreadable.</p>
 <h3 id="location">Location<a class="headerlink" href="#location" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;Vault install path&gt;\PrivateArk\Server\
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── server.key        # Server private key (AES-256 encrypted at rest)
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── recpub.key        # Recovery public key
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── recprv.key        # Recovery private key (may be stored separately)
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└── conf\
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    └── dbparm.ini    # Vault configuration
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&lt;Vault install path&gt;\PrivateArk\Server\
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── server.key        # Server private key (AES-256 encrypted at rest)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── recpub.key        # Recovery public key
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>├── recprv.key        # Recovery private key (may be stored separately)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>└── conf\
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    └── dbparm.ini    # Vault configuration
 </code></pre></div>
 <h3 id="backup-the-server-key">Backup the Server Key<a class="headerlink" href="#backup-the-server-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM From the Vault server (run as PrivateArk service account)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>REM Stop the Vault service first if taking a cold copy
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>net stop &quot;PrivateArk Server&quot;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>REM Copy key files to secure offline media
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>xcopy &quot;C:\PrivateArk\Server\server.key&quot;  E:\VaultKeyBackup\ /Y
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>xcopy &quot;C:\PrivateArk\Server\recpub.key&quot;  E:\VaultKeyBackup\ /Y
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>xcopy &quot;C:\PrivateArk\Server\recprv.key&quot;  E:\VaultKeyBackup\ /Y
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>xcopy &quot;C:\PrivateArk\Server\conf\dbparm.ini&quot; E:\VaultKeyBackup\ /Y
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>net start &quot;PrivateArk Server&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>REM From the Vault server (run as PrivateArk service account)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>REM Stop the Vault service first if taking a cold copy
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>net stop &quot;PrivateArk Server&quot;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>REM Copy key files to secure offline media
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>xcopy &quot;C:\PrivateArk\Server\server.key&quot;  E:\VaultKeyBackup\ /Y
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>xcopy &quot;C:\PrivateArk\Server\recpub.key&quot;  E:\VaultKeyBackup\ /Y
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>xcopy &quot;C:\PrivateArk\Server\recprv.key&quot;  E:\VaultKeyBackup\ /Y
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>xcopy &quot;C:\PrivateArk\Server\conf\dbparm.ini&quot; E:\VaultKeyBackup\ /Y
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>net start &quot;PrivateArk Server&quot;
 </code></pre></div>
 <blockquote>
 <p><strong>Security requirement:</strong> The offline media containing <code>server.key</code> must be stored in a physically separate, access-controlled location (e.g., fireproof safe, separate data center). Access requires two authorized personnel (dual-control).</p>
 </blockquote>
 <h3 id="verify-key-backup-integrity">Verify Key Backup Integrity<a class="headerlink" href="#verify-key-backup-integrity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>REM Compare checksums after copy
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>certutil -hashfile &quot;C:\PrivateArk\Server\server.key&quot; SHA256
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>certutil -hashfile &quot;E:\VaultKeyBackup\server.key&quot; SHA256
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>REM Outputs must match
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM Compare checksums after copy
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>certutil -hashfile &quot;C:\PrivateArk\Server\server.key&quot; SHA256
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>certutil -hashfile &quot;E:\VaultKeyBackup\server.key&quot; SHA256
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>REM Outputs must match
 </code></pre></div>
 <hr />
 <h2 id="safe-backup-via-pacli">Safe Backup via PACLI<a class="headerlink" href="#safe-backup-via-pacli" title="Permanent link">&para;</a></h2>
 <p>PACLI (Privileged Access Command Line Interface) is CyberArk's command-line tool for Vault operations, including data export.</p>
 <h3 id="install-and-configure-pacli">Install and Configure PACLI<a class="headerlink" href="#install-and-configure-pacli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM PACLI is installed as part of the CyberArk SDK package
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>REM Set PACLI path
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>SET PACLIPATH=C:\Program Files (x86)\CyberArk\ApplicationPasswordSdk\
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>REM Initialize PACLI session
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>PACLI INIT
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>REM Define Vault connection
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>PACLI DEFINEVAULT VAULT=&quot;ProductionVault&quot; ADDRESS=&quot;192.168.10.10&quot; PORT=1858 PREAUTH=YES
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>REM Logon (use a dedicated backup service account with auditor/vault admin permissions)
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>PACLI LOGON VAULT=&quot;ProductionVault&quot; USER=&quot;BackupUser&quot; PASSWORD=&quot;&lt;password&gt;&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>REM PACLI is installed as part of the CyberArk SDK package
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>REM Set PACLI path
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>SET PACLIPATH=C:\Program Files (x86)\CyberArk\ApplicationPasswordSdk\
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>REM Initialize PACLI session
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>PACLI INIT
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>REM Define Vault connection
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>PACLI DEFINEVAULT VAULT=&quot;ProductionVault&quot; ADDRESS=&quot;192.168.10.10&quot; PORT=1858 PREAUTH=YES
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>REM Logon (use a dedicated backup service account with auditor/vault admin permissions)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>PACLI LOGON VAULT=&quot;ProductionVault&quot; USER=&quot;BackupUser&quot; PASSWORD=&quot;&lt;password&gt;&quot;
 </code></pre></div>
 <h3 id="export-a-single-safe">Export a Single Safe<a class="headerlink" href="#export-a-single-safe" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>REM Export all files and accounts from a Safe to a local directory
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>PACLI EXPORTSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ^
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  FOLDER=&quot;Root&quot; LOCALFOLDER=&quot;C:\VaultBackup\Safes\IT-Admins\&quot; ^
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  INCLUDESUBFOLDERS=YES
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>REM Logoff and terminate
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>PACLI LOGOFF VAULT=&quot;ProductionVault&quot;
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>PACLI TERM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>REM Export all files and accounts from a Safe to a local directory
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>PACLI EXPORTSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ^
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  FOLDER=&quot;Root&quot; LOCALFOLDER=&quot;C:\VaultBackup\Safes\IT-Admins\&quot; ^
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  INCLUDESUBFOLDERS=YES
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>REM Logoff and terminate
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PACLI LOGOFF VAULT=&quot;ProductionVault&quot;
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>PACLI TERM
 </code></pre></div>
 <h3 id="bulk-safe-export-script">Bulk Safe Export Script<a class="headerlink" href="#bulk-safe-export-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Export all Safes via PACLI (PowerShell wrapper)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$VaultName</span>    <span class="p">=</span> <span class="s2">&quot;ProductionVault&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$VaultAddress</span> <span class="p">=</span> <span class="s2">&quot;192.168.10.10&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">$BackupUser</span>   <span class="p">=</span> <span class="s2">&quot;BackupUser&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">$BackupPass</span>   <span class="p">=</span> <span class="s2">&quot;VaultBackupPassword&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">$BackupRoot</span>   <span class="p">=</span> <span class="s2">&quot;C:\VaultBackup\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">INIT</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">DEFINEVAULT</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">ADDRESS</span><span class="p">=</span><span class="nv">$VaultAddress</span> <span class="n">PORT</span><span class="p">=</span><span class="n">1858</span> <span class="n">PREAUTH</span><span class="p">=</span><span class="n">YES</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">LOGON</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">USER</span><span class="p">=</span><span class="nv">$BackupUser</span> <span class="n">PASSWORD</span><span class="p">=</span><span class="nv">$BackupPass</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># Get list of all Safes</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nv">$SafeList</span> <span class="p">=</span> <span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">SAFESLIST</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">OUTPUT</span><span class="p">=</span><span class="s2">&quot;(NAME)&quot;</span> <span class="p">|</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;^\S+&#39;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Matches</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Value</span> <span class="p">}</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$Safe</span> <span class="k">in</span> <span class="nv">$SafeList</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>    <span class="nv">$SafeBackupPath</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$BackupRoot</span> <span class="s2">&quot;Safes\$Safe&quot;</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    <span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$SafeBackupPath</span> <span class="n">-Force</span> <span class="p">|</span> <span class="nb">Out-Null</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    <span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">EXPORTSAFE</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">SAFE</span><span class="p">=</span><span class="nv">$Safe</span> <span class="n">FOLDER</span><span class="p">=</span><span class="s2">&quot;Root&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        <span class="n">LOCALFOLDER</span><span class="p">=</span><span class="nv">$SafeBackupPath</span> <span class="n">INCLUDESUBFOLDERS</span><span class="p">=</span><span class="n">YES</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Exported Safe: $Safe&quot;</span>
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="p">}</span>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">LOGOFF</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span>
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">TERM</span>
-<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
-<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Vault backup complete: $BackupRoot&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Export all Safes via PACLI (PowerShell wrapper)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$VaultName</span>    <span class="p">=</span> <span class="s2">&quot;ProductionVault&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$VaultAddress</span> <span class="p">=</span> <span class="s2">&quot;192.168.10.10&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">$BackupUser</span>   <span class="p">=</span> <span class="s2">&quot;BackupUser&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$BackupPass</span>   <span class="p">=</span> <span class="s2">&quot;VaultBackupPassword&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$BackupRoot</span>   <span class="p">=</span> <span class="s2">&quot;C:\VaultBackup\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">INIT</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">DEFINEVAULT</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">ADDRESS</span><span class="p">=</span><span class="nv">$VaultAddress</span> <span class="n">PORT</span><span class="p">=</span><span class="n">1858</span> <span class="n">PREAUTH</span><span class="p">=</span><span class="n">YES</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">LOGON</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">USER</span><span class="p">=</span><span class="nv">$BackupUser</span> <span class="n">PASSWORD</span><span class="p">=</span><span class="nv">$BackupPass</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># Get list of all Safes</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nv">$SafeList</span> <span class="p">=</span> <span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">SAFESLIST</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">OUTPUT</span><span class="p">=</span><span class="s2">&quot;(NAME)&quot;</span> <span class="p">|</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>  <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s1">&#39;^\S+&#39;</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Matches</span><span class="p">[</span><span class="n">0</span><span class="p">].</span><span class="n">Value</span> <span class="p">}</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$Safe</span> <span class="k">in</span> <span class="nv">$SafeList</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="nv">$SafeBackupPath</span> <span class="p">=</span> <span class="nb">Join-Path</span> <span class="nv">$BackupRoot</span> <span class="s2">&quot;Safes\$Safe&quot;</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$SafeBackupPath</span> <span class="n">-Force</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">EXPORTSAFE</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span> <span class="n">SAFE</span><span class="p">=</span><span class="nv">$Safe</span> <span class="n">FOLDER</span><span class="p">=</span><span class="s2">&quot;Root&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>        <span class="n">LOCALFOLDER</span><span class="p">=</span><span class="nv">$SafeBackupPath</span> <span class="n">INCLUDESUBFOLDERS</span><span class="p">=</span><span class="n">YES</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Exported Safe: $Safe&quot;</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">LOGOFF</span> <span class="n">VAULT</span><span class="p">=</span><span class="nv">$VaultName</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="p">&amp;</span> <span class="n">PACLI</span> <span class="n">TERM</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="nb">Write-Host</span> <span class="s2">&quot;Vault backup complete: $BackupRoot&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="vault-metadata-export">Vault Metadata Export<a class="headerlink" href="#vault-metadata-export" title="Permanent link">&para;</a></h2>
 <p>Platform definitions, safe templates, and LDAP/user configurations should be exported separately from CyberArk's PVWA (Password Vault Web Access).</p>
 <h3 id="export-platforms">Export Platforms<a class="headerlink" href="#export-platforms" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>PVWA → Administration → Platform Management → Export Platform → Download ZIP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PVWA → Administration → Platform Management → Export Platform → Download ZIP
 </code></pre></div>
 <p>Or via REST API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://pvwa.corp.example.com/PasswordVault/API/auth/CyberArk/Logon<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;BackupUser&quot;,&quot;password&quot;:&quot;VaultBackupPassword&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Get all platforms</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>https://pvwa.corp.example.com/PasswordVault/API/Platforms?Active<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>-o<span class="w"> </span>vault-platforms-backup.json
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Logoff</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>https://pvwa.corp.example.com/PasswordVault/API/auth/Logoff
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://pvwa.corp.example.com/PasswordVault/API/auth/CyberArk/Logon<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;BackupUser&quot;,&quot;password&quot;:&quot;VaultBackupPassword&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Get all platforms</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>https://pvwa.corp.example.com/PasswordVault/API/Platforms?Active<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>-o<span class="w"> </span>vault-platforms-backup.json
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Logoff</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span>https://pvwa.corp.example.com/PasswordVault/API/auth/Logoff
 </code></pre></div>
 <hr />
 <h2 id="disaster-recovery-dr-vault-configuration">Disaster Recovery (DR) Vault Configuration<a class="headerlink" href="#disaster-recovery-dr-vault-configuration" title="Permanent link">&para;</a></h2>
@@ -4575,25 +4625,25 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
         CPM -.-&gt;|"Failover"| V2
     end</code></pre>
 <h3 id="dr-vault-dbparmini-settings-primary">DR Vault dbparm.ini Settings (Primary)<a class="headerlink" href="#dr-vault-dbparmini-settings-primary" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">[Main]</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">VaultID</span><span class="o">=</span><span class="s">ProductionVault</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">Address</span><span class="o">=</span><span class="s">192.168.10.10</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">[DR]</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="na">EnableDR</span><span class="o">=</span><span class="s">Yes</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="na">DRUser</span><span class="o">=</span><span class="s">DR_User</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="na">DRPassword</span><span class="o">=</span><span class="s">&lt;encrypted&gt;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="na">DRSyncInterval</span><span class="o">=</span><span class="s">60</span><span class="w">         </span><span class="c1">; seconds between sync cycles</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="na">DRRetention</span><span class="o">=</span><span class="s">168</span><span class="w">           </span><span class="c1">; hours of transaction log retention</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="na">BackupVaultAddress</span><span class="o">=</span><span class="s">192.168.20.10</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="na">BackupVaultPort</span><span class="o">=</span><span class="s">1858</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[Main]</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="na">VaultID</span><span class="o">=</span><span class="s">ProductionVault</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="na">Address</span><span class="o">=</span><span class="s">192.168.10.10</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">[DR]</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="na">EnableDR</span><span class="o">=</span><span class="s">Yes</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="na">DRUser</span><span class="o">=</span><span class="s">DR_User</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="na">DRPassword</span><span class="o">=</span><span class="s">&lt;encrypted&gt;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="na">DRSyncInterval</span><span class="o">=</span><span class="s">60</span><span class="w">         </span><span class="c1">; seconds between sync cycles</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="na">DRRetention</span><span class="o">=</span><span class="s">168</span><span class="w">           </span><span class="c1">; hours of transaction log retention</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="na">BackupVaultAddress</span><span class="o">=</span><span class="s">192.168.20.10</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="na">BackupVaultPort</span><span class="o">=</span><span class="s">1858</span>
 </code></pre></div>
 <h3 id="verify-dr-replication-status">Verify DR Replication Status<a class="headerlink" href="#verify-dr-replication-status" title="Permanent link">&para;</a></h3>
 <p>From the Vault server console or PrivateArk Client:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Administration → Vault Parameters → DR Replication
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Administration → Vault Parameters → DR Replication
 </code></pre></div>
 <p>Or check the PrivateArk Server log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>type &quot;C:\PrivateArk\Server\Logs\ITALog.log&quot; | findstr /I &quot;DR replication&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>type &quot;C:\PrivateArk\Server\Logs\ITALog.log&quot; | findstr /I &quot;DR replication&quot;
 </code></pre></div>
 <hr />
 <h2 id="full-restore-procedure">Full Restore Procedure<a class="headerlink" href="#full-restore-procedure" title="Permanent link">&para;</a></h2>
@@ -4607,37 +4657,37 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
 <p><strong>Step 1 — Install CyberArk Vault Software</strong></p>
 <p>Install the same Vault version as the backed-up environment. Do not start the service yet.</p>
 <p><strong>Step 2 — Restore the Server Key</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>REM Copy key files to the Vault installation directory
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>xcopy E:\VaultKeyBackup\server.key  &quot;C:\PrivateArk\Server\&quot; /Y
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>xcopy E:\VaultKeyBackup\recpub.key  &quot;C:\PrivateArk\Server\&quot; /Y
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>xcopy E:\VaultKeyBackup\recprv.key  &quot;C:\PrivateArk\Server\&quot; /Y
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>xcopy E:\VaultKeyBackup\dbparm.ini  &quot;C:\PrivateArk\Server\conf\&quot; /Y
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>REM Copy key files to the Vault installation directory
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>xcopy E:\VaultKeyBackup\server.key  &quot;C:\PrivateArk\Server\&quot; /Y
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>xcopy E:\VaultKeyBackup\recpub.key  &quot;C:\PrivateArk\Server\&quot; /Y
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>xcopy E:\VaultKeyBackup\recprv.key  &quot;C:\PrivateArk\Server\&quot; /Y
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>xcopy E:\VaultKeyBackup\dbparm.ini  &quot;C:\PrivateArk\Server\conf\&quot; /Y
 </code></pre></div>
 <p><strong>Step 3 — Restore the Vault Database</strong></p>
 <p>If restoring from a VSS/filesystem snapshot:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>REM Stop PrivateArk if running
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>net stop &quot;PrivateArk Server&quot;
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>REM Replace Vault database directory with backup copy
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>robocopy &quot;E:\VaultDBBackup\&quot; &quot;C:\PrivateArk\Server\Database\&quot; /E /COPYALL /R:3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>REM Stop PrivateArk if running
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>net stop &quot;PrivateArk Server&quot;
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>REM Replace Vault database directory with backup copy
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>robocopy &quot;E:\VaultDBBackup\&quot; &quot;C:\PrivateArk\Server\Database\&quot; /E /COPYALL /R:3
 </code></pre></div>
 <p>If restoring from PACLI export, start the Vault with an empty database, then re-import:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>net start &quot;PrivateArk Server&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>net start &quot;PrivateArk Server&quot;
 </code></pre></div>
 <p>Then use PACLI IMPORTSAFE to re-import each Safe:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>PACLI INIT
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>PACLI DEFINEVAULT VAULT=&quot;ProductionVault&quot; ADDRESS=&quot;127.0.0.1&quot; PORT=1858
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>PACLI LOGON VAULT=&quot;ProductionVault&quot; USER=&quot;Administrator&quot; PASSWORD=&quot;&lt;admin-password&gt;&quot;
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>PACLI ADDSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ...
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>PACLI IMPORTSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ^
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  LOCALFOLDER=&quot;C:\VaultBackup\Safes\IT-Admins\&quot; INCLUDESUBFOLDERS=YES
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>PACLI LOGOFF VAULT=&quot;ProductionVault&quot;
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>PACLI TERM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>PACLI INIT
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>PACLI DEFINEVAULT VAULT=&quot;ProductionVault&quot; ADDRESS=&quot;127.0.0.1&quot; PORT=1858
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>PACLI LOGON VAULT=&quot;ProductionVault&quot; USER=&quot;Administrator&quot; PASSWORD=&quot;&lt;admin-password&gt;&quot;
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>PACLI ADDSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ...
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>PACLI IMPORTSAFE VAULT=&quot;ProductionVault&quot; SAFE=&quot;IT-Admins&quot; ^
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>  LOCALFOLDER=&quot;C:\VaultBackup\Safes\IT-Admins\&quot; INCLUDESUBFOLDERS=YES
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>PACLI LOGOFF VAULT=&quot;ProductionVault&quot;
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>PACLI TERM
 </code></pre></div>
 <p><strong>Step 4 — Start and Validate</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>net start &quot;PrivateArk Server&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>net start &quot;PrivateArk Server&quot;
 </code></pre></div>
 <hr />
 <h2 id="dr-failover-procedure">DR Failover Procedure<a class="headerlink" href="#dr-failover-procedure" title="Permanent link">&para;</a></h2>
@@ -4652,14 +4702,14 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
 </li>
 </ol>
 <p>Log on to the DR Vault server. Run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>REM From the DR Vault server
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>net stop &quot;PrivateArk Server&quot;
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>REM Edit dbparm.ini: change EnableDR=Yes to EnableDR=No (promote to primary)
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>notepad &quot;C:\PrivateArk\Server\conf\dbparm.ini&quot;
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>REM Set: EnableDR=No
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>net start &quot;PrivateArk Server&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>REM From the DR Vault server
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>net stop &quot;PrivateArk Server&quot;
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>REM Edit dbparm.ini: change EnableDR=Yes to EnableDR=No (promote to primary)
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>notepad &quot;C:\PrivateArk\Server\conf\dbparm.ini&quot;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>REM Set: EnableDR=No
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>net start &quot;PrivateArk Server&quot;
 </code></pre></div>
 <ol>
 <li>
@@ -4672,8 +4722,8 @@ The CyberArk Vault stores credentials that protect the entire organization. Loss
 <p><strong>Verify component connectivity:</strong></p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>REM From the PVWA server — test Vault connection
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>&quot;C:\Program Files (x86)\CyberArk\Password Vault Web Access\Services\CyberArkIISAppPool\bin\PasswordVaultWebAccessTester.exe&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>REM From the PVWA server — test Vault connection
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>&quot;C:\Program Files (x86)\CyberArk\Password Vault Web Access\Services\CyberArkIISAppPool\bin\PasswordVaultWebAccessTester.exe&quot;
 </code></pre></div>
 <hr />
 <h2 id="post-restore-validation-checklist">Post-Restore Validation Checklist<a class="headerlink" href="#post-restore-validation-checklist" title="Permanent link">&para;</a></h2>

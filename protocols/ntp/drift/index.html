@@ -3612,28 +3612,28 @@
 NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, Interpreting Drift History, Drift After VM Operations and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        CLOCK DRIFT AND NTP CORRECTION
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Without NTP:                                                │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Real time  ─────────────────────────────────────────────►  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  System clk ──────────────────────────────────────────────►  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│             └──── drift (+12 ppm = +1.04s/day)────────────   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                              │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  With NTP (slewing — gradual correction):                    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  System clk ─────── NTP adjusts freq slowly ────────────────►│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│              ▲ offset detected    ▲ slew complete            │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│              └──────────────────  └─── freq correction saved │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│              max slew: ~500 ppm                              │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                              │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Stepping (abrupt jump — large offset only):                 │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  System clk ──────────────►  STEP ──────────────────────────►│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│              offset &gt; 1s detected  clock jumps to correct    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                              │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Drift file (/var/lib/chrony/drift):                         │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Stores frequency correction so daemon starts pre-calibrated │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Content: single float, e.g.  12.345678  (ppm)              │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└──────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    CLOCK DRIFT AND NTP CORRECTION
 </code></pre></div>
+<p><code>┌──────────────────────────────────────────────────────────────┐
+│  Without NTP:                                                │
+│  Real time  ─────────────────────────────────────────────►  │
+│  System clk ──────────────────────────────────────────────►  │
+│             └──── drift (+12 ppm = +1.04s/day)────────────   │
+│                                                              │
+│  With NTP (slewing — gradual correction):                    │
+│  System clk ─────── NTP adjusts freq slowly ────────────────►│
+│              ▲ offset detected    ▲ slew complete            │
+│              └──────────────────  └─── freq correction saved │
+│              max slew: ~500 ppm                              │
+│                                                              │
+│  Stepping (abrupt jump — large offset only):                 │
+│  System clk ──────────────►  STEP ──────────────────────────►│
+│              offset &gt; 1s detected  clock jumps to correct    │
+│                                                              │
+│  Drift file (/var/lib/chrony/drift):                         │
+│  Stores frequency correction so daemon starts pre-calibrated │
+│  Content: single float, e.g.  12.345678  (ppm)              │
+└──────────────────────────────────────────────────────────────┘</code></p>
 <p>Clock drift is the natural tendency of a system clock to run fast or slow relative to real time. NTP continuously corrects drift by applying small frequency adjustments (slewing) to keep the clock accurate.</p>
 <h2 id="drift-concepts">Drift Concepts<a class="headerlink" href="#drift-concepts" title="Permanent link">&para;</a></h2>
 <table>

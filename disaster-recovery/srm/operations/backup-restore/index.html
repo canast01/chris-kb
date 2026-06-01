@@ -3920,84 +3920,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#srm-configuration-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SRM Configuration Backup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SRM Configuration Backup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#export-srm-configuration-via-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export SRM Configuration via UI
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#capture-srm-certificate-thumbprints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capture SRM Certificate Thumbprints
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restore-srm-from-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore SRM from Backup
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Restore SRM from Backup">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#restore-from-vami-file-based-backup-appliance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore from VAMI File-Based Backup (Appliance)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#restore-from-sql-backup-external-db" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore from SQL Backup (External DB)
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#recover-recovery-plans-from-xml-export" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4337,40 +4259,28 @@ Backup & Restore reference covering SRM Backup Considerations, SRM Database Back
 │  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Store these XML files in version control. A <code>git diff</code> against the previous export immediately shows what changed in a plan.</p>
-<hr />
-<h2 id="srm-configuration-backup">SRM Configuration Backup<a class="headerlink" href="#srm-configuration-backup" title="Permanent link">&para;</a></h2>
-<p>In addition to the database and recovery plans, the SRM pairing configuration and certificates should be captured.</p>
-<h3 id="export-srm-configuration-via-ui">Export SRM Configuration via UI<a class="headerlink" href="#export-srm-configuration-via-ui" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>vSphere Client</strong> → <strong>Site Recovery</strong> → <strong>Site Pair</strong> → select the pair.</li>
-<li>Navigate to <strong>Configuration</strong> → <strong>Export Configuration</strong>.</li>
-<li>Save the export archive.</li>
-</ol>
-<h3 id="capture-srm-certificate-thumbprints">Capture SRM Certificate Thumbprints<a class="headerlink" href="#capture-srm-certificate-thumbprints" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Record the pairing certificate thumbprints for reconstruction reference</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$srmInstance</span> <span class="p">=</span> <span class="nb">Connect-SrmServer</span> <span class="n">-SrmServerAddress</span> <span class="n">srm01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nv">$srmInstance</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">GetCertificate</span><span class="p">()</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Write-Host</span> <span class="s2">&quot;SRM Certificate Thumbprint: </span><span class="p">$(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">Thumbprint</span><span class="p">)</span><span class="s2">&quot;</span>
-</code></pre></div>
-<hr />
-<h2 id="restore-srm-from-backup">Restore SRM from Backup<a class="headerlink" href="#restore-srm-from-backup" title="Permanent link">&para;</a></h2>
-<h3 id="restore-from-vami-file-based-backup-appliance">Restore from VAMI File-Based Backup (Appliance)<a class="headerlink" href="#restore-from-vami-file-based-backup-appliance" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Deploy a fresh SRM OVA at <code>https://&lt;vc&gt;/ui</code> → <strong>Deploy OVF Template</strong>.</li>
-<li>Configure with the same hostname and IP as the failed instance.</li>
-<li>Log in to VAMI (<code>https://&lt;new-srm-appliance&gt;:5480</code>).</li>
-<li>Navigate to <strong>Restore</strong>.</li>
-<li>Provide the SFTP path to the backup archive.</li>
-<li>Click <strong>Restore</strong> — the appliance will restore configuration and DB, then restart SRM services.</li>
-</ol>
-<h3 id="restore-from-sql-backup-external-db">Restore from SQL Backup (External DB)<a class="headerlink" href="#restore-from-sql-backup-external-db" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Restore on SQL Server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">VMwareSRM</span><span class="p">]</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="s1">&#39;\\backup-server\sql-backups\VMwareSRM_Full.bak&#39;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">WITH</span><span class="w"> </span><span class="k">REPLACE</span><span class="p">,</span><span class="w"> </span><span class="n">RECOVERY</span><span class="p">;</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Restore SRM from Backup
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Restore from VAMI File-Based Backup (Appliance)
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>1. Deploy a fresh SRM OVA at `https://&lt;vc&gt;/ui` → **Deploy OVF Template**.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>2. Configure with the same hostname and IP as the failed instance.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>3. Log in to VAMI (`https://&lt;new-srm-appliance&gt;:5480`).
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>4. Navigate to **Restore**.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>5. Provide the SFTP path to the backup archive.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>6. Click **Restore** — the appliance will restore configuration and DB, then restart SRM services.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Restore from SQL Backup (External DB)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```sql
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>-- Restore on SQL Server
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>RESTORE DATABASE [VMwareSRM]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>FROM DISK = N&#39;\\backup-server\sql-backups\VMwareSRM_Full.bak&#39;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>WITH REPLACE, RECOVERY;
+</code></pre></div></p>
 <ol>
 <li>Ensure the restored SQL instance is accessible from the new SRM server.</li>
 <li>Install a fresh SRM appliance/server.</li>

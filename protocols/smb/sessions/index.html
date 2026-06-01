@@ -3411,50 +3411,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#smb-signing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SMB Signing
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#smb-version-negotiation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SMB Version Negotiation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#session-limits-and-timeouts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Session Limits and Timeouts
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-files-and-locks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Open Files and Locks
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3612,69 +3568,54 @@
 SMB Sessions reference covering Overview, Listing and Managing Sessions, SMB Signing, SMB Version Negotiation, Session Limits and Timeouts and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SMB SESSION ESTABLISHMENT
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────┐                              ┌─────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Client    │                              │   SMB Server    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─────┬──────┘                              └────────┬────────┘
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>      │  1. Negotiate (dialect selection)             │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>      │ ─────────────────────────────────────────────►│
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>      │     Server offers SMB 3.1.1                   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>      │ ◄─────────────────────────────────────────────│
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>      │  2. SessionSetup (Kerberos / NTLM auth)        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>      │ ─────────────────────────────────────────────►│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>      │     Auth OK, SessionID assigned               │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      │ ◄─────────────────────────────────────────────│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>      │  3. TreeConnect (request share access)         │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>      │  \\server\Finance ────────────────────────────►│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>      │     TreeID assigned, share connected           │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>      │ ◄─────────────────────────────────────────────│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>      │  4. File I/O (Create, Read, Write, Close)      │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>      │ ◄════════════════════════════════════════════►│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>      │                                               │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>      │  SMB3: signing + optional encryption active   │
+<div class="highlight"><pre><span></span><code>    SMB SESSION ESTABLISHMENT
 </code></pre></div>
+<p><code>┌────────────┐                              ┌─────────────────┐
+│  Client    │                              │   SMB Server    │
+└─────┬──────┘                              └────────┬────────┘</code>
+      │  1. Negotiate (dialect selection)             │
+      │ ─────────────────────────────────────────────►│
+      │     Server offers SMB 3.1.1                   │
+      │ ◄─────────────────────────────────────────────│
+      │  2. SessionSetup (Kerberos / NTLM auth)        │
+      │ ─────────────────────────────────────────────►│
+      │     Auth OK, SessionID assigned               │
+      │ ◄─────────────────────────────────────────────│
+      │  3. TreeConnect (request share access)         │
+      │  \server\Finance ────────────────────────────►│
+      │     TreeID assigned, share connected           │
+      │ ◄─────────────────────────────────────────────│
+      │  4. File I/O (Create, Read, Write, Close)      │
+      │ ◄════════════════════════════════════════════►│
+      │                                               │
+      │  SMB3: signing + optional encryption active   │
+```
+</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>An SMB session is established after a client authenticates to a server. Sessions can be inspected, disconnected, and constrained via PowerShell and legacy tools. Understanding active sessions is essential for access audits, capacity planning, and incident response.</p>
-<table>
-<thead>
-<tr>
-<th>Command</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Get-SmbSession</code></td>
-<td>List active SMB sessions (PowerShell)</td>
-</tr>
-<tr>
-<td><code>net session</code></td>
-<td>List or disconnect sessions (legacy)</td>
-</tr>
-<tr>
-<td><code>Get-SmbConnection</code></td>
-<td>List outbound SMB connections from this host</td>
-</tr>
-<tr>
-<td><code>Get-SmbServerConfiguration</code></td>
-<td>View SMB signing and version settings</td>
-</tr>
-</tbody>
-</table>
+<p>An SMB session is established after a client authenticates to a server. Sessions can be inspected, disconnected, and constrained via PowerShell and legacy tools. Understanding active sessions is essential for access audits, capacity planning, and incident response.
+
+| Command | Purpose |
+|---|---|
+| <code>Get-SmbSession</code> | List active SMB sessions (PowerShell) |
+| <code>net session</code> | List or disconnect sessions (legacy) |
+| <code>Get-SmbConnection</code> | List outbound SMB connections from this host |
+| <code>Get-SmbServerConfiguration</code> | View SMB signing and version settings |
+</p>
 <h2 id="listing-and-managing-sessions">Listing and Managing Sessions<a class="headerlink" href="#listing-and-managing-sessions" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List all active SMB sessions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-SmbSession</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Show session details including client IP and username</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">SessionId</span><span class="p">,</span> <span class="n">ClientComputerName</span><span class="p">,</span> <span class="n">ClientUserName</span><span class="p">,</span> <span class="n">NumOpens</span><span class="p">,</span> <span class="n">SecondsExists</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Close a specific session by ID</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Close-SmbSession</span> <span class="n">-SessionId</span> <span class="n">17179869218</span> <span class="n">-Force</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Close all sessions from a specific client</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nb">Get-SmbSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ClientComputerName</span> <span class="o">-eq</span> <span class="s2">&quot;192.168.1.55&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="nb">Close-SmbSession</span> <span class="n">-Force</span>
-</code></pre></div>
+<p>```powershell</p>
+<h1 id="list-all-active-smb-sessions">List all active SMB sessions<a class="headerlink" href="#list-all-active-smb-sessions" title="Permanent link">&para;</a></h1>
+<p>Get-SmbSession
+</p>
+<h1 id="show-session-details-including-client-ip-and-username">Show session details including client IP and username<a class="headerlink" href="#show-session-details-including-client-ip-and-username" title="Permanent link">&para;</a></h1>
+<p>Get-SmbSession | Select-Object SessionId, ClientComputerName, ClientUserName, NumOpens, SecondsExists
+</p>
+<h1 id="close-a-specific-session-by-id">Close a specific session by ID<a class="headerlink" href="#close-a-specific-session-by-id" title="Permanent link">&para;</a></h1>
+<p>Close-SmbSession -SessionId 17179869218 -Force
+</p>
+<h1 id="close-all-sessions-from-a-specific-client">Close all sessions from a specific client<a class="headerlink" href="#close-all-sessions-from-a-specific-client" title="Permanent link">&para;</a></h1>
+<p>Get-SmbSession | Where-Object { $_.ClientComputerName -eq "192.168.1.55" } |
+    Close-SmbSession -Force
+```</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all active sessions (legacy)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>net<span class="w"> </span>session
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>

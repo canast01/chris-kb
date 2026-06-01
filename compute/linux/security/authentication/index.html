@@ -3091,56 +3091,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pam-pluggable-authentication-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PAM — Pluggable Authentication Modules
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PAM — Pluggable Authentication Modules">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#pam-stack-order" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PAM Stack Order
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#common-pam-modules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common PAM Modules
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#password-quality-pam_pwquality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Password Quality (pam_pwquality)
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#account-lockout-pam_faillock" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3603,302 +3553,256 @@ PAM, SSH public key auth, SSSD/AD integration, sudo, and MFA configuration.
 │  Certificate = SSH CA-signed cert; enables expiring, revocable SSH credentials                        │
 │  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Apply changed settings to existing accounts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chage<span class="w"> </span>-M<span class="w"> </span><span class="m">90</span><span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>-W<span class="w"> </span><span class="m">14</span><span class="w"> </span>username
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>chage<span class="w"> </span>-l<span class="w"> </span>username
-</code></pre></div>
-<h2 id="pam-pluggable-authentication-modules">PAM — Pluggable Authentication Modules<a class="headerlink" href="#pam-pluggable-authentication-modules" title="Permanent link">&para;</a></h2>
-<p>PAM controls how programs authenticate users. Configuration lives in <code>/etc/pam.d/</code>.</p>
-<h3 id="pam-stack-order">PAM Stack Order<a class="headerlink" href="#pam-stack-order" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Control flag</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>required</code></td>
-<td>Must succeed; failure continues stack but ultimately denies</td>
-</tr>
-<tr>
-<td><code>requisite</code></td>
-<td>Must succeed; failure immediately denies without continuing</td>
-</tr>
-<tr>
-<td><code>sufficient</code></td>
-<td>Success is enough if no prior <code>required</code> failed</td>
-</tr>
-<tr>
-<td><code>optional</code></td>
-<td>Result is ignored unless it is the only module</td>
-</tr>
-</tbody>
-</table>
-<h3 id="common-pam-modules">Common PAM Modules<a class="headerlink" href="#common-pam-modules" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>pam_unix.so</code></td>
-<td>Traditional Unix password/shadow authentication</td>
-</tr>
-<tr>
-<td><code>pam_sss.so</code></td>
-<td>SSSD — delegates to AD/LDAP</td>
-</tr>
-<tr>
-<td><code>pam_faillock.so</code></td>
-<td>Account lockout after N failed attempts</td>
-</tr>
-<tr>
-<td><code>pam_pwquality.so</code></td>
-<td>Password complexity enforcement</td>
-</tr>
-<tr>
-<td><code>pam_limits.so</code></td>
-<td>Resource limits from <code>/etc/security/limits.conf</code></td>
-</tr>
-<tr>
-<td><code>pam_access.so</code></td>
-<td>Host/user/origin access control via <code>/etc/security/access.conf</code></td>
-</tr>
-<tr>
-<td><code>pam_time.so</code></td>
-<td>Time-of-day login restrictions</td>
-</tr>
-</tbody>
-</table>
-<h3 id="password-quality-pam_pwquality">Password Quality (pam_pwquality)<a class="headerlink" href="#password-quality-pam_pwquality" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/security/pwquality.conf</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">minlen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">14</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">minclass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">maxrepeat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">maxsequence</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">dcredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">ucredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">lcredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">ocredit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>-1
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nv">dictcheck</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/pam.d/system-auth — add pwquality to password section</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>password<span class="w">    </span>requisite<span class="w">     </span>pam_pwquality.so<span class="w"> </span>try_first_pass<span class="w"> </span>local_users_only<span class="w"> </span><span class="nv">retry</span><span class="o">=</span><span class="m">3</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## PAM — Pluggable Authentication Modules
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PAM controls how programs authenticate users. Configuration lives in `/etc/pam.d/`.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### PAM Stack Order
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Control flag | Behaviour |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `required` | Must succeed; failure continues stack but ultimately denies |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| `requisite` | Must succeed; failure immediately denies without continuing |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| `sufficient` | Success is enough if no prior `required` failed |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| `optional` | Result is ignored unless it is the only module |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Common PAM Modules
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Module | Purpose |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>|---|---|
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| `pam_unix.so` | Traditional Unix password/shadow authentication |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| `pam_sss.so` | SSSD — delegates to AD/LDAP |
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| `pam_faillock.so` | Account lockout after N failed attempts |
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| `pam_pwquality.so` | Password complexity enforcement |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| `pam_limits.so` | Resource limits from `/etc/security/limits.conf` |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| `pam_access.so` | Host/user/origin access control via `/etc/security/access.conf` |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| `pam_time.so` | Time-of-day login restrictions |
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>### Password Quality (pam_pwquality)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>```bash
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># /etc/security/pwquality.conf
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>minlen = 14
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>minclass = 3
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>maxrepeat = 3
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>maxsequence = 4
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>dcredit = -1
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>ucredit = -1
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>lcredit = -1
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>ocredit = -1
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>dictcheck = 1
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/pam.d/system-auth — add pwquality to password section</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>password<span class="w">    </span>requisite<span class="w">     </span>pam_pwquality.so<span class="w"> </span>try_first_pass<span class="w"> </span>local_users_only<span class="w"> </span><span class="nv">retry</span><span class="o">=</span><span class="m">3</span>
 </code></pre></div>
 <h3 id="account-lockout-pam_faillock">Account Lockout (pam_faillock)<a class="headerlink" href="#account-lockout-pam_faillock" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/pam.d/system-auth — auth section (RHEL 8+)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>auth<span class="w">        </span>required<span class="w">      </span>pam_faillock.so<span class="w"> </span>preauth<span class="w"> </span>silent<span class="w"> </span><span class="nv">deny</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">unlock_time</span><span class="o">=</span><span class="m">900</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>auth<span class="w">        </span>sufficient<span class="w">    </span>pam_unix.so<span class="w"> </span>nullok
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>auth<span class="w">        </span><span class="o">[</span><span class="nv">default</span><span class="o">=</span>die<span class="o">]</span><span class="w"> </span>pam_faillock.so<span class="w"> </span>authfail<span class="w"> </span><span class="nv">deny</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">unlock_time</span><span class="o">=</span><span class="m">900</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># account section</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>account<span class="w">     </span>required<span class="w">      </span>pam_faillock.so
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/pam.d/system-auth — auth section (RHEL 8+)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>auth<span class="w">        </span>required<span class="w">      </span>pam_faillock.so<span class="w"> </span>preauth<span class="w"> </span>silent<span class="w"> </span><span class="nv">deny</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">unlock_time</span><span class="o">=</span><span class="m">900</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>auth<span class="w">        </span>sufficient<span class="w">    </span>pam_unix.so<span class="w"> </span>nullok
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>auth<span class="w">        </span><span class="o">[</span><span class="nv">default</span><span class="o">=</span>die<span class="o">]</span><span class="w"> </span>pam_faillock.so<span class="w"> </span>authfail<span class="w"> </span><span class="nv">deny</span><span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="nv">unlock_time</span><span class="o">=</span><span class="m">900</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># account section</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>account<span class="w">     </span>required<span class="w">      </span>pam_faillock.so
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View failed attempt count for a user</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>faillock<span class="w"> </span>--user<span class="w"> </span>jsmith
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Manually unlock an account</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>faillock<span class="w"> </span>--user<span class="w"> </span>jsmith<span class="w"> </span>--reset
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View failed attempt count for a user</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>faillock<span class="w"> </span>--user<span class="w"> </span>jsmith
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Manually unlock an account</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>faillock<span class="w"> </span>--user<span class="w"> </span>jsmith<span class="w"> </span>--reset
 </code></pre></div>
 <h2 id="ssh-public-key-authentication">SSH — Public Key Authentication<a class="headerlink" href="#ssh-public-key-authentication" title="Permanent link">&para;</a></h2>
 <h3 id="server-configuration">Server Configuration<a class="headerlink" href="#server-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/ssh/sshd_config — recommended hardened settings</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Protocol<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>PubkeyAuthentication<span class="w"> </span>yes
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>AuthorizedKeysFile<span class="w"> </span>.ssh/authorized_keys
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>PermitEmptyPasswords<span class="w"> </span>no
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>MaxAuthTries<span class="w"> </span><span class="m">4</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>LoginGraceTime<span class="w"> </span><span class="m">60</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>X11Forwarding<span class="w"> </span>no
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>AllowTcpForwarding<span class="w"> </span>no
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>Banner<span class="w"> </span>/etc/issue.net
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Restrict to specific groups</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>domain<span class="se">\ </span>users@CORP.LOCAL
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Use only strong algorithms</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>KexAlgorithms<span class="w"> </span>curve25519-sha256,diffie-hellman-group14-sha256
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>HostKeyAlgorithms<span class="w"> </span>ecdsa-sha2-nistp256,ssh-ed25519
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># /etc/ssh/sshd_config — recommended hardened settings</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Protocol<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>PubkeyAuthentication<span class="w"> </span>yes
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>AuthorizedKeysFile<span class="w"> </span>.ssh/authorized_keys
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PermitEmptyPasswords<span class="w"> </span>no
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>MaxAuthTries<span class="w"> </span><span class="m">4</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>LoginGraceTime<span class="w"> </span><span class="m">60</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>X11Forwarding<span class="w"> </span>no
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>AllowTcpForwarding<span class="w"> </span>no
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>Banner<span class="w"> </span>/etc/issue.net
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Restrict to specific groups</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>AllowGroups<span class="w"> </span>sshusers<span class="w"> </span>domain<span class="se">\ </span>users@CORP.LOCAL
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Use only strong algorithms</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>KexAlgorithms<span class="w"> </span>curve25519-sha256,diffie-hellman-group14-sha256
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>Ciphers<span class="w"> </span>aes256-gcm@openssh.com,aes128-gcm@openssh.com
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>MACs<span class="w"> </span>hmac-sha2-512,hmac-sha2-256
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>HostKeyAlgorithms<span class="w"> </span>ecdsa-sha2-nistp256,ssh-ed25519
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Validate config and reload</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sshd<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Validate config and reload</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sshd<span class="w"> </span>-t<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
 </code></pre></div>
 <h3 id="client-key-setup">Client Key Setup<a class="headerlink" href="#client-key-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Generate an Ed25519 key (preferred) with passphrase</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_ed25519
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Deploy public key to a server</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>jsmith@server01
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Manually append key (when ssh-copy-id not available)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>cat<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>jsmith@server01<span class="w"> </span><span class="s2">&quot;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Correct permissions — SSH refuses keys with wrong permissions</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/id_ed25519
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Generate an Ed25519 key (preferred) with passphrase</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/id_ed25519
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Deploy public key to a server</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span>jsmith@server01
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Manually append key (when ssh-copy-id not available)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>cat<span class="w"> </span>~/.ssh/id_ed25519.pub<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>jsmith@server01<span class="w"> </span><span class="s2">&quot;mkdir -p ~/.ssh &amp;&amp; cat &gt;&gt; ~/.ssh/authorized_keys &amp;&amp; chmod 600 ~/.ssh/authorized_keys&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Correct permissions — SSH refuses keys with wrong permissions</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>~/.ssh
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/authorized_keys
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.ssh/id_ed25519
 </code></pre></div>
 <h2 id="sssd-ad-ldap-integration">SSSD — AD / LDAP Integration<a class="headerlink" href="#sssd-ad-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>SSSD (System Security Services Daemon) provides authentication and identity lookup against Active Directory or LDAP.</p>
 <h3 id="join-a-domain-with-realmd-rhelubuntu">Join a Domain with realmd (RHEL/Ubuntu)<a class="headerlink" href="#join-a-domain-with-realmd-rhelubuntu" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Install required packages (RHEL)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>realmd<span class="w"> </span>sssd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Discover the domain</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>realm<span class="w"> </span>discover<span class="w"> </span>CORP.LOCAL
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Join — prompts for an AD admin account</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>Administrator<span class="w"> </span>CORP.LOCAL
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Verify membership</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>realm<span class="w"> </span>list
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>id<span class="w"> </span>administrator@corp.local
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install required packages (RHEL)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>realmd<span class="w"> </span>sssd<span class="w"> </span>oddjob<span class="w"> </span>oddjob-mkhomedir<span class="w"> </span>adcli<span class="w"> </span>samba-common
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Discover the domain</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>realm<span class="w"> </span>discover<span class="w"> </span>CORP.LOCAL
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Join — prompts for an AD admin account</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>realm<span class="w"> </span>join<span class="w"> </span>--user<span class="o">=</span>Administrator<span class="w"> </span>CORP.LOCAL
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Verify membership</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>realm<span class="w"> </span>list
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>id<span class="w"> </span>administrator@corp.local
 </code></pre></div>
 <h3 id="sssd-configuration">SSSD Configuration<a class="headerlink" href="#sssd-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/sssd/sssd.conf (chmod 600)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">[sssd]</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="na">domains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.local</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="na">config_file_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="na">services</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nss, pam</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">[domain/corp.local]</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="na">ad_domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.local</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="na">krb5_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CORP.LOCAL</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="na">realmd_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">manages-system joined-with-samba</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="na">cache_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="na">id_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="na">auth_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="na">access_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="na">krb5_store_password_if_offline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="na">default_shell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/bin/bash</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="na">use_fully_qualified_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="na">fallback_homedir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/%u</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># Restrict login to specific AD group</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="na">ad_access_filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memberOf=CN=LinuxAdmins,OU=Groups,DC=corp,DC=local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># /etc/sssd/sssd.conf (chmod 600)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">[sssd]</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="na">domains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.local</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="na">config_file_version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">2</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="na">services</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">nss, pam</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">[domain/corp.local]</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="na">ad_domain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">corp.local</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="na">krb5_realm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CORP.LOCAL</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="na">realmd_tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">manages-system joined-with-samba</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="na">cache_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="na">id_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="na">auth_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="na">access_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">ad</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="na">krb5_store_password_if_offline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">True</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="na">default_shell</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/bin/bash</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="na">use_fully_qualified_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="na">fallback_homedir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/home/%u</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Restrict login to specific AD group</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="na">ad_access_filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">memberOf=CN=LinuxAdmins,OU=Groups,DC=corp,DC=local</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Test lookup</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>id<span class="w"> </span>jsmith
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>getent<span class="w"> </span>passwd<span class="w"> </span>jsmith
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Test lookup</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>id<span class="w"> </span>jsmith
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>getent<span class="w"> </span>passwd<span class="w"> </span>jsmith
 </code></pre></div>
 <h3 id="home-directory-auto-creation">Home Directory Auto-Creation<a class="headerlink" href="#home-directory-auto-creation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/pam.d/system-auth — session section</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>session<span class="w">     </span>optional<span class="w">      </span>pam_oddjob_mkhomedir.so<span class="w"> </span><span class="nv">umask</span><span class="o">=</span><span class="m">0077</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># /etc/pam.d/system-auth — session section</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>session<span class="w">     </span>optional<span class="w">      </span>pam_oddjob_mkhomedir.so<span class="w"> </span><span class="nv">umask</span><span class="o">=</span><span class="m">0077</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>oddjobd
 </code></pre></div>
 <h2 id="sudo-configuration">sudo Configuration<a class="headerlink" href="#sudo-configuration" title="Permanent link">&para;</a></h2>
 <h3 id="etcsudoers-best-practices">/etc/sudoers Best Practices<a class="headerlink" href="#etcsudoers-best-practices" title="Permanent link">&para;</a></h3>
 <p>Always edit with <code>visudo</code> — it validates syntax before saving.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>visudo
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>visudo
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># /etc/sudoers — safe baseline</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Defaults<span class="w">    </span>requiretty
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Defaults<span class="w">    </span>use_pty
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>Defaults<span class="w">    </span><span class="nv">logfile</span><span class="o">=</span>/var/log/sudo.log
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>Defaults<span class="w">    </span>log_input,<span class="w"> </span>log_output
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>Defaults<span class="w">    </span><span class="nv">passwd_timeout</span><span class="o">=</span><span class="m">1</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>Defaults<span class="w">    </span><span class="nv">timestamp_timeout</span><span class="o">=</span><span class="m">5</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="c1"># Wheel group — full sudo with password</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>%wheel<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># Domain admins group from AD — specific commands only</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>%linuxadmins@corp.local<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>/usr/bin/systemctl,<span class="w"> </span>/usr/sbin/useradd,<span class="w"> </span>/usr/sbin/userdel
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Service account — passwordless for a specific command</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>svcansible<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/bin/apt,<span class="w"> </span>/usr/bin/dnf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># /etc/sudoers — safe baseline</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>Defaults<span class="w">    </span>requiretty
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>Defaults<span class="w">    </span>use_pty
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>Defaults<span class="w">    </span><span class="nv">logfile</span><span class="o">=</span>/var/log/sudo.log
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>Defaults<span class="w">    </span>log_input,<span class="w"> </span>log_output
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>Defaults<span class="w">    </span><span class="nv">passwd_timeout</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>Defaults<span class="w">    </span><span class="nv">timestamp_timeout</span><span class="o">=</span><span class="m">5</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Wheel group — full sudo with password</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>%wheel<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c1"># Domain admins group from AD — specific commands only</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>%linuxadmins@corp.local<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>/usr/bin/systemctl,<span class="w"> </span>/usr/sbin/useradd,<span class="w"> </span>/usr/sbin/userdel
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c1"># Service account — passwordless for a specific command</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>svcansible<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/bin/apt,<span class="w"> </span>/usr/bin/dnf
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Add a user to the wheel group</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel<span class="w"> </span>jsmith
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Verify sudo access</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>jsmith
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Check sudo log</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/sudo.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Add a user to the wheel group</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>usermod<span class="w"> </span>-aG<span class="w"> </span>wheel<span class="w"> </span>jsmith
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Verify sudo access</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>sudo<span class="w"> </span>-l<span class="w"> </span>-U<span class="w"> </span>jsmith
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Check sudo log</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/sudo.log
 </code></pre></div>
 <h3 id="sudoers-drop-in-files">Sudoers Drop-in Files<a class="headerlink" href="#sudoers-drop-in-files" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Place overrides in /etc/sudoers.d/ — avoids editing main sudoers</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/sudoers.d/99-linuxadmins<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="s">%linuxadmins ALL=(ALL) ALL</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s">EOF</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>chmod<span class="w"> </span><span class="m">0440</span><span class="w"> </span>/etc/sudoers.d/99-linuxadmins
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/99-linuxadmins
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Place overrides in /etc/sudoers.d/ — avoids editing main sudoers</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/sudoers.d/99-linuxadmins<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="s">%linuxadmins ALL=(ALL) ALL</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="s">EOF</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>chmod<span class="w"> </span><span class="m">0440</span><span class="w"> </span>/etc/sudoers.d/99-linuxadmins
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>visudo<span class="w"> </span>-c<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers.d/99-linuxadmins
 </code></pre></div>
 <h2 id="mfa-multi-factor-authentication">MFA — Multi-Factor Authentication<a class="headerlink" href="#mfa-multi-factor-authentication" title="Permanent link">&para;</a></h2>
 <h3 id="google-authenticator-totp-via-pam">Google Authenticator (TOTP) via PAM<a class="headerlink" href="#google-authenticator-totp-via-pam" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Install</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>google-authenticator<span class="w">   </span><span class="c1"># RHEL</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libpam-google-authenticator<span class="w">   </span><span class="c1"># Ubuntu</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Each user runs this to generate their TOTP seed</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>google-authenticator<span class="w"> </span>--time-based<span class="w"> </span>--disallow-reuse<span class="w"> </span>--force<span class="w"> </span>--rate-limit<span class="o">=</span><span class="m">3</span><span class="w"> </span>--rate-time<span class="o">=</span><span class="m">30</span><span class="w"> </span>--window-size<span class="o">=</span><span class="m">3</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>google-authenticator<span class="w">   </span><span class="c1"># RHEL</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libpam-google-authenticator<span class="w">   </span><span class="c1"># Ubuntu</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Each user runs this to generate their TOTP seed</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>google-authenticator<span class="w"> </span>--time-based<span class="w"> </span>--disallow-reuse<span class="w"> </span>--force<span class="w"> </span>--rate-limit<span class="o">=</span><span class="m">3</span><span class="w"> </span>--rate-time<span class="o">=</span><span class="m">30</span><span class="w"> </span>--window-size<span class="o">=</span><span class="m">3</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># /etc/pam.d/sshd — add TOTP requirement</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>auth<span class="w">    </span>required<span class="w">    </span>pam_google_authenticator.so<span class="w"> </span>nullok
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># /etc/pam.d/sshd — add TOTP requirement</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>auth<span class="w">    </span>required<span class="w">    </span>pam_google_authenticator.so<span class="w"> </span>nullok
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># /etc/ssh/sshd_config — require both key and TOTP</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>AuthenticationMethods<span class="w"> </span>publickey,keyboard-interactive
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ChallengeResponseAuthentication<span class="w"> </span>yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># /etc/ssh/sshd_config — require both key and TOTP</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>AuthenticationMethods<span class="w"> </span>publickey,keyboard-interactive
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>ChallengeResponseAuthentication<span class="w"> </span>yes
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>systemctl<span class="w"> </span>reload<span class="w"> </span>sshd
 </code></pre></div>
 <h3 id="radius-based-mfa-duo-security">RADIUS-Based MFA (Duo Security)<a class="headerlink" href="#radius-based-mfa-duo-security" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># /etc/pam.d/sshd — Duo PAM integration</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>auth<span class="w">    </span>sufficient<span class="w">    </span>/lib64/security/pam_duo.so
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># /etc/duo/pam_duo.conf</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="o">[</span>duo<span class="o">]</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nv">ikey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>DIXXXXXXXXXXXXXXXXXX
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nv">skey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="nv">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>api-XXXXXXXX.duosecurity.com
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="nv">failmode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>safe<span class="w">    </span><span class="c1"># &#39;safe&#39; allows login if Duo is unreachable; &#39;secure&#39; blocks</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># /etc/pam.d/sshd — Duo PAM integration</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>auth<span class="w">    </span>sufficient<span class="w">    </span>/lib64/security/pam_duo.so
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># /etc/duo/pam_duo.conf</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="o">[</span>duo<span class="o">]</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="nv">ikey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>DIXXXXXXXXXXXXXXXXXX
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="nv">skey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="nv">host</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>api-XXXXXXXX.duosecurity.com
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nv">failmode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>safe<span class="w">    </span><span class="c1"># &#39;safe&#39; allows login if Duo is unreachable; &#39;secure&#39; blocks</span>
 </code></pre></div>
 <h2 id="certificate-based-authentication">Certificate-Based Authentication<a class="headerlink" href="#certificate-based-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Configure SSH to accept certificate-signed keys</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># /etc/ssh/sshd_config</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>TrustedUserCAKeys<span class="w"> </span>/etc/ssh/ca.pub
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="c1"># Sign a user&#39;s public key with the CA</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>ca_key<span class="w"> </span>-I<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-n<span class="w"> </span>jsmith<span class="w"> </span>-V<span class="w"> </span>+52w<span class="w"> </span>~/.ssh/id_ed25519.pub
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># This creates id_ed25519-cert.pub</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="c1"># The user presents both the key and certificate automatically</span>
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>server01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Configure SSH to accept certificate-signed keys</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="c1"># /etc/ssh/sshd_config</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>TrustedUserCAKeys<span class="w"> </span>/etc/ssh/ca.pub
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="c1"># Sign a user&#39;s public key with the CA</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>ca_key<span class="w"> </span>-I<span class="w"> </span><span class="s2">&quot;jsmith@corp.local&quot;</span><span class="w"> </span>-n<span class="w"> </span>jsmith<span class="w"> </span>-V<span class="w"> </span>+52w<span class="w"> </span>~/.ssh/id_ed25519.pub
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># This creates id_ed25519-cert.pub</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="c1"># The user presents both the key and certificate automatically</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/id_ed25519<span class="w"> </span>server01
 </code></pre></div>
 <h2 id="authentication-audit">Authentication Audit<a class="headerlink" href="#authentication-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Failed SSH logins</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password\|Invalid user&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Successful logins</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>last<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># All authentication events (PAM) via auditd</span>
-<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>
-<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="c1"># Currently logged-in users</span>
-<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a>w
-<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a>who
-<a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a>
-<a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="c1"># Failed sudo attempts</span>
-<a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span>/var/log/sudo.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-23-16" name="__codelineno-23-16" href="#__codelineno-23-16"></a><span class="c1"># or</span>
-<a id="__codelineno-23-17" name="__codelineno-23-17" href="#__codelineno-23-17"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_CMD<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Failed SSH logins</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>journalctl<span class="w"> </span><span class="nv">_SYSTEMD_UNIT</span><span class="o">=</span>sshd.service<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Failed password\|Invalid user&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Successful logins</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>last<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="c1"># All authentication events (PAM) via auditd</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># Currently logged-in users</span>
+<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>w
+<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a>who
+<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a>
+<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="c1"># Failed sudo attempts</span>
+<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>grep<span class="w"> </span><span class="s2">&quot;FAILED&quot;</span><span class="w"> </span>/var/log/sudo.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="c1"># or</span>
+<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_CMD<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

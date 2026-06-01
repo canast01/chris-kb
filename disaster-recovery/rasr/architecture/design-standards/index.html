@@ -3735,28 +3735,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-media-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Media Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-and-validation-schedule" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test and Validation Schedule
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#access-control-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4052,89 +4030,8 @@
 │  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="recovery-media-standards">Recovery Media Standards<a class="headerlink" href="#recovery-media-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Requirement</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Media format</td>
-<td>ISO file stored on the recovery share alongside images</td>
-</tr>
-<tr>
-<td>iDRAC mapping</td>
-<td>Pre-mapped and tested quarterly — do not wait until an incident</td>
-</tr>
-<tr>
-<td>WinPE version match</td>
-<td>Media must match the server generation's driver pack (14G/15G/16G)</td>
-</tr>
-<tr>
-<td>Media refresh cycle</td>
-<td>Rebuild media after each RASR agent update</td>
-</tr>
-<tr>
-<td>Physical USB</td>
-<td>One USB per rack; labeled with server generation and last verified date</td>
-</tr>
-</tbody>
-</table>
-<h2 id="test-and-validation-schedule">Test and Validation Schedule<a class="headerlink" href="#test-and-validation-schedule" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Test type</th>
-<th>Frequency</th>
-<th>Scope</th>
-<th>Evidence required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Boot media test</strong></td>
-<td>Quarterly</td>
-<td>Boot WinPE from iDRAC; confirm network access and share connectivity</td>
-<td>Screenshot of share connection from WinPE</td>
-</tr>
-<tr>
-<td><strong>Full restore test</strong></td>
-<td>Semi-annually</td>
-<td>Restore to an isolated VM; verify OS boots</td>
-<td>Restore completion log + screenshot</td>
-</tr>
-<tr>
-<td><strong>Partial restore test</strong></td>
-<td>Quarterly</td>
-<td>File-level recovery from image</td>
-<td>File hash comparison</td>
-</tr>
-<tr>
-<td><strong>Schedule verification</strong></td>
-<td>Monthly</td>
-<td>Confirm backups are completing per schedule</td>
-<td>Backup log review + OMSA alert check</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Monthly schedule verification script</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span> <span class="s2">&quot;db02&quot;</span><span class="p">,</span> <span class="s2">&quot;web01&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nv">$img</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="s2">&quot;\\nas01\rasr-images\prod\$server\&quot;</span> <span class="p">|</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>           <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nv">$age</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="n">Server</span>     <span class="p">=</span> <span class="nv">$server</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="n">LastImage</span>  <span class="p">=</span> <span class="nv">$img</span><span class="p">.</span><span class="n">LastWriteTime</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="n">AgeHours</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="n">Status</span>     <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$age</span><span class="p">.</span><span class="n">TotalHours</span> <span class="o">-lt</span> <span class="n">26</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;ALERT — overdue&quot;</span><span class="p">}</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="p">}</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-Table</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="access-control-standards">Access Control Standards<a class="headerlink" href="#access-control-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

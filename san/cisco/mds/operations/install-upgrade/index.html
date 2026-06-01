@@ -3486,28 +3486,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#adding-a-new-switch-to-the-fabric" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adding a New Switch to the Fabric
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decommission-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decommission Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3825,38 +3803,28 @@
 │  show version    = verify NX-OS version after ISSU upgrade completes                                  │
 │  show system health= post-upgrade health check; all modules should be online                          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.</p>
-<hr />
-<h2 id="adding-a-new-switch-to-the-fabric">Adding a New Switch to the Fabric<a class="headerlink" href="#adding-a-new-switch-to-the-fabric" title="Permanent link">&para;</a></h2>
-<p>When adding a new MDS switch to an existing fabric:</p>
-<ol>
-<li>Configure the new switch with a unique domain ID before connecting ISLs.</li>
-<li>Pre-configure NTP, AAA (TACACS+/RADIUS), SNMP, and syslog from the baseline template.</li>
-<li>Connect the ISL — the new switch will join the fabric.</li>
-<li>Verify the new switch appears in <code>show topology</code>:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>show topology
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show fcdomain domain-list vsan 10
-</code></pre></div>
-<ol>
-<li>Configure VSANs on the ISL trunk port to allow only the required VSANs.</li>
-<li>Update CMDB and SAN design register with the new switch domain ID and port allocation.</li>
-</ol>
-<hr />
-<h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
-<p>When removing a switch from the fabric:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Move all host and storage ports to other switches</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Step 2 — Disable the ISL port-channels to isolate the switch from the fabric</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>interface<span class="w"> </span>port-channel1
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>shutdown
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Step 3 — Confirm no devices are still logged in</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>show<span class="w"> </span>flogi<span class="w"> </span>database
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Step 4 — Physically remove the switch</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 5 — Update CMDB and domain ID register</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>5. Configure VSANs on the ISL trunk port to allow only the required VSANs.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>6. Update CMDB and SAN design register with the new switch domain ID and port allocation.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>---
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>## Decommission Procedure
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>When removing a switch from the fabric:
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Step 1 — Move all host and storage ports to other switches
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Step 2 — Disable the ISL port-channels to isolate the switch from the fabric
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>interface port-channel1
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  shutdown
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Step 3 — Confirm no devices are still logged in
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>show flogi database
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Step 4 — Physically remove the switch
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Step 5 — Update CMDB and domain ID register
+</code></pre></div></p>
 
 
 

@@ -3091,17 +3091,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#domain-join" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain Join
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3559,72 +3548,60 @@ Active Directory integration, Kerberos, NTLM audit, LAPS, smart card, and Creden
 │  Event 4776     = NTLM authentication attempt; monitor to detect NTLM usage                           │
 │  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="domain-join">Domain Join<a class="headerlink" href="#domain-join" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Add a server to an AD domain</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Add-Computer</span> <span class="n">-DomainName</span> <span class="s2">&quot;corp.local&quot;</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span> <span class="n">-Restart</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Verify domain membership</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_query</span><span class="p">:</span><span class="n">CORP</span><span class="p">.</span><span class="n">LOCAL</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Check the secure channel to a domain controller</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Verbose</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Repair if broken</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM Command-line alternative
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>netdom join %COMPUTERNAME% /domain:corp.local /userd:corp\administrator /passwordd:* /reboot:30
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```cmd
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>REM Command-line alternative
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>netdom join %COMPUTERNAME% /domain:corp.local /userd:corp\administrator /passwordd:* /reboot:30
+</code></pre></div></p>
 <h2 id="kerberos">Kerberos<a class="headerlink" href="#kerberos" title="Permanent link">&para;</a></h2>
 <p>Kerberos is the default domain authentication protocol (port 88 TCP/UDP). The Key Distribution Center (KDC) runs on each domain controller.</p>
 <h3 id="verify-kerberos-tickets">Verify Kerberos Tickets<a class="headerlink" href="#verify-kerberos-tickets" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>REM View current Kerberos tickets
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>klist
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>REM Purge ticket cache and re-authenticate
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>klist purge
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>klist -li 0x3e7   # SYSTEM account tickets
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM View current Kerberos tickets
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>klist
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>REM Purge ticket cache and re-authenticate
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>klist purge
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>klist -li 0x3e7   # SYSTEM account tickets
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Test Kerberos authentication to a specific DC</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_verify</span><span class="p">:</span><span class="n">CORP</span><span class="p">.</span><span class="n">LOCAL</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Check KDC connectivity</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">88</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># View Kerberos event log errors (Event ID 4769, 4771)</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4771</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Test Kerberos authentication to a specific DC</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">sc_verify</span><span class="p">:</span><span class="n">CORP</span><span class="p">.</span><span class="n">LOCAL</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check KDC connectivity</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="n">dc01</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-Port</span> <span class="n">88</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># View Kerberos event log errors (Event ID 4769, 4771)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4771</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">20</span> <span class="p">|</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h3 id="kerberos-delegation">Kerberos Delegation<a class="headerlink" href="#kerberos-delegation" title="Permanent link">&para;</a></h3>
 <p>Delegation allows a service to authenticate to other services on behalf of a user. Restrict it carefully.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find accounts with unconstrained delegation (high risk — should be DCs only)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">TrustedForDelegation</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">TrustedForDelegation</span> <span class="p">|</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">TrustedForDelegation</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">TrustedForDelegation</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">TrustedForDelegation</span> <span class="p">|</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Find accounts with constrained delegation</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">msDS-AllowedToDelegateTo</span> <span class="o">-ne</span> <span class="s2">&quot;$null&quot;</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">msDS-AllowedToDelegateTo</span> <span class="p">|</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msDS-AllowedToDelegateTo</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find accounts with unconstrained delegation (high risk — should be DCs only)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">TrustedForDelegation</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">TrustedForDelegation</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">TrustedForDelegation</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">TrustedForDelegation</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">TrustedForDelegation</span> <span class="p">|</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Find accounts with constrained delegation</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-ADComputer</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">msDS-AllowedToDelegateTo</span> <span class="o">-ne</span> <span class="s2">&quot;$null&quot;</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">msDS-AllowedToDelegateTo</span> <span class="p">|</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">msDS-AllowedToDelegateTo</span>
 </code></pre></div>
 <h2 id="ntlm-audit-and-restriction">NTLM — Audit and Restriction<a class="headerlink" href="#ntlm-audit-and-restriction" title="Permanent link">&para;</a></h2>
 <p>NTLM is weaker than Kerberos and should be minimised. Audit it before blocking to avoid breaking services.</p>
 <h3 id="audit-ntlm-usage">Audit NTLM Usage<a class="headerlink" href="#audit-ntlm-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Enable NTLM auditing via GPO or directly in registry</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c"># HKLM\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c"># AuditReceivingNTLMTraffic = 2 (audit all)</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># AuditNTLMInDomain = 7 (audit all)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  <span class="n">-Name</span> <span class="s2">&quot;AuditReceivingNTLMTraffic&quot;</span> <span class="n">-Value</span> <span class="n">2</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;AuditNTLMInDomain&quot;</span> <span class="n">-Value</span> <span class="n">7</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c"># Events appear in Applications and Services Logs &gt; Microsoft &gt; Windows &gt; NTLM</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Microsoft-Windows-NTLM/Operational&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable NTLM auditing via GPO or directly in registry</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># HKLM\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># AuditReceivingNTLMTraffic = 2 (audit all)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># AuditNTLMInDomain = 7 (audit all)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  <span class="n">-Name</span> <span class="s2">&quot;AuditReceivingNTLMTraffic&quot;</span> <span class="n">-Value</span> <span class="n">2</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  <span class="n">-Name</span> <span class="s2">&quot;AuditNTLMInDomain&quot;</span> <span class="n">-Value</span> <span class="n">7</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Events appear in Applications and Services Logs &gt; Microsoft &gt; Windows &gt; NTLM</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s2">&quot;Microsoft-Windows-NTLM/Operational&quot;</span> <span class="n">-MaxEvents</span> <span class="n">50</span> <span class="p">|</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h3 id="restrict-ntlm">Restrict NTLM<a class="headerlink" href="#restrict-ntlm" title="Permanent link">&para;</a></h3>
 <p>GPO path: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options</p>
@@ -3654,103 +3631,103 @@ Active Directory integration, Kerberos, NTLM audit, LAPS, smart card, and Creden
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Set LM authentication level to NTLMv2 only via registry</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;LmCompatibilityLevel&quot;</span> <span class="n">-Value</span> <span class="n">5</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Set LM authentication level to NTLMv2 only via registry</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="n">-Name</span> <span class="s2">&quot;LmCompatibilityLevel&quot;</span> <span class="n">-Value</span> <span class="n">5</span> <span class="n">-Type</span> <span class="n">DWord</span>
 </code></pre></div>
 <h2 id="laps-local-administrator-password-solution">LAPS — Local Administrator Password Solution<a class="headerlink" href="#laps-local-administrator-password-solution" title="Permanent link">&para;</a></h2>
 <p>LAPS rotates the local Administrator password on each domain-joined machine and stores it in AD. This prevents lateral movement using a shared local admin password.</p>
 <h3 id="deploy-laps">Deploy LAPS<a class="headerlink" href="#deploy-laps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># On the management workstation — install LAPS tools</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c"># Requires LAPS MSI or Windows LAPS (built into Windows Server 2019+ / Windows 11 22H2+)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Extend the AD schema (run once as Schema Admin)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Update-LapsADSchema</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># Grant computers permission to update their own password attribute</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Set-LapsADComputerSelfPermission</span> <span class="n">-Identity</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Grant helpdesk group read access to LAPS passwords</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Set-LapsADReadPasswordPermission</span> <span class="n">-Identity</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>  <span class="n">-AllowedPrincipals</span> <span class="s2">&quot;CORP\Helpdesk&quot;</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c"># Enable LAPS via GPO (Computer Configuration &gt; Administrative Templates &gt; LAPS)</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># Or deploy via Windows LAPS settings</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># On the management workstation — install LAPS tools</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Requires LAPS MSI or Windows LAPS (built into Windows Server 2019+ / Windows 11 22H2+)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Extend the AD schema (run once as Schema Admin)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Update-LapsADSchema</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Grant computers permission to update their own password attribute</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">Set-LapsADComputerSelfPermission</span> <span class="n">-Identity</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Grant helpdesk group read access to LAPS passwords</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Set-LapsADReadPasswordPermission</span> <span class="n">-Identity</span> <span class="s2">&quot;OU=Servers,DC=corp,DC=local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  <span class="n">-AllowedPrincipals</span> <span class="s2">&quot;CORP\Helpdesk&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c"># Enable LAPS via GPO (Computer Configuration &gt; Administrative Templates &gt; LAPS)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># Or deploy via Windows LAPS settings</span>
 </code></pre></div>
 <h3 id="retrieve-laps-password">Retrieve LAPS Password<a class="headerlink" href="#retrieve-laps-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Retrieve the current local admin password for a computer</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span> <span class="n">-AsPlainText</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Force immediate rotation</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Reset-LapsPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># View password expiry</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ComputerName</span><span class="p">,</span> <span class="n">ExpirationTimestamp</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Retrieve the current local admin password for a computer</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span> <span class="n">-AsPlainText</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Force immediate rotation</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Reset-LapsPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># View password expiry</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="s2">&quot;SERVER01&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">ComputerName</span><span class="p">,</span> <span class="n">ExpirationTimestamp</span>
 </code></pre></div>
 <h2 id="smart-card-certificate-authentication">Smart Card / Certificate Authentication<a class="headerlink" href="#smart-card-certificate-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Require smart card for sensitive accounts (sets flag on AD object)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Set-ADUser</span> <span class="n">-Identity</span> <span class="n">jsmith</span> <span class="n">-SmartcardLogonRequired</span> <span class="nv">$true</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Verify the flag</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">(</span><span class="nb">Get-ADUser</span> <span class="n">jsmith</span> <span class="n">-Properties</span> <span class="n">SmartcardLogonRequired</span><span class="p">).</span><span class="n">SmartcardLogonRequired</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># List all users requiring smart card</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">SmartcardLogonRequired</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">SmartcardLogonRequired</span> <span class="p">|</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Require smart card for sensitive accounts (sets flag on AD object)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Set-ADUser</span> <span class="n">-Identity</span> <span class="n">jsmith</span> <span class="n">-SmartcardLogonRequired</span> <span class="nv">$true</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Verify the flag</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">(</span><span class="nb">Get-ADUser</span> <span class="n">jsmith</span> <span class="n">-Properties</span> <span class="n">SmartcardLogonRequired</span><span class="p">).</span><span class="n">SmartcardLogonRequired</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># List all users requiring smart card</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Get-ADUser</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">SmartcardLogonRequired</span> <span class="o">-eq</span> <span class="nv">$true</span><span class="p">}</span> <span class="n">-Properties</span> <span class="n">SmartcardLogonRequired</span> <span class="p">|</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SamAccountName</span>
 </code></pre></div>
 <p>GPO: Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Local Policies &gt; Security Options
 Setting: <strong>Interactive logon: Require smart card</strong> — set to Enabled for privileged workstations.</p>
 <h3 id="certificate-enrollment-pki">Certificate Enrollment (PKI)<a class="headerlink" href="#certificate-enrollment-pki" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Request a certificate from the enterprise CA</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">certreq</span> <span class="n">-enroll</span> <span class="n">-machine</span> <span class="s2">&quot;ServerAuthentication&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c"># View installed machine certificates</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c"># Check if smart card middleware is loaded</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">certutil</span> <span class="n">-scinfo</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Request a certificate from the enterprise CA</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">certreq</span> <span class="n">-enroll</span> <span class="n">-machine</span> <span class="s2">&quot;ServerAuthentication&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># View installed machine certificates</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c"># Check if smart card middleware is loaded</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">certutil</span> <span class="n">-scinfo</span>
 </code></pre></div>
 <h2 id="credential-guard">Credential Guard<a class="headerlink" href="#credential-guard" title="Permanent link">&para;</a></h2>
 <p>Credential Guard isolates LSA secrets (NTLM hashes, Kerberos tickets) in a Hyper-V protected container, preventing credential harvesting tools from extracting them.</p>
 <h3 id="enable-credential-guard">Enable Credential Guard<a class="headerlink" href="#enable-credential-guard" title="Permanent link">&para;</a></h3>
 <p>Requirements: UEFI Secure Boot, Hyper-V (VBS), 64-bit, Windows Server 2016+.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Enable via registry (persistent, requires reboot)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c"># LsaCfgFlags: 1 = Credential Guard with UEFI lock, 2 = Credential Guard without lock</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard&quot;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Force</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;EnableVirtualizationBasedSecurity&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;RequirePlatformSecurityFeatures&quot;</span> <span class="n">-Value</span> <span class="n">3</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nv">$lsaPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$lsaPath</span> <span class="n">-Name</span> <span class="s2">&quot;LsaCfgFlags&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c"># Or via GPO:</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c"># Computer Configuration &gt; Administrative Templates &gt; System &gt; Device Guard</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c"># Setting: Turn On Virtualization Based Security &gt; Credential Guard: Enabled with UEFI lock</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Enable via registry (persistent, requires reboot)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c"># LsaCfgFlags: 1 = Credential Guard with UEFI lock, 2 = Credential Guard without lock</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Force</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;EnableVirtualizationBasedSecurity&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;RequirePlatformSecurityFeatures&quot;</span> <span class="n">-Value</span> <span class="n">3</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">$lsaPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$lsaPath</span> <span class="n">-Name</span> <span class="s2">&quot;LsaCfgFlags&quot;</span> <span class="n">-Value</span> <span class="n">1</span> <span class="n">-Type</span> <span class="n">DWord</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c"># Or via GPO:</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c"># Computer Configuration &gt; Administrative Templates &gt; System &gt; Device Guard</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c"># Setting: Turn On Virtualization Based Security &gt; Credential Guard: Enabled with UEFI lock</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Verify Credential Guard is running</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-ComputerInfo</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Property</span> <span class="n">DeviceGuard</span><span class="p">*</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Alternative check</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">msinfo32</span>  <span class="c"># System Summary &gt; look for &quot;Virtualization-based security Services Running&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Verify Credential Guard is running</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-ComputerInfo</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Property</span> <span class="n">DeviceGuard</span><span class="p">*</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Alternative check</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">msinfo32</span>  <span class="c"># System Summary &gt; look for &quot;Virtualization-based security Services Running&quot;</span>
 </code></pre></div>
 <h2 id="service-account-authentication">Service Account Authentication<a class="headerlink" href="#service-account-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Create a Group Managed Service Account (gMSA) — preferred over regular service accounts</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c"># gMSA passwords are managed automatically by AD</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Create the gMSA (run on DC)</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">New-ADServiceAccount</span> <span class="n">-Name</span> <span class="s2">&quot;svc-webapp&quot;</span> <span class="p">`</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>  <span class="n">-DNSHostName</span> <span class="s2">&quot;svc-webapp.example.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>  <span class="n">-PrincipalsAllowedToRetrieveManagedPassword</span> <span class="s2">&quot;WebServers&quot;</span>   <span class="c"># AD computer group</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c"># Install gMSA on the target server</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="nb">Install-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-webapp&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="c"># Verify installation</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="nb">Test-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-webapp&quot;</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="c"># Configure the service to use the gMSA</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c"># In Services: account = corp\svc-webapp$  (note the $ suffix, no password needed)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Create a Group Managed Service Account (gMSA) — preferred over regular service accounts</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c"># gMSA passwords are managed automatically by AD</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Create the gMSA (run on DC)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">New-ADServiceAccount</span> <span class="n">-Name</span> <span class="s2">&quot;svc-webapp&quot;</span> <span class="p">`</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>  <span class="n">-DNSHostName</span> <span class="s2">&quot;svc-webapp.example.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  <span class="n">-PrincipalsAllowedToRetrieveManagedPassword</span> <span class="s2">&quot;WebServers&quot;</span>   <span class="c"># AD computer group</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c"># Install gMSA on the target server</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="nb">Install-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-webapp&quot;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c"># Verify installation</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="nb">Test-ADServiceAccount</span> <span class="n">-Identity</span> <span class="s2">&quot;svc-webapp&quot;</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="c"># Configure the service to use the gMSA</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c"># In Services: account = corp\svc-webapp$  (note the $ suffix, no password needed)</span>
 </code></pre></div>
 <h2 id="authentication-event-monitoring">Authentication Event Monitoring<a class="headerlink" href="#authentication-event-monitoring" title="Permanent link">&para;</a></h2>
 <table>
@@ -3809,18 +3786,18 @@ Setting: <strong>Interactive logon: Require smart card</strong> — set to Enabl
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Recent failed logons</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4625</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">30</span> <span class="p">|</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;User&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">5</span><span class="p">].</span><span class="n">Value</span><span class="p">}},</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Workstation&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">13</span><span class="p">].</span><span class="n">Value</span><span class="p">}},</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;IP&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">19</span><span class="p">].</span><span class="n">Value</span><span class="p">}}</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c"># Account lockouts in the last 24 hours</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Recent failed logons</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4625</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">30</span> <span class="p">|</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;User&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">5</span><span class="p">].</span><span class="n">Value</span><span class="p">}},</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;Workstation&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">13</span><span class="p">].</span><span class="n">Value</span><span class="p">}},</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;IP&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Properties</span><span class="p">[</span><span class="n">19</span><span class="p">].</span><span class="n">Value</span><span class="p">}}</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c"># Account lockouts in the last 24 hours</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>  <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>  <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

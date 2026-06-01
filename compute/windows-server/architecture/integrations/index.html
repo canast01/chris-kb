@@ -3022,28 +3022,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#wsus-sccm-patch-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        WSUS / SCCM Patch Management
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#monitoring-agent-deployment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Monitoring Agent Deployment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#backup-agent-deployment" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3331,46 +3309,32 @@ Integration with other platforms and external systems.
 │  DFS-R         = DFS Replication; multi-master file replication between servers                       │
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>GPOs are applied at the OU level by server role — infrastructure, database, application tiers each have a dedicated OU with role-specific policy.</p>
-<h2 id="wsus-sccm-patch-management">WSUS / SCCM Patch Management<a class="headerlink" href="#wsus-sccm-patch-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Verify WSUS client is configured</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-ItemProperty</span> <span class="n">-Path</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span> <span class="p">|</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">Select-Object</span> <span class="n">WUServer</span><span class="p">,</span> <span class="n">WUStatusServer</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Force WSUS detection (triggers check-in with WSUS server)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Or on newer Windows:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Check pending updates</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$UpdateSession</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">-ComObject</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">Update</span><span class="p">.</span><span class="n">Session</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$UpdateSearcher</span> <span class="p">=</span> <span class="nv">$UpdateSession</span><span class="p">.</span><span class="n">CreateUpdateSearcher</span><span class="p">()</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">$Updates</span> <span class="p">=</span> <span class="nv">$UpdateSearcher</span><span class="p">.</span><span class="n">Search</span><span class="p">(</span><span class="s2">&quot;IsInstalled=0&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nv">$Updates</span><span class="p">.</span><span class="n">Updates</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Title</span><span class="p">,</span> <span class="n">MsrcSeverity</span>
-</code></pre></div>
-<p>Maintenance windows control reboot scheduling:
-- Development: patching on Tuesdays, auto-reboot allowed
-- Staging: patching on Thursdays, auto-reboot after midnight
-- Production: patching on scheduled maintenance windows, manual reboot approval required</p>
-<h2 id="monitoring-agent-deployment">Monitoring Agent Deployment<a class="headerlink" href="#monitoring-agent-deployment" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Aria Operations Windows guest agent — deploy via Ansible or SCCM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Verify agent is running</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Aria Operations Agent&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># SCOM agent — verify management group registration</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">Get-SCOMAgent</span> <span class="n">-ComputerName</span> <span class="nv">$env:COMPUTERNAME</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">HealthState</span><span class="p">,</span> <span class="n">ManagementGroup</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Maintenance windows control reboot scheduling:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Development: patching on Tuesdays, auto-reboot allowed
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Staging: patching on Thursdays, auto-reboot after midnight
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Production: patching on scheduled maintenance windows, manual reboot approval required
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>## Monitoring Agent Deployment
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>```powershell
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Aria Operations Windows guest agent — deploy via Ansible or SCCM
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Verify agent is running
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Get-Service &quot;VMware Aria Operations Agent&quot; | Select-Object Status
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># SCOM agent — verify management group registration
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-SCOMAgent -ComputerName $env:COMPUTERNAME | Select-Object Name, HealthState, ManagementGroup
+</code></pre></div></p>
 <h2 id="backup-agent-deployment">Backup Agent Deployment<a class="headerlink" href="#backup-agent-deployment" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Agent for Windows</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Install via VBR console: Protection Groups → Add Server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># Or verify existing agent</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">Get-Service</span> <span class="n">VeeamAgentSvc</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install via VBR console: Protection Groups → Add Server</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># Or verify existing agent</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Service</span> <span class="n">VeeamAgentSvc</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
 </code></pre></div></p>
 <p><strong>NetBackup Client</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Verify NBU client is installed and connected to master</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;NetBackup Client Service&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\Veritas\NetBackup\bin\bpclntcmd.exe&quot;</span> <span class="n">-self</span>   <span class="c"># Show NBU version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify NBU client is installed and connected to master</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="s2">&quot;NetBackup Client Service&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">&amp;</span> <span class="s2">&quot;C:\Program Files\Veritas\NetBackup\bin\bpclntcmd.exe&quot;</span> <span class="n">-self</span>   <span class="c"># Show NBU version</span>
 </code></pre></div></p>
 <h2 id="rdp-winrm-session-flow">RDP / WinRM Session Flow<a class="headerlink" href="#rdp-winrm-session-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3388,35 +3352,35 @@ Integration with other platforms and external systems.
     target--&gt;&gt;jump: Desktop session granted
     jump--&gt;&gt;admin: Proxied session</code></pre>
 <h2 id="iscsi-mpio-configuration">iSCSI / MPIO Configuration<a class="headerlink" href="#iscsi-mpio-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># iSCSI Initiator — add target portal and connect</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$iqn</span> <span class="p">=</span> <span class="s2">&quot;iqn.1992-04.com.emc:storage.powermax01&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">New-IscsiTargetPortal</span> <span class="n">-TargetPortalAddress</span> <span class="s2">&quot;10.10.10.100&quot;</span> <span class="n">-TargetPortalPortNumber</span> <span class="n">3260</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">Connect-IscsiTarget</span> <span class="n">-NodeAddress</span> <span class="nv">$iqn</span> <span class="n">-IsMultipathEnabled</span> <span class="nv">$true</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Verify MPIO paths</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-MSDSMSupportedHW</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>   <span class="c"># List all MPIO devices and paths</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Verify DSM is installed (Dell MPIO DSM)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-WindowsFeature</span> <span class="n">Multipath-IO</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InstallState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># iSCSI Initiator — add target portal and connect</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$iqn</span> <span class="p">=</span> <span class="s2">&quot;iqn.1992-04.com.emc:storage.powermax01&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">New-IscsiTargetPortal</span> <span class="n">-TargetPortalAddress</span> <span class="s2">&quot;10.10.10.100&quot;</span> <span class="n">-TargetPortalPortNumber</span> <span class="n">3260</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Connect-IscsiTarget</span> <span class="n">-NodeAddress</span> <span class="nv">$iqn</span> <span class="n">-IsMultipathEnabled</span> <span class="nv">$true</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Verify MPIO paths</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-MSDSMSupportedHW</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">mpclaim</span> <span class="n">-s</span> <span class="n">-d</span>   <span class="c"># List all MPIO devices and paths</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Verify DSM is installed (Dell MPIO DSM)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-WindowsFeature</span> <span class="n">Multipath-IO</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">InstallState</span>
 </code></pre></div>
 <h2 id="dns-registration">DNS Registration<a class="headerlink" href="#dns-registration" title="Permanent link">&para;</a></h2>
 <p>Verify correct DNS registration after domain join:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Force DNS re-registration</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Verify A and PTR records</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="nv">$env:COMPUTERNAME</span> <span class="n">-Server</span> <span class="n">dc1</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Type</span> <span class="n">PTR</span> <span class="n">-Name</span> <span class="s2">&quot;10.10.10.50&quot;</span> <span class="n">-Server</span> <span class="n">dc1</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Force DNS re-registration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Verify A and PTR records</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Name</span> <span class="nv">$env:COMPUTERNAME</span> <span class="n">-Server</span> <span class="n">dc1</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Resolve-DnsName</span> <span class="n">-Type</span> <span class="n">PTR</span> <span class="n">-Name</span> <span class="s2">&quot;10.10.10.50&quot;</span> <span class="n">-Server</span> <span class="n">dc1</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
 </code></pre></div>
 <h2 id="fc-hba-configuration">FC HBA Configuration<a class="headerlink" href="#fc-hba-configuration" title="Permanent link">&para;</a></h2>
 <p>After OS installation:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Get HBA WWPNs (for fabric zoning request)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="s2">&quot;root\WMI&quot;</span> <span class="n">-Class</span> <span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">NodeWWN</span><span class="p">,</span> <span class="n">PortWWN</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Verify zoning is in place before enabling FC storage access</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># (confirm with storage team that initiator WWPNs are zoned to required target ports)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Get HBA WWPNs (for fabric zoning request)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="s2">&quot;root\WMI&quot;</span> <span class="n">-Class</span> <span class="s2">&quot;MSFC_FCAdapterHBAAttributes&quot;</span> <span class="p">|</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Select-Object</span> <span class="n">NodeWWN</span><span class="p">,</span> <span class="n">PortWWN</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Verify zoning is in place before enabling FC storage access</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># (confirm with storage team that initiator WWPNs are zoned to required target ports)</span>
 </code></pre></div></p>
 
 

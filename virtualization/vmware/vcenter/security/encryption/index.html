@@ -4338,145 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vsan-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vm-encryption-key-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VM Encryption Key Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vsphere-trust-authority-vta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSphere Trust Authority (vTA)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Certificate Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#certificates-to-track" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificates to Track
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#expiration-tracking-schedule" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Expiration Tracking Schedule
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#certificate-replacement-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Replacement Process
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validation-after-replacement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation After Replacement
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#emergency-escalation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Emergency Escalation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#certificate-replacement-procedures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Certificate Replacement Procedures
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Certificate Replacement Procedures">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#machine-ssl-certificate-vmca-signed-renewal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Machine SSL Certificate (VMCA-Signed Renewal)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#machine-ssl-certificate-custom-ca" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4486,8 +4347,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#sts-signing-certificate" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4495,11 +4356,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4794,128 +4650,79 @@ Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryp
 │  Custom CA    = replace VMCA-signed certs with enterprise PKI certs                                   │
 │  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="vsan-encryption">vSAN Encryption<a class="headerlink" href="#vsan-encryption" title="Permanent link">&para;</a></h2>
-<p>vSAN data-at-rest encryption is configured at the cluster level and requires a key provider (NKP or external KMS). Encryption is applied at the disk group layer.</p>
-<p>Configure at <strong>vCenter → Cluster → Configure → vSAN → Services → Data Encryption</strong>.</p>
-<h2 id="certificate-encryption">Certificate Encryption<a class="headerlink" href="#certificate-encryption" title="Permanent link">&para;</a></h2>
-<p>All vCenter-issued certificates (VMCA) use RSA 2048-bit minimum. Certificate chain of trust is maintained through the VMCA root certificate and STS signing certificate.</p>
-<p>See <a href="../authentication/">Authentication</a> for certificate management procedures.</p>
-<h2 id="vm-encryption-key-flow">VM Encryption Key Flow<a class="headerlink" href="#vm-encryption-key-flow" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    kms["External KMS\n(KMIP-compatible)"]
-    vc["vCenter Server\n(KMIP client)"]
-    kek["Key Encryption Key (KEK)\nper ESXi host"]
-    esxi["ESXi Host\n(holds encrypted DEK)"]
-    dek["Data Encryption Key (DEK)\nper VM — encrypted by KEK"]
-    disk["Encrypted VMDK\non datastore"]
-
-    kms --&gt;|"provides KEK on request"| vc
-    vc --&gt;|"delivers KEK"| esxi
-    esxi --&gt;|"generates and encrypts DEK\nusing KEK"| dek
-    dek --&gt;|"used to encrypt"| disk
-
-    classDef kms fill:#dc2626,stroke:#b91c1c,color:#fff
-    classDef vc fill:#b45309,stroke:#92400e,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef key fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef store fill:#1d4ed8,stroke:#1e40af,color:#fff
-
-    class kms kms
-    class vc vc
-    class esxi host
-    class kek,dek key
-    class disk store</code></pre>
-<h2 id="vsphere-trust-authority-vta">vSphere Trust Authority (vTA)<a class="headerlink" href="#vsphere-trust-authority-vta" title="Permanent link">&para;</a></h2>
-<p>vSphere Trust Authority (vTA), available from vSphere 7.0+, provides hardware-attested trust for ESXi hosts. A dedicated Trust Authority cluster attests that ESXi hosts are running trusted firmware and software before they are allowed to receive encryption keys.</p>
-<p>Use cases:
-- Prevent rogue or compromised ESXi hosts from decrypting encrypted VMs
-- Enable attestation-based key release (hosts must pass TPM 2.0 attestation)
-- Meets requirements for regulated environments requiring hardware root of trust</p>
-<p>Configuration is more complex than NKP — requires a dedicated Trust Authority cluster and proper TPM 2.0 hardware on all compute hosts.</p>
-<hr />
-<h2 id="certificate-management">Certificate Management<a class="headerlink" href="#certificate-management" title="Permanent link">&para;</a></h2>
-<h3 id="certificates-to-track">Certificates to Track<a class="headerlink" href="#certificates-to-track" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Certificate</th>
-<th>Location</th>
-<th>Risk if Expired</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vCenter Machine SSL</td>
-<td>VAMI → Certificate Management</td>
-<td>Browser warnings, API failures</td>
-</tr>
-<tr>
-<td>VMCA Root Certificate</td>
-<td>VAMI → Certificate Management</td>
-<td>Breaks all VMCA-issued certs</td>
-</tr>
-<tr>
-<td>STS Certificate</td>
-<td>vSphere Client → SSO → Certificates</td>
-<td>Login failures platform-wide</td>
-</tr>
-<tr>
-<td>Solution User Certificates</td>
-<td>VAMI → Certificate Management</td>
-<td>Service-to-service auth failures</td>
-</tr>
-<tr>
-<td>NSX Manager Certificate</td>
-<td>NSX Manager → System</td>
-<td>NSX UI and API failures</td>
-</tr>
-<tr>
-<td>Aria Endpoint Certificates</td>
-<td>Aria Suite Lifecycle</td>
-<td>Integration and access failures</td>
-</tr>
-</tbody>
-</table>
-<h3 id="expiration-tracking-schedule">Expiration Tracking Schedule<a class="headerlink" href="#expiration-tracking-schedule" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Review all certificate expiration dates monthly</li>
-<li>Flag certificates expiring within 60 days — plan replacement</li>
-<li>Escalate certificates expiring within 30 days — urgent action required</li>
-<li>Document next renewal date after each replacement</li>
-</ul>
-<h3 id="certificate-replacement-process">Certificate Replacement Process<a class="headerlink" href="#certificate-replacement-process" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Identify the certificate and replacement method (VMCA, custom CA, or self-signed)</li>
-<li>Confirm backup of vCenter is current</li>
-<li>Schedule a maintenance window</li>
-<li>Replace the certificate using the appropriate method</li>
-<li>Restart affected services</li>
-<li>Validate all integrations and logins</li>
-</ol>
-<h3 id="validation-after-replacement">Validation After Replacement<a class="headerlink" href="#validation-after-replacement" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Browser access to vCenter confirmed with no certificate warning</li>
-<li>All ESXi hosts Connected</li>
-<li>SSO login working for both local and AD accounts</li>
-<li>Aria, NSX, and backup integrations confirmed working</li>
-</ul>
-<h3 id="emergency-escalation">Emergency Escalation<a class="headerlink" href="#emergency-escalation" title="Permanent link">&para;</a></h3>
-<p>If certificate expiry causes a login or service failure:
-- Check if the local administrator account (<code>administrator@vsphere.local</code>) still works
-- Engage VMware support if SSO or STS cannot be recovered in place</p>
-<hr />
-<h2 id="certificate-replacement-procedures">Certificate Replacement Procedures<a class="headerlink" href="#certificate-replacement-procedures" title="Permanent link">&para;</a></h2>
-<h3 id="machine-ssl-certificate-vmca-signed-renewal">Machine SSL Certificate (VMCA-Signed Renewal)<a class="headerlink" href="#machine-ssl-certificate-vmca-signed-renewal" title="Permanent link">&para;</a></h3>
-<p>The simplest replacement — use when VMCA is the CA and no custom CA is required:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to VCSA</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Select option 6: Replace Machine SSL certificate with VMCA Certificate</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Enter administrator@vsphere.local credentials</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Accept default certificate parameters or customise CN/SAN</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># The tool will replace the cert and restart required services</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## vSphere Trust Authority (vTA)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vSphere Trust Authority (vTA), available from vSphere 7.0+, provides hardware-attested trust for ESXi hosts. A dedicated Trust Authority cluster attests that ESXi hosts are running trusted firmware and software before they are allowed to receive encryption keys.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Use cases:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- Prevent rogue or compromised ESXi hosts from decrypting encrypted VMs
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- Enable attestation-based key release (hosts must pass TPM 2.0 attestation)
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- Meets requirements for regulated environments requiring hardware root of trust
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Configuration is more complex than NKP — requires a dedicated Trust Authority cluster and proper TPM 2.0 hardware on all compute hosts.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>---
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## Certificate Management
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>### Certificates to Track
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Certificate | Location | Risk if Expired |
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>|---|---|---|
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| vCenter Machine SSL | VAMI → Certificate Management | Browser warnings, API failures |
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| VMCA Root Certificate | VAMI → Certificate Management | Breaks all VMCA-issued certs |
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| STS Certificate | vSphere Client → SSO → Certificates | Login failures platform-wide |
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Solution User Certificates | VAMI → Certificate Management | Service-to-service auth failures |
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| NSX Manager Certificate | NSX Manager → System | NSX UI and API failures |
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Aria Endpoint Certificates | Aria Suite Lifecycle | Integration and access failures |
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>### Expiration Tracking Schedule
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>- Review all certificate expiration dates monthly
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>- Flag certificates expiring within 60 days — plan replacement
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>- Escalate certificates expiring within 30 days — urgent action required
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>- Document next renewal date after each replacement
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>### Certificate Replacement Process
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>1. Identify the certificate and replacement method (VMCA, custom CA, or self-signed)
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>2. Confirm backup of vCenter is current
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>3. Schedule a maintenance window
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>4. Replace the certificate using the appropriate method
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>5. Restart affected services
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>6. Validate all integrations and logins
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>### Validation After Replacement
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>- Browser access to vCenter confirmed with no certificate warning
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>- All ESXi hosts Connected
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>- SSO login working for both local and AD accounts
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>- Aria, NSX, and backup integrations confirmed working
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>### Emergency Escalation
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>If certificate expiry causes a login or service failure:
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>- Check if the local administrator account (`administrator@vsphere.local`) still works
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>- Engage VMware support if SSO or STS cannot be recovered in place
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>---
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>## Certificate Replacement Procedures
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>### Machine SSL Certificate (VMCA-Signed Renewal)
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>The simplest replacement — use when VMCA is the CA and no custom CA is required:
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>```bash
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a># SSH to VCSA
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a># Select option 6: Replace Machine SSL certificate with VMCA Certificate
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a># Enter administrator@vsphere.local credentials
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a># Accept default certificate parameters or customise CN/SAN
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a># The tool will replace the cert and restart required services
+</code></pre></div></p>
 <p>After renewal:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify new certificate dates</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>

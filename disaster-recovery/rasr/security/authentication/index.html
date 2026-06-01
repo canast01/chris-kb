@@ -3810,45 +3810,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recovery-media-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Media Authentication
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recovery Media Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#physical-media-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Physical Media Controls
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#biosuefi-boot-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BIOS/UEFI Boot Authentication
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#recovery-session-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4161,135 +4122,100 @@ Authentication controls for Dell Rapid Array Snapshot Recovery operations, recov
 │  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Racadm CLI — change default password</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Users.2.Password<span class="w"> </span><span class="s2">&quot;NewSecurePassword123!&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable AD authentication</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ActiveDirectory.Enable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ActiveDirectory.DomainController1<span class="w"> </span>dc01.example.local
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ActiveDirectory.RootDomain<span class="w"> </span>corp.local
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Set session timeout (in seconds — 900 = 15 minutes)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.Timeout<span class="w"> </span><span class="m">900</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Disable HTTP, require HTTPS</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.HttpsPort<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.HttpPort<span class="w"> </span><span class="m">80</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.HttpsRedirect<span class="w"> </span><span class="m">1</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Recovery Media Authentication
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>RASR recovery media (USB drives, ISO images, PXE boot images) must be protected from unauthorised use. An attacker with access to recovery media can potentially restore systems to a compromised state or access snapshot data.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Physical Media Controls
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Control | Implementation |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Recovery USB inventory | Serial number tracked in CMDB; checked out via change management |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Physical storage | Recovery USB drives stored in locked cabinet with key log |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| USB labelling | Clearly labelled with system/environment scope and creation date |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Media access log | Sign-out sheet or electronic access log (who, when, why) |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Media destruction | Cryptographic wipe (3-pass DoD or shred) before disposal |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### BIOS/UEFI Boot Authentication
 <a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># View current user accounts</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.Users
-</code></pre></div>
-<h2 id="recovery-media-authentication">Recovery Media Authentication<a class="headerlink" href="#recovery-media-authentication" title="Permanent link">&para;</a></h2>
-<p>RASR recovery media (USB drives, ISO images, PXE boot images) must be protected from unauthorised use. An attacker with access to recovery media can potentially restore systems to a compromised state or access snapshot data.</p>
-<h3 id="physical-media-controls">Physical Media Controls<a class="headerlink" href="#physical-media-controls" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Control</th>
-<th>Implementation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Recovery USB inventory</td>
-<td>Serial number tracked in CMDB; checked out via change management</td>
-</tr>
-<tr>
-<td>Physical storage</td>
-<td>Recovery USB drives stored in locked cabinet with key log</td>
-</tr>
-<tr>
-<td>USB labelling</td>
-<td>Clearly labelled with system/environment scope and creation date</td>
-</tr>
-<tr>
-<td>Media access log</td>
-<td>Sign-out sheet or electronic access log (who, when, why)</td>
-</tr>
-<tr>
-<td>Media destruction</td>
-<td>Cryptographic wipe (3-pass DoD or shred) before disposal</td>
-</tr>
-</tbody>
-</table>
-<h3 id="biosuefi-boot-authentication">BIOS/UEFI Boot Authentication<a class="headerlink" href="#biosuefi-boot-authentication" title="Permanent link">&para;</a></h3>
-<p>Recovery from bootable RASR media requires BIOS/UEFI boot. Protect this path:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">BIOS/UEFI hardening</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set UEFI administrator password to prevent boot order changes</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Restrict boot order to internal drive; allow USB/PXE only when authorised</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enable Secure Boot (verify recovery media is Secure Boot compatible)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Log BIOS access attempts via iDRAC</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Require iDRAC credentials to enable one-time boot to USB/PXE</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Racadm — configure one-time boot to virtual media (requires authentication)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.BootOnce<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.FirstBootDevice<span class="w"> </span>VCD-DVD
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># This requires valid iDRAC credentials — prevents unauthorised recovery boot</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Recovery from bootable RASR media requires BIOS/UEFI boot. Protect this path:
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>```yaml
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>BIOS/UEFI hardening:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>- Set UEFI administrator password to prevent boot order changes
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>- Restrict boot order to internal drive; allow USB/PXE only when authorised
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>- Enable Secure Boot (verify recovery media is Secure Boot compatible)
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>- Log BIOS access attempts via iDRAC
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>- Require iDRAC credentials to enable one-time boot to USB/PXE
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Racadm — configure one-time boot to virtual media (requires authentication)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.BootOnce<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.ServerBoot.FirstBootDevice<span class="w"> </span>VCD-DVD
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># This requires valid iDRAC credentials — prevents unauthorised recovery boot</span>
 </code></pre></div>
 <h2 id="recovery-session-authentication">Recovery Session Authentication<a class="headerlink" href="#recovery-session-authentication" title="Permanent link">&para;</a></h2>
 <p>When a RASR recovery is initiated, the process must require multi-party authentication for production systems.</p>
 <h3 id="four-eyes-dual-control-procedure">Four-Eyes / Dual-Control Procedure<a class="headerlink" href="#four-eyes-dual-control-procedure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Recovery authorisation workflow:
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>1. Recovery requester raises a change record (ServiceNow / Jira)
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>2. Change is approved by the system owner or DR manager
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>3. Recovery is initiated by a separate operator (not the requester)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>4. Both parties authenticate to the array management plane during the session
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>5. Recovery actions are logged (see audit/hardening page)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Recovery authorisation workflow:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>1. Recovery requester raises a change record (ServiceNow / Jira)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2. Change is approved by the system owner or DR manager
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>3. Recovery is initiated by a separate operator (not the requester)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>4. Both parties authenticate to the array management plane during the session
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>5. Recovery actions are logged (see audit/hardening page)
 </code></pre></div>
 <h3 id="service-account-for-automated-rasr-operations">Service Account for Automated RASR Operations<a class="headerlink" href="#service-account-for-automated-rasr-operations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="l l-Scalar l-Scalar-Plain">Automated RASR tasks (e.g., scheduled snapshot validation) use dedicated service accounts</span><span class="p p-Indicator">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">One service account per environment (prod, UAT, DR)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Minimum privilege</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snapshot read and recovery initiation only</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Password stored in a privileged access management (PAM) vault (CyberArk / HashiCorp Vault)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">No interactive login permitted (shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sbin/nologin on Linux management hosts)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Credentials rotated every 90 days</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="l l-Scalar l-Scalar-Plain">Automated RASR tasks (e.g., scheduled snapshot validation) use dedicated service accounts</span><span class="p p-Indicator">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">One service account per environment (prod, UAT, DR)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Minimum privilege</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snapshot read and recovery initiation only</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Password stored in a privileged access management (PAM) vault (CyberArk / HashiCorp Vault)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">No interactive login permitted (shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/sbin/nologin on Linux management hosts)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Credentials rotated every 90 days</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Example: Store RASR service account credentials in HashiCorp Vault</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/rasr/prod<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;svc-rasr-prod&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nv">password</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Retrieve at runtime (never in scripts or config files)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">RASR_PASSWORD</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/rasr/prod<span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Example: Store RASR service account credentials in HashiCorp Vault</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/rasr/prod<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nv">username</span><span class="o">=</span><span class="s2">&quot;svc-rasr-prod&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nv">password</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Retrieve at runtime (never in scripts or config files)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">RASR_PASSWORD</span><span class="o">=</span><span class="k">$(</span>vault<span class="w"> </span>kv<span class="w"> </span>get<span class="w"> </span>-field<span class="o">=</span>password<span class="w"> </span>secret/rasr/prod<span class="k">)</span>
 </code></pre></div>
 <h2 id="post-recovery-system-authentication">Post-Recovery System Authentication<a class="headerlink" href="#post-recovery-system-authentication" title="Permanent link">&para;</a></h2>
 <p>After a RASR recovery completes, verify the recovered system's authentication configuration before returning it to production.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Linux — verify SSH host keys have been regenerated (not restored from snapshot)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/ssh/ssh_host_*
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># If keys are identical to the pre-restore state, regenerate:</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>rm<span class="w"> </span>/etc/ssh/ssh_host_*
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>ssh-keygen<span class="w"> </span>-A
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Verify SSSD is connected to AD after restore</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>realm<span class="w"> </span>list
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>id<span class="w"> </span>domain_admin_user@corp.local
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Reset cached Kerberos tickets</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>kdestroy<span class="w"> </span>-A<span class="w">   </span><span class="c1"># Clear all credential caches</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Verify no local accounts were added during the rollback period that need review</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 &gt;= 1000 { print $1, $3 }&#39;</span><span class="w"> </span>/etc/passwd
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>lastlog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Never logged in&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Linux — verify SSH host keys have been regenerated (not restored from snapshot)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>/etc/ssh/ssh_host_*
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># If keys are identical to the pre-restore state, regenerate:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>rm<span class="w"> </span>/etc/ssh/ssh_host_*
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh-keygen<span class="w"> </span>-A
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify SSSD is connected to AD after restore</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>realm<span class="w"> </span>list
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>id<span class="w"> </span>domain_admin_user@corp.local
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Reset cached Kerberos tickets</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>kdestroy<span class="w"> </span>-A<span class="w">   </span><span class="c1"># Clear all credential caches</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Verify no local accounts were added during the rollback period that need review</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>awk<span class="w"> </span>-F:<span class="w"> </span><span class="s1">&#39;$3 &gt;= 1000 { print $1, $3 }&#39;</span><span class="w"> </span>/etc/passwd
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>lastlog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Never logged in&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Windows — verify AD domain secure channel after restore</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Test-ComputerSecureChannel</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c"># If broken:</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Check local administrator account status post-restore</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">Get-LocalUser</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">LastLogon</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Verify LAPS has rotated the local admin password post-recovery</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="nv">$env:COMPUTERNAME</span> <span class="n">-AsPlainText</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Clear cached credentials</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="n">cmdkey</span> <span class="p">/</span><span class="n">list</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">cmdkey</span> <span class="p">/</span><span class="n">delete</span><span class="p">:</span><span class="n">targetname</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Windows — verify AD domain secure channel after restore</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Test-ComputerSecureChannel</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c"># If broken:</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Test-ComputerSecureChannel</span> <span class="n">-Repair</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># Check local administrator account status post-restore</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Get-LocalUser</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">LastLogon</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Verify LAPS has rotated the local admin password post-recovery</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nb">Get-LapsADPassword</span> <span class="n">-Identity</span> <span class="nv">$env:COMPUTERNAME</span> <span class="n">-AsPlainText</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c"># Clear cached credentials</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">cmdkey</span> <span class="p">/</span><span class="n">list</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="n">cmdkey</span> <span class="p">/</span><span class="n">delete</span><span class="p">:</span><span class="n">targetname</span>
 </code></pre></div>
 <h2 id="authentication-audit-checklist">Authentication Audit Checklist<a class="headerlink" href="#authentication-audit-checklist" title="Permanent link">&para;</a></h2>
 <table>

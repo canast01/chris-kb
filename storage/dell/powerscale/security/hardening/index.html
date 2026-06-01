@@ -4457,7 +4457,57 @@
 <div class="kb-summary">
 > Security baselines and compliance configuration for Dell PowerScale.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── Dell PowerScale — Security Hardening ─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      PowerScale hardening: disable unused protocols, enforce encryption, restrict access      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         Network: dedicated storage VLAN; restrict management access to jump hosts only        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │        Auth: disable default accounts; enforce password complexity and rotation policy        │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Audit: forward syslog to SIEM; alert on privilege escalation and failed logins        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Baseline config → disable unused → enforce MFA → enable logging → audit                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │           Function          │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Area       │     Control      │      Standard     │      Verify      │    Frequency     │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     Accounts     │ Disable defaults │  No default creds │   Login audit    │      Deploy      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    Protocols     │  Disable unused  │   TLS 1.2+ only   │    Port scan     │     Monthly      │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │       MFA        │ Enforce all admi │   TOTP/hardware   │    Auth logs     │    Continuous    │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Logging      │ SIEM forwarding  │  All admin events │   SIEM alerts    │      Daily       │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Access zone        = logical container with separate authentication and export namespace per tenant│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
     cluster["PowerScale Cluster"]
@@ -4532,167 +4582,167 @@
 <hr />
 <h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
 <h3 id="disable-http-enforce-https">Disable HTTP, Enforce HTTPS<a class="headerlink" href="#disable-http-enforce-https" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Enforce HTTPS-only for the management API and web UI</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># (Block HTTP at the firewall level; OneFS redirects HTTP to HTTPS by default)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># View current HTTPS/TLS settings</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Set minimum TLS version to 1.2</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--tls-min-version<span class="w"> </span><span class="m">1</span>.2
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Configure session timeout for the web UI (15 minutes recommended)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>isi<span class="w"> </span>web<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--session-timeout<span class="w"> </span><span class="m">900</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enforce HTTPS-only for the management API and web UI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># (Block HTTP at the firewall level; OneFS redirects HTTP to HTTPS by default)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View current HTTPS/TLS settings</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set minimum TLS version to 1.2</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--tls-min-version<span class="w"> </span><span class="m">1</span>.2
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Configure session timeout for the web UI (15 minutes recommended)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>web<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--session-timeout<span class="w"> </span><span class="m">900</span>
 </code></pre></div>
 <h3 id="disable-smb1-and-enforce-smb-signing">Disable SMB1 and Enforce SMB Signing<a class="headerlink" href="#disable-smb1-and-enforce-smb-signing" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Disable SMBv1 (legacy; insecure — affected by WannaCry and EternalBlue)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--support-smb1<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Require SMB packet signing on all connections</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify settings</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;smb1|signing&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable SMBv1 (legacy; insecure — affected by WannaCry and EternalBlue)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--support-smb1<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Require SMB packet signing on all connections</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--server-signing<span class="w"> </span>required
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify settings</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;smb1|signing&quot;</span>
 </code></pre></div>
 <h3 id="nfs-root-squash">NFS Root Squash<a class="headerlink" href="#nfs-root-squash" title="Permanent link">&para;</a></h3>
 <p>Root squash maps NFS client UID 0 (root) to the anonymous user (typically <code>nobody</code>). This prevents an NFS client root user from having unrestricted access to cluster data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View current root squash settings on an export</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;root|squash|map&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable root squash on all clients (map root to nobody)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>--map-root<span class="w"> </span>user:nobody
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># For an export that requires root access (e.g., backup host), add only that IP to root-clients</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>--add-root-clients<span class="w"> </span><span class="m">10</span>.0.1.5<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--map-root<span class="w"> </span>user:nobody
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Global NFS settings — default squash behaviour</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;map\|root&quot;</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>modify<span class="w"> </span>--map-root<span class="w"> </span>user:nobody
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View current root squash settings on an export</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;root|squash|map&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Enable root squash on all clients (map root to nobody)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>--map-root<span class="w"> </span>user:nobody
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># For an export that requires root access (e.g., backup host), add only that IP to root-clients</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>--add-root-clients<span class="w"> </span><span class="m">10</span>.0.1.5<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>--map-root<span class="w"> </span>user:nobody
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Global NFS settings — default squash behaviour</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;map\|root&quot;</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>isi<span class="w"> </span>nfs<span class="w"> </span>settings<span class="w"> </span><span class="nb">export</span><span class="w"> </span>modify<span class="w"> </span>--map-root<span class="w"> </span>user:nobody
 </code></pre></div>
 <h3 id="disable-unused-protocols-per-access-zone">Disable Unused Protocols Per Access Zone<a class="headerlink" href="#disable-unused-protocols-per-access-zone" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># View current protocol status for a zone</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>protocol
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Disable FTP for a zone (if not in use)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>ftp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Disable HDFS for a zone</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>isi<span class="w"> </span>hdfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Disable S3 in an access zone</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--service<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Verify which services are running</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>isi<span class="w"> </span>services<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>running
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View current protocol status for a zone</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>view<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>protocol
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Disable FTP for a zone (if not in use)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>ftp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Disable HDFS for a zone</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>hdfs<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Disable S3 in an access zone</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>s3<span class="w"> </span>settings<span class="w"> </span>zone<span class="w"> </span>modify<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;<span class="w"> </span>--service<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Verify which services are running</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>isi<span class="w"> </span>services<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>running
 </code></pre></div>
 <h3 id="restrict-ssh-access">Restrict SSH Access<a class="headerlink" href="#restrict-ssh-access" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View SSH configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>ssh<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restrict SSH to specific source IPs (management VLAN only)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Done via firewall rules at the network level — not natively enforced in OneFS</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Alternatively, configure /etc/hosts.allow on each node (TCP wrappers)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Best practice: use a jump host / bastion in the management VLAN</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Disable root SSH login (use named accounts with role-based access)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Edit /etc/ssh/sshd_config on each node: PermitRootLogin no</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Or use the OneFS security policy if available in your version</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>isi<span class="w"> </span>ssh<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--allow-root-login<span class="w"> </span>no<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Restrict root SSH login via /etc/ssh/sshd_config on each node&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View SSH configuration</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>ssh<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restrict SSH to specific source IPs (management VLAN only)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Done via firewall rules at the network level — not natively enforced in OneFS</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Alternatively, configure /etc/hosts.allow on each node (TCP wrappers)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Best practice: use a jump host / bastion in the management VLAN</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Disable root SSH login (use named accounts with role-based access)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Edit /etc/ssh/sshd_config on each node: PermitRootLogin no</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Or use the OneFS security policy if available in your version</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>isi<span class="w"> </span>ssh<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--allow-root-login<span class="w"> </span>no<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Restrict root SSH login via /etc/ssh/sshd_config on each node&quot;</span>
 </code></pre></div>
 <h3 id="snmp-v3-configuration">SNMP v3 Configuration<a class="headerlink" href="#snmp-v3-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable SNMP v1 and v2c (insecure community strings)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--snmp-v1-v2c-access-enable<span class="w"> </span>no<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Configure SNMP v3 with authentication and privacy</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span>--system-contact<span class="w"> </span><span class="s2">&quot;infra-team@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>--system-location<span class="w"> </span><span class="s2">&quot;DC1-Row3-Rack5-Node1&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># View SNMP settings</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Create an SNMP v3 user with auth + privacy</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>isi<span class="w"> </span>snmp<span class="w"> </span>v3users<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span>--name<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span>--auth-password<span class="w"> </span>&lt;auth_password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span>--priv-password<span class="w"> </span>&lt;priv_password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span>--auth-type<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">    </span>--priv-type<span class="w"> </span>AES
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Disable SNMP v1 and v2c (insecure community strings)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--snmp-v1-v2c-access-enable<span class="w"> </span>no<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Configure SNMP v3 with authentication and privacy</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--snmp-v3-access-enable<span class="w"> </span>yes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>--system-contact<span class="w"> </span><span class="s2">&quot;infra-team@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>--system-location<span class="w"> </span><span class="s2">&quot;DC1-Row3-Rack5-Node1&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># View SNMP settings</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Create an SNMP v3 user with auth + privacy</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>isi<span class="w"> </span>snmp<span class="w"> </span>v3users<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span>--name<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>--auth-password<span class="w"> </span>&lt;auth_password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span>--priv-password<span class="w"> </span>&lt;priv_password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span>--auth-type<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span>--priv-type<span class="w"> </span>AES
 </code></pre></div>
 <h3 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable protocol audit logging (NFS and SMB access events)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--auditing-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Set the syslog audit target</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--syslog-forwarding-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--syslog-server<span class="w"> </span>siem.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--syslog-facility<span class="w"> </span>local6
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Configure CEE (Common Event Enabler) forwarding for SIEM integration</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span>--cee-server-uri<span class="w"> </span><span class="s2">&quot;http://siem.example.com:12228/cee&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Enable configuration change audit (admin actions)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--config-auditing-enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># View current audit configuration</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># View audit topics (what events are captured)</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>isi<span class="w"> </span>audit<span class="w"> </span>topics<span class="w"> </span>list
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>isi<span class="w"> </span>audit<span class="w"> </span>topics<span class="w"> </span>view<span class="w"> </span>protocol
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable protocol audit logging (NFS and SMB access events)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--auditing-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Set the syslog audit target</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--syslog-forwarding-enabled<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--syslog-server<span class="w"> </span>siem.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>--syslog-facility<span class="w"> </span>local6
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Configure CEE (Common Event Enabler) forwarding for SIEM integration</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>--cee-server-uri<span class="w"> </span><span class="s2">&quot;http://siem.example.com:12228/cee&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Enable configuration change audit (admin actions)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--config-auditing-enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># View current audit configuration</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="c1"># View audit topics (what events are captured)</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>isi<span class="w"> </span>audit<span class="w"> </span>topics<span class="w"> </span>list
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>isi<span class="w"> </span>audit<span class="w"> </span>topics<span class="w"> </span>view<span class="w"> </span>protocol
 </code></pre></div>
 <h3 id="restrict-ip-pool-access-by-subnet">Restrict IP Pool Access by Subnet<a class="headerlink" href="#restrict-ip-pool-access-by-subnet" title="Permanent link">&para;</a></h3>
 <p>Limit which source IPs can connect to each access zone's IP pool:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View IP pool configuration</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>&lt;pool_name&gt;
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Set source IP restrictions on a pool (only allow connections from authorised subnets)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>modify<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--sc-subnet<span class="w"> </span>&lt;allowed_subnet&gt;
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Alternatively, enforce access zone path restrictions via NFS export client lists</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># and SMB share permissions — restrict client lists to known IP ranges</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View IP pool configuration</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>view<span class="w"> </span>&lt;pool_name&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Set source IP restrictions on a pool (only allow connections from authorised subnets)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>modify<span class="w"> </span>&lt;pool_name&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--sc-subnet<span class="w"> </span>&lt;allowed_subnet&gt;
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Alternatively, enforce access zone path restrictions via NFS export client lists</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># and SMB share permissions — restrict client lists to known IP ranges</span>
 </code></pre></div>
 <hr />
 <h2 id="role-based-administration">Role-Based Administration<a class="headerlink" href="#role-based-administration" title="Permanent link">&para;</a></h2>
 <p>Apply the principle of least privilege for cluster administrators:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all available privileges</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>privileges<span class="w"> </span>list
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Create a read-only monitoring role (no configuration changes)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span>--name<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Read-only cluster monitoring — no configuration access&quot;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_LOGIN_CONSOLE
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_STATISTICS
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_EVENT_READ
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Create a backup operator role</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span>--name<span class="w"> </span>BackupOperator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;NDMP backup operations only&quot;</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>BackupOperator<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_LOGIN_CONSOLE
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>BackupOperator<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_BACKUP
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="c1"># Assign a role to a user</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-user<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-group<span class="w"> </span><span class="s2">&quot;CORP\\StorageMonitoring&quot;</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># View roles assigned to a user</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>&lt;username&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>role
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="c1"># List all roles and their members</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>list
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>view<span class="w"> </span>ReadOnlyMonitor
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all available privileges</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>auth<span class="w"> </span>privileges<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create a read-only monitoring role (no configuration changes)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>--name<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Read-only cluster monitoring — no configuration access&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_LOGIN_CONSOLE
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_STATISTICS
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_EVENT_READ
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Create a backup operator role</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span>--name<span class="w"> </span>BackupOperator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;NDMP backup operations only&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>BackupOperator<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_LOGIN_CONSOLE
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>BackupOperator<span class="w"> </span>--add-priv<span class="w"> </span>ISI_PRIV_BACKUP
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># Assign a role to a user</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-user<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>modify<span class="w"> </span>ReadOnlyMonitor<span class="w"> </span>--add-group<span class="w"> </span><span class="s2">&quot;CORP\\StorageMonitoring&quot;</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># View roles assigned to a user</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>&lt;username&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>role
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="c1"># List all roles and their members</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>list
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>isi<span class="w"> </span>auth<span class="w"> </span>roles<span class="w"> </span>view<span class="w"> </span>ReadOnlyMonitor
 </code></pre></div>
 <h3 id="recommended-role-structure">Recommended Role Structure<a class="headerlink" href="#recommended-role-structure" title="Permanent link">&para;</a></h3>
 <table>
@@ -4734,36 +4784,36 @@
 <hr />
 <h2 id="security-baseline-validation">Security Baseline Validation<a class="headerlink" href="#security-baseline-validation" title="Permanent link">&para;</a></h2>
 <p>Run these checks to confirm the hardening baseline is in place:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Confirm SMB1 is disabled</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>smb1
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Expected: support_smb1: No</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Confirm SMB signing is required</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Expected: server_signing: Required</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Confirm audit logging is enabled</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>auditing
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># Expected: auditing_enabled: Yes</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Confirm SNMP v3 is enabled and v1/v2c disabled</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;v1_v2c|v3&quot;</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Expected: snmp_v1_v2c_access_enable: No, snmp_v3_access_enable: Yes</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="c1"># Confirm HTTPS min TLS version</span>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tls
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="c1"># Expected: tls_min_version: 1.2</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># Confirm NFS exports do not use wildcards</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Clients:|Root Clients:|Read Write Clients:&quot;</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># Review for any entry with * — replace with specific CIDRs</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
-<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># Confirm SyncIQ policies require encryption</span>
-<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Encryption&quot;</span>
-<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="c1"># Expected: encryption_required: Yes for all policies carrying sensitive data</span>
-<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>
-<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="c1"># Confirm no unused local user accounts are enabled</span>
-<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Enabled: No&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm SMB1 is disabled</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>smb1
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Expected: support_smb1: No</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Confirm SMB signing is required</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>isi<span class="w"> </span>smb<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>signing
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Expected: server_signing: Required</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Confirm audit logging is enabled</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>isi<span class="w"> </span>audit<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>auditing
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># Expected: auditing_enabled: Yes</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Confirm SNMP v3 is enabled and v1/v2c disabled</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>isi<span class="w"> </span>snmp<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;v1_v2c|v3&quot;</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Expected: snmp_v1_v2c_access_enable: No, snmp_v3_access_enable: Yes</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Confirm HTTPS min TLS version</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>isi<span class="w"> </span>https<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>tls
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># Expected: tls_min_version: 1.2</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Confirm NFS exports do not use wildcards</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Clients:|Root Clients:|Read Write Clients:&quot;</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># Review for any entry with * — replace with specific CIDRs</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c1"># Confirm SyncIQ policies require encryption</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Encryption&quot;</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="c1"># Expected: encryption_required: Yes for all policies carrying sensitive data</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="c1"># Confirm no unused local user accounts are enabled</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>isi<span class="w"> </span>auth<span class="w"> </span>users<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Enabled: No&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="hardening-standards-reference">Hardening Standards Reference<a class="headerlink" href="#hardening-standards-reference" title="Permanent link">&para;</a></h2>

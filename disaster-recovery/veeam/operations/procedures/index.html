@@ -3895,58 +3895,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-copy-job-setup-offsite-cloud-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Copy Job Setup (Offsite / Cloud Target)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Backup Copy Job Setup (Offsite / Cloud Target)">
+    <nav class="md-nav" aria-label="Instant VM Recovery Flow">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sobr-capacity-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SOBR Capacity Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SOBR Capacity Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#offload-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Offload Policy
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#sealing-extents" class="md-nav__link">
@@ -4201,43 +4151,24 @@ Operational procedures covering backup job creation, copy job setup, SOBR manage
 │  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>After creation:
-- [ ] Run the job once manually and verify success before relying on the schedule.
-- [ ] Confirm the restore point appears under <strong>Home &gt; Backups</strong>.
-- [ ] Document the job name, scope, repository, and retention in the CMDB or runbook.</p>
-<hr />
-<h2 id="backup-copy-job-setup-offsite-cloud-target">Backup Copy Job Setup (Offsite / Cloud Target)<a class="headerlink" href="#backup-copy-job-setup-offsite-cloud-target" title="Permanent link">&para;</a></h2>
-<p>Backup copy jobs pull from a source backup job and write a secondary chain to an offsite or cloud repository. This is the primary mechanism for the 3-2-1 rule.</p>
-<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Go to <strong>Home &gt; Backup Copy &gt; VMware vSphere Backup...</strong> (or Hyper-V equivalent).</li>
-<li>Select the <strong>source</strong> — a specific backup job or all backups from a repository.</li>
-<li>Select the <strong>target repository</strong> — object storage (S3-compatible, Azure Blob, Wasabi, etc.) or a remote Linux/Windows repo.</li>
-<li>Set the <strong>copy interval</strong> (e.g., every 1 day) and configure GFS retention independently of the source job.</li>
-<li>Enable <strong>encryption</strong> on the target if the repository is offsite or cloud.</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List existing backup copy jobs</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">BackupSync</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Check copy job sessions</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;BackupSync&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
-</code></pre></div>
-<hr />
-<h2 id="sobr-capacity-management">SOBR Capacity Management<a class="headerlink" href="#sobr-capacity-management" title="Permanent link">&para;</a></h2>
-<h3 id="offload-policy">Offload Policy<a class="headerlink" href="#offload-policy" title="Permanent link">&para;</a></h3>
-<p>In <strong>Backup Infrastructure &gt; Scale-Out Repositories</strong>, select the SOBR and open <strong>Properties &gt; Capacity Tier</strong>. Configure:</p>
-<ul>
-<li><strong>Move backups older than N days</strong> — set based on how long backups should remain on fast storage before offloading to object storage.</li>
-<li><strong>Copy backups to object storage as soon as they are created</strong> — use this for a continuous offload model (no delay).</li>
-<li><strong>Encrypt data uploaded to object storage</strong> — always enable for cloud targets.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Trigger SOBR offload (capacity tier upload)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$sobr</span> <span class="p">=</span> <span class="nb">Get-VBRScaleOutBackupRepository</span> <span class="n">-Name</span> <span class="s2">&quot;SOBR-Primary&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Invoke-VBRScaleOutBackupRepositoryOffload</span> <span class="n">-ScaleOutBackupRepository</span> <span class="nv">$sobr</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## SOBR Capacity Management
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### Offload Policy
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>In **Backup Infrastructure &gt; Scale-Out Repositories**, select the SOBR and open **Properties &gt; Capacity Tier**. Configure:
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>- **Move backups older than N days** — set based on how long backups should remain on fast storage before offloading to object storage.
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>- **Copy backups to object storage as soon as they are created** — use this for a continuous offload model (no delay).
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- **Encrypt data uploaded to object storage** — always enable for cloud targets.
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>```powershell
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Trigger SOBR offload (capacity tier upload)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>$sobr = Get-VBRScaleOutBackupRepository -Name &quot;SOBR-Primary&quot;
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>Invoke-VBRScaleOutBackupRepositoryOffload -ScaleOutBackupRepository $sobr
+</code></pre></div></p>
 <h3 id="sealing-extents">Sealing Extents<a class="headerlink" href="#sealing-extents" title="Permanent link">&para;</a></h3>
 <p>When an extent needs to be decommissioned:</p>
 <ol>

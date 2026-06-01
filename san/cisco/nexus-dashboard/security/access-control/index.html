@@ -3749,52 +3749,52 @@
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s1">    &quot;roles&quot;: [{&quot;name&quot;: &quot;Viewer&quot;, &quot;sites&quot;: [{&quot;name&quot;: &quot;DC1-SAN&quot;}, {&quot;name&quot;: &quot;DC2-SAN&quot;}]}]</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────── Cisco Nexus Dashboard — Security Access Control ───────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  RBAC model with local and AAA-backed users; per-app roles scoped to tenant or site.                  │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               User Management                │  │                  Role Model                 │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Local users: ND-native DB           │  │          Admin: full cluster access         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Remote: LDAP/RADIUS/TACACS+          │  │        Operator: read + limited write       │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Groups: mapped to ND roles          │  │             Read-only: view only            │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Password policy: enforce cmplx        │  │         App roles: per NDFC/NDI/NDO         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Session timeout: configurable         │  │         Site scope: per-site access         │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Roles assigned at cluster level; app-specific roles further restrict within each app                 │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              API Access Control              │  │                    Audit                    │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         REST API: Bearer token auth          │  │          Login events: success/fail         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Token TTL: 60 min default           │  │           Config changes: who+what          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Service accounts: dedicated          │  │          API calls: logged per user         │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         IP allowlist: restrict mgmt          │  │            Export: syslog to SIEM           │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            MFA: via SAML IdP only            │  │          Retention: 90-day default          │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND cluster · LDAP/RADIUS/TACACS+ server · SAML IdP · SIEM · management network                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  RBAC           = Role-Based Access Control; maps users/groups to permitted actions                   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  LDAP group map = Mapping LDAP group DN to an ND role for automatic assignment                        │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  App role       = Role scoped to a specific ND app (NDFC/NDI/NDO) not cluster-wide                    │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Site scope     = Restricting a user to only manage specific onboarded sites                          │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Service account= Dedicated ND user for automation; not used for human login                          │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  IP allowlist   = Network ACL restricting management access to known source IPs                       │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  MFA            = Multi-Factor Auth; enforced by SAML IdP (not natively by ND)                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Token TTL      = JWT lifetime; default 60 min; reduce for higher security posture                    │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Password complexity= Minimum length, upper/lower/digit/special char requirements                     │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Session timeout= Idle period after which UI session is automatically terminated                      │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  SIEM export    = Forwarding ND audit logs via syslog TLS to Splunk or similar                        │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Audit retention= How long ND retains access logs before purging (default 90 days)                    │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+┌─────────────────────────── Cisco Nexus Dashboard — Security Access Control ───────────────────────────┐
+│                                                                                                       │
+│  RBAC model with local and AAA-backed users; per-app roles scoped to tenant or site.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               User Management                │  │                  Role Model                 │   │
+│   │          Local users: ND-native DB           │  │          Admin: full cluster access         │   │
+│   │         Remote: LDAP/RADIUS/TACACS+          │  │        Operator: read + limited write       │   │
+│   │          Groups: mapped to ND roles          │  │             Read-only: view only            │   │
+│   │        Password policy: enforce cmplx        │  │         App roles: per NDFC/NDI/NDO         │   │
+│   │        Session timeout: configurable         │  │         Site scope: per-site access         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Roles assigned at cluster level; app-specific roles further restrict within each app                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              API Access Control              │  │                    Audit                    │   │
+│   │         REST API: Bearer token auth          │  │          Login events: success/fail         │   │
+│   │          Token TTL: 60 min default           │  │           Config changes: who+what          │   │
+│   │         Service accounts: dedicated          │  │          API calls: logged per user         │   │
+│   │         IP allowlist: restrict mgmt          │  │            Export: syslog to SIEM           │   │
+│   │            MFA: via SAML IdP only            │  │          Retention: 90-day default          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster · LDAP/RADIUS/TACACS+ server · SAML IdP · SIEM · management network                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RBAC           = Role-Based Access Control; maps users/groups to permitted actions                   │
+│  LDAP group map = Mapping LDAP group DN to an ND role for automatic assignment                        │
+│  App role       = Role scoped to a specific ND app (NDFC/NDI/NDO) not cluster-wide                    │
+│  Site scope     = Restricting a user to only manage specific onboarded sites                          │
+│  Service account= Dedicated ND user for automation; not used for human login                          │
+│  IP allowlist   = Network ACL restricting management access to known source IPs                       │
+│  MFA            = Multi-Factor Auth; enforced by SAML IdP (not natively by ND)                        │
+│  Token TTL      = JWT lifetime; default 60 min; reduce for higher security posture                    │
+│  Password complexity= Minimum length, upper/lower/digit/special char requirements                     │
+│  Session timeout= Idle period after which UI session is automatically terminated                      │
+│  SIEM export    = Forwarding ND audit logs via syslog TLS to Splunk or similar                        │
+│  Audit retention= How long ND retains access logs before purging (default 90 days)                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="disabling-and-removing-accounts">Disabling and Removing Accounts<a class="headerlink" href="#disabling-and-removing-accounts" title="Permanent link">&para;</a></h2>
 <h3 id="disable-temporary">Disable (Temporary)<a class="headerlink" href="#disable-temporary" title="Permanent link">&para;</a></h3>

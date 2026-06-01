@@ -3899,67 +3899,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sobr-capacity-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SOBR Capacity Check
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tape-check-if-applicable" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Tape Check (if applicable)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#daily-checklist-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checklist Summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#weekly-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Weekly Checks
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Weekly Checks">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#surebackup-verification-job-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SureBackup Verification Job Review
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#repository-capacity-trend" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4219,60 +4158,62 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 │  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="sobr-capacity-check">SOBR Capacity Check<a class="headerlink" href="#sobr-capacity-check" title="Permanent link">&para;</a></h3>
-<p>In <strong>Backup Infrastructure &gt; Scale-Out Repositories</strong>, verify that no extent shows <strong>Sealed</strong> or <strong>Unavailable</strong> status. Check the free space on each performance tier extent.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Repository free space — all repos including SOBR extents</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
-</code></pre></div>
-<p>Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).</p>
-<h3 id="tape-check-if-applicable">Tape Check (if applicable)<a class="headerlink" href="#tape-check-if-applicable" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm the daily tape job completed and media was ejected on schedule.</li>
-<li>Verify the <strong>Tape</strong> node shows no <strong>Error</strong> state for the library or drives.</li>
-<li>Confirm physical tapes are noted for offsite transport per the media rotation policy.</li>
-</ul>
-<h3 id="daily-checklist-summary">Daily Checklist Summary<a class="headerlink" href="#daily-checklist-summary" title="Permanent link">&para;</a></h3>
-<ul>
-<li>[ ] Home view — review Success / Warning / Failed job counts</li>
-<li>[ ] Investigate all Failed jobs — document error and remediation</li>
-<li>[ ] Review all Warning jobs — identify root cause, escalate if recurring</li>
-<li>[ ] SOBR extents — confirm no Sealed or Unavailable extent</li>
-<li>[ ] Repository free space — flag any extent below 10% free</li>
-<li>[ ] Active sessions — confirm no job is running more than 2x its normal duration</li>
-<li>[ ] Tape eject — confirm tapes are offsite (if applicable)</li>
-</ul>
-<hr />
-<h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
-<h3 id="surebackup-verification-job-review">SureBackup Verification Job Review<a class="headerlink" href="#surebackup-verification-job-review" title="Permanent link">&para;</a></h3>
-<p>Run or review the scheduled SureBackup job for critical VM groups. In <strong>Home &gt; Last 24 Hours</strong> (adjust filter to last 7 days), locate SureBackup sessions and check the <strong>Verification</strong> column.</p>
-<p>A SureBackup failure means the backup is not confirmed restorable — escalate immediately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List SureBackup sessions from the last 7 days</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;SureBackup&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Tape Check (if applicable)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Confirm the daily tape job completed and media was ejected on schedule.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- Verify the **Tape** node shows no **Error** state for the library or drives.
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Confirm physical tapes are noted for offsite transport per the media rotation policy.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>### Daily Checklist Summary
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>- [ ] Home view — review Success / Warning / Failed job counts
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>- [ ] Investigate all Failed jobs — document error and remediation
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>- [ ] Review all Warning jobs — identify root cause, escalate if recurring
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>- [ ] SOBR extents — confirm no Sealed or Unavailable extent
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>- [ ] Repository free space — flag any extent below 10% free
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>- [ ] Active sessions — confirm no job is running more than 2x its normal duration
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>- [ ] Tape eject — confirm tapes are offsite (if applicable)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>---
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>## Weekly Checks
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>### SureBackup Verification Job Review
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>Run or review the scheduled SureBackup job for critical VM groups. In **Home &gt; Last 24 Hours** (adjust filter to last 7 days), locate SureBackup sessions and check the **Verification** column.
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>A SureBackup failure means the backup is not confirmed restorable — escalate immediately.
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>```powershell
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a># List SureBackup sessions from the last 7 days
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Get-VBRBackupSession | Where-Object {
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    $_.JobType -eq &quot;SureBackup&quot; -and $_.CreationTime -gt (Get-Date).AddDays(-7)
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>} | Select-Object JobName, Result, CreationTime, EndTime
+</code></pre></div></p>
 <h3 id="repository-capacity-trend">Repository Capacity Trend<a class="headerlink" href="#repository-capacity-trend" title="Permanent link">&para;</a></h3>
 <p>Pull weekly capacity snapshots and compare against the previous week to identify jobs with abnormal data growth.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Capacity across all repositories</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">)*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Capacity across all repositories</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">)*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
 </code></pre></div>
 <p>Flag any repository trending to reach capacity within 30 days at current growth rate.</p>
 <h3 id="retention-compliance">Retention Compliance<a class="headerlink" href="#retention-compliance" title="Permanent link">&para;</a></h3>
 <p>Verify that restore point counts match the configured retention for each job.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Count restore points per backup job</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$_</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">Job</span>        <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="n">Points</span>     <span class="p">=</span> <span class="nv">$rp</span><span class="p">.</span><span class="n">Count</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="n">Oldest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">Newest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">}</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Count restore points per backup job</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$_</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">Job</span>        <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">Points</span>     <span class="p">=</span> <span class="nv">$rp</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">Oldest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">Newest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">}</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
 </code></pre></div>
 
 

@@ -3767,39 +3767,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rbac-inheritance-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RBAC Inheritance Model
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resource-lock-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resource Lock Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#approved-regions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4172,70 +4139,18 @@ Azure Standards reference covering Naming Convention, Tagging Policy, Security S
 │  Global unique   = Some Azure resource names (storage, ACR) must be globally unique                   │
 │  Platform sub    = Dedicated subscriptions for management, connectivity, and identity                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Control</th>
-<th>Standard</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Defender for Cloud</td>
-<td>Enabled on all subscriptions; recommendations remediated to &lt; 10% unhealthy</td>
-</tr>
-<tr>
-<td>Azure Policy</td>
-<td>CIS Azure Benchmark conformance pack assigned at root Management Group</td>
-</tr>
-<tr>
-<td>Diagnostic settings</td>
-<td>All resources → Log Analytics; Key Vault, NSG, Firewall also to Event Hub</td>
-</tr>
-<tr>
-<td>VNet flow logs</td>
-<td>Enabled on all VNets; 90-day retention</td>
-</tr>
-<tr>
-<td>Key Vault</td>
-<td>Soft delete + purge protection enabled; private endpoint required for production</td>
-</tr>
-<tr>
-<td>Encryption</td>
-<td>All disks CMK or PMK (minimum); storage SSE with Microsoft-managed keys minimum</td>
-</tr>
-<tr>
-<td>NSG rules</td>
-<td>Description field mandatory; inbound ANY:ANY from internet denied by default</td>
-</tr>
-</tbody>
-</table>
-<h2 id="rbac-inheritance-model">RBAC Inheritance Model<a class="headerlink" href="#rbac-inheritance-model" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    mgRoot["Tenant Root\nManagement Group"]
-    mgPlatform["mg-platform\nManagement Group"]
-    mgLandingZones["mg-landingzones\nManagement Group"]
-    mgProd["mg-production\nManagement Group"]
-    subProd["Production\nSubscription"]
-    rg["Resource Group\nrg-prod-euw-app"]
-    resource["Resource\nVM · Storage · Key Vault"]
-
-    mgRoot --&gt;|"RBAC inherited"| mgPlatform
-    mgRoot --&gt;|"RBAC inherited"| mgLandingZones
-    mgLandingZones --&gt;|"RBAC inherited"| mgProd
-    mgProd --&gt;|"RBAC inherited"| subProd
-    subProd --&gt;|"RBAC inherited"| rg
-    rg --&gt;|"RBAC inherited"| resource</code></pre>
-<h2 id="resource-lock-standards">Resource Lock Standards<a class="headerlink" href="#resource-lock-standards" title="Permanent link">&para;</a></h2>
-<p>Apply locks to prevent accidental deletion of production infrastructure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add delete lock to production resource group</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-rg-lock&quot;</span><span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--lock-type<span class="w"> </span>CanNotDelete
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># List locks</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>lock<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Resource Lock Standards
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Apply locks to prevent accidental deletion of production infrastructure:
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Add delete lock to production resource group
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az lock create --name &quot;prod-rg-lock&quot; --resource-group &lt;rg&gt; --lock-type CanNotDelete
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># List locks
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az lock list --resource-group &lt;rg&gt;
+</code></pre></div></p>
 <h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
 <p>Azure resources may only be deployed in:
 - <code>westeurope</code> — primary

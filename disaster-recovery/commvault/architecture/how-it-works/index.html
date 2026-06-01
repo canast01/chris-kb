@@ -3734,50 +3734,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#mediaagent-and-deduplication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaAgent and Deduplication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-library-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Library Types
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#port-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Port Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#multi-site-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Site Topology
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4038,147 +3994,73 @@ How It Works reference covering Overview, Component Topology, MediaAgent and Ded
 │  Synthetic Full = Full backup built from incremental chains on MA (no client re-read)                 │
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="mediaagent-and-deduplication">MediaAgent and Deduplication<a class="headerlink" href="#mediaagent-and-deduplication" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart LR
-    client(["Client Agent\n(VM / DB / File)"])
-    client --&gt;|"raw data stream\nTCP 8403"| ma["MediaAgent"]
-
-    subgraph maBlock [MediaAgent Processing]
-        direction TB
-        chunk["Chunk data into\nvariable blocks"]
-        hash["Hash each block\n(SHA-256)"]
-        ddb[("DDB\nDeduplication DB\nSSD-backed")]
-        chunk --&gt; hash
-        hash --&gt;|"block seen before?"| ddb
-    end
-
-    ma --&gt; maBlock
-
-    ddb --&gt;|"New block\nwrite to library"| diskLib[("Disk Library\nPrimary copy")]
-    ddb --&gt;|"Duplicate block\nskip write"| dedupSave["Dedup saving\n(reference only)"]
-
-    diskLib --&gt;|"Aux copy"| secondary[("Secondary copy\nOffsite / Cloud / Tape")]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    class ma,chunk,hash ctrl
-    class ddb,diskLib,secondary store
-    class client host</code></pre>
-<p>MediaAgent best practices:
-- Deploy one MediaAgent per site for local backups
-- Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
-- DDB free space: maintain ≥ 20% free at all times
-- Single DDB should not manage more than 60 TB of deduped data</p>
-<h2 id="storage-library-types">Storage Library Types<a class="headerlink" href="#storage-library-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Use Case</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Disk Library (Dedup)</td>
-<td>Primary backup target</td>
-<td>SSD recommended for DDB</td>
-</tr>
-<tr>
-<td>Cloud Library (S3)</td>
-<td>Long-term retention</td>
-<td>AWS S3, Azure Blob, GCP</td>
-</tr>
-<tr>
-<td>Tape Library</td>
-<td>Offsite/archival</td>
-<td>Via SAN-attached or NDMP</td>
-</tr>
-<tr>
-<td>Hyperscale X</td>
-<td>Integrated scale-out</td>
-<td>CommVault managed hardware; minimum 3-node cluster</td>
-</tr>
-</tbody>
-</table>
-<h2 id="port-requirements">Port Requirements<a class="headerlink" href="#port-requirements" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th>Destination</th>
-<th>Port</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Clients</td>
-<td>CommServe</td>
-<td>8400</td>
-<td>Job requests</td>
-</tr>
-<tr>
-<td>Clients</td>
-<td>MediaAgent</td>
-<td>8403</td>
-<td>Data movement</td>
-</tr>
-<tr>
-<td>CommServe</td>
-<td>MediaAgent</td>
-<td>8400</td>
-<td>Job orchestration</td>
-</tr>
-<tr>
-<td>Browser (admin)</td>
-<td>Command Center</td>
-<td>443</td>
-<td>Web UI</td>
-</tr>
-</tbody>
-</table>
-<h2 id="multi-site-topology">Multi-Site Topology<a class="headerlink" href="#multi-site-topology" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    subgraph primarySite [Primary Site]
-        cs["CommServe\n(command &amp; control)"]
-        ma1["MediaAgent\ndc1-ma-01"]
-        diskLib1[("Disk Library\nDDB — Primary")]
-        clients1(["VMs / DBs / Files\nSite A"])
-        clients1 --&gt; ma1
-        ma1 --&gt; diskLib1
-        ma1 --&gt; cs
-    end
-
-    subgraph drSite [DR / Secondary Site]
-        ma2["MediaAgent\ndc2-ma-01"]
-        diskLib2[("Disk Library\nDDB — DR copy")]
-        clients2(["VMs / DBs / Files\nSite B"])
-        clients2 --&gt; ma2
-        ma2 --&gt; diskLib2
-        ma2 --&gt; cs
-    end
-
-    subgraph cloudTier [Cloud / Tape Tier]
-        cloud[("Cloud Library\nS3 / Azure Blob\nlong-term retention")]
-        tape[("Tape Library\narchival / compliance")]
-    end
-
-    diskLib1 --&gt;|"aux copy\n(scheduled)"| diskLib2
-    diskLib2 --&gt;|"aux copy\n(scheduled)"| cloud
-    diskLib1 --&gt;|"aux copy"| tape
-    cs --&gt; webUI["Command Center\nWeb UI — port 443"]
-
-    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef host fill:#15803d,stroke:#166534,color:#fff
-    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
-    class cs,ma1,ma2 ctrl
-    class diskLib1,diskLib2,tape store
-    class clients1,clients2 host
-    class cloud,webUI cloud</code></pre>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>MediaAgent best practices:
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Deploy one MediaAgent per site for local backups
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Place DDB on SSD-backed storage — IOPS are critical for large dedup pools
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- DDB free space: maintain ≥ 20% free at all times
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Single DDB should not manage more than 60 TB of deduped data
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## Storage Library Types
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Type | Use Case | Notes |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>|---|---|---|
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| Disk Library (Dedup) | Primary backup target | SSD recommended for DDB |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Cloud Library (S3) | Long-term retention | AWS S3, Azure Blob, GCP |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| Tape Library | Offsite/archival | Via SAN-attached or NDMP |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>| Hyperscale X | Integrated scale-out | CommVault managed hardware; minimum 3-node cluster |
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>## Port Requirements
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>| Source | Destination | Port | Purpose |
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>|---|---|---|---|
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| Clients | CommServe | 8400 | Job requests |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| Clients | MediaAgent | 8403 | Data movement |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| CommServe | MediaAgent | 8400 | Job orchestration |
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| Browser (admin) | Command Center | 443 | Web UI |
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>## Multi-Site Topology
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>```mermaid
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>flowchart TD
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    subgraph primarySite [Primary Site]
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        cs[&quot;CommServe\n(command &amp; control)&quot;]
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        ma1[&quot;MediaAgent\ndc1-ma-01&quot;]
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        diskLib1[(&quot;Disk Library\nDDB — Primary&quot;)]
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        clients1([&quot;VMs / DBs / Files\nSite A&quot;])
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        clients1 --&gt; ma1
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        ma1 --&gt; diskLib1
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        ma1 --&gt; cs
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    end
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    subgraph drSite [DR / Secondary Site]
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        ma2[&quot;MediaAgent\ndc2-ma-01&quot;]
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        diskLib2[(&quot;Disk Library\nDDB — DR copy&quot;)]
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        clients2([&quot;VMs / DBs / Files\nSite B&quot;])
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        clients2 --&gt; ma2
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>        ma2 --&gt; diskLib2
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>        ma2 --&gt; cs
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    end
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    subgraph cloudTier [Cloud / Tape Tier]
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        cloud[(&quot;Cloud Library\nS3 / Azure Blob\nlong-term retention&quot;)]
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        tape[(&quot;Tape Library\narchival / compliance&quot;)]
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>    end
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>    diskLib1 --&gt;|&quot;aux copy\n(scheduled)&quot;| diskLib2
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>    diskLib2 --&gt;|&quot;aux copy\n(scheduled)&quot;| cloud
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>    diskLib1 --&gt;|&quot;aux copy&quot;| tape
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>    cs --&gt; webUI[&quot;Command Center\nWeb UI — port 443&quot;]
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>    classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>    classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>    classDef host fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    classDef cloud fill:#0f766e,stroke:#0d5f58,color:#fff
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>    class cs,ma1,ma2 ctrl
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>    class diskLib1,diskLib2,tape store
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>    class clients1,clients2 host
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>    class cloud,webUI cloud
+</code></pre></div></p>
 
 
 

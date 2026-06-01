@@ -4408,47 +4408,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#native-array-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Native Array Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#itsm-and-notification-integrations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ITSM and Notification Integrations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pure1-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pure1 REST API
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -4649,79 +4608,6 @@ Pure1 integrates natively with FlashArray and FlashBlade via Purity OS telemetry
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Pure1 API token = OAuth token for REST API; generated in Pure1 account settings                      │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="native-array-integration">Native Array Integration<a class="headerlink" href="#native-array-integration" title="Permanent link">&para;</a></h2>
-<p>No on-premises collector is required. Each array connects directly to Pure1:</p>
-<table>
-<thead>
-<tr>
-<th>Array</th>
-<th>Integration Mechanism</th>
-<th>Data Sent</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FlashArray (Purity//FA)</td>
-<td>Outbound HTTPS from array</td>
-<td>Performance metrics, capacity, alerts, health</td>
-</tr>
-<tr>
-<td>FlashBlade (Purity//FB)</td>
-<td>Outbound HTTPS from array</td>
-<td>Capacity, performance, filesystem health</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Arrays use the built-in Pure SupportAssist channel — same HTTPS path as support data</li>
-<li>No firewall inbound rules required; only outbound 443 to <code>*.purestorage.com</code></li>
-<li>Each array authenticates with a unique array identity token (auto-provisioned by Purity OS)</li>
-</ul>
-<h2 id="itsm-and-notification-integrations">ITSM and Notification Integrations<a class="headerlink" href="#itsm-and-notification-integrations" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Integration</th>
-<th>Method</th>
-<th>Configuration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Email</td>
-<td>SMTP via Pure1 cloud</td>
-<td>Pure1 → Account → Notification Rules</td>
-</tr>
-<tr>
-<td>PagerDuty</td>
-<td>REST outbound</td>
-<td>Pure1 → Account → Integrations → PagerDuty</td>
-</tr>
-<tr>
-<td>ServiceNow</td>
-<td>Webhook (REST)</td>
-<td>Pure1 → Account → Integrations → Webhook</td>
-</tr>
-<tr>
-<td>Slack</td>
-<td>Incoming webhook</td>
-<td>Pure1 → Account → Integrations → Slack</td>
-</tr>
-</tbody>
-</table>
-<h2 id="pure1-rest-api">Pure1 REST API<a class="headerlink" href="#pure1-rest-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get API token (OAuth 2.0 with JWT)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.pure1.purestorage.com/oauth2/1.0/token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&amp;assertion=&lt;signed_jwt&gt;&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List all arrays</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Get capacity metrics</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/metrics/history?names=array_total_capacity&amp;ids=&lt;array_id&gt;&quot;</span>
 </code></pre></div>
 
 

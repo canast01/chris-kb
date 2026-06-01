@@ -3062,37 +3062,37 @@
 <p>After editing <code>main.cf</code>, reload without dropping the queue:</p>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>postfix<span class="w"> </span>reload
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Configure SMTP relay so monitoring, backup, and infrastructure appliances send email     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Use authenticated SMTP relay; never configure an open relay; TLS required           │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           Test: telnet/openssl to relay port; send a test alert after config change           │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                 SMTP Config                  │  │                Common Issues                │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │          Relay host: smtp.internal           │  │         Connection refused = FW/port        │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │             Port: 587 (STARTTLS)             │  │           Auth fail = check creds           │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │             Auth: PLAIN or LOGIN             │  │           TLS error = add relay CA          │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │             From: alerts@domain              │  │          Relay denied = check allow         │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Test: send test mail             │  │           SPF fail = add relay IP           │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    STARTTLS     = Upgrade plain SMTP connection to TLS on port 587; required for auth                 │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Open relay   = SMTP server accepting mail for any domain; used for spam; never configure           │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    SPF          = Sender Policy Framework; DNS TXT record listing authorised sending IPs              │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Port 25      = SMTP; blocked by most cloud providers for outbound; use 587 or 465                  │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Port 587     = Submission port; requires authentication; preferred for relay config                │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Relay allow  = List of IPs permitted to relay through SMTP server without auth (use sparingly)     │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Configure SMTP relay so monitoring, backup, and infrastructure appliances send email     │   │
+│   │           Use authenticated SMTP relay; never configure an open relay; TLS required           │   │
+│   │           Test: telnet/openssl to relay port; send a test alert after config change           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 SMTP Config                  │  │                Common Issues                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Relay host: smtp.internal           │  │         Connection refused = FW/port        │   │
+│   │             Port: 587 (STARTTLS)             │  │           Auth fail = check creds           │   │
+│   │             Auth: PLAIN or LOGIN             │  │           TLS error = add relay CA          │   │
+│   │             From: alerts@domain              │  │          Relay denied = check allow         │   │
+│   │             Test: send test mail             │  │           SPF fail = add relay IP           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    STARTTLS     = Upgrade plain SMTP connection to TLS on port 587; required for auth                 │
+│    Open relay   = SMTP server accepting mail for any domain; used for spam; never configure           │
+│    SPF          = Sender Policy Framework; DNS TXT record listing authorised sending IPs              │
+│    Port 25      = SMTP; blocked by most cloud providers for outbound; use 587 or 465                  │
+│    Port 587     = Submission port; requires authentication; preferred for relay config                │
+│    Relay allow  = List of IPs permitted to relay through SMTP server without auth (use sparingly)     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="daily-operational-commands">Daily Operational Commands<a class="headerlink" href="#daily-operational-commands" title="Permanent link">&para;</a></h2>
 <table>

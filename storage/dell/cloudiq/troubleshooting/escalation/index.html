@@ -3970,39 +3970,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#support-portal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Support Portal
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#opening-a-case" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Opening a Case
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#information-to-collect" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Information to Collect
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#sla-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4244,69 +4211,6 @@ Escalation reference covering Support Portal, Opening a Case, Information to Col
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    Backend check  = Dell CloudIQ SRE team investigates ingest pipeline for missing data               │
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<blockquote>
-<p>Part of the <a href="../../">CloudIQ</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="support-portal">Support Portal<a class="headerlink" href="#support-portal" title="Permanent link">&para;</a></h2>
-<p>Dell CloudIQ support cases are handled through the standard Dell support portal at <a href="https://www.dell.com/support">https://www.dell.com/support</a>. CloudIQ is a SaaS service and does not have its own separate support queue — issues are logged against the affected storage system's case, with CloudIQ identified as the impacted component.</p>
-<p>If a CloudIQ issue affects multiple systems or is a platform-level SaaS problem (e.g., dashboard unavailable, API endpoints returning 5xx), open a case against any managed system and specify that the issue is with the CloudIQ SaaS platform itself.</p>
-<h2 id="opening-a-case">Opening a Case<a class="headerlink" href="#opening-a-case" title="Permanent link">&para;</a></h2>
-<p>When opening a support case for a CloudIQ-related issue:</p>
-<ul>
-<li><strong>Product</strong>: select the affected storage system (e.g., PowerScale, Unity XT) as the primary product.</li>
-<li><strong>Affected component</strong>: specify <strong>CloudIQ</strong> as the impacted component in the case description.</li>
-<li><strong>Summary</strong>: include what is not working — system not reporting, API failing, incorrect health score, alert not routing.</li>
-</ul>
-<p>Required information for the case:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>How to Obtain</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>System serial number</td>
-<td>Chassis label or array CLI (e.g., <code>isi version</code> for PowerScale)</td>
-</tr>
-<tr>
-<td>SCG version</td>
-<td>SCG web UI: Settings &gt; About</td>
-</tr>
-<tr>
-<td>Error message</td>
-<td>Exact error text from the CloudIQ portal or API response</td>
-</tr>
-<tr>
-<td>CloudIQ system list screenshot</td>
-<td>Screenshot of CloudIQ Systems page showing reporting status</td>
-</tr>
-<tr>
-<td>SCG connectivity test output</td>
-<td><code>curl -k https://esrs3.emc.com</code> result from the SCG host</td>
-</tr>
-</tbody>
-</table>
-<h2 id="information-to-collect">Information to Collect<a class="headerlink" href="#information-to-collect" title="Permanent link">&para;</a></h2>
-<p>Collect the following diagnostic data before or immediately after opening the case:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the Secure Connect Gateway host:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Check dsagw service status</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dsagw
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Review recent dsagw telemetry forwarding logs</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Test connectivity to Dell SRS endpoint</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://esrs3.emc.com
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Test CloudIQ API authentication</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/auth/v1/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;client_id&gt;&amp;client_secret=&lt;client_secret&gt;&quot;</span>
 </code></pre></div>
 <p>Additional items:</p>
 <ul>

@@ -3739,7 +3739,57 @@
 <div class="kb-summary">
 How It Works reference covering Overview, HA Topology, Cluster Networking, Storage Hierarchy, SVM (Storage VM) Architecture and 3 more sections.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── NetApp ONTAP — How It Works ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       ONTAP operational flow: request → controller → data service → host acknowledgement      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Data path: host I/O → ONTAP controller → storage media → persistent write           │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │ Management: ONTAP System Manager / ONTAP CLI provides unified control for all operational fun │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Protection: snapshots, replication, and redundancy ensure data durability           │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Host I/O → ONTAP controller → storage media → acknowledge → replicate                              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │       SVM        │ Tenant isolation │   All protocols   │  Kerberos/NTLM   │  Virtual server  │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    SnapMirror    │  DR replication  │    SM protocol    │   Certificate    │  Async or sync   │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    FlexClone     │  Instant clone   │      Internal     │    Admin role    │ Space-efficient  │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │      SM-BC       │ Zero-RPO active- │    SM protocol    │     Mediator     │     SAN only     │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NetApp ONTAP is a clustered storage operating system that abstracts physical hardware into logical constructs, enabling non-disruptive operations, multi-protocol data access, and built-in data protection. The hierarchy flows from cluster → nodes → aggregates → SVMs → volumes, with data served across NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3 protocols simultaneously from a single cluster.</p>
 <p>ONTAP runs on three hardware forms:</p>
@@ -3765,9 +3815,9 @@ How It Works reference covering Overview, HA Topology, Cluster Networking, Stora
     Node1-&gt;&gt;Node1: Reclaim own aggregates
     Node1--&gt;&gt;Clients: Resume serving own LIFs
     Note over Node1,Node2: Both nodes: Connected, Not in takeover</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-to-take-over&gt;<span class="w">   </span><span class="c1"># planned takeover</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w">                                    </span><span class="c1"># monitor takeover / giveback</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-name&gt;<span class="w">            </span><span class="c1"># return ownership</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>storage<span class="w"> </span>failover<span class="w"> </span>takeover<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-to-take-over&gt;<span class="w">   </span><span class="c1"># planned takeover</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w">                                    </span><span class="c1"># monitor takeover / giveback</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>storage<span class="w"> </span>failover<span class="w"> </span>giveback<span class="w"> </span>-ofnode<span class="w"> </span>&lt;node-name&gt;<span class="w">            </span><span class="c1"># return ownership</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3839,19 +3889,19 @@ How It Works reference covering Overview, HA Topology, Cluster Networking, Stora
 </tbody>
 </table>
 <p><strong>LIF management:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,curr-node,curr-port,status-oper
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># LIFs not on home port (migrated due to failover)</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>*<span class="w">              </span><span class="c1"># revert all LIFs to home after maintenance</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,home-port,curr-node,curr-port,status-oper
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span><span class="w">   </span><span class="c1"># LIFs not on home port (migrated due to failover)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>network<span class="w"> </span>interface<span class="w"> </span>revert<span class="w"> </span>*<span class="w">              </span><span class="c1"># revert all LIFs to home after maintenance</span>
 </code></pre></div>
 <h2 id="storage-hierarchy">Storage Hierarchy<a class="headerlink" href="#storage-hierarchy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cluster
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  └── Node(s)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        └── Aggregate(s)     ← physical RAID groups; owned by a node
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>              └── Volume(s)  ← logical containers; thin or thick provisioned
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                    ├── Snapshots      ← point-in-time, read-only copies within the volume
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>                    ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                    ├── Qtrees/Shares  ← NFS exports and SMB shares
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>                    └── Files          ← NAS files served via NFS or SMB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cluster
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  └── Node(s)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        └── Aggregate(s)     ← physical RAID groups; owned by a node
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>              └── Volume(s)  ← logical containers; thin or thick provisioned
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                    ├── Snapshots      ← point-in-time, read-only copies within the volume
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                    ├── LUNs           ← block devices for iSCSI/FC (inside a volume)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>                    ├── Qtrees/Shares  ← NFS exports and SMB shares
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>                    └── Files          ← NAS files served via NFS or SMB
 </code></pre></div>
 <p><strong>WAFL (Write Anywhere File Layout)</strong> is ONTAP's internal filesystem engine. Key characteristics:</p>
 <ul>
@@ -3883,9 +3933,9 @@ How It Works reference covering Overview, HA Topology, Cluster Networking, Stora
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,raidtype
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,raidtype
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
 </code></pre></div>
 <h2 id="svm-storage-vm-architecture">SVM (Storage VM) Architecture<a class="headerlink" href="#svm-storage-vm-architecture" title="Permanent link">&para;</a></h2>
 <p>SVMs are the data access layer — analogous to virtual storage appliances within the cluster. Each SVM has its own namespace, network interfaces (data LIFs), protocol configuration, security domain (export policies, CIFS ACLs, RBAC), and name services (DNS, LDAP, NIS). SVMs enable multi-tenancy on a shared cluster.</p>
@@ -3915,9 +3965,9 @@ How It Works reference covering Overview, HA Topology, Cluster Networking, Stora
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,junction-path<span class="w">   </span><span class="c1"># SVM namespace</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,type,state,allowed-protocols
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>volume,junction-path<span class="w">   </span><span class="c1"># SVM namespace</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h2 id="protocol-stack">Protocol Stack<a class="headerlink" href="#protocol-stack" title="Permanent link">&para;</a></h2>
 <table>
@@ -4033,10 +4083,10 @@ How It Works reference covering Overview, HA Topology, Cluster Networking, Stora
 </tbody>
 </table>
 <h2 id="aggregate-health">Aggregate Health<a class="headerlink" href="#aggregate-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used<span class="w">   </span><span class="c1"># capacity per aggregate</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">                              </span><span class="c1"># aggregates not online</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                                          </span><span class="c1"># failed or broken disks</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w">              </span><span class="c1"># RAID status</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used<span class="w">   </span><span class="c1"># capacity per aggregate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online<span class="w">                              </span><span class="c1"># aggregates not online</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w">                                          </span><span class="c1"># failed or broken disks</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w">              </span><span class="c1"># RAID status</span>
 </code></pre></div>
 
 

@@ -4164,17 +4164,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol-level-capacity-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol-Level Capacity Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#quota-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4382,48 +4371,6 @@ InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p>InsightIQ capacity report settings:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Granularity</td>
-<td>5 min, 1 hour, 1 day</td>
-</tr>
-<tr>
-<td>Look-back Period</td>
-<td>Up to 365 days (depends on InsightIQ retention)</td>
-</tr>
-<tr>
-<td>Node Breakdown</td>
-<td>Per-node or cluster aggregate</td>
-</tr>
-<tr>
-<td>Protocol Filter</td>
-<td>NFS, SMB, HDFS, S3</td>
-</tr>
-</tbody>
-</table>
-<h2 id="protocol-level-capacity-breakdown">Protocol-Level Capacity Breakdown<a class="headerlink" href="#protocol-level-capacity-breakdown" title="Permanent link">&para;</a></h2>
-<p>InsightIQ can show which protocol (NFS, SMB, HDFS, S3) is consuming the most capacity growth over time. This is useful for chargeback and planning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On PowerScale: check per-protocol throughput to correlate with capacity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check NFS exports and their sizes</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check SMB shares</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check directory sizes for top-level paths</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>isi<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>/ifs/data<span class="w"> </span>--numeric
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>du<span class="w"> </span>-sh<span class="w"> </span>/ifs/data/*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-</code></pre></div>
 <p>Protocol utilisation breakdown reference:</p>
 <table>
 <thead>
@@ -4458,16 +4405,16 @@ InsightIQ: Capacity Trending, Protocol Breakdown, and Quota Monitoring reference
 </table>
 <h2 id="quota-monitoring">Quota Monitoring<a class="headerlink" href="#quota-monitoring" title="Permanent link">&para;</a></h2>
 <p>PowerScale quotas can be monitored through InsightIQ or directly via the OneFS CLI.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all quotas and their usage on PowerScale</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--long
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Show quotas approaching threshold (&gt;80% used)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; ($5/$4) &gt; 0.8 {print $1, $3, $4, $5}&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Get quota report</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>--id<span class="w"> </span>&lt;reportId&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all quotas and their usage on PowerScale</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--long
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Show quotas approaching threshold (&gt;80% used)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>quota<span class="w"> </span>quotas<span class="w"> </span>list<span class="w"> </span>--format<span class="w"> </span>csv<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="s1">&#39;,&#39;</span><span class="w"> </span><span class="s1">&#39;NR&gt;1 &amp;&amp; ($5/$4) &gt; 0.8 {print $1, $3, $4, $5}&#39;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Get quota report</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>list
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>isi<span class="w"> </span>quota<span class="w"> </span>reports<span class="w"> </span>view<span class="w"> </span>--id<span class="w"> </span>&lt;reportId&gt;
 </code></pre></div>
 <p>Quota types in OneFS:</p>
 <table>

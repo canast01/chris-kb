@@ -3771,90 +3771,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#multi-factor-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multi-Factor Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cyberark-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CyberArk Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vbr-windows-authentication-modes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VBR Windows Authentication Modes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#service-account-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Service Account Requirements
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Service Account Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#minimum-permissions-for-vbr-service-account" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Minimum Permissions for VBR Service Account
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rest-api-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API Authentication
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="REST API Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#obtain-a-token" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Obtain a Token
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#token-expiry" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3862,11 +3778,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4145,104 +4056,6 @@ Authentication reference covering Multi-Factor Authentication, CyberArk Integrat
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="multi-factor-authentication">Multi-Factor Authentication<a class="headerlink" href="#multi-factor-authentication" title="Permanent link">&para;</a></h2>
-<p>For Veeam Backup Enterprise Manager (if deployed):
-- Enable MFA under Settings → Users → configure TOTP or SAML provider
-- Require MFA for all administrative accounts</p>
-<h2 id="cyberark-integration">CyberArk Integration<a class="headerlink" href="#cyberark-integration" title="Permanent link">&para;</a></h2>
-<p>VBR can retrieve infrastructure credentials from CyberArk at runtime:</p>
-<ol>
-<li>VBR console → Credentials → Add → CyberArk</li>
-<li>Configure CCP (Central Credential Provider) URL, application ID, and safe name</li>
-<li>Credentials retrieved at job runtime — never stored in VBR config DB</li>
-</ol>
-<hr />
-<h2 id="vbr-windows-authentication-modes">VBR Windows Authentication Modes<a class="headerlink" href="#vbr-windows-authentication-modes" title="Permanent link">&para;</a></h2>
-<p>VBR supports three authentication modes for console and remote access:</p>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>Description</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Local Windows</td>
-<td>Accounts local to the VBR server OS</td>
-<td>Standalone/lab deployments; avoid in production</td>
-</tr>
-<tr>
-<td>Active Directory</td>
-<td>Domain accounts authenticated via Kerberos/NTLM</td>
-<td>Standard enterprise deployments</td>
-</tr>
-<tr>
-<td>LDAP</td>
-<td>Direct LDAP bind to a directory service (non-AD)</td>
-<td>Cross-domain or non-Windows directory environments</td>
-</tr>
-</tbody>
-</table>
-<p>Configure the authentication mode in VBR console under <strong>Users and Roles</strong> → select the account type when granting access. AD group membership is supported — assign roles to AD security groups rather than individual accounts.</p>
-<hr />
-<h2 id="service-account-requirements">Service Account Requirements<a class="headerlink" href="#service-account-requirements" title="Permanent link">&para;</a></h2>
-<h3 id="minimum-permissions-for-vbr-service-account">Minimum Permissions for VBR Service Account<a class="headerlink" href="#minimum-permissions-for-vbr-service-account" title="Permanent link">&para;</a></h3>
-<p>The VBR service account (<code>svc-veeam</code> or equivalent) requires the following:</p>
-<table>
-<thead>
-<tr>
-<th>Scope</th>
-<th>Permission</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VBR server OS</td>
-<td>Local Administrator</td>
-<td>Required for VBR installation and service operation</td>
-</tr>
-<tr>
-<td>vCenter</td>
-<td>Veeam-defined privilege set</td>
-<td>Use the Veeam vCenter role (assigned during setup wizard)</td>
-</tr>
-<tr>
-<td>Proxy servers</td>
-<td>Local Administrator</td>
-<td>VBR deploys and manages proxy components</td>
-</tr>
-<tr>
-<td>Repository servers</td>
-<td>Local Administrator or share write</td>
-<td>Needed to write backup files and manage extents</td>
-</tr>
-<tr>
-<td>SQL Server (VBR config DB)</td>
-<td><code>db_owner</code> on VBR config DB</td>
-<td><code>sysadmin</code> only required during initial DB setup</td>
-</tr>
-<tr>
-<td>Guest OS (application-aware)</td>
-<td>Local Administrator on guest</td>
-<td>For VSS quiescing and log truncation</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>Do not use a Domain Admin account as the VBR service account. Scope permissions to the minimum above.</p>
-</blockquote>
-<hr />
-<h2 id="rest-api-authentication">REST API Authentication<a class="headerlink" href="#rest-api-authentication" title="Permanent link">&para;</a></h2>
-<p>VBR exposes a REST API on port 9419 (HTTPS). Authentication uses OAuth 2.0 bearer tokens.</p>
-<h3 id="obtain-a-token">Obtain a Token<a class="headerlink" href="#obtain-a-token" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Request a bearer token (username/password exchange)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://&lt;vbr-server&gt;:9419/api/oauth2/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=password&amp;username=&lt;user&gt;&amp;password=&lt;pass&gt;&amp;use_short_term_refresh=false&quot;</span>
 </code></pre></div>
 <h3 id="token-expiry">Token Expiry<a class="headerlink" href="#token-expiry" title="Permanent link">&para;</a></h3>
 <table>

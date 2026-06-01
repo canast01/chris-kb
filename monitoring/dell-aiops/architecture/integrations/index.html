@@ -4357,39 +4357,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#supported-platforms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Supported Platforms
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notification-channels" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notification Channels
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#apex-console-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        APEX Console API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#integration-with-servicenow-cmdb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4603,82 +4570,6 @@ Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell ar
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Poll interval = Frequency AIOps adapter queries infrastructure API; default 5 minutes                │
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
-<p>Dell AIOps draws telemetry from all arrays registered to CloudIQ via the SCG:</p>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>AIOps Capabilities</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>PowerMax</td>
-<td>Capacity forecasting, SRDF anomaly detection, workload fingerprinting</td>
-</tr>
-<tr>
-<td>PowerStore</td>
-<td>Anomaly detection on latency, capacity forecast</td>
-</tr>
-<tr>
-<td>PowerScale</td>
-<td>Node health anomalies, capacity projection, quota trending</td>
-</tr>
-<tr>
-<td>Unity XT</td>
-<td>Pool capacity forecast, SP health anomaly</td>
-</tr>
-<tr>
-<td>Data Domain</td>
-<td>Dedup ratio anomaly, capacity forecast</td>
-</tr>
-</tbody>
-</table>
-<h2 id="notification-channels">Notification Channels<a class="headerlink" href="#notification-channels" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Channel</th>
-<th>Trigger</th>
-<th>Configuration</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Email</td>
-<td>Critical recommendation or anomaly</td>
-<td>CloudIQ portal → Settings → Notifications</td>
-</tr>
-<tr>
-<td>ServiceNow</td>
-<td>Critical severity</td>
-<td>CloudIQ portal → Settings → ServiceNow connector</td>
-</tr>
-<tr>
-<td>Webhook</td>
-<td>Any severity</td>
-<td>CloudIQ portal → Settings → Webhook; POST to custom URL</td>
-</tr>
-<tr>
-<td>Slack / Teams</td>
-<td>Warning+</td>
-<td>Via CloudIQ webhook to Slack incoming webhook URL</td>
-</tr>
-</tbody>
-</table>
-<h2 id="apex-console-api">APEX Console API<a class="headerlink" href="#apex-console-api" title="Permanent link">&para;</a></h2>
-<p>The APEX Console (which surfaces AIOps recommendations) is accessible via the CloudIQ REST API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List active AIOps recommendations</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>https://cloudiq.dell.com/v1/recommendations?status<span class="o">=</span>active
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Acknowledge a recommendation</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;status&quot;: &quot;acknowledged&quot;, &quot;comment&quot;: &quot;Scheduled for next change window&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>https://cloudiq.dell.com/v1/recommendations/<span class="o">{</span>id<span class="o">}</span>
 </code></pre></div>
 <h2 id="integration-with-servicenow-cmdb">Integration with ServiceNow CMDB<a class="headerlink" href="#integration-with-servicenow-cmdb" title="Permanent link">&para;</a></h2>
 <ul>

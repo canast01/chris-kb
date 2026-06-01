@@ -3474,39 +3474,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#vmware-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMware Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pure1-monitoring" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pure1 Monitoring
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3721,92 +3688,99 @@
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashBlade Integration Map
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                       FlashBlade                         │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  NFS/SMB │  │    S3    │  │   Mgmt   │                │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  data    │  │  object  │  │  HTTPS   │                │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  └────┬─────┘  └────┬─────┘  └────┬─────┘                │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>└───────┼─────────────┼─────────────┼──────────────────────┘
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>        │             │             │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        ▼             ▼             ├──► Pure1 (phone-home)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  ESXi NFS DS    Veeam repo         ├──► Pure1 REST API
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  Linux AI/ML    Analytics          ├──► SNMP NMS
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  Windows SMB    Backup target      └──► SIEM (TLS syslog)
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                                    └──► Remote FlashBlade
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                                         (ActiveDR async repl)
+<p>FlashBlade Integration Map
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                       FlashBlade                         │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  NFS/SMB │  │    S3    │  │   Mgmt   │                │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  data    │  │  object  │  │  HTTPS   │                │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └────┬─────┘  └────┬─────┘  └────┬─────┘                │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└───────┼─────────────┼─────────────┼──────────────────────┘
 </code></pre></div>
-<blockquote>
-<p>Part of the <a href="../">FlashBlade Architecture</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="vmware-integration">VMware Integration<a class="headerlink" href="#vmware-integration" title="Permanent link">&para;</a></h2>
-<p>FlashBlade integrates with VMware primarily as an NFS datastore and backup target — it is not a block storage device and does not use VMFS or vVols in the same way as FlashArray.</p>
-<p><strong>NFS datastore for vSphere:</strong></p>
-<ul>
-<li>Mount FlashBlade filesystems as NFSv3 or NFSv4.1 datastores in vCenter</li>
-<li>NFSv4.1 is recommended for vSphere 7.x/8.x — enables Kerberos authentication and improved locking semantics</li>
-<li>Create a dedicated filesystem per datastore type (e.g., <code>prod-vsphere-vmstore</code>, <code>prod-vsphere-templates</code>)</li>
-<li>Set NFS export policies to restrict access to the ESXi management IP range only</li>
-</ul>
-<p><strong>vSphere integration steps:</strong></p>
-<ol>
-<li>Create a FlashBlade filesystem for the datastore: <code>purefb filesystem create --nfs --nfs-rules '&lt;subnet&gt;(rw,root_squash)' prod-vsphere-vmstore</code></li>
-<li>In vCenter, add a new NFS datastore pointing to the FlashBlade data VIP and the export path</li>
-<li>Mount the datastore on all ESXi hosts in the cluster using vCenter's storage configuration wizard</li>
-<li>Configure VAAI (vStorage APIs for Array Integration) — FlashBlade supports NAS VAAI for hardware-accelerated copy offload</li>
-</ol>
-<p><strong>Backup target for Veeam:</strong></p>
-<ul>
-<li>Use a dedicated FlashBlade filesystem as a Veeam NFS backup repository</li>
-<li>FlashBlade's Rapid Restore integration with Veeam provides backup-from-snapshot and instant recovery capabilities — see Backup Integration below</li>
-</ul>
-<h2 id="backup-integration">Backup Integration<a class="headerlink" href="#backup-integration" title="Permanent link">&para;</a></h2>
-<p><strong>Veeam Backup &amp; Replication:</strong></p>
-<ul>
-<li>Add FlashBlade as an NFS share repository in Veeam: <code>Backup Infrastructure &gt; Backup Repositories &gt; Add Repository &gt; Network Attached Storage &gt; NFS Share</code></li>
-<li>For Veeam Rapid Restore (FlashBlade native integration): install the Pure Storage Veeam Plugin; configure FlashBlade as a snapshot-enabled repository</li>
-<li>Veeam uses FlashBlade snapshot APIs to create instant, consistent snapshots before backup starts — backup reads from the snapshot, not live data, so production filesystem performance is not impacted</li>
-<li>Use a dedicated filesystem per Veeam backup tier (daily, weekly, monthly) to simplify retention management</li>
-</ul>
-<p><strong>Commvault:</strong></p>
-<ul>
-<li>Configure FlashBlade as an NFS media agent library in Commvault</li>
-<li>Commvault IntelliSnap integrates with FlashBlade via the REST API to orchestrate snapshot-based backups</li>
-<li>FlashBlade snapshots are used as the backup source, avoiding impact to live production filesystems</li>
-</ul>
-<p><strong>Veritas NetBackup:</strong></p>
-<ul>
-<li>Add FlashBlade NFS exports as disk storage units in NetBackup</li>
-<li>NetBackup Snapshot Client can orchestrate FlashBlade filesystem snapshots via the FlashBlade REST API</li>
-</ul>
-<p><strong>General backup best practices:</strong></p>
-<ul>
-<li>Dedicate separate filesystems per backup application and tier</li>
-<li>Set filesystem capacity limits to match backup retention design</li>
-<li>Enable per-filesystem snapshot schedules as an additional recovery layer</li>
-<li>Use NFS export IP restrictions to limit backup server access to the backup filesystem only</li>
-</ul>
-<h2 id="pure1-monitoring">Pure1 Monitoring<a class="headerlink" href="#pure1-monitoring" title="Permanent link">&para;</a></h2>
-<p>FlashBlade phones home to Pure1 automatically over HTTPS once registered.</p>
-<p><strong>Phone-home requirements:</strong></p>
-<ul>
-<li>Outbound HTTPS (port 443) from the FlashBlade management interface to <code>*.purestorage.com</code></li>
-<li>If a proxy is required: configure via the FlashBlade GUI under System &gt; Support</li>
-</ul>
-<p><strong>Pure1 capabilities for FlashBlade:</strong></p>
-<ul>
-<li>Fleet health dashboard including blade status, hardware faults, and capacity forecasting</li>
-<li>Throughput and latency analytics per filesystem and per protocol (NFS, SMB, S3)</li>
-<li>Replication lag monitoring for ActiveDR links</li>
-<li>Upgrade readiness reports and prescriptive upgrade paths</li>
-<li>AI-driven anomaly detection for capacity and performance trends</li>
-</ul>
-<p><strong>Verify phone-home status:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>array<span class="w"> </span>list<span class="w"> </span>--phonehome
-</code></pre></div>
+        │             │             │
+        ▼             ▼             ├──► Pure1 (phone-home)
+  ESXi NFS DS    Veeam repo         ├──► Pure1 REST API
+  Linux AI/ML    Analytics          ├──► SNMP NMS
+  Windows SMB    Backup target      └──► SIEM (TLS syslog)
+                                    │
+                                    └──► Remote FlashBlade
+                                         (ActiveDR async repl)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&gt; Part of the [FlashBlade Architecture](../index.md) reference.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## VMware Integration
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>FlashBlade integrates with VMware primarily as an NFS datastore and backup target — it is not a block storage device and does not use VMFS or vVols in the same way as FlashArray.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**NFS datastore for vSphere:**
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Mount FlashBlade filesystems as NFSv3 or NFSv4.1 datastores in vCenter
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- NFSv4.1 is recommended for vSphere 7.x/8.x — enables Kerberos authentication and improved locking semantics
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Create a dedicated filesystem per datastore type (e.g., `prod-vsphere-vmstore`, `prod-vsphere-templates`)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Set NFS export policies to restrict access to the ESXi management IP range only
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>**vSphere integration steps:**
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>1. Create a FlashBlade filesystem for the datastore: `purefb filesystem create --nfs --nfs-rules &#39;&lt;subnet&gt;(rw,root_squash)&#39; prod-vsphere-vmstore`
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>2. In vCenter, add a new NFS datastore pointing to the FlashBlade data VIP and the export path
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>3. Mount the datastore on all ESXi hosts in the cluster using vCenter&#39;s storage configuration wizard
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>4. Configure VAAI (vStorage APIs for Array Integration) — FlashBlade supports NAS VAAI for hardware-accelerated copy offload
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>**Backup target for Veeam:**
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>- Use a dedicated FlashBlade filesystem as a Veeam NFS backup repository
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>- FlashBlade&#39;s Rapid Restore integration with Veeam provides backup-from-snapshot and instant recovery capabilities — see Backup Integration below
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>## Backup Integration
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>**Veeam Backup &amp; Replication:**
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>- Add FlashBlade as an NFS share repository in Veeam: `Backup Infrastructure &gt; Backup Repositories &gt; Add Repository &gt; Network Attached Storage &gt; NFS Share`
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>- For Veeam Rapid Restore (FlashBlade native integration): install the Pure Storage Veeam Plugin; configure FlashBlade as a snapshot-enabled repository
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>- Veeam uses FlashBlade snapshot APIs to create instant, consistent snapshots before backup starts — backup reads from the snapshot, not live data, so production filesystem performance is not impacted
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>- Use a dedicated filesystem per Veeam backup tier (daily, weekly, monthly) to simplify retention management
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>**Commvault:**
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>- Configure FlashBlade as an NFS media agent library in Commvault
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>- Commvault IntelliSnap integrates with FlashBlade via the REST API to orchestrate snapshot-based backups
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>- FlashBlade snapshots are used as the backup source, avoiding impact to live production filesystems
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>**Veritas NetBackup:**
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>- Add FlashBlade NFS exports as disk storage units in NetBackup
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>- NetBackup Snapshot Client can orchestrate FlashBlade filesystem snapshots via the FlashBlade REST API
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>**General backup best practices:**
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>- Dedicate separate filesystems per backup application and tier
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>- Set filesystem capacity limits to match backup retention design
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>- Enable per-filesystem snapshot schedules as an additional recovery layer
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>- Use NFS export IP restrictions to limit backup server access to the backup filesystem only
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>## Pure1 Monitoring
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>FlashBlade phones home to Pure1 automatically over HTTPS once registered.
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>**Phone-home requirements:**
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>- Outbound HTTPS (port 443) from the FlashBlade management interface to `*.purestorage.com`
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>- If a proxy is required: configure via the FlashBlade GUI under System &gt; Support
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>**Pure1 capabilities for FlashBlade:**
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>- Fleet health dashboard including blade status, hardware faults, and capacity forecasting
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>- Throughput and latency analytics per filesystem and per protocol (NFS, SMB, S3)
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>- Replication lag monitoring for ActiveDR links
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>- Upgrade readiness reports and prescriptive upgrade paths
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>- AI-driven anomaly detection for capacity and performance trends
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>**Verify phone-home status:**
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>```bash
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>purefb array list --phonehome
+</code></pre></div></p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p><strong>Active Directory (AD):</strong></p>
 <ul>

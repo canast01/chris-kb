@@ -4723,162 +4723,152 @@
 Health Checks reference covering Protection Group Health, RPO Compliance Check, SRA Status (Array-Based Replication), Placeholder VMs at Recovery Site, Recovery Plan Pre-Check and 2 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>  Health Check Chain
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Site Pairing    │    │  Protection      │    │  Recovery Plan   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  (Connected?)    │───►│  Groups (OK?)    │───►│  Pre-check       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                  │    │  ┌────────────┐  │    │  (no errors)     │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└──────────────────┘    │  │ RPO within │  │    └──────────────────┘
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                        │  │ target?    │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                        │  │ Placeholder│  │    ┌──────────────────┐
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                        │  │ VMs exist? │  │    │  SRA / Array     │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                        │  └────────────┘  │    │  Pair healthy?   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                        └──────────────────┘    │  Last discovery  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                                                │  recent?         │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                                                └──────────────────┘
-</code></pre></div>
-┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│  SRM health checks verify site pair connectivity, replication status, plan test                       │
-│  compliance, and protection group coverage across all protected VMs.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Site Pair Health               │  │              Replication Health             │   │
-│   │         Site pair: Connected status          │  │             All VMs: replicating            │   │
-│   │          Both SRM servers: running           │  │             No replication error            │   │
-│   │        vCenter: reachable both sites         │  │            RPO met: within target           │   │
-│   │          Datastore mappings: valid           │  │            Lag: within acceptable           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Site pair connectivity and replication status are the primary daily health checks.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Plan Compliance                │  │                Coverage Audit               │   │
-│   │           Last test: &lt;90 days ago            │  │          All critical VMs protected         │   │
-│   │          RTO achieved in last test           │  │          Protection groups: no VMs          │   │
-│   │            Plan valid: no errors             │  │          Network mappings: complete         │   │
-│   │         Cleanup: completed post-test         │  │            IP rules: all defined            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  WAN link quality affects replication health; monitor replication lag on slow links;                  │
-│  storage arrays report replication status to SRA.                                                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Site pair     = bidirectional link between two SRM Servers                                           │
-│  RPO met       = replication lag &lt; configured RPO for each VM                                         │
-│  Last test     = date of most recent successful recovery plan test                                    │
-│  90-day SLA    = common DR test compliance requirement                                                │
-│  RTO achieved  = actual recovery time met target RTO in test                                          │
-│  Plan valid    = no VM, mapping, or datastore errors in plan                                          │
-│  Cleanup       = SRM removes test VMs after successful test                                           │
-│  Protection group= all VMs that should be protected                                                   │
-│  Network mapping= required for VMs to connect post-failover                                           │
-│  IP rules      = IP customisation for re-IP on failover                                               │
-│  Replication lag= seconds since last sync; must be &lt; RPO target                                       │
-│  Datastore map = recovery datastore for each protected datastore                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>If site pairing shows error:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check SRM service health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-protected</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">Get-Service</span> <span class="n">-ComputerName</span> <span class="n">srm-recovery</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-Name</span> <span class="s2">&quot;VMware vCenter Site Recovery Manager&quot;</span>
+<p>Health Check Chain
+                        │  │ target?    │  │
+                        │  │ Placeholder│  │    ┌──────────────────┐
+                        │  │ VMs exist? │  │    │  SRA / Array     │
+                        │  └────────────┘  │    │  Pair healthy?   │
+                        └──────────────────┘    │  Last discovery  │
+                                                │  recent?         │
+                                                └──────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── VMware SRM — Health Checks ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  SRM health checks verify site pair connectivity, replication status, plan test                       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  compliance, and protection group coverage across all protected VMs.                                  │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │               Site Pair Health               │  │              Replication Health             │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Site pair: Connected status          │  │             All VMs: replicating            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          Both SRM servers: running           │  │             No replication error            │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        vCenter: reachable both sites         │  │            RPO met: within target           │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │          Datastore mappings: valid           │  │            Lag: within acceptable           │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Site pair connectivity and replication status are the primary daily health checks.                   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │               Plan Compliance                │  │                Coverage Audit               │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           Last test: &lt;90 days ago            │  │          All critical VMs protected         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          RTO achieved in last test           │  │          Protection groups: no VMs          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │            Plan valid: no errors             │  │          Network mappings: complete         │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │         Cleanup: completed post-test         │  │            IP rules: all defined            │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  WAN link quality affects replication health; monitor replication lag on slow links;                  │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  storage arrays report replication status to SRA.                                                     │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Site pair     = bidirectional link between two SRM Servers                                           │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  RPO met       = replication lag &lt; configured RPO for each VM                                         │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Last test     = date of most recent successful recovery plan test                                    │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  90-day SLA    = common DR test compliance requirement                                                │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  RTO achieved  = actual recovery time met target RTO in test                                          │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Plan valid    = no VM, mapping, or datastore errors in plan                                          │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Cleanup       = SRM removes test VMs after successful test                                           │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Protection group= all VMs that should be protected                                                   │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Network mapping= required for VMs to connect post-failover                                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  IP rules      = IP customisation for re-IP on failover                                               │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Replication lag= seconds since last sync; must be &lt; RPO target                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Datastore map = recovery datastore for each protected datastore                                      │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
 <h2 id="protection-group-health">Protection Group Health<a class="headerlink" href="#protection-group-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Site Recovery → Protection → Protection Groups
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  All groups should show Status: OK
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Any warning or error: click group → View issues
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Site Recovery → Protection → Protection Groups
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  All groups should show Status: OK
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Any warning or error: click group → View issues
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI: check all protection group states</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$info</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">QueryProtectionGroupState</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$info</span><span class="p">.</span><span class="n">State</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;PG </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$info</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="p">}</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI: check all protection group states</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nv">$info</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">QueryProtectionGroupState</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$info</span><span class="p">.</span><span class="n">State</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="nb">Write-Warning</span> <span class="s2">&quot;PG </span><span class="p">$(</span><span class="nv">$pg</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: </span><span class="p">$(</span><span class="nv">$info</span><span class="p">.</span><span class="n">State</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">}</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="rpo-compliance-check">RPO Compliance Check<a class="headerlink" href="#rpo-compliance-check" title="Permanent link">&para;</a></h2>
 <p>All protected VMs must be within their configured RPO. VMs outside RPO appear in amber/red:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Site Recovery → Replication → vSphere Replication
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Filter by: RPO violation
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  Any VMs shown: investigate immediately — replication is lagging
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Site Recovery → Protection → Protection Groups → [group] → VMs
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  Check &quot;Last Sync&quot; column against RPO setting
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site Recovery → Replication → vSphere Replication
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Filter by: RPO violation
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Any VMs shown: investigate immediately — replication is lagging
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Site Recovery → Protection → Protection Groups → [group] → VMs
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Check &quot;Last Sync&quot; column against RPO setting
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check VM replication lag vs configured RPO</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="nv">$state</span> <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">ReplicationState</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$state</span> <span class="o">-and</span> <span class="nv">$state</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: replication state = $state&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="p">}</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">}</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Check VM replication lag vs configured RPO</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$pgs</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectionGroups</span><span class="p">()</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$pg</span> <span class="k">in</span> <span class="nv">$pgs</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nv">$vms</span> <span class="p">=</span> <span class="nv">$srm</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Protection</span><span class="p">.</span><span class="n">ListProtectedVms</span><span class="p">(</span><span class="nv">$pg</span><span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>        <span class="nv">$state</span> <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">ReplicationState</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="k">if</span> <span class="p">(</span><span class="nv">$state</span> <span class="o">-and</span> <span class="nv">$state</span> <span class="o">-ne</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="nb">Write-Warning</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: replication state = $state&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="sra-status-array-based-replication">SRA Status (Array-Based Replication)<a class="headerlink" href="#sra-status-array-based-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Site<span class="w"> </span>Recovery<span class="w"> </span>→<span class="w"> </span>Storage<span class="w"> </span>→<span class="w"> </span>Array<span class="w"> </span>Pairs
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>All<span class="w"> </span>array<span class="w"> </span>pairs<span class="w"> </span>should<span class="w"> </span>show:<span class="w"> </span>Enabled,<span class="w"> </span>Healthy
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>Last<span class="w"> </span>discovery:<span class="w"> </span>recent<span class="w"> </span>timestamp
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># If SRA shows error:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Site Recovery → Storage → Array Pairs → [pair] → Discover Devices</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># This re-runs the SRA discovery against the storage array</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Site<span class="w"> </span>Recovery<span class="w"> </span>→<span class="w"> </span>Storage<span class="w"> </span>→<span class="w"> </span>Array<span class="w"> </span>Pairs
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>All<span class="w"> </span>array<span class="w"> </span>pairs<span class="w"> </span>should<span class="w"> </span>show:<span class="w"> </span>Enabled,<span class="w"> </span>Healthy
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>Last<span class="w"> </span>discovery:<span class="w"> </span>recent<span class="w"> </span>timestamp
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># If SRA shows error:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Site Recovery → Storage → Array Pairs → [pair] → Discover Devices</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># This re-runs the SRA discovery against the storage array</span>
 </code></pre></div>
 <hr />
 <h2 id="placeholder-vms-at-recovery-site">Placeholder VMs at Recovery Site<a class="headerlink" href="#placeholder-vms-at-recovery-site" title="Permanent link">&para;</a></h2>
 <p>Placeholder VMs must exist at the recovery site for each protected VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Recovery<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>VMs<span class="w"> </span>and<span class="w"> </span>Templates
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>Look<span class="w"> </span><span class="k">for</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>names<span class="w"> </span>matching<span class="w"> </span>protected<span class="w"> </span>VMs<span class="w"> </span>—<span class="w"> </span>these<span class="w"> </span>are<span class="w"> </span>placeholder<span class="w"> </span>VMs
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>They<span class="w"> </span>appear<span class="w"> </span>as<span class="w"> </span><span class="s2">&quot;shadow&quot;</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>minimal<span class="w"> </span>resources
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Placeholder VMs missing = protection group needs reconfiguration</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Site Recovery → Protection → [PG] → Configure → Reconfigure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter<span class="w"> </span><span class="o">(</span>Recovery<span class="w"> </span>Site<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>VMs<span class="w"> </span>and<span class="w"> </span>Templates
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>Look<span class="w"> </span><span class="k">for</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>names<span class="w"> </span>matching<span class="w"> </span>protected<span class="w"> </span>VMs<span class="w"> </span>—<span class="w"> </span>these<span class="w"> </span>are<span class="w"> </span>placeholder<span class="w"> </span>VMs
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>They<span class="w"> </span>appear<span class="w"> </span>as<span class="w"> </span><span class="s2">&quot;shadow&quot;</span><span class="w"> </span>VMs<span class="w"> </span>with<span class="w"> </span>minimal<span class="w"> </span>resources
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Placeholder VMs missing = protection group needs reconfiguration</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Site Recovery → Protection → [PG] → Configure → Reconfigure</span>
 </code></pre></div>
 <hr />
 <h2 id="recovery-plan-pre-check">Recovery Plan Pre-Check<a class="headerlink" href="#recovery-plan-pre-check" title="Permanent link">&para;</a></h2>
 <p>Run the built-in pre-check before any recovery:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Site Recovery → Recovery Plans → [plan] → Test or Recover
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  Step 1: Run validation checks (pre-check)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Verify: no errors before proceeding
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  Common warnings: network mapping not set, no IP customization defined
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Site Recovery → Recovery Plans → [plan] → Test or Recover
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Step 1: Run validation checks (pre-check)
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Verify: no errors before proceeding
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Common warnings: network mapping not set, no IP customization defined
 </code></pre></div>
 <hr />
 <h2 id="certificate-expiry">Certificate Expiry<a class="headerlink" href="#certificate-expiry" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check SRM Server certificate</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check vSphere Replication appliance cert</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check SRM Server certificate</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>srm-recovery.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check vSphere Replication appliance cert</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vra-protected.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <hr />
 <h2 id="monthly-test-recovery-verification">Monthly Test Recovery Verification<a class="headerlink" href="#monthly-test-recovery-verification" title="Permanent link">&para;</a></h2>
 <p>Run a test failover monthly on at least one non-critical Recovery Plan:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Test</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Mode</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Network</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isolated (do not connect test VMs to production network)</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nt">After test</span><span class="p">:</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">Verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all VMs powered on in isolated network</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IP addresses correct per IP customization rules</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application-level connectivity within isolated network (ping, service check)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="nt">Cleanup</span><span class="p">:</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Cleanup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Test</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Mode</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Test</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Network</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isolated (do not connect test VMs to production network)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nt">After test</span><span class="p">:</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">Verify</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all VMs powered on in isolated network</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IP addresses correct per IP customization rules</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="nt">Check</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application-level connectivity within isolated network (ping, service check)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="nt">Cleanup</span><span class="p">:</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [test-plan] → Cleanup</span>
 </code></pre></div>
 <p>Document test results and any issues found. Track trend of test durations — increasing duration indicates scaling issues.</p>
 

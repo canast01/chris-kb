@@ -3612,29 +3612,29 @@
 NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Reference, Inheritance, Effective Permissions and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NTFS ACL STRUCTURE
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  C:\Shares\Finance  (folder object)                          │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────────────────────────────────────────────────┐    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  Security Descriptor                                 │    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  ┌────────────────┐  Owner: DOMAIN\admin             │    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  │ DACL           │                                  │    │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  │ (access control│  ACEs (Access Control Entries):  │    │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  │                │  │         Modify (OI)(CI)       │    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  │                │  │         Full Control (OI)(CI) │    │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  │                │  └─ Deny:  DOMAIN\Interns        │    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  │                │            Write (OI)(CI)        │    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  └────────────────┘                                  │    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  ┌────────────────┐                                  │    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │  │ SACL           │  Audit: Everyone FullControl     │    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │  │ (audit list)   │  → Event ID 4663 in Security log │    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  │  └────────────────┘                                  │    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  └──────────────────────────────────────────────────────┘    │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  (I) = inherited from parent   explicit = set directly here  │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└──────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    NTFS ACL STRUCTURE
 </code></pre></div>
+<p><code>┌──────────────────────────────────────────────────────────────┐
+│  C:\Shares\Finance  (folder object)                          │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │  Security Descriptor                                 │    │
+│  │  ┌────────────────┐  Owner: DOMAIN\admin             │    │
+│  │  │ DACL           │                                  │    │
+│  │  │ (access control│  ACEs (Access Control Entries):  │    │
+│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │    │
+│  │  │                │  │         Modify (OI)(CI)       │    │
+│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │    │
+│  │  │                │  │         Full Control (OI)(CI) │    │
+│  │  │                │  └─ Deny:  DOMAIN\Interns        │    │
+│  │  │                │            Write (OI)(CI)        │    │
+│  │  └────────────────┘                                  │    │
+│  │  ┌────────────────┐                                  │    │
+│  │  │ SACL           │  Audit: Everyone FullControl     │    │
+│  │  │ (audit list)   │  → Event ID 4663 in Security log │    │
+│  │  └────────────────┘                                  │    │
+│  └──────────────────────────────────────────────────────┘    │
+│  (I) = inherited from parent   explicit = set directly here  │
+└──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NTFS permissions control access to files and folders at the filesystem level on Windows volumes. They are distinct from share permissions and apply whether access comes over the network or locally. Effective access is determined by combining both layers: the most restrictive result of NTFS and share permissions wins.</p>
 <table>

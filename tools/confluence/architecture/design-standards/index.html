@@ -3162,39 +3162,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#updating-and-deleting-templates" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Updating and Deleting Templates
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-storage-format-macros" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Storage Format Macros
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#blueprints" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Blueprints
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3428,95 +3395,41 @@ Standards reference covering Page Templates, Page Templates vs Blueprints, Updat
 │  Cluster node = each Confluence instance in DC must share the same DB URL and home path               │
 │  WAL          = Write-Ahead Log; PostgreSQL durability mechanism, source for replication              │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Variable best practices:
-- Add placeholder hint text for each field
-- Group related variables in a metadata table at the top
-- Keep variable names short and self-explanatory
-- Do not use required-field macros unless the team is trained on them</p>
-<h2 id="updating-and-deleting-templates">Updating and Deleting Templates<a class="headerlink" href="#updating-and-deleting-templates" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Update an existing template</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/template&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="s1">    &quot;templateId&quot;: &quot;TEMPLATE_ID&quot;,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;name&quot;: &quot;Runbook Template v2&quot;,</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">    &quot;templateType&quot;: &quot;page&quot;,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    &quot;space&quot;: {&quot;key&quot;: &quot;OPS&quot;},</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">    &quot;body&quot;: {</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="s1">      &quot;storage&quot;: {</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="s1">        &quot;value&quot;: &quot;&lt;h2&gt;Updated body&lt;/h2&gt;&quot;,</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="s1">        &quot;representation&quot;: &quot;storage&quot;</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="s1">      }</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="s1">    }</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="s1">  }&#39;</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Note: updating a template does not retroactively change pages already created from it.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Common Storage Format Macros
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Macro Name | Storage Tag | Purpose |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|-----------|-------------|---------|
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Placeholder | `&lt;ac:placeholder&gt;` | Prompts author to fill in |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Panel | `&lt;ac:structured-macro ac:name=&quot;panel&quot;&gt;` | Highlighted info box |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Status | `&lt;ac:structured-macro ac:name=&quot;status&quot;&gt;` | Coloured status badge |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Table of Contents | `&lt;ac:structured-macro ac:name=&quot;toc&quot;&gt;` | Auto-generated nav |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Code Block | `&lt;ac:structured-macro ac:name=&quot;code&quot;&gt;` | Syntax-highlighted code |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Info | `&lt;ac:structured-macro ac:name=&quot;info&quot;&gt;` | Blue info panel |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## Blueprints
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Blueprints add a creation wizard with fill-in fields before the page body is created. They require an Atlassian Connect app.
 <a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Delete a template</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl<span class="w"> </span>-u<span class="w"> </span>user:token<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">  </span><span class="s2">&quot;https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID&quot;</span>
-</code></pre></div>
-<p>Note: updating a template does not retroactively change pages already created from it.</p>
-<h2 id="common-storage-format-macros">Common Storage Format Macros<a class="headerlink" href="#common-storage-format-macros" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Macro Name</th>
-<th>Storage Tag</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Placeholder</td>
-<td><code>&lt;ac:placeholder&gt;</code></td>
-<td>Prompts author to fill in</td>
-</tr>
-<tr>
-<td>Panel</td>
-<td><code>&lt;ac:structured-macro ac:name="panel"&gt;</code></td>
-<td>Highlighted info box</td>
-</tr>
-<tr>
-<td>Status</td>
-<td><code>&lt;ac:structured-macro ac:name="status"&gt;</code></td>
-<td>Coloured status badge</td>
-</tr>
-<tr>
-<td>Table of Contents</td>
-<td><code>&lt;ac:structured-macro ac:name="toc"&gt;</code></td>
-<td>Auto-generated nav</td>
-</tr>
-<tr>
-<td>Code Block</td>
-<td><code>&lt;ac:structured-macro ac:name="code"&gt;</code></td>
-<td>Syntax-highlighted code</td>
-</tr>
-<tr>
-<td>Info</td>
-<td><code>&lt;ac:structured-macro ac:name="info"&gt;</code></td>
-<td>Blue info panel</td>
-</tr>
-</tbody>
-</table>
-<h2 id="blueprints">Blueprints<a class="headerlink" href="#blueprints" title="Permanent link">&para;</a></h2>
-<p>Blueprints add a creation wizard with fill-in fields before the page body is created. They require an Atlassian Connect app.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// atlassian-connect.json blueprint module entry</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;blueprints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;incident-blueprint&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Incident Report&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&quot;createResult&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;edit&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/templates/incident.xml&quot;</span><span class="p">},</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">&quot;wizard&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">&quot;steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Incident Details&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="nt">&quot;instructions&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Fill in the key incident fields below&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">      </span><span class="p">}]</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p">}]</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">}</span>
-</code></pre></div>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```json
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>// atlassian-connect.json blueprint module entry
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>{
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;blueprints&quot;: [{
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    &quot;key&quot;: &quot;incident-blueprint&quot;,
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    &quot;name&quot;: &quot;Incident Report&quot;,
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    &quot;createResult&quot;: &quot;edit&quot;,
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    &quot;template&quot;: {&quot;url&quot;: &quot;/templates/incident.xml&quot;},
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    &quot;wizard&quot;: {
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>      &quot;steps&quot;: [{
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        &quot;title&quot;: &quot;Incident Details&quot;,
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>        &quot;instructions&quot;: &quot;Fill in the key incident fields below&quot;
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>      }]
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    }
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  }]
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>}
+</code></pre></div></p>
 
 
 

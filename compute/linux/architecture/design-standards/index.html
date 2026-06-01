@@ -3022,17 +3022,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#ntp-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3372,41 +3361,34 @@ Sizing guidelines, design standards, and best practices.
 │  UTC         = Coordinated Universal Time; used on servers to avoid DST ambiguity                     │
 │  XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux                    │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH key-based authentication only</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># /etc/ssh/sshd_config enforced via Ansible</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ChallengeResponseAuthentication<span class="w"> </span>no
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>PubkeyAuthentication<span class="w"> </span>yes
-</code></pre></div>
-<p>Sudo access granted via AD group membership:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/infra-admins</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>%infra_admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># No NOPASSWD — all privileged operations require password confirmation</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Sudo access granted via AD group membership:
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```bash
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># /etc/sudoers.d/infra-admins
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>%infra_admins ALL=(ALL) ALL
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># No NOPASSWD — all privileged operations require password confirmation
 </code></pre></div></p>
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/chrony.conf (RHEL)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>server<span class="w"> </span>ntp1.example.local<span class="w"> </span>iburst
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>server<span class="w"> </span>ntp2.example.local<span class="w"> </span>iburst
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>makestep<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>rtcsync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/chrony.conf (RHEL)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>server<span class="w"> </span>ntp1.example.local<span class="w"> </span>iburst
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>server<span class="w"> </span>ntp2.example.local<span class="w"> </span>iburst
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>makestep<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>rtcsync
 </code></pre></div>
 <p>Verify: <code>chronyc tracking</code> — <code>System time</code> offset should be &lt; 1ms.</p>
 <h2 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/rsyslog.d/00-forward.conf</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>*.info<span class="w"> </span>@siem.example.local:514
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Or TLS:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>*.info<span class="w"> </span>@@siem.example.local:6514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/rsyslog.d/00-forward.conf</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>*.info<span class="w"> </span>@siem.example.local:514
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Or TLS:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>*.info<span class="w"> </span>@@siem.example.local:6514
 </code></pre></div>
 <h2 id="package-repository-policy">Package Repository Policy<a class="headerlink" href="#package-repository-policy" title="Permanent link">&para;</a></h2>
 <p>Production servers point only to approved internal mirrors:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># RHEL: subscription-manager repos — configure approved repos only</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>subscription-manager<span class="w"> </span>repos<span class="w"> </span>--disable<span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-baseos-rpms<span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-appstream-rpms
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Ubuntu: /etc/apt/sources.list — point to internal mirror</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>deb<span class="w"> </span>http://mirror.example.local/ubuntu<span class="w"> </span>jammy<span class="w"> </span>main<span class="w"> </span>restricted<span class="w"> </span>universe
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># RHEL: subscription-manager repos — configure approved repos only</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>subscription-manager<span class="w"> </span>repos<span class="w"> </span>--disable<span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-baseos-rpms<span class="w"> </span>--enable<span class="o">=</span>rhel-9-for-x86_64-appstream-rpms
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Ubuntu: /etc/apt/sources.list — point to internal mirror</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>deb<span class="w"> </span>http://mirror.example.local/ubuntu<span class="w"> </span>jammy<span class="w"> </span>main<span class="w"> </span>restricted<span class="w"> </span>universe
 </code></pre></div></p>
 <p>No direct internet access from production servers — all package traffic via mirror.</p>
 <h2 id="os-component-stack">OS Component Stack<a class="headerlink" href="#os-component-stack" title="Permanent link">&para;</a></h2>
@@ -3428,34 +3410,34 @@ Sizing guidelines, design standards, and best practices.
 <hr />
 <h2 id="hostname-and-dns-configuration">Hostname and DNS Configuration<a class="headerlink" href="#hostname-and-dns-configuration" title="Permanent link">&para;</a></h2>
 <p>Hostnames follow the server naming convention <code>{site}{role}{env}{num}</code> (see naming-conventions/servers). The hostname must be set persistently and match forward and reverse DNS before a build is marked complete.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Set hostname</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>dc1-wapp-prd-01
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm FQDN resolves correctly</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>getent<span class="w"> </span>hosts<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>dig<span class="w"> </span>+short<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.10.4.21
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Set hostname</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>dc1-wapp-prd-01
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm FQDN resolves correctly</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>getent<span class="w"> </span>hosts<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>dig<span class="w"> </span>+short<span class="w"> </span>dc1-wapp-prd-01.corp.example.com
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>dig<span class="w"> </span>+short<span class="w"> </span>-x<span class="w"> </span><span class="m">10</span>.10.4.21
 </code></pre></div>
 <p>DNS resolver configuration is managed by Ansible. <code>/etc/resolv.conf</code> must not be edited manually on RHEL/Ubuntu; use <code>nmcli</code> or the Ansible <code>dns_baseline</code> role.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/resolv.conf (managed — do not edit)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">search corp.example.com example.com</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">nameserver 10.10.0.10</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">nameserver 10.10.0.11</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="na">options timeout</span><span class="o">:</span><span class="s">2 attempts:3</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/resolv.conf (managed — do not edit)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="na">search corp.example.com example.com</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="na">nameserver 10.10.0.10</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="na">nameserver 10.10.0.11</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="na">options timeout</span><span class="o">:</span><span class="s">2 attempts:3</span>
 </code></pre></div>
 <h2 id="ntp-configuration_1">NTP Configuration<a class="headerlink" href="#ntp-configuration_1" title="Permanent link">&para;</a></h2>
 <p>All Linux servers synchronise to internal NTP servers only. External NTP access is blocked at the perimeter firewall.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /etc/chrony.conf — managed by Ansible role ntp_baseline</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="na">server 10.10.0.5 iburst prefer</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="na">server 10.10.0.6 iburst</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="na">driftfile /var/lib/chrony/drift</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="na">makestep 1.0 3</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="na">rtcsync</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="na">logdir /var/log/chrony</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/chrony.conf — managed by Ansible role ntp_baseline</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="na">server 10.10.0.5 iburst prefer</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="na">server 10.10.0.6 iburst</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="na">driftfile /var/lib/chrony/drift</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="na">makestep 1.0 3</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="na">rtcsync</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="na">logdir /var/log/chrony</span>
 </code></pre></div>
 <p>Verify sync:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>chronyc<span class="w"> </span>sources<span class="w"> </span>-v
 </code></pre></div>
 <p>Expected: reference time offset under 100 ms, stratum 3 or better. An alert fires if offset exceeds 500 ms for more than 5 minutes.</p>
 <h2 id="ssh-and-sudo-configuration">SSH and sudo Configuration<a class="headerlink" href="#ssh-and-sudo-configuration" title="Permanent link">&para;</a></h2>
@@ -3507,11 +3489,11 @@ Sizing guidelines, design standards, and best practices.
 </tbody>
 </table>
 <p>sudo is configured via <code>/etc/sudoers.d/</code> drop-in files only. The base <code>/etc/sudoers</code> must not be modified directly. Engineers receive sudo via AD group membership; service accounts get targeted command whitelists.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/sudoers.d/ops-admins</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>%ops-admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># /etc/sudoers.d/svc-backup</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>svc-backup<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># /etc/sudoers.d/ops-admins</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>%ops-admins<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># /etc/sudoers.d/svc-backup</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>svc-backup<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>/usr/bin/rsync,<span class="w"> </span>/usr/bin/tar
 </code></pre></div>
 <p>Run <code>visudo -c</code> after any sudoers change to confirm no syntax errors.</p>
 <h2 id="required-packages-and-kernel-parameters">Required Packages and Kernel Parameters<a class="headerlink" href="#required-packages-and-kernel-parameters" title="Permanent link">&para;</a></h2>
@@ -3526,19 +3508,19 @@ Sizing guidelines, design standards, and best practices.
 <li><code>cloud-init</code> — cloud builds only</li>
 </ul>
 <p><strong>Kernel parameters (<code>/etc/sysctl.d/99-baseline.conf</code>):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="na">net.ipv4.ip_forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="na">net.ipv4.conf.all.accept_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="na">net.ipv4.conf.all.send_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="na">net.ipv4.conf.all.accept_source_route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="na">net.ipv4.tcp_syncookies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="na">fs.suid_dumpable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="na">kernel.core_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">|/bin/false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="na">net.ipv4.ip_forward</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="na">net.ipv4.conf.all.accept_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="na">net.ipv4.conf.all.send_redirects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="na">net.ipv4.conf.all.accept_source_route</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="na">net.ipv4.tcp_syncookies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="na">fs.suid_dumpable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="na">kernel.core_pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">|/bin/false</span>
 </code></pre></div>
 <p>Apply without reboot: <code>sysctl --system</code></p>
 <h2 id="syslog-and-audit-configuration">Syslog and Audit Configuration<a class="headerlink" href="#syslog-and-audit-configuration" title="Permanent link">&para;</a></h2>
 <p>Remote syslog forwarding to the central SIEM is mandatory. The <code>rsyslog_baseline</code> Ansible role deploys:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/rsyslog.d/50-remote.conf</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>*.*<span class="w"> </span>@@siem.corp.example.com:514<span class="p">;</span>RSYSLOG_ForwardFormat
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># /etc/rsyslog.d/50-remote.conf</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>*.*<span class="w"> </span>@@siem.corp.example.com:514<span class="p">;</span>RSYSLOG_ForwardFormat
 </code></pre></div>
 <p>The audit daemon must be running and enabled at boot. Baseline audit rules capture:</p>
 <ul>
@@ -3547,8 +3529,8 @@ Sizing guidelines, design standards, and best practices.
 <li>Privileged command execution</li>
 <li>File opens with write intent on key paths under <code>/etc</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>auditd<span class="w"> </span>rsyslog
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>privileged<span class="w"> </span>--start<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>auditd<span class="w"> </span>rsyslog
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>privileged<span class="w"> </span>--start<span class="w"> </span>today<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
 </code></pre></div>
 <p>Log retention on the host: 30 days rolling via <code>logrotate</code>. Long-term retention is handled by the SIEM (90 days hot, 1 year cold).</p>
 <h2 id="build-completion-checklist">Build Completion Checklist<a class="headerlink" href="#build-completion-checklist" title="Permanent link">&para;</a></h2>

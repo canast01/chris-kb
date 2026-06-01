@@ -4640,7 +4640,57 @@
 <div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell PowerScale.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── Dell PowerScale — Backup and Restore ─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     PowerScale backup: snapshots, replication, and external backup application integration    │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Snapshot → replicate to DR → verify → document → test restore                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │           Function          │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │              OS             │  │            OneFS            │  │        Distributed FS       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           Tiering           │  │          SmartPools         │  │        Auto data move       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         Replication         │  │            SyncIQ           │  │        Async DR copy        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Snapshots          │  │          SnapshotIQ         │  │       Space-efficient       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Load balance        │  │         SmartConnect        │  │       DNS client dist.      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: PowerScale nodes (All-Flash/Hybrid) · InfiniBand backend · 25/100 GbE frontend           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    OneFS              = Dell PowerScale distributed filesystem OS; all nodes share a single namespace │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SmartPools         = tiering engine; moves files between All-Flash, Hybrid, and Archive tiers      │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    SyncIQ             = async replication to DR cluster; RPO-based schedule; failover in minutes      │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    SnapshotIQ         = space-efficient snapshots; accessed via .snapshot directory in each share     │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    SmartConnect       = DNS-based load balancing; distributes NFS/SMB client connections across nodes │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Access zone        = logical container with separate authentication and export namespace per tenant│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Quota              = directory or user quota; hard/soft/advisory limits enforced by OneFS QuotaIQ  │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    CloudPools         = tiering to cloud object storage (S3/Blob); data remains accessible locally    │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    isi CLI            = OneFS command-line interface; all management operations available via isi c...│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Node pool          = group of same-model nodes sharing protection domain for data distribution     │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Protection level   = N+2:1, N+3:1 etc.; defines how many node or drive failures are tolerated      │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    File pool policy   = rule-based policy assigning files to specific node pools or storage tiers     │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>graph TD
     prod["Production Data\n/ifs/data/..."]
@@ -4693,189 +4743,189 @@
 <h2 id="snapshotiq-local-snapshots">SnapshotIQ — Local Snapshots<a class="headerlink" href="#snapshotiq-local-snapshots" title="Permanent link">&para;</a></h2>
 <p>SnapshotIQ creates point-in-time snapshots of any directory under <code>/ifs</code>. Snapshots are stored within the same cluster and are accessible immediately via the <code>.snapshot</code> directory. They do not protect against cluster-level failures but provide rapid file-level recovery.</p>
 <h3 id="creating-snapshots">Creating Snapshots<a class="headerlink" href="#creating-snapshots" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Manual snapshot of a directory</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Create a snapshot with a 30-day expiration</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>--expires<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;+30 days&#39;</span><span class="w"> </span>+%s<span class="k">)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># List all snapshots for a path</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># List all snapshots (all paths)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># View details of a snapshot (size, creation time, expiration)</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snapshot_id&gt;
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Delete a snapshot by ID</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snapshot_id&gt;
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Delete a snapshot by name</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-20260101
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manual snapshot of a directory</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create a snapshot with a 30-day expiration</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>create<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>--name<span class="w"> </span>project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--expires<span class="w"> </span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;+30 days&#39;</span><span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># List all snapshots for a path</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># List all snapshots (all paths)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># View details of a snapshot (size, creation time, expiration)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>view<span class="w"> </span>&lt;snapshot_id&gt;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Delete a snapshot by ID</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>&lt;snapshot_id&gt;
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Delete a snapshot by name</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>delete<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1<span class="w"> </span>--name<span class="w"> </span>project1-20260101
 </code></pre></div>
 <h3 id="snapshot-schedules">Snapshot Schedules<a class="headerlink" href="#snapshot-schedules" title="Permanent link">&para;</a></h3>
 <p>Schedule automated snapshots per directory with retention periods:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all snapshot schedules</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Create a daily schedule at midnight, retaining 14 snapshots</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>daily-project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 days at 00:00&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>--retention<span class="w"> </span>14D
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Create an hourly schedule, retaining 48 hours of snapshots</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>hourly-project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 hours&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--retention<span class="w"> </span>2D
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Modify a schedule retention period</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>daily-project1<span class="w"> </span>--retention<span class="w"> </span>30D
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># View a schedule</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>view<span class="w"> </span>daily-project1
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Disable a schedule without deleting it</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>daily-project1<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1"># Delete a schedule (existing snapshots are NOT deleted)</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>daily-project1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all snapshot schedules</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a daily schedule at midnight, retaining 14 snapshots</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>daily-project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 days at 00:00&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>--retention<span class="w"> </span>14D
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Create an hourly schedule, retaining 48 hours of snapshots</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>create<span class="w"> </span>hourly-project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 hours&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--retention<span class="w"> </span>2D
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Modify a schedule retention period</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>daily-project1<span class="w"> </span>--retention<span class="w"> </span>30D
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># View a schedule</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>view<span class="w"> </span>daily-project1
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Disable a schedule without deleting it</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>modify<span class="w"> </span>daily-project1<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Delete a schedule (existing snapshots are NOT deleted)</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>schedules<span class="w"> </span>delete<span class="w"> </span>daily-project1
 </code></pre></div>
 <h3 id="accessing-snapshots">Accessing Snapshots<a class="headerlink" href="#accessing-snapshots" title="Permanent link">&para;</a></h3>
 <p>Snapshots are visible within the live filesystem under the <code>.snapshot</code> directory at the root of the snapshotted path:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From the cluster shell — list available snapshots for a path</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ls<span class="w"> </span>/ifs/data/project1/.snapshot/
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List files at a specific snapshot</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># From an NFS client — browse the snapshot directory</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ls<span class="w"> </span>/mnt/project1/.snapshot/
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm .snapshot is accessible on the NFS export</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>allow-snapshot
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Enable .snapshot visibility on an NFS export if not already set</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--allow-snapshot-dirs<span class="w"> </span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From the cluster shell — list available snapshots for a path</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>/ifs/data/project1/.snapshot/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List files at a specific snapshot</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>ls<span class="w"> </span>-la<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># From an NFS client — browse the snapshot directory</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ls<span class="w"> </span>/mnt/project1/.snapshot/
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm .snapshot is accessible on the NFS export</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>view<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>allow-snapshot
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Enable .snapshot visibility on an NFS export if not already set</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>modify<span class="w"> </span>&lt;export_id&gt;<span class="w"> </span>--allow-snapshot-dirs<span class="w"> </span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="restoring-files-from-a-snapshot">Restoring Files from a Snapshot<a class="headerlink" href="#restoring-files-from-a-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore a single file from a snapshot</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>-p<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/report.xlsx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span>/ifs/data/project1/report.xlsx
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Restore a directory tree from a snapshot (preserves permissions and timestamps)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">          </span>/ifs/data/project1/
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Revert an entire directory to a snapshot state (DESTRUCTIVE — all data after the snapshot is lost)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Protect the snapshot from expiration before reverting</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>modify<span class="w"> </span>&lt;snapshot_id&gt;<span class="w"> </span>--set-expiration<span class="w"> </span>never
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Perform the revert</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>revert<span class="w"> </span>&lt;snapshot_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Restore a single file from a snapshot</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>-p<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/report.xlsx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span>/ifs/data/project1/report.xlsx
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Restore a directory tree from a snapshot (preserves permissions and timestamps)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>rsync<span class="w"> </span>-av<span class="w"> </span>/ifs/data/project1/.snapshot/project1-20260101/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">          </span>/ifs/data/project1/
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Revert an entire directory to a snapshot state (DESTRUCTIVE — all data after the snapshot is lost)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Protect the snapshot from expiration before reverting</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>modify<span class="w"> </span>&lt;snapshot_id&gt;<span class="w"> </span>--set-expiration<span class="w"> </span>never
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Perform the revert</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>revert<span class="w"> </span>&lt;snapshot_id&gt;
 </code></pre></div>
 <blockquote>
 <p>Snapshot revert is destructive. All changes made after the snapshot timestamp are permanently discarded. Always confirm with the application and data owner before reverting.</p>
 </blockquote>
 <h3 id="snapshot-space-usage">Snapshot Space Usage<a class="headerlink" href="#snapshot-space-usage" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Total snapshot space used cluster-wide</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;space\|reserve&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Per-snapshot space consumption</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Size&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Snapshot reserve (percentage of cluster capacity reserved for snapshots)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>view
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--reserve<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># 10% reservation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Total snapshot space used cluster-wide</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;space\|reserve&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Per-snapshot space consumption</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Name|Size&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Snapshot reserve (percentage of cluster capacity reserved for snapshots)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>view
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>settings<span class="w"> </span>modify<span class="w"> </span>--reserve<span class="w"> </span><span class="m">10</span><span class="w">    </span><span class="c1"># 10% reservation</span>
 </code></pre></div>
 <hr />
 <h2 id="synciq-replication-based-recovery">SyncIQ — Replication-Based Recovery<a class="headerlink" href="#synciq-replication-based-recovery" title="Permanent link">&para;</a></h2>
 <p>SyncIQ replicates directory trees to a remote PowerScale cluster. For full details on policy management, monitoring, and failover, see <a href="../../architecture/how-it-works/">Architecture — How It Works</a>.</p>
 <h3 id="backup-to-a-dedicated-dr-cluster">Backup to a Dedicated DR Cluster<a class="headerlink" href="#backup-to-a-dedicated-dr-cluster" title="Permanent link">&para;</a></h3>
 <p>Use SyncIQ to replicate production data to a secondary PowerScale cluster on a separate site. The target cluster holds a consistent replica that can be mounted read-only or failed over to:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a replication policy targeting a DR cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>backup-project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;dr-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 hours&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Hourly sync of project1 to DR cluster&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Run a manual sync immediately</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>backup-project1
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Confirm last successful sync time</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>backup-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Last Success&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># View the full report of the most recent sync job</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>backup-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Create a replication policy targeting a DR cluster</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>backup-project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;dr-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--schedule<span class="w"> </span><span class="s2">&quot;every 1 hours&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Hourly sync of project1 to DR cluster&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Run a manual sync immediately</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>backup-project1
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Confirm last successful sync time</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>backup-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Last Success&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># View the full report of the most recent sync job</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>backup-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
 </code></pre></div>
 <h3 id="synciq-restore-failback-to-primary">SyncIQ Restore (Failback to Primary)<a class="headerlink" href="#synciq-restore-failback-to-primary" title="Permanent link">&para;</a></h3>
 <p>When recovering from a DR failover, replicate data back from the DR cluster to the primary:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On the DR cluster — create a return policy</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>restore-project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;primary-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Failback restore of project1 to primary&quot;</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Run the full restore</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>restore-project1
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Confirm completion</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>restore-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On the DR cluster — create a return policy</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>create<span class="w"> </span>restore-project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--action<span class="w"> </span>sync<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--source-root-path<span class="w"> </span>/ifs/replicated/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--target-host<span class="w"> </span>&lt;primary-cluster-ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--target-path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--description<span class="w"> </span><span class="s2">&quot;Failback restore of project1 to primary&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Run the full restore</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>restore-project1
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--state<span class="w"> </span>running
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>view<span class="w"> </span>&lt;job_id&gt;
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Confirm completion</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>restore-project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
 </code></pre></div>
 <hr />
 <h2 id="ndmp-network-data-management-protocol">NDMP — Network Data Management Protocol<a class="headerlink" href="#ndmp-network-data-management-protocol" title="Permanent link">&para;</a></h2>
 <p>NDMP enables third-party backup applications (NetBackup, Veritas Backup Exec, CommVault) to back up PowerScale data without traversing the backup server. PowerScale streams data directly to the backup target (tape library or disk appliance).</p>
 <h3 id="enabling-ndmp">Enabling NDMP<a class="headerlink" href="#enabling-ndmp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable the NDMP service</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Verify NDMP service is running</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>services<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ndmp
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># View global NDMP settings</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Configure NDMP port (default 10000)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--port<span class="w"> </span><span class="m">10000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable the NDMP service</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify NDMP service is running</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>services<span class="w"> </span>-a<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>ndmp
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View global NDMP settings</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>view
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Configure NDMP port (default 10000)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>settings<span class="w"> </span>global<span class="w"> </span>modify<span class="w"> </span>--port<span class="w"> </span><span class="m">10000</span>
 </code></pre></div>
 <h3 id="ndmp-users">NDMP Users<a class="headerlink" href="#ndmp-users" title="Permanent link">&para;</a></h3>
 <p>NDMP requires a dedicated backup account separate from the admin account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create an NDMP user</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>backup_user<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List NDMP users</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>list
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># View NDMP user details</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>backup_user
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Delete an NDMP user</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>delete<span class="w"> </span>backup_user
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Create an NDMP user</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>backup_user<span class="w"> </span>--password<span class="w"> </span>&lt;password&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># List NDMP users</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>list
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># View NDMP user details</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>view<span class="w"> </span>backup_user
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Delete an NDMP user</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>users<span class="w"> </span>delete<span class="w"> </span>backup_user
 </code></pre></div>
 <h3 id="ndmp-sessions-and-diagnostics">NDMP Sessions and Diagnostics<a class="headerlink" href="#ndmp-sessions-and-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List active NDMP sessions (shows backup jobs in progress)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>list
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># View details of a specific NDMP session</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>view<span class="w"> </span>&lt;session_id&gt;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Terminate a stuck NDMP session</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>delete<span class="w"> </span>&lt;session_id&gt;
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># View NDMP diagnostic logs</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>diagnostics<span class="w"> </span>view
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List active NDMP sessions (shows backup jobs in progress)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>list
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># View details of a specific NDMP session</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>view<span class="w"> </span>&lt;session_id&gt;
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Terminate a stuck NDMP session</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>sessions<span class="w"> </span>delete<span class="w"> </span>&lt;session_id&gt;
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># View NDMP diagnostic logs</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>isi<span class="w"> </span>ndmp<span class="w"> </span>diagnostics<span class="w"> </span>view
 </code></pre></div>
 <h3 id="ndmp-configuration-reference">NDMP Configuration Reference<a class="headerlink" href="#ndmp-configuration-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -4969,27 +5019,27 @@
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
 <p>Backup without regular validation is not a reliable protection mechanism. Validate all backup methods on a regular schedule.</p>
 <h3 id="snapshotiq-validation">SnapshotIQ Validation<a class="headerlink" href="#snapshotiq-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Confirm a snapshot exists for each protected path</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify a file is recoverable from the most recent snapshot</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ls<span class="w"> </span>/ifs/data/project1/.snapshot/<span class="k">$(</span>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-2<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>/
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Perform a live restore test to a staging directory</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/ifs/data/restore-test/project1
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>cp<span class="w"> </span>-r<span class="w"> </span>/ifs/data/project1/.snapshot/project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">      </span>/ifs/data/restore-test/project1/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Confirm a snapshot exists for each protected path</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Verify a file is recoverable from the most recent snapshot</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ls<span class="w"> </span>/ifs/data/project1/.snapshot/<span class="k">$(</span>isi<span class="w"> </span>snapshot<span class="w"> </span>snapshots<span class="w"> </span>list<span class="w"> </span>--path<span class="w"> </span>/ifs/data/project1<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-2<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>/
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Perform a live restore test to a staging directory</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/ifs/data/restore-test/project1
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>cp<span class="w"> </span>-r<span class="w"> </span>/ifs/data/project1/.snapshot/project1-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">      </span>/ifs/data/restore-test/project1/
 </code></pre></div>
 <h3 id="synciq-validation">SyncIQ Validation<a class="headerlink" href="#synciq-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Confirm the last replication completed successfully</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Check the timestamp of the most recent successful sync against RPO</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Last Success|Schedule&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Test-mount the target path on the DR cluster (read-only)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># SSH to the DR cluster and verify the data is present and consistent</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>ls<span class="w"> </span>/ifs/replicated/project1/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Confirm the last replication completed successfully</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>reports<span class="w"> </span>list<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-3
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Check the timestamp of the most recent successful sync against RPO</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Last Success|Schedule&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Test-mount the target path on the DR cluster (read-only)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1"># SSH to the DR cluster and verify the data is present and consistent</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>ls<span class="w"> </span>/ifs/replicated/project1/
 </code></pre></div>
 <h3 id="ndmp-veeam-validation">NDMP / Veeam Validation<a class="headerlink" href="#ndmp-veeam-validation" title="Permanent link">&para;</a></h3>
 <table>

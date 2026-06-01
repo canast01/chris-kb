@@ -4409,7 +4409,57 @@
 <div class="kb-summary">
 Losing a Certificate Authority's private key is an unrecoverable event — every certificate it issued becomes untrusted.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────── Security Certificates Operations — Backup and Restore ────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    Certificates backup: snapshots, replication, and external backup application integration   │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Snapshot → replicate to DR → verify → document → test restore                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             Core            │  │       Primary service       │  │        Main function        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          Management         │  │        Control plane        │  │         Admin access        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: Security Certificates Operations infrastructure · management network · monitoring        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Certificates       = Security Certificates Operations platform overview and core concepts          │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Management         = management console and command-line interface for administration              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Monitoring         = health and performance monitoring dashboards and alerting                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Security           = access control, authentication, and encryption configuration                  │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Backup             = backup and recovery procedures and schedule configuration                     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Upgrade            = software version upgrades and firmware patching procedures                    │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Escalation         = vendor support escalation path and severity triage process                    │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Documentation      = vendor knowledge base and official product documentation                      │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Change management  = change ticket requirements for production modifications                       │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Audit log          = admin action logging for compliance and security review                       │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>This page covers the full backup and restore lifecycle for both Windows Active Directory Certificate Services (ADCS) and OpenSSL-based private CAs, including key ceremony documentation, PKCS#12 export, and validated restore procedures.</p>
 <hr />
 <h2 id="backup-strategy-overview">Backup Strategy Overview<a class="headerlink" href="#backup-strategy-overview" title="Permanent link">&para;</a></h2>
@@ -4476,109 +4526,109 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <hr />
 <h2 id="windows-adcs-backup">Windows ADCS — Backup<a class="headerlink" href="#windows-adcs-backup" title="Permanent link">&para;</a></h2>
 <h3 id="back-up-the-ca-private-key">Back Up the CA Private Key<a class="headerlink" href="#back-up-the-ca-private-key" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>REM Back up the CA private key and certificate to a password-protected PFX
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>REM Run on the CA server as a local administrator
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>certutil -backupKey C:\CABackup\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM Back up the CA private key and certificate to a password-protected PFX
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>REM Run on the CA server as a local administrator
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>certutil -backupKey C:\CABackup\
 </code></pre></div>
 <p>This creates a <code>.p12</code> file in the target directory. Protect it with a strong password when prompted.</p>
 <p>Alternatively, export non-interactively (for automation):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export CA key using certutil with a password file</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$pwd</span> <span class="p">=</span> <span class="s2">&quot;VaultStoredPassphrase&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">certutil</span> <span class="n">-p</span> <span class="nv">$pwd</span> <span class="n">-backupKey</span> <span class="n">C</span><span class="p">:\</span><span class="n">CABackup</span><span class="p">\</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Export CA key using certutil with a password file</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$pwd</span> <span class="p">=</span> <span class="s2">&quot;VaultStoredPassphrase&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">certutil</span> <span class="n">-p</span> <span class="nv">$pwd</span> <span class="n">-backupKey</span> <span class="n">C</span><span class="p">:\</span><span class="n">CABackup</span><span class="p">\</span>
 </code></pre></div>
 <h3 id="back-up-the-ca-database">Back Up the CA Database<a class="headerlink" href="#back-up-the-ca-database" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>REM Back up the CA database (issued certificates, pending requests, CRL)
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>certutil -backupDB C:\CABackup\
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>REM Incremental backup (since last full)
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>certutil -backupDB C:\CABackup\ -incremental
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM Back up the CA database (issued certificates, pending requests, CRL)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>certutil -backupDB C:\CABackup\
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>REM Incremental backup (since last full)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>certutil -backupDB C:\CABackup\ -incremental
 </code></pre></div>
 <p>The target directory will contain:
 - <code>&lt;CAName&gt;.edb</code> — Extensible Storage Engine (ESE) database
 - <code>&lt;CAName&gt;*.log</code> — Transaction logs</p>
 <h3 id="back-up-the-ca-registry-configuration">Back Up the CA Registry Configuration<a class="headerlink" href="#back-up-the-ca-registry-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM Export the CA registry hive
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>reg export &quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot; C:\CABackup\CertSvc.reg /y
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>REM Export the CA registry hive
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>reg export &quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot; C:\CABackup\CertSvc.reg /y
 </code></pre></div>
 <h3 id="full-adcs-backup-script">Full ADCS Backup Script<a class="headerlink" href="#full-adcs-backup-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">$BackupRoot</span> <span class="p">=</span> <span class="s2">&quot;\\backup-srv\CA-Backups\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$BackupRoot</span> <span class="n">-Force</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Key backup</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">certutil</span> <span class="n">-backupKey</span> <span class="s2">&quot;$BackupRoot\Key\&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Database backup</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">certutil</span> <span class="n">-backupDB</span> <span class="s2">&quot;$BackupRoot\DB\&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Registry backup</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">reg</span> <span class="n">export</span> <span class="s2">&quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot;</span> <span class="s2">&quot;$BackupRoot\CertSvc.reg&quot;</span> <span class="p">/</span><span class="n">y</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Copy CA certificate and CRL</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Windows\System32\CertSrv\CertEnroll\*&quot;</span> <span class="s2">&quot;$BackupRoot\CertEnroll\&quot;</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="nb">Write-Host</span> <span class="s2">&quot;CA backup completed to $BackupRoot&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">$BackupRoot</span> <span class="p">=</span> <span class="s2">&quot;\\backup-srv\CA-Backups\</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyy-MM-dd&#39;</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Path</span> <span class="nv">$BackupRoot</span> <span class="n">-Force</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Key backup</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">certutil</span> <span class="n">-backupKey</span> <span class="s2">&quot;$BackupRoot\Key\&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Database backup</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="n">certutil</span> <span class="n">-backupDB</span> <span class="s2">&quot;$BackupRoot\DB\&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Registry backup</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">reg</span> <span class="n">export</span> <span class="s2">&quot;HKLM\SYSTEM\CurrentControlSet\Services\CertSvc&quot;</span> <span class="s2">&quot;$BackupRoot\CertSvc.reg&quot;</span> <span class="p">/</span><span class="n">y</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Copy CA certificate and CRL</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Copy-Item</span> <span class="s2">&quot;C:\Windows\System32\CertSrv\CertEnroll\*&quot;</span> <span class="s2">&quot;$BackupRoot\CertEnroll\&quot;</span> <span class="n">-Recurse</span> <span class="n">-Force</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="nb">Write-Host</span> <span class="s2">&quot;CA backup completed to $BackupRoot&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="pkcs12-pfx-export">PKCS#12 (PFX) Export<a class="headerlink" href="#pkcs12-pfx-export" title="Permanent link">&para;</a></h2>
 <p>PKCS#12 bundles a certificate, its private key, and the chain into a single portable file. Use this format for CA migration, archival, and handing off certificates between systems.</p>
 <h3 id="windows-export-with-certutil">Windows — Export with certutil<a class="headerlink" href="#windows-export-with-certutil" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>REM Export a certificate by thumbprint from the local machine store
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>certutil -exportpfx -p &quot;StrongPassphrase&quot; My &lt;Thumbprint&gt; C:\export\cert.pfx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>REM Export a certificate by thumbprint from the local machine store
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>certutil -exportpfx -p &quot;StrongPassphrase&quot; My &lt;Thumbprint&gt; C:\export\cert.pfx
 </code></pre></div>
 <h3 id="openssl-create-a-pkcs12-bundle">OpenSSL — Create a PKCS#12 Bundle<a class="headerlink" href="#openssl-create-a-pkcs12-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Combine certificate, private key, and CA chain into a PFX</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-in<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-inkey<span class="w"> </span>server.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-certfile<span class="w"> </span>ca-chain.pem<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-out<span class="w"> </span>server.pfx<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-passout<span class="w"> </span>pass:StrongPassphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">&quot;server.corp.example.com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Combine certificate, private key, and CA chain into a PFX</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-export<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-in<span class="w"> </span>server.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-inkey<span class="w"> </span>server.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-certfile<span class="w"> </span>ca-chain.pem<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>-out<span class="w"> </span>server.pfx<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-passout<span class="w"> </span>pass:StrongPassphrase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>-name<span class="w"> </span><span class="s2">&quot;server.corp.example.com&quot;</span>
 </code></pre></div>
 <h3 id="openssl-import-a-pkcs12-bundle">OpenSSL — Import a PKCS#12 Bundle<a class="headerlink" href="#openssl-import-a-pkcs12-bundle" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Extract certificate from PFX</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-clcerts<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>server.crt<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Extract private key from PFX (no encryption on output key — store securely)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-nocerts<span class="w"> </span>-nodes<span class="w"> </span>-out<span class="w"> </span>server.key<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Extract CA chain from PFX</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-cacerts<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>ca-chain.pem<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Extract certificate from PFX</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-clcerts<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>server.crt<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Extract private key from PFX (no encryption on output key — store securely)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-nocerts<span class="w"> </span>-nodes<span class="w"> </span>-out<span class="w"> </span>server.key<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Extract CA chain from PFX</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>openssl<span class="w"> </span>pkcs12<span class="w"> </span>-in<span class="w"> </span>server.pfx<span class="w"> </span>-cacerts<span class="w"> </span>-nokeys<span class="w"> </span>-out<span class="w"> </span>ca-chain.pem<span class="w"> </span>-passin<span class="w"> </span>pass:StrongPassphrase
 </code></pre></div>
 <hr />
 <h2 id="openssl-private-ca-backup">OpenSSL Private CA — Backup<a class="headerlink" href="#openssl-private-ca-backup" title="Permanent link">&para;</a></h2>
 <p>The OpenSSL CA directory structure must be backed up atomically (while no signing operations are in progress).</p>
 <h3 id="typical-openssl-ca-directory">Typical OpenSSL CA Directory<a class="headerlink" href="#typical-openssl-ca-directory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/etc/ssl/CA/
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── ca.key          # CA private key — MUST be encrypted
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── ca.crt          # CA certificate (self-signed)
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├── ca.csr          # Original signing request (keep for reference)
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>├── index.txt       # Certificate database
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>├── index.txt.attr
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>├── serial          # Current serial number
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>├── crlnumber       # CRL serial counter
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>├── crl/
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│   └── ca.crl      # Current CRL
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>├── certs/          # Issued certificates archive
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>└── newcerts/       # Copies of all issued certs (by serial)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>/etc/ssl/CA/
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── ca.key          # CA private key — MUST be encrypted
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├── ca.crt          # CA certificate (self-signed)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>├── ca.csr          # Original signing request (keep for reference)
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>├── index.txt       # Certificate database
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>├── index.txt.attr
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>├── serial          # Current serial number
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>├── crlnumber       # CRL serial counter
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>├── crl/
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>│   └── ca.crl      # Current CRL
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>├── certs/          # Issued certificates archive
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>└── newcerts/       # Copies of all issued certs (by serial)
 </code></pre></div>
 <h3 id="backup-command">Backup Command<a class="headerlink" href="#backup-command" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Encrypted tar archive of the entire CA directory</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>-<span class="w"> </span>/etc/ssl/CA/<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-out<span class="w"> </span>/backup/ca-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz.enc
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Verify the archive is readable</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>openssl<span class="w"> </span>enc<span class="w"> </span>-d<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>-in<span class="w"> </span>/backup/ca-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz.enc<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>tar<span class="w"> </span>tzvf<span class="w"> </span>-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Encrypted tar archive of the entire CA directory</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tar<span class="w"> </span>czf<span class="w"> </span>-<span class="w"> </span>/etc/ssl/CA/<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>openssl<span class="w"> </span>enc<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-out<span class="w"> </span>/backup/ca-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz.enc
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Verify the archive is readable</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>openssl<span class="w"> </span>enc<span class="w"> </span>-d<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>-in<span class="w"> </span>/backup/ca-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz.enc<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>tar<span class="w"> </span>tzvf<span class="w"> </span>-
 </code></pre></div>
 <h3 id="verify-ca-key-integrity">Verify CA Key Integrity<a class="headerlink" href="#verify-ca-key-integrity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check that the key and certificate match (modulus comparison)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Both outputs must be identical</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check that the key and certificate match (modulus comparison)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Both outputs must be identical</span>
 </code></pre></div>
 <hr />
 <h2 id="windows-adcs-restore-procedure">Windows ADCS — Restore Procedure<a class="headerlink" href="#windows-adcs-restore-procedure" title="Permanent link">&para;</a></h2>
@@ -4592,65 +4642,65 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 <ol>
 <li>Install ADCS role and select <em>Certification Authority</em> role service (do not configure yet):</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">ADCS-Cert-Authority</span> <span class="n">-IncludeManagementTools</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Install-WindowsFeature</span> <span class="n">ADCS-Cert-Authority</span> <span class="n">-IncludeManagementTools</span>
 </code></pre></div>
 <ol>
 <li>Restore the CA database:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>certutil -restoreDB C:\CABackup\DB\
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>certutil -restoreDB C:\CABackup\DB\
 </code></pre></div>
 <ol>
 <li>Restore the CA registry configuration:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>reg import C:\CABackup\CertSvc.reg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>reg import C:\CABackup\CertSvc.reg
 </code></pre></div>
 <ol>
 <li>Restore the CA private key:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>certutil -restoreKey C:\CABackup\Key\&lt;CAName&gt;.p12
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>certutil -restoreKey C:\CABackup\Key\&lt;CAName&gt;.p12
 </code></pre></div>
 <ol>
 <li>Start the Certificate Services:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">Start-Service</span> <span class="n">CertSvc</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">Start-Service</span> <span class="n">CertSvc</span>
 </code></pre></div>
 <ol>
 <li>Verify CA functionality:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>REM Check CA status
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>certutil -ping
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>REM Verify the CA certificate chain
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>certutil -verify -urlfetch C:\CABackup\CertEnroll\&lt;CAName&gt;.crt
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>REM Confirm database is intact
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>certutil -view -restrict &quot;Disposition=20&quot; -out CertificateTemplate,CommonName | more
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>REM Check CA status
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>certutil -ping
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>REM Verify the CA certificate chain
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>certutil -verify -urlfetch C:\CABackup\CertEnroll\&lt;CAName&gt;.crt
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>REM Confirm database is intact
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>certutil -view -restrict &quot;Disposition=20&quot; -out CertificateTemplate,CommonName | more
 </code></pre></div>
 <ol>
 <li>Re-publish the CRL and Delta CRL:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>certutil -CRL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>certutil -CRL
 </code></pre></div>
 <hr />
 <h2 id="openssl-ca-restore-procedure">OpenSSL CA — Restore Procedure<a class="headerlink" href="#openssl-ca-restore-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Stop any services that might be calling the CA</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx<span class="w">  </span><span class="c1"># or whatever signs/serves via this CA</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Restore from encrypted backup</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>openssl<span class="w"> </span>enc<span class="w"> </span>-d<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span>-in<span class="w"> </span>/backup/ca-backup-YYYYMMDD.tar.gz.enc<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>tar<span class="w"> </span>xzvf<span class="w"> </span>-<span class="w"> </span>-C<span class="w"> </span>/
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="c1"># Fix permissions</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/ssl/CA
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssl/CA/ca.key
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/etc/ssl/CA/ca.crt
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>chown<span class="w"> </span>-R<span class="w"> </span>root:ssl-cert<span class="w"> </span>/etc/ssl/CA
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="c1"># Verify integrity</span>
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Stop any services that might be calling the CA</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>nginx<span class="w">  </span><span class="c1"># or whatever signs/serves via this CA</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Restore from encrypted backup</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>openssl<span class="w"> </span>enc<span class="w"> </span>-d<span class="w"> </span>-aes-256-cbc<span class="w"> </span>-pbkdf2<span class="w"> </span>-pass<span class="w"> </span>pass:VaultPassphrase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>-in<span class="w"> </span>/backup/ca-backup-YYYYMMDD.tar.gz.enc<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>tar<span class="w"> </span>xzvf<span class="w"> </span>-<span class="w"> </span>-C<span class="w"> </span>/
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># Fix permissions</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/ssl/CA
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/ssl/CA/ca.key
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>chmod<span class="w"> </span><span class="m">644</span><span class="w"> </span>/etc/ssl/CA/ca.crt
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>chown<span class="w"> </span>-R<span class="w"> </span>root:ssl-cert<span class="w"> </span>/etc/ssl/CA
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a><span class="c1"># Verify integrity</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>openssl<span class="w"> </span>rsa<span class="w">  </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-modulus<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>md5
+<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/CA/ca.crt<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="key-ceremony-documentation">Key Ceremony Documentation<a class="headerlink" href="#key-ceremony-documentation" title="Permanent link">&para;</a></h2>
@@ -4713,16 +4763,16 @@ Losing a Certificate Authority's private key is an unrecoverable event — every
 </tbody>
 </table>
 <h3 id="ceremony-log-template-fields">Ceremony Log Template Fields<a class="headerlink" href="#ceremony-log-template-fields" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Date/Time (UTC):
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>Location:
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>CA Distinguished Name:
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>Key Algorithm / Length:
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>Serial Number:
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>SHA-256 Thumbprint:
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>Participants (Name / Role / Signature):
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>Key Custodians:
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Backup Locations:
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>Next Ceremony Date:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Date/Time (UTC):
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>Location:
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>CA Distinguished Name:
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>Key Algorithm / Length:
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>Serial Number:
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>SHA-256 Thumbprint:
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>Participants (Name / Role / Signature):
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>Key Custodians:
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Backup Locations:
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>Next Ceremony Date:
 </code></pre></div>
 <hr />
 <h2 id="backup-schedule-and-retention">Backup Schedule and Retention<a class="headerlink" href="#backup-schedule-and-retention" title="Permanent link">&para;</a></h2>

@@ -2899,28 +2899,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kernel-vs-user-space" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kernel vs User Space
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#perf-deeper-kernel-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        perf — Deeper Kernel Analysis
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#safe-process-termination" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3317,89 +3295,74 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 │    Steal time = In VMs: hypervisor withholding CPU from guest; indicates host overcommit              │
 │    irqbalance = Linux daemon; distributes hardware interrupts across CPUs for load balance            │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="kernel-vs-user-space">Kernel vs User Space<a class="headerlink" href="#kernel-vs-user-space" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># top — key fields:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># %us = user space CPU</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># %sy = kernel/system CPU  ← if high: I/O, syscalls, interrupt handling</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># %wa = I/O wait          ← if high: storage bottleneck driving CPU wait</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># %si = software interrupt ← if high: network receive processing</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># %hi = hardware interrupt ← if high: check NIC offload / IRQ affinity</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># If %sy is high — use perf to identify kernel hot paths</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>perf<span class="w"> </span>top<span class="w"> </span>-a<span class="w"> </span>--sort<span class="w"> </span>comm,dso
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Example output showing ksoftirqd high:</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Overhead  Shared Object       Symbol</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1">#   42.30%  [kernel]            [k] __softirqentry_text_start</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1">#   18.50%  [kernel]            [k] net_rx_action</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># → High network receive interrupt: check RSS / IRQ affinity</span>
-</code></pre></div>
-<h3 id="perf-deeper-kernel-analysis">perf — Deeper Kernel Analysis<a class="headerlink" href="#perf-deeper-kernel-analysis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Record 30 seconds of CPU activity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>perf<span class="w"> </span>record<span class="w"> </span>-g<span class="w"> </span>-a<span class="w"> </span>sleep<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate report</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>perf<span class="w"> </span>report<span class="w"> </span>--stdio<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-40
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Flame graph approach</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>perf<span class="w"> </span>script<span class="w"> </span><span class="p">|</span><span class="w"> </span>stackcollapse-perf.pl<span class="w"> </span><span class="p">|</span><span class="w"> </span>flamegraph.pl<span class="w"> </span>&gt;<span class="w"> </span>cpu_flame.svg
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### perf — Deeper Kernel Analysis
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Record 30 seconds of CPU activity
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>perf record -g -a sleep 30
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># Generate report
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>perf report --stdio | head -40
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Flame graph approach
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>perf script | stackcollapse-perf.pl | flamegraph.pl &gt; cpu_flame.svg
+</code></pre></div></p>
 <h3 id="safe-process-termination">Safe Process Termination<a class="headerlink" href="#safe-process-termination" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Send SIGTERM first (graceful)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">kill</span><span class="w"> </span>-15<span class="w"> </span><span class="m">14321</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Wait 10 seconds; if still running:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span><span class="m">14321</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># For a runaway cgroup (containerised service):</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>application-service
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Throttle CPU via cgroup without killing (temporary relief)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>systemctl<span class="w"> </span>set-property<span class="w"> </span>application.service<span class="w"> </span><span class="nv">CPUQuota</span><span class="o">=</span><span class="m">50</span>%
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Send SIGTERM first (graceful)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">kill</span><span class="w"> </span>-15<span class="w"> </span><span class="m">14321</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Wait 10 seconds; if still running:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span><span class="m">14321</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># For a runaway cgroup (containerised service):</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>application-service
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Throttle CPU via cgroup without killing (temporary relief)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>systemctl<span class="w"> </span>set-property<span class="w"> </span>application.service<span class="w"> </span><span class="nv">CPUQuota</span><span class="o">=</span><span class="m">50</span>%
 </code></pre></div>
 <hr />
 <h2 id="windows-cpu-diagnosis">Windows CPU Diagnosis<a class="headerlink" href="#windows-cpu-diagnosis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Top CPU consumers — snapshot</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">15</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">CPU</span><span class="p">,</span> <span class="n">WorkingSet</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Example output:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Name          Id      CPU WorkingSet Description</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># java        4512  48923.4  845557760 Java Platform SE</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># sqlservr    1024  12401.2 2147483648 SQL Server Windows NT</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Per-core CPU utilization</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_Processor</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LoadPercentage</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># perfmon — collect CPU counter</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">$query</span> <span class="p">=</span> <span class="s2">&quot;select PercentProcessorTime from Win32_PerfFormattedData_PerfOS_Processor where Name=&#39;_Total&#39;&quot;</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Query</span> <span class="nv">$query</span><span class="p">).</span><span class="n">PercentProcessorTime</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c"># Continuous monitoring via typeperf</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="n">typeperf</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="n">-si</span> <span class="n">5</span> <span class="n">-sc</span> <span class="n">12</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c"># Check CPU affinity for a process</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nv">$proc</span> <span class="p">=</span> <span class="nb">Get-Process</span> <span class="n">-Id</span> <span class="n">4512</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="nv">$proc</span><span class="p">.</span><span class="n">ProcessorAffinity</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Top CPU consumers — snapshot</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">15</span> <span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">CPU</span><span class="p">,</span> <span class="n">WorkingSet</span><span class="p">,</span> <span class="n">Description</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Example output:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c"># Name          Id      CPU WorkingSet Description</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># java        4512  48923.4  845557760 Java Platform SE</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># sqlservr    1024  12401.2 2147483648 SQL Server Windows NT</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Per-core CPU utilization</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">Get-WmiObject</span> <span class="n">Win32_Processor</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LoadPercentage</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c"># perfmon — collect CPU counter</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">$query</span> <span class="p">=</span> <span class="s2">&quot;select PercentProcessorTime from Win32_PerfFormattedData_PerfOS_Processor where Name=&#39;_Total&#39;&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Query</span> <span class="nv">$query</span><span class="p">).</span><span class="n">PercentProcessorTime</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c"># Continuous monitoring via typeperf</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">typeperf</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="n">-si</span> <span class="n">5</span> <span class="n">-sc</span> <span class="n">12</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c"># Check CPU affinity for a process</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="nv">$proc</span> <span class="p">=</span> <span class="nb">Get-Process</span> <span class="n">-Id</span> <span class="n">4512</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="nv">$proc</span><span class="p">.</span><span class="n">ProcessorAffinity</span>
 </code></pre></div>
 <hr />
 <h2 id="vmware-esxi-esxtop-cpu-analysis">VMware ESXi: esxtop CPU Analysis<a class="headerlink" href="#vmware-esxi-esxtop-cpu-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Connect via SSH to ESXi host or run esxtop from vCenter</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># In esxtop, press &#39;c&#39; for CPU view</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Key columns:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># %USED — percentage of physical CPU used</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># %RDY  — CPU Ready: VM waiting for physical CPU (guest vCPUs scheduled but host busy)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># %CSTP — Co-Stop: SMP VMs waiting for all vCPUs to be scheduled simultaneously</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># %MLMTD — Hard limit reached (resource pool limit)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># %SWPWT — Swap wait: memory swapping causing CPU stall</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Export esxtop batch data for analysis</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.csv
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Filter for specific VM by name (press &#39;f&#39; then select GID)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect via SSH to ESXi host or run esxtop from vCenter</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># In esxtop, press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Key columns:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># %USED — percentage of physical CPU used</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># %RDY  — CPU Ready: VM waiting for physical CPU (guest vCPUs scheduled but host busy)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># %CSTP — Co-Stop: SMP VMs waiting for all vCPUs to be scheduled simultaneously</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># %MLMTD — Hard limit reached (resource pool limit)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># %SWPWT — Swap wait: memory swapping causing CPU stall</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Export esxtop batch data for analysis</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M<span class="k">)</span>.csv
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Filter for specific VM by name (press &#39;f&#39; then select GID)</span>
 </code></pre></div>
 <h3 id="cpu-ready-time-interpretation">CPU Ready Time Interpretation<a class="headerlink" href="#cpu-ready-time-interpretation" title="Permanent link">&para;</a></h3>
 <table>
@@ -3438,88 +3401,88 @@ High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, D
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># PowerCLI: get CPU Ready for all VMs on a host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">5</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>Group-Object<span class="w"> </span>Entity<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>Select-Object<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;VM&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.Name<span class="o">}}</span>,
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">                  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;CPUReady_ms&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.Group<span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="o">)</span>.Average<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span>Sort-Object<span class="w"> </span>CPUReady_ms<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Convert ms to %: Ready% = (Ready_ms / (20000 * vCPU_count)) * 100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PowerCLI: get CPU Ready for all VMs on a host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">5</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>Group-Object<span class="w"> </span>Entity<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>Select-Object<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;VM&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.Name<span class="o">}}</span>,
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">                  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;CPUReady_ms&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.Group<span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="o">)</span>.Average<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>Sort-Object<span class="w"> </span>CPUReady_ms<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Convert ms to %: Ready% = (Ready_ms / (20000 * vCPU_count)) * 100</span>
 </code></pre></div>
 <hr />
 <h2 id="javajvm-high-cpu-troubleshooting">Java/JVM High CPU Troubleshooting<a class="headerlink" href="#javajvm-high-cpu-troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Identify which Java thread is consuming CPU</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 1: get PID</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>java
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># PID = 14321</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Step 2: get top threads within that PID (Linux)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>top<span class="w"> </span>-H<span class="w"> </span>-p<span class="w"> </span><span class="m">14321</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Note the TID of the highest CPU thread (e.g., TID 14456)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Step 3: convert TID to hex</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%x\n&#39;</span><span class="w"> </span><span class="m">14456</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Output: 3878</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Step 4: capture thread dump</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>jstack<span class="w"> </span><span class="m">14321</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/jstack_<span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span>.txt
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Step 5: find thread 0x3878 in jstack output</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;nid=0x3878&quot;</span><span class="w"> </span>/tmp/jstack_<span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span>.txt
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="c1"># Step 6: check GC overhead</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="m">14321</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Output:</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="c1">#   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="c1">#  0.00  95.32  88.12  99.01  97.64  95.52    854  120.412   42  310.897  431.309</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># ^ FGC=42 Full GCs, FGCT=310s → GC overhead is very high → heap exhaustion</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify which Java thread is consuming CPU</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Step 1: get PID</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>java
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># PID = 14321</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Step 2: get top threads within that PID (Linux)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>top<span class="w"> </span>-H<span class="w"> </span>-p<span class="w"> </span><span class="m">14321</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Note the TID of the highest CPU thread (e.g., TID 14456)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Step 3: convert TID to hex</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%x\n&#39;</span><span class="w"> </span><span class="m">14456</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Output: 3878</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># Step 4: capture thread dump</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>jstack<span class="w"> </span><span class="m">14321</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/jstack_<span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span>.txt
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Step 5: find thread 0x3878 in jstack output</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="s2">&quot;nid=0x3878&quot;</span><span class="w"> </span>/tmp/jstack_<span class="k">$(</span>date<span class="w"> </span>+%H%M%S<span class="k">)</span>.txt
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># Step 6: check GC overhead</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>jstat<span class="w"> </span>-gcutil<span class="w"> </span><span class="m">14321</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Output:</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1">#   S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="c1">#  0.00  95.32  88.12  99.01  97.64  95.52    854  120.412   42  310.897  431.309</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># ^ FGC=42 Full GCs, FGCT=310s → GC overhead is very high → heap exhaustion</span>
 </code></pre></div>
 <hr />
 <h2 id="database-cpu-spikes">Database CPU Spikes<a class="headerlink" href="#database-cpu-spikes" title="Permanent link">&para;</a></h2>
 <h3 id="mysql-mariadb">MySQL / MariaDB<a class="headerlink" href="#mysql-mariadb" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Show currently running queries</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="k">FULL</span><span class="w"> </span><span class="n">PROCESSLIST</span><span class="p">;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1">-- Find long-running queries</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="w"> </span><span class="k">host</span><span class="p">,</span><span class="w"> </span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="k">time</span><span class="p">,</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="n">info</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">processlist</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">-- Check slow query log</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">-- my.cnf: slow_query_log=1, long_query_time=2</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">VARIABLES</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;slow_query_log%&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Show currently running queries</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="k">FULL</span><span class="w"> </span><span class="n">PROCESSLIST</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">-- Find long-running queries</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="k">user</span><span class="p">,</span><span class="w"> </span><span class="k">host</span><span class="p">,</span><span class="w"> </span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="n">command</span><span class="p">,</span><span class="w"> </span><span class="k">time</span><span class="p">,</span><span class="w"> </span><span class="k">state</span><span class="p">,</span><span class="w"> </span><span class="n">info</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">FROM</span><span class="w"> </span><span class="n">information_schema</span><span class="p">.</span><span class="n">processlist</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">WHERE</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">10</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">-- Check slow query log</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">-- my.cnf: slow_query_log=1, long_query_time=2</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">VARIABLES</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;slow_query_log%&#39;</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="microsoft-sql-server">Microsoft SQL Server<a class="headerlink" href="#microsoft-sql-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">-- Find top CPU queries</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">TOP</span><span class="w"> </span><span class="mi">10</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="n">qs</span><span class="p">.</span><span class="n">total_worker_time</span><span class="o">/</span><span class="n">qs</span><span class="p">.</span><span class="n">execution_count</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_cpu_us</span><span class="p">,</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">qs</span><span class="p">.</span><span class="n">execution_count</span><span class="p">,</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="k">SUBSTRING</span><span class="p">(</span><span class="n">qt</span><span class="p">.</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_start_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_end_offset</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="n">LEN</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="nb">text</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">         </span><span class="k">ELSE</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_end_offset</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_start_offset</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">query_text</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_query_stats</span><span class="w"> </span><span class="n">qs</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="k">CROSS</span><span class="w"> </span><span class="n">APPLY</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sql_text</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">sql_handle</span><span class="p">)</span><span class="w"> </span><span class="n">qt</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">avg_cpu_us</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1">-- Check for blocking</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">wait_time</span><span class="p">,</span><span class="w"> </span><span class="n">cpu_time</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">-- Find top CPU queries</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">TOP</span><span class="w"> </span><span class="mi">10</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="n">qs</span><span class="p">.</span><span class="n">total_worker_time</span><span class="o">/</span><span class="n">qs</span><span class="p">.</span><span class="n">execution_count</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_cpu_us</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="n">qs</span><span class="p">.</span><span class="n">execution_count</span><span class="p">,</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="k">SUBSTRING</span><span class="p">(</span><span class="n">qt</span><span class="p">.</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_start_offset</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">        </span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_end_offset</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="n">LEN</span><span class="p">(</span><span class="k">CONVERT</span><span class="p">(</span><span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="nb">text</span><span class="p">))</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">         </span><span class="k">ELSE</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_end_offset</span><span class="w"> </span><span class="k">END</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">qs</span><span class="p">.</span><span class="n">statement_start_offset</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">query_text</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_query_stats</span><span class="w"> </span><span class="n">qs</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="k">CROSS</span><span class="w"> </span><span class="n">APPLY</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sql_text</span><span class="p">(</span><span class="n">qs</span><span class="p">.</span><span class="n">sql_handle</span><span class="p">)</span><span class="w"> </span><span class="n">qt</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">avg_cpu_us</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1">-- Check for blocking</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">wait_time</span><span class="p">,</span><span class="w"> </span><span class="n">cpu_time</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 </code></pre></div>
 <hr />
 <h2 id="recent-change-correlation">Recent Change Correlation<a class="headerlink" href="#recent-change-correlation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check for deployments, package installs, or cron jobs at time of spike</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span><span class="s2">&quot;Install\|deploy\|update&quot;</span><span class="w"> </span>/var/log/dpkg.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>grep<span class="w"> </span><span class="s2">&quot;Install\|deploy\|update&quot;</span><span class="w"> </span>/var/log/yum.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">    </span><span class="c1"># RHEL</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check cron jobs that ran during the spike window</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>grep<span class="w"> </span><span class="s2">&quot;CMD&quot;</span><span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;08:00\|08:05\|08:10&quot;</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Check systemd service start times</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>active<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>systemctl<span class="w"> </span>show<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--property<span class="o">=</span>ActiveEnterTimestamp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check for deployments, package installs, or cron jobs at time of spike</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span><span class="s2">&quot;Install\|deploy\|update&quot;</span><span class="w"> </span>/var/log/dpkg.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>grep<span class="w"> </span><span class="s2">&quot;Install\|deploy\|update&quot;</span><span class="w"> </span>/var/log/yum.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20<span class="w">    </span><span class="c1"># RHEL</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check cron jobs that ran during the spike window</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>grep<span class="w"> </span><span class="s2">&quot;CMD&quot;</span><span class="w"> </span>/var/log/cron<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;08:00\|08:05\|08:10&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check systemd service start times</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>systemctl<span class="w"> </span>list-units<span class="w"> </span>--state<span class="o">=</span>active<span class="w"> </span>--type<span class="o">=</span>service<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>systemctl<span class="w"> </span>show<span class="w"> </span><span class="o">{}</span><span class="w"> </span>--property<span class="o">=</span>ActiveEnterTimestamp
 </code></pre></div>
 <hr />
 <h2 id="escalation-criteria">Escalation Criteria<a class="headerlink" href="#escalation-criteria" title="Permanent link">&para;</a></h2>

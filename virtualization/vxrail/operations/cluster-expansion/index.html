@@ -4310,50 +4310,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#common-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#operational-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operational Tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Notes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4529,38 +4485,39 @@
 VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Add Node Flow
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Planning                                                    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  same SKU as cluster · compatible firmware · IP/DNS ready    │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  network cabling plan · iDRAC IP assigned                    │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└──────────────────────────────┬───────────────────────────────┘
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                               │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>              ┌────────────────▼────────────────┐
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>              │  Physical Installation           │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>              │  rack → cable (data + iDRAC)     │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>              │  power on → iDRAC reachable      │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>              └────────────────┬────────────────┘
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                               │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>              ┌────────────────▼────────────────┐
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>              │  VxRail Manager Discovery        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>              │  System → Cluster Expansion      │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>              │  new node appears → validate     │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>              └────────────────┬────────────────┘
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                               │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>              ┌────────────────▼────────────────┐
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>              │  LCM Integration                 │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>              │  VxRail Manager upgrades node    │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>              │  firmware to cluster baseline    │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>              │  ESXi deployed + vSAN joins      │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>              └────────────────┬────────────────┘
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                               │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>              ┌────────────────▼────────────────┐
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>              │  Post-Expansion Validation       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>              │  node Connected · vSAN rebalance │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>              │  health green · capacity updated │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>              └─────────────────────────────────┘
+<p>Add Node Flow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Planning                                                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  same SKU as cluster · compatible firmware · IP/DNS ready    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  network cabling plan · iDRAC IP assigned                    │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>└──────────────────────────────┬───────────────────────────────┘
 </code></pre></div>
+                               │
+              ┌────────────────▼────────────────┐
+              │  Physical Installation           │
+              │  rack → cable (data + iDRAC)     │
+              │  power on → iDRAC reachable      │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  VxRail Manager Discovery        │
+              │  System → Cluster Expansion      │
+              │  new node appears → validate     │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  LCM Integration                 │
+              │  VxRail Manager upgrades node    │
+              │  firmware to cluster baseline    │
+              │  ESXi deployed + vSAN joins      │
+              └────────────────┬────────────────┘
+                               │
+              ┌────────────────▼────────────────┐
+              │  Post-Expansion Validation       │
+              │  node Connected · vSAN rebalance │
+              │  health green · capacity updated │
+              └─────────────────────────────────┘
+```</p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Node add planning, compatibility, network checks, and validation.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>
@@ -4608,8 +4565,9 @@ VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Check
 </tbody>
 </table>
 <h2 id="health-commands">Health Commands<a class="headerlink" href="#health-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add environment-specific commands here</span>
-</code></pre></div>
+<p>~~~bash</p>
+<h1 id="add-environment-specific-commands-here">Add environment-specific commands here<a class="headerlink" href="#add-environment-specific-commands-here" title="Permanent link">&para;</a></h1>
+<p>~~~</p>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Lifecycle pre-check failure.</li>

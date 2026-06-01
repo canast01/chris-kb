@@ -3898,45 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-operations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Operations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#restore-operations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Operations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Restore Operations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#restore-workflow-decision-tree" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Workflow Decision Tree
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#clients-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4213,52 +4174,42 @@ CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restor
 │  auxcopy        = qoperation subcommand to immediately trigger a secondary copy job                   │
 │  jobdetails     = qlist subcommand returning verbose per-phase timing and error codes                 │
 │  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="backup-operations">Backup Operations<a class="headerlink" href="#backup-operations" title="Permanent link">&para;</a></h2>
-<p>Trigger backups manually or validate subclient configuration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Run a full backup on a subclient</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>qoperation<span class="w"> </span>backup<span class="w"> </span>-subclient<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-backuptype<span class="w"> </span>full
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Run an incremental backup</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>qoperation<span class="w"> </span>backup<span class="w"> </span>-subclient<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-backuptype<span class="w"> </span>incremental
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Restore Operations
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### Restore Workflow Decision Tree
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Run backup for all subclients in a client</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>qoperation<span class="w"> </span>backup<span class="w"> </span>-c<span class="w"> </span>&lt;client_name&gt;<span class="w"> </span>-a
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List subclients for a client</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>qlist<span class="w"> </span>subclient<span class="w"> </span>-c<span class="w"> </span>&lt;client_name&gt;
-</code></pre></div>
-<hr />
-<h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
-<h3 id="restore-workflow-decision-tree">Restore Workflow Decision Tree<a class="headerlink" href="#restore-workflow-decision-tree" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    restoreStart(["Restore request received"])
-    restoreStart --&gt; q1{What needs\nto be restored?}
-
-    q1 --&gt;|"One or more files"| q2{Windows\nor Linux?}
-    q1 --&gt;|"Entire volume\nor VM disk"| volumeRestore["Volume-level restore\nqoperation restore\n-subclient -topath"]
-    q1 --&gt;|"Full VM"| vmRestore["Full VM restore\n(VSA subclient)\nrestore to alternate location"]
-    q1 --&gt;|"Application data\n(SQL, Oracle, Exchange)"| appRestore["Application-aware restore\nPoint-in-time log replay\nor granular item restore"]
-
-    q2 --&gt;|"Windows"| winFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-    q2 --&gt;|"Linux"| linFlr["File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath"]
-
-    volumeRestore --&gt; verifyDest["Verify destination\nhas sufficient space"]
-    vmRestore --&gt; verifyDest
-    appRestore --&gt; verifyDest
-    winFlr --&gt; verifyDest
-    linFlr --&gt; verifyDest
-
-    verifyDest --&gt; execute["Execute restore\nMonitor in Job Controller"]
-    execute --&gt; validate(["Validate restored\ndata integrity"])
-
-    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef decision fill:#b45309,stroke:#92400e,color:#fff
-    classDef terminal fill:#15803d,stroke:#166534,color:#fff
-    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
-    class q1,q2 decision
-    class restoreStart,validate terminal</code></pre>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```mermaid
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>flowchart TD
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    restoreStart([&quot;Restore request received&quot;])
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    restoreStart --&gt; q1{What needs\nto be restored?}
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    q1 --&gt;|&quot;One or more files&quot;| q2{Windows\nor Linux?}
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    q1 --&gt;|&quot;Entire volume\nor VM disk&quot;| volumeRestore[&quot;Volume-level restore\nqoperation restore\n-subclient -topath&quot;]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    q1 --&gt;|&quot;Full VM&quot;| vmRestore[&quot;Full VM restore\n(VSA subclient)\nrestore to alternate location&quot;]
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    q1 --&gt;|&quot;Application data\n(SQL, Oracle, Exchange)&quot;| appRestore[&quot;Application-aware restore\nPoint-in-time log replay\nor granular item restore&quot;]
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    q2 --&gt;|&quot;Windows&quot;| winFlr[&quot;File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath&quot;]
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    q2 --&gt;|&quot;Linux&quot;| linFlr[&quot;File-level restore\nbrowse from catalog\nqoperation restore -subclient -topath&quot;]
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    volumeRestore --&gt; verifyDest[&quot;Verify destination\nhas sufficient space&quot;]
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    vmRestore --&gt; verifyDest
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    appRestore --&gt; verifyDest
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    winFlr --&gt; verifyDest
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    linFlr --&gt; verifyDest
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    verifyDest --&gt; execute[&quot;Execute restore\nMonitor in Job Controller&quot;]
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    execute --&gt; validate([&quot;Validate restored\ndata integrity&quot;])
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    classDef action fill:#2563eb,stroke:#1d4ed8,color:#fff
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    classDef decision fill:#b45309,stroke:#92400e,color:#fff
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    classDef terminal fill:#15803d,stroke:#166534,color:#fff
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    class volumeRestore,vmRestore,appRestore,winFlr,linFlr,verifyDest,execute action
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    class q1,q2 decision
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    class restoreStart,validate terminal
+</code></pre></div></p>
 <p>Always verify destination and time range before executing a restore.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Restore to original location at a point in time</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>qoperation<span class="w"> </span>restore<span class="w"> </span>-subclient<span class="w"> </span>&lt;name&gt;<span class="w"> </span>-totime<span class="w"> </span><span class="s2">&quot;2024-01-01 12:00:00&quot;</span>

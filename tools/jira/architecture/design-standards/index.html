@@ -3186,67 +3186,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operations-itsm-issue-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operations / ITSM Issue Types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hierarchy-enforcement-rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hierarchy Enforcement Rules
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workflow-state-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workflow State Standards
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Workflow State Standards">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#software-project-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Software Project Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#operations-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Operations Workflow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#transition-conditions-and-validators" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3786,170 +3725,36 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 │  JIRA_HOME    = data directory; set in jira-application.properties; NFS mount path                    │
 │  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<table>
-<thead>
-<tr>
-<th>Issue Type</th>
-<th>When to Use</th>
-<th>Hierarchy Level</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Epic</strong></td>
-<td>Large body of work, multiple sprints</td>
-<td>Top</td>
-</tr>
-<tr>
-<td><strong>Story</strong></td>
-<td>User-facing feature or requirement</td>
-<td>Mid</td>
-</tr>
-<tr>
-<td><strong>Task</strong></td>
-<td>Technical work item, no direct user value</td>
-<td>Mid</td>
-</tr>
-<tr>
-<td><strong>Bug</strong></td>
-<td>Defect requiring a fix</td>
-<td>Mid</td>
-</tr>
-<tr>
-<td><strong>Spike</strong></td>
-<td>Research or proof-of-concept</td>
-<td>Mid</td>
-</tr>
-<tr>
-<td><strong>Sub-task</strong></td>
-<td>Decomposition of Story/Task/Bug</td>
-<td>Bottom</td>
-</tr>
-</tbody>
-</table>
-<h3 id="operations-itsm-issue-types">Operations / ITSM Issue Types<a class="headerlink" href="#operations-itsm-issue-types" title="Permanent link">&para;</a></h3>
-<p>For service desk / operations projects:</p>
-<table>
-<thead>
-<tr>
-<th>Issue Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Incident</strong></td>
-<td>Unplanned service disruption</td>
-</tr>
-<tr>
-<td><strong>Problem</strong></td>
-<td>Root cause investigation following incident</td>
-</tr>
-<tr>
-<td><strong>Change Request</strong></td>
-<td>Planned change to infrastructure/service</td>
-</tr>
-<tr>
-<td><strong>Service Request</strong></td>
-<td>User request (access, provisioning)</td>
-</tr>
-<tr>
-<td><strong>Post-Mortem</strong></td>
-<td>Structured review of incident</td>
-</tr>
-</tbody>
-</table>
-<h3 id="hierarchy-enforcement-rules">Hierarchy Enforcement Rules<a class="headerlink" href="#hierarchy-enforcement-rules" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Epics may not be children of other Epics</li>
-<li>Sub-tasks may not be children of Sub-tasks</li>
-<li>Bugs may link to Epics via the <strong>Epic Link</strong> or <strong>Parent</strong> field but are not required to</li>
-<li>Spikes always have a fixed <strong>Story Points</strong> cap (e.g., max 3 points) to enforce timeboxing</li>
-</ul>
-<hr />
-<h2 id="workflow-state-standards">Workflow State Standards<a class="headerlink" href="#workflow-state-standards" title="Permanent link">&para;</a></h2>
-<h3 id="software-project-workflow">Software Project Workflow<a class="headerlink" href="#software-project-workflow" title="Permanent link">&para;</a></h3>
-<p>All software projects use a shared <strong>Software Standard Workflow</strong>:</p>
-<pre class="mermaid"><code>stateDiagram-v2
-    [*] --&gt; Backlog
-    Backlog --&gt; ToDoSprint : Sprint Planning
-    ToDoSprint --&gt; InProgress : Start work
-    InProgress --&gt; InReview : Submit for review
-    InReview --&gt; InProgress : Review rejected
-    InReview --&gt; QA : Review approved
-    QA --&gt; InProgress : QA failed
-    QA --&gt; Done : QA passed
-    InProgress --&gt; Blocked : Blocked
-    Blocked --&gt; InProgress : Unblocked
-    Done --&gt; [*]
-
-    ToDoSprint: To Do (Sprint)
-    InProgress: In Progress
-    InReview: In Review
-    QA: QA / Testing</code></pre>
-<table>
-<thead>
-<tr>
-<th>Status</th>
-<th>Category</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Backlog</code></td>
-<td>To Do</td>
-<td>Not yet scheduled for a sprint</td>
-</tr>
-<tr>
-<td><code>To Do</code></td>
-<td>To Do</td>
-<td>In sprint, not started</td>
-</tr>
-<tr>
-<td><code>In Progress</code></td>
-<td>In Progress</td>
-<td>Actively being worked on</td>
-</tr>
-<tr>
-<td><code>In Review</code></td>
-<td>In Progress</td>
-<td>PR open, awaiting code review</td>
-</tr>
-<tr>
-<td><code>QA / Testing</code></td>
-<td>In Progress</td>
-<td>In QA or integration testing</td>
-</tr>
-<tr>
-<td><code>Blocked</code></td>
-<td>In Progress</td>
-<td>Work halted, awaiting external dependency</td>
-</tr>
-<tr>
-<td><code>Done</code></td>
-<td>Done</td>
-<td>Complete and verified</td>
-</tr>
-</tbody>
-</table>
-<h3 id="operations-workflow">Operations Workflow<a class="headerlink" href="#operations-workflow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>stateDiagram-v2
-    [*] --&gt; New
-    New --&gt; Assigned : Triage
-    Assigned --&gt; InProgress : Work started
-    InProgress --&gt; PendingChange : Requires change approval
-    PendingChange --&gt; InProgress : Change approved
-    InProgress --&gt; PendingInfo : Awaiting information
-    PendingInfo --&gt; InProgress : Info received
-    InProgress --&gt; Resolved : Resolution applied
-    Resolved --&gt; Closed : Confirmed resolved
-    Resolved --&gt; InProgress : Reopened
-
-    InProgress: In Progress
-    PendingChange: Pending Change
-    PendingInfo: Pending Information</code></pre>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| Status | Category | Description |
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|---|---|---|
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| `Backlog` | To Do | Not yet scheduled for a sprint |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| `To Do` | To Do | In sprint, not started |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `In Progress` | In Progress | Actively being worked on |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `In Review` | In Progress | PR open, awaiting code review |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `QA / Testing` | In Progress | In QA or integration testing |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `Blocked` | In Progress | Work halted, awaiting external dependency |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `Done` | Done | Complete and verified |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Operations Workflow
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```mermaid
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>stateDiagram-v2
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    [*] --&gt; New
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    New --&gt; Assigned : Triage
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    Assigned --&gt; InProgress : Work started
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    InProgress --&gt; PendingChange : Requires change approval
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    PendingChange --&gt; InProgress : Change approved
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    InProgress --&gt; PendingInfo : Awaiting information
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    PendingInfo --&gt; InProgress : Info received
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    InProgress --&gt; Resolved : Resolution applied
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Resolved --&gt; Closed : Confirmed resolved
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    Resolved --&gt; InProgress : Reopened
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    InProgress: In Progress
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    PendingChange: Pending Change
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    PendingInfo: Pending Information
+</code></pre></div></p>
 <h3 id="transition-conditions-and-validators">Transition Conditions and Validators<a class="headerlink" href="#transition-conditions-and-validators" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4353,11 +4158,11 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 </table>
 <h3 id="escalation-notifications-automation">Escalation Notifications (Automation)<a class="headerlink" href="#escalation-notifications-automation" title="Permanent link">&para;</a></h3>
 <p>Configure via Jira Automation for escalation beyond the notification scheme:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Trigger</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Scheduled (every 1 hour)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Condition: issue matches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority = Critical AND status != Done</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">AND created &lt; -4h</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Send email to Engineering Manager</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Add comment &quot;@manager — Critical issue overdue&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Trigger</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Scheduled (every 1 hour)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Condition: issue matches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority = Critical AND status != Done</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">AND created &lt; -4h</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Send email to Engineering Manager</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Add comment &quot;@manager — Critical issue overdue&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="dashboard-standards">Dashboard Standards<a class="headerlink" href="#dashboard-standards" title="Permanent link">&para;</a></h2>
@@ -4436,12 +4241,12 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 </tbody>
 </table>
 <h3 id="dashboard-naming-convention">Dashboard Naming Convention<a class="headerlink" href="#dashboard-naming-convention" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[SCOPE] - [TEAM/PROJECT] - [PURPOSE]
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Examples:
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  TEAM - Platform Engineering - Sprint Dashboard
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  MGMT - Engineering - Portfolio Overview
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  OPS  - Incident Management - SLA Dashboard
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[SCOPE] - [TEAM/PROJECT] - [PURPOSE]
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Examples:
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  TEAM - Platform Engineering - Sprint Dashboard
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  MGMT - Engineering - Portfolio Overview
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  OPS  - Incident Management - SLA Dashboard
 </code></pre></div>
 <h3 id="sharing-standards">Sharing Standards<a class="headerlink" href="#sharing-standards" title="Permanent link">&para;</a></h3>
 <table>

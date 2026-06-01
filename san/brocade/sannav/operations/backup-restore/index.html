@@ -3443,56 +3443,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#post-restore-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Restore Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zone-configuration-export-standalone" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone Configuration Export (Standalone)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Zone Configuration Export (Standalone)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#gui-export" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GUI Export
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cli-api-export" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI / API Export
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -3827,67 +3777,8 @@
 │  Retention policy= keep 30 days of SANnav backups; prune older to manage storage                      │
 │  Restore test    = quarterly test of full restore to validate backup integrity                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Method</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All switches reachable</td>
-<td>Dashboard &gt; Fabric Summary — all Online</td>
-</tr>
-<tr>
-<td>Zone configurations present</td>
-<td>Inventory &gt; Fabrics &gt; Zones</td>
-</tr>
-<tr>
-<td>Alert policies restored</td>
-<td>Administration &gt; Alert Policies</td>
-</tr>
-<tr>
-<td>LDAP authentication working</td>
-<td>Attempt login with AD account</td>
-</tr>
-<tr>
-<td>Email notifications working</td>
-<td>Administration &gt; Test Email</td>
-</tr>
-<tr>
-<td>License valid</td>
-<td>Administration &gt; License Management</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="zone-configuration-export-standalone">Zone Configuration Export (Standalone)<a class="headerlink" href="#zone-configuration-export-standalone" title="Permanent link">&para;</a></h2>
-<p>In addition to full appliance backup, export zone configurations before every zoning change:</p>
-<h3 id="gui-export">GUI Export<a class="headerlink" href="#gui-export" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Navigate to <strong>Inventory &gt; Fabrics &gt; [Fabric Name]</strong>.</li>
-<li>Select the fabric and click <strong>Actions &gt; Export Zone Configuration</strong>.</li>
-<li>Save the file with a timestamped name: <code>DC1-FABRIC-A-zones-20260506.json</code>.</li>
-<li>Store in the change management system ticket.</li>
-</ol>
-<h3 id="cli-api-export">CLI / API Export<a class="headerlink" href="#cli-api-export" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/login<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentials&quot;:{&quot;loginName&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;}}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;authToken&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Export zone database for a specific fabric (replace &lt;fabricId&gt;)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://sannav-dc1.corp.example.com/rest/resourcegroups/&lt;fabricId&gt;/zonedb&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-o<span class="w"> </span>dc1-fabric-a-zones-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Logout</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://sannav-dc1.corp.example.com/rest/logout<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <hr />
 <h2 id="backup-retention-policy">Backup Retention Policy<a class="headerlink" href="#backup-retention-policy" title="Permanent link">&para;</a></h2>
 <table>

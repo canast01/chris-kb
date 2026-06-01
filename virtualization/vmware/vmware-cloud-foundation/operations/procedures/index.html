@@ -4454,17 +4454,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sddc-manager-backup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SDDC Manager Backup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#password-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4679,84 +4668,85 @@
 Procedures reference covering SDDC Manager Backup, Password Management, Useful Log Locations.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VCF Operational Procedures — Decision Map
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Routine Operations                                 │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────┬───────────────┬────────────────┬─────────────┘
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>       │               │                │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>       ▼               ▼                ▼
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>┌──────────────┐ ┌──────────────┐ ┌────────────────┐
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│ Patching /   │ │ Password     │ │ Certificate       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│ Upgrading    │ │ Management   │ │ Management        │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│              │ │              │ │                   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│ SDDC Mgr     │ │ SDDC Mgr     │ │ SDDC Mgr          │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ → LCM        │ │ → Security   │ │ → Security        │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ → Upgrade    │ │ → Password   │ │ → Certificate     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│              │ │   Management │ │   Management      │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│ Order:       │ │              │ │                   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│ SDDC Mgr     │ │ Rotate via   │ │ Generate CSR      │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│ → vCenter    │ │ SDDC Mgr     │ │ → sign → import   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│ → ESXi       │ │ (not direct  │ │                   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│ → NSX → vSAN │ │ in product)  │ │ Order:            │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│              │ │              │ │ SDDC Mgr          │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│ Pre-check    │ │ Update vault │ │ → vCenter         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│ first!       │ │ after rotate │ │ → NSX → ESXi      │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└──────────────┘ └──────────────┘ └────────────────┘
+<p>VCF Operational Procedures — Decision Map
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
-┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐
-│                                                                                                       │
-│  Routine VCF procedures: add host to free pool, create workload domain, rotate                        │
-│  passwords, renew certificates, and commission/decommission domains.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Host Management                │  │              Domain Management              │   │
-│   │         Commission host to free pool         │  │            Create workload domain           │   │
-│   │         Validate: HCL + connectivity         │  │            Select hosts from pool           │   │
-│   │          Assign to workload domain           │  │           SDDC Mgr deploys VC+NSX           │   │
-│   │          Remove: decommission first          │  │           Decommission: drain VMs           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Commission adds hardware capacity; workload domain creation consumes free pool hosts.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Credential &amp; Cert Rotation          │  │               Cluster Scaling               │   │
-│   │         Rotate: SDDC Mgr &gt; Security          │  │         Expand: add hosts to domain         │   │
-│   │        Remediate: fix stuck rotation         │  │           Contract: drain + remove          │   │
-│   │           Certs: Certificates tab            │  │            Add cluster to domain            │   │
-│   │            CSR: generate + import            │  │         Delete cluster: drain first         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Adding hosts requires physical cabling, BIOS config, and SDDC Mgr commissioning;                     │
-│  password rotation may cause brief component restarts.                                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Commission    = add physical host to SDDC Mgr free pool                                              │
-│  Decommission  = remove host from VCF; must drain first                                               │
-│  Free pool     = hosts available for domain assignment                                                │
-│  Workload domain= isolated cluster with its own vCenter + NSX                                         │
-│  Credential rotation= SDDC Mgr rotates passwords for all managed components                           │
-│  CSR           = Certificate Signing Request; generated by SDDC Mgr                                   │
-│  Remediate     = fix stuck lifecycle task; retry failed step                                          │
-│  Expand cluster= add hosts to existing cluster in a domain                                            │
-│  Contract      = reduce cluster size; hosts return to free pool                                       │
-│  Drain         = migrate VMs off host before decommission                                             │
-│  Security tab  = SDDC Mgr area for credential rotation and cert management                            │
-│  Certificate tab= SDDC Mgr UI for cert status, CSR, and import                                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="sddc-manager-backup">SDDC Manager Backup<a class="headerlink" href="#sddc-manager-backup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>SDDC Manager → Administration → Backup → Configure (SFTP target recommended)
+┌─────────────────────────────────────────────────────┐
+│  Routine Operations                                 │
+└──────┬───────────────┬────────────────┬─────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
 </code></pre></div>
+       │               │                │
+       ▼               ▼                ▼
+┌──────────────┐ ┌──────────────┐ ┌────────────────┐
+│ Patching /   │ │ Password     │ │ Certificate       │
+│ Upgrading    │ │ Management   │ │ Management        │
+│              │ │              │ │                   │
+│ SDDC Mgr     │ │ SDDC Mgr     │ │ SDDC Mgr          │
+│ → LCM        │ │ → Security   │ │ → Security        │
+│ → Upgrade    │ │ → Password   │ │ → Certificate     │
+│              │ │   Management │ │   Management      │
+│ Order:       │ │              │ │                   │
+│ SDDC Mgr     │ │ Rotate via   │ │ Generate CSR      │
+│ → vCenter    │ │ SDDC Mgr     │ │ → sign → import   │
+│ → ESXi       │ │ (not direct  │ │                   │
+│ → NSX → vSAN │ │ in product)  │ │ Order:            │
+│              │ │              │ │ SDDC Mgr          │
+│ Pre-check    │ │ Update vault │ │ → vCenter         │
+│ first!       │ │ after rotate │ │ → NSX → ESXi      │
+└──────────────┘ └──────────────┘ └────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Routine VCF procedures: add host to free pool, create workload domain, rotate                        │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  passwords, renew certificates, and commission/decommission domains.                                  │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                                                                                                       │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │               Host Management                │  │              Domain Management              │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │         Commission host to free pool         │  │            Create workload domain           │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │         Validate: HCL + connectivity         │  │            Select hosts from pool           │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │          Assign to workload domain           │  │           SDDC Mgr deploys VC+NSX           │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │          Remove: decommission first          │  │           Decommission: drain VMs           │   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  Commission adds hardware capacity; workload domain creation consumes free pool hosts.                │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │          Credential &amp; Cert Rotation          │  │               Cluster Scaling               │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │         Rotate: SDDC Mgr &gt; Security          │  │         Expand: add hosts to domain         │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │        Remediate: fix stuck rotation         │  │           Contract: drain + remove          │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │           Certs: Certificates tab            │  │            Add cluster to domain            │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │            CSR: generate + import            │  │         Delete cluster: drain first         │   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│                                                                                                       │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  Adding hosts requires physical cabling, BIOS config, and SDDC Mgr commissioning;                     │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  password rotation may cause brief component restarts.                                                │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  Commission    = add physical host to SDDC Mgr free pool                                              │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  Decommission  = remove host from VCF; must drain first                                               │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  Free pool     = hosts available for domain assignment                                                │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  Workload domain= isolated cluster with its own vCenter + NSX                                         │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  Credential rotation= SDDC Mgr rotates passwords for all managed components                           │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  CSR           = Certificate Signing Request; generated by SDDC Mgr                                   │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  Remediate     = fix stuck lifecycle task; retry failed step                                          │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  Expand cluster= add hosts to existing cluster in a domain                                            │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  Contract      = reduce cluster size; hosts return to free pool                                       │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  Drain         = migrate VMs off host before decommission                                             │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  Security tab  = SDDC Mgr area for credential rotation and cert management                            │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  Certificate tab= SDDC Mgr UI for cert status, CSR, and import                                        │
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <ul>
 <li>Schedule: daily; retain at least 7 restore points</li>
 <li>On-demand: <code>SDDC Manager → Administration → Backup → Backup Now</code></li>
 </ul>
 <h2 id="password-management">Password Management<a class="headerlink" href="#password-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>SDDC Manager → Security → Password Management
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SDDC Manager → Security → Password Management
 </code></pre></div>
 <p><strong>Break-glass rotation procedure:</strong></p>
 <ol>

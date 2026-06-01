@@ -3923,7 +3923,57 @@
 <div class="kb-summary">
 Systematic diagnostic procedures for ONTAP. Start with cluster-level health, then narrow to the affected subsystem. Always collect an AutoSupport bundle before calling NetApp support.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── NetApp ONTAP — Diagnostics ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │           ONTAP diagnostics: log collection, health checks, and performance analysis          │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Tools: management CLI, REST API, vendor support bundle, and system event log         │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Performance: check I/O latency, throughput, queue depth, and cache hit rate          │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Collect support bundle before contacting vendor support to reduce time-to-resolve       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Identify issue → collect logs → run diagnostics → analyse → resolve                                │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           Cluster           │  │        HA node pairs        │  │          Scale-out          │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │             SVM             │  │        Virtual server       │  │       Protocol access       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Aggregate          │  │         RAID groups         │  │         Storage pool        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           FlexVol           │  │         Thin volume         │  │        Data container       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          SnapMirror         │  │         Replication         │  │          Async/Sync         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │    Component     │     Purpose      │      Protocol     │       Auth       │      Notes       │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │       SVM        │ Tenant isolation │   All protocols   │  Kerberos/NTLM   │  Virtual server  │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │    SnapMirror    │  DR replication  │    SM protocol    │   Certificate    │  Async or sync   │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    FlexClone     │  Instant clone   │      Internal     │    Admin role    │ Space-efficient  │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │      SM-BC       │ Zero-RPO active- │    SM protocol    │     Mediator     │     SAN only     │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: AFF/FAS HA node pairs · cluster network · client access network · MetroCluster           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    ONTAP              = NetApp storage OS; unified NAS, SAN, and object across AFF, FAS, ONTAP Select │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    SVM                = Storage Virtual Machine; logical storage server with protocols, IP, and vol...│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Aggregate          = RAID group of disks; underpins FlexVols and FlexGroups within a node          │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    FlexVol            = flexible thin-provisioned volume within an aggregate; most common container   │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    FlexGroup          = scale-out volume spanning multiple aggregates; for very large NAS workloads   │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    SnapMirror         = async or synchronous replication between ONTAP systems for DR and backup      │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    SnapVault          = backup-oriented SnapMirror variant; independent retention at destination      │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    FlexClone          = instant space-efficient writable clone of a volume or LUN from snapshot       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Snapshot           = ONTAP space-efficient PiT copy; stored in .snapshot directory on NFS          │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    ONTAP Mediator     = third-site quorum for SnapMirror SM-BC; prevents split-brain scenarios        │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    SM-BC              = SnapMirror Business Continuity; synchronous zero-RPO active-active SAN repl...│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    vserver            = ONTAP CLI name for SVM; vserver show and vserver nfs show are common commands │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="diagnostic-scope-broad-to-narrow">Diagnostic Scope: Broad to Narrow<a class="headerlink" href="#diagnostic-scope-broad-to-narrow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     first["First Response\ncluster show\nsystem health status show\nstorage failover show"] --&gt; scope{"Symptom scope?"}
@@ -3939,68 +3989,68 @@ Systematic diagnostic procedures for ONTAP. Start with cluster-level health, the
     scope --&gt;|"SnapMirror"| smDiag["snapmirror show -health false\nsnapmirror history show\nnetwork interface show -role intercluster"]
     scope --&gt;|"Performance"| perfDiag["statistics start -object volume\nqos statistics performance show\nsystem node run sysstat"]</code></pre>
 <h2 id="first-response-always-run-these-first">First Response — Always Run These First<a class="headerlink" href="#first-response-always-run-these-first" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Overall cluster health summary</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># HA pair state</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Check for any broken disks</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Check for any offline aggregates</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Check for any offline volumes</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># Check network interfaces that are down</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Recent CRITICAL and ERROR events</span>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span>1h
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Overall cluster health summary</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>system<span class="w"> </span>health<span class="w"> </span>status<span class="w"> </span>show
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>system<span class="w"> </span>health<span class="w"> </span>alert<span class="w"> </span>show
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># HA pair state</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>storage<span class="w"> </span>failover<span class="w"> </span>show
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Check for any broken disks</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check for any offline aggregates</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check for any offline volumes</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Check network interfaces that are down</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Recent CRITICAL and ERROR events</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span>1h
 </code></pre></div>
 <p>If any of these commands return unexpected results, follow the relevant subsystem diagnostic section below.</p>
 <hr />
 <h2 id="cluster-and-node-diagnostics">Cluster and Node Diagnostics<a class="headerlink" href="#cluster-and-node-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Cluster node count and status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cluster<span class="w"> </span>show
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># All nodes should show: health=true, eligibility=true</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Detailed node status including uptime</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>system<span class="w"> </span>node<span class="w"> </span>show
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,health,state,uptime,model,serial-number
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Node-level hardware configuration (drops to node shell)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-a
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Node environment (temperature, fans, power)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>environment<span class="w"> </span>status
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Node-level system resource utilisation</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysstat<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span><span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Check the cluster ring (internal cluster services)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>cluster<span class="w"> </span>ring<span class="w"> </span>show
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Epsilon node (tiebreaker in split-brain scenarios)</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>cluster<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,epsilon
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Cluster node count and status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cluster<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># All nodes should show: health=true, eligibility=true</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Detailed node status including uptime</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>system<span class="w"> </span>node<span class="w"> </span>show
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>system<span class="w"> </span>node<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,health,state,uptime,model,serial-number
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Node-level hardware configuration (drops to node shell)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysconfig<span class="w"> </span>-a
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Node environment (temperature, fans, power)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>environment<span class="w"> </span>status
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Node-level system resource utilisation</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysstat<span class="w"> </span>-c<span class="w"> </span><span class="m">5</span><span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Check the cluster ring (internal cluster services)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>cluster<span class="w"> </span>ring<span class="w"> </span>show
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Epsilon node (tiebreaker in split-brain scenarios)</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>cluster<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,epsilon
 </code></pre></div>
 <h3 id="storage-failover-diagnostics">Storage Failover Diagnostics<a class="headerlink" href="#storage-failover-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Detailed HA failover state</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,enabled,state,partner,takeover-enabled,giveback-status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check interconnect link status between HA partners</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>storage<span class="w"> </span>failover<span class="w"> </span>interconnect<span class="w"> </span>show
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Test cluster interconnect ping (HA heartbeat)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Show failover history (recent takeovers and givebacks)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>storage<span class="w"> </span>failover<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Detailed HA failover state</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>failover<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,enabled,state,partner,takeover-enabled,giveback-status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check interconnect link status between HA partners</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>storage<span class="w"> </span>failover<span class="w"> </span>interconnect<span class="w"> </span>show
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Test cluster interconnect ping (HA heartbeat)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Show failover history (recent takeovers and givebacks)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>storage<span class="w"> </span>failover<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
 </code></pre></div>
 <p>HA state interpretation:</p>
 <table>
@@ -4041,37 +4091,37 @@ Systematic diagnostic procedures for ONTAP. Start with cluster-level health, the
 </table>
 <hr />
 <h2 id="storage-aggregate-and-disk-diagnostics">Storage — Aggregate and Disk Diagnostics<a class="headerlink" href="#storage-aggregate-and-disk-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Aggregate health — show any not online</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,state,raid-status,percent-used
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Aggregate RAID status detail</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Disk health</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w"> </span>-fields<span class="w"> </span>disk,container-type,bay,shelf,node,serial-number
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare<span class="w">        </span><span class="c1"># confirm spares available for rebuild</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing<span class="w">   </span><span class="c1"># active RAID reconstruction</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># All disks with firmware revision and location</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,bay,shelf,node,firmware-revision,rpm,size,disk-type
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Disk shelf status</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Aggregate health — show any not online</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>aggr-name,node,state,raid-status,percent-used
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Aggregate RAID status detail</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-raidtree<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Disk health</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-broken<span class="w"> </span>-fields<span class="w"> </span>disk,container-type,bay,shelf,node,serial-number
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-container-type<span class="w"> </span>spare<span class="w">        </span><span class="c1"># confirm spares available for rebuild</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing<span class="w">   </span><span class="c1"># active RAID reconstruction</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># All disks with firmware revision and location</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>disk,bay,shelf,node,firmware-revision,rpm,size,disk-type
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Disk shelf status</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>storage<span class="w"> </span>shelf<span class="w"> </span>show<span class="w"> </span>-detail
 </code></pre></div>
 <h3 id="raid-reconstruction-monitoring">RAID Reconstruction Monitoring<a class="headerlink" href="#raid-reconstruction-monitoring" title="Permanent link">&para;</a></h3>
 <p>When a disk fails and a spare is available, ONTAP automatically starts RAID reconstruction. Monitor progress:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show reconstruction status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show aggregate state during reconstruction</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,raid-status
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Watch reconstruction progress (check every 60 seconds)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Look for &quot;Parity reconstruction&quot; or &quot;Data reconstruction&quot; with a percentage</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show reconstruction status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>storage<span class="w"> </span>disk<span class="w"> </span>show<span class="w"> </span>-raid-state<span class="w"> </span>reconstructing
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show aggregate state during reconstruction</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,raid-status
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Watch reconstruction progress (check every 60 seconds)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show-status<span class="w"> </span>-aggregate<span class="w"> </span>&lt;aggr_name&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Look for &quot;Parity reconstruction&quot; or &quot;Data reconstruction&quot; with a percentage</span>
 </code></pre></div>
 <p>Typical reconstruction times depend on disk type and size:
 - NVMe SSD: hours to a day for large capacities
@@ -4079,210 +4129,210 @@ Systematic diagnostic procedures for ONTAP. Start with cluster-level health, the
 - SATA HDD: 12–48+ hours per TB</p>
 <hr />
 <h2 id="volume-diagnostics">Volume Diagnostics<a class="headerlink" href="#volume-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Volume state — identify offline or restricted volumes</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>offline
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>restricted
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Volume capacity — identify full or near-full volumes</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,size,used,available,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rn
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Autosize configuration</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,autosize-mode,max-autosize,grow-threshold-percent
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Space guarantee and snapshot reserve</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,space-guarantee,snapshot-percent,percent-snapshot-space
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Volume efficiency status (dedup / compression)</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># FlexClone volumes and their parent</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>volume<span class="w"> </span>clone<span class="w"> </span>show
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>volume<span class="w"> </span>clone<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>flexclone,parent-volume,parent-snapshot
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># Volume move status</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>volume<span class="w"> </span>move<span class="w"> </span>show
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># Volume rehost status (SVM migration)</span>
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>volume<span class="w"> </span>rehost<span class="w"> </span>-vserver<span class="w"> </span>&lt;src_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-destination-vserver<span class="w"> </span>&lt;dest_svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Volume state — identify offline or restricted volumes</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>!online
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>offline
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>volume<span class="w"> </span>show<span class="w"> </span>-state<span class="w"> </span>restricted
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Volume capacity — identify full or near-full volumes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,size,used,available,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k5<span class="w"> </span>-rn
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Autosize configuration</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>vserver,volume,autosize-mode,max-autosize,grow-threshold-percent
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Space guarantee and snapshot reserve</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>volume,space-guarantee,snapshot-percent,percent-snapshot-space
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Volume efficiency status (dedup / compression)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>volume<span class="w"> </span>efficiency<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># FlexClone volumes and their parent</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>volume<span class="w"> </span>clone<span class="w"> </span>show
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>volume<span class="w"> </span>clone<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>flexclone,parent-volume,parent-snapshot
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Volume move status</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>volume<span class="w"> </span>move<span class="w"> </span>show
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Volume rehost status (SVM migration)</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>volume<span class="w"> </span>rehost<span class="w"> </span>-vserver<span class="w"> </span>&lt;src_svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-destination-vserver<span class="w"> </span>&lt;dest_svm&gt;
 </code></pre></div>
 <hr />
 <h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># LIF status — identify any down interfaces</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,curr-node,home-port,curr-port,status-oper
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># LIFs not on home port (migrated due to failover or maintenance)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Port status — identify failed or degraded ports</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>network<span class="w"> </span>port<span class="w"> </span>show
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,health-status,link-status,speed,mtu
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Interface group (bond/LACP) status</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>network<span class="w"> </span>port<span class="w"> </span>ifgrp<span class="w"> </span>show
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># VLAN configuration</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>network<span class="w"> </span>port<span class="w"> </span>vlan<span class="w"> </span>show
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Routing table</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>network<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c1"># Test connectivity from a specific LIF</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;target_ip&gt;
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="c1"># Check cluster interconnect connectivity</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># LIF status — identify any down interfaces</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>network<span class="w"> </span>interface<span class="w"> </span>show
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-status-oper<span class="w"> </span>down
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>lif,vserver,address,home-node,curr-node,home-port,curr-port,status-oper
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># LIFs not on home port (migrated due to failover or maintenance)</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-is-home<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Port status — identify failed or degraded ports</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>network<span class="w"> </span>port<span class="w"> </span>show
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,health-status,link-status,speed,mtu
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Interface group (bond/LACP) status</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>network<span class="w"> </span>port<span class="w"> </span>ifgrp<span class="w"> </span>show
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># VLAN configuration</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>network<span class="w"> </span>port<span class="w"> </span>vlan<span class="w"> </span>show
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="c1"># Routing table</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>network<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c1"># Test connectivity from a specific LIF</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;target_ip&gt;
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="c1"># Check cluster interconnect connectivity</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
 </code></pre></div>
 <h3 id="mtu-jumbo-frame-verification">MTU / Jumbo Frame Verification<a class="headerlink" href="#mtu-jumbo-frame-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check ONTAP port MTU settings</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,mtu
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Ping with large payload to test jumbo frames end-to-end</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;target_ip&gt;<span class="w"> </span>-packet-size<span class="w"> </span><span class="m">8972</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># 8972 bytes = 9000 byte jumbo frame minus IP/ICMP headers</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Ping should succeed if switches and target support jumbo frames</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check ONTAP port MTU settings</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,mtu
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Ping with large payload to test jumbo frames end-to-end</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;target_ip&gt;<span class="w"> </span>-packet-size<span class="w"> </span><span class="m">8972</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># 8972 bytes = 9000 byte jumbo frame minus IP/ICMP headers</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Ping should succeed if switches and target support jumbo frames</span>
 </code></pre></div>
 <hr />
 <h2 id="protocol-specific-diagnostics">Protocol-Specific Diagnostics<a class="headerlink" href="#protocol-specific-diagnostics" title="Permanent link">&para;</a></h2>
 <h3 id="nfs-diagnostics">NFS Diagnostics<a class="headerlink" href="#nfs-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># NFS service status per SVM</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Connected NFS clients</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># NFS export policy rules</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;policy&gt;
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Test client IP against export policy</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>check-access<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-client-ip<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-authentication-method<span class="w"> </span>sys<span class="w"> </span>-protocol<span class="w"> </span>nfs3
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># NFS statistics (read/write ops and latency)</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># wait 30 seconds</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># NFS service status per SVM</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vserver<span class="w"> </span>nfs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Connected NFS clients</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>nfs<span class="w"> </span>connected-client<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># NFS export policy rules</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>rule<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-policyname<span class="w"> </span>&lt;policy&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Test client IP against export policy</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>vserver<span class="w"> </span>export-policy<span class="w"> </span>check-access<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-volume<span class="w"> </span>&lt;vol&gt;<span class="w"> </span>-client-ip<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>-authentication-method<span class="w"> </span>sys<span class="w"> </span>-protocol<span class="w"> </span>nfs3
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># NFS statistics (read/write ops and latency)</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># wait 30 seconds</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>nfs-diag
 </code></pre></div>
 <h3 id="cifssmb-diagnostics">CIFS/SMB Diagnostics<a class="headerlink" href="#cifssmb-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># CIFS server and domain status</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># CIFS domain controller connectivity</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>discovered-servers<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Active CIFS sessions</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>node,connection-count,open-files
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Open files on an SVM</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>file<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># CIFS SMB statistics</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>smb1<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>smb2<span class="w"> </span>-sample-id<span class="w"> </span>smb2-diag
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># wait 30 seconds</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>smb2-diag
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># CIFS server and domain status</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>info<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># CIFS domain controller connectivity</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>domain<span class="w"> </span>discovered-servers<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Active CIFS sessions</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>node,connection-count,open-files
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># Open files on an SVM</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>vserver<span class="w"> </span>cifs<span class="w"> </span>session<span class="w"> </span>file<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># CIFS SMB statistics</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>smb1<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>smb2<span class="w"> </span>-sample-id<span class="w"> </span>smb2-diag
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># wait 30 seconds</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>smb2-diag
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>smb-diag
 </code></pre></div>
 <h3 id="iscsi-diagnostics">iSCSI Diagnostics<a class="headerlink" href="#iscsi-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># iSCSI service status</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># iSCSI sessions (connected initiators)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,lif,tpgroup,connection-count
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># iSCSI initiators</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># iSCSI target portal groups</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># LUN mapping — confirm host can see LUNs</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup_name&gt;
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># igroup membership</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># iSCSI service status</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>iscsi<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># iSCSI sessions (connected initiators)</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>iscsi<span class="w"> </span>session<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-fields<span class="w"> </span>initiator-name,lif,tpgroup,connection-count
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># iSCSI initiators</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>iscsi<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># iSCSI target portal groups</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>iscsi<span class="w"> </span>tpgroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># LUN mapping — confirm host can see LUNs</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>lun<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>lun<span class="w"> </span>mapping<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-igroup<span class="w"> </span>&lt;igroup_name&gt;
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># igroup membership</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>lun<span class="w"> </span>igroup<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <h3 id="fc-fcoe-diagnostics">FC / FCoE Diagnostics<a class="headerlink" href="#fc-fcoe-diagnostics" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># FC service status</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># FC adapter status (physical ports)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,adapter,state,speed,fabric-established
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># FC initiators (logged-in hosts)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># FC interface status (FC LIFs)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>fcp<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># FC topology information</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>fcp<span class="w"> </span>topology<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># FC service status</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>fcp<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># FC adapter status (physical ports)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>fcp<span class="w"> </span>adapter<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,adapter,state,speed,fabric-established
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># FC initiators (logged-in hosts)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>fcp<span class="w"> </span>initiator<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># FC interface status (FC LIFs)</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>fcp<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># FC topology information</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>fcp<span class="w"> </span>topology<span class="w"> </span>show
 </code></pre></div>
 <hr />
 <h2 id="snapmirror-diagnostics">SnapMirror Diagnostics<a class="headerlink" href="#snapmirror-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># All relationships with health and lag</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-end-timestamp
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Only unhealthy relationships</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Transfer progress (active transfers)</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-transfer-progress
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># Transfer history for a specific relationship</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="c1"># Lag for all relationships (compact view)</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>snapmirror<span class="w"> </span>lag<span class="w"> </span>show
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="c1"># SnapMirror network statistics (bandwidth usage)</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>snapmirror<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># wait 30 seconds</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="c1"># Check intercluster LIF status (required for cross-cluster SnapMirror)</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># All relationships with health and lag</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>source-path,destination-path,lag-time,healthy,state,last-transfer-end-timestamp
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Only unhealthy relationships</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-health<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Transfer progress (active transfers)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>snapmirror<span class="w"> </span>show<span class="w"> </span>-transfer-progress
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Transfer history for a specific relationship</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>snapmirror<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-destination-path<span class="w"> </span>&lt;dest_svm&gt;:&lt;dest_vol&gt;
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># Lag for all relationships (compact view)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>snapmirror<span class="w"> </span>lag<span class="w"> </span>show
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="c1"># SnapMirror network statistics (bandwidth usage)</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>snapmirror<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># wait 30 seconds</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>sm-diag
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="c1"># Check intercluster LIF status (required for cross-cluster SnapMirror)</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>network<span class="w"> </span>interface<span class="w"> </span>show<span class="w"> </span>-role<span class="w"> </span>intercluster
 </code></pre></div>
 <hr />
 <h2 id="performance-diagnostics">Performance Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
 <p>ONTAP statistics require a start/stop sample cycle. The first sample after <code>statistics start</code> is discarded — always let it run for at least 30 seconds before stopping to get meaningful data.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Volume-level performance statistics</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># wait 30–60 seconds</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Filter for key latency metrics (microseconds)</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_latency|read_latency|write_latency&quot;</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Filter for IOPS</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_ops|read_ops|write_ops&quot;</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1"># NFS-specific statistics</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-sample-id<span class="w"> </span>nfs-perf
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv4_1<span class="w"> </span>-sample-id<span class="w"> </span>nfs4-perf
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="c1"># iSCSI statistics</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>iscsi_lif<span class="w"> </span>-sample-id<span class="w"> </span>iscsi-perf
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="c1"># Volume-specific statistics (single volume)</span>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-instance<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency,total_ops
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="c1"># QoS workload statistics (shows throttling and floor/ceiling hit rates)</span>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>performance<span class="w"> </span>show
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a>
-<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="c1"># Node-level CPU and disk utilisation (node shell)</span>
-<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysstat<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Volume-level performance statistics</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># wait 30–60 seconds</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>statistics<span class="w"> </span>stop<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Filter for key latency metrics (microseconds)</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_latency|read_latency|write_latency&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Filter for IOPS</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>statistics<span class="w"> </span>show<span class="w"> </span>-sample-id<span class="w"> </span>vol-perf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;total_ops|read_ops|write_ops&quot;</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># NFS-specific statistics</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv3<span class="w"> </span>-sample-id<span class="w"> </span>nfs-perf
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>nfsv4_1<span class="w"> </span>-sample-id<span class="w"> </span>nfs4-perf
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="c1"># iSCSI statistics</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>statistics<span class="w"> </span>start<span class="w"> </span>-object<span class="w"> </span>iscsi_lif<span class="w"> </span>-sample-id<span class="w"> </span>iscsi-perf
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="c1"># Volume-specific statistics (single volume)</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>volume<span class="w"> </span>-instance<span class="w"> </span>&lt;vol_name&gt;<span class="w"> </span>-counter<span class="w"> </span>read_latency,write_latency,total_ops
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a><span class="c1"># QoS workload statistics (shows throttling and floor/ceiling hit rates)</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>qos<span class="w"> </span>statistics<span class="w"> </span>performance<span class="w"> </span>show
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>qos<span class="w"> </span>statistics<span class="w"> </span>workload<span class="w"> </span>performance<span class="w"> </span>show
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="c1"># Node-level CPU and disk utilisation (node shell)</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>system<span class="w"> </span>node<span class="w"> </span>run<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>sysstat<span class="w"> </span>-c<span class="w"> </span><span class="m">10</span><span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>
 </code></pre></div>
 <h3 id="latency-interpretation">Latency Interpretation<a class="headerlink" href="#latency-interpretation" title="Permanent link">&para;</a></h3>
 <table>
@@ -4334,31 +4384,31 @@ Systematic diagnostic procedures for ONTAP. Start with cluster-level health, the
 - SnapMirror or efficiency jobs running during production peak hours</p>
 <hr />
 <h2 id="ems-event-log-analysis">EMS Event Log Analysis<a class="headerlink" href="#ems-event-log-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Recent events by severity</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>EMERGENCY
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ALERT
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Events in the last hour</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span>1h
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Events from a specific node</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-severity<span class="w"> </span>ERROR
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="c1"># Search for a specific message name (pattern)</span>
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>wafl.vol.full
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>raid.*
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>disk.*
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># Events related to SnapMirror</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>snapmirror.*
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="c1"># Events related to callhome (AutoSupport triggers)</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
-<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
-<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="c1"># Show event details including description</span>
-<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>&lt;message_name&gt;<span class="w"> </span>-detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Recent events by severity</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>EMERGENCY
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ALERT
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>CRITICAL
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Events in the last hour</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-severity<span class="w"> </span>ERROR<span class="w"> </span>-time-range<span class="w"> </span>1h
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Events from a specific node</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-severity<span class="w"> </span>ERROR
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c1"># Search for a specific message name (pattern)</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>wafl.vol.full
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>raid.*
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>disk.*
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># Events related to SnapMirror</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>snapmirror.*
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># Events related to callhome (AutoSupport triggers)</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>callhome.*
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="c1"># Show event details including description</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>event<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-messagename<span class="w"> </span>&lt;message_name&gt;<span class="w"> </span>-detail
 </code></pre></div>
 <p>Common EMS messages and their meaning:</p>
 <table>
@@ -4463,57 +4513,57 @@ Systematic diagnostic procedures for ONTAP. Start with cluster-level health, the
 <hr />
 <h2 id="autosupport-bundle">AutoSupport Bundle<a class="headerlink" href="#autosupport-bundle" title="Permanent link">&para;</a></h2>
 <p>AutoSupport bundles are the primary support artifact. Generate one before calling support:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Generate AutoSupport tied to a support case</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;case &lt;SR-number&gt; - &lt;description&gt;&quot;</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Verify delivery</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-most-recent<span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># Status should show: sent-successful</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Generate AutoSupport tied to a support case</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>invoke<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-type<span class="w"> </span>all<span class="w"> </span>-message<span class="w"> </span><span class="s2">&quot;case &lt;SR-number&gt; - &lt;description&gt;&quot;</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Verify delivery</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span><span class="nb">history</span><span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>*<span class="w"> </span>-most-recent<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Status should show: sent-successful</span>
 </code></pre></div>
 <p>If AutoSupport delivery is failing:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check AutoSupport configuration</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Test connectivity to NetApp endpoints</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>check<span class="w"> </span>show
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Check proxy configuration if the cluster cannot reach the internet directly</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>proxy-url,transport
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check AutoSupport configuration</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Test connectivity to NetApp endpoints</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>check<span class="w"> </span>show
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Check proxy configuration if the cluster cannot reach the internet directly</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>system<span class="w"> </span>node<span class="w"> </span>autosupport<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>proxy-url,transport
 </code></pre></div>
 <hr />
 <h2 id="network-diagnostics_1">Network Diagnostics<a class="headerlink" href="#network-diagnostics_1" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Ping from a specific LIF to a client or target</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check port health and link status</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,health-status,link-status,mtu
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Check cluster interconnect</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Trace route from a LIF (ONTAP 9.8+)</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>network<span class="w"> </span>traceroute<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># DNS resolution check</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1"># LDAP connectivity check</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Ping from a specific LIF to a client or target</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>network<span class="w"> </span>ping<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Check port health and link status</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>network<span class="w"> </span>port<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>node,port,health-status,link-status,mtu
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Check cluster interconnect</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>cluster<span class="w"> </span>ping-cluster<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Trace route from a LIF (ONTAP 9.8+)</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>network<span class="w"> </span>traceroute<span class="w"> </span>-lif<span class="w"> </span>&lt;lif_name&gt;<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;<span class="w"> </span>-destination<span class="w"> </span>&lt;ip&gt;
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="c1"># DNS resolution check</span>
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>dns<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="c1"># LDAP connectivity check</span>
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>vserver<span class="w"> </span>services<span class="w"> </span>name-service<span class="w"> </span>ldap<span class="w"> </span>check<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm&gt;
 </code></pre></div>
 <hr />
 <h2 id="coredump-and-system-panic-analysis">Coredump and System Panic Analysis<a class="headerlink" href="#coredump-and-system-panic-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># List core dump files</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>show
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Show core dump details</span>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,type,panic-string,uptime-before-crash
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c1"># Delete processed core dumps (after AutoSupport upload)</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>delete<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-corefile<span class="w"> </span>&lt;filename&gt;
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="c1"># Check Service Processor logs for pre-panic system events</span>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>system<span class="w"> </span>service-processor<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>system<span class="w"> </span>service-processor<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-num-rows<span class="w"> </span><span class="m">100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># List core dump files</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>show
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Show core dump details</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-fields<span class="w"> </span>state,type,panic-string,uptime-before-crash
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Delete processed core dumps (after AutoSupport upload)</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>system<span class="w"> </span>node<span class="w"> </span>coredump<span class="w"> </span>delete<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-corefile<span class="w"> </span>&lt;filename&gt;
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="c1"># Check Service Processor logs for pre-panic system events</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>system<span class="w"> </span>service-processor<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>system<span class="w"> </span>service-processor<span class="w"> </span>log<span class="w"> </span>show<span class="w"> </span>-node<span class="w"> </span>&lt;node_name&gt;<span class="w"> </span>-num-rows<span class="w"> </span><span class="m">100</span>
 </code></pre></div>
 <p>A node panic followed by an automatic HA takeover is normal ONTAP behavior — the key diagnostic information is in the panic string and the EMS log immediately preceding the panic. Always generate an AutoSupport when an unexpected panic occurs.</p>
 

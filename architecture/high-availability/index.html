@@ -2728,106 +2728,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vsphere-fault-tolerance-ft" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSphere Fault Tolerance (FT)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage High Availability
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage High Availability">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#raid-and-local-redundancy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RAID and Local Redundancy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multipath-io-mpio" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multipath I/O (MPIO)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vsan-stretched-cluster" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vSAN Stretched Cluster
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#network-high-availability" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Network High Availability
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Network High Availability">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#nic-bonding-lacp-8023ad" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NIC Bonding (LACP / 802.3ad)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dual-top-of-rack-topology" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dual Top-of-Rack Topology
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ecmp-for-layer-3-redundancy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3238,206 +3138,55 @@
 │    Fencing      = Isolate a failed node before failover to prevent split-brain                        │
 │    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.</p>
-<p><strong>Heartbeat Datastores</strong>
-Configure at least 2 datastore heartbeat targets on separate storage paths to prevent false-positive host isolation events. Use non-vSAN datastores (NFS or VMFS on external storage) as heartbeat targets in vSAN clusters to avoid circular dependency.</p>
-<p><strong>Isolation Response</strong>
-Default: "Leave powered on" — appropriate when the network, not the host, has failed. Set to "Shut down and restart" only when storage fencing ensures split-brain cannot occur (e.g., vSAN witness ensures quorum).</p>
-<p><strong>Host Monitoring</strong>
-Enable host monitoring. Set the PDL (Permanent Device Loss) response to "Power off and restart VMs" for vSAN clusters — PDL indicates the storage fabric, not just a transient path failure.</p>
-<h3 id="vsphere-fault-tolerance-ft">vSphere Fault Tolerance (FT)<a class="headerlink" href="#vsphere-fault-tolerance-ft" title="Permanent link">&para;</a></h3>
-<p>FT provides zero-downtime protection (RTO ~0) for single VMs. Use cases are narrow due to cost and constraints.</p>
-<table>
-<thead>
-<tr>
-<th>Attribute</th>
-<th>vSphere HA</th>
-<th>vSphere FT</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RTO</td>
-<td>30–180 s (restart)</td>
-<td>~0 s (lockstep)</td>
-</tr>
-<tr>
-<td>RPO</td>
-<td>Loss of in-flight transactions</td>
-<td>0</td>
-</tr>
-<tr>
-<td>vCPU limit</td>
-<td>No limit</td>
-<td>8 vCPU per VM</td>
-</tr>
-<tr>
-<td>Memory limit</td>
-<td>No limit</td>
-<td>No official limit (practical: &lt;128 GB)</td>
-</tr>
-<tr>
-<td>Cost</td>
-<td>Included in vSphere</td>
-<td>Requires dedicated CPU reservation</td>
-</tr>
-<tr>
-<td>Use case</td>
-<td>All Tier 1/2 VMs</td>
-<td>Tier 0: core network services, license servers</td>
-</tr>
-</tbody>
-</table>
-<p>FT requires a dedicated 10 GbE or 25 GbE logging network segment, isolated from vMotion traffic.</p>
-<hr />
-<h2 id="storage-high-availability">Storage High Availability<a class="headerlink" href="#storage-high-availability" title="Permanent link">&para;</a></h2>
-<h3 id="raid-and-local-redundancy">RAID and Local Redundancy<a class="headerlink" href="#raid-and-local-redundancy" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>RAID Level</th>
-<th>Min Drives</th>
-<th>Failure Tolerance</th>
-<th>Write Penalty</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RAID-1</td>
-<td>2</td>
-<td>1 drive</td>
-<td>2×</td>
-<td>OS/boot volumes, small critical data</td>
-</tr>
-<tr>
-<td>RAID-5</td>
-<td>3</td>
-<td>1 drive</td>
-<td>4×</td>
-<td>General purpose (not recommended for &gt;4 TB drives)</td>
-</tr>
-<tr>
-<td>RAID-6</td>
-<td>4</td>
-<td>2 drives</td>
-<td>6×</td>
-<td>Archive, large spinning disk arrays</td>
-</tr>
-<tr>
-<td>RAID-10</td>
-<td>4</td>
-<td>1 per mirrored pair</td>
-<td>2×</td>
-<td>OLTP, high I/O databases</td>
-</tr>
-<tr>
-<td>RAID-50</td>
-<td>6</td>
-<td>1 per RAID-5 set</td>
-<td>4×</td>
-<td>Balanced capacity and performance</td>
-</tr>
-</tbody>
-</table>
-<p>For flash arrays (Dell PowerMax, Pure Storage, NetApp AFF), vendor-specific RAID-DP or parity schemes replace traditional RAID. Validate the effective drive failure tolerance with the vendor before deployment.</p>
-<h3 id="multipath-io-mpio">Multipath I/O (MPIO)<a class="headerlink" href="#multipath-io-mpio" title="Permanent link">&para;</a></h3>
-<p>Always configure multipath for SAN-attached storage. Two independent paths are the minimum for HA; four paths (two HBAs × two fabrics) are standard for Tier 0/1.</p>
-<p><strong>Path selection policies:</strong>
-- <strong>Round Robin</strong> — distributes I/O across all active paths; preferred for uniform path speeds
-- <strong>Fixed (preferred)</strong> — all I/O on one path; others are standby; used when paths have unequal bandwidth
-- <strong>MRU (Most Recently Used)</strong> — stays on one path until it fails; least optimal; avoid for production</p>
-<p>For VMware with Dell PowerMax: use VMware Native Multipathing (NMP) with the PowerPath/VE plugin and <code>RoundRobin</code> with I/O operations limit set to 1 (IOPS-based switching rather than byte-count switching).</p>
-<h3 id="vsan-stretched-cluster">vSAN Stretched Cluster<a class="headerlink" href="#vsan-stretched-cluster" title="Permanent link">&para;</a></h3>
-<p>vSAN Stretched Cluster extends a single cluster across two sites with a witness host in a third location (or vCenter). It provides RPO=0 and RTO measured in seconds for site-level failures.</p>
-<pre class="mermaid"><code>graph LR
-    subgraph Site_A["Site A (Primary)"]
-        H1["ESXi Host 1\nvSAN Data"]
-        H2["ESXi Host 2\nvSAN Data"]
-    end
-    subgraph Site_B["Site B (Secondary)"]
-        H3["ESXi Host 3\nvSAN Data"]
-        H4["ESXi Host 4\nvSAN Data"]
-    end
-    subgraph Witness_Site["Witness Site / Cloud"]
-        W["vSAN Witness\n(metadata only)"]
-    end
-    H1 &lt;--&gt;|"Sync replication\n&lt;5ms RTT required"| H3
-    H2 &lt;--&gt;|"Sync replication"| H4
-    H1 &amp; H2 &lt;--&gt;|"Witness heartbeat"| W
-    H3 &amp; H4 &lt;--&gt;|"Witness heartbeat"| W</code></pre>
-<p><strong>vSAN Stretched Cluster requirements:</strong>
-- Intersite latency: ≤5 ms RTT (synchronous replication)
-- Bandwidth: size for peak write throughput × 2 (all writes cross both sites)
-- Witness host: 4 vCPU, 16 GB RAM per 750 VM components
-- Storage Policy: FTT=1, RAID-1, stretched — ensures one copy per site</p>
-<hr />
-<h2 id="network-high-availability">Network High Availability<a class="headerlink" href="#network-high-availability" title="Permanent link">&para;</a></h2>
-<h3 id="nic-bonding-lacp-8023ad">NIC Bonding (LACP / 802.3ad)<a class="headerlink" href="#nic-bonding-lacp-8023ad" title="Permanent link">&para;</a></h3>
-<p>All production ESXi hosts should have a minimum of 2 × 25 GbE NICs bonded in LACP across two upstream ToR switches. Configure the vSphere Distributed Switch (vDS) uplink team with <strong>Route based on IP hash</strong> or <strong>Route based on physical NIC load</strong> (enhanced LACP) teaming policy.</p>
-<p>Separate traffic types onto dedicated VMkernel ports with dedicated uplinks:</p>
-<table>
-<thead>
-<tr>
-<th>Traffic Type</th>
-<th>Recommended Bandwidth</th>
-<th>VLAN Assignment</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VM Network (Production)</td>
-<td>Shared 25 GbE bond</td>
-<td>VLAN 100–199</td>
-</tr>
-<tr>
-<td>vMotion</td>
-<td>Dedicated 25 GbE (or 10 GbE)</td>
-<td>VLAN 200</td>
-</tr>
-<tr>
-<td>vSAN / Storage</td>
-<td>Dedicated 25 GbE (or 10 GbE)</td>
-<td>VLAN 300</td>
-</tr>
-<tr>
-<td>Management (ESXi/vCenter)</td>
-<td>Shared or dedicated 1 GbE</td>
-<td>VLAN 400</td>
-</tr>
-<tr>
-<td>Backup / Replication</td>
-<td>Shared or dedicated 10 GbE</td>
-<td>VLAN 500</td>
-</tr>
-<tr>
-<td>FT Logging</td>
-<td>Dedicated 10 GbE</td>
-<td>VLAN 600</td>
-</tr>
-</tbody>
-</table>
-<h3 id="dual-top-of-rack-topology">Dual Top-of-Rack Topology<a class="headerlink" href="#dual-top-of-rack-topology" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph TD
-    Core_A["Core Switch A\n(Cisco Nexus 9504)"]
-    Core_B["Core Switch B\n(Cisco Nexus 9504)"]
-    ToR_A["ToR Switch A\n(Nexus 93180YC-FX)"]
-    ToR_B["ToR Switch B\n(Nexus 93180YC-FX)"]
-    H1["ESXi Host 1\n2×25GbE"]
-    H2["ESXi Host 2\n2×25GbE"]
-    H3["ESXi Host 3\n2×25GbE"]
-
-    Core_A &lt;--&gt;|"vPC peer-link\n2×100GbE"| Core_B
-    Core_A --&gt; ToR_A &amp; ToR_B
-    Core_B --&gt; ToR_A &amp; ToR_B
-    ToR_A &lt;--&gt;|"vPC"| ToR_B
-    H1 --&gt;|"NIC 1"| ToR_A
-    H1 --&gt;|"NIC 2"| ToR_B
-    H2 --&gt;|"NIC 1"| ToR_A
-    H2 --&gt;|"NIC 2"| ToR_B
-    H3 --&gt;|"NIC 1"| ToR_A
-    H3 --&gt;|"NIC 2"| ToR_B</code></pre>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**vSAN Stretched Cluster requirements:**
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>- Intersite latency: ≤5 ms RTT (synchronous replication)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>- Bandwidth: size for peak write throughput × 2 (all writes cross both sites)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>- Witness host: 4 vCPU, 16 GB RAM per 750 VM components
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- Storage Policy: FTT=1, RAID-1, stretched — ensures one copy per site
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>---
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>## Network High Availability
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>### NIC Bonding (LACP / 802.3ad)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>All production ESXi hosts should have a minimum of 2 × 25 GbE NICs bonded in LACP across two upstream ToR switches. Configure the vSphere Distributed Switch (vDS) uplink team with **Route based on IP hash** or **Route based on physical NIC load** (enhanced LACP) teaming policy.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>Separate traffic types onto dedicated VMkernel ports with dedicated uplinks:
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Traffic Type | Recommended Bandwidth | VLAN Assignment |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>|-------------|----------------------|-----------------|
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| VM Network (Production) | Shared 25 GbE bond | VLAN 100–199 |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| vMotion | Dedicated 25 GbE (or 10 GbE) | VLAN 200 |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| vSAN / Storage | Dedicated 25 GbE (or 10 GbE) | VLAN 300 |
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| Management (ESXi/vCenter) | Shared or dedicated 1 GbE | VLAN 400 |
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>| Backup / Replication | Shared or dedicated 10 GbE | VLAN 500 |
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| FT Logging | Dedicated 10 GbE | VLAN 600 |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>### Dual Top-of-Rack Topology
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>```mermaid
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>graph TD
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    Core_A[&quot;Core Switch A\n(Cisco Nexus 9504)&quot;]
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    Core_B[&quot;Core Switch B\n(Cisco Nexus 9504)&quot;]
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    ToR_A[&quot;ToR Switch A\n(Nexus 93180YC-FX)&quot;]
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    ToR_B[&quot;ToR Switch B\n(Nexus 93180YC-FX)&quot;]
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    H1[&quot;ESXi Host 1\n2×25GbE&quot;]
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    H2[&quot;ESXi Host 2\n2×25GbE&quot;]
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    H3[&quot;ESXi Host 3\n2×25GbE&quot;]
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    Core_A &lt;--&gt;|&quot;vPC peer-link\n2×100GbE&quot;| Core_B
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    Core_A --&gt; ToR_A &amp; ToR_B
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    Core_B --&gt; ToR_A &amp; ToR_B
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    ToR_A &lt;--&gt;|&quot;vPC&quot;| ToR_B
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    H1 --&gt;|&quot;NIC 1&quot;| ToR_A
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    H1 --&gt;|&quot;NIC 2&quot;| ToR_B
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    H2 --&gt;|&quot;NIC 1&quot;| ToR_A
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    H2 --&gt;|&quot;NIC 2&quot;| ToR_B
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    H3 --&gt;|&quot;NIC 1&quot;| ToR_A
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    H3 --&gt;|&quot;NIC 2&quot;| ToR_B
+</code></pre></div></p>
 <p>Cisco vPC (Virtual Port Channel) enables both ToR switches to present a single logical port channel to each host, eliminating Spanning Tree blocking. Both uplinks carry traffic simultaneously.</p>
 <h3 id="ecmp-for-layer-3-redundancy">ECMP for Layer 3 Redundancy<a class="headerlink" href="#ecmp-for-layer-3-redundancy" title="Permanent link">&para;</a></h3>
 <p>For environments using routed access (no Layer 2 between hosts), configure ECMP (Equal Cost Multi-Path) at the distribution and core layers. NSX-T with BGP edge uplinks supports ECMP across 8 paths. This provides both redundancy and horizontal bandwidth scaling.</p>

@@ -3532,39 +3532,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#data-at-rest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data at Rest
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-in-flight-nfs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data in Flight — NFS
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-in-flight-smb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data in Flight — SMB
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#data-in-flight-management-and-s3" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3790,39 +3757,48 @@
 Encryption reference covering Data at Rest, Data in Flight — NFS, Data in Flight — SMB, Data in Flight — Management and S3, Audit Logging and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashBlade Encryption Architecture
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Data at Rest (always-on)                                  │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Drive removed → crypto erase (DEK destroyed)              │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>┌────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Data in Transit                                           │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)          │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ├── SMB 3.0: end-to-end SMB encryption (AES-128-GCM)      │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── S3: HTTPS (TLS 1.2+)                                  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├── Management GUI/API: HTTPS (443)                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └── Replication (ActiveDR): TLS between FlashBlades       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└────────────────────────────────────────────────────────────┘
+<p>FlashBlade Encryption Architecture
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
 </code></pre></div>
-<blockquote>
-<p>Part of the <a href="../">FlashBlade Security</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="data-at-rest">Data at Rest<a class="headerlink" href="#data-at-rest" title="Permanent link">&para;</a></h2>
-<p>All data written to FlashBlade drives is encrypted using XTS-AES-256. Encryption is always on and cannot be disabled. Drives are self-encrypting; when a drive is removed or replaced, data is cryptographically erased by destroying the drive encryption key.</p>
-<h2 id="data-in-flight-nfs">Data in Flight — NFS<a class="headerlink" href="#data-in-flight-nfs" title="Permanent link">&para;</a></h2>
-<p>NFS v4.1 Kerberos authentication modes supported:</p>
-<ul>
-<li><code>krb5</code> — authentication only</li>
-<li><code>krb5i</code> — authentication + integrity</li>
-<li><code>krb5p</code> — authentication + integrity + privacy (full encryption)</li>
-</ul>
-<p>Configure Kerberos in the NFS export policy to enforce encrypted NFS sessions. Requires an Active Directory or MIT Kerberos KDC.</p>
-<h2 id="data-in-flight-smb">Data in Flight — SMB<a class="headerlink" href="#data-in-flight-smb" title="Permanent link">&para;</a></h2>
-<p>SMB encryption (AES-128-CCM or AES-256-GCM) is configurable per share. Enable SMB encryption to protect data in transit between Windows clients and FlashBlade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>purefb<span class="w"> </span>smb-share<span class="w"> </span>update<span class="w"> </span>--smb-encryption-mode<span class="w"> </span>required<span class="w"> </span>&lt;sharename&gt;
-</code></pre></div>
+┌────────────────────────────────────────────────────────────┐
+│  Data at Rest (always-on)                                  │
+│  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)     │
+│  Drive removed → crypto erase (DEK destroyed)              │
+└────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  Data in Transit                                           │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  ├── NFS v4.1: Kerberos GSSAPI privacy (optional)          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ├── SMB 3.0: end-to-end SMB encryption (AES-128-GCM)      │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  ├── S3: HTTPS (TLS 1.2+)                                  │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  ├── Management GUI/API: HTTPS (443)                       │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  └── Replication (ActiveDR): TLS between FlashBlades       │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>&gt; Part of the [FlashBlade Security](../index.md) reference.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>---
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## Data at Rest
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>All data written to FlashBlade drives is encrypted using XTS-AES-256. Encryption is always on and cannot be disabled. Drives are self-encrypting; when a drive is removed or replaced, data is cryptographically erased by destroying the drive encryption key.
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>## Data in Flight — NFS
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>NFS v4.1 Kerberos authentication modes supported:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>- `krb5` — authentication only
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>- `krb5i` — authentication + integrity
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>- `krb5p` — authentication + integrity + privacy (full encryption)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>Configure Kerberos in the NFS export policy to enforce encrypted NFS sessions. Requires an Active Directory or MIT Kerberos KDC.
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>## Data in Flight — SMB
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>SMB encryption (AES-128-CCM or AES-256-GCM) is configurable per share. Enable SMB encryption to protect data in transit between Windows clients and FlashBlade:
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>```bash
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>purefb smb-share update --smb-encryption-mode required &lt;sharename&gt;
+</code></pre></div></p>
 <h2 id="data-in-flight-management-and-s3">Data in Flight — Management and S3<a class="headerlink" href="#data-in-flight-management-and-s3" title="Permanent link">&para;</a></h2>
 <p>All management API and GUI traffic uses TLS 1.2 or higher. S3 data plane also uses TLS; configure clients to require HTTPS endpoints and reject HTTP.</p>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>

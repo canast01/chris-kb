@@ -4280,17 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#host-transport-node-profiles" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host Transport Node Profiles
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#vmware-cloud-foundation-vcf-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4736,21 +4725,6 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p>Once registered, vCenter clusters appear under <strong>System → Fabric → Hosts</strong>. Use them to apply transport node profiles at cluster scope.</p>
-<h2 id="host-transport-node-profiles">Host Transport Node Profiles<a class="headerlink" href="#host-transport-node-profiles" title="Permanent link">&para;</a></h2>
-<p>A Transport Node Profile (TNP) captures the NSX configuration applied to every ESXi host in a cluster: which VDS/vSS uplinks carry TEP traffic, which Transport Zones are included, and which IP pool allocates TEP addresses.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply a TNP to a cluster (prepares all hosts in the cluster as transport nodes)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Via API — Policy endpoint</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="s1">    &quot;host_profile_binding&quot;: {</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="s1">      &quot;transport_node_profile_id&quot;: &quot;&lt;tnp-id&gt;&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="s1">    }</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/sites/default/enforcement-points/default/clusters/&lt;cluster-id&gt;&quot;</span>
-</code></pre></div>
 <p>Monitor preparation progress: <strong>System → Fabric → Hosts → Configuration</strong> — each host shows <code>Success</code> when preparation is complete.</p>
 <hr />
 <h2 id="vmware-cloud-foundation-vcf-integration">VMware Cloud Foundation (VCF) Integration<a class="headerlink" href="#vmware-cloud-foundation-vcf-integration" title="Permanent link">&para;</a></h2>
@@ -4793,10 +4767,10 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <p>NSX overlay traffic runs over the physical network. The underlay must meet specific requirements for Geneve encapsulation to function correctly.</p>
 <h3 id="mtu-requirements">MTU Requirements<a class="headerlink" href="#mtu-requirements" title="Permanent link">&para;</a></h3>
 <p>Geneve adds a 54-byte overhead to each packet. The underlay must support an MTU of at least <strong>1600</strong> on all paths between TEPs. Jumbo frames (MTU 9000) are recommended.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test MTU from an ESXi host TEP vmkernel — don&#39;t-fragment ping</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># -s 1572 = 1600 (Geneve MTU) - 28 (IP+UDP headers)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># If this fails, the underlay MTU is insufficient</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test MTU from an ESXi host TEP vmkernel — don&#39;t-fragment ping</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk1<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># -s 1572 = 1600 (Geneve MTU) - 28 (IP+UDP headers)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If this fails, the underlay MTU is insufficient</span>
 </code></pre></div>
 <h3 id="vlan-requirements">VLAN Requirements<a class="headerlink" href="#vlan-requirements" title="Permanent link">&para;</a></h3>
 <table>
@@ -4836,34 +4810,34 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <h2 id="bgp-integration-with-physical-network">BGP Integration with Physical Network<a class="headerlink" href="#bgp-integration-with-physical-network" title="Permanent link">&para;</a></h2>
 <p>Tier-0 gateways peer with physical routers via eBGP (typically) or iBGP. The Edge nodes host the BGP sessions and exchange routes with the physical fabric.</p>
 <h3 id="standard-bgp-design">Standard BGP Design<a class="headerlink" href="#standard-bgp-design" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Physical Router (AS 65000)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    |  eBGP
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Edge Node Active (T0 Uplink)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Edge Node Standby (T0 Uplink)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Physical Router (AS 65000)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    |  eBGP
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Edge Node Active (T0 Uplink)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Edge Node Standby (T0 Uplink)
 </code></pre></div>
 <p><strong>Route advertisement</strong>: The Tier-0 gateway advertises connected routes (NSX overlay prefixes) to the physical router. The physical router announces a default route or specific external prefixes back to NSX.</p>
 <h3 id="bgp-configuration-via-policy-api">BGP Configuration via Policy API<a class="headerlink" href="#bgp-configuration-via-policy-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create BGP neighbor on a Tier-0 gateway</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;resource_type&quot;: &quot;BgpNeighborConfig&quot;,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;display_name&quot;: &quot;ToR-Switch-01&quot;,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">    &quot;neighbor_address&quot;: &quot;10.0.0.1&quot;,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">    &quot;remote_as_num&quot;: &quot;65000&quot;,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    &quot;password&quot;: &quot;bgp-auth-key&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/default/bgp/neighbors/tor-switch-01&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create BGP neighbor on a Tier-0 gateway</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-X<span class="w"> </span>PATCH<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;resource_type&quot;: &quot;BgpNeighborConfig&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;display_name&quot;: &quot;ToR-Switch-01&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;neighbor_address&quot;: &quot;10.0.0.1&quot;,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;remote_as_num&quot;: &quot;65000&quot;,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    &quot;password&quot;: &quot;bgp-auth-key&quot;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/locale-services/default/bgp/neighbors/tor-switch-01&quot;</span>
 </code></pre></div>
 <p>Verify BGP state from Edge CLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vrf<span class="w"> </span>&lt;tier0-vrf-id&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected: all peers in Established state</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w"> </span>routes
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w"> </span>advertised-routes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vrf<span class="w"> </span>&lt;tier0-vrf-id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Expected: all peers in Established state</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w"> </span>routes
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span><span class="m">10</span>.0.0.1<span class="w"> </span>advertised-routes
 </code></pre></div>
 <hr />
 <h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
@@ -4906,16 +4880,16 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 </table>
 <p>Test connectivity before saving. NSX will validate the bind DN and base DN.</p>
 <h3 id="verify-ldap-integration-via-api">Verify LDAP Integration via API<a class="headerlink" href="#verify-ldap-integration-via-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># List configured identity sources</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/aaa/vidm/status
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Test LDAP search</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;search_query&quot;: &quot;nsxadmin&quot;, &quot;cursor&quot;: &quot;0&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/aaa/ldap/search&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List configured identity sources</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/aaa/vidm/status
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test LDAP search</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;search_query&quot;: &quot;nsxadmin&quot;, &quot;cursor&quot;: &quot;0&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/aaa/ldap/search&quot;</span>
 </code></pre></div>
 <h3 id="assign-roles-to-ad-groups">Assign Roles to AD Groups<a class="headerlink" href="#assign-roles-to-ad-groups" title="Permanent link">&para;</a></h3>
 <p><strong>System → Users and Roles → Role Assignments → Add</strong></p>
@@ -4981,31 +4955,31 @@ Integrations reference covering Host Transport Node Profiles, VMware Cloud Found
 <li>N-VDS (NSX Virtual Distributed Switch) is deprecated in NSX 4.x; vDS is the standard</li>
 </ul>
 <h3 id="verify-vds-port-binding-on-esxi-host">Verify vDS Port Binding on ESXi Host<a class="headerlink" href="#verify-vds-port-binding-on-esxi-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On ESXi host (SSH or shell)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># List all VDS attached to the host</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># List uplinks and their VDS mappings</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Uplinks&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Verify TEP vmkernel adapter is on vDS</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Check TEP IP is assigned</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On ESXi host (SSH or shell)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># List all VDS attached to the host</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># List uplinks and their VDS mappings</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>dvs<span class="w"> </span>vmware<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Uplinks&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Verify TEP vmkernel adapter is on vDS</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vmk
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Check TEP IP is assigned</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
 </code></pre></div>
 <hr />
 <h2 id="log-forwarding-to-siem">Log Forwarding to SIEM<a class="headerlink" href="#log-forwarding-to-siem" title="Permanent link">&para;</a></h2>
 <p>NSX components forward syslog via the NSX Manager CLI or API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add syslog target on NSX Manager</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nsxcli
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Add syslog on Edge node (SSH to Edge)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>UDP<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">514</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Add syslog target on NSX Manager</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nsxcli
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>TLS<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">6514</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>get<span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporters
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Add syslog on Edge node (SSH to Edge)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nb">set</span><span class="w"> </span>service<span class="w"> </span>syslog<span class="w"> </span>exporter<span class="w"> </span>siem-01<span class="w"> </span>level<span class="w"> </span>info<span class="w"> </span>protocol<span class="w"> </span>UDP<span class="w"> </span>server<span class="w"> </span><span class="m">10</span>.0.0.100<span class="w"> </span>port<span class="w"> </span><span class="m">514</span>
 </code></pre></div>
 <p>Key log sources to forward:</p>
 <table>

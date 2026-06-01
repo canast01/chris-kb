@@ -4538,67 +4538,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#add-vcenter-as-a-data-source" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add vCenter as a Data Source
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#add-nsx-t-manager-as-a-data-source" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Add NSX-T Manager as a Data Source
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#upgrade-process" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Process
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Upgrade Process">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#upgrade-order-critical" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrade Order — Critical
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#prepare-for-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prepare for Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#upgrade-platform-vm" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -5052,142 +4991,62 @@ Install and Upgrade reference covering Prerequisites, Platform VM Deployment, Up
 │  Upgrade Log         = Available in VAMI during PAK apply; shows progress and errors                  │
 │  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>If the Collector does not appear as Connected within 10 minutes, check:
-1. TCP 443 from Collector to Platform is open
-2. DNS resolves Platform FQDN from the Collector
-3. Pairing key was not expired or already used</p>
-<h3 id="add-vcenter-as-a-data-source">Add vCenter as a Data Source<a class="headerlink" href="#add-vcenter-as-a-data-source" title="Permanent link">&para;</a></h3>
-<p>Settings → Accounts and Data Sources → Add Source → vCenter Server</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vCenter IP/FQDN</td>
-<td><code>vcenter.example.local</code></td>
-</tr>
-<tr>
-<td>Username</td>
-<td><code>svc-aon@vsphere.local</code></td>
-</tr>
-<tr>
-<td>Password</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Collector</td>
-<td>Select the paired Collector</td>
-</tr>
-<tr>
-<td>Nickname</td>
-<td><code>vCenter-Production</code></td>
-</tr>
-</tbody>
-</table>
-<p>Click <strong>Validate</strong> to test credentials, then <strong>Submit</strong>.</p>
-<h3 id="add-nsx-t-manager-as-a-data-source">Add NSX-T Manager as a Data Source<a class="headerlink" href="#add-nsx-t-manager-as-a-data-source" title="Permanent link">&para;</a></h3>
-<p>Settings → Accounts and Data Sources → Add Source → NSX-T Manager</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NSX-T Manager IP/FQDN</td>
-<td><code>nsxmgr.example.local</code></td>
-</tr>
-<tr>
-<td>Username</td>
-<td><code>svc-aon</code></td>
-</tr>
-<tr>
-<td>Password</td>
-<td>—</td>
-</tr>
-<tr>
-<td>Collector</td>
-<td>Select the paired Collector</td>
-</tr>
-<tr>
-<td>Nickname</td>
-<td><code>NSX-T-Production</code></td>
-</tr>
-</tbody>
-</table>
-<p>NSX-T data source auto-discovers VNIs, segments, and DFW rules within the first sync cycle (10 minutes).</p>
-<h2 id="upgrade-process">Upgrade Process<a class="headerlink" href="#upgrade-process" title="Permanent link">&para;</a></h2>
-<h3 id="upgrade-order-critical">Upgrade Order — Critical<a class="headerlink" href="#upgrade-order-critical" title="Permanent link">&para;</a></h3>
-<p><strong>Always upgrade Platform VM before Collector VMs.</strong> A newer Collector cannot communicate with an older Platform. Upgrading Collectors first will cause them to disconnect and lose flow data during the window.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Correct order:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>1. Snapshot Platform VM
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>2. Upgrade Platform VM
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>3. Verify Platform is healthy
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>4. Snapshot each Collector VM
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>5. Upgrade each Collector VM (one at a time or in parallel if environment allows)
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>6. Verify all Collectors reconnect
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>7. Delete snapshots (after 48-hour burn-in)
-</code></pre></div>
-<h3 id="prepare-for-upgrade">Prepare for Upgrade<a class="headerlink" href="#prepare-for-upgrade" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Take config backup</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/auth/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="k">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/settings/backup&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--output<span class="w"> </span><span class="s2">&quot;aon-backup-pre-upgrade-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.tar.gz&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 2. Take vSphere snapshot of Platform VM (via PowerCLI or vCenter UI)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># PowerCLI:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>Get-VM<span class="w"> </span><span class="s2">&quot;aon-platform-01&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>New-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Pre-Upgrade-6.14.0&quot;</span><span class="w"> </span>-Description<span class="w"> </span><span class="s2">&quot;Before AON upgrade to 6.14.0&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># 3. Note current version</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Prepare for Upgrade
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># 1. Take config backup
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>TOKEN=$(curl -sk -X POST &quot;https://aon.example.local/api/ni/auth/token&quot; \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  -H &quot;Content-Type: application/json&quot; \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  -d &#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;PASSWORD&quot;}&#39; \
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  | python3 -c &quot;import sys,json; print(json.load(sys.stdin)[&#39;token&#39;])&quot;)
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl -sk &quot;https://aon.example.local/api/ni/settings/backup&quot; \
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  -H &quot;Authorization: NetworkInsight ${TOKEN}&quot; \
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  --output &quot;aon-backup-pre-upgrade-$(date +%Y%m%d).tar.gz&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># 2. Take vSphere snapshot of Platform VM (via PowerCLI or vCenter UI)
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># PowerCLI:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Get-VM &quot;aon-platform-01&quot; | New-Snapshot -Name &quot;Pre-Upgrade-6.14.0&quot; -Description &quot;Before AON upgrade to 6.14.0&quot;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># 3. Note current version
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -sk &quot;https://aon.example.local/api/ni/system/version&quot; \
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  -H &quot;Authorization: NetworkInsight ${TOKEN}&quot; | python3 -m json.tool
+</code></pre></div></p>
 <h3 id="upgrade-platform-vm">Upgrade Platform VM<a class="headerlink" href="#upgrade-platform-vm" title="Permanent link">&para;</a></h3>
 <p><strong>UI method:</strong></p>
 <p>Settings → Infrastructure → Upgrade → Browse → select Platform upgrade bundle → Install</p>
 <p>The upgrade bundle file is a <code>.pak</code> file downloaded from Broadcom.</p>
 <p><strong>CLI method (if UI upgrade fails):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Upload the upgrade bundle to the platform</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>scp<span class="w"> </span>VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak<span class="w"> </span>ubuntu@aon-platform.example.local:/tmp/
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># On Platform VM</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>/opt/vmware/bin/upgrade.sh<span class="w"> </span>/tmp/VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Monitor upgrade progress</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vrni-platform/upgrade.log
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Upload the upgrade bundle to the platform</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>scp<span class="w"> </span>VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak<span class="w"> </span>ubuntu@aon-platform.example.local:/tmp/
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># On Platform VM</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>sudo<span class="w"> </span>/opt/vmware/bin/upgrade.sh<span class="w"> </span>/tmp/VMware-Aria-Operations-for-Networks-6.14.0-upgrade.pak
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Monitor upgrade progress</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vrni-platform/upgrade.log
 </code></pre></div>
 <p>Platform will restart services during upgrade. Expect 15–30 minutes of downtime. The UI will be unavailable during this period.</p>
 <h3 id="verify-platform-after-upgrade">Verify Platform After Upgrade<a class="headerlink" href="#verify-platform-after-upgrade" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check version</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check all services are running</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Check Collectors re-connected (they should reconnect automatically)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">import sys,json</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">for c in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">    print(c.get(&#39;nickname&#39;,&#39;&#39;), c.get(&#39;status&#39;,&#39;&#39;))</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check version</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/system/version&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Check all services are running</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ssh<span class="w"> </span>ubuntu@aon-platform.example.local
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>vrni-platform<span class="w"> </span>nginx<span class="w"> </span>cassandra<span class="w"> </span>kafka<span class="w"> </span>elasticsearch<span class="w"> </span>postgres
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check Collectors re-connected (they should reconnect automatically)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="s2">&quot;https://aon.example.local/api/ni/collectors&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight </span><span class="si">${</span><span class="nv">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">import sys,json</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">for c in json.load(sys.stdin).get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">    print(c.get(&#39;nickname&#39;,&#39;&#39;), c.get(&#39;status&#39;,&#39;&#39;))</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="upgrade-collector-vms">Upgrade Collector VMs<a class="headerlink" href="#upgrade-collector-vms" title="Permanent link">&para;</a></h3>
 <p>Settings → Accounts and Data Sources → Collectors → Select Collector → Upgrade</p>
@@ -5196,13 +5055,13 @@ Install and Upgrade reference covering Prerequisites, Platform VM Deployment, Up
 <p>Collectors will restart their services. Expect 5–10 minutes per Collector. Flow data ingestion will pause for each Collector during its upgrade.</p>
 <h3 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h3>
 <p>If the upgrade fails or causes issues:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Revert Platform VM snapshot (this is a destructive operation — confirm before proceeding)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Get-VM<span class="w"> </span><span class="s2">&quot;aon-platform-01&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Pre-Upgrade-6.14.0&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VM<span class="w"> </span>-SnapShot<span class="w"> </span><span class="nv">$_</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># After revert, Collectors should auto-reconnect to the older Platform</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># If not, re-pair manually:</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Revert Platform VM snapshot (this is a destructive operation — confirm before proceeding)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Get-VM<span class="w"> </span><span class="s2">&quot;aon-platform-01&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-Snapshot<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;Pre-Upgrade-6.14.0&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VM<span class="w"> </span>-SnapShot<span class="w"> </span><span class="nv">$_</span><span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After revert, Collectors should auto-reconnect to the older Platform</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If not, re-pair manually:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ssh<span class="w"> </span>ubuntu@aon-collector-dc1.example.local
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>/home/ubuntu/support/pairing.sh
 </code></pre></div>
 <p>Snapshot-based rollback restores flow data to the snapshot point. Config changes made between snapshot and upgrade are lost.</p>
 

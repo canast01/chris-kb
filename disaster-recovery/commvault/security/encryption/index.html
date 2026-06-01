@@ -3764,36 +3764,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#backup-encryption" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup Encryption
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#linux-hardened-repository-immutable-backups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Linux Hardened Repository (Immutable Backups)
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -4011,41 +3981,6 @@ Encryption reference covering Backup Encryption, Linux Hardened Repository (Immu
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  TLS Mutual     = Both sides present certs; prevents man-in-the-middle on backup streams              │
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  CBC / XTS      = AES block cipher modes; XTS preferred for disk/chunk encryption                     │
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="backup-encryption">Backup Encryption<a class="headerlink" href="#backup-encryption" title="Permanent link">&para;</a></h2>
-<p>Configure per Storage Policy (Command Center: Storage → Storage Policies):</p>
-<table>
-<thead>
-<tr>
-<th>Encryption Option</th>
-<th>When to Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Client-side (BlowFish/AES-256)</td>
-<td>Maximum protection; CPU overhead on client</td>
-</tr>
-<tr>
-<td>MediaAgent-side (AES-256)</td>
-<td>Off-client encryption; no client CPU impact</td>
-</tr>
-<tr>
-<td>Storage-level encryption</td>
-<td>If storage supports hardware encryption (not CommVault-managed)</td>
-</tr>
-</tbody>
-</table>
-<p>Mandate for:
-- [ ] Policies covering PII or regulated data → AES-256, MediaAgent-side minimum
-- [ ] Cloud and off-site copy targets → always encrypted
-- [ ] DDB encryption: enable for dedup pools storing sensitive workloads</p>
-<h2 id="linux-hardened-repository-immutable-backups">Linux Hardened Repository (Immutable Backups)<a class="headerlink" href="#linux-hardened-repository-immutable-backups" title="Permanent link">&para;</a></h2>
-<p>Protect against ransomware using immutability:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On Linux hardened repository server</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># CommVault sets immutable flag automatically via chattr +i</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Verify:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>lsattr<span class="w"> </span>/path/to/backup/files<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s1">&#39;\-i\-&#39;</span>
 </code></pre></div>
 <p>Configure via VBR Repository settings: enable "Immutable" with retention period matching recovery requirements.</p>
 

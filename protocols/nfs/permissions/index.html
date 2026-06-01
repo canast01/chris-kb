@@ -3612,26 +3612,26 @@
 NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (idmapd), Kerberos Security Modes, ACL Interaction and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NFS PERMISSION LAYERS
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │  IP restriction: only 192.168.10.0/24 can mount        │  │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │  root_squash: root on client → UID 65534 (nfsnobody)   │  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  ro / rw: read-only or read-write at mount level        │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                         │ mount permitted                    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                         ▼                                    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Layer 2 — POSIX UID/GID on files (server filesystem)        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ┌────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  File owner: UID 1001 (must match client UID 1001)      │  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  Permissions: rwxr-xr-x                                │  │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  NFSv4: user@domain mapping via idmapd                 │  │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └────────────────────────────────────────────────────────┘  │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                         │                                    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Effective access = export options AND POSIX permissions     │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└──────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    NFS PERMISSION LAYERS
 </code></pre></div>
+<p><code>┌──────────────────────────────────────────────────────────────┐
+│  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  IP restriction: only 192.168.10.0/24 can mount        │  │
+│  │  root_squash: root on client → UID 65534 (nfsnobody)   │  │
+│  │  ro / rw: read-only or read-write at mount level        │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                         │ mount permitted                    │
+│                         ▼                                    │
+│  Layer 2 — POSIX UID/GID on files (server filesystem)        │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  File owner: UID 1001 (must match client UID 1001)      │  │
+│  │  Permissions: rwxr-xr-x                                │  │
+│  │  NFSv4: user@domain mapping via idmapd                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                         │                                    │
+│  Effective access = export options AND POSIX permissions     │
+└──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>NFS relies on UID/GID matching between client and server for access control. NFSv3 trusts client-reported UIDs; NFSv4 with Kerberos (<code>krb5</code>, <code>krb5i</code>, <code>krb5p</code>) adds cryptographic authentication. POSIX ACLs are supported over NFS but require the underlying filesystem to support them.</p>
 <h2 id="uidgid-mapping">UID/GID Mapping<a class="headerlink" href="#uidgid-mapping" title="Permanent link">&para;</a></h2>

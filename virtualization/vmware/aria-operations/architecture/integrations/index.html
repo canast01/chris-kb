@@ -4280,17 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#nsx-adapter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NSX Adapter
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#active-directory-ldap-authentication" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4549,96 +4538,92 @@
 Integration reference covering NSX Adapter, Active Directory / LDAP Authentication, SMTP (Alert Email), ServiceNow ITSM Integration, Webhook / Generic REST Actions and 2 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Aria Operations — Adapter and Outbound Integration Map
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Data Sources (Inbound Adapters)                    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                     │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐ │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ vCenter  │  │  NSX-T   │  │  Storage           │ │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    │ │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │          │  │          │  │   vSAN built-in)   │ │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │ read-only│  │ auditor  │  │                    │ │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │ min. role│  │ role min.│  │                    │ │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘ │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│       └─────────────┴──────────────────┘            │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          │                          │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>└──────────────────────────┼──────────────────────────┘
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                           │ metrics + events
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                           ▼
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Aria Operations Analytics Cluster                  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  correlates · analyses · alerts                     │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────────┬──────────────────────────┘
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                           │ outbound notifications
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>          ┌────────────────┼──────────────────────┐
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>          ▼                ▼                      ▼
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>┌──────────────┐  ┌──────────────┐  ┌────────────────┐
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  SMTP        │  │  ServiceNow  │  │  Webhook / REST │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  (email      │  │  (ITSM       │  │  (Slack, Teams, │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   alerts)    │  │   incidents) │  │   custom ITSM)  │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└──────────────┘  └──────────────┘  └────────────────┘
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>          │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>          ▼
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Aria Ops for Logs (Log Insight Adapter)            │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  forwards alerts for log correlation                │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└─────────────────────────────────────────────────────┘
+<p>Aria Operations — Adapter and Outbound Integration Map
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Data Sources (Inbound Adapters)                    │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                     │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐ │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ vCenter  │  │  NSX-T   │  │  Storage           │ │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    │ │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │          │  │          │  │   vSAN built-in)   │ │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │ read-only│  │ auditor  │  │                    │ │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │ min. role│  │ role min.│  │                    │ │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘ │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│       └─────────────┴──────────────────┘            │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                          │                          │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└──────────────────────────┼──────────────────────────┘
 </code></pre></div>
-┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
-│                                                                                                       │
-│  vCenter, NSX, vRLI, ITSM, and cloud endpoint integrations for Aria Operations.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           VMware Platform Sources            │  │            Log &amp; Network Sources            │   │
-│   │         vCenter: VMs/hosts/clusters          │  │            vRLI: log correlation            │   │
-│   │            vSAN: storage metrics             │  │          NSX: overlay + DFW metrics         │   │
-│   │           vRNI: network flow data            │  │             SD-WAN: edge metrics            │   │
-│   │           LCM: product health feed           │  │          Horizon: VDI session data          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  VMware sources provide metrics; ITSM and cloud consume or extend vROps data.                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             ITSM &amp; Notification              │  │              Cloud Integrations             │   │
-│   │          ServiceNow: alert webhook           │  │           AWS: EC2/RDS/ELB metrics          │   │
-│   │           Slack/Teams: chat alert            │  │             Azure: VM + storage             │   │
-│   │           Email: SMTP notification           │  │             GCP: Compute Engine             │   │
-│   │           PagerDuty: on-call alert           │  │          Cloud: read-only IAM role          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster on vSphere; management packs per source; outbound HTTPS for cloud/ITSM                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Management Pack     = vROps plugin adding adapters, dashboards, alerts for a product                 │
-│  vCenter Adapter     = Built-in; collects all vSphere metrics without extra pack                      │
-│  vRLI Integration    = Log Insight alert events appear in vROps for correlation                       │
-│  NSX Management Pack = Adds DFW rule, segment, edge gateway metrics to vROps                          │
-│  vRNI Integration    = Network flow metrics pushed from vRNI to vROps via REST                        │
-│  ServiceNow Webhook  = Outbound HTTP POST from vROps alert to ServiceNow intake                       │
-│  PagerDuty           = On-call routing; vROps sends alert via REST or email                           │
-│  Cloud Adapter       = vROps plugin collecting EC2/Azure/GCP metrics via cloud API                    │
-│  IAM Role            = Read-only cloud role granting vROps access to cloud metrics                    │
-│  LCM Integration     = LCM health events visible in vROps product health dashboard                    │
-│  Horizon Pack        = Management pack for VMware Horizon VDI session and pool data                   │
-│  Notification Rule   = vROps config routing alert to a specific outbound channel                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="nsx-adapter">NSX Adapter<a class="headerlink" href="#nsx-adapter" title="Permanent link">&para;</a></h2>
-<p>Monitors NSX-T logical topology, transport nodes, and control plane health.</p>
-<p><strong>Requirements:</strong>
-- NSX Manager FQDN/IP
-- NSX service account with read-only Enterprise Admin or Auditor role</p>
-<p><strong>Configure:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Administration &gt; Solutions &gt; NSX-T Adapter &gt; Add Instance
+                           │ metrics + events
+                           ▼
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  Aria Operations Analytics Cluster                  │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  correlates · analyses · alerts                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>└──────────────────────────┬──────────────────────────┘
 </code></pre></div>
+                           │ outbound notifications
+          ┌────────────────┼──────────────────────┐
+          ▼                ▼                      ▼
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────┐  ┌──────────────┐  ┌────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│  SMTP        │  │  ServiceNow  │  │  Webhook / REST │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  (email      │  │  (ITSM       │  │  (Slack, Teams, │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   alerts)    │  │   incidents) │  │   custom ITSM)  │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└──────────────┘  └──────────────┘  └────────────────┘
+</code></pre></div>
+          │
+          ▼
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>
+</code></pre></div>
+┌─────────────────────────────────────────────────────┐
+│  Aria Ops for Logs (Log Insight Adapter)            │
+│  forwards alerts for log correlation                │
+└─────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                                                                                                       │
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  vCenter, NSX, vRLI, ITSM, and cloud endpoint integrations for Aria Operations.                       │
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│                                                                                                       │
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   │           VMware Platform Sources            │  │            Log &amp; Network Sources            │   │
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   │         vCenter: VMs/hosts/clusters          │  │            vRLI: log correlation            │   │
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   │            vSAN: storage metrics             │  │          NSX: overlay + DFW metrics         │   │
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   │           vRNI: network flow data            │  │             SD-WAN: edge metrics            │   │
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   │           LCM: product health feed           │  │          Horizon: VDI session data          │   │
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│                                                                                                       │
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│  VMware sources provide metrics; ITSM and cloud consume or extend vROps data.                         │
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│                                                                                                       │
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│                                                                                                       │
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   │             ITSM &amp; Notification              │  │              Cloud Integrations             │   │
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   │          ServiceNow: alert webhook           │  │           AWS: EC2/RDS/ELB metrics          │   │
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   │           Slack/Teams: chat alert            │  │             Azure: VM + storage             │   │
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│   │           Email: SMTP notification           │  │             GCP: Compute Engine             │   │
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│   │           PagerDuty: on-call alert           │  │          Cloud: read-only IAM role          │   │
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│                                                                                                       │
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│  vROps cluster on vSphere; management packs per source; outbound HTTPS for cloud/ITSM                 │
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│                                                                                                       │
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│                                                                                                       │
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│  Management Pack     = vROps plugin adding adapters, dashboards, alerts for a product                 │
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│  vCenter Adapter     = Built-in; collects all vSphere metrics without extra pack                      │
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│  vRLI Integration    = Log Insight alert events appear in vROps for correlation                       │
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│  NSX Management Pack = Adds DFW rule, segment, edge gateway metrics to vROps                          │
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│  vRNI Integration    = Network flow metrics pushed from vRNI to vROps via REST                        │
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│  ServiceNow Webhook  = Outbound HTTP POST from vROps alert to ServiceNow intake                       │
+<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│  PagerDuty           = On-call routing; vROps sends alert via REST or email                           │
+<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│  Cloud Adapter       = vROps plugin collecting EC2/Azure/GCP metrics via cloud API                    │
+<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>│  IAM Role            = Read-only cloud role granting vROps access to cloud metrics                    │
+<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>│  LCM Integration     = LCM health events visible in vROps product health dashboard                    │
+<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>│  Horizon Pack        = Management pack for VMware Horizon VDI session and pool data                   │
+<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>│  Notification Rule   = vROps config routing alert to a specific outbound channel                      │
+<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>│                                                                                                       │
+<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <hr />
 <h2 id="active-directory-ldap-authentication">Active Directory / LDAP Authentication<a class="headerlink" href="#active-directory-ldap-authentication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration &gt; Access Control &gt; Authentication Sources &gt; Add Source
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Administration &gt; Access Control &gt; Authentication Sources &gt; Add Source
 </code></pre></div>
 <table>
 <thead>
@@ -4677,7 +4662,7 @@ Integration reference covering NSX Adapter, Active Directory / LDAP Authenticati
 <p>After adding the source, map AD groups to Aria Operations roles in <strong>Access Control &gt; Roles</strong>.</p>
 <hr />
 <h2 id="smtp-alert-email">SMTP (Alert Email)<a class="headerlink" href="#smtp-alert-email" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; SMTP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; SMTP
 </code></pre></div>
 <table>
 <thead>
@@ -4709,7 +4694,7 @@ Integration reference covering NSX Adapter, Active Directory / LDAP Authenticati
 <hr />
 <h2 id="servicenow-itsm-integration">ServiceNow ITSM Integration<a class="headerlink" href="#servicenow-itsm-integration" title="Permanent link">&para;</a></h2>
 <p>Requires the <strong>ServiceNow Notification Plugin</strong> (available in the Aria Operations Marketplace or bundled).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; ServiceNow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; ServiceNow
 </code></pre></div>
 <table>
 <thead>
@@ -4741,13 +4726,13 @@ Integration reference covering NSX Adapter, Active Directory / LDAP Authenticati
 <hr />
 <h2 id="webhook-generic-rest-actions">Webhook / Generic REST Actions<a class="headerlink" href="#webhook-generic-rest-actions" title="Permanent link">&para;</a></h2>
 <p>For custom integrations (Slack, Teams, custom ITSM):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; REST Notification Plugin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Administration &gt; Outbound Settings &gt; Add Plugin &gt; REST Notification Plugin
 </code></pre></div>
 <p>Configure endpoint URL, method (POST), and body template using Aria Operations alert tokens.</p>
 <hr />
 <h2 id="aria-operations-for-logs-alert-forwarding">Aria Operations for Logs (Alert Forwarding)<a class="headerlink" href="#aria-operations-for-logs-alert-forwarding" title="Permanent link">&para;</a></h2>
 <p>Forward Aria Operations alerts to Aria Operations for Logs for correlation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Administration &gt; Solutions &gt; Log Insight Adapter
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Administration &gt; Solutions &gt; Log Insight Adapter
 </code></pre></div>
 <p>Requires: Aria Operations for Logs FQDN, admin credentials.</p>
 <hr />

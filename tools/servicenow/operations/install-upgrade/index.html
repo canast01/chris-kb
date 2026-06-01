@@ -3334,106 +3334,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Upgrade Lifecycle">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-2-servicenow-performs-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2 — ServiceNow Performs Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-post-upgrade-dev-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3 — Post-Upgrade Dev Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-uat-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4 — UAT Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-production-upgrade" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5 — Production Upgrade
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#plugin-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plugin Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Plugin Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#checking-plugin-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Checking Plugin Status
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#upgrading-plugins" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Upgrading Plugins
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#plugin-upgrade-via-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Plugin Upgrade via CLI
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3776,55 +3676,22 @@ ServiceNow cloud instances are upgraded by ServiceNow as part of the managed ser
 │  Entitlement     = licensed plugins only; check contract before activation                            │
 │  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="step-2-servicenow-performs-upgrade">Step 2 — ServiceNow Performs Upgrade<a class="headerlink" href="#step-2-servicenow-performs-upgrade" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Instance enters maintenance mode (unavailable ~2–4 hours)</li>
-<li>ServiceNow applies the upgrade, runs internal validation</li>
-<li>Notification email sent on completion</li>
-</ul>
-<h3 id="step-3-post-upgrade-dev-validation">Step 3 — Post-Upgrade Dev Validation<a class="headerlink" href="#step-3-post-upgrade-dev-validation" title="Permanent link">&para;</a></h3>
-<p>Immediately after upgrade completes:</p>
-<ol>
-<li>Log in; confirm no homepage errors</li>
-<li>Navigate to <code>stats.do</code> — review for memory or thread alerts</li>
-<li>Execute ATF test suite:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>snc<span class="w"> </span>atf<span class="w"> </span>run<span class="w"> </span>--suite<span class="w"> </span><span class="s2">&quot;Core Regression Suite&quot;</span><span class="w"> </span>--profile<span class="w"> </span>dev
-</code></pre></div></li>
-<li>Fix any ATF failures before proceeding to UAT upgrade</li>
-</ol>
-<h3 id="step-4-uat-upgrade">Step 4 — UAT Upgrade<a class="headerlink" href="#step-4-uat-upgrade" title="Permanent link">&para;</a></h3>
-<p>Repeat Steps 1–3 for the UAT instance. UAT upgrade should follow Dev upgrade by at least 1 week to allow developer fixes.</p>
-<h3 id="step-5-production-upgrade">Step 5 — Production Upgrade<a class="headerlink" href="#step-5-production-upgrade" title="Permanent link">&para;</a></h3>
-<p>After UAT sign-off:</p>
-<ol>
-<li>Raise production upgrade request on HI portal (minimum 5 business days lead time)</li>
-<li>Confirm change window with ServiceNow (they will confirm exact start time)</li>
-<li>Keep on-call team available throughout the window</li>
-<li>Follow post-upgrade validation checklist (below)</li>
-</ol>
-<hr />
-<h2 id="plugin-management">Plugin Management<a class="headerlink" href="#plugin-management" title="Permanent link">&para;</a></h2>
-<p>Plugins extend ServiceNow functionality. They are managed separately from the platform upgrade.</p>
-<h3 id="checking-plugin-status">Checking Plugin Status<a class="headerlink" href="#checking-plugin-status" title="Permanent link">&para;</a></h3>
-<p>Navigate to: <strong>System Definitions &gt; Plugins</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List installed plugins via API</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SN_USER</span><span class="s2">:</span><span class="nv">$SN_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$INSTANCE</span><span class="s2">/api/now/table/v_plugin?sysparm_query=active=true&amp;sysparm_fields=name,id,version&amp;sysparm_limit=200&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result[] | {id, name, version}&#39;</span>
-</code></pre></div>
-<h3 id="upgrading-plugins">Upgrading Plugins<a class="headerlink" href="#upgrading-plugins" title="Permanent link">&para;</a></h3>
-<p>Some plugins have their own release cycle independent of the platform. After a major platform upgrade:</p>
-<ol>
-<li>Navigate to <strong>System Definitions &gt; Plugins</strong></li>
-<li>Filter: <strong>Upgrade Available = true</strong></li>
-<li>Review each plugin's changelog</li>
-<li>Upgrade in Dev first, validate, then promote to UAT and Production via the same change process</li>
-</ol>
-<h3 id="plugin-upgrade-via-cli">Plugin Upgrade via CLI<a class="headerlink" href="#plugin-upgrade-via-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snc<span class="w"> </span>plugin<span class="w"> </span>upgrade<span class="w"> </span>--id<span class="w"> </span>com.snc.itsm.workspace<span class="w"> </span>--profile<span class="w"> </span>dev
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snc<span class="w"> </span>plugin<span class="w"> </span>upgrade<span class="w"> </span>--id<span class="w"> </span>com.snc.discovery<span class="w"> </span>--profile<span class="w"> </span>dev
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Upgrading Plugins
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Some plugins have their own release cycle independent of the platform. After a major platform upgrade:
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1. Navigate to **System Definitions &gt; Plugins**
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2. Filter: **Upgrade Available = true**
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3. Review each plugin&#39;s changelog
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4. Upgrade in Dev first, validate, then promote to UAT and Production via the same change process
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>### Plugin Upgrade via CLI
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>```bash
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>snc plugin upgrade --id com.snc.itsm.workspace --profile dev
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>snc plugin upgrade --id com.snc.discovery --profile dev
+</code></pre></div></p>
 <hr />
 <h2 id="post-upgrade-testing-checklist">Post-Upgrade Testing Checklist<a class="headerlink" href="#post-upgrade-testing-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="automated">Automated<a class="headerlink" href="#automated" title="Permanent link">&para;</a></h3>

@@ -2815,18 +2815,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mysql-mariadb-replication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MySQL / MariaDB Replication
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MySQL / MariaDB Replication">
+    <nav class="md-nav" aria-label="PostgreSQL Streaming Replication">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3113,63 +3102,48 @@ Verify replication health, lag, and data consistency across primary and replica 
 │    Redo queue        = SQL Server AG: bytes received but not yet applied; measures apply lag          │
 │    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="mysql-mariadb-replication">MySQL / MariaDB Replication<a class="headerlink" href="#mysql-mariadb-replication" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- On REPLICA: full replication status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">-- Key fields to check:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">-- Slave_IO_Running: Yes</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">-- Slave_SQL_Running: Yes</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">-- Seconds_Behind_Master: 0 (or &lt; threshold)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">-- Last_IO_Error / Last_SQL_Error: empty</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">-- On PRIMARY: show connected replicas</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">HOSTS</span><span class="p">;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1">-- Binary log position on primary</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">MASTER</span><span class="w"> </span><span class="n">STATUS</span><span class="p">;</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Quick one-liner — show lag and thread status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW SLAVE STATUS\G&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error&quot;</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Quick one-liner — show lag and thread status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mysql -u root -e &quot;SHOW SLAVE STATUS\G&quot; | grep -E &quot;Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error&quot;
+</code></pre></div></p>
 <h3 id="mysql-gtid-replication">MySQL GTID Replication<a class="headerlink" href="#mysql-gtid-replication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Check GTID position on replica vs primary</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">VARIABLES</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;gtid_mode&#39;</span><span class="p">;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="k">GLOBAL</span><span class="p">.</span><span class="n">gtid_executed</span><span class="p">;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="k">GLOBAL</span><span class="p">.</span><span class="n">gtid_purged</span><span class="p">;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">-- Compare GTID sets between primary and replica to calculate drift</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Check GTID position on replica vs primary</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">VARIABLES</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;gtid_mode&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="k">GLOBAL</span><span class="p">.</span><span class="n">gtid_executed</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">@@</span><span class="k">GLOBAL</span><span class="p">.</span><span class="n">gtid_purged</span><span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- Compare GTID sets between primary and replica to calculate drift</span>
 </code></pre></div>
 <h2 id="sql-server-always-on">SQL Server Always On<a class="headerlink" href="#sql-server-always-on" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">-- Replica synchronization health</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ag_name</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">       </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_state_desc</span><span class="p">,</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span><span class="p">,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">last_commit_time</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1">-- Database-level lag</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">drs</span><span class="p">.</span><span class="n">database_id</span><span class="p">,</span><span class="w"> </span><span class="n">DB_NAME</span><span class="p">(</span><span class="n">drs</span><span class="p">.</span><span class="n">database_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">db_name</span><span class="p">,</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">synchronization_state_desc</span><span class="p">,</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">log_send_queue_size</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">send_queue_kb</span><span class="p">,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">redo_queue_size</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">redo_queue_kb</span><span class="p">,</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">last_commit_time</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_database_replica_states</span><span class="w"> </span><span class="n">drs</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- Replica synchronization health</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ag_name</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">       </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_server_name</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">role_desc</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_state_desc</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">synchronization_health_desc</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">last_commit_time</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_availability_replica_states</span><span class="w"> </span><span class="n">rs</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_replicas</span><span class="w"> </span><span class="n">ar</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">replica_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">replica_id</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">availability_groups</span><span class="w"> </span><span class="n">ag</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">ar</span><span class="p">.</span><span class="n">group_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ag</span><span class="p">.</span><span class="n">group_id</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">-- Database-level lag</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">drs</span><span class="p">.</span><span class="n">database_id</span><span class="p">,</span><span class="w"> </span><span class="n">DB_NAME</span><span class="p">(</span><span class="n">drs</span><span class="p">.</span><span class="n">database_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">db_name</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">synchronization_state_desc</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">log_send_queue_size</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">send_queue_kb</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">redo_queue_size</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">redo_queue_kb</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">       </span><span class="n">drs</span><span class="p">.</span><span class="n">last_commit_time</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_hadr_database_replica_states</span><span class="w"> </span><span class="n">drs</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="data-consistency-check">Data Consistency Check<a class="headerlink" href="#data-consistency-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># PostgreSQL — compare row counts between primary and replica</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;primary-host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/primary-counts.txt
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;standby-host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/standby-counts.txt
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>diff<span class="w"> </span>/tmp/primary-counts.txt<span class="w"> </span>/tmp/standby-counts.txt
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># MySQL — pt-table-checksum (Percona Toolkit)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>pt-table-checksum<span class="w"> </span>--host<span class="o">=</span>&lt;primary&gt;<span class="w"> </span>--user<span class="o">=</span>root<span class="w"> </span>--password<span class="o">=</span>&lt;pass&gt;<span class="w"> </span>--databases<span class="o">=</span>&lt;dbname&gt;
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Then on replica:</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>pt-table-sync<span class="w"> </span>--sync-to-master<span class="w"> </span><span class="nv">h</span><span class="o">=</span>&lt;replica&gt;,u<span class="o">=</span>root,p<span class="o">=</span>&lt;pass&gt;<span class="w"> </span>--print<span class="w">  </span><span class="c1"># --execute to fix</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># PostgreSQL — compare row counts between primary and replica</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;primary-host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/primary-counts.txt
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>&lt;standby-host&gt;<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/standby-counts.txt
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>diff<span class="w"> </span>/tmp/primary-counts.txt<span class="w"> </span>/tmp/standby-counts.txt
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># MySQL — pt-table-checksum (Percona Toolkit)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>pt-table-checksum<span class="w"> </span>--host<span class="o">=</span>&lt;primary&gt;<span class="w"> </span>--user<span class="o">=</span>root<span class="w"> </span>--password<span class="o">=</span>&lt;pass&gt;<span class="w"> </span>--databases<span class="o">=</span>&lt;dbname&gt;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Then on replica:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>pt-table-sync<span class="w"> </span>--sync-to-master<span class="w"> </span><span class="nv">h</span><span class="o">=</span>&lt;replica&gt;,u<span class="o">=</span>root,p<span class="o">=</span>&lt;pass&gt;<span class="w"> </span>--print<span class="w">  </span><span class="c1"># --execute to fix</span>
 </code></pre></div>
 <h2 id="replication-lag-thresholds">Replication Lag Thresholds<a class="headerlink" href="#replication-lag-thresholds" title="Permanent link">&para;</a></h2>
 <table>
@@ -3210,19 +3184,19 @@ Verify replication health, lag, and data consistency across primary and replica 
 </table>
 <h2 id="replication-repair">Replication Repair<a class="headerlink" href="#replication-repair" title="Permanent link">&para;</a></h2>
 <h3 id="mysql-fix-stopped-replication">MySQL — Fix stopped replication<a class="headerlink" href="#mysql-fix-stopped-replication" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">-- Check error</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">-- If duplicate key / skip error (use with caution)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">STOP</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">;</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">sql_slave_skip_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="k">START</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">-- Check error</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">-- If duplicate key / skip error (use with caution)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">STOP</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">SET</span><span class="w"> </span><span class="k">GLOBAL</span><span class="w"> </span><span class="n">sql_slave_skip_counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="k">START</span><span class="w"> </span><span class="n">SLAVE</span><span class="p">;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">SLAVE</span><span class="w"> </span><span class="n">STATUS</span><span class="err">\</span><span class="k">G</span>
 </code></pre></div>
 <h3 id="postgresql-replica-fallen-too-far-behind">PostgreSQL — Replica fallen too far behind<a class="headerlink" href="#postgresql-replica-fallen-too-far-behind" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># If replay lag is huge and WAL is no longer available on primary,</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># rebuild the replica from a fresh base backup</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>pg_basebackup<span class="w"> </span>-h<span class="w"> </span>&lt;primary-host&gt;<span class="w"> </span>-U<span class="w"> </span>replication<span class="w"> </span>-D<span class="w"> </span>/var/lib/postgresql/data-new<span class="w"> </span>-P<span class="w"> </span>-R
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># -R writes recovery.conf / standby.signal automatically</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># If replay lag is huge and WAL is no longer available on primary,</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># rebuild the replica from a fresh base backup</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pg_basebackup<span class="w"> </span>-h<span class="w"> </span>&lt;primary-host&gt;<span class="w"> </span>-U<span class="w"> </span>replication<span class="w"> </span>-D<span class="w"> </span>/var/lib/postgresql/data-new<span class="w"> </span>-P<span class="w"> </span>-R
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># -R writes recovery.conf / standby.signal automatically</span>
 </code></pre></div>
 <h2 id="replication-check-checklist">Replication Check Checklist<a class="headerlink" href="#replication-check-checklist" title="Permanent link">&para;</a></h2>
 <ul>

@@ -4358,7 +4358,57 @@
 <div class="kb-summary">
 Authentication for VPLEX management is split across two interfaces: SSH-based `vplexcli` access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Dell VPLEX — Authentication ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          VPLEX authentication: local accounts, LDAP/AD, RADIUS, and SAML SSO options          │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        MFA: time-based OTP or hardware token required for all privileged admin accounts       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         Service accounts: dedicated accounts for automation; API tokens/keys preferred        │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Session: idle timeout enforced; concurrent session limits for admin role accounts       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Login → authenticate LDAP/SAML/local → MFA → authorise role → session                              │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Virtualisation       │  │         Backend LUNs        │  │      Abstracted to VVs      │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            Metro            │  │         Sync stretch        │  │        &lt;5ms RTT sites       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │             Geo             │  │      Async replication      │  │         Any distance        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Clustering         │  │        Active-active        │  │       Shared namespace      │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │            Quorum           │  │          Witness VM         │  │      Split-brain guard      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │      Method      │     Use case     │  Config location  │       MFA        │     Priority     │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     LDAP/AD      │  Staff accounts  │   Auth settings   │     Required     │     Primary      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │     SAML SSO     │    Federated     │    SSO settings   │   IdP-enforced   │    Preferred     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │      Local       │   Break-glass    │    Local users    │     Required     │  Emergency only  │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │    API token     │    Automation    │  Service account  │   N/A (token)    │    Automation    │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: VPLEX VS2/VS6 appliance · FC fabric · backend arrays · WAN link (Metro/Geo)              │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    VPLEX              = Dell storage federation; aggregates arrays into virtual volumes across vendors│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Virtual volume     = VPLEX-abstracted LUN presented to hosts; backend is array LUNs                │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    VPLEX Metro        = synchronous active-active stretch cluster; same VV served from two sites      │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    VPLEX Geo          = asynchronous active-active replication; higher RPO, no distance constraint    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Distributed VV     = virtual volume spanning two sites for Metro active-active host access         │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Witness            = third-site quorum arbiter for Metro; prevents split-brain island scenarios    │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    WAN-COM            = WAN communication module in VPLEX Geo; manages inter-site replication traffic │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Management Server  = embedded Linux VM in VPLEX engine; serves web UI and vplex CLI                │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Consistency group  = set of virtual volumes that failover together maintaining write order         │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Backend volume     = LUN from underlying array presented to VPLEX engine for virtualisation        │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Local device       = RAID device or extent of backend volumes on a single VPLEX cluster            │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Cluster            = single VPLEX installation; Metro topology requires exactly two clusters       │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <pre class="mermaid"><code>flowchart LR
     subgraph "CLI Access"
         operator(["Operator"])
@@ -4414,22 +4464,22 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 </ul>
 <h3 id="ssh-key-authentication">SSH Key Authentication<a class="headerlink" href="#ssh-key-authentication" title="Permanent link">&para;</a></h3>
 <p>Configure SSH key authentication for the <code>service</code> account and any automation accounts:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On the operator/automation host: generate an SSH key pair (if not already done)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;vplex-automation@example.com&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/vplex_ed25519
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Copy the public key to the VMS (first-time setup requires password authentication)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519.pub<span class="w"> </span>service@&lt;VMS_IP&gt;
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify key-based login works</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the operator/automation host: generate an SSH key pair (if not already done)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;vplex-automation@example.com&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/vplex_ed25519
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Copy the public key to the VMS (first-time setup requires password authentication)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ssh-copy-id<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519.pub<span class="w"> </span>service@&lt;VMS_IP&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify key-based login works</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ssh<span class="w"> </span>-i<span class="w"> </span>~/.ssh/vplex_ed25519<span class="w"> </span>service@&lt;VMS_IP&gt;<span class="w"> </span><span class="s2">&quot;vplexcli -q -e &#39;health-check&#39;&quot;</span>
 </code></pre></div>
 <p>After SSH key authentication is confirmed to work for all operators and automation accounts, disable password-based SSH authentication on the VMS:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On VMS (as admin): edit /etc/ssh/sshd_config</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>ChallengeResponseAuthentication<span class="w"> </span>no
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Restart sshd to apply</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On VMS (as admin): edit /etc/ssh/sshd_config</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ChallengeResponseAuthentication<span class="w"> </span>no
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Restart sshd to apply</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <p>Verify the change does not lock out any account before closing the session.</p>
 <h2 id="ldap-active-directory-integration">LDAP / Active Directory Integration<a class="headerlink" href="#ldap-active-directory-integration" title="Permanent link">&para;</a></h2>
@@ -4580,14 +4630,14 @@ Authentication for VPLEX management is split across two interfaces: SSH-based `v
 </table>
 <h3 id="forwarding-logs-to-siem">Forwarding Logs to SIEM<a class="headerlink" href="#forwarding-logs-to-siem" title="Permanent link">&para;</a></h3>
 <p>Configure syslog forwarding from VMS to the centralised SIEM immediately after deployment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On VMS (as admin), create /etc/rsyslog.d/vplex-siem.conf:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Forward all VPLEX logs to the SIEM</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexcli&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexmanagement&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Apply the configuration</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On VMS (as admin), create /etc/rsyslog.d/vplex-siem.conf:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Forward all VPLEX logs to the SIEM</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexcli&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;vplexmanagement&#39;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>*.*<span class="w"> </span>@&lt;SIEM_IP&gt;:514
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Apply the configuration</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
 </code></pre></div>
 <p>Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM alerts for:</p>
 <ul>

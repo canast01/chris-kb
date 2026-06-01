@@ -3764,36 +3764,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#preventing-accidental-failover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Preventing Accidental Failover
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -4004,28 +3974,6 @@ Access Control reference covering Preventing Accidental Failover, Audit Logging.
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<blockquote>
-<p>Part of the <a href="../">SRDF/S Security</a> reference.</p>
-</blockquote>
-<hr />
-<h2 id="preventing-accidental-failover">Preventing Accidental Failover<a class="headerlink" href="#preventing-accidental-failover" title="Permanent link">&para;</a></h2>
-<p>SRDF/S failovers are zero-data-loss but cause site-wide impact. Guard against accidental execution:</p>
-<ul>
-<li>Require second-factor confirmation for <code>symrdf failover</code> in production:
-  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">SYMCLI_CONFIRM</span><span class="o">=</span>prompt<span class="w">    </span><span class="c1"># Requires manual y/n before executing</span>
-</code></pre></div></li>
-<li>Implement a two-person rule: all production SRDF failovers require peer approval before execution</li>
-<li>Restrict <code>symrdf establish -full</code> (full resync) to break-glass account — this destroys R2 content</li>
-</ul>
-<hr />
-<h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
-<p>All SRDF state changes are recorded in the PowerMax audit log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># View recent RDF events</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-last<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Export for SIEM ingest</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symevent<span class="w"> </span>list<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-type<span class="w"> </span>rdf<span class="w"> </span>-output<span class="w"> </span>csv<span class="w"> </span>&gt;<span class="w"> </span>/tmp/rdf_events.csv
 </code></pre></div>
 <p>Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM. Alert on:
 - <code>SRDF Split</code> outside maintenance windows

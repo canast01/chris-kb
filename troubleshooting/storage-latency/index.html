@@ -2895,46 +2895,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmware-esxi-esxtop-storage-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMware ESXi esxtop Storage Analysis
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="VMware ESXi esxtop Storage Analysis">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#esxtop-storage-threshold-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        esxtop Storage Threshold Summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#powermax-vmax-performance-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PowerMax / VMAX Performance Analysis
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="PowerMax / VMAX Performance Analysis">
+    <nav class="md-nav" aria-label="Diagnostic Flowchart">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3299,104 +3260,41 @@ Storage Latency Troubleshooting reference covering Overview, Latency Threshold R
 │    ABPG = Abort Per Second; commands timing out; indicates severe latency or path issue               │
 │    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="vmware-esxi-esxtop-storage-analysis">VMware ESXi esxtop Storage Analysis<a class="headerlink" href="#vmware-esxi-esxtop-storage-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Open esxtop on ESXi host (SSH required)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>esxtop
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Press &#39;u&#39; to switch to storage/disk adapter view</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Press &#39;e&#39; for storage device view (LUN level)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Key columns (storage device view):</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># DAVG  — Device Average latency (array-side; ms)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1">#          &gt;10ms = investigate; &gt;20ms = concern; &gt;30ms = critical</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># KAVG  — Kernel Average latency (VMkernel overhead; should be &lt;2ms)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># GAVG  — Guest Average = DAVG + KAVG + QAVG (total latency seen by VM)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># QAVG  — Queue Average latency (time spent in VMkernel queue; &gt;0 = queuing)</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># ABRTS — Aborts per second (I/O aborted by guest; &gt;0 = serious problem)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># RESETS — Device resets (&gt;0 = path or device failure)</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># CONS  — Commands outstanding per second</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Batch export esxtop data (useful for trend analysis)</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">5</span><span class="w"> </span>-n<span class="w"> </span><span class="m">60</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/esxtop_storage_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
-</code></pre></div>
-<h3 id="esxtop-storage-threshold-summary">esxtop Storage Threshold Summary<a class="headerlink" href="#esxtop-storage-threshold-summary" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Counter</th>
-<th>Green</th>
-<th>Warning</th>
-<th>Critical</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DAVG (ms)</td>
-<td>&lt;10</td>
-<td>10–20</td>
-<td>&gt;20</td>
-<td>Array investigation</td>
-</tr>
-<tr>
-<td>KAVG (ms)</td>
-<td>&lt;2</td>
-<td>2–5</td>
-<td>&gt;5</td>
-<td>ESXi / HBA driver issue</td>
-</tr>
-<tr>
-<td>GAVG (ms)</td>
-<td>&lt;15</td>
-<td>15–30</td>
-<td>&gt;30</td>
-<td>Correlate DAVG+KAVG</td>
-</tr>
-<tr>
-<td>QAVG (ms)</td>
-<td>0</td>
-<td>&gt;0</td>
-<td>&gt;5</td>
-<td>Reduce queue depth or I/O load</td>
-</tr>
-<tr>
-<td>ABRTS/s</td>
-<td>0</td>
-<td>&gt;0</td>
-<td>&gt;5</td>
-<td>Path or timeout issue; urgent</td>
-</tr>
-<tr>
-<td>RESETS/s</td>
-<td>0</td>
-<td>&gt;0</td>
-<td>&gt;1</td>
-<td>HBA or storage controller fault</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="powermax-vmax-performance-analysis">PowerMax / VMAX Performance Analysis<a class="headerlink" href="#powermax-vmax-performance-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run symstat for array performance (requires SYMCLI)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symstat<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-type<span class="w"> </span>lun<span class="w"> </span>-interval<span class="w"> </span><span class="m">10</span><span class="w"> </span>-count<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Example LUN-level output:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Device   Reads/s  Writes/s  Read MB/s  Write MB/s  Read MS  Write MS  %Busy</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 00A0     1250.0    800.0      40.0       25.0        1.2      2.1     45.0</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 00A1     2100.0    100.0      65.0        3.0       18.5      5.0     88.0  ← high</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># 00A2      450.0    900.0      14.0       28.0        0.8      1.5     32.0</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Check SRDF impact on performance (SRDF/S adds write latency)</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symdev<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>show<span class="w"> </span>00A1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;rdf\|srdf&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Check director (FA port) performance</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>symstat<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-type<span class="w"> </span>director<span class="w"> </span>-interval<span class="w"> </span><span class="m">10</span><span class="w"> </span>-count<span class="w"> </span><span class="m">6</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Check frontend director (FA) port utilisation</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>list<span class="w"> </span>-fa<span class="w"> </span>all<span class="w"> </span>-port<span class="w"> </span>all
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### esxtop Storage Threshold Summary
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Counter | Green | Warning | Critical | Action |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|---|---|---|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| DAVG (ms) | &lt;10 | 10–20 | &gt;20 | Array investigation |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| KAVG (ms) | &lt;2 | 2–5 | &gt;5 | ESXi / HBA driver issue |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| GAVG (ms) | &lt;15 | 15–30 | &gt;30 | Correlate DAVG+KAVG |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| QAVG (ms) | 0 | &gt;0 | &gt;5 | Reduce queue depth or I/O load |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| ABRTS/s | 0 | &gt;0 | &gt;5 | Path or timeout issue; urgent |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| RESETS/s | 0 | &gt;0 | &gt;1 | HBA or storage controller fault |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>---
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## PowerMax / VMAX Performance Analysis
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Run symstat for array performance (requires SYMCLI)
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>symstat -sid 000123 -type lun -interval 10 -count 6
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Example LUN-level output:
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a># Device   Reads/s  Writes/s  Read MB/s  Write MB/s  Read MS  Write MS  %Busy
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a># 00A0     1250.0    800.0      40.0       25.0        1.2      2.1     45.0
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># 00A1     2100.0    100.0      65.0        3.0       18.5      5.0     88.0  ← high
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a># 00A2      450.0    900.0      14.0       28.0        0.8      1.5     32.0
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Check SRDF impact on performance (SRDF/S adds write latency)
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>symdev -sid 000123 show 00A1 | grep -i &quot;rdf\|srdf&quot;
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Check director (FA port) performance
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>symstat -sid 000123 -type director -interval 10 -count 6
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Check frontend director (FA) port utilisation
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>symcfg -sid 000123 list -fa all -port all
+</code></pre></div></p>
 <h3 id="unisphere-for-powermax-key-performance-views">Unisphere for PowerMax — Key Performance Views<a class="headerlink" href="#unisphere-for-powermax-key-performance-views" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3437,93 +3335,93 @@ Storage Latency Troubleshooting reference covering Overview, Latency Threshold R
 <hr />
 <h2 id="multipath-issues">Multipath Issues<a class="headerlink" href="#multipath-issues" title="Permanent link">&para;</a></h2>
 <p>Dead or degraded paths cause I/O to be rerouted through remaining paths, increasing load and latency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Linux device mapper multipath — show all paths</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># name      sysfs  dm-st  dev    dev_t   pri  dm-st   chk_st  next_check</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 3600507680282874fc400000000000002</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   |- sdb  running  active  ready   1  active  ready  up</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   |- sdc  running  active  ready   1  active  ready  up</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   |- sdd  running  failed  faulty  0  faulty  undef  up   ← dead path</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   |- sde  running  active  ready   1  active  ready  up</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Check multipath topology (which paths are active)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check path failures and reinstate a path (after fixing SAN issue)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>multipathd<span class="w"> </span>reinstate<span class="w"> </span>path<span class="w"> </span>sdd
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Show device usage to identify which LUN is affected</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>multipathd<span class="w"> </span>show<span class="w"> </span>maps
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Verify HBA port status (Linux)</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;port_state|port_id|symbolic_name&quot;</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Check SAN fabric login (Brocade / Cisco FC switch)</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Brocade:</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn&gt;
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="c1"># Cisco MDS:</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># show flogi database | include &lt;wwpn&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Linux device mapper multipath — show all paths</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>multipathd<span class="w"> </span>show<span class="w"> </span>paths
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># name      sysfs  dm-st  dev    dev_t   pri  dm-st   chk_st  next_check</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># 3600507680282874fc400000000000002</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   |- sdb  running  active  ready   1  active  ready  up</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   |- sdc  running  active  ready   1  active  ready  up</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">#   |- sdd  running  failed  faulty  0  faulty  undef  up   ← dead path</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">#   |- sde  running  active  ready   1  active  ready  up</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check multipath topology (which paths are active)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check path failures and reinstate a path (after fixing SAN issue)</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>multipathd<span class="w"> </span>reinstate<span class="w"> </span>path<span class="w"> </span>sdd
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Show device usage to identify which LUN is affected</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>multipathd<span class="w"> </span>show<span class="w"> </span>maps
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Verify HBA port status (Linux)</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>systool<span class="w"> </span>-c<span class="w"> </span>fc_host<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;port_state|port_id|symbolic_name&quot;</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Check SAN fabric login (Brocade / Cisco FC switch)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="c1"># Brocade:</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn&gt;
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="c1"># Cisco MDS:</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># show flogi database | include &lt;wwpn&gt;</span>
 </code></pre></div>
 <hr />
 <h2 id="snapshot-and-replication-impact-on-latency">Snapshot and Replication Impact on Latency<a class="headerlink" href="#snapshot-and-replication-impact-on-latency" title="Permanent link">&para;</a></h2>
 <p>Snapshots consume array resources during creation and maintenance. Active snapshots increase write latency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check VMware snapshot count on VMs (PowerCLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.ExtensionData.Snapshot<span class="o">}</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>Select-Object<span class="w"> </span>Name,
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;SnapCount&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$_</span><span class="o">)</span>.Count<span class="o">}}</span>,
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;SnapAgeDays&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>Created<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">1</span><span class="o">)</span>.Created<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span>Sort-Object<span class="w"> </span>SnapCount<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check ONTAP volume snapshot count</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1<span class="w"> </span>-volume<span class="w"> </span>vol_db
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Check snapshot space consumption</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1<span class="w"> </span>-volume<span class="w"> </span>vol_db<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-snapshot-space
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># PowerMax: check snapshot count per device</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-name<span class="w"> </span>snap_*<span class="w"> </span>list
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Check SRDF/A journal consumption (high journal = SRDF/A falling behind)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>journal
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check VMware snapshot count on VMs (PowerCLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Get-VM<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.ExtensionData.Snapshot<span class="o">}</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>Select-Object<span class="w"> </span>Name,
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;SnapCount&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$_</span><span class="o">)</span>.Count<span class="o">}}</span>,
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;SnapAgeDays&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span>Get-Snapshot<span class="w"> </span>-VM<span class="w"> </span><span class="nv">$_</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>Created<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">1</span><span class="o">)</span>.Created<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span>Sort-Object<span class="w"> </span>SnapCount<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Check ONTAP volume snapshot count</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>volume<span class="w"> </span>snapshot<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1<span class="w"> </span>-volume<span class="w"> </span>vol_db
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Check snapshot space consumption</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>svm1<span class="w"> </span>-volume<span class="w"> </span>vol_db<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-snapshot-space
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># PowerMax: check snapshot count per device</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-name<span class="w"> </span>snap_*<span class="w"> </span>list
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Check SRDF/A journal consumption (high journal = SRDF/A falling behind)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>RDF_GRP_01<span class="w"> </span>-type<span class="w"> </span>rdfa<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>journal
 </code></pre></div>
 <hr />
 <h2 id="storage-controller-cpu-and-cache-hit-rate">Storage Controller CPU and Cache Hit Rate<a class="headerlink" href="#storage-controller-cpu-and-cache-hit-rate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># ONTAP: check node CPU and cache</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>system<span class="w"> </span>-instance<span class="w"> </span>node01<span class="w"> </span>-counter<span class="w"> </span>cpu_busy
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Cache performance</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>wafl<span class="w"> </span>-instance<span class="w"> </span>node01<span class="w"> </span>-counter<span class="w"> </span>read_cache_hit_percent
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Example healthy output:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># read_cache_hit_percent: 97%   ← good</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># read_cache_hit_percent: 64%   ← working set larger than cache — latency will increase</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># PowerMax: cache stats via symstat</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>symstat<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-type<span class="w"> </span>cache<span class="w"> </span>-interval<span class="w"> </span><span class="m">10</span><span class="w"> </span>-count<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># Check ONTAP aggregate (disk group) performance</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>aggr<span class="w"> </span>-instance<span class="w"> </span>aggr0<span class="w"> </span>-counter<span class="w"> </span>total_ops,read_latency,write_latency
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ONTAP: check node CPU and cache</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>system<span class="w"> </span>-instance<span class="w"> </span>node01<span class="w"> </span>-counter<span class="w"> </span>cpu_busy
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Cache performance</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>wafl<span class="w"> </span>-instance<span class="w"> </span>node01<span class="w"> </span>-counter<span class="w"> </span>read_cache_hit_percent
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Example healthy output:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># read_cache_hit_percent: 97%   ← good</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># read_cache_hit_percent: 64%   ← working set larger than cache — latency will increase</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># PowerMax: cache stats via symstat</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>symstat<span class="w"> </span>-sid<span class="w"> </span><span class="m">000123</span><span class="w"> </span>-type<span class="w"> </span>cache<span class="w"> </span>-interval<span class="w"> </span><span class="m">10</span><span class="w"> </span>-count<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Check ONTAP aggregate (disk group) performance</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>statistics<span class="w"> </span>show<span class="w"> </span>-object<span class="w"> </span>aggr<span class="w"> </span>-instance<span class="w"> </span>aggr0<span class="w"> </span>-counter<span class="w"> </span>total_ops,read_latency,write_latency
 </code></pre></div>
 <hr />
 <h2 id="queue-depth-analysis">Queue Depth Analysis<a class="headerlink" href="#queue-depth-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check current queue depth for a device (Linux)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>/sys/block/sdb/queue/nr_requests
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Default: 128 for HDD, 1024 for NVMe</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Check HBA queue depth</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cat<span class="w"> </span>/sys/class/scsi_host/host0/cmd_per_lun
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># VMware: check queue depth for an adapter (esxcli)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Queue Full&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Set queue depth for Fibre Channel HBA (Emulex example) — requires reboot</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lpfc<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;lpfc_lun_queue_depth=64&quot;</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check if queue full events are occurring</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>naa.6006016011602d00abcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>queue
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check current queue depth for a device (Linux)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>/sys/block/sdb/queue/nr_requests
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Default: 128 for HDD, 1024 for NVMe</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Check HBA queue depth</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cat<span class="w"> </span>/sys/class/scsi_host/host0/cmd_per_lun
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># VMware: check queue depth for an adapter (esxcli)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>list
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;Queue Full&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Set queue depth for Fibre Channel HBA (Emulex example) — requires reboot</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>esxcli<span class="w"> </span>system<span class="w"> </span>module<span class="w"> </span>parameters<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-m<span class="w"> </span>lpfc<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;lpfc_lun_queue_depth=64&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Check if queue full events are occurring</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>-d<span class="w"> </span>naa.6006016011602d00abcd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>queue
 </code></pre></div>
 <hr />
 <h2 id="common-causes-and-fixes">Common Causes and Fixes<a class="headerlink" href="#common-causes-and-fixes" title="Permanent link">&para;</a></h2>

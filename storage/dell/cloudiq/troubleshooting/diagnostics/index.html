@@ -4222,32 +4222,6 @@ Diagnostics reference covering Log Locations, Before Calling Support.
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<blockquote>
-<p>Part of the <a href="../../">CloudIQ</a> reference.</p>
-</blockquote>
-<hr />
-<p>Run the following on the <strong>Secure Connect Gateway</strong> host to diagnose connectivity and service health:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify SCG can reach Dell&#39;s SRS telemetry endpoint</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>https://esrs3.emc.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check dsagw service status (the core SCG telemetry forwarding service)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>dsagw
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Restart dsagw if it is stopped or failed</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>dsagw
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># View dsagw logs live for telemetry send errors</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>dsagw<span class="w"> </span>-f
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Test CloudIQ API authentication (replace with your client_id and client_secret)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://cloudiq.dell.com/auth/v1/token&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/x-www-form-urlencoded&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=client_credentials&amp;client_id=&lt;client_id&gt;&amp;client_secret=&lt;client_secret&gt;&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Confirm DNS resolution for CloudIQ and SRS endpoints from the SCG host</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>nslookup<span class="w"> </span>cloudiq.dell.com
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>nslookup<span class="w"> </span>esrs3.emc.com
-</code></pre></div>
 <p>For systems connected via a <strong>proxy</strong>, verify proxy settings in the SCG web UI under <strong>Settings &gt; Proxy</strong> and confirm the proxy allows HTTPS to <code>cloudiq.dell.com</code> and <code>esrs3.emc.com</code> on port 443.</p>
 <h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
 <table>

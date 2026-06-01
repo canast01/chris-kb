@@ -3723,39 +3723,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#aria-operations-integration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Aria Operations Integration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#solutions-enabler-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Solutions Enabler REST API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backup-from-r2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup from R2
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4000,40 +3967,18 @@
 │  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
-<p>The PowerMax management pack surfaces SRDF/S health in Aria Ops dashboards:</p>
-<ul>
-<li>SRDF pair state (<code>Synchronized</code>, <code>SyncInProg</code>, <code>Split</code>)</li>
-<li>Write latency penalty imposed by synchronous replication</li>
-<li>Link health and director port errors</li>
-<li>Cycle time trends for capacity planning</li>
-</ul>
-<p>Install the management pack from Aria Marketplace → search "PowerMax" → Deploy.</p>
-<hr />
-<h2 id="solutions-enabler-rest-api">Solutions Enabler REST API<a class="headerlink" href="#solutions-enabler-rest-api" title="Permanent link">&para;</a></h2>
-<p>The Unisphere REST API enables programmatic SRDF/S pair management from Ansible or Terraform:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>svc_api:password<span class="w"> </span>https://&lt;unisphere&gt;:8443/univmax/restapi/system/version
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List SRDF groups</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>GET<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Backup from R2
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get pair state</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>GET<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group/<span class="o">{</span>rdfgNumber<span class="o">}</span>/volume/<span class="o">{</span>devId<span class="o">}</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Split pair (planned failover)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>PUT<span class="w"> </span>/univmax/restapi/91/replication/symmetrix/<span class="o">{</span>sid<span class="o">}</span>/rdf_group/<span class="o">{</span>rdfgNumber<span class="o">}</span>/volume
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Body:<span class="w"> </span><span class="o">{</span><span class="s2">&quot;action&quot;</span>:<span class="w"> </span><span class="s2">&quot;Split&quot;</span>,<span class="w"> </span><span class="s2">&quot;executionOption&quot;</span>:<span class="w"> </span><span class="s2">&quot;SYNCHRONOUS&quot;</span><span class="o">}</span>
-</code></pre></div>
-<hr />
-<h2 id="backup-from-r2">Backup from R2<a class="headerlink" href="#backup-from-r2" title="Permanent link">&para;</a></h2>
-<p>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-ttl<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Mount the linked copy to a backup proxy server</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>link<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-lnsg<span class="w"> </span>&lt;proxy_sg&gt;
-</code></pre></div>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; create -name BACKUP_$(date +%Y%m%d) -ttl 3
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Mount the linked copy to a backup proxy server
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>symsnap -sid &lt;target_SID&gt; -sg &lt;sg_name&gt; link -name BACKUP_$(date +%Y%m%d) -lnsg &lt;proxy_sg&gt;
+</code></pre></div></p>
 <p>Note: always snapshot the R2 while it is in <code>Synchronized</code> state to ensure consistency.</p>
 
 

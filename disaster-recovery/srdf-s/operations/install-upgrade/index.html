@@ -3897,39 +3897,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#decommission-procedure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decommission Procedure
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        License Lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ndu-firmware-upgrade-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NDU Firmware Upgrade Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4196,83 +4163,48 @@
 │  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1: Quiesce application I/O</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Step 2: Split pairs gracefully</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>split<span class="w"> </span>-noprompt
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## License Lifecycle
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Step 3: Verify split state</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>State<span class="w">   </span><span class="c1"># Should show: Split</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Step 4: Delete SRDF pairs</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>deletepair<span class="w"> </span>-force<span class="w"> </span>-noprompt
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Step 5: Remove devices from SRDF group</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>symrdf<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdfg&gt;<span class="w"> </span>delete<span class="w"> </span>-noprompt
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SRDF licenses are array-bound per PowerMax array. Track:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Item | Action | Why |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| License expiry dates | Annual review; alert 90 days before expiry | Expired license disables SRDF operations — potential production outage |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| SRDF/S vs SRDF/A licences | Separate SKUs; verify correct licence type is applied | Wrong license type results in replication mode mismatch at establish time |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| SRDF/E (encryption) | Optional add-on — track separately | Required for compliance frameworks mandating data-in-transit encryption |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| License compliance | Compare licensed pairs vs. `symcfg list -rdfg` output | Over-deployed pairs may fail to establish if license count is exceeded |
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Step 6: Update CMDB — remove group number from allocation register</span>
-</code></pre></div>
-<hr />
-<h2 id="license-lifecycle">License Lifecycle<a class="headerlink" href="#license-lifecycle" title="Permanent link">&para;</a></h2>
-<p>SRDF licenses are array-bound per PowerMax array. Track:</p>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Action</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>License expiry dates</td>
-<td>Annual review; alert 90 days before expiry</td>
-<td>Expired license disables SRDF operations — potential production outage</td>
-</tr>
-<tr>
-<td>SRDF/S vs SRDF/A licences</td>
-<td>Separate SKUs; verify correct licence type is applied</td>
-<td>Wrong license type results in replication mode mismatch at establish time</td>
-</tr>
-<tr>
-<td>SRDF/E (encryption)</td>
-<td>Optional add-on — track separately</td>
-<td>Required for compliance frameworks mandating data-in-transit encryption</td>
-</tr>
-<tr>
-<td>License compliance</td>
-<td>Compare licensed pairs vs. <code>symcfg list -rdfg</code> output</td>
-<td>Over-deployed pairs may fail to establish if license count is exceeded</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ndu-firmware-upgrade-sequence">NDU Firmware Upgrade Sequence<a class="headerlink" href="#ndu-firmware-upgrade-sequence" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>flowchart TD
-    preCheck["Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized"]
-    notifyApps["Notify Application Teams\nTemporary RPO degradation during window"]
-    convertAsync["Convert to SRDF/A\nsymrdf -g rdfg set mode async"]
-    nduSource["NDU on Source Array\n(Dell NDU runbook)"]
-    nduTarget["NDU on Target Array"]
-    convertSync["Re-establish Synchronous Mode\nsymrdf -g rdfg set mode sync"]
-    waitResync["Wait for Synchronized State\n(SyncInProg expected)"]
-    postValidate["Post-Upgrade Validation\nAll pairs Synchronized within 30 min"]
-    closeChange["Close Change Ticket"]
-
-    preCheck --&gt; notifyApps
-    notifyApps --&gt; convertAsync
-    convertAsync --&gt; nduSource
-    nduSource --&gt; nduTarget
-    nduTarget --&gt; convertSync
-    convertSync --&gt; waitResync
-    waitResync --&gt; postValidate
-    postValidate --&gt; closeChange
-
-    style preCheck fill:#7c3aed,color:#fff
-    style convertAsync fill:#b45309,color:#fff
-    style convertSync fill:#2563eb,color:#fff
-    style closeChange fill:#15803d,color:#fff</code></pre>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>## NDU Firmware Upgrade Sequence
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```mermaid
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>flowchart TD
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    preCheck[&quot;Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized&quot;]
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    notifyApps[&quot;Notify Application Teams\nTemporary RPO degradation during window&quot;]
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    convertAsync[&quot;Convert to SRDF/A\nsymrdf -g rdfg set mode async&quot;]
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    nduSource[&quot;NDU on Source Array\n(Dell NDU runbook)&quot;]
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    nduTarget[&quot;NDU on Target Array&quot;]
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    convertSync[&quot;Re-establish Synchronous Mode\nsymrdf -g rdfg set mode sync&quot;]
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    waitResync[&quot;Wait for Synchronized State\n(SyncInProg expected)&quot;]
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    postValidate[&quot;Post-Upgrade Validation\nAll pairs Synchronized within 30 min&quot;]
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    closeChange[&quot;Close Change Ticket&quot;]
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    preCheck --&gt; notifyApps
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    notifyApps --&gt; convertAsync
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    convertAsync --&gt; nduSource
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>    nduSource --&gt; nduTarget
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>    nduTarget --&gt; convertSync
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    convertSync --&gt; waitResync
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    waitResync --&gt; postValidate
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    postValidate --&gt; closeChange
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>    style preCheck fill:#7c3aed,color:#fff
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>    style convertAsync fill:#b45309,color:#fff
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>    style convertSync fill:#2563eb,color:#fff
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>    style closeChange fill:#15803d,color:#fff
+</code></pre></div></p>
 
 
 

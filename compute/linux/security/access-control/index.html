@@ -3092,45 +3092,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sensitive-file-permissions-baseline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Sensitive File Permissions Baseline
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mandatory-access-control-selinux-rhel" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mandatory Access Control — SELinux (RHEL)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Mandatory Access Control — SELinux (RHEL)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#selinux-mac-decision-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SELinux MAC Decision Flow
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#selinux-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3538,88 +3499,29 @@ DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restri
 │  audit2allow = Generate SELinux allow rule from audit denial log entries                              │
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="sensitive-file-permissions-baseline">Sensitive File Permissions Baseline<a class="headerlink" href="#sensitive-file-permissions-baseline" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Owner</th>
-<th>Permissions</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>/etc/passwd</code></td>
-<td>root:root</td>
-<td>644</td>
-<td>World-readable, no passwords</td>
-</tr>
-<tr>
-<td><code>/etc/shadow</code></td>
-<td>root:root</td>
-<td>000</td>
-<td>Readable only by root</td>
-</tr>
-<tr>
-<td><code>/etc/gshadow</code></td>
-<td>root:root</td>
-<td>000</td>
-<td>Group password hashes</td>
-</tr>
-<tr>
-<td><code>/etc/sudoers</code></td>
-<td>root:root</td>
-<td>440</td>
-<td>Only via <code>visudo</code></td>
-</tr>
-<tr>
-<td><code>/etc/ssh/sshd_config</code></td>
-<td>root:root</td>
-<td>600</td>
-<td>SSH daemon config</td>
-</tr>
-<tr>
-<td><code>/root</code></td>
-<td>root:root</td>
-<td>700</td>
-<td>Root home directory</td>
-</tr>
-<tr>
-<td><code>/etc/cron.d/</code></td>
-<td>root:root</td>
-<td>700</td>
-<td>Cron job directory</td>
-</tr>
-<tr>
-<td><code>/var/log/audit/</code></td>
-<td>root:root</td>
-<td>700</td>
-<td>Audit log directory</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify critical file permissions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>stat<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;%a %U %G %n&quot;</span><span class="w"> </span>/etc/passwd<span class="w"> </span>/etc/shadow<span class="w"> </span>/etc/sudoers<span class="w"> </span>/etc/ssh/sshd_config
-</code></pre></div>
-<h2 id="mandatory-access-control-selinux-rhel">Mandatory Access Control — SELinux (RHEL)<a class="headerlink" href="#mandatory-access-control-selinux-rhel" title="Permanent link">&para;</a></h2>
-<p>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.</p>
-<h3 id="selinux-mac-decision-flow">SELinux MAC Decision Flow<a class="headerlink" href="#selinux-mac-decision-flow" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>flowchart TD
-    subject["Subject\nProcess with SELinux label\ne.g. httpd_t"]
-    dacCheck{"DAC Check\nUnix permissions allow?"}
-    dacDeny["DENY\n(DAC blocks)"]
-    selinuxCheck{"SELinux Policy\nallow rule exists?"}
-    audit["AVC Denial logged\n/var/log/audit/audit.log"]
-    allow["ALLOW\nAccess granted to object"]
-    object["Object\nFile / Socket / Port\ne.g. httpd_sys_content_t"]
-
-    subject --&gt; dacCheck
-    dacCheck -- No --&gt; dacDeny
-    dacCheck -- Yes --&gt; selinuxCheck
-    selinuxCheck -- No --&gt; audit --&gt; dacDeny
-    selinuxCheck -- Yes --&gt; allow --&gt; object</code></pre>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Mandatory Access Control — SELinux (RHEL)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### SELinux MAC Decision Flow
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```mermaid
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>flowchart TD
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    subject[&quot;Subject\nProcess with SELinux label\ne.g. httpd_t&quot;]
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    dacCheck{&quot;DAC Check\nUnix permissions allow?&quot;}
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    dacDeny[&quot;DENY\n(DAC blocks)&quot;]
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    selinuxCheck{&quot;SELinux Policy\nallow rule exists?&quot;}
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    audit[&quot;AVC Denial logged\n/var/log/audit/audit.log&quot;]
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    allow[&quot;ALLOW\nAccess granted to object&quot;]
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    object[&quot;Object\nFile / Socket / Port\ne.g. httpd_sys_content_t&quot;]
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    subject --&gt; dacCheck
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    dacCheck -- No --&gt; dacDeny
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    dacCheck -- Yes --&gt; selinuxCheck
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    selinuxCheck -- No --&gt; audit --&gt; dacDeny
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    selinuxCheck -- Yes --&gt; allow --&gt; object
+</code></pre></div></p>
 <h3 id="selinux-modes">SELinux Modes<a class="headerlink" href="#selinux-modes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current mode</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>getenforce<span class="w">        </span><span class="c1"># Enforcing / Permissive / Disabled</span>

@@ -4155,28 +4155,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#netapp-ontap-rest-api-keystone-collector-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NetApp ONTAP REST API (Keystone Collector Bootstrap)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#keystone-portal-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keystone Portal API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4453,34 +4431,23 @@ CLI Reference reference covering Keystone Collector CLI, NetApp ONTAP REST API (
 │    ks status                = Collector service; last upload time; upload backlog                     │
 │    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="netapp-ontap-rest-api-keystone-collector-bootstrap">NetApp ONTAP REST API (Keystone Collector Bootstrap)<a class="headerlink" href="#netapp-ontap-rest-api-keystone-collector-bootstrap" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test API connectivity from Collector VM to ONTAP</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s2">&quot;https://&lt;ontap-mgmt-ip&gt;/api/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.name, .version.full&#39;</span>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Keystone Portal API
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>NetApp exposes Keystone subscription data via API for reporting and integration.
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># List SVMs via REST</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="s2">&quot;https://&lt;ontap-mgmt-ip&gt;/api/svm/svms&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.records[].name&#39;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Volume list via REST</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s2">&quot;https://&lt;ontap-mgmt-ip&gt;/api/storage/volumes?svm.name=&lt;keystone-svm&gt;&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span>jq<span class="w"> </span><span class="s1">&#39;.records[] | &quot;\(.name) \(.space.used) / \(.space.size)&quot;&#39;</span>
-</code></pre></div>
-<h2 id="keystone-portal-api">Keystone Portal API<a class="headerlink" href="#keystone-portal-api" title="Permanent link">&para;</a></h2>
-<p>NetApp exposes Keystone subscription data via API for reporting and integration.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">PORTAL</span> <span class="o">=</span> <span class="s2">&quot;https://keystone.netapp.com/api/v1&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">TOKEN</span>  <span class="o">=</span> <span class="s2">&quot;&lt;keystone-api-token&gt;&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">HDR</span>    <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Get subscription details</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">PORTAL</span><span class="si">}</span><span class="s2">/subscriptions&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HDR</span><span class="p">)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subscriptions&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;subscriptionNumber&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  committed=</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;committedCapacity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> consumed=</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;consumedCapacity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```python
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>import requests
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>PORTAL = &quot;https://keystone.netapp.com/api/v1&quot;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>TOKEN  = &quot;&lt;keystone-api-token&gt;&quot;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>HDR    = {&quot;Authorization&quot;: f&quot;Bearer {TOKEN}&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;}
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Get subscription details
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>resp = requests.get(f&quot;{PORTAL}/subscriptions&quot;, headers=HDR)
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>for sub in resp.json().get(&quot;subscriptions&quot;, []):
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    print(f&quot;{sub[&#39;subscriptionNumber&#39;]}  committed={sub[&#39;committedCapacity&#39;]} consumed={sub[&#39;consumedCapacity&#39;]}&quot;)
+</code></pre></div></p>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

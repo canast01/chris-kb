@@ -3920,50 +3920,50 @@ Diagnostics reference covering Diagnostic Flow.
     class jobId,jobDetail,errCode,clientLog,ddbCheck,bundle,ready,ddbVerify,escalate action
     class q1 decision
     class alert terminal</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Log File Locations              │  │               Diagnostic Tools              │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │      CS: C:\CV\Log Files\CommServe.log       │  │      CV_DIAG: collect all logs + config     │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │      MA: C:\CV\Log Files\MediaAgent.log      │  │        CommVaultDiagnostics.exe on CS       │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         JobMgr: GxJobMgrService.log          │  │     cvping: test component connectivity     │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │     Client: C:\CV\Log Files\clBackup.log     │  │      cvdiskperf: benchmark MA disk I/O      │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │     Linux: /var/log/commvault/Log_Files/     │  │     cvnetwork: test MA network bandwidth    │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│    Always collect CV_DIAG before opening a support case; include job ID and error code                │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                   ▼                                                   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │                                    Key Diagnostic Commands                                    │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                 qlist jobs -jobid &lt;id&gt; -verbose       → detailed job phase log                │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │               qlist client -name &lt;host&gt;             → client registration status              │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │            qlist storage -type disk -verbose     → disk library mount paths + usage           │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │             cvping -clientName &lt;host&gt;             → test CS-to-client connectivity            │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │            CommVaultDiagnostics.exe -collect all → generate full diagnostic bundle            │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Log rotation: CV logs rotate at 10 MB by default; 30-day retention                                   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Disk for logs: CommServe log partition should be separate from CSDB partition                        │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                                                                                       │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  CV_DIAG        = Diagnostic bundle: all component logs, config exports, event logs                   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  cvping         = CommVault connectivity test tool (not ICMP ping; tests CV comms)                    │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  cvdiskperf     = Measures sequential read/write performance of MA disk library path                  │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  cvnetwork      = Tests throughput and latency between CommVault components                           │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  clBackup.log   = Client-side backup agent log; shows pre/post scripts, CBT activity                  │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  GxJobMgrSvc    = CommServe Job Manager service log; shows job dispatch and errors                    │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  MediaAgent.log = MA-side data pipeline log; shows dedup, compress, write operations                  │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  CommServe.log  = Main CommServe service log; CS startup, DB queries, scheduler                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Job Phase      = Individual step within a backup job (scan, transfer, dedup, write)                  │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Error Code     = 4-5 digit CV error; search on ma.commvault.com for KB resolution                    │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  -verbose flag  = qlist flag enabling detailed per-object output for all list commands                │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Log Rotation   = Commvault auto-rotates logs at size limit; old logs archived to .gz                 │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Log File Locations              │  │               Diagnostic Tools              │   │
+│   │      CS: C:\CV\Log Files\CommServe.log       │  │      CV_DIAG: collect all logs + config     │   │
+│   │      MA: C:\CV\Log Files\MediaAgent.log      │  │        CommVaultDiagnostics.exe on CS       │   │
+│   │         JobMgr: GxJobMgrService.log          │  │     cvping: test component connectivity     │   │
+│   │     Client: C:\CV\Log Files\clBackup.log     │  │      cvdiskperf: benchmark MA disk I/O      │   │
+│   │     Linux: /var/log/commvault/Log_Files/     │  │     cvnetwork: test MA network bandwidth    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Always collect CV_DIAG before opening a support case; include job ID and error code                │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                    Key Diagnostic Commands                                    │   │
+│   │                 qlist jobs -jobid <id> -verbose       → detailed job phase log                │   │
+│   │               qlist client -name <host>             → client registration status              │   │
+│   │            qlist storage -type disk -verbose     → disk library mount paths + usage           │   │
+│   │             cvping -clientName <host>             → test CS-to-client connectivity            │   │
+│   │            CommVaultDiagnostics.exe -collect all → generate full diagnostic bundle            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Log rotation: CV logs rotate at 10 MB by default; 30-day retention                                   │
+│  Disk for logs: CommServe log partition should be separate from CSDB partition                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CV_DIAG        = Diagnostic bundle: all component logs, config exports, event logs                   │
+│  cvping         = CommVault connectivity test tool (not ICMP ping; tests CV comms)                    │
+│  cvdiskperf     = Measures sequential read/write performance of MA disk library path                  │
+│  cvnetwork      = Tests throughput and latency between CommVault components                           │
+│  clBackup.log   = Client-side backup agent log; shows pre/post scripts, CBT activity                  │
+│  GxJobMgrSvc    = CommServe Job Manager service log; shows job dispatch and errors                    │
+│  MediaAgent.log = MA-side data pipeline log; shows dedup, compress, write operations                  │
+│  CommServe.log  = Main CommServe service log; CS startup, DB queries, scheduler                       │
+│  Job Phase      = Individual step within a backup job (scan, transfer, dedup, write)                  │
+│  Error Code     = 4-5 digit CV error; search on ma.commvault.com for KB resolution                    │
+│  -verbose flag  = qlist flag enabling detailed per-object output for all list commands                │
+│  Log Rotation   = Commvault auto-rotates logs at size limit; old logs archived to .gz                 │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 
 
 

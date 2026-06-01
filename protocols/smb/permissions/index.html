@@ -3612,30 +3612,30 @@
 SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share Permissions, PowerShell Share Creation and 1 more sections.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        TWO-LAYER PERMISSION MODEL
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Network client accesses \\server\Finance                    │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                    │                                         │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                    ▼ Layer 1                                 │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ┌────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │  SHARE PERMISSIONS (network access gate)               │  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  Everyone: Full Control  ◄── best practice setting     │  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  or specific group: Read / Change / Full               │  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  └────────────────────────┬───────────────────────────────┘  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                           │ permitted                        │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                           ▼ Layer 2                          │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌────────────────────────────────────────────────────────┐  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  NTFS ACL (filesystem-level, local + network)          │  │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  DOMAIN\Finance_Users: Modify (Allow)                  │  │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │  DOMAIN\Auditors: Read (Allow)                         │  │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │  Everyone: (no entry)                                  │  │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  └────────────────────────┬───────────────────────────────┘  │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                           │                                  │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   Effective = most restrictive of share AND NTFS perms       │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   Share:Full + NTFS:Read = Read                              │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   Share:Read + NTFS:Full = Read                              │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>└──────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    TWO-LAYER PERMISSION MODEL
 </code></pre></div>
+<p><code>┌──────────────────────────────────────────────────────────────┐
+│  Network client accesses \\server\Finance                    │
+│                    │                                         │
+│                    ▼ Layer 1                                 │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  SHARE PERMISSIONS (network access gate)               │  │
+│  │  Everyone: Full Control  ◄── best practice setting     │  │
+│  │  or specific group: Read / Change / Full               │  │
+│  └────────────────────────┬───────────────────────────────┘  │
+│                           │ permitted                        │
+│                           ▼ Layer 2                          │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  NTFS ACL (filesystem-level, local + network)          │  │
+│  │  DOMAIN\Finance_Users: Modify (Allow)                  │  │
+│  │  DOMAIN\Auditors: Read (Allow)                         │  │
+│  │  Everyone: (no entry)                                  │  │
+│  └────────────────────────┬───────────────────────────────┘  │
+│                           │                                  │
+│   Effective = most restrictive of share AND NTFS perms       │
+│   Share:Full + NTFS:Read = Read                              │
+│   Share:Read + NTFS:Full = Read                              │
+└──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Share permissions are the first access gate for network clients connecting to an SMB share. They apply only to network access — local access bypasses them entirely. In practice, share permissions are often set to <strong>Everyone: Full Control</strong> and NTFS permissions handle actual access control. Effective permission for a network user is the most restrictive result of both layers combined.</p>
 <table>

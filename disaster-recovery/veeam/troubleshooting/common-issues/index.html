@@ -3724,17 +3724,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#repository-out-of-space" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Repository Out of Space
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#instant-vm-recovery-vm-not-starting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4013,29 +4002,29 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 │  Health Check  = periodic backup integrity scan; verifies restore points are readable                 │
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># Test connectivity between VBR server and proxy (run on VBR server)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Test-NetConnection -ComputerName &lt;proxy-hostname&gt; -Port 2500
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Test proxy to repository connectivity
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Test-NetConnection -ComputerName &lt;repo-hostname&gt; -Port 2500
-</code></pre></div>
-<p>Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.</p>
-<p><strong>Check proxy resource exhaustion:</strong> if the proxy CPU or RAM is at capacity, tasks queue and eventually time out. Increase max concurrent tasks or add a proxy.</p>
-<hr />
-<h2 id="repository-out-of-space">Repository Out of Space<a class="headerlink" href="#repository-out-of-space" title="Permanent link">&para;</a></h2>
-<p><strong>Symptom:</strong> Job fails with "not enough free disk space on the repository" or "Veeam backup files have been detected outside of the quota."</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check repository free space</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FriendlyPath</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)}}</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Veeam uses ports 2500–3300 (TCP) for data channel communication between VBR, proxies, and repositories.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>**Check proxy resource exhaustion:** if the proxy CPU or RAM is at capacity, tasks queue and eventually time out. Increase max concurrent tasks or add a proxy.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>---
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>## Repository Out of Space
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>**Symptom:** Job fails with &quot;not enough free disk space on the repository&quot; or &quot;Veeam backup files have been detected outside of the quota.&quot;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>```powershell
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a># Check repository free space
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>Get-VBRBackupRepository | Select Name, FriendlyPath, Path,
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>  @{N=&quot;FreeMB&quot;;E={[math]::Round($_.GetContainer().CachedFreeSpace / 1MB)}}
+</code></pre></div></p>
 <p><strong>Immediate remediation:</strong></p>
 <ol>
 <li>Check if SOBR capacity tier offload is configured and working — manually trigger offload if needed.</li>
 <li>Identify large backup chains that can be reduced:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Find largest backup chains</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetStorageFiles</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Stats</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find largest backup chains</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;SizeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetStorageFiles</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">Stats</span> <span class="n">-Sum</span><span class="p">).</span><span class="n">Sum</span><span class="p">.</span><span class="n">DataSize</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">SizeGB</span> <span class="n">-Descending</span>
 </code></pre></div>
 <ol>
 <li>Reduce retention policy on some jobs to free space sooner.</li>
@@ -4050,23 +4039,23 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <li><strong>Network configuration of the recovered VM</strong> — Instant Recovery places the VM in a publish network by default. Verify it is connected to the correct port group.</li>
 <li><strong>Veeam vPower NFS service</strong> — if the NFS service is not running on the proxy, the virtual disk cannot be mounted:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># On the Veeam proxy — check the vPower NFS service
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-Service -Name VeeamVssProvider
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Get-Service -Name VeeamNFSSvc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># On the Veeam proxy — check the vPower NFS service
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Get-Service -Name VeeamVssProvider
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Get-Service -Name VeeamNFSSvc
 </code></pre></div>
 <hr />
 <h2 id="vbr-service-crash-instability">VBR Service Crash / Instability<a class="headerlink" href="#vbr-service-crash-instability" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> Jobs fail to start, Veeam console cannot connect, or the VBR service restarts repeatedly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Check Windows Event Log on the VBR server
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Check Veeam service log
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Check Windows Event Log on the VBR server
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Get-EventLog -LogName Application -Source &quot;Veeam*&quot; -Newest 50 | Select TimeGenerated, Message | Format-List
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a># Check Veeam service log
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Get-Content &quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot; -Tail 100
 </code></pre></div>
 <p><strong>Restart the VBR service:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>net stop &quot;Veeam Backup Service&quot;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>net start &quot;Veeam Backup Service&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Restart the Veeam Backup Service (all running jobs will be interrupted and resume from checkpoint)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>net stop &quot;Veeam Backup Service&quot;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>net start &quot;Veeam Backup Service&quot;
 </code></pre></div>
 <hr />
 <h2 id="backup-copy-job-never-completes">Backup Copy Job Never Completes<a class="headerlink" href="#backup-copy-job-never-completes" title="Permanent link">&para;</a></h2>
@@ -4081,8 +4070,8 @@ Most Veeam job failures fall into a small set of categories: VMware snapshot iss
 <hr />
 <h2 id="surebackup-fails">SureBackup Fails<a class="headerlink" href="#surebackup-fails" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> SureBackup verification job reports "VM failed to start" or "application test script failed."</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check virtual lab network mapping</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VBRVirtualLab</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Platform</span><span class="p">,</span> <span class="n">Description</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Check virtual lab network mapping</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VBRVirtualLab</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Platform</span><span class="p">,</span> <span class="n">Description</span>
 </code></pre></div>
 <ol>
 <li>Verify the <strong>virtual lab network mapping</strong> — the VLan used inside the isolated lab must be mapped to a real port group.</li>

@@ -3713,28 +3713,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#log-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Log Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#support-bundle-collection" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3959,32 +3937,6 @@ Diagnostics reference covering Log Locations, Diagnostic Commands, Support Bundl
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h2>
-<ul>
-<li>VBR service log: <code>C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log</code></li>
-<li>Job session logs: <code>C:\ProgramData\Veeam\Backup\Job_&lt;JobName&gt;\</code></li>
-<li>Proxy logs: <code>C:\ProgramData\Veeam\Backup\</code> on each proxy server</li>
-<li>Linux agent logs: <code>/var/log/veeam/</code></li>
-<li>Audit log: <code>C:\ProgramData\Veeam\Backup\Audit.log</code></li>
-</ul>
-<h2 id="diagnostic-commands">Diagnostic Commands<a class="headerlink" href="#diagnostic-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Quick PowerShell view of last result per job</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastResult</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># List jobs with a non-success last result</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastResult</span> <span class="o">-ne</span> <span class="s2">&quot;None&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LastResult</span><span class="p">,</span> <span class="n">LastRun</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Check repository free space</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FriendlyPath</span><span class="p">,</span> <span class="n">Path</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span> <span class="p">/</span> <span class="n">1MB</span><span class="p">)}}</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c"># Check proxy status</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nb">Get-VBRViProxy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Host</span><span class="p">,</span> <span class="n">MaxTasksCount</span><span class="p">,</span> <span class="n">IsDisabled</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c"># Check Veeam service log (last 100 lines)</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ProgramData\Veeam\Backup\Svc.VeeamBackup.log&quot;</span> <span class="n">-Tail</span> <span class="n">100</span>
 </code></pre></div>
 <h2 id="support-bundle-collection">Support Bundle Collection<a class="headerlink" href="#support-bundle-collection" title="Permanent link">&para;</a></h2>
 <ol>

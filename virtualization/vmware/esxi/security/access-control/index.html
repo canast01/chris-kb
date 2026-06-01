@@ -4338,57 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#exception-users" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exception Users
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Exception Users">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#strict-lockdown-considerations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Strict Lockdown Considerations
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-account-management" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local Account Management
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Local Account Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#view-local-accounts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        View Local Accounts
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#add-a-local-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4398,8 +4347,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#delete-an-unused-local-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4409,8 +4358,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#set-root-password" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4418,11 +4367,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4808,40 +4752,41 @@
 ESXi Access Control reference covering Exception Users, Local Account Management, vCenter Role-Based Access Control, ESXi Shell and SSH Access Controls, Firewall Ruleset Management and 1 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Access Control Model
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  vCenter (Primary path — day-to-day operations)      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── AD / SSO identity source                        │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├── Role-based permissions propagated to ESXi       │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └── Lockdown Mode: blocks all direct host access    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>└──────────────────────┬───────────────────────────────┘
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                       │ vpxa / hostd (HTTPS 443/902)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌──────────────────────▼───────────────────────────────┐
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ESXi Host                                           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                      │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Lockdown Mode — Normal (recommended)                │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ├── SSH: BLOCKED for all except exception users     │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ├── API: BLOCKED for direct connections             │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  ├── DCUI: ACCESSIBLE (local console only)           │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └── Exception users: 1 named break-glass account    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                      │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Lockdown Mode — Strict                              │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ├── SSH: BLOCKED                                    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  ├── DCUI: BLOCKED (no local console)                │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  └── Only vCenter or IPMI for recovery               │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                      │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Local Accounts (keep minimal)                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  ├── root            break-glass, unique password    │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  └── infra-breakglass  Admin role, in exception list │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└──────────────────────────────────────────────────────┘
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>         │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    ┌────▼────────────────────────────────┐
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    │  Firewall (host-based ruleset)      │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    │  ├── sshServer → admin subnet only  │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    │  ├── vSphereClient → vCenter only   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    │  ├── ntpClient, syslog → allowed    │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    │  └── All other rulesets → disabled  │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    └─────────────────────────────────────┘
+<p>ESXi Access Control Model
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  vCenter (Primary path — day-to-day operations)      │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ├── AD / SSO identity source                        │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── Role-based permissions propagated to ESXi       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  └── Lockdown Mode: blocks all direct host access    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└──────────────────────┬───────────────────────────────┘
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                       │ vpxa / hostd (HTTPS 443/902)
+</code></pre></div>
+┌──────────────────────▼───────────────────────────────┐
+│  ESXi Host                                           │
+│                                                      │
+│  Lockdown Mode — Normal (recommended)                │
+│  ├── SSH: BLOCKED for all except exception users     │
+│  ├── API: BLOCKED for direct connections             │
+│  ├── DCUI: ACCESSIBLE (local console only)           │
+│  └── Exception users: 1 named break-glass account    │
+│                                                      │
+│  Lockdown Mode — Strict                              │
+│  ├── SSH: BLOCKED                                    │
+│  ├── DCUI: BLOCKED (no local console)                │
+│  └── Only vCenter or IPMI for recovery               │
+│                                                      │
+│  Local Accounts (keep minimal)                       │
+│  ├── root            break-glass, unique password    │
+│  └── infra-breakglass  Admin role, in exception list │
+└──────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>         │
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    ┌────▼────────────────────────────────┐
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    │  Firewall (host-based ruleset)      │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    │  ├── sshServer → admin subnet only  │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    │  ├── vSphereClient → vCenter only   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    │  ├── ntpClient, syslog → allowed    │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    │  └── All other rulesets → disabled  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    └─────────────────────────────────────┘
 </code></pre></div>
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
@@ -4887,56 +4832,41 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 │  Strict lockdown = no DCUI; only vCenter API access allowed to host                                   │
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Via ESXCLI (must be run from DCUI or existing shell session):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vim-cmd<span class="w"> </span>hostsvc/lockdown_mode_enter
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vim-cmd<span class="w"> </span>hostsvc/lockdown_mode_exit<span class="w">    </span><span class="c1"># to disable</span>
-</code></pre></div>
-<h2 id="exception-users">Exception Users<a class="headerlink" href="#exception-users" title="Permanent link">&para;</a></h2>
-<p>Exception users in Normal Lockdown can still connect directly to the host via SSH. Keep this list minimal:</p>
-<ul>
-<li>One named break-glass local account</li>
-<li>No shared accounts</li>
-</ul>
-<p>Configure via vCenter: <strong>Host → Configure → Security Profile → Exception Users → Add</strong></p>
-<h3 id="strict-lockdown-considerations">Strict Lockdown Considerations<a class="headerlink" href="#strict-lockdown-considerations" title="Permanent link">&para;</a></h3>
-<p>Use Strict Lockdown only if vCenter is highly available (HA'd appliance or VCF). If vCenter is unavailable in Strict Lockdown, the only recovery path is physical IPMI/iDRAC console access to the DCUI, which itself does not permit root login under Strict Lockdown — a second local account with DCUI access must be pre-configured.</p>
-<hr />
-<h2 id="local-account-management">Local Account Management<a class="headerlink" href="#local-account-management" title="Permanent link">&para;</a></h2>
-<p>Minimise local accounts. Production ESXi hosts should have at most two local accounts:</p>
-<table>
-<thead>
-<tr>
-<th>Account</th>
-<th>Purpose</th>
-<th>State</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>root</code></td>
-<td>Primary break-glass</td>
-<td>Enabled; strong unique password per host</td>
-</tr>
-<tr>
-<td>Break-glass named account</td>
-<td>Secondary break-glass</td>
-<td>Enabled; in exception users list</td>
-</tr>
-<tr>
-<td>All other accounts</td>
-<td>Application-specific (deprecated)</td>
-<td>Delete or disable</td>
-</tr>
-</tbody>
-</table>
-<h3 id="view-local-accounts">View Local Accounts<a class="headerlink" href="#view-local-accounts" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via ESXCLI (SSH or shell)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Via vSphere API (PowerCLI)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-01.example.local&quot;</span><span class="o">)</span>.ExtensionData.Config.LocalAccountManager.QueryUserList<span class="o">()</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## Exception Users
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Exception users in Normal Lockdown can still connect directly to the host via SSH. Keep this list minimal:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- One named break-glass local account
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- No shared accounts
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Configure via vCenter: **Host → Configure → Security Profile → Exception Users → Add**
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>### Strict Lockdown Considerations
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>Use Strict Lockdown only if vCenter is highly available (HA&#39;d appliance or VCF). If vCenter is unavailable in Strict Lockdown, the only recovery path is physical IPMI/iDRAC console access to the DCUI, which itself does not permit root login under Strict Lockdown — a second local account with DCUI access must be pre-configured.
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>---
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>## Local Account Management
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>Minimise local accounts. Production ESXi hosts should have at most two local accounts:
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>| Account | Purpose | State |
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>|---|---|---|
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>| `root` | Primary break-glass | Enabled; strong unique password per host |
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>| Break-glass named account | Secondary break-glass | Enabled; in exception users list |
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>| All other accounts | Application-specific (deprecated) | Delete or disable |
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>### View Local Accounts
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>```bash
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a># Via ESXCLI (SSH or shell)
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>esxcli system account list
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a># Via vSphere API (PowerCLI)
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>(Get-VMHost &quot;esxi-01.example.local&quot;).ExtensionData.Config.LocalAccountManager.QueryUserList()
+</code></pre></div></p>
 <h3 id="add-a-local-account">Add a Local Account<a class="headerlink" href="#add-a-local-account" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span><span class="se">\</span>

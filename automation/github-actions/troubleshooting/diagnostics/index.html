@@ -3219,28 +3219,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#running-workflows-locally-with-act" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Running Workflows Locally with act
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#inspecting-workflow-runs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inspecting Workflow Runs
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3452,49 +3430,28 @@
 │   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
 │   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="running-workflows-locally-with-act">Running Workflows Locally with act<a class="headerlink" href="#running-workflows-locally-with-act" title="Permanent link">&para;</a></h2>
-<p><code>act</code> runs GitHub Actions locally using Docker, shortening the feedback loop.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install act (macOS)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>brew<span class="w"> </span>install<span class="w"> </span>act
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List available jobs</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>act<span class="w"> </span>--list
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Inspecting Workflow Runs
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># List recent workflow runs
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>gh run list --repo owner/repo --limit 20
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Run the default push event</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>act<span class="w"> </span>push
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># View a specific run
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>gh run view 12345678
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Run a specific job</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>act<span class="w"> </span>push<span class="w"> </span>--job<span class="w"> </span>build
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Watch a run in real time
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>gh run watch 12345678
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Run with a specific secret</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>act<span class="w"> </span>push<span class="w"> </span>-s<span class="w"> </span><span class="nv">MY_SECRET</span><span class="o">=</span>value
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Download logs from a failed run
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>gh run download 12345678 --dir ./run-logs
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># Use a smaller runner image</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>act<span class="w"> </span>push<span class="w"> </span>-P<span class="w"> </span>ubuntu-24.04<span class="o">=</span>catthehacker/ubuntu:act-24.04
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Re-run only failed jobs
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>gh run rerun 12345678 --failed
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># Dry-run (no execution)</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>act<span class="w"> </span>--dryrun<span class="w"> </span>push
-</code></pre></div>
-<h2 id="inspecting-workflow-runs">Inspecting Workflow Runs<a class="headerlink" href="#inspecting-workflow-runs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List recent workflow runs</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--repo<span class="w"> </span>owner/repo<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># View a specific run</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span><span class="m">12345678</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Watch a run in real time</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>gh<span class="w"> </span>run<span class="w"> </span>watch<span class="w"> </span><span class="m">12345678</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Download logs from a failed run</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>gh<span class="w"> </span>run<span class="w"> </span>download<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--dir<span class="w"> </span>./run-logs
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Re-run only failed jobs</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>gh<span class="w"> </span>run<span class="w"> </span>rerun<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--failed
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Cancel a running workflow</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>gh<span class="w"> </span>run<span class="w"> </span>cancel<span class="w"> </span><span class="m">12345678</span>
-</code></pre></div>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a># Cancel a running workflow
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>gh run cancel 12345678
+</code></pre></div></p>
 
 
 

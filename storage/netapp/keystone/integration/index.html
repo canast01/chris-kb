@@ -3719,39 +3719,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#activeiq-digital-advisor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ActiveIQ Digital Advisor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#keystone-collector" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Keystone Collector
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        REST API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#itsm-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4000,35 +3967,6 @@ NetApp Keystone Integration reference covering ActiveIQ Digital Advisor, Keyston
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Cloud Sync    = NetApp SaaS data migration/sync; NFS, SMB, S3, HDFS                                │
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="activeiq-digital-advisor">ActiveIQ Digital Advisor<a class="headerlink" href="#activeiq-digital-advisor" title="Permanent link">&para;</a></h2>
-<p>BlueXP / ActiveIQ Digital Advisor is the primary portal for Keystone capacity visibility and subscription management. Log in at <a href="https://activeiq.netapp.com">https://activeiq.netapp.com</a> using your NetApp SSO credentials. The Keystone dashboard displays:</p>
-<ul>
-<li>Committed vs. consumed capacity per service tier</li>
-<li>Burst usage and remaining burst headroom</li>
-<li>SLA compliance status (availability, latency, IOPS/TB)</li>
-<li>Monthly consumption trends and true-up projections</li>
-</ul>
-<p>Access is provisioned by the Keystone Success Manager at subscription onboarding. Request additional user access via the KSM or the support portal.</p>
-<h2 id="keystone-collector">Keystone Collector<a class="headerlink" href="#keystone-collector" title="Permanent link">&para;</a></h2>
-<p>The Keystone Collector is a VM agent deployed on-premises that collects consumption data from ONTAP clusters and StorageGRID systems in the Keystone subscription.</p>
-<ul>
-<li>Runs as a Linux service (<code>keystone-collector</code>); requires outbound HTTPS on port 443 to <code>keystone.netapp.com</code></li>
-<li>No inbound ports required — the Collector is outbound only</li>
-<li>Communicates with ONTAP via the cluster management LIF using ONTAP REST API</li>
-<li>Update the Collector when NetApp releases new versions to maintain telemetry continuity; updates are distributed via the NetApp support site</li>
-</ul>
-<p>Collector configuration is managed via a terminal UI (TUI) accessible on the Collector VM console. Credentials for ONTAP access and NetApp cloud endpoint authentication are managed here.</p>
-<h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
-<p>Keystone exposes a REST API for programmatic consumption reporting and subscription visibility. Use for custom dashboards, ServiceNow integration, or automated capacity reports.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List subscriptions</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>GET<span class="w"> </span>/api/keystone/v1/subscriptions
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Get consumption for a specific subscription</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>GET<span class="w"> </span>/api/keystone/v1/subscriptions/<span class="o">{</span>id<span class="o">}</span>/consumption
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Get service level details</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>GET<span class="w"> </span>/api/keystone/v1/subscriptions/<span class="o">{</span>id<span class="o">}</span>/service-levels
 </code></pre></div>
 <p>Authenticate via ActiveIQ API tokens generated in the BlueXP portal. Tokens are scoped to the customer account and expire on a configurable schedule.</p>
 <h2 id="itsm-integration">ITSM Integration<a class="headerlink" href="#itsm-integration" title="Permanent link">&para;</a></h2>

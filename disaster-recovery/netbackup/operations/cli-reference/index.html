@@ -3898,34 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restore-operations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Restore Operations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Restore Operations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#catalog-restore-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catalog Restore Sequence
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#catalog-media" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4222,40 +4194,22 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 │  KMS           = Key Management Service for encryption keys used in backup data encryption            │
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="restore-operations">Restore Operations<a class="headerlink" href="#restore-operations" title="Permanent link">&para;</a></h2>
-<h3 id="catalog-restore-sequence">Catalog Restore Sequence<a class="headerlink" href="#catalog-restore-sequence" title="Permanent link">&para;</a></h3>
-<p>When the catalog is lost, recovery must happen before any other restore is possible.</p>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant Master as Primary Server
-    participant Catalog as Catalog Backup (offline copy)
-    participant Media as Media Server
-
-    Admin-&gt;&gt;Master: Install / reinstall NetBackup\n(matching version)
-    Admin-&gt;&gt;Master: Run bprecover or\nbpcatarc -r (recover from catalog backup)
-    Master-&gt;&gt;Catalog: Locate catalog backup\n(separate STU or cold copy)
-    Catalog--&gt;&gt;Master: Catalog images transferred
-    Master-&gt;&gt;Master: Rebuild EMM database\nnbemmcmd -machinealias
-    Master-&gt;&gt;Media: Reconnect media servers\nbpclntcmd -hn &lt;media&gt; -chk
-    Media--&gt;&gt;Master: Media servers re-registered
-    Admin-&gt;&gt;Master: Run bpdbjobs -summary\nverify catalog integrity
-    Admin-&gt;&gt;Master: Resume backup policies\nbpbackup -p &lt;policy&gt;
-    note over Admin,Media: Catalog recovery enables\nall image restores to resume</code></pre>
-<p>Run restores from the CLI. Always verify client name, backup time, and policy before executing.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Restore files for a client</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>bprestore<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;policy_type&gt;<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>&lt;file_path&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># List available restore points (backup images)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bpimmedia<span class="w"> </span>-U<span class="w"> </span>-client<span class="w"> </span>&lt;client&gt;
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Run restores from the CLI. Always verify client name, backup time, and policy before executing.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Restore files for a client
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>bprestore -C &lt;client&gt; -t &lt;policy_type&gt; -L /tmp/restore.log &lt;file_path&gt;
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Browse backups for a client</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bplist<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>-t<span class="w"> </span>&lt;type&gt;<span class="w"> </span>-R<span class="w"> </span>/
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a># List available restore points (backup images)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>bpimmedia -U -client &lt;client&gt;
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Initiate instant access restore</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bprestore<span class="w"> </span>-L<span class="w"> </span>/tmp/restore.log<span class="w"> </span>-R<span class="w"> </span>-C<span class="w"> </span>&lt;client&gt;<span class="w"> </span>&lt;path&gt;
-</code></pre></div>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Browse backups for a client
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>bplist -C &lt;client&gt; -t &lt;type&gt; -R /
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Initiate instant access restore
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>bprestore -L /tmp/restore.log -R -C &lt;client&gt; &lt;path&gt;
+</code></pre></div></p>
 <hr />
 <h2 id="catalog-media">Catalog &amp; Media<a class="headerlink" href="#catalog-media" title="Permanent link">&para;</a></h2>
 <p>Manage media, catalog verification, and storage unit health.</p>

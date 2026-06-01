@@ -3547,24 +3547,24 @@
 Network File System (NFS) allows hosts to mount remote directories over TCP. Coverage includes version selection (NFSv3/4/4.1), export configuration, UID/GID permission mapping, mount option tuning (hard/soft, sync/async, rsize/wsize), and troubleshooting stale handles and mount failures.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NFS ARCHITECTURE
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────┐        TCP 2049        ┌──────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   NFS CLIENT    │                        │    NFS SERVER        │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                 │                        │                      │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  mount -t nfs   │  ─────────────────────►│  /etc/exports        │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  server:/export │                        │  /data 10.0.0.0/24   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  /mnt/data      │  NFS MOUNT REQUEST     │  (rw,sync,root_squash)│
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                 │ ◄──────────────────────│                      │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  ┌───────────┐  │  mount OK              │  ┌────────────────┐  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │ /mnt/data │  │                        │  │  /data         │  │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  (remote  │  │  READ / WRITE ops      │  │  (filesystem)  │  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │   files)  │◄═╪════════════════════════╪═►│                │  │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └───────────┘  │                        │  └────────────────┘  │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                 │                        │                      │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  UID/GID check  │  NFSv3: stateless      │  exportfs -ra        │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  (POSIX perms)  │  NFSv4: stateful/Krb5  │  applies changes     │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└─────────────────┘                        └──────────────────────┘
+<div class="highlight"><pre><span></span><code>    NFS ARCHITECTURE
 </code></pre></div>
+<p><code>┌─────────────────┐        TCP 2049        ┌──────────────────────┐
+│   NFS CLIENT    │                        │    NFS SERVER        │
+│                 │                        │                      │
+│  mount -t nfs   │  ─────────────────────►│  /etc/exports        │
+│  server:/export │                        │  /data 10.0.0.0/24   │
+│  /mnt/data      │  NFS MOUNT REQUEST     │  (rw,sync,root_squash)│
+│                 │ ◄──────────────────────│                      │
+│  ┌───────────┐  │  mount OK              │  ┌────────────────┐  │
+│  │ /mnt/data │  │                        │  │  /data         │  │
+│  │  (remote  │  │  READ / WRITE ops      │  │  (filesystem)  │  │
+│  │   files)  │◄═╪════════════════════════╪═►│                │  │
+│  └───────────┘  │                        │  └────────────────┘  │
+│                 │                        │                      │
+│  UID/GID check  │  NFSv3: stateless      │  exportfs -ra        │
+│  (POSIX perms)  │  NFSv4: stateful/Krb5  │  applies changes     │
+└─────────────────┘                        └──────────────────────┘</code></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="exports/">

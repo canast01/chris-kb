@@ -2818,39 +2818,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#uptime-monitoring-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Uptime Monitoring Tools
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#azure-monitor-availability-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Azure Monitor — Availability Test
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#aws-route-53-health-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AWS Route 53 Health Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#availability-incident-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3052,83 +3019,36 @@ Service Availability Monitoring reference covering Availability Calculation, Upt
 │    Error budget  = 1 - SLO; allowable downtime; consumed by incidents and planned maintenance         │
 │    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="uptime-monitoring-tools">Uptime Monitoring Tools<a class="headerlink" href="#uptime-monitoring-tools" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Method</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Prometheus Blackbox Exporter</td>
-<td>HTTP/TCP/ICMP probes from internal</td>
-<td>Integrates with Grafana</td>
-</tr>
-<tr>
-<td>Zabbix</td>
-<td>HTTP/TCP/ICMP + agent checks</td>
-<td>All-in-one monitoring</td>
-</tr>
-<tr>
-<td>Pingdom / UptimeRobot</td>
-<td>External HTTP probes</td>
-<td>External visibility; SLA reporting</td>
-</tr>
-<tr>
-<td>Azure Monitor / Application Insights</td>
-<td>App-level availability tests</td>
-<td>Built-in for Azure workloads</td>
-</tr>
-<tr>
-<td>AWS CloudWatch</td>
-<td>Route 53 health checks</td>
-<td>Native for AWS endpoints</td>
-</tr>
-</tbody>
-</table>
-<h2 id="azure-monitor-availability-test">Azure Monitor — Availability Test<a class="headerlink" href="#azure-monitor-availability-test" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create an availability test (ping test)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>monitor<span class="w"> </span>app-insights<span class="w"> </span>web-test<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-g<span class="w"> </span>&lt;rg&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--app-insights<span class="w"> </span>&lt;ai-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-n<span class="w"> </span>&lt;test-name&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--defined-web-test-kind<span class="w"> </span>ping<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>--locations<span class="w"> </span><span class="s1">&#39;[{&quot;Id&quot;:&quot;us-east-az&quot;}]&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--url<span class="w"> </span><span class="s2">&quot;https://&lt;app&gt;/health&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--frequency<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--timeout<span class="w"> </span><span class="m">30</span>
-</code></pre></div>
-<h2 id="aws-route-53-health-checks">AWS Route 53 Health Checks<a class="headerlink" href="#aws-route-53-health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create HTTP health check</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>aws<span class="w"> </span>route53<span class="w"> </span>create-health-check<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--caller-reference<span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--health-check-config<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s1">    &quot;Type&quot;: &quot;HTTPS&quot;,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;FullyQualifiedDomainName&quot;: &quot;&lt;app-host&gt;&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;Port&quot;: 443,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;ResourcePath&quot;: &quot;/health&quot;,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;RequestInterval&quot;: 30,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;FailureThreshold&quot;: 3</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Get health check status</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>aws<span class="w"> </span>route53<span class="w"> </span>get-health-check-status<span class="w"> </span>--health-check-id<span class="w"> </span>&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}&#39;</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## AWS Route 53 Health Checks
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Create HTTP health check
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws route53 create-health-check \
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  --caller-reference &quot;$(date +%s)&quot; \
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  --health-check-config &#39;{
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    &quot;Type&quot;: &quot;HTTPS&quot;,
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    &quot;FullyQualifiedDomainName&quot;: &quot;&lt;app-host&gt;&quot;,
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    &quot;Port&quot;: 443,
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    &quot;ResourcePath&quot;: &quot;/health&quot;,
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    &quot;RequestInterval&quot;: 30,
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    &quot;FailureThreshold&quot;: 3
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  }&#39;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Get health check status
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>aws route53 get-health-check-status --health-check-id &lt;id&gt; \
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  --query &#39;HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}&#39;
+</code></pre></div></p>
 <h2 id="availability-incident-tracking">Availability Incident Tracking<a class="headerlink" href="#availability-incident-tracking" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Incident:       APP-2026-042
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Service:        ERP Application
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Start time:     2026-05-05 14:23 UTC
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>End time:       2026-05-05 15:07 UTC
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Downtime:       44 minutes
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>SLO impact:     Monthly budget: 43.8 min — budget consumed 100%
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Root cause:     Database connection pool exhausted due to slow query
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>Detection:      Monitoring alert fired at 14:24 (1 min after start)
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>Resolution:     Restarted connection pool; fixed query index
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Incident:       APP-2026-042
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Service:        ERP Application
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Start time:     2026-05-05 14:23 UTC
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>End time:       2026-05-05 15:07 UTC
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>Downtime:       44 minutes
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>SLO impact:     Monthly budget: 43.8 min — budget consumed 100%
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Root cause:     Database connection pool exhausted due to slow query
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>Detection:      Monitoring alert fired at 14:24 (1 min after start)
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Resolution:     Restarted connection pool; fixed query index
 </code></pre></div>
 <h2 id="reporting">Reporting<a class="headerlink" href="#reporting" title="Permanent link">&para;</a></h2>
 <table>

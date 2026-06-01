@@ -3547,27 +3547,27 @@
 Server Message Block (SMB) is a network file sharing protocol running over TCP port 445, used for file shares, printer sharing, and inter-process communication in Windows environments and increasingly in mixed Linux/macOS fleets via Samba. The critical operational concerns are version enforcement (SMB1 must be disabled; SMB3 is required for encryption and signing), the interaction between share permissions and NTFS permissions (most restrictive wins), and diagnosing authentication and session failures in domain environments.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SMB ARCHITECTURE
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────────┐     TCP 445      ┌──────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Windows/Linux   │                  │   SMB SERVER (Windows)   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Client          │                  │                          │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                  │  1. Negotiate    │  \\server\Finance        │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  net use Z:      ├─────────────────►│    (UNC path / share)    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  \\server\share  │  2. SessionSetup │                          │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ├─────────────────►│  Auth: Kerberos / NTLM   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Kerberos ticket │◄─────────────────┤                          │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  or NTLM creds   │  3. TreeConnect  │  ┌──────────────────┐    │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                  ├─────────────────►│  │  Share Perms     │    │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  │◄─────────────────┤  │  (Everyone:Read) │    │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  │  Share connected │  └────────┬─────────┘    │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ┌─────────────┐ │  4. File I/O     │           │ AND          │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  Z:\files   │◄╪═════════════════►│  ┌────────▼─────────┐    │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └─────────────┘ │                  │  │  NTFS ACL        │    │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                  │                  │  │  (user:Modify)   │    │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                  │                  │  └──────────────────┘    │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                  │                  │  Effective = most restrict│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────┘                  └──────────────────────────┘
+<div class="highlight"><pre><span></span><code>    SMB ARCHITECTURE
 </code></pre></div>
+<p><code>┌──────────────────┐     TCP 445      ┌──────────────────────────┐
+│  Windows/Linux   │                  │   SMB SERVER (Windows)   │
+│  Client          │                  │                          │
+│                  │  1. Negotiate    │  \\server\Finance        │
+│  net use Z:      ├─────────────────►│    (UNC path / share)    │
+│  \\server\share  │  2. SessionSetup │                          │
+│                  ├─────────────────►│  Auth: Kerberos / NTLM   │
+│  Kerberos ticket │◄─────────────────┤                          │
+│  or NTLM creds   │  3. TreeConnect  │  ┌──────────────────┐    │
+│                  ├─────────────────►│  │  Share Perms     │    │
+│                  │◄─────────────────┤  │  (Everyone:Read) │    │
+│                  │  Share connected │  └────────┬─────────┘    │
+│  ┌─────────────┐ │  4. File I/O     │           │ AND          │
+│  │  Z:\files   │◄╪═════════════════►│  ┌────────▼─────────┐    │
+│  └─────────────┘ │                  │  │  NTFS ACL        │    │
+│                  │                  │  │  (user:Modify)   │    │
+│                  │                  │  └──────────────────┘    │
+│                  │                  │  Effective = most restrict│
+└──────────────────┘                  └──────────────────────────┘</code></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="shares/">

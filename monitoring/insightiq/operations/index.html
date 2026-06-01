@@ -4186,28 +4186,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#capacity-review-weekly" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity Review (Weekly)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#appliance-health-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Appliance Health Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#alert-threshold-review-monthly" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4504,31 +4482,25 @@ InsightIQ Operations reference covering Daily Checklist, Cluster Connection Trou
 │  Access review = Monthly check of InsightIQ user list; remove stale accounts                          │
 │  Management report = Monthly PDF summary of performance trends for leadership review                  │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h2 id="capacity-review-weekly">Capacity Review (Weekly)<a class="headerlink" href="#capacity-review-weekly" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Dashboard &gt; [Cluster] &gt; Capacity
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Review used capacity trend over the last 30 days
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Calculate growth rate: (current used - 30 days ago used) / 30 days
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Project capacity exhaustion: days until 85% used
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>5. Flag clusters with &lt; 60 days to 85% threshold to capacity planning queue
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>6. Include in weekly capacity report email
-</code></pre></div>
-<h2 id="appliance-health-checks">Appliance Health Checks<a class="headerlink" href="#appliance-health-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check InsightIQ service status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>iiq
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check PostgreSQL service</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>postgresql
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check disk usage on data volume</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>df<span class="w"> </span>-h<span class="w"> </span>/data
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Review recent errors in InsightIQ logs</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>iiq<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;24 hours ago&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>error
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check database size</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>psql<span class="w"> </span>-U<span class="w"> </span>iiq<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT pg_size_pretty(pg_database_size(&#39;iiq&#39;));&quot;</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Appliance Health Checks
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check InsightIQ service status
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo systemctl status iiq
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Check PostgreSQL service
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sudo systemctl status postgresql
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Check disk usage on data volume
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>df -h /data
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Review recent errors in InsightIQ logs
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>sudo journalctl -u iiq --since &quot;24 hours ago&quot; | grep -i error
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Check database size
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>psql -U iiq -c &quot;SELECT pg_size_pretty(pg_database_size(&#39;iiq&#39;));&quot;
+</code></pre></div></p>
 <h2 id="alert-threshold-review-monthly">Alert Threshold Review (Monthly)<a class="headerlink" href="#alert-threshold-review-monthly" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Review the past month's active alerts for noise patterns</li>
@@ -4538,16 +4510,16 @@ InsightIQ Operations reference covering Daily Checklist, Cluster Connection Trou
 </ul>
 <h2 id="report-generation">Report Generation<a class="headerlink" href="#report-generation" title="Permanent link">&para;</a></h2>
 <h3 id="on-demand-report">On-Demand Report<a class="headerlink" href="#on-demand-report" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>InsightIQ web UI &gt; Reports &gt; Custom Report
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Select: Cluster, Time Range, Metrics (throughput, latency, CPU)
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Format: PDF or CSV
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Download or email directly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>InsightIQ web UI &gt; Reports &gt; Custom Report
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Select: Cluster, Time Range, Metrics (throughput, latency, CPU)
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Format: PDF or CSV
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Download or email directly
 </code></pre></div>
 <h3 id="scheduled-report-validation">Scheduled Report Validation<a class="headerlink" href="#scheduled-report-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration &gt; Reports &gt; Scheduled Reports
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Verify each scheduled report shows Last Run within expected window
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- If a report failed: check SMTP configuration and recipient list
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Manually trigger to test: Actions &gt; Run Now
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration &gt; Reports &gt; Scheduled Reports
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Verify each scheduled report shows Last Run within expected window
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- If a report failed: check SMTP configuration and recipient list
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Manually trigger to test: Actions &gt; Run Now
 </code></pre></div>
 <h2 id="monthly-tasks">Monthly Tasks<a class="headerlink" href="#monthly-tasks" title="Permanent link">&para;</a></h2>
 <ul>

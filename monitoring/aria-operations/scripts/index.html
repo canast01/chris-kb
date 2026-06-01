@@ -4174,39 +4174,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#push-custom-metric" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Push Custom Metric
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#script-inventory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Script Inventory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#token-refresh" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Token Refresh
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4418,83 +4385,33 @@ Aria Operations Scripts reference covering Authentication, Push Custom Metric, S
 │  Group membership = Objects belonging to a group; listable via /api/groups/{id}/members               │
 │  Retry logic = Exponential backoff pattern for handling 429/503 from Aria Ops API                     │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>Common metric keys:
-- <code>cpu|usage_average</code> — VM CPU usage %
-- <code>mem|usage_average</code> — VM memory usage %
-- <code>disk|commandsAveraged_average</code> — disk IOPS
-- <code>net|usage_average</code> — network usage KBps</p>
-<h2 id="push-custom-metric">Push Custom Metric<a class="headerlink" href="#push-custom-metric" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">push_custom_metric</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">resource_id</span><span class="p">,</span> <span class="n">metric_key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">timestamp_ms</span><span class="p">):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;https://</span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">/suite-api/api/resources/stats/addstatscollection&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;vRealizeOpsToken </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">}</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="s2">&quot;stat-contents&quot;</span><span class="p">:</span> <span class="p">[{</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>            <span class="s2">&quot;resourceId&quot;</span><span class="p">:</span> <span class="n">resource_id</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>            <span class="s2">&quot;stat-list&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>                <span class="s2">&quot;stat&quot;</span><span class="p">:</span> <span class="p">[{</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                    <span class="s2">&quot;timestamps&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">timestamp_ms</span><span class="p">],</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">value</span><span class="p">],</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>                    <span class="s2">&quot;statKey&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">metric_key</span><span class="p">}</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>                <span class="p">}]</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>            <span class="p">}</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        <span class="p">}]</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="p">}</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="script-inventory">Script Inventory<a class="headerlink" href="#script-inventory" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Script</th>
-<th>Purpose</th>
-<th>Schedule</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>export_active_alerts.py</code></td>
-<td>Export all active alerts to CSV with severity, object, and timestamp</td>
-<td>Daily</td>
-</tr>
-<tr>
-<td><code>capacity_report.py</code></td>
-<td>Generate cluster-level capacity utilisation report (CPU, memory, storage)</td>
-<td>Weekly</td>
-</tr>
-<tr>
-<td><code>top_n_vms.py</code></td>
-<td>Report top-N VMs by CPU contention and memory usage over a time range</td>
-<td>Weekly</td>
-</tr>
-<tr>
-<td><code>push_custom_metric.py</code></td>
-<td>Push custom metrics to Aria Operations via the REST ingest API</td>
-<td>On demand</td>
-</tr>
-<tr>
-<td><code>generate_report.py</code></td>
-<td>Trigger and download a scheduled report programmatically</td>
-<td>On demand</td>
-</tr>
-</tbody>
-</table>
-<p>Scripts are stored in the team repository under <code>scripts/aria-operations/</code>. A <code>config.json</code> template with required fields (<code>aria_host</code>, <code>username</code>, <code>password</code>) is provided — populate from the secrets manager at runtime.</p>
-<h2 id="token-refresh">Token Refresh<a class="headerlink" href="#token-refresh" title="Permanent link">&para;</a></h2>
-<p>Tokens expire after 30 minutes (default). For long-running scripts, re-acquire the token before expiry or catch HTTP 401 responses and re-authenticate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">token_expiry</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_valid_token</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">current_token</span><span class="p">):</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">if</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">token_expiry</span><span class="p">:</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">return</span> <span class="n">get_token</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">return</span> <span class="n">current_token</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Script Inventory
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Script | Purpose | Schedule |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|---|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `export_active_alerts.py` | Export all active alerts to CSV with severity, object, and timestamp | Daily |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `capacity_report.py` | Generate cluster-level capacity utilisation report (CPU, memory, storage) | Weekly |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `top_n_vms.py` | Report top-N VMs by CPU contention and memory usage over a time range | Weekly |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `push_custom_metric.py` | Push custom metrics to Aria Operations via the REST ingest API | On demand |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `generate_report.py` | Trigger and download a scheduled report programmatically | On demand |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Scripts are stored in the team repository under `scripts/aria-operations/`. A `config.json` template with required fields (`aria_host`, `username`, `password`) is provided — populate from the secrets manager at runtime.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## Token Refresh
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Tokens expire after 30 minutes (default). For long-running scripts, re-acquire the token before expiry or catch HTTP 401 responses and re-authenticate:
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```python
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>from datetime import datetime, timedelta
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>token_expiry = datetime.utcnow() + timedelta(minutes=28)
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>def get_valid_token(host, username, password, current_token):
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    if datetime.utcnow() &gt;= token_expiry:
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>        return get_token(host, username, password)
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    return current_token
+</code></pre></div></p>
 
 
 

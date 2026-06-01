@@ -4398,7 +4398,57 @@
 <div class="kb-summary">
 Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific recovery modes.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────── Security Active Directory Operations — Backup and Restore ──────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  Active Directory backup: snapshots, replication, and external backup application integration │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Snapshot schedule: hourly for 24 h, daily for 7 days, weekly for 4 weeks minimum       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Replication: async or sync to DR site for off-site data protection copy            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Restore: volume-level or file-level restore from snapshot; test restore quarterly       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Snapshot → replicate to DR → verify → document → test restore                                      │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             Core            │  │       Primary service       │  │        Main function        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          Management         │  │        Control plane        │  │         Admin access        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Monitoring         │  │         Health/perf         │  │      Alerts/dashboards      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Security          │  │         Auth/encrypt        │  │        Access control       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Integration         │  │        APIs/plug-ins        │  │         Third-party         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Type       │     Schedule     │     Retention     │     Offsite?     │    Test cycle    │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │     Snapshot     │   Hourly/daily   │    7/30/90 days   │        No        │     Monthly      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │   Replication    │  Policy-driven   │     Per policy    │     Yes (DR)     │    Quarterly     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Backup app    │ Daily full+incr  │      90+ days     │ Yes (tape/cloud  │    Quarterly     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │     Archive      │     Monthly      │      7+ years     │   Yes (object)   │      Annual      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: Security Active Directory Operations infrastructure · management network · monitoring    │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Active Directory   = Security Active Directory Operations platform overview and core concepts      │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Management         = management console and command-line interface for administration              │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Monitoring         = health and performance monitoring dashboards and alerting                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    Automation         = REST API, scripting, and pipeline integration capabilities                    │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Security           = access control, authentication, and encryption configuration                  │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Backup             = backup and recovery procedures and schedule configuration                     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Upgrade            = software version upgrades and firmware patching procedures                    │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Troubleshooting    = diagnostic procedures and common issue resolution steps                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Escalation         = vendor support escalation path and severity triage process                    │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Documentation      = vendor knowledge base and official product documentation                      │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Change management  = change ticket requirements for production modifications                       │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Audit log          = admin action logging for compliance and security review                       │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>This page covers the full lifecycle: backup strategy, restore decision logic, authoritative restore for accidentally deleted objects, and post-restore validation.</p>
 <hr />
 <h2 id="backup-strategy-overview">Backup Strategy Overview<a class="headerlink" href="#backup-strategy-overview" title="Permanent link">&para;</a></h2>
@@ -4437,37 +4487,37 @@ Protecting Active Directory requires regular System State backups of every Domai
 <hr />
 <h2 id="windows-server-backup-system-state">Windows Server Backup — System State<a class="headerlink" href="#windows-server-backup-system-state" title="Permanent link">&para;</a></h2>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Install the Windows Server Backup feature on each DC</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">Windows-Server-Backup</span> <span class="n">-IncludeManagementTools</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Install the Windows Server Backup feature on each DC</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">Windows-Server-Backup</span> <span class="n">-IncludeManagementTools</span>
 </code></pre></div>
 <h3 id="system-state-backup-to-network-share">System State Backup to Network Share<a class="headerlink" href="#system-state-backup-to-network-share" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>REM One-shot System State backup to a UNC path
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>wbadmin start systemstatebackup -backupTarget:\\backup-srv\DC-Backups -quiet
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>REM Check status / history
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>wbadmin get versions -backupTarget:\\backup-srv\DC-Backups
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>REM One-shot System State backup to a UNC path
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>wbadmin start systemstatebackup -backupTarget:\\backup-srv\DC-Backups -quiet
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>REM Check status / history
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>wbadmin get versions -backupTarget:\\backup-srv\DC-Backups
 </code></pre></div>
 <h3 id="scheduled-system-state-backup-powershell">Scheduled System State Backup (PowerShell)<a class="headerlink" href="#scheduled-system-state-backup-powershell" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Schedule daily System State backup at 02:00 to a local volume (D:)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$Policy</span> <span class="p">=</span> <span class="nb">New-WBPolicy</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$Target</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-VolumePath</span> <span class="s2">&quot;D:&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">Add-WBBackupTarget</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Target</span> <span class="nv">$Target</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Add-WBSystemState</span> <span class="n">-Policy</span> <span class="nv">$Policy</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Set-WBSchedule</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Schedule</span> <span class="n">02</span><span class="p">:</span><span class="n">00</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">Set-WBPolicy</span> <span class="n">-Policy</span> <span class="nv">$Policy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Schedule daily System State backup at 02:00 to a local volume (D:)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$Policy</span> <span class="p">=</span> <span class="nb">New-WBPolicy</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$Target</span> <span class="p">=</span> <span class="nb">New-WBBackupTarget</span> <span class="n">-VolumePath</span> <span class="s2">&quot;D:&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">Add-WBBackupTarget</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Target</span> <span class="nv">$Target</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Add-WBSystemState</span> <span class="n">-Policy</span> <span class="nv">$Policy</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Set-WBSchedule</span> <span class="n">-Policy</span> <span class="nv">$Policy</span> <span class="n">-Schedule</span> <span class="n">02</span><span class="p">:</span><span class="n">00</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Set-WBPolicy</span> <span class="n">-Policy</span> <span class="nv">$Policy</span>
 </code></pre></div>
 <blockquote>
 <p><strong>Note:</strong> System State backups cannot target a shared folder via the scheduled task GUI — use <code>wbadmin</code> from a scheduled Task or a dedicated backup agent.</p>
 </blockquote>
 <h3 id="bare-metal-recovery-bmr-backup">Bare-Metal Recovery (BMR) Backup<a class="headerlink" href="#bare-metal-recovery-bmr-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>REM Full BMR backup includes System State, boot volumes, and all critical volumes
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>wbadmin start backup ^
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  -backupTarget:\\backup-srv\DC-BMR ^
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  -include:C:,D: ^
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  -allCritical ^
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  -systemState ^
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  -vssFull ^
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  -quiet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>REM Full BMR backup includes System State, boot volumes, and all critical volumes
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>wbadmin start backup ^
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  -backupTarget:\\backup-srv\DC-BMR ^
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  -include:C:,D: ^
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  -allCritical ^
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  -systemState ^
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  -vssFull ^
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  -quiet
 </code></pre></div>
 <hr />
 <h2 id="restore-decision-flowchart">Restore Decision Flowchart<a class="headerlink" href="#restore-decision-flowchart" title="Permanent link">&para;</a></h2>
@@ -4505,15 +4555,15 @@ Protecting Active Directory requires regular System State backups of every Domai
 <p>Restore System State:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>REM List available backup versions
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>wbadmin get versions -backupTarget:\\backup-srv\DC-Backups
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>REM Restore (use the Version Identifier from the list above)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>wbadmin start systemstaterecovery ^
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  -version:MM/DD/YYYY-HH:MM ^
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  -backupTarget:\\backup-srv\DC-Backups ^
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  -authSysvol ^
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  -quiet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>REM List available backup versions
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>wbadmin get versions -backupTarget:\\backup-srv\DC-Backups
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>REM Restore (use the Version Identifier from the list above)
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>wbadmin start systemstaterecovery ^
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  -version:MM/DD/YYYY-HH:MM ^
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  -backupTarget:\\backup-srv\DC-Backups ^
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  -authSysvol ^
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  -quiet
 </code></pre></div>
 <ol>
 <li>Reboot normally. Replication will bring AD data current from other DCs.</li>
@@ -4536,20 +4586,20 @@ Protecting Active Directory requires regular System State backups of every Domai
 <p>After restore completes, <strong>do not reboot yet</strong>. Open a command prompt in DSRM:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ntdsutil
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  activate instance ntds
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  authoritative restore
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  restore subtree &quot;OU=Users,DC=corp,DC=example,DC=com&quot;
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  quit
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  quit
-</code></pre></div>
-<p>For a single object:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ntdsutil
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  activate instance ntds
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  authoritative restore
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  restore object &quot;CN=John Smith,OU=Users,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  restore subtree &quot;OU=Users,DC=corp,DC=example,DC=com&quot;
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  quit
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  quit
+</code></pre></div>
+<p>For a single object:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ntdsutil
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  activate instance ntds
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  authoritative restore
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  restore object &quot;CN=John Smith,OU=Users,DC=corp,DC=example,DC=com&quot;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  quit
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  quit
 </code></pre></div>
 <ol>
 <li>
@@ -4563,39 +4613,39 @@ Protecting Active Directory requires regular System State backups of every Domai
 <h2 id="ad-recycle-bin-recovery">AD Recycle Bin Recovery<a class="headerlink" href="#ad-recycle-bin-recovery" title="Permanent link">&para;</a></h2>
 <p>The AD Recycle Bin (available since Windows Server 2008 R2 Forest Functional Level) retains deleted objects with all their attributes intact for the duration of <code>msDS-deletedObjectLifetime</code> (defaults to tombstone lifetime).</p>
 <h3 id="enable-the-recycle-bin-one-time-irreversible">Enable the Recycle Bin (one-time, irreversible)<a class="headerlink" href="#enable-the-recycle-bin-one-time-irreversible" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="p">`</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  <span class="n">-Identity</span> <span class="s1">&#39;Recycle Bin Feature&#39;</span> <span class="p">`</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span> <span class="p">`</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Enable-ADOptionalFeature</span> <span class="p">`</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  <span class="n">-Identity</span> <span class="s1">&#39;Recycle Bin Feature&#39;</span> <span class="p">`</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="n">-Scope</span> <span class="n">ForestOrConfigurationSet</span> <span class="p">`</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="n">-Target</span> <span class="p">(</span><span class="nb">Get-ADForest</span><span class="p">).</span><span class="n">Name</span> <span class="p">`</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>  <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <h3 id="recover-deleted-objects">Recover Deleted Objects<a class="headerlink" href="#recover-deleted-objects" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Find deleted objects by name</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Restore a single object</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>  <span class="nb">Restore-ADObject</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c"># Restore an entire deleted OU and its contents</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Marketing&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>  <span class="nb">Restore-ADObject</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c"># Restore to an alternate parent OU</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="nb">Restore-ADObject</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">ObjectGUID</span><span class="p">&gt;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;OU=Users,DC=corp,DC=example,DC=com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Find deleted objects by name</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Restore a single object</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">DisplayName</span> <span class="o">-eq</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  <span class="nb">Restore-ADObject</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c"># Restore an entire deleted OU and its contents</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">Get-ADObject</span> <span class="n">-Filter</span> <span class="p">{</span><span class="n">Name</span> <span class="o">-eq</span> <span class="s2">&quot;Marketing&quot;</span><span class="p">}</span> <span class="n">-IncludeDeletedObjects</span> <span class="p">|</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  <span class="nb">Restore-ADObject</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c"># Restore to an alternate parent OU</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="nb">Restore-ADObject</span> <span class="n">-Identity</span> <span class="p">&lt;</span><span class="n">ObjectGUID</span><span class="p">&gt;</span> <span class="n">-TargetPath</span> <span class="s2">&quot;OU=Users,DC=corp,DC=example,DC=com&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="tombstone-lifetime">Tombstone Lifetime<a class="headerlink" href="#tombstone-lifetime" title="Permanent link">&para;</a></h2>
 <p>The tombstone lifetime controls how long deleted objects remain in the AD database. After expiry, objects are permanently purged.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Check current tombstone lifetime (days)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">(</span><span class="nb">Get-ADObject</span> <span class="p">`</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  <span class="n">-Properties</span> <span class="n">tombstoneLifetime</span><span class="p">).</span><span class="n">tombstoneLifetime</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c"># Increase to 365 days (recommended for enterprises with offline DCs)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nb">Set-ADObject</span> <span class="p">`</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  <span class="o">-Replace</span> <span class="p">@{</span><span class="n">tombstoneLifetime</span><span class="p">=</span><span class="n">365</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># Check current tombstone lifetime (days)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">(</span><span class="nb">Get-ADObject</span> <span class="p">`</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  <span class="n">-Properties</span> <span class="n">tombstoneLifetime</span><span class="p">).</span><span class="n">tombstoneLifetime</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c"># Increase to 365 days (recommended for enterprises with offline DCs)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="nb">Set-ADObject</span> <span class="p">`</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>  <span class="n">-Identity</span> <span class="s2">&quot;CN=Directory Service,CN=Windows NT,CN=Services,CN=Configuration,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  <span class="o">-Replace</span> <span class="p">@{</span><span class="n">tombstoneLifetime</span><span class="p">=</span><span class="n">365</span><span class="p">}</span>
 </code></pre></div>
 <table>
 <thead>
@@ -4632,48 +4682,48 @@ Protecting Active Directory requires regular System State backups of every Domai
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
 <h3 id="replication-health">Replication Health<a class="headerlink" href="#replication-health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>REM Show inbound replication status for all naming contexts
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>repadmin /showrepl
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>REM Show replication summary across all DCs
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>repadmin /replsummary
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>REM Force replication from all partners
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>repadmin /syncall /AdeP
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>REM Check for replication errors
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>repadmin /showrepl * /errorsonly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>REM Show inbound replication status for all naming contexts
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>repadmin /showrepl
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>REM Show replication summary across all DCs
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>repadmin /replsummary
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>REM Force replication from all partners
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>repadmin /syncall /AdeP
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>REM Check for replication errors
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>repadmin /showrepl * /errorsonly
 </code></pre></div>
 <h3 id="ad-ds-service-and-database">AD DS Service and Database<a class="headerlink" href="#ad-ds-service-and-database" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Verify AD DS service is running</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-Service</span> <span class="n">ADWS</span><span class="p">,</span> <span class="n">NTDS</span><span class="p">,</span> <span class="n">Netlogon</span><span class="p">,</span> <span class="n">KDC</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c"># Check event logs for AD errors</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Warning</span> <span class="n">-Newest</span> <span class="n">20</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c"># Verify SYSVOL is shared</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="n">net</span> <span class="n">share</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">SYSVOL</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c"># Check DFSR SYSVOL replication state</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="n">dfsrdiag</span> <span class="n">ReplicationState</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Verify AD DS service is running</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-Service</span> <span class="n">ADWS</span><span class="p">,</span> <span class="n">NTDS</span><span class="p">,</span> <span class="n">Netlogon</span><span class="p">,</span> <span class="n">KDC</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Status</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Check event logs for AD errors</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="s2">&quot;Directory Service&quot;</span> <span class="n">-EntryType</span> <span class="n">Error</span><span class="p">,</span> <span class="n">Warning</span> <span class="n">-Newest</span> <span class="n">20</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Verify SYSVOL is shared</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">net</span> <span class="n">share</span> <span class="p">|</span> <span class="n">findstr</span> <span class="n">SYSVOL</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c"># Check DFSR SYSVOL replication state</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="n">dfsrdiag</span> <span class="n">ReplicationState</span>
 </code></pre></div>
 <h3 id="dns-and-fsmo">DNS and FSMO<a class="headerlink" href="#dns-and-fsmo" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Verify all FSMO roles are held by the expected DC</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Check SRV records are registered</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">nslookup</span> <span class="n">-type</span><span class="p">=</span><span class="n">SRV</span> <span class="n">_ldap</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">dc</span><span class="p">.</span><span class="n">_msdcs</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c"># Force DC to re-register DNS records</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsregdns</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Verify all FSMO roles are held by the expected DC</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Check SRV records are registered</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">nslookup</span> <span class="n">-type</span><span class="p">=</span><span class="n">SRV</span> <span class="n">_ldap</span><span class="p">.</span><span class="n">_tcp</span><span class="p">.</span><span class="n">dc</span><span class="p">.</span><span class="n">_msdcs</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c"># Force DC to re-register DNS records</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">ipconfig</span> <span class="p">/</span><span class="n">registerdns</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsregdns</span>
 </code></pre></div>
 <h3 id="functional-verification">Functional Verification<a class="headerlink" href="#functional-verification" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c"># Run DCDiag on the restored DC</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">netlogons</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">services</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">v</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c"># Check that the DC is advertising itself correctly</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">force</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Run DCDiag on the restored DC</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">dcdiag</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">replications</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">netlogons</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">services</span> <span class="p">/</span><span class="n">test</span><span class="p">:</span><span class="n">dns</span> <span class="p">/</span><span class="n">v</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Check that the DC is advertising itself correctly</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">force</span>
 </code></pre></div>
 <hr />
 <h2 id="key-reference-values">Key Reference Values<a class="headerlink" href="#key-reference-values" title="Permanent link">&para;</a></h2>

@@ -3443,41 +3443,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#post-upgrade-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Post-Upgrade Validation
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rollback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rollback
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decommission" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decommission
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3802,41 +3769,38 @@
 │  Zone management = ability to push zone changes from SANnav GUI after upgrade                         │
 │  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify all services running</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sannav<span class="w"> </span>status
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check log for post-upgrade errors</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ERROR\|FATAL&quot;</span><span class="w"> </span>/opt/sannav/logs/server.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Rollback
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify switch connectivity restored</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># In GUI: Dashboard &gt; Fabric Summary — all switches should be Online within 5 min</span>
-</code></pre></div>
-<p>Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.</p>
-<hr />
-<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
-<p>If the upgrade fails or a critical issue is found post-upgrade:</p>
-<ol>
-<li>Power off the SANnav VM.</li>
-<li>Revert to the pre-upgrade snapshot in vCenter.</li>
-<li>Power on the VM and verify services start.</li>
-<li>Contact Broadcom Support with the upgrade log: <code>/opt/sannav/logs/upgrade.log</code>.</li>
-</ol>
-<p>There is no in-place rollback mechanism within SANnav itself — the VM snapshot is the only rollback path.</p>
-<hr />
-<h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
-<p>To decommission a SANnav instance:</p>
-<ol>
-<li>Export all zone configurations: <strong>Inventory &gt; Fabrics &gt; Export</strong>.</li>
-<li>Export the full backup: <strong>Administration &gt; Backup &gt; Backup Now</strong>.</li>
-<li>Remove the SANnav instance from Global View (if registered): Global View <strong>Administration &gt; Portals &gt; Remove</strong>.</li>
-<li>On each managed switch, remove the SANnav SNMP trap destination and HTTPS service account:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each switch (FOS CLI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>trapdest<span class="w"> </span>-index<span class="w"> </span>&lt;n&gt;<span class="w"> </span>-trapdest<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w">   </span><span class="c1"># clear trap destination</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>sannav_svc
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>If the upgrade fails or a critical issue is found post-upgrade:
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1. Power off the SANnav VM.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2. Revert to the pre-upgrade snapshot in vCenter.
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>3. Power on the VM and verify services start.
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>4. Contact Broadcom Support with the upgrade log: `/opt/sannav/logs/upgrade.log`.
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>There is no in-place rollback mechanism within SANnav itself — the VM snapshot is the only rollback path.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>---
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>## Decommission
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>To decommission a SANnav instance:
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>1. Export all zone configurations: **Inventory &gt; Fabrics &gt; Export**.
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>2. Export the full backup: **Administration &gt; Backup &gt; Backup Now**.
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>3. Remove the SANnav instance from Global View (if registered): Global View **Administration &gt; Portals &gt; Remove**.
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>4. On each managed switch, remove the SANnav SNMP trap destination and HTTPS service account:
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>```bash
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># On each switch (FOS CLI)
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>snmpconfig --set trapdest -index &lt;n&gt; -trapdest 0.0.0.0   # clear trap destination
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>userconfig --delete sannav_svc
+</code></pre></div></p>
 <ol>
 <li>Power off and delete the SANnav VM.</li>
 </ol>

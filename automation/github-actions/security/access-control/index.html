@@ -3275,34 +3275,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Secrets Management">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#secret-scopes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Secret Scopes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#oidc-keyless-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OIDC — Keyless Authentication
-      
-    </span>
-  </a>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3610,65 +3582,24 @@
 │   │     Branch protection = require PR + CI pass + review before merge; enforces pipeline gate    │   │
 │   │        Deployment review = env requires named team approval; reviewer approves/rejects        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<h3 id="secret-scopes">Secret Scopes<a class="headerlink" href="#secret-scopes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Scope</th>
-<th>Where set</th>
-<th>Accessible by</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Repository</td>
-<td>Repo Settings → Secrets</td>
-<td>All workflows in that repo</td>
-</tr>
-<tr>
-<td>Environment</td>
-<td>Repo Settings → Environments</td>
-<td>Jobs targeting that environment</td>
-</tr>
-<tr>
-<td>Organisation</td>
-<td>Org Settings → Secrets</td>
-<td>Repos granted access</td>
-</tr>
-<tr>
-<td><code>GITHUB_TOKEN</code></td>
-<td>Auto-generated</td>
-<td>All jobs (scoped to the run)</td>
-</tr>
-</tbody>
-</table>
-<h2 id="oidc-keyless-authentication">OIDC — Keyless Authentication<a class="headerlink" href="#oidc-keyless-authentication" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Job as Workflow Job
-    participant GH as GitHub OIDC
-    participant Cloud as Cloud Provider
-
-    Job-&gt;&gt;GH: Request OIDC JWT\n(permissions: id-token: write)
-    GH--&gt;&gt;Job: Signed JWT\n(sub: repo:org/repo:ref:...)
-    Job-&gt;&gt;Cloud: Exchange JWT for credentials
-    Cloud--&gt;&gt;Job: Temporary credentials\n(auto-expire)</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">permissions</span><span class="p">:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">id-token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">read</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aws-actions/configure-aws-credentials@v4</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">role-to-assume</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arn:aws:iam::123456789012:role/github-actions-role</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">aws-region</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eu-west-1</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/login@v2</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_CLIENT_ID }}</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">      </span><span class="nt">tenant-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_TENANT_ID }}</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">      </span><span class="nt">subscription-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_SUBSCRIPTION_ID }}</span>
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```yaml
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>permissions:
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  id-token: write
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  contents: read
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>steps:
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  - uses: aws-actions/configure-aws-credentials@v4
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    with:
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>      role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>      aws-region: eu-west-1
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  - uses: azure/login@v2
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    with:
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>      client-id: ${{ secrets.AZURE_CLIENT_ID }}
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+</code></pre></div></p>
 <h2 id="workflow-permissions">Workflow Permissions<a class="headerlink" href="#workflow-permissions" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Minimal permissions — default deny, grant explicitly</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">permissions</span><span class="p">:</span>

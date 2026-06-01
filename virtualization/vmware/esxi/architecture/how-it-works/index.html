@@ -4280,106 +4280,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#networking-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Networking Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Networking Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#standard-vswitch-vss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Standard vSwitch (vSS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#distributed-vswitch-vds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Distributed vSwitch (vDS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#nioc-network-io-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NIOC (Network I/O Control)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lacp-link-aggregation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LACP / Link Aggregation
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vmkernel-adapters-vmk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VMkernel Adapters (vmk)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#storage-architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Storage Architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage Architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#multipathing-psp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Multipathing (PSP)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cpu-and-memory-scheduling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4700,213 +4600,74 @@
 How It Works reference covering Networking Architecture, VMkernel Adapters (vmk), Storage Architecture, CPU and Memory Scheduling, HA and DRS and 3 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>VMkernel Internals — Resource Stack
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  VMkernel (bare-metal, no general OS underneath)           │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                            │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  CPU Scheduler                    Memory Manager           │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ├── NUMA-aware placement         ├── TPS (dedup pages)    │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ├── vCPU → pCPU assignment       ├── Balloon driver       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  ├── CPU Ready / Co-stop tracking ├── Compression          │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  └── Reservations &amp; limits        └── Host swap (.vswp)    │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                            │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  Storage Stack                    Network Stack            │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS        │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │   ├── NMP (multipathing)       ├── Port groups          │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters     │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │   │   └── SATP (array rules)  │   vmk0 mgmt             │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  │   └── VAAI (array offload)    │   vmk1 vMotion          │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  └── Datastores                   │   vmk2 vSAN            │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS       │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                   └── pNICs (vmnic0..n)    │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>  ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
+<p>VMkernel Internals — Resource Stack
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  VMkernel (bare-metal, no general OS underneath)           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  CPU Scheduler                    Memory Manager           │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├── NUMA-aware placement         ├── TPS (dedup pages)    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  ├── vCPU → pCPU assignment       ├── Balloon driver       │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ├── CPU Ready / Co-stop tracking ├── Compression          │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  └── Reservations &amp; limits        └── Host swap (.vswp)    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                            │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Storage Stack                    Network Stack            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS        │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │   ├── NMP (multipathing)       ├── Port groups          │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters     │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │   │   └── SATP (array rules)  │   vmk0 mgmt             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │   └── VAAI (array offload)    │   vmk1 vMotion          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └── Datastores                   │   vmk2 vSAN            │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                   └── pNICs (vmnic0..n)    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           vmkernel (Kernel Layer)            │  │             VM Execution Engine             │   │
-│   │        Schedules CPUs across all VMs         │  │          VMX process per running VM         │   │
-│   │         Memory balloon / swap / TPS          │  │         vCPU mapped to pCPU threads         │   │
-│   │          VMkernel NIC (vmknic) mgmt          │  │          Guest OS in HW virt ring 0         │   │
-│   │          Storage I/O via PSA stack           │  │            VMDK on VMFS/NFS/vSAN            │   │
-│   │       Networking via vSwitch/dvSwitch        │  │            VMM, VMX, VCPU threads           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vmkernel sends scheduled VM I/O to PSA (storage) and vSwitch (network).                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Storage I/O Stack (PSA)            │  │              Network I/O Stack              │   │
-│   │            NMP → SATP → PSP path             │  │           vSwitch / dvSwitch ports          │   │
-│   │          iSCSI/FC/FCoE/NFS/NVMe-oF           │  │         Uplinks to physical switches        │   │
-│   │           VMFS datastores on LUNs            │  │           vmk0 mgmt / vmk1 vMotion          │   │
-│   │         vSAN uses local disk groups          │  │            vmk2 vSAN / vmk3 other           │   │
-│   │         APD/PDL handling per policy          │  │         NIOC bandwidth reservations         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 servers, NVMe/SSD/HDD, 10/25/100 GbE NICs, FC/iSCSI HBAs, ToR switches                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vmkernel  = ESXi micro-kernel; schedules CPU/mem/I/O for all VMs on host                             │
-│  VMX       = user-space process managing one running VM; I/O emulation                                │
-│  PSA       = Pluggable Storage Architecture; ESXi storage I/O framework                               │
-│  NMP       = Native Multipathing Plugin; default path selector in PSA                                 │
-│  SATP      = Storage Array Type Plugin; array-specific PSA plugin                                     │
-│  PSP       = Path Selection Policy; round-robin, fixed, or MRU per LUN                                │
-│  vmknic    = VMkernel NIC; carries mgmt/vMotion/vSAN/overlay traffic                                  │
-│  dvSwitch  = Distributed vSwitch; managed centrally by vCenter                                        │
-│  VMFS      = VMware File System; clustered FS shared across ESXi hosts                                │
-│  TPS       = Transparent Page Sharing; deduplicates identical guest mem pages                         │
-│  APD       = All Paths Down; storage path loss without PDL declared                                   │
-│  PDL       = Permanent Device Loss; device signals storage is gone permanently                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="networking-architecture">Networking Architecture<a class="headerlink" href="#networking-architecture" title="Permanent link">&para;</a></h2>
-<h3 id="standard-vswitch-vss">Standard vSwitch (vSS)<a class="headerlink" href="#standard-vswitch-vss" title="Permanent link">&para;</a></h3>
-<p>Per-host configuration; does not synchronise across hosts. Each host has its own vSS with port groups. Suitable for simple deployments or management isolation.</p>
-<h3 id="distributed-vswitch-vds">Distributed vSwitch (vDS)<a class="headerlink" href="#distributed-vswitch-vds" title="Permanent link">&para;</a></h3>
-<p>Managed at vCenter cluster level; consistent configuration across all hosts in the cluster. Required for vMotion reliability, NSX, NIOC, and LACP.</p>
-<h3 id="nioc-network-io-control">NIOC (Network I/O Control)<a class="headerlink" href="#nioc-network-io-control" title="Permanent link">&para;</a></h3>
-<p>NIOC enforces bandwidth allocation on a shared uplink across traffic types: VM traffic, vMotion, vSAN, management, iSCSI, NFS. Prevents one traffic type from starving others.</p>
-<h3 id="lacp-link-aggregation">LACP / Link Aggregation<a class="headerlink" href="#lacp-link-aggregation" title="Permanent link">&para;</a></h3>
-<p>ESXi supports 802.3ad LACP on vDS for bonded uplinks. Requires physical switch LACP configuration. Provides both redundancy and throughput aggregation.</p>
-<h2 id="vmkernel-adapters-vmk">VMkernel Adapters (vmk)<a class="headerlink" href="#vmkernel-adapters-vmk" title="Permanent link">&para;</a></h2>
-<p>Standard production layout:</p>
-<table>
-<thead>
-<tr>
-<th>Adapter</th>
-<th>Traffic Type</th>
-<th>MTU</th>
-<th>Typical VLAN</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>vmk0</td>
-<td>Management</td>
-<td>1500</td>
-<td>Mgmt VLAN</td>
-</tr>
-<tr>
-<td>vmk1</td>
-<td>vMotion</td>
-<td>9000</td>
-<td>vMotion VLAN</td>
-</tr>
-<tr>
-<td>vmk2</td>
-<td>vSAN</td>
-<td>9000</td>
-<td>vSAN VLAN</td>
-</tr>
-<tr>
-<td>vmk3</td>
-<td>NFS or iSCSI</td>
-<td>9000</td>
-<td>Storage VLAN</td>
-</tr>
-</tbody>
-</table>
-<p>Each vmk is associated with a port group and a TCP/IP stack:
-- <strong>Default stack</strong>: management, NFS
-- <strong>vMotion stack</strong>: dedicated TCP/IP stack for vMotion traffic
-- <strong>Provisioning stack</strong>: NFC traffic for cold migration and clone
-- <strong>vSAN stack</strong>: not used; vSAN uses a vmk tagged with the vSAN service</p>
-<hr />
-<h2 id="storage-architecture">Storage Architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Protocol</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>VMFS6</td>
-<td>FC, iSCSI, FCoE, SAS</td>
-<td>Block; supports 64 TB LUNs, cluster locking</td>
-</tr>
-<tr>
-<td>NFS 3</td>
-<td>NFS over TCP</td>
-<td>Simple; no VAAI NAS for thin block</td>
-</tr>
-<tr>
-<td>NFS 4.1</td>
-<td>NFS over TCP</td>
-<td>Kerberos auth, session trunking</td>
-</tr>
-<tr>
-<td>iSCSI (SW)</td>
-<td>iSCSI over TCP</td>
-<td>Software initiator built into VMkernel</td>
-</tr>
-<tr>
-<td>FC / FCoE</td>
-<td>FC fabric</td>
-<td>Hardware HBA or CNA required</td>
-</tr>
-<tr>
-<td>NVMe/FC</td>
-<td>FC fabric</td>
-<td>NVMe over FC; low-latency block</td>
-</tr>
-<tr>
-<td>NVMe/TCP</td>
-<td>TCP/IP</td>
-<td>NVMe over TCP; supported vSphere 7.0 U3+</td>
-</tr>
-<tr>
-<td>vSAN</td>
-<td>Internal (vSAN network)</td>
-<td>HCI; managed from within vCenter</td>
-</tr>
-</tbody>
-</table>
-<h3 id="multipathing-psp">Multipathing (PSP)<a class="headerlink" href="#multipathing-psp" title="Permanent link">&para;</a></h3>
-<p>ESXi multipathing is managed by NMP (Native Multipathing Plugin):</p>
-<table>
-<thead>
-<tr>
-<th>Policy</th>
-<th>Description</th>
-<th>When to Use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Most Recently Used (MRU)</td>
-<td>Uses last active path; fails over on failure</td>
-<td>Active/Passive arrays</td>
-</tr>
-<tr>
-<td>Fixed</td>
-<td>Always uses preferred path; returns after failover</td>
-<td>Active/Active arrays where path pinning is needed</td>
-</tr>
-<tr>
-<td>Round Robin (RR)</td>
-<td>Distributes I/O across active paths</td>
-<td>Active/Active arrays (Pure, NetApp AFF, etc.)</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># View multipath policy for a device</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>&lt;device-naa&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set Round Robin for a device</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-d<span class="w"> </span>&lt;device-naa&gt;<span class="w"> </span>--type<span class="o">=</span>iops<span class="w"> </span>--iops<span class="o">=</span><span class="m">1</span>
-</code></pre></div>
+  ↑ Hardware: CPUs · RAM · HBAs (FC/NVMe) · NICs · Disk
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           vmkernel (Kernel Layer)            │  │             VM Execution Engine             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Schedules CPUs across all VMs         │  │          VMX process per running VM         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Memory balloon / swap / TPS          │  │         vCPU mapped to pCPU threads         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          VMkernel NIC (vmknic) mgmt          │  │          Guest OS in HW virt ring 0         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Storage I/O via PSA stack           │  │            VMDK on VMFS/NFS/vSAN            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │       Networking via vSwitch/dvSwitch        │  │            VMM, VMX, VCPU threads           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  vmkernel sends scheduled VM I/O to PSA (storage) and vSwitch (network).                              │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Storage I/O Stack (PSA)            │  │              Network I/O Stack              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │            NMP → SATP → PSP path             │  │           vSwitch / dvSwitch ports          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          iSCSI/FC/FCoE/NFS/NVMe-oF           │  │         Uplinks to physical switches        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           VMFS datastores on LUNs            │  │           vmk0 mgmt / vmk1 vMotion          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         vSAN uses local disk groups          │  │            vmk2 vSAN / vmk3 other           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         APD/PDL handling per policy          │  │         NIOC bandwidth reservations         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  x86 servers, NVMe/SSD/HDD, 10/25/100 GbE NICs, FC/iSCSI HBAs, ToR switches                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  vmkernel  = ESXi micro-kernel; schedules CPU/mem/I/O for all VMs on host                             │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  VMX       = user-space process managing one running VM; I/O emulation                                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  PSA       = Pluggable Storage Architecture; ESXi storage I/O framework                               │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  NMP       = Native Multipathing Plugin; default path selector in PSA                                 │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SATP      = Storage Array Type Plugin; array-specific PSA plugin                                     │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  PSP       = Path Selection Policy; round-robin, fixed, or MRU per LUN                                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  vmknic    = VMkernel NIC; carries mgmt/vMotion/vSAN/overlay traffic                                  │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  dvSwitch  = Distributed vSwitch; managed centrally by vCenter                                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  VMFS      = VMware File System; clustered FS shared across ESXi hosts                                │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  TPS       = Transparent Page Sharing; deduplicates identical guest mem pages                         │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  APD       = All Paths Down; storage path loss without PDL declared                                   │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  PDL       = Permanent Device Loss; device signals storage is gone permanently                        │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <hr />
 <h2 id="cpu-and-memory-scheduling">CPU and Memory Scheduling<a class="headerlink" href="#cpu-and-memory-scheduling" title="Permanent link">&para;</a></h2>
 <h3 id="cpu-scheduling">CPU Scheduling<a class="headerlink" href="#cpu-scheduling" title="Permanent link">&para;</a></h3>

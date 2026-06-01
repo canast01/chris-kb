@@ -3532,29 +3532,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#encryption-at-rest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encryption at Rest
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Encryption at Rest">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mechanism" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Mechanism
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#external-key-management-kmip" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3562,11 +3539,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -3857,47 +3829,55 @@
 Encryption reference covering Encryption at Rest, Encryption in Transit, TLS Configuration Reference, Compliance Mapping, Operational Checklist.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>FlashArray Encryption Architecture
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Data at Rest (always-on, no config required)              │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                            │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  Write I/O ──► NVRAM ──► NVMe SED                          │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                            ├── DEK (per-drive, internal)   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                            └── KEK (Purity, stored NVRAM)  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                            │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  AES-256-XTS hardware encryption in drive                  │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  Removed drive: cryptographic erase (NIST SP 800-88)       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>┌────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Data in Transit (TLS, always-on)                          │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  ├── Management: HTTPS (443) + SSH (22)                    │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  ├── Replication: TLS between arrays                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └── Pure1 phone-home: HTTPS (443) outbound                │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└────────────────────────────────────────────────────────────┘
+<p>FlashArray Encryption Architecture
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Data at Rest (always-on, no config required)              │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│                                                            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  Write I/O ──► NVRAM ──► NVMe SED                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                            ├── DEK (per-drive, internal)   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                            └── KEK (Purity, stored NVRAM)  │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                            │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  AES-256-XTS hardware encryption in drive                  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  Removed drive: cryptographic erase (NIST SP 800-88)       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<p>FlashArray provides encryption at rest (hardware-based, always-on) and encryption in transit (TLS for all management and replication traffic). Both are enabled by default and require no configuration to activate — the operational task is to manage certificates, verify status, and integrate with external key managers when required.</p>
-<hr />
-<h2 id="encryption-at-rest">Encryption at Rest<a class="headerlink" href="#encryption-at-rest" title="Permanent link">&para;</a></h2>
-<h3 id="mechanism">Mechanism<a class="headerlink" href="#mechanism" title="Permanent link">&para;</a></h3>
-<p>FlashArray //X and //C series use <strong>NVMe Self-Encrypting Drives (SEDs)</strong> with hardware-accelerated AES-256-XTS encryption. Every drive is encrypted from the factory — there is no unencrypted mode and no configuration option to disable encryption. The hardware encryption engine operates inside the drive itself, so encryption has zero performance impact on the array.</p>
-<p><strong>How it works:</strong></p>
-<ul>
-<li>Each drive holds an internal Data Encryption Key (DEK) that encrypts the data stored on it</li>
-<li>Purity manages a Key Encryption Key (KEK) that protects the DEK; the KEK is stored in the NVRAM on both controllers</li>
-<li>When Purity initialises or recovers from a restart, it unlocks the drives by supplying the KEK</li>
-<li>A removed or stolen drive cannot be read without the KEK — the data is cryptographically inaccessible</li>
-</ul>
-<p><strong>Cryptographic sanitisation on drive decommission:</strong></p>
-<p>When a drive reaches end-of-life or fails and is replaced, Pure Storage performs a cryptographic erase (Instant Secure Erase, ISE) — the drive's internal DEK is overwritten, rendering all data permanently unrecoverable without needing to zero-fill the drive. This is compliant with NIST SP 800-88 media sanitisation requirements.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify encryption is active on the array</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>purearray<span class="w"> </span>list<span class="w"> </span>--encryption
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show hardware drive details including drive type (SED)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>puredrive<span class="w"> </span>list<span class="w"> </span>--spec
+┌────────────────────────────────────────────────────────────┐
+│  Data in Transit (TLS, always-on)                          │
+│  ├── Management: HTTPS (443) + SSH (22)                    │
+│  ├── Replication: TLS between arrays                       │
+│  └── Pure1 phone-home: HTTPS (443) outbound                │
+└────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>FlashArray provides encryption at rest (hardware-based, always-on) and encryption in transit (TLS for all management and replication traffic). Both are enabled by default and require no configuration to activate — the operational task is to manage certificates, verify status, and integrate with external key managers when required.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Encryption at Rest
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show hardware component detail for encryption-related components</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>purehw<span class="w"> </span>list<span class="w"> </span>--type<span class="w"> </span>nvram
-</code></pre></div>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### Mechanism
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>FlashArray //X and //C series use **NVMe Self-Encrypting Drives (SEDs)** with hardware-accelerated AES-256-XTS encryption. Every drive is encrypted from the factory — there is no unencrypted mode and no configuration option to disable encryption. The hardware encryption engine operates inside the drive itself, so encryption has zero performance impact on the array.
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>**How it works:**
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Each drive holds an internal Data Encryption Key (DEK) that encrypts the data stored on it
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Purity manages a Key Encryption Key (KEK) that protects the DEK; the KEK is stored in the NVRAM on both controllers
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- When Purity initialises or recovers from a restart, it unlocks the drives by supplying the KEK
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- A removed or stolen drive cannot be read without the KEK — the data is cryptographically inaccessible
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>**Cryptographic sanitisation on drive decommission:**
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>When a drive reaches end-of-life or fails and is replaced, Pure Storage performs a cryptographic erase (Instant Secure Erase, ISE) — the drive&#39;s internal DEK is overwritten, rendering all data permanently unrecoverable without needing to zero-fill the drive. This is compliant with NIST SP 800-88 media sanitisation requirements.
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>```bash
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Verify encryption is active on the array
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>purearray list --encryption
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Show hardware drive details including drive type (SED)
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>puredrive list --spec
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Show hardware component detail for encryption-related components
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>purehw list --type nvram
+</code></pre></div></p>
 <hr />
 <h3 id="external-key-management-kmip">External Key Management (KMIP)<a class="headerlink" href="#external-key-management-kmip" title="Permanent link">&para;</a></h3>
 <p>For organisations that require external custody of encryption keys — for example, to meet FIPS 140-2 requirements, financial services regulations, or internal security policies that mandate separation of key management from storage infrastructure — FlashArray supports integration with an external Key Management Interoperability Protocol (KMIP) key manager.</p>

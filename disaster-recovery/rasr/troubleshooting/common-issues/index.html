@@ -3735,45 +3735,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recovery-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Failures
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recovery Failures">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#winpe-boots-but-cannot-see-the-network-share" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        WinPE boots but cannot see the network share
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#winpe-cannot-see-local-disks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        WinPE cannot see local disks
-      
-    </span>
-  </a>
-  
-</li>
-        
           <li class="md-nav__item">
   <a href="#restore-completes-but-os-wont-boot" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4076,68 +4037,35 @@
 │  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="recovery-failures">Recovery Failures<a class="headerlink" href="#recovery-failures" title="Permanent link">&para;</a></h2>
-<h3 id="winpe-boots-but-cannot-see-the-network-share">WinPE boots but cannot see the network share<a class="headerlink" href="#winpe-boots-but-cannot-see-the-network-share" title="Permanent link">&para;</a></h3>
-<p><strong>Symptom:</strong> RASR wizard starts, but the network share path returns "path not found" or "access denied".</p>
-<p><strong>Causes and fixes:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Cause</th>
-<th>Fix</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Network driver not loaded</td>
-<td>Verify server generation matches media driver pack; rebuild media for 15G/16G if needed</td>
-</tr>
-<tr>
-<td>No IP assigned in WinPE</td>
-<td>Run <code>wpeutil</code> → check IP; manually assign: <code>netsh interface ip set address "Ethernet" static 10.x.x.x 255.255.255.0 10.x.x.1</code></td>
-</tr>
-<tr>
-<td>Authentication failure</td>
-<td>WinPE cannot use Kerberos — use NTLM/local credentials: <code>net use Z: \\nas01\rasr-images /user:nashost\localuser</code></td>
-</tr>
-<tr>
-<td>Firewall blocking 445</td>
-<td>Confirm no firewall rule blocks SMB from the recovery network VLAN to the NAS</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>:: From WinPE command prompt — test and map share
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ping nas01
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>net use Z: \\nas01\rasr-images\prod\app01 /user:nashost\localuser
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>dir Z:\
-</code></pre></div>
-<h3 id="winpe-cannot-see-local-disks">WinPE cannot see local disks<a class="headerlink" href="#winpe-cannot-see-local-disks" title="Permanent link">&para;</a></h3>
-<p><strong>Symptom:</strong> RASR shows no disks or RAID array not visible during restore target selection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>:: In WinPE: check if disks visible to diskpart
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>diskpart
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>list disk
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>exit
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>:: If no disks listed — storage driver not loaded
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>:: Load PERC driver from USB or share:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>drvload D:\drivers\perc\percsas3i.inf
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### WinPE cannot see local disks
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**Symptom:** RASR shows no disks or RAID array not visible during restore target selection.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```cmd
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>:: In WinPE: check if disks visible to diskpart
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>diskpart
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>list disk
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>exit
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>:: If no disks listed — storage driver not loaded
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>:: Load PERC driver from USB or share:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>drvload D:\drivers\perc\percsas3i.inf
+</code></pre></div></p>
 <p>If the disk is still not visible, the RASR media may predate the server generation — rebuild using the correct driver pack.</p>
 <h3 id="restore-completes-but-os-wont-boot">Restore completes but OS won't boot<a class="headerlink" href="#restore-completes-but-os-wont-boot" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom:</strong> Image restored successfully, server reboots, but hangs at boot screen or fails with <code>BOOTMGR is missing</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>:: From WinPE: repair boot record manually
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bootrec /fixmbr
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>bootrec /fixboot
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>bootrec /rebuildbcd
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>:: If BitLocker was enabled, recovery key required at this point
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>manage-bde -unlock C: -RecoveryPassword &lt;48-digit-key&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>:: From WinPE: repair boot record manually
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bootrec /fixmbr
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>bootrec /fixboot
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>bootrec /rebuildbcd
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>:: If BitLocker was enabled, recovery key required at this point
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>manage-bde -unlock C: -RecoveryPassword &lt;48-digit-key&gt;
 </code></pre></div>
 <p>If the server hardware changed (new PERC controller generation), the restored OS may lack the storage driver. Inject it before rebooting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Inject missing PERC driver into offline restored OS</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">dism</span> <span class="p">/</span><span class="n">Image</span><span class="p">:</span><span class="n">C</span><span class="p">:\</span> <span class="p">/</span><span class="nb">Add-Driver</span> <span class="p">/</span><span class="n">Driver</span><span class="p">:</span><span class="n">D</span><span class="p">:\</span><span class="n">drivers</span><span class="p">\</span><span class="n">perc</span><span class="p">\</span><span class="n">percsas3i</span><span class="p">.</span><span class="n">inf</span> <span class="p">/</span><span class="n">ForceUnsigned</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Inject missing PERC driver into offline restored OS</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">dism</span> <span class="p">/</span><span class="n">Image</span><span class="p">:</span><span class="n">C</span><span class="p">:\</span> <span class="p">/</span><span class="nb">Add-Driver</span> <span class="p">/</span><span class="n">Driver</span><span class="p">:</span><span class="n">D</span><span class="p">:\</span><span class="n">drivers</span><span class="p">\</span><span class="n">perc</span><span class="p">\</span><span class="n">percsas3i</span><span class="p">.</span><span class="n">inf</span> <span class="p">/</span><span class="n">ForceUnsigned</span>
 </code></pre></div>
 <h3 id="restore-takes-much-longer-than-expected">Restore takes much longer than expected<a class="headerlink" href="#restore-takes-much-longer-than-expected" title="Permanent link">&para;</a></h3>
 <table>
@@ -4169,26 +4097,26 @@
 <hr />
 <h2 id="agent-and-schedule-issues">Agent and Schedule Issues<a class="headerlink" href="#agent-and-schedule-issues" title="Permanent link">&para;</a></h2>
 <h3 id="scheduled-backup-not-running">Scheduled backup not running<a class="headerlink" href="#scheduled-backup-not-running" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify RASR schedule is configured</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TaskName</span> <span class="o">-match</span> <span class="s2">&quot;RASR&quot;</span> <span class="p">}</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Check last run time and result</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># If task exists but not running: check task conditions (power, network, idle conditions)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$task</span> <span class="p">=</span> <span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$task</span><span class="p">.</span><span class="n">Settings</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RunOnlyIfNetworkAvailable</span><span class="p">,</span> <span class="n">RunOnlyIfIdle</span><span class="p">,</span> <span class="n">WakeToRun</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify RASR schedule is configured</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TaskName</span> <span class="o">-match</span> <span class="s2">&quot;RASR&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Check last run time and result</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># If task exists but not running: check task conditions (power, network, idle conditions)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">$task</span> <span class="p">=</span> <span class="nb">Get-ScheduledTask</span> <span class="n">-TaskName</span> <span class="s2">&quot;RASR_DailyBackup&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$task</span><span class="p">.</span><span class="n">Settings</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">RunOnlyIfNetworkAvailable</span><span class="p">,</span> <span class="n">RunOnlyIfIdle</span><span class="p">,</span> <span class="n">WakeToRun</span>
 </code></pre></div>
 <h3 id="backup-log-shows-vss-errors">Backup log shows VSS errors<a class="headerlink" href="#backup-log-shows-vss-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Error: VSS writer reported failure — Microsoft Hyper-V VSS Writer / SQL Server VSS Writer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Error: VSS writer reported failure — Microsoft Hyper-V VSS Writer / SQL Server VSS Writer
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check VSS writer status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">vssadmin</span> <span class="n">list</span> <span class="n">writers</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;State:|Writer name:&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Restart VSS service and writers</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">VSS</span><span class="p">,</span> <span class="n">vds</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c"># For SQL VSS writer:</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">SQLWriter</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check VSS writer status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">vssadmin</span> <span class="n">list</span> <span class="n">writers</span> <span class="p">|</span> <span class="nb">Select-String</span> <span class="n">-Pattern</span> <span class="s2">&quot;State:|Writer name:&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Restart VSS service and writers</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">VSS</span><span class="p">,</span> <span class="n">vds</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># For SQL VSS writer:</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="n">SQLWriter</span>
 </code></pre></div>
 <hr />
 <h2 id="common-issue-summary">Common Issue Summary<a class="headerlink" href="#common-issue-summary" title="Permanent link">&para;</a></h2>

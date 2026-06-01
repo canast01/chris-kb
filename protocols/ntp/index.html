@@ -3547,29 +3547,29 @@
 Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS validity, and log correlation. Coverage includes chrony/ntpd/w32tm configuration, stratum selection, sync health metrics, and VMware time sync rules.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        NTP STRATUM HIERARCHY
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Stratum 0  ┌──────────────────────────────────┐           │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│             │ GPS receiver / Atomic clock       │           │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│             │ (not on network — hardware ref)   │           │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│             └──────────────┬───────────────────┘           │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                            │ direct signal                  │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  Stratum 1  ┌──────────────▼───────────────────┐           │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│             │ Public NTP server (pool.ntp.org)  │           │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│             │ (directly connected to stratum 0) │           │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│             └──────────────┬───────────────────┘           │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                            │ UDP 123                        │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Stratum 2  ┌──────────────▼───────────────────┐           │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│             │ Enterprise NTP server (internal)  │           │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│             │ ntp1.example.local, ntp2.example.local  │           │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│             └──────────────┬───────────────────┘           │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                            │ UDP 123                        │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Stratum 3  ┌──────────────▼───────────────────┐           │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│             │ Your servers, switches, VMs       │           │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│             │ (clients syncing from stratum 2)  │           │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│             └──────────────────────────────────┘           │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└─────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    NTP STRATUM HIERARCHY
 </code></pre></div>
+<p><code>┌─────────────────────────────────────────────────────────────┐
+│  Stratum 0  ┌──────────────────────────────────┐           │
+│             │ GPS receiver / Atomic clock       │           │
+│             │ (not on network — hardware ref)   │           │
+│             └──────────────┬───────────────────┘           │
+│                            │ direct signal                  │
+│  Stratum 1  ┌──────────────▼───────────────────┐           │
+│             │ Public NTP server (pool.ntp.org)  │           │
+│             │ (directly connected to stratum 0) │           │
+│             └──────────────┬───────────────────┘           │
+│                            │ UDP 123                        │
+│  Stratum 2  ┌──────────────▼───────────────────┐           │
+│             │ Enterprise NTP server (internal)  │           │
+│             │ ntp1.example.local, ntp2.example.local  │           │
+│             └──────────────┬───────────────────┘           │
+│                            │ UDP 123                        │
+│  Stratum 3  ┌──────────────▼───────────────────┐           │
+│             │ Your servers, switches, VMs       │           │
+│             │ (clients syncing from stratum 2)  │           │
+│             └──────────────────────────────────┘           │
+└─────────────────────────────────────────────────────────────┘</code></p>
 <div class="kb-grid kb-grid-5">
 
 <a class="kb-card" href="sources/">

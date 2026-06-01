@@ -3314,17 +3314,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-tls-for-the-sannav-web-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. TLS for the SANnav Web UI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#track-certificate-expiry-renew-at-least-30-days-before-expiry-sannav-will-issue-a-warning-alert-when-the-certificate-is-within-the-warning-threshold-if-certificate-monitoring-is-enabled" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3722,37 +3711,8 @@
 │  HashiCorp Vault = credential vault; stores SANnav switch passwords for automation                    │
 │  Break-glass     = local admin account used only when TACACS+ is unreachable                          │
 │                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<hr />
-<h2 id="5-tls-for-the-sannav-web-ui">5. TLS for the SANnav Web UI<a class="headerlink" href="#5-tls-for-the-sannav-web-ui" title="Permanent link">&para;</a></h2>
-<p>The SANnav web UI is served over HTTPS. By default, it uses a self-signed certificate. Replace this with a certificate from the corporate CA or a public CA:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Generate CSR on SANnav appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@sannav-dc1.corp.example.com
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-keyout<span class="w"> </span>/tmp/sannav.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-out<span class="w"> </span>/tmp/sannav.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=sannav-dc1.corp.example.com/O=Corp/C=AU&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>-addext<span class="w"> </span><span class="s2">&quot;subjectAltName=DNS:sannav-dc1.corp.example.com&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Send CSR to your CA for signing</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># After receiving the signed cert (sannav.crt):</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Install certificate</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav.key<span class="w"> </span>/opt/sannav/conf/ssl/sannav.key
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav.crt<span class="w"> </span>/opt/sannav/conf/ssl/sannav.crt
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># If intermediate CA cert is needed, create bundle:</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>cat<span class="w"> </span>sannav.crt<span class="w"> </span>intermediate-ca.crt<span class="w"> </span>&gt;<span class="w"> </span>sannav-chain.crt
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/sannav-chain.crt<span class="w"> </span>/opt/sannav/conf/ssl/sannav.crt
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c1"># Reload nginx (SANnav&#39;s front-end web server)</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>reload<span class="w"> </span>nginx
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Verify certificate is served correctly</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sannav-dc1.corp.example.com:443<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-dates
-</code></pre></div>
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```</p>
 <h2 id="track-certificate-expiry-renew-at-least-30-days-before-expiry-sannav-will-issue-a-warning-alert-when-the-certificate-is-within-the-warning-threshold-if-certificate-monitoring-is-enabled">Track certificate expiry; renew at least 30 days before expiry. SANnav will issue a warning alert when the certificate is within the warning threshold if certificate monitoring is enabled.<a class="headerlink" href="#track-certificate-expiry-renew-at-least-30-days-before-expiry-sannav-will-issue-a-warning-alert-when-the-certificate-is-within-the-warning-threshold-if-certificate-monitoring-is-enabled" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

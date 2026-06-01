@@ -3861,7 +3861,57 @@
 <div class="kb-summary">
 FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported.
 </div>
-
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Pure FlashArray — Access Control ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        FlashArray access control: RBAC roles, least-privilege, and access audit logging       │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Roles: admin (full), operator (read/modify), read-only (view); map to AD groups        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       Authentication: local accounts, LDAP/AD integration, and MFA for privileged users       │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Audit: log all admin actions; review access logs monthly; rotate credentials         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    Identify user → assign role → enforce MFA → audit → review quarterly                               │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Layer            │  │          Component          │  │            Notes            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Controllers         │  │        Active-active        │  │           No SPOF           │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            Drives           │  │         DirectFlash         │  │         NVMe native         │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           Volumes           │  │       Thin provisioned      │  │        Instant clone        │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        ActiveCluster        │  │       Sync replication      │  │           Zero RPO          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           SafeMode          │  │       Immutable snaps       │  │      Ransomware resist      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Role       │   Permissions    │       Scope       │       Auth       │   Review cycle   │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │      Admin       │    Full CRUD     │       Global      │   MFA required   │     Monthly      │   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │     Operator     │   Read/modify    │      Assigned     │   MFA required   │    Quarterly     │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │    Read-only     │    View only     │      Assigned     │     Password     │    Quarterly     │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │   Service acct   │     API only     │    Specific API   │    Token/cert    │      Annual      │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Physical: FlashArray//X or //C controllers · DirectFlash NVMe modules · 25/100 GbE / 32Gb FC       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    FlashArray         = Pure all-NVMe block/file array; inline dedup and compression always enabled   │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    DirectFlash        = Pure proprietary NVMe modules; direct flash access without SAS translation    │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    ActiveCluster      = synchronous active-active stretch cluster; hosts see a single namespace       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    ActiveDR           = asynchronous replication to DR site; recovery point objective in seconds      │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    SafeMode           = admin-locked immutable snapshots; cannot be deleted even by array administr...│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Protection group   = set of volumes and hosts sharing a snapshot and replication schedule          │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    purefa CLI         = REST CLI tool for FlashArray; purefa CLI connects via REST API key            │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    purearray          = purectl CLI command: purearray list and purearray show monitoring             │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Volume tag         = user-defined key-value label on volumes for policy and reporting purposes     │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Host group         = logical collection of hosts sharing volume access via a host group object     │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Inline dedup       = content-based deduplication performed inline before data is written to flash  │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Evergreen          = Pure architecture; controllers upgrade non-disruptively, shelves remain in ...│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.</p>
 <hr />
 <h2 id="rbac-and-access-model">RBAC and Access Model<a class="headerlink" href="#rbac-and-access-model" title="Permanent link">&para;</a></h2>
@@ -3939,39 +3989,39 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 </table>
 <hr />
 <h2 id="assigning-roles-to-local-accounts">Assigning Roles to Local Accounts<a class="headerlink" href="#assigning-roles-to-local-accounts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Create a local account with a specific role</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>jsmith
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Change an existing account&#39;s role</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span>ops_admin
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Downgrade to read-only</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List all accounts and their current roles</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pureadmin<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a local account with a specific role</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>jsmith
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Change an existing account&#39;s role</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span>ops_admin
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Downgrade to read-only</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>jsmith<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># List all accounts and their current roles</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>pureadmin<span class="w"> </span>list
 </code></pre></div>
 <hr />
 <h2 id="assigning-roles-to-directory-service-groups">Assigning Roles to Directory Service Groups<a class="headerlink" href="#assigning-roles-to-directory-service-groups" title="Permanent link">&para;</a></h2>
 <p>Groups in Active Directory or LDAP are mapped to Purity roles. When a user logs in, Purity checks which AD groups they are a member of and applies the highest-privilege role from the mapped groups.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Map an AD group to array_admin role</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Map an AD group to storage_admin role</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Map an AD group to ops_admin role</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Map an AD group to read-only role</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># List all mapped groups and their roles</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>pureadmin<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Map an AD group to array_admin role</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-array-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Map an AD group to storage_admin role</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-storage-admins,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Map an AD group to ops_admin role</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span>ops_admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-ops,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Map an AD group to read-only role</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pureadmin<span class="w"> </span>setattr<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span>--group<span class="w"> </span><span class="s2">&quot;CN=pure-readonly,OU=Groups,DC=example,DC=com&quot;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># List all mapped groups and their roles</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>pureadmin<span class="w"> </span>list
 </code></pre></div>
 <p><strong>Group design guidance:</strong></p>
 <ul>
@@ -3982,23 +4032,23 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 <hr />
 <h2 id="api-token-access-control">API Token Access Control<a class="headerlink" href="#api-token-access-control" title="Permanent link">&para;</a></h2>
 <p>API tokens provide programmatic access without interactive authentication. They inherit the role of the account they belong to.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a monitoring service account (read-only)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>svc-monitoring
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create a provisioning service account for Terraform / Ansible</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-automation
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-automation
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Create an account for Veeam FlashArray integration</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-veeam
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-veeam
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># List all accounts and whether they have API tokens</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Revoke a token without deleting the account</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create a monitoring service account (read-only)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span><span class="nb">readonly</span><span class="w"> </span>svc-monitoring
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Create a provisioning service account for Terraform / Ansible</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-automation
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-automation
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Create an account for Veeam FlashArray integration</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>storage_admin<span class="w"> </span>svc-veeam
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-veeam
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># List all accounts and whether they have API tokens</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>pureadmin<span class="w"> </span>list<span class="w"> </span>--api-token
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Revoke a token without deleting the account</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>svc-old<span class="w"> </span>--api-token
 </code></pre></div>
 <p><strong>Token access matrix:</strong></p>
 <table>
@@ -4061,17 +4111,17 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 <li><strong>Separate environments:</strong> use separate FlashArrays (or separate Pure1 organisations) for production and non-production if strict separation is required</li>
 <li><strong>Named accounts only:</strong> never share a <code>pureuser</code> credential for routine work — every admin action must be attributable to a named user in the audit log</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Audit all admin actions in the last 24 hours</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>time-<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find all volume delete (destroy) operations</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purevol&quot; and subcommand=&quot;destroy&quot;&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Find all snapshot eradication operations</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;puresnap&quot; and subcommand=&quot;eradicate&quot;&#39;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Find all protection group schedule changes</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepgroup&quot; and subcommand=&quot;schedule&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Audit all admin actions in the last 24 hours</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--sort<span class="w"> </span>time-<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Find all volume delete (destroy) operations</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purevol&quot; and subcommand=&quot;destroy&quot;&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Find all snapshot eradication operations</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;puresnap&quot; and subcommand=&quot;eradicate&quot;&#39;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Find all protection group schedule changes</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>pureaudit<span class="w"> </span>list<span class="w"> </span>--filter<span class="w"> </span><span class="s1">&#39;command=&quot;purepgroup&quot; and subcommand=&quot;schedule&quot;&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="account-lifecycle-management">Account Lifecycle Management<a class="headerlink" href="#account-lifecycle-management" title="Permanent link">&para;</a></h2>
@@ -4083,24 +4133,24 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 <li>If they need API access, create a named service account or provide them a personal API token tied to their account</li>
 </ol>
 <h3 id="offboarding-an-admin">Offboarding an Admin<a class="headerlink" href="#offboarding-an-admin" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># If using AD: remove the user from the relevant AD group — their next login attempt will fail</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Invalidate any active sessions immediately:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>&lt;username&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If they had a local account, delete it:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># If they had a personal API token:</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith<span class="w"> </span>--api-token
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># If using AD: remove the user from the relevant AD group — their next login attempt will fail</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Invalidate any active sessions immediately:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>pureadmin<span class="w"> </span>refresh<span class="w"> </span>&lt;username&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># If they had a local account, delete it:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># If they had a personal API token:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>pureadmin<span class="w"> </span>delete<span class="w"> </span>jsmith<span class="w"> </span>--api-token
 </code></pre></div>
 <p>If the departing admin had access to any shared credentials (e.g., the vaulted <code>pureuser</code> password), rotate those credentials immediately after their departure.</p>
 <h3 id="periodic-access-review">Periodic Access Review<a class="headerlink" href="#periodic-access-review" title="Permanent link">&para;</a></h3>
 <p>Run quarterly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Export all admin accounts and roles to CSV for access review</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --csv&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Export API token inventory</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --api-token --csv&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Export all admin accounts and roles to CSV for access review</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --csv&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Export API token inventory</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh<span class="w"> </span>pureuser@&lt;array_ip&gt;<span class="w"> </span><span class="s2">&quot;pureadmin list --api-token --csv&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>admin_review_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.csv
 </code></pre></div>
 <p>Review output and action:</p>
 <ul>
@@ -4111,27 +4161,27 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 <hr />
 <h2 id="snmp-access-control">SNMP Access Control<a class="headerlink" href="#snmp-access-control" title="Permanent link">&para;</a></h2>
 <p>FlashArray supports SNMPv3 for monitoring integrations. Always use SNMPv3 — never SNMPv1 or SNMPv2c in production.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SNMPv3 community (authPriv — SHA auth + AES encryption)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>siem-snmp
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># List SNMP configuration</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>puresnmp<span class="w"> </span>list
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Configure SNMP trap destination</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">    </span>--host<span class="w"> </span>&lt;trap_receiver_ip&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="w">    </span>nms-trap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure SNMPv3 community (authPriv — SHA auth + AES encryption)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>puresnmp<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span>siem-snmp
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># List SNMP configuration</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>puresnmp<span class="w"> </span>list
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Configure SNMP trap destination</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>puresnmptrap<span class="w"> </span>create<span class="w"> </span>--version<span class="w"> </span>v3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span>--auth-protocol<span class="w"> </span>SHA<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">    </span>--auth-passphrase<span class="w"> </span><span class="s2">&quot;&lt;auth_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span>--privacy-protocol<span class="w"> </span>AES<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span>--privacy-passphrase<span class="w"> </span><span class="s2">&quot;&lt;priv_password&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span>--user<span class="w"> </span>monitoring-user<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">    </span>--host<span class="w"> </span>&lt;trap_receiver_ip&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span>nms-trap
 </code></pre></div>
 <p>SNMPv3 is read-only by design on FlashArray — it cannot be used to make configuration changes.</p>
 <hr />

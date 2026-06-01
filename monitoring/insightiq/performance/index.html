@@ -4164,17 +4164,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol-performance-breakdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol Performance Breakdown
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#identifying-performance-bottlenecks-via-insightiq" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4394,48 +4383,6 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="protocol-performance-breakdown">Protocol Performance Breakdown<a class="headerlink" href="#protocol-performance-breakdown" title="Permanent link">&para;</a></h2>
-<p>InsightIQ separates performance by protocol, allowing identification of which protocol is driving load.</p>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Key Metrics to Watch</th>
-<th>Normal Latency</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>NFS v3/v4</td>
-<td>ops/s, avg latency, errors</td>
-<td>&lt; 5 ms</td>
-</tr>
-<tr>
-<td>SMB2/3</td>
-<td>read/write MB/s, latency</td>
-<td>&lt; 10 ms</td>
-</tr>
-<tr>
-<td>HDFS</td>
-<td>throughput MB/s, job duration</td>
-<td>Highly variable</td>
-</tr>
-<tr>
-<td>S3</td>
-<td>request rate, latency, error rate</td>
-<td>&lt; 50 ms for object ops</td>
-</tr>
-</tbody>
-</table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check NFS client latency in real time</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>statistics<span class="w"> </span>client<span class="w"> </span>list<span class="w"> </span>--protocol<span class="o">=</span>nfs<span class="w"> </span>--sort<span class="o">=</span>latency<span class="w"> </span>--limit<span class="o">=</span><span class="m">20</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check SMB active sessions</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>smb<span class="w"> </span>sessions<span class="w"> </span>list
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Per-client throughput — who is consuming the most bandwidth</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>client<span class="w"> </span>list<span class="w"> </span>--sort<span class="o">=</span>bytes_in<span class="w"> </span>--limit<span class="o">=</span><span class="m">10</span><span class="w"> </span>--human-readable
-</code></pre></div>
 <h2 id="identifying-performance-bottlenecks-via-insightiq">Identifying Performance Bottlenecks via InsightIQ<a class="headerlink" href="#identifying-performance-bottlenecks-via-insightiq" title="Permanent link">&para;</a></h2>
 <p>InsightIQ can generate a <strong>Breakout Report</strong> that overlays multiple metrics for the same time range to help identify correlation.</p>
 <p>Report path: <strong>InsightIQ &gt; Reports &gt; Performance &gt; Breakout Report</strong></p>
@@ -4466,16 +4413,16 @@ InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards refere
 </tbody>
 </table>
 <h2 id="collecting-a-onefs-performance-support-bundle">Collecting a OneFS Performance Support Bundle<a class="headerlink" href="#collecting-a-onefs-performance-support-bundle" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Gather a stats snapshot for a support case</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run the gather script (sends to Dell support or saves locally)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi_gather_info
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># For a targeted performance capture (5 minutes of 30s samples)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--stats<span class="w"> </span>cpu.user.avg,disk.xfer.bytes.rate,net.iface.bytes.in.rate,ifs.ops.read.avg,ifs.ops.write.avg<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--interval<span class="w"> </span><span class="m">30</span><span class="w"> </span>--duration<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Gather a stats snapshot for a support case</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ssh<span class="w"> </span>admin@powerscale.example.com
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Run the gather script (sends to Dell support or saves locally)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi_gather_info
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># For a targeted performance capture (5 minutes of 30s samples)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>statistics<span class="w"> </span>query<span class="w"> </span>list<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--stats<span class="w"> </span>cpu.user.avg,disk.xfer.bytes.rate,net.iface.bytes.in.rate,ifs.ops.read.avg,ifs.ops.write.avg<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--interval<span class="w"> </span><span class="m">30</span><span class="w"> </span>--duration<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
 <h2 id="common-performance-issues">Common Performance Issues<a class="headerlink" href="#common-performance-issues" title="Permanent link">&para;</a></h2>
 <table>

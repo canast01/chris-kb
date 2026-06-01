@@ -3662,26 +3662,26 @@
 SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        TRAP FLOW (device-initiated, async)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Device (switch/router/server)         NMS / trap receiver  │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌─────────────────────────────┐       ┌──────────────────┐ │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  │ Event: link down on eth0/1  │       │ snmptrapd        │ │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  │           │                 │       │ (port 162 UDP)   │ │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  │           ▼                 │       │                  │ │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  SNMP Agent builds PDU      │       │                  │ │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  ┌─────────────────────┐    │       │                  │ │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  │ TRAP v2c            │    │       │                  │ │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  │  │ OID: linkDown       ├────┼──────►│ log / alert      │ │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  │  │ community: traps    │    │UDP 162│ trigger action   │ │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  │  │ ifIndex: 1          │    │       │                  │ │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  └─────────────────────┘    │       │                  │ │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  (fire-and-forget, no ACK)  │       │                  │ │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └─────────────────────────────┘       └──────────────────┘ │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                             │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  INFORM = trap with ACK; device retries until NMS replies   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└─────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code>    TRAP FLOW (device-initiated, async)
 </code></pre></div>
+<p><code>┌─────────────────────────────────────────────────────────────┐
+│  Device (switch/router/server)         NMS / trap receiver  │
+│  ┌─────────────────────────────┐       ┌──────────────────┐ │
+│  │ Event: link down on eth0/1  │       │ snmptrapd        │ │
+│  │           │                 │       │ (port 162 UDP)   │ │
+│  │           ▼                 │       │                  │ │
+│  │  SNMP Agent builds PDU      │       │                  │ │
+│  │  ┌─────────────────────┐    │       │                  │ │
+│  │  │ TRAP v2c            │    │       │                  │ │
+│  │  │ OID: linkDown       ├────┼──────►│ log / alert      │ │
+│  │  │ community: traps    │    │UDP 162│ trigger action   │ │
+│  │  │ ifIndex: 1          │    │       │                  │ │
+│  │  └─────────────────────┘    │       │                  │ │
+│  │  (fire-and-forget, no ACK)  │       │                  │ │
+│  └─────────────────────────────┘       └──────────────────┘ │
+│                                                             │
+│  INFORM = trap with ACK; device retries until NMS replies   │
+└─────────────────────────────────────────────────────────────┘</code>
 — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.</p>
 <h2 id="trap-vs-inform">Trap vs Inform<a class="headerlink" href="#trap-vs-inform" title="Permanent link">&para;</a></h2>
 <table>

@@ -3771,17 +3771,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#test-failover-network-isolation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Failover Network Isolation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#audit-logging" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4007,17 +3996,6 @@ Hardening reference covering Test Failover Network Isolation, Audit Logging.
 <a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 <a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
 <a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<h2 id="test-failover-network-isolation">Test Failover Network Isolation<a class="headerlink" href="#test-failover-network-isolation" title="Permanent link">&para;</a></h2>
-<p>Recovery plan tests must never reach production networks. Enforce this:</p>
-<ol>
-<li>Create an isolated port group on the recovery site ESXi cluster: <code>vPG-SRM-Test-Bubble</code> (no uplinks)</li>
-<li>Configure network mapping in SRM: source production network → <code>vPG-SRM-Test-Bubble</code></li>
-<li>Verify no routing exists from the test bubble to production VLANs</li>
-<li>If using NSX: create a dedicated overlay segment with no uplink for test failover</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify test network mapping</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-SrmRecoveryPlan</span> <span class="p">|</span> <span class="nb">Get-SrmNetworkMapping</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">RecoveryNetwork</span>
 </code></pre></div>
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>SRM logs all recovery plan events. Ensure logs are forwarded to SIEM:</p>

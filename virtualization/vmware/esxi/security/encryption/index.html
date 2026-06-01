@@ -4338,18 +4338,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#encrypt-a-vm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Encrypt a VM
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Encrypt a VM">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#verify-vm-encryption-status" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4359,8 +4347,8 @@
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#vm-encryption-key-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4368,11 +4356,6 @@
       
     </span>
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -4730,86 +4713,80 @@
 ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encryption — Secure Boot and TPM, ESXi SSL/TLS Certificate Management, Encrypted vMotion and 1 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>ESXi Encryption Stack
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────┐
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Key Provider                                           │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── Native Key Provider (NKP) — vCenter-managed        │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  ├── Standard KMS — external KMIP server (Thales etc)   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│  └── Trust Authority — attestation-based (high-assurance)│
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                │                                        │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                ▼ keys delivered to ESXi host            │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├─────────────────────────────────────────────────────────┤
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  VM Encryption (per-VM, at-rest)                        │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── Encrypts: .vmx, .vmdk, .log files                  │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  ├── Applied via Storage Policy in vCenter              │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  └── Encrypted vMotion: disabled / opportunistic /      │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                         required (per-VM setting)       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>├─────────────────────────────────────────────────────────┤
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  vSAN Encryption                                        │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  ├── Data-at-Rest: full vSAN datastore encryption       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  │   └── Enabling on live cluster triggers full rebuild │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └── Data-in-Transit: vSAN network hop encryption       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│      (no KMS required; enable without rebuild)          │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>├─────────────────────────────────────────────────────────┤
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Boot Integrity                                         │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  ├── UEFI Secure Boot — validates bootloader + VIBs     │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  └── TPM 2.0 — host attestation (vSphere 7.0+)          │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>└─────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>  ESXi Host Certificate: /etc/vmware/ssl/rui.crt
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>  Managed by VMCA (vCenter CA) — auto-renewed
+<p>ESXi Encryption Stack
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Key Provider                                           │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ├── Native Key Provider (NKP) — vCenter-managed        │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ├── Standard KMS — external KMIP server (Thales etc)   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  └── Trust Authority — attestation-based (high-assurance)│
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                │                                        │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                ▼ keys delivered to ESXi host            │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├─────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  VM Encryption (per-VM, at-rest)                        │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  ├── Encrypts: .vmx, .vmdk, .log files                  │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  ├── Applied via Storage Policy in vCenter              │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  └── Encrypted vMotion: disabled / opportunistic /      │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                         required (per-VM setting)       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>├─────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  vSAN Encryption                                        │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  ├── Data-at-Rest: full vSAN datastore encryption       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  │   └── Enabling on live cluster triggers full rebuild │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  └── Data-in-Transit: vSAN network hop encryption       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│      (no KMS required; enable without rebuild)          │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>├─────────────────────────────────────────────────────────┤
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Boot Integrity                                         │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  ├── UEFI Secure Boot — validates bootloader + VIBs     │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  └── TPM 2.0 — host attestation (vSphere 7.0+)          │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└─────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
-│                                                                                                       │
-│  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                VM Encryption                 │  │               KMS Integration               │   │
-│   │          Enabled via Storage Policy          │  │             vCenter Key Provider            │   │
-│   │            Encrypts VMDK + config            │  │             KMIP-compatible KMS             │   │
-│   │         DEK wrapped by KEK from KMS          │  │        Native Key Provider (vCenter)        │   │
-│   │         Requires Crypto-Enabled host         │  │         HyTrust / Thales / Vormetric        │   │
-│   │           Snapshots encrypted too            │  │            Key rotation procedure           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  KMS provides KEKs; vCenter wraps VM DEKs; host decrypts at power-on.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              vMotion Encryption              │  │               vSAN Encryption               │   │
-│   │         Required/Opportunistic modes         │  │           Data-at-rest encryption           │   │
-│   │          AES-256 in-flight traffic           │  │          Enabled per cluster policy         │   │
-│   │            Requires vSphere 6.5+             │  │          KMS provides cluster keys          │   │
-│   │          Config in cluster settings          │  │           Dedup disabled if enc on          │   │
-│   │          Enabled by default (8.0+)           │  │          Key re-key on node failure         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 hosts with AES-NI CPU, management network, external KMS appliance                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VM Encryption = VMDK encrypted at rest using DEK/KEK model                                           │
-│  DEK          = Data Encryption Key; encrypts actual VM data on disk                                  │
-│  KEK          = Key Encryption Key; wraps the DEK; stored in KMS                                      │
-│  KMS          = Key Management Server; KMIP server storing KEKs                                       │
-│  KMIP         = Key Mgmt Interoperability Protocol; standard KMS API                                  │
-│  Native KP    = vCenter built-in key provider; no external KMS needed                                 │
-│  Crypto host  = ESXi host in crypto-enabled state; required for enc VMs                               │
-│  vMotion enc  = encrypts live migration traffic; required or opportunistic                            │
-│  vSAN enc     = encrypts all data written to vSAN datastore                                           │
-│  AES-NI       = CPU instruction set accelerating AES encryption                                       │
-│  Key rotation = replacing KEK; re-wraps DEKs without re-encrypting data                               │
-│  Dedup        = deduplication; disabled when vSAN encryption is active                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</p>
-<p>NKP backup is critical — if vCenter is lost without a NKP backup, all VMs encrypted with that provider become unrecoverable.</p>
-<h2 id="encrypt-a-vm">Encrypt a VM<a class="headerlink" href="#encrypt-a-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># PowerCLI — encrypt an existing VM</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;db-server-01&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VM Encryption Policy&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">Set-VM</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-</code></pre></div>
+  ESXi Host Certificate: /etc/vmware/ssl/rui.crt
+  Managed by VMCA (vCenter CA) — auto-renewed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                VM Encryption                 │  │               KMS Integration               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Enabled via Storage Policy          │  │             vCenter Key Provider            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            Encrypts VMDK + config            │  │             KMIP-compatible KMS             │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         DEK wrapped by KEK from KMS          │  │        Native Key Provider (vCenter)        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Requires Crypto-Enabled host         │  │         HyTrust / Thales / Vormetric        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Snapshots encrypted too            │  │            Key rotation procedure           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  KMS provides KEKs; vCenter wraps VM DEKs; host decrypts at power-on.                                 │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              vMotion Encryption              │  │               vSAN Encryption               │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Required/Opportunistic modes         │  │           Data-at-rest encryption           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          AES-256 in-flight traffic           │  │          Enabled per cluster policy         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Requires vSphere 6.5+             │  │          KMS provides cluster keys          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Config in cluster settings          │  │           Dedup disabled if enc on          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Enabled by default (8.0+)           │  │          Key re-key on node failure         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  x86 hosts with AES-NI CPU, management network, external KMS appliance                                │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  VM Encryption = VMDK encrypted at rest using DEK/KEK model                                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  DEK          = Data Encryption Key; encrypts actual VM data on disk                                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  KEK          = Key Encryption Key; wraps the DEK; stored in KMS                                      │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  KMS          = Key Management Server; KMIP server storing KEKs                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  KMIP         = Key Mgmt Interoperability Protocol; standard KMS API                                  │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Native KP    = vCenter built-in key provider; no external KMS needed                                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Crypto host  = ESXi host in crypto-enabled state; required for enc VMs                               │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vMotion enc  = encrypts live migration traffic; required or opportunistic                            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  vSAN enc     = encrypts all data written to vSAN datastore                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  AES-NI       = CPU instruction set accelerating AES encryption                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Key rotation = replacing KEK; re-wraps DEKs without re-encrypting data                               │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Dedup        = deduplication; disabled when vSAN encryption is active                                │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
 <p>The VM must be powered off or in a compatible state. Encryption processes each VMDK in-place.</p>
 <h3 id="verify-vm-encryption-status">Verify VM Encryption Status<a class="headerlink" href="#verify-vm-encryption-status" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check encryption status for all VMs</span>
