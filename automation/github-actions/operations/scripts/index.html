@@ -3646,40 +3646,40 @@
 <a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 <a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## Bulk Secret Audit Script
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Bulk Secret Audit Script</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>```bash
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>#!/bin/bash
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a># audit-secrets.sh — List all secrets across repos and environments
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>set -euo pipefail
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">#!/bin/bash</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># audit-secrets.sh — List all secrets across repos and environments</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ORG=&quot;myorg&quot;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>OUTPUT=&quot;secret-audit-$(date +%F).csv&quot;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">ORG</span><span class="o">=</span><span class="s2">&quot;myorg&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">OUTPUT</span><span class="o">=</span><span class="s2">&quot;secret-audit-</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.csv&quot;</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>echo &quot;repo,scope,secret_name&quot; &gt; &quot;$OUTPUT&quot;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;repo,scope,secret_name&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a># Org-level secrets
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>gh api orgs/$ORG/actions/secrets | jq -r \
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  &#39;.secrets[] | &quot;&#39;$ORG&#39;/org-level,org,\(.name)&quot;&#39; &gt;&gt; &quot;$OUTPUT&quot;
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Org-level secrets</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>gh<span class="w"> </span>api<span class="w"> </span>orgs/<span class="nv">$ORG</span>/actions/secrets<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="s1">&#39;.secrets[] | &quot;&#39;</span><span class="nv">$ORG</span><span class="s1">&#39;/org-level,org,\(.name)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a># Repo-level secrets for each repo
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>gh repo list $ORG --limit 200 --json name -q &#39;.[].name&#39; | \
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>  while read -r repo; do
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    # Repo secrets
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    gh api repos/$ORG/$repo/actions/secrets 2&gt;/dev/null | jq -r \
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>      &#39;.secrets[]? | &quot;&#39;$ORG&#39;/&#39;$repo&#39;,repo,\(.name)&quot;&#39; &gt;&gt; &quot;$OUTPUT&quot; || true
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Repo-level secrets for each repo</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>gh<span class="w"> </span>repo<span class="w"> </span>list<span class="w"> </span><span class="nv">$ORG</span><span class="w"> </span>--limit<span class="w"> </span><span class="m">200</span><span class="w"> </span>--json<span class="w"> </span>name<span class="w"> </span>-q<span class="w"> </span><span class="s1">&#39;.[].name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>repo<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="c1"># Repo secrets</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$ORG</span>/<span class="nv">$repo</span>/actions/secrets<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">      </span><span class="s1">&#39;.secrets[]? | &quot;&#39;</span><span class="nv">$ORG</span><span class="s1">&#39;/&#39;</span><span class="nv">$repo</span><span class="s1">&#39;,repo,\(.name)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
 <a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    # Environment secrets
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    gh api repos/$ORG/$repo/environments 2&gt;/dev/null | \
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>      jq -r &#39;.environments[]?.name&#39; | \
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>      while read -r env; do
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        gh api repos/$ORG/$repo/environments/$env/secrets 2&gt;/dev/null | jq -r \
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>          &#39;.secrets[]? | &quot;&#39;$ORG&#39;/&#39;$repo&#39;,&#39;$env&#39;,\(.name)&quot;&#39; &gt;&gt; &quot;$OUTPUT&quot; || true
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>      done
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>  done
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span><span class="c1"># Environment secrets</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$ORG</span>/<span class="nv">$repo</span>/environments<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">      </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.environments[]?.name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">      </span><span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>env<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">        </span>gh<span class="w"> </span>api<span class="w"> </span>repos/<span class="nv">$ORG</span>/<span class="nv">$repo</span>/environments/<span class="nv">$env</span>/secrets<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">          </span><span class="s1">&#39;.secrets[]? | &quot;&#39;</span><span class="nv">$ORG</span><span class="s1">&#39;/&#39;</span><span class="nv">$repo</span><span class="s1">&#39;,&#39;</span><span class="nv">$env</span><span class="s1">&#39;,\(.name)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">      </span><span class="k">done</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">  </span><span class="k">done</span>
 <a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>echo &quot;Audit written to $OUTPUT&quot;
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>wc -l &quot;$OUTPUT&quot;
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Audit written to </span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>wc<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OUTPUT</span><span class="s2">&quot;</span>
 </code></pre></div></p>
 <h2 id="failed-run-notifier-webhook">Failed Run Notifier (Webhook)<a class="headerlink" href="#failed-run-notifier-webhook" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
