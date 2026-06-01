@@ -122,7 +122,6 @@ SID=000123456789 ./cod_capacity_report.sh
 │    symlic             = Solutions Enabler license command; requires SYMAPI connectivity               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **What you should see**
 

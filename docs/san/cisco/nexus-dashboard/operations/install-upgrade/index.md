@@ -122,7 +122,6 @@ acs health
 │  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Post-Upgrade Validation
 

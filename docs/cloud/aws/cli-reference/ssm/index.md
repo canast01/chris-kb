@@ -69,7 +69,6 @@ SSM CLI: Session · Command · Parameter Store · Patching
 │  Managed instance= EC2 or on-prem server with SSM agent registered to account                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Run Command
 

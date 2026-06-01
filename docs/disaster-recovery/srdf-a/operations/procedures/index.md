@@ -131,7 +131,6 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 After failover, present R2 volumes to DR hosts using the array's storage masking configuration.
 

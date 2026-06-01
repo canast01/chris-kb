@@ -59,7 +59,6 @@ ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 │    Reconciliation= Compare discovered data vs CMDB; find stale or missing records                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Azure Policy — Resource Compliance
 

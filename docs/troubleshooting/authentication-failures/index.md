@@ -87,7 +87,6 @@ flowchart TD
 │    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### 2. Inspect Current Tickets
 

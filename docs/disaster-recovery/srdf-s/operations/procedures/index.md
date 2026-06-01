@@ -54,7 +54,6 @@ echo "Baseline captured at $(date)"
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Do not proceed if any device shows `SyncInProg`, `Transmit Idle`, or a track count above zero unless the business decision is to accept data loss.
 

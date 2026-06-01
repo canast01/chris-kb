@@ -54,7 +54,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Requests library = pip install requests; standard Python HTTP client                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Forward Critical Recommendations to ServiceNow
 

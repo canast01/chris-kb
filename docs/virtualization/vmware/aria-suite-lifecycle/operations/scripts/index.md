@@ -64,7 +64,6 @@
 │  CI/CD Integration   = Scripts run on schedule for drift detection and reporting                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

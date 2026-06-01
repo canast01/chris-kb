@@ -61,7 +61,6 @@ graph TD
 │    Audit logging = DDOS logs all admin commands with user, timestamp, and command text                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SSH and Remote Access
 

@@ -64,7 +64,6 @@ vCenter (Key Management Service client)
 │  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 - **KMS (Key Management Service):** External server holding the KEKs. vCenter connects to the KMS to retrieve keys at startup.
 - **KEK:** Host-level key provided by KMS. Used to encrypt the DEK stored locally on the host.

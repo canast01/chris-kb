@@ -79,7 +79,6 @@ HARDENING LAYERS
 │  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## ESXi Host Hardening
 

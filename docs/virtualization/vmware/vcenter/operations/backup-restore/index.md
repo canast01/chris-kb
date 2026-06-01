@@ -86,7 +86,6 @@ VCSA Backup & Restore Architecture
 │  Tarball      = compressed archive format used by VCSA file-based backup                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Include in weekly health check:
 - Confirm last backup completed successfully (green status in VAMI)

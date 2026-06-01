@@ -71,7 +71,6 @@ flowchart TD
 │  fsck        = Filesystem check and repair; must be run on unmounted filesystem                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## High Memory / OOM
 

@@ -80,7 +80,6 @@ isi statistics client list \
 │  Throughput required = Peak bandwidth needed; used for network and controller sizing                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Using Client Data for Capacity Planning
 

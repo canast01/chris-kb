@@ -67,7 +67,6 @@ flowchart TD
 │  CSAT           = Customer Satisfaction survey; sent after Microsoft case closure                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Support Tiers
 

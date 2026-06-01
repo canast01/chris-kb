@@ -58,7 +58,6 @@ user show
 │    Storage unit    = DD Boost logical unit mapping to an MTree path; app credential scoped            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Audit Logging
 

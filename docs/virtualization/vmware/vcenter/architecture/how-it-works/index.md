@@ -110,7 +110,6 @@ graph LR
 │  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Resource pools, vSphere tags, and content libraries are vCenter-level constructs applied within this hierarchy.
 

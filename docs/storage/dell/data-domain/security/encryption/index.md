@@ -60,7 +60,6 @@ graph TD
 │    Key escrow   = Backup copy of encryption key in separate secure vault; needed for recovery         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Sample output of `encryption status`:
 

@@ -39,7 +39,6 @@ flowchart TD
 │   │     --syntax-check     = parse playbook YAML without executing; catches syntax errors fast    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Debug a single host with full SSH trace

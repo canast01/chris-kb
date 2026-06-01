@@ -37,7 +37,6 @@ ssh-keygen -t rsa -b 4096 -C "ansible-control@prod" -f ~/.ssh/ansible_rsa -N ""
 │   │   SSH agent      = key agent; AWX injects private key into SSH agent process at job runtime   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Per-group Key Override
 

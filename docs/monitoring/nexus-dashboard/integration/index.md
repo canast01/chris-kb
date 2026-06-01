@@ -43,7 +43,6 @@ Admin > Sites > Add Site
 │  SMTP = Email notification for NDI events; configured in ND admin settings                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 For ACI fabrics, configure APIC syslog forwarding separately (APIC also generates fabric events):
 ```text

@@ -57,7 +57,6 @@ python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
 │  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Resolution:
 1. Reset the service account password in vCenter/NSX/AD

@@ -61,7 +61,6 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 │  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Stage 2: Map Application Dependencies
 

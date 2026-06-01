@@ -59,7 +59,6 @@ Hierarchy:
 │  Audit trail       = Admin > Audit Log records all permission changes with timestamp                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Space Permissions
 

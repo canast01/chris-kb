@@ -75,7 +75,6 @@ nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 │  Disk encryption= OS-level feature (LUKS) optional on bare-metal ND deployments                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### ND to Managed Switch Communication (SSH and SNMP)
 

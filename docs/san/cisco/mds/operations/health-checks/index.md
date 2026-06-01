@@ -74,7 +74,6 @@ show version
 │  show analytics   = MDS 9700 ITL flow analytics: IOPS, throughput, latency                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | State | Meaning | Action |
 |---|---|---|

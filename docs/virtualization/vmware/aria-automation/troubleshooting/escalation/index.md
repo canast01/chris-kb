@@ -86,7 +86,6 @@ scp root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz /tmp/
 │  Stakeholder notif = Communicate impact and ETA to application owners and business units              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

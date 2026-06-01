@@ -63,7 +63,6 @@ aws kms cancel-key-deletion --key-id <key-id>
 │    Transit eng  = Vault secrets engine; encrypts/decrypts via API without exposing key material       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Key Revocation
 

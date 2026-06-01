@@ -79,7 +79,6 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 │  Cost integration = Aria Operations cost data surfaced in vRA to show estimated spend per item        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

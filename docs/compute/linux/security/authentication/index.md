@@ -66,7 +66,6 @@ awk -F: '$3 >= 1000 { print $1, $3, $7 }' /etc/passwd
 │  auditd      = Linux audit daemon; records logins, sudo, file access as events                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Apply changed settings to existing accounts:
 

@@ -76,7 +76,6 @@ VCF CLI Tool Map — Where to Run What
 │  upgrade-status= show current upgrade state across all components                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -77,7 +77,6 @@ Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountNa
 │  Protected Users= AD security group; blocks NTLM, unconstrained delegation, DES                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Apply User Rights via GPO (PowerShell DSC reference)
 

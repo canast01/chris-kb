@@ -62,7 +62,6 @@ Get-Service -Name "DellRASR" | Select-Object Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Option 2 — Full domain rejoin:**
 

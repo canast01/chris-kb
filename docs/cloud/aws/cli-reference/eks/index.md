@@ -73,7 +73,6 @@ EKS CLI: Cluster → Nodes → Workloads
 │  IRSA            = IAM Roles for Service Accounts; pods assume IAM roles via OIDC                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Node Groups
 

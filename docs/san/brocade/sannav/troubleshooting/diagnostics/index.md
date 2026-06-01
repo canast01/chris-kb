@@ -90,7 +90,6 @@ sannav restart
 │  Audit log CSV   = exported SANnav user action log; shared during security review                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Attach this bundle to the Broadcom support case.
 

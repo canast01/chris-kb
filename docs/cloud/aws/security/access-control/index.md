@@ -81,7 +81,6 @@
 │  Wildcard action = iam:* or s3:* in a policy grants all actions — avoid in production                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

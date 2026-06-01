@@ -75,7 +75,6 @@ CLI TOOL CHAIN
 │  Test-VsanCluster= PowerCLI; triggers health check run                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Capacity & Objects
 

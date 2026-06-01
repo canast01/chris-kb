@@ -70,7 +70,6 @@ VCF Operational Procedures — Decision Map
 │  Certificate tab= SDDC Mgr UI for cert status, CSR, and import                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## SDDC Manager Backup
 

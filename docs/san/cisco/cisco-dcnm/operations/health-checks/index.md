@@ -87,7 +87,6 @@ timedatectl status
 │  VSAN split       = VSAN partition causing isolation; major incident requiring fix                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

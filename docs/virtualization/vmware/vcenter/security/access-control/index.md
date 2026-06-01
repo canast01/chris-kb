@@ -82,7 +82,6 @@ RBAC Permission Model
 │  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Built-in Roles
 

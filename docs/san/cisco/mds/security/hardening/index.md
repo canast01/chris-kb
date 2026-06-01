@@ -82,7 +82,6 @@ show feature | include telnet|http|tftp|ftp|snmp|ssh
 │  SIEM           = Security Information and Event Management; aggregates log analysis                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

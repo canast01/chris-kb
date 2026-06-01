@@ -65,7 +65,6 @@
 │  GSS SR Attachment   = Logscraper archive + support bundle required for P1/P2                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Service Status Verification
 

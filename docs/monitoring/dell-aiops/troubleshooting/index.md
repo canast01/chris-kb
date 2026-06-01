@@ -50,7 +50,6 @@ curl -sk -X POST \
 │  Dell support = Open case at support.dell.com; attach support bundle                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Common integration issues:
 

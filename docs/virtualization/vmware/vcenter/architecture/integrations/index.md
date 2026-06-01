@@ -78,7 +78,6 @@ vCenter Integration Map
 │  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Supported backup proxy modes:**
 - **Hot-add** (preferred) — backup proxy VM mounts target VM disks directly; highest performance

@@ -61,7 +61,6 @@ Confluence Admin URL:
 │  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

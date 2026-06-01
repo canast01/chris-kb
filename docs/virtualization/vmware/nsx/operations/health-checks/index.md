@@ -82,7 +82,6 @@ get services | grep -v " running"
 │  BGP session = Edge peering with physical router; must be Established                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Tunnel Health
 

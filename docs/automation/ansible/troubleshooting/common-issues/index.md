@@ -47,7 +47,6 @@ flowchart TD
 │   │               Fix: rebuild EE image with collection included if running via AWX               │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Sudo and Privilege Escalation Failures
 

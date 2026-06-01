@@ -132,7 +132,6 @@ flowchart TD
 │    Restore report    = Formal record of test result; filed for audit evidence                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -78,7 +78,6 @@ ls -lh /var/backup/dcnm/
 │  Restore test    = quarterly test of full DCNM restore to validate backup integrity                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Automated Backup (Cron)
 

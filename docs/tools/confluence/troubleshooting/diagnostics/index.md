@@ -78,7 +78,6 @@ flowchart TD
 │  df -h          = disk usage; alert if CONFLUENCE_HOME volume >80% full                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Log Level Changes (Runtime, No Restart)
 

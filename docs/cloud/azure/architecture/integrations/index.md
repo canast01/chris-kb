@@ -60,7 +60,6 @@ flowchart LR
 │  Azure Sentinel  = Cloud-native SIEM/SOAR; ingests logs and generates security alerts                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 BGP routes from on-premises should appear in all spoke VNet effective routes:
 ```bash

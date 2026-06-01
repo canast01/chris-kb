@@ -85,7 +85,6 @@ echo "Token: $TOKEN"
 │  Restore Validation  = Post-restore check: data sources green, flows appearing, alerts OK             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Automate with a cron job on a management host:
 

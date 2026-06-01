@@ -75,7 +75,6 @@ show interface fc1/1 counters errors
 │  FC loopback    = Hardware self-test looping frames back at the port for validation                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Rx power below the minimum operating range indicates a marginal or failing optical path — cable or SFP. Tx power below minimum indicates the SFP transmitter is degrading.
 

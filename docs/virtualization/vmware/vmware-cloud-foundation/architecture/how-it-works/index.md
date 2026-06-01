@@ -81,7 +81,6 @@ VCF Bring-Up and Lifecycle Flow
 │  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Bundle Management
 

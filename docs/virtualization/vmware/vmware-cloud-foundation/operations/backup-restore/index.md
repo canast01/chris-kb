@@ -81,7 +81,6 @@ flowchart TD
 │  RPO           = daily backup = 24h RPO for config; VMs = per backup tool                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Verify Backup Status
 

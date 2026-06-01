@@ -66,7 +66,6 @@ refactor(cache): replace in-memory store with Redis
 │  Changelog    = auto-generated from conventional commits by tools like release-it                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Only amend commits that have not been pushed to a shared branch.
 

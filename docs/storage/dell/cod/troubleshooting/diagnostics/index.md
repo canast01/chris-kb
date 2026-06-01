@@ -64,7 +64,6 @@ symaudit -sid <SID> list -action "license"
 │    Duplicate apply = Applying same key twice; array reports already activated; not an error           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 2. Confirm SYMCLI can communicate with the array:
 

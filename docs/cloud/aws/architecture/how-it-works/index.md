@@ -68,7 +68,6 @@ graph TB
 │  Log archive    = Dedicated account receiving all central logs; immutable S3 bucket                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## IAM Structure
 

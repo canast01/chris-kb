@@ -77,7 +77,6 @@ sequenceDiagram
 │    One fabric     = Upgrade one fabric completely before touching the peer fabric                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -57,7 +57,6 @@ curl -sk -X POST \
 │  Cisco TAC = Technical Assistance Centre; Smart Call Home auto-opens cases                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## NDDB Traffic Tapping
 

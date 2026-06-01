@@ -70,7 +70,6 @@ ESXi Integration Map
 │  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Bind the iSCSI adapter to dedicated vmkernel ports for multipathing.
 

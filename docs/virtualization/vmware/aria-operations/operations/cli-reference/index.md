@@ -78,7 +78,6 @@ Aria Operations — CLI Command Reference Map
 │  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

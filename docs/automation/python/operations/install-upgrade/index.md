@@ -65,7 +65,6 @@ which python   # Should point to ~/.pyenv/shims/python
 │   │      Re-create venv= after Python upgrade; venv is tied to a specific interpreter binary      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Windows
 

@@ -93,7 +93,6 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 │  Rollback     = revert VM snapshot or restore DB dump; re-run previous installer                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

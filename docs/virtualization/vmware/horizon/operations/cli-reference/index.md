@@ -66,7 +66,6 @@
 │  Remove-HVMachine= PowerCLI; remove a desktop VM from pool                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Run from an elevated command prompt on a Connection Server (or a machine with network access to the CS, using `-c` flag).
 

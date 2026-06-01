@@ -86,7 +86,6 @@ symrdf -g <dgname> -sid <r1_sid> query
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -61,7 +61,6 @@
 │    Config naming  = Zone config names include date/ticket reference for auditability                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Examples:
 - Zone: `db01_0a-powermax01_0a` — host DB01 HBA0 port A to PowerMax array port 0A

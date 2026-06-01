@@ -58,7 +58,6 @@ flowchart TD
 │  leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## RHEL Subscription Management
 

@@ -52,7 +52,6 @@ psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_w
 │    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SQL Server
 

@@ -74,7 +74,6 @@ tar -tzf ks-config-<date>.tar.gz
 │    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## SnapMirror Relationship Export
 

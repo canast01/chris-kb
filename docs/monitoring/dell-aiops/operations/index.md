@@ -56,7 +56,6 @@
 │  Procurement plan = Capacity expansion request based on AIOps forecast data                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Health Score Decline Investigation
 

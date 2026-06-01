@@ -68,7 +68,6 @@ flowchart LR
 │  symlink     = Symbolic link; pointer to another path, can cross filesystems                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Package Management
 

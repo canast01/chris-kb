@@ -81,7 +81,6 @@ flowchart TD
 │    PTR record  = Reverse DNS record; IP → hostname; required for many services and logs               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Reverse (PTR) Resolution
 

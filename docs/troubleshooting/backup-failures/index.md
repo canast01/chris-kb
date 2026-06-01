@@ -80,7 +80,6 @@ flowchart TD
 │    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Log Locations
 

@@ -87,7 +87,6 @@ flowchart TD
 │  df -h          = disk usage; alert if JIRA_HOME volume exceeds 80% full                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Log Parsing Commands
 

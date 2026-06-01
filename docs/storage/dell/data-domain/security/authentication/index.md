@@ -64,7 +64,6 @@ graph TD
 │    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### LDAP Configuration Options
 

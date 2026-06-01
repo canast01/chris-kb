@@ -45,7 +45,6 @@ symrdf -g <rdfgroup> query
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **SRDF — failover to R2:**
 ```bash

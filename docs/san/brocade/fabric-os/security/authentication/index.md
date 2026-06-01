@@ -69,7 +69,6 @@ flowchart TD
 │  Session timeout= idle session termination; Fabric OS default 30 minutes inactivity                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Role Mapping via RADIUS
 

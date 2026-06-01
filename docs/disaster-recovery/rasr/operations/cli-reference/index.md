@@ -50,7 +50,6 @@ C:\Program Files\Dell\RASR\rasrutil.exe
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Required:**
 

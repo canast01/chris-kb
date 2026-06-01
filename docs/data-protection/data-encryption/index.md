@@ -56,7 +56,6 @@ cryptsetup luksDump /dev/sdb
 │    TLS 1.3    = Latest TLS version; removes weak ciphers; mandatory for public-facing services        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Storage arrays:**
 - **ONTAP**: `security key-manager show` — confirm key manager connected; `volume show -fields encryption-state`

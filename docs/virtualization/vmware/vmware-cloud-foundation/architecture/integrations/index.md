@@ -75,7 +75,6 @@ NSX Federation (multi-site)
 │  SIEM       = Security Information and Event Management; log receiver                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Assign roles to AD groups:**
 

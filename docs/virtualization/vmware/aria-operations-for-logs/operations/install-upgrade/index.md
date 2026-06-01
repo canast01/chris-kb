@@ -97,7 +97,6 @@ curl -sk -u 'admin:<password>' \
 │  OSI               = Operationally Significant Instance; licensed unit in vRLI                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Upload the PAK file. Aria Ops for Logs validates the file and presents a pre-upgrade compatibility check. If all checks pass, click **Upgrade**.
 

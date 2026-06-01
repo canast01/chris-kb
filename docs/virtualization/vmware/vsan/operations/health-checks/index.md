@@ -78,7 +78,6 @@ vSAN HEALTH CHECK SCOPE
 │  Resync ETA    = estimate shown in vSAN performance health panel                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

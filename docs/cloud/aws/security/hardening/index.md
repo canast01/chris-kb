@@ -77,7 +77,6 @@ aws iam get-account-summary \
 │  Root MFA        = Hardware MFA on root is CIS level 1 requirement; highest priority                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -71,7 +71,6 @@ get service controller
 │  node-uuid     = unique ID of NSX appliance; used in API paths                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Appliance Configuration
 

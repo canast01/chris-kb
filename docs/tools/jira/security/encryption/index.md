@@ -96,7 +96,6 @@ server {
 │  TDE          = Transparent Data Encryption at PostgreSQL level (pgcrypto)                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Verifying TLS Configuration
 

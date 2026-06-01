@@ -51,7 +51,6 @@ API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials �
 │  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Provide:
 - VIDM hostname: `vidm.example.local`

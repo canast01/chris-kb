@@ -64,7 +64,6 @@ flowchart TD
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 GPOs are applied at the OU level by server role — infrastructure, database, application tiers each have a dedicated OU with role-specific policy.
 

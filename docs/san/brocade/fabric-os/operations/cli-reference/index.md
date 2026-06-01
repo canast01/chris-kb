@@ -62,7 +62,6 @@ slotShow           # blade/slot population
 │  FCAP            = Fibre Channel Authentication Protocol; cert-based switch auth                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Expected output: `HEALTHY`. Any other status requires investigation.
 

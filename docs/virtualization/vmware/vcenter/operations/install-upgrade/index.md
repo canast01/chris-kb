@@ -91,7 +91,6 @@ vSphere Upgrade Sequence
 │  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Never upgrade ESXi before vCenter.** A newer ESXi host is not supported by an older vCenter.
 

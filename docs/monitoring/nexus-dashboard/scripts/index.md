@@ -57,7 +57,6 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
 │  JSON response = NDI API returns JSON; parse with json module or jq                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Fabric Fault Export
 

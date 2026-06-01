@@ -79,7 +79,6 @@ flowchart TD
 │  dism           = Deployment Image Servicing and Management; repairs OS component store               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## High CPU
 

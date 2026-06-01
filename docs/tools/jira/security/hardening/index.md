@@ -62,7 +62,6 @@ curl -u "user@corp.example.com:API_TOKEN" \
 │  MFA              = multi-factor auth enforced at IdP; Jira trusts SAML assertion                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

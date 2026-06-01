@@ -70,7 +70,6 @@ usermod -L dcnm   # lock (disable password login)
 │  Staging test    = validate DCNM upgrade in non-prod before production rollout                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -86,7 +86,6 @@ ESCALATION PATH
 │  GSS           = Global Support Services (VMware/Broadcom)                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Information Template
 

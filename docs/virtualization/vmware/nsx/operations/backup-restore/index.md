@@ -117,7 +117,6 @@ curl -sk -u 'admin:password' \
 │  Policy API  = NSX policy REST API; primary management interface                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Always trigger a manual backup before:
 - Any NSX upgrade

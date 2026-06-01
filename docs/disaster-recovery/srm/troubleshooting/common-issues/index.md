@@ -67,7 +67,6 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Recovery Plan Fails at Network Mapping Step
 

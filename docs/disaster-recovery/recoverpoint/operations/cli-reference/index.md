@@ -87,7 +87,6 @@ flowchart TD
 │    failback         = CLI command to reverse replication after failover; requires resync first        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### System Status Commands
 

@@ -42,7 +42,6 @@ curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \
 │  Rate limit = API enforces per-client limits; retry with exponential backoff on 429                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Recommendations (AIOps)
 

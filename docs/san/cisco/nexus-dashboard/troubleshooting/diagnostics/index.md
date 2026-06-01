@@ -73,7 +73,6 @@ acs system logs --component audit --tail 50
 │  Tech-support   = All-in-one bundle; includes etcd snapshot, pod logs, cluster state                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -104,7 +104,6 @@ flowchart TD
 │    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 - Each host has HBAs connecting to both Fabric A and Fabric B — no single fabric failure takes down host access
 - Storage processors are cross-connected internally; either SP can serve data from any drive group

@@ -54,7 +54,6 @@ Infrastructure → Configure → Property Groups → New Property Group → Encr
 │  Cert expiry alert = LCM warns 30 days before cert expiry; schedule rotation in advance               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### HashiCorp Vault Integration
 

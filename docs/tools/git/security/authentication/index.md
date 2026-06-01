@@ -78,7 +78,6 @@ ssh-keygen -lf ~/.ssh/id_ed25519_git.pub
 │  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SSH Config for Multiple Identities
 

@@ -57,7 +57,6 @@
 │  Remote SQL    = dedicated SQL Server; supports AlwaysOn HA                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Install SRM on both sites before pairing. Site pairing is done from the vCenter UI after both are installed.
 

@@ -81,7 +81,6 @@ ESXi Upgrade Flow — vLCM Rolling Cluster Upgrade
 │  Boot disk = ESXi install target; SD/USB (legacy), M.2 NVMe (recommended)                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Workflow:**
 1. Set cluster image (select base ESXi version + add-ons)

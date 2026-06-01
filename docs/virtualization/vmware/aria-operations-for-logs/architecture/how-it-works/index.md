@@ -62,7 +62,6 @@ graph TB
 │  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## ESXi Syslog Configuration
 

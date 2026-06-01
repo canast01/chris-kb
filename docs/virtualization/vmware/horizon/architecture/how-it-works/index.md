@@ -84,7 +84,6 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 │  Farm            = collection of RDS hosts for app/desktop delivery                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Customization at fork:** A post-customization script (`horizon-customization.ps1` or sysprep alternative) runs in each child VM immediately after the fork to:
 - Set a unique hostname (based on naming pattern defined in pool)

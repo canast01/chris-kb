@@ -74,7 +74,6 @@ kubectl get svc -n prelude
 │  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Set the token as a variable:
 

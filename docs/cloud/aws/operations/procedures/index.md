@@ -99,7 +99,6 @@ aws rds start-db-instance --db-instance-identifier <db-id>
 │  DR test         = Disaster recovery test validating RTO/RPO targets are achievable                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Key CloudWatch Metrics
 

@@ -74,7 +74,6 @@ sequenceDiagram
 │  jobdetails     = qlist subcommand returning verbose per-phase timing and error codes                 │
 │  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

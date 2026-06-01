@@ -84,7 +84,6 @@ flowchart TD
 │    RPO breach  = Lag exceeds configured RPO target; escalate immediately as DR goal at risk           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Verify SRDF Link Health
 

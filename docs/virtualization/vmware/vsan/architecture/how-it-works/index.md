@@ -61,7 +61,6 @@ ESXi Host (OSA)
 │  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 - NVMe-only — no SATA or SAS SSDs
 - No separate cache tier; each NVMe is both cache and capacity

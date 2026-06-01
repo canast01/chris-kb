@@ -73,7 +73,6 @@ ESXi Backup & Restore Flow
 │  Cluster     = group of ESXi hosts sharing HA, DRS, and vSAN resources                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Via vSphere Client

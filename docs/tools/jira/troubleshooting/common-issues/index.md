@@ -83,7 +83,6 @@ jcmd "${JIRA_PID}" GC.heap_info
 │  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Restart Jira to apply.
 

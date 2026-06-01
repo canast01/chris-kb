@@ -65,7 +65,6 @@ echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
 │  Unused Services      = Disable OS services not needed; reduce attack surface                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Then configure the AD source with port 636 and SSL enabled.
 

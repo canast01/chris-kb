@@ -65,7 +65,6 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
 │  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 vSAN-specific operations — creating disk groups, modifying storage policies, enabling encryption — all require authentication to vCenter. No separate vSAN credentials exist.
 

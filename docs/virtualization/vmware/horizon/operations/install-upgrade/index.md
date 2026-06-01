@@ -61,7 +61,6 @@
 │  Windows Server= required OS; 2019 or 2022; domain joined                                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 For replica servers (additional Connection Servers in the same pod):
 ```powershell

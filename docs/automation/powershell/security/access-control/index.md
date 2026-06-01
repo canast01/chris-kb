@@ -46,7 +46,6 @@ graph TD
 │   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## RBAC with Active Directory Groups
 

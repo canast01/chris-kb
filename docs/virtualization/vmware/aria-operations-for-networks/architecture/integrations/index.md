@@ -86,7 +86,6 @@ curl -k -u 'svc-aon:PASSWORD' \
 │  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 The built-in **Read-Only** role at the vCenter root object covers most of these. Add `Host.Config.NetFlow` if AON will manage IPFIX configuration push to ESXi hosts.
 

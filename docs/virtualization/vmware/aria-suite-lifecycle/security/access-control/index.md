@@ -63,7 +63,6 @@
 │  Audit Log           = LCM records all user actions and config changes                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 1. Select the role from the dropdown
 2. Click **Add Group** — search for the AD group synced via VIDM (e.g., `GG-LCM-Admins`)

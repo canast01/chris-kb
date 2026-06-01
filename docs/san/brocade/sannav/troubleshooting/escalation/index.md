@@ -127,7 +127,6 @@ uptime
 │  No changes      = freeze all fabric and SANnav changes during active incident                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### For Upgrade Issues
 

@@ -73,7 +73,6 @@ graph TB
 │    BRCD exchange  = Brocade-specific capability exchange over E_Port during fabric init               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Fabric A and Fabric B are completely independent — no cross-fabric cables. ISLs form trunk groups between switches within a fabric only.
 

@@ -61,7 +61,6 @@ flowchart LR
 │  CloudFormation = AWS native IaC; stack-based resource provisioning and updates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 VPN is configured as a backup to Direct Connect with lower BGP preference (AS-Path prepend or local preference).
 

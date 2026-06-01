@@ -67,7 +67,6 @@
 │  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## vCenter Server
 

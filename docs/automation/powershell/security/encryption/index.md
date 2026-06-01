@@ -46,7 +46,6 @@ graph TD
 │   │    Azure Key Vault = recommended back-end for SecretManagement in cloud/hybrid environments   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Secure Communication (WinRM over HTTPS)
 

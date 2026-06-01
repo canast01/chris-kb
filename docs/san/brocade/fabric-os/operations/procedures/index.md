@@ -73,7 +73,6 @@ flowchart TD
 │    NDU            = Non-Disruptive Upgrade; HA chassis upgrades one blade at a time                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### View Current State
 

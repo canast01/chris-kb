@@ -53,7 +53,6 @@ curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type
 │  py-pure-client = Pure-provided Python library wrapping Pure1 API                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

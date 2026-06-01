@@ -77,7 +77,6 @@ flowchart TD
 │    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 The `-all` flag is required to capture Virtual Fabric configurations, logical switch assignments, and port-level settings. Without `-all`, only the base switch configuration is exported.
 

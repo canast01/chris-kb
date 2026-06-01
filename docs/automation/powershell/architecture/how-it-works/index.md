@@ -61,7 +61,6 @@ flowchart LR
 │   │ Runspace        = isolated execution context; enables parallel processing via Start-ThreadJob │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SSH Remoting (PowerShell 7+)
 

@@ -90,7 +90,6 @@ echo "Authenticated to ${DCNM_HOST}"
 │  Token           = JWT Bearer token; required Authorization header on all API calls                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

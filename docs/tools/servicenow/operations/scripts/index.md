@@ -51,7 +51,6 @@ export SN_PASS="your-password"
 │  addQuery()       = adds WHERE clause condition to GlideRecord query                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

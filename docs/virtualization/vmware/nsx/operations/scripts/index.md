@@ -186,7 +186,6 @@ python nsxt_health_check.py
 │  policy/api/v1 = NSX Policy API base path; preferred over MP API                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Any CRITICAL items appear in red. The script exits with code 2 on critical failures.
 

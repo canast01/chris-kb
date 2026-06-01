@@ -57,7 +57,6 @@ config backup restore <backup_name>
 │    mtree quota    = Logical soft/hard limit per MTree; shown in filesys show space output             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### NTP Configuration
 

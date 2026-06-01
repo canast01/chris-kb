@@ -60,7 +60,6 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Examples:
 - `DG-PROD-ERP-DC1-01`

@@ -74,7 +74,6 @@ df -h /var/log/loginsight
 │  LCM logscraper    = Diagnostic tool; not a backup tool; used for support bundles only                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Remove snapshots within 48 hours of a successful change:
 

@@ -68,7 +68,6 @@ grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -30
 │  journalctl      = Linux systemd log; shows DCNM service crashes and errors                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Resolution for merge conflict:**
 1. Identify the switch with the conflicting zone database.

@@ -58,7 +58,6 @@ Role
 │  approver   = role enabling approval tasks; does not grant broader ITSM access                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Role Assignment Best Practices
 

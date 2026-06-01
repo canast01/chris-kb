@@ -78,7 +78,6 @@ git mergetool
 │  cherry-pick     = apply specific commit to current branch; use to move work                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Fix Procedure
 

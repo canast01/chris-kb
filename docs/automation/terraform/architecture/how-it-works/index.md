@@ -56,7 +56,6 @@ flowchart TD
 │   │    State lock    = prevents concurrent terraform apply; acquired on apply, released on done   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 For strict isolation (separate AWS accounts, different permissions), use separate root modules with separate backends rather than workspaces.
 

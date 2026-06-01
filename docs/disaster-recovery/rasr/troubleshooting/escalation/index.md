@@ -87,7 +87,6 @@ Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$arch
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Or from iDRAC web UI: **Maintenance** → **Lifecycle Log** → **Export**.
 

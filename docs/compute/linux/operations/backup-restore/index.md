@@ -64,7 +64,6 @@ veeamconfig ui   # Opens text-based configuration UI
 │  NBU         = NetBackup; Veritas enterprise backup platform with agent and catalog                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Schedule Backup Jobs
 

@@ -83,7 +83,6 @@ aws kms get-key-rotation-status --key-id $KEY_ID
 │  EBS default enc = Account-level setting encrypting all new EBS volumes automatically                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

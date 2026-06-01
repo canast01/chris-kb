@@ -43,7 +43,6 @@ flowchart TD
 │   │           Fix: export REQUESTS_CA_BUNDLE=/etc/ssl/certs/corp-ca.pem in shell profile          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```python
 # Diagnose an import issue at runtime

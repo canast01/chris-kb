@@ -67,7 +67,6 @@
 │  Self-Signed Default = Default cert; replace with CA-signed before production                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Fill in:
 - **Common Name**: product FQDN or VIP FQDN

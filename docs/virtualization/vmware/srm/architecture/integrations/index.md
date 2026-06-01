@@ -65,7 +65,6 @@
 │  Test due alarm = SRM reminds when DR test is overdue                                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Re-pairing is required if either SRM Server's certificate is rotated (thumbprint changes invalidate the trust).
 

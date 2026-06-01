@@ -72,7 +72,6 @@ graph TB
 │  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Role Assignment Standards
 

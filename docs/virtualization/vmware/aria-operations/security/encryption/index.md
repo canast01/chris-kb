@@ -52,7 +52,6 @@ Administration → Certificates → Replace Certificate
 │  Self-Signed Default = vROps ships with self-signed cert; replace for production                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

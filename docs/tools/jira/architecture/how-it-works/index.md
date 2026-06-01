@@ -114,7 +114,6 @@ graph TB
 │  Attachment      = file stored on NFS under JIRA_HOME/data/attachments                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Database
 

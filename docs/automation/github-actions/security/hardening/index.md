@@ -43,7 +43,6 @@ flowchart TD
 │   │ Audit log        = org-level log of all Actions events; export to SIEM for long-term retention│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Use Dependabot to keep pinned actions up to date automatically:
 

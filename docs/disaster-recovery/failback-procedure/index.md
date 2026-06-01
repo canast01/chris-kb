@@ -57,7 +57,6 @@ switchshow                        # Brocade
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Veeam — run a final backup at DR before failback:**
 1. Veeam Backup & Replication → Replication jobs → Run job

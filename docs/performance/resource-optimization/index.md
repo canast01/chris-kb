@@ -44,7 +44,6 @@ free -h | awk '/Mem/ {print "Available:", $7}'
 │    Snapshot chain= Each snapshot added to chain; long chains slow reads; delete after use             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## AWS — Cost Optimization
 

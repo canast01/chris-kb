@@ -65,7 +65,6 @@
 │  Log Retention        = 90 days minimum; match compliance policy                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 - Import the full chain: leaf certificate + intermediate CA(s) + root CA
 - Private key must be unencrypted (no passphrase) in PEM format

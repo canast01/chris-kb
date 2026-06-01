@@ -80,7 +80,6 @@ Aria Operations — Backup Architecture
 │  Metric Data         = Historical metrics NOT in CaSA backup; starts fresh on restore                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Provide:
 - Location type: NFS or SFTP

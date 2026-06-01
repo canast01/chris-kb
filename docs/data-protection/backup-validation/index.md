@@ -78,7 +78,6 @@ flowchart TD
 │    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SureBackup Verification Tests (per VM)
 

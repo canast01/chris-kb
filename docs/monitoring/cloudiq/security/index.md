@@ -54,7 +54,6 @@ CloudIQ portal > Settings > Identity Providers > Add
 │  API token security = client_id/secret treated as password; never logged or committed to code         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## SCG Certificate Security
 

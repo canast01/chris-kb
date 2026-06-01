@@ -74,7 +74,6 @@ flowchart TD
 │  Critical escalation = request via Atlassian account team for P1 outages                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

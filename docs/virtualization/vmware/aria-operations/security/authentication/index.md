@@ -63,7 +63,6 @@ Administration → Authentication Sources → Add Source
 │  Bind Account        = Service account for LDAP queries; read-only, dedicated                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Test the LDAP connection:**
 

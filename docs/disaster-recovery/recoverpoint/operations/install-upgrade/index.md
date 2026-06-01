@@ -98,7 +98,6 @@ flowchart TD
 │    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 !!! note "RPA Discovery"
     Deployment Manager discovers RPAs via broadcast on the management subnet. Ensure the management station is Layer 2 adjacent to the RPAs, or configure the RPA management IPs statically via the RPA front-panel LCD before running the wizard if the broadcast does not reach them.

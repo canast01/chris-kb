@@ -68,7 +68,6 @@ flowchart LR
 │  /proc/PID   = Virtual filesystem exposing process state: maps, fd, stat, cmdline                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## dmesg — Kernel Ring Buffer
 

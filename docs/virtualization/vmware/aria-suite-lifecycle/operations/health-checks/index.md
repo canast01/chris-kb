@@ -64,7 +64,6 @@
 │  Logscraper          = Run after health check failure to collect diagnostic logs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 In the LCM UI:
 - **Lifecycle Operations → Environments**: all environment cards should show green health indicators

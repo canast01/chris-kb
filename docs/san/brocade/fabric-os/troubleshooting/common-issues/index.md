@@ -70,7 +70,6 @@ flowchart TD
 │  HA reboot       = High Availability failover; active CP reboots to standby CP                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Document the output of each command in the incident record before proceeding.
 

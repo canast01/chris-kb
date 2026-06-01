@@ -46,7 +46,6 @@ flowchart LR
 │    Vault entry   = Admin credentials stored in CyberArk/vault; no shared spreadsheet creds            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Windows Server
 

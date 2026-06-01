@@ -53,7 +53,6 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 │   │   WinRM event log  = Event Viewer → Microsoft → Windows → WinRM for connection error details  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### 4. Environment Context
 

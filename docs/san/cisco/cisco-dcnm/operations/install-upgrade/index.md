@@ -148,7 +148,6 @@ ssh root@dcnm-dc1-standby.corp.example.com
 │  NTP             = Network Time Protocol; timestamps required for event correlation                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Post-Upgrade Validation
 

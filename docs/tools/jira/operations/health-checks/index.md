@@ -74,7 +74,6 @@ flowchart TD
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Check Load Balancer Pool
 

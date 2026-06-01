@@ -97,7 +97,6 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
 │  syslog TLS      = encrypted syslog forwarding; audit events protected in transit                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### DCNM to Switch Communication (SSH)
 

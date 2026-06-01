@@ -116,7 +116,6 @@ acs backup list
 │  Version match  = Restore requires identical ND software version as backup source                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **If the ND management IP changed (new hardware):**
 - Update DNS records for the cluster management FQDN

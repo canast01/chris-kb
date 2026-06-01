@@ -54,7 +54,6 @@
 │  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Examples:
 - Zone: `db01_0a-powermax01_0a`

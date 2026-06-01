@@ -81,7 +81,6 @@ ESXi Access Control Model
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Via ESXCLI (must be run from DCUI or existing shell session):
 

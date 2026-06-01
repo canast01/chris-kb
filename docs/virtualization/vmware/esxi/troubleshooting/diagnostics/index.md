@@ -73,7 +73,6 @@ ESXi Diagnostic Data Sources
 │  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Common Issues
 

@@ -81,7 +81,6 @@ journalctl -u dsagw -f
 │    SSL cert error  = SCG cannot validate CloudIQ endpoint cert; add CA to SCG trust store             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Step 3 — Verify the system is registered to SCG:**
 

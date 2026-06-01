@@ -59,7 +59,6 @@ boxmgmt support collect_bundle
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

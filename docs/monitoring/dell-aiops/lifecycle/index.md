@@ -59,7 +59,6 @@ support.dell.com > Products > CloudIQ > Secure Connect Gateway > Downloads
 │  Admin CLI = aiops-admin command-line tool for backup, upgrade, and service management                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Feature Enablement
 

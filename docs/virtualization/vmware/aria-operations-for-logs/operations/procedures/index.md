@@ -52,7 +52,6 @@ connection refused
 │  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Certificate Errors
 

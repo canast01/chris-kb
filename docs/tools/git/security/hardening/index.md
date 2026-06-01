@@ -67,7 +67,6 @@ pre-commit install --hook-type pre-push
 │  trivy            = container + filesystem vulnerability scanner; works on Git repos                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Run all hooks against all files

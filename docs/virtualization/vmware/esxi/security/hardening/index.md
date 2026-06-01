@@ -77,7 +77,6 @@ ESXi Host Hardening Layers
 │  SNMP v3     = secure SNMP version with auth+enc; v1/v2 must be disabled                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Exception Users List:**
 

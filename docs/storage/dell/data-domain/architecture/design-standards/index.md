@@ -61,7 +61,6 @@ graph TD
 │    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Never use spaces, uppercase letters, or special characters other than hyphens in MTree names. MTree names are permanent — they cannot be renamed after creation.
 

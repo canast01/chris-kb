@@ -103,7 +103,6 @@ get certificate api thumbprint
 │  Interop     = VMware Product Interoperability Matrix for version support                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Configure Virtual IP (VIP)
 

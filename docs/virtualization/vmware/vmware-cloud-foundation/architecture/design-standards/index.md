@@ -83,7 +83,6 @@ VCF Physical and Logical Design Requirements
 │  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Supported Configurations
 

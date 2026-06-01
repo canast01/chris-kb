@@ -82,7 +82,6 @@ flowchart TD
 │  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Enable BitLocker on OS Drive with TPM + PIN
 

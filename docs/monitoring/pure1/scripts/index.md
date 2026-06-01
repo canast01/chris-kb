@@ -70,7 +70,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
 │  Slack webhook = POST alert summary to Slack channel incoming webhook URL                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Active Alert Export
 

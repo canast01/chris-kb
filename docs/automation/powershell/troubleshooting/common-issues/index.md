@@ -46,7 +46,6 @@ flowchart TD
 │   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## PowerShell Remoting Issues
 

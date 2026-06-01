@@ -77,7 +77,6 @@ curl -sk -u 'admin:password' \
 │  CR          = Change Request; ITSM record authorising change                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Step 3 — Validate rule is published**
 

@@ -44,7 +44,6 @@ graph LR
 │   │   encrypt_string = encrypts a single string value; embed inline in plain YAML variable files  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Paste the output directly into a plaintext YAML file:
 

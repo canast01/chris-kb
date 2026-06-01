@@ -72,7 +72,6 @@ flowchart TD
 │  NIC error counters= rx_errors/tx_errors on interface; indicate cabling or driver issues              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## System Overview
 

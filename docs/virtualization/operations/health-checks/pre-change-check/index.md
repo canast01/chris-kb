@@ -70,7 +70,6 @@ Pre-Change Baseline Sequence
 │    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## 2. Host Connectivity
 

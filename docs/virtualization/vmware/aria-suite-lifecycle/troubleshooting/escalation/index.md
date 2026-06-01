@@ -71,7 +71,6 @@
 │  RCA                 = Root Cause Analysis document issued after P1 resolution                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Log bundle (required for all SRs):**
 

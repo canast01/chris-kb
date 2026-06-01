@@ -79,7 +79,6 @@ graph LR
 │  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Outbound REST (ServiceNow calls external)
 

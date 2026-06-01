@@ -55,7 +55,6 @@ curl -sk -u 'admin:<password>' \
 │  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Disk thresholds:**
 - < 70% used: normal

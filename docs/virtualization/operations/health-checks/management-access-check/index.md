@@ -62,7 +62,6 @@ Management Access Check Flow
 │    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## vCenter Access
 

@@ -69,7 +69,6 @@ Settings → My Account → Change Password
 │  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 After LDAP is configured, add Role Mappings (Settings → Authentication → Role Mappings) to map AD groups to vRNI roles.
 

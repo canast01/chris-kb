@@ -93,7 +93,6 @@ sequenceDiagram
 │  VMFS            = VMware File System; FC LUN presented to ESXi as datastore                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Verify the host can see the storage:**
 

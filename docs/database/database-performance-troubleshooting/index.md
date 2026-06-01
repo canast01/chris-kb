@@ -47,7 +47,6 @@ free -h           # check swap usage — DB paging = critical
 │    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## MySQL / MariaDB — Slow Query Analysis
 

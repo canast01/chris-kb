@@ -64,7 +64,6 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
 │  Policy-based= IPSec with selectors; legacy; no dynamic routing                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Overlay encryption requires sufficient CPU on ESXi hosts (AES-NI hardware acceleration recommended). Measure the CPU overhead before enabling in production.
 

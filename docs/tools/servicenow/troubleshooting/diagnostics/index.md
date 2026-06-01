@@ -81,7 +81,6 @@ JVM version:            17.0.11
 │  Queue depth = pending requests waiting for available thread; high depth = saturation                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Cache Hit Rates:**
 

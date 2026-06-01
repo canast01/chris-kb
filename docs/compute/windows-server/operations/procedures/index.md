@@ -63,7 +63,6 @@ flowchart TD
 │  TOTP MFA       = time-based one-time password; enforced via Azure AD CA                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Maintenance Tasks
 

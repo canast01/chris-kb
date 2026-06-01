@@ -53,7 +53,6 @@ purearray set --proxy https://<proxy>:<port>   # if behind a proxy
 │  SaaS = Pure1 platform updated by Pure Storage; no customer upgrade action                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Array Decommission
 

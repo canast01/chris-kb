@@ -79,7 +79,6 @@ tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 If errors persist after cleaning, engage tape vendor support and check robotic library firmware version.
 

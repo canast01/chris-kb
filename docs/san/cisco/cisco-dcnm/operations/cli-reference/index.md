@@ -79,7 +79,6 @@ systemctl restart dcnm-events
 │  netstat -tlnp    = verify DCNM port 443 is listening; basic health check                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Database Access
 

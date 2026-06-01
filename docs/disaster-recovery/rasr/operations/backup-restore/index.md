@@ -71,7 +71,6 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\r
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Phase 2 — WinPE Environment
 

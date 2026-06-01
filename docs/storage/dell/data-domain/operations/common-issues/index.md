@@ -53,7 +53,6 @@ flowchart TD
 │    Context broken   = Replication context in error state; replication resync to re-establish          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 If cleaning does not recover sufficient space:
 

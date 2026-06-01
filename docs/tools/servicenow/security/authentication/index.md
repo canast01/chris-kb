@@ -88,7 +88,6 @@ gs.info('LDAP test result: ' + JSON.stringify(result));
 │  Duo        = MFA provider; push notification to mobile app for approval                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Azure AD (Entra ID) Enterprise Application Setup
 

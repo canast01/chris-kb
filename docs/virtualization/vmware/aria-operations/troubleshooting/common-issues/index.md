@@ -62,7 +62,6 @@ service vmware-vcops-watchdog restart
 │  Time Range           = Dashboard widget setting; widen if no data appears                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

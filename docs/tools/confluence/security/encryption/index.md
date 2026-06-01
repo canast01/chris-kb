@@ -88,7 +88,6 @@ server {
 │  cert         = X.509 certificate; signed by internal CA or public CA (Let's Encrypt)                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### TLS at Tomcat (Direct Confluence)
 

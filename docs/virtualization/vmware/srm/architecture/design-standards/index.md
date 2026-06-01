@@ -67,7 +67,6 @@
 │  WAN BW        = replication bandwidth; plan for peak replication rate                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 VMs retain their IPs. Routing updates (BGP, static routes) redirect traffic to recovery site.
 
 **Option B: Different VLAN IDs, same IP subnets** — Recovery site uses different physical VLANs but same IP subnets (extended L3 or re-advertising the subnets):

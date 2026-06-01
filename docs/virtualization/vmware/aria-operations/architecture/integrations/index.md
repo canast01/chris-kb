@@ -79,7 +79,6 @@ Aria Operations — Adapter and Outbound Integration Map
 │  Notification Rule   = vROps config routing alert to a specific outbound channel                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

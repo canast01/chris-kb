@@ -75,7 +75,6 @@ ESXi Escalation Path — Broadcom Support
 │  Phone bridge= S1 SR triggers phone call from VMware engineer                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **From vSphere Client:**
 

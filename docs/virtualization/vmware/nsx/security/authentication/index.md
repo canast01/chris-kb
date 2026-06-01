@@ -87,7 +87,6 @@ curl -sk -u 'admin:password' \
 │  Session timeout = idle session expiry; configurable in NSX                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Store the new password in the organisation's secrets vault immediately after rotation.
 

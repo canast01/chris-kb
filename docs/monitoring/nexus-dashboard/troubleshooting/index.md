@@ -50,7 +50,6 @@ acs nodes
 │  Epoch gap = NDI shows missing epochs when telemetry interrupted                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Network requirements for ND to fabric communication:
 

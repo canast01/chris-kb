@@ -100,7 +100,6 @@ Object.keys(criticalProps).forEach(function(prop) {
 │  Script review= security check of Business Rules/Client Scripts before promotion                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Break-Glass Procedure
 

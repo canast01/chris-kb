@@ -82,7 +82,6 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Configure lifecycle rules on S3 to transition to Glacier after 90 days for cost reduction.
 

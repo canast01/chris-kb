@@ -56,7 +56,6 @@ Administration → Integrations → Aria Operations → Add vRealize Operations 
 │  Custom field      = User-defined regex extractor creating a queryable field from log text            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 - Protocol: UDP or TCP
 - Host: `vrli-prod-01.example.local`
 - Port: 514 (UDP syslog) or 1514 (TCP syslog via LI Agent protocol)

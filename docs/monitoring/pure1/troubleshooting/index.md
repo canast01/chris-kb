@@ -63,7 +63,6 @@ purearray set --proxy https://<proxy-host>:<port>
 │  Firewall rule = Allow outbound TCP 443 from array mgmt IP to pure1.purestorage.com                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Additional steps:
 - Reduce polling frequency in scripts (increase interval from 5 to 15 minutes)

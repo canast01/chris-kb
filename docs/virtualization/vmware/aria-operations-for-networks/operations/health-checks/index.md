@@ -95,7 +95,6 @@ for c in data.get('results', []):
 │  Sizing Headroom     = CPU/RAM utilisation should stay below 75% for stable operation                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Verify Flow Data Is Being Received
 

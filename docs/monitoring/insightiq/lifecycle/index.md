@@ -48,7 +48,6 @@ Key compatibility rules:
 │  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Backup
 

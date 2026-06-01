@@ -64,7 +64,6 @@ psql -U postgres -c "SELECT now() AS current_time;"
 │    Split-brain    = Two nodes both believe they are primary; never promote without fencing            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## MySQL / MariaDB — Replica Promotion
 

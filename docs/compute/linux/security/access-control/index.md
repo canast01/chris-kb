@@ -68,7 +68,6 @@ chmod 2775 /opt/projects
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Sensitive File Permissions Baseline
 

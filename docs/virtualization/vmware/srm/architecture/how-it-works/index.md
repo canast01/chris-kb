@@ -67,7 +67,6 @@ Protected Site                        Recovery Site
 │  Reprotect     = reverse replication direction after failover                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Priority Groups
 

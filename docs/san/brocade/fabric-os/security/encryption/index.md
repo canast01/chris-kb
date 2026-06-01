@@ -74,7 +74,6 @@ graph TB
 │  Dual control    = key operations require two independent admin approvals                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Remove Default SNMP Community Strings
 

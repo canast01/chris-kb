@@ -74,7 +74,6 @@ ESXi Encryption Stack
 │  Dedup        = deduplication; disabled when vSAN encryption is active                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 NKP backup is critical — if vCenter is lost without a NKP backup, all VMs encrypted with that provider become unrecoverable.
 

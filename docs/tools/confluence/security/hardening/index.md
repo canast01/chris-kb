@@ -58,7 +58,6 @@ Administrator account policy:
 │  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Rename or Disable the Default Admin Account
 

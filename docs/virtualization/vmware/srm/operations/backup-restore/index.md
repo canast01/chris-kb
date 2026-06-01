@@ -67,7 +67,6 @@
 │  VADP backup   = standard VM backup; required for SRM Server VM                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Backup parts that include SRM data:**
 

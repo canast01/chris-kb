@@ -50,7 +50,6 @@ flowchart TD
 │  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Site-Level XML Backup
 

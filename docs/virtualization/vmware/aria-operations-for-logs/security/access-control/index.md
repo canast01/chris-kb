@@ -60,7 +60,6 @@ Administration → Authentication → Active Directory → Configure
 │  MFA               = Not native to vRLI; enforce MFA via vIDM if SSO integrated                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

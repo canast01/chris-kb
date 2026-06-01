@@ -83,7 +83,6 @@ KEY PROCEDURE FLOWS
 │  30% free       = minimum headroom for resync operations                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Add a Disk Group to an Existing Host
 

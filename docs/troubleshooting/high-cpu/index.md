@@ -82,7 +82,6 @@ flowchart TD
 │    irqbalance = Linux daemon; distributes hardware interrupts across CPUs for load balance            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Kernel vs User Space
 

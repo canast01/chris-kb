@@ -75,7 +75,6 @@ flowchart LR
 │  syslogdipadd    = adds a syslog server IP; Fabric OS sends events to SIEM                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Switch-Level Diagnostics
 

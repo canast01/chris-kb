@@ -71,7 +71,6 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 │  Defender ATP   = Microsoft Defender for Endpoint; EDR platform with SIEM integration                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Audit Policy
 

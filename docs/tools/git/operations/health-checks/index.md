@@ -69,7 +69,6 @@ git -C /backup/repo.git fsck --full
 │  Build time drift = CI duration creeping up; indicates test suite growth or slowness                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

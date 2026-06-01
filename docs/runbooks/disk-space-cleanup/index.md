@@ -69,7 +69,6 @@
 │    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Stop here if** you find large application data directories or database files — escalate rather than delete.
 

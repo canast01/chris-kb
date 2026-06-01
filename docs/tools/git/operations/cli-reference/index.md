@@ -75,7 +75,6 @@ git remote set-url origin <new_url>
 │  log --graph       = ASCII graph of branch/merge topology in terminal                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -75,7 +75,6 @@
 │    Service account= Non-interactive account; lockout = service failing; update credential source      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Step 2 — Find the Lockout Source
 

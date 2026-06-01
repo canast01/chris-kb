@@ -82,7 +82,6 @@ jobs:
 │  Artifact       = built output (container, binary) published on tag push to registry                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### GitLab CI/CD
 

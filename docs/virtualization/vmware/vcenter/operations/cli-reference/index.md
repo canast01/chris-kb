@@ -71,7 +71,6 @@ vCenter CLI Interfaces
 │  SSH enable     = VAMI > Access > SSH login; off by default                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

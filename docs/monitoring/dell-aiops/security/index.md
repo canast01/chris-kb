@@ -52,7 +52,6 @@ CloudIQ portal > Settings > Identity Providers > Add
 │  Least privilege = Adapter accounts have read-only access to infrastructure APIs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Audit Logging
 

@@ -74,7 +74,6 @@ VCF API Automation — Data Flow
 │  Task ID       = async operation ID; poll with Get-VCFTask until complete                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Trigger SoS Health Check and Poll Result (Bash)
 

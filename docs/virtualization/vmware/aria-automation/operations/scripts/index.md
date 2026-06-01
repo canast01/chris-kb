@@ -87,7 +87,6 @@ if ($Results) {
 │  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

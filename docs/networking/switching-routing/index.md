@@ -52,7 +52,6 @@ show interface <int> status
 │    IPAM         = IP Address Management; tracks allocations; prevents duplicate IPs                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Assign a Port to a VLAN (Access Port)
 

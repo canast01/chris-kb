@@ -64,7 +64,6 @@ curl -u user:token \
 │  WAL          = Write-Ahead Log; PostgreSQL durability mechanism, source for replication              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Variable best practices:
 - Add placeholder hint text for each field

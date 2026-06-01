@@ -65,7 +65,6 @@
 │  Isolated VLAN = desktop VMs cannot reach management or other VLANs                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Windows Hardening of Connection Server
 

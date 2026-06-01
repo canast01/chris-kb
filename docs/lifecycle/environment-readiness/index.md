@@ -48,7 +48,6 @@ flowchart TD
 │    Pre-deploy backup= Snapshot/config backup taken immediately before any change starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | Resource | Required | Available | Headroom ≥ 20%? |
 |---|---|---|---|

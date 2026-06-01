@@ -46,7 +46,6 @@ provider "aws" {
 │   │  Vault provider= reads secrets from Vault at apply time; writes dynamic credentials to state  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # GitHub Actions OIDC for Azure

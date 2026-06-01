@@ -52,7 +52,6 @@ graph LR
 │    Before/after     = Screenshot capacity before and after activation; attach to change ticket        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 The drives are physically present and spin up normally. Array firmware prevents them from being allocated to any storage pool until the COD entitlement is applied. Activation is instantaneous — there is no data movement or rebuild required to bring COD capacity online.
 

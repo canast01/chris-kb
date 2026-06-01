@@ -71,7 +71,6 @@ flowchart LR
 │  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Event Logs
 

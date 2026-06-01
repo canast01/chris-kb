@@ -64,7 +64,6 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### 3. Recovery Share Capacity
 

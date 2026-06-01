@@ -74,7 +74,6 @@ vSAN RBAC MODEL
 │  Qtrly review  = check admin accounts; remove stale assignments                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Objects and Permission Propagation
 

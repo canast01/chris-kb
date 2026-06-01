@@ -121,7 +121,6 @@ acs certificates show-ca
 │  Metadata URL   = SAML IdP endpoint exposing signing cert and SSO URL automatically                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Include all node hostnames in the SAN extension so direct node access (not via VIP) also presents a valid certificate.
 

@@ -70,7 +70,6 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

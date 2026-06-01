@@ -102,7 +102,6 @@ flowchart LR
 │  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## CloudFormation Stack Lifecycle
 

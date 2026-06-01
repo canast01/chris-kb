@@ -80,7 +80,6 @@ flowchart TD
 │  Root access   = SOS requires root; access via sudo after SSH                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SSH to SDDC Manager
 

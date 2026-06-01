@@ -51,7 +51,6 @@ df -h /home/insightiq
 │  Backup target = NFS mount or local directory configured in iiq_config                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

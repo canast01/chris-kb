@@ -82,7 +82,6 @@ ls -lh /var/lib/applmgmt/backup/
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Store these XML files in version control. A `git diff` against the previous export immediately shows what changed in a plan.
 

@@ -64,7 +64,6 @@
 │  Re-pair       = after cert replacement; required for site pair trust                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Enable encryption for VMs replicating over untrusted WAN links. For on-premises replication over private LAN, rely on network-level security instead.
 

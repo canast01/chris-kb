@@ -61,7 +61,6 @@ uname -r
 │  certbot     = ACME client for Let's Encrypt; automates TLS cert issuance and renewal                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Process and CPU
 

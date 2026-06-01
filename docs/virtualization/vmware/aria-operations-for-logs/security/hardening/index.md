@@ -50,7 +50,6 @@ Administration → Authentication → Local Users → admin → Edit → Change 
 │  MFA enforcement   = Handled by vIDM access policy if vRLI uses SSO                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Upload: private key (no passphrase), leaf certificate (PEM), CA chain (intermediate + root, PEM).
 

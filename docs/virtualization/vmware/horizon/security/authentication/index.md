@@ -63,7 +63,6 @@
 │  OTP           = One-Time Password; from hardware or soft token                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Configure AD domains in Horizon:
 ```text

@@ -42,7 +42,6 @@ graph TD
 │   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## .env Files with python-dotenv
 

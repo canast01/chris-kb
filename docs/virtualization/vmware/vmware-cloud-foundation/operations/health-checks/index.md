@@ -70,7 +70,6 @@ VCF Daily Health Check — Coverage Map
 │  Domain view   = per-domain health in SDDC Mgr Workload Domains tab                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **SDDC Manager appliance disk:**
 

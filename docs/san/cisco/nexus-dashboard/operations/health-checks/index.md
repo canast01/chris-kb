@@ -85,7 +85,6 @@ kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 │  Backup success = Verification that scheduled backup completed and is retrievable                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

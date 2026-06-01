@@ -88,7 +88,6 @@ flowchart TD
 │  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Step 2 — ServiceNow Performs Upgrade
 

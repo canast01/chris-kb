@@ -38,7 +38,6 @@ graph TD
 │   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Least Privilege on Managed Nodes
 

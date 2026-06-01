@@ -75,7 +75,6 @@ Aria Operations API — Script Interaction Pattern
 │  Tag                 = Custom label on vROps resource for grouping and filtering                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

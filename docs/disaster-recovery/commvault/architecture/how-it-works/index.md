@@ -91,7 +91,6 @@ graph TB
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## MediaAgent and Deduplication
 

@@ -92,7 +92,6 @@ volume show -fields vserver,volume,comment | grep keystone
 │    Retrieve policy  = Controls if tiered data read back to SSD (on-demand vs never)                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Volume Provisioning Checklist
 

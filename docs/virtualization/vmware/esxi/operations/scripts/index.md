@@ -74,7 +74,6 @@ Script Execution Flow (PowerCLI example)
 │  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Step 5 — Run it**
 

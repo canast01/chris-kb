@@ -54,7 +54,6 @@ Symptom: Switch shows "Unreachable" in Fabric → Switches
 │  Zone stale      = DCNM zone database out of sync with switch; re-discover to fix                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### CDP/LLDP Neighbor Discovery Not Populating
 

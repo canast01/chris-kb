@@ -71,7 +71,6 @@ flowchart TD
 │  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## High Memory / OOM
 

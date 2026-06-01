@@ -57,7 +57,6 @@ echo "All secrets rotated."
 │   │    Action audit   = scan all workflow YAML for uses: lines; verify each is pinned to a SHA    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Workflow Run Monitor
 

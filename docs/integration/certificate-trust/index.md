@@ -63,7 +63,6 @@ trust list | grep "internal-ca"
 │    GPO          = Group Policy Object; deploys CA cert to all domain machines automatically           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Add a CA Certificate — Java
 

@@ -98,7 +98,6 @@ curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \
 │  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
 │  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

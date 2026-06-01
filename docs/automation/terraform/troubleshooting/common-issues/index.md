@@ -40,7 +40,6 @@ flowchart TD
 │   │  After import: terraform plan should show no changes if config matches the existing resource  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Refresh and Reconciliation Issues
 

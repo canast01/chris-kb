@@ -72,7 +72,6 @@ graph TB
 │    TLS 1.2+           = Minimum encryption standard for all Collector communications                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Each Keystone service level corresponds to a named adaptive QoS policy group applied to volumes — e.g., `extreme-ks`, `premium-ks`, `standard-ks`.
 

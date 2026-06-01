@@ -68,7 +68,6 @@ graph TD
 │    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 On the ESXi side, create a vDS uplink port group with **LACP Active** mode on each vDS uplink team.
 

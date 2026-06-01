@@ -50,7 +50,6 @@ vrli-<env>-<node#>.<domain>
 │  Ingest rate       = Measured in GB/day; determines sizing (master-only vs. cluster)                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -43,7 +43,6 @@ graph TD
 │   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Secrets Management with Terraform
 

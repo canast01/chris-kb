@@ -116,7 +116,6 @@ flowchart TD
 │  Zone audit      = quarterly review: remove stale aliases and unused zones                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### View Current State
 

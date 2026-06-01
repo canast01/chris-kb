@@ -80,7 +80,6 @@ flowchart LR
 │  CMDB update   = Discovery writes CI attributes to CMDB after probe results                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 MID Servers are customer-managed Java agents deployed on-premises. All communication is **outbound from MID Server to the instance** (port 443), eliminating inbound firewall requirements.
 

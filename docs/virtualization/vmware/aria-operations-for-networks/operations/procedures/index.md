@@ -79,7 +79,6 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 │  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Configure NetFlow Export from a Cisco Switch
 

@@ -69,7 +69,6 @@ Host github.com gitlab.corp.example.com
 │  No --insecure= never disable TLS cert verification; risk of MITM attack                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### HTTPS/TLS Transport
 

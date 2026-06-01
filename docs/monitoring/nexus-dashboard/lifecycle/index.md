@@ -59,7 +59,6 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 │  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Upgrade services after the base ND platform upgrade is complete and all nodes are healthy.
 

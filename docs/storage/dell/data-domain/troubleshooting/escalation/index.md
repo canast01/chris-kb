@@ -84,7 +84,6 @@ support bundle generate
 │    Maintenance window= Coordinate hardware replacement with ops team; some replacements hot-swap      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 AutoSupport requires SCG (Secure Connect Gateway) registration or direct HTTPS outbound access to Dell's support endpoints.
 

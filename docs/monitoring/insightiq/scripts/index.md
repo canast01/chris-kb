@@ -46,7 +46,6 @@ def iiq_get(path: str, params: dict = None) -> dict:
 │  Python requests = pip install requests; standard HTTP library for InsightIQ API                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Threshold Alert Forwarding (SNMP)
 

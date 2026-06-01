@@ -118,7 +118,6 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 │  SNMPv3 auth     = SNMP v3 authentication (SHA); privacy (AES) for polling                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

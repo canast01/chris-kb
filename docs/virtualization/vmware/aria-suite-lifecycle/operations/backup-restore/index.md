@@ -65,7 +65,6 @@
 │  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Remove the snapshot within 48 hours of a successful upgrade:
 

@@ -97,7 +97,6 @@ jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 │  Attachment 404 = attachment served from NFS; NFS unavailable = 404 for all attachments               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

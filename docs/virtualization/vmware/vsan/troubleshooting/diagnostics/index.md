@@ -79,7 +79,6 @@ DIAGNOSTIC TOOL CHAIN
 │  SMART         = disk self-test; pre-failure indicator                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Log Locations
 

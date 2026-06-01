@@ -62,7 +62,6 @@ Administration → SSL → Import Certificate → paste root CA PEM
 │  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Settings:
 - Domain: `corp.local`

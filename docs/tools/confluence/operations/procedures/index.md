@@ -75,7 +75,6 @@ curl -u user:token -X PUT \
 │  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | Macro | Purpose | Common Config |
 |-------|---------|--------------|

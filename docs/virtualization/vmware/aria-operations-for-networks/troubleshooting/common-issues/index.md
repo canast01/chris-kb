@@ -65,7 +65,6 @@ sudo journalctl --vacuum-size=1G   # free journal space
 │  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

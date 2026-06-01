@@ -34,7 +34,6 @@
 │   │ OIDC              = workflow requests short-lived AWS/Azure token; no stored cloud credentials│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Permissions — Principle of Least Privilege
 

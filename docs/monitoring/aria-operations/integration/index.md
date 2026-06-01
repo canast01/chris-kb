@@ -57,7 +57,6 @@ Admin > Solutions > VMware vCenter > Configure
 │  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Test the integration using the **Test Notification** button after saving.
 

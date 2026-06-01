@@ -52,7 +52,6 @@ sudo systemctl restart iiq-collector
 │  Dell support = support.dell.com; attach collection log and iiq_status output                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## InsightIQ Appliance Performance Issues
 

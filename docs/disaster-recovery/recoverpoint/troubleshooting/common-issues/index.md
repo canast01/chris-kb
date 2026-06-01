@@ -53,7 +53,6 @@ boxmgmt system status
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Resolution:**
 1. Identify which CG is generating excess writes

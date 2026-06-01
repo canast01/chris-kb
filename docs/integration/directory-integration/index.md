@@ -52,7 +52,6 @@ id administrator@corp.example.com
 │    Event 4776   = AD credential validation attempt; logged on DC; useful for bind failures            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 systemctl enable --now sssd

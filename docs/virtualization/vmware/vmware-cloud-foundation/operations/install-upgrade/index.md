@@ -85,7 +85,6 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  Depot         = VMware online update repository; SDDC Mgr downloads from                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Bundles are downloaded automatically on a configured schedule or manually triggered.
 

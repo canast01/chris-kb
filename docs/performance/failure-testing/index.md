@@ -70,7 +70,6 @@ tc qdisc del dev eth0 root
 │    Rollback       = Restore normal state after test; documented before injection starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **VMware — simulate host failure:**
 ```powershell

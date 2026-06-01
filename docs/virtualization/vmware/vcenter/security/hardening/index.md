@@ -84,7 +84,6 @@ vCenter Hardening Layers
 │  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Configure SSH timeout so idle sessions are terminated automatically:
 

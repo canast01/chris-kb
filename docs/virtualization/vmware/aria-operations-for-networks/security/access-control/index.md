@@ -70,7 +70,6 @@ Settings → Authentication → LDAP → Configure
 │  Audit Log            = Records user login, config changes, and data source edits                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

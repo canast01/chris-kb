@@ -58,7 +58,6 @@ Get-Service -Name "Veeam Agent for Microsoft Windows"
 │  Test restore = periodic recovery drill; validates backup integrity                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Managed by Veeam Backup & Replication (VBR)
 

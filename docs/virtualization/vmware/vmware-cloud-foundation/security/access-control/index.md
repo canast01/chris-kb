@@ -75,7 +75,6 @@ Credential Rotation (all via SDDC Manager — never manually):
 │  Service accounts= SDDC Mgr manages all component service credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Use the returned `accessToken` as a Bearer token in subsequent API calls:
 

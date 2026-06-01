@@ -60,7 +60,6 @@
 │  Qtrly review   = audit Horizon admin role assignments                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Recommended mapping:
 | AD Group | Horizon Role |

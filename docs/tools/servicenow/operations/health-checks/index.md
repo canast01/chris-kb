@@ -78,7 +78,6 @@ flowchart TD
 │  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### ServiceNow Status Page
 

@@ -42,7 +42,6 @@ Configuration: InsightIQ web UI > Administration > Clusters > Add Cluster
 │  Alert cadence = How often InsightIQ re-sends alert if threshold remains exceeded                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Use LDAPS (TCP 636) to encrypt LDAP traffic. Store the bind account password in the secrets manager.
 

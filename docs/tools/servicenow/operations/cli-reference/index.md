@@ -52,7 +52,6 @@ export PASS="your-password"
 │  PATCH            = HTTP method for partial record update by sys_id                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Get a single record by sys_id

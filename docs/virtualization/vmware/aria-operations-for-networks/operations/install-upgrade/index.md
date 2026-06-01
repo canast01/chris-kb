@@ -111,7 +111,6 @@ sudo systemctl status vrni-platform nginx cassandra
 │  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 If the Collector does not appear as Connected within 10 minutes, check:
 1. TCP 443 from Collector to Platform is open

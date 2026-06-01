@@ -59,7 +59,6 @@ Global Permissions
 │  Audit log         = Admin > Audit Log; records permission and scheme changes                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Critical control:** Remove `jira-software-users` from global Browse Users permission if the user directory is large — it can expose all usernames to every authenticated user.
 

@@ -66,7 +66,6 @@ nslookup _ldap._tcp.dc._msdcs.<your-domain>
 │  CIFS              = file share protocol; desktop profiles stored here                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Import into Group Policy:**
 ```cmd

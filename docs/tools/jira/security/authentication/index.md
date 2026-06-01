@@ -93,7 +93,6 @@ Administration → User Management → User Directories → Add Directory → Mi
 │  Assertion    = SAML XML signed by IdP; contains user attributes and groups                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Synchronisation and Failover
 

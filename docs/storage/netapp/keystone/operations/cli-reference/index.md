@@ -77,7 +77,6 @@ keystone-collector upgrade --apply
 │    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## NetApp ONTAP REST API (Keystone Collector Bootstrap)
 

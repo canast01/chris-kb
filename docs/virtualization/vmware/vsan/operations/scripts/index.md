@@ -77,7 +77,6 @@ AUTOMATION FLOW
 │  Capacity report= UsedCapacity/TotalCapacity per datastore per host                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Step 5 — Run it**
 

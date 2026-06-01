@@ -80,7 +80,6 @@ flowchart TD
 │    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### MTree Space Actions
 

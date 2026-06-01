@@ -112,7 +112,6 @@ graph TD
 │    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 For variable host sizes, use the "percentage of cluster resources" policy rather than "host failures cluster tolerates" to get accurate reservations.
 

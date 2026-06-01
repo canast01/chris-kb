@@ -129,7 +129,6 @@ curl -sk -b dcnm-cookie.txt -X POST \
 │  NX-OS repo      = DCNM internal firmware storage; images staged before upgrade                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

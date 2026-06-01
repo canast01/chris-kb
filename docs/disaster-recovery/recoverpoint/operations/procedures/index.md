@@ -167,7 +167,6 @@ flowchart TD
 │    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Full Failover (Declared DR Event)
 

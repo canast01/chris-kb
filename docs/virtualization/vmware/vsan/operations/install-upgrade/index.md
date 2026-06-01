@@ -82,7 +82,6 @@ VSAN UPGRADE SEQUENCE (host-by-host rolling)
 │  Disk group    = logical container of cache + capacity disks per host                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Pre-upgrade checks:**
 

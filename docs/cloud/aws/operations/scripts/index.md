@@ -157,7 +157,6 @@ bash aws-health-check.sh
 │  Root usage detect= CloudTrail filter for events where userIdentity.type = Root                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **What you should see**
 

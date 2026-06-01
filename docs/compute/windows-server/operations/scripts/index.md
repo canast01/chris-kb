@@ -58,7 +58,6 @@ flowchart LR
 │  repadmin     = AD replication tool; output parsed by PS for reporting                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Disk Space Alert
 

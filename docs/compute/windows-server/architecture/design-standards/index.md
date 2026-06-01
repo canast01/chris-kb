@@ -58,7 +58,6 @@ flowchart LR
 │  Logon audit   = logs interactive, network, and Kerberos logons                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 All servers must be placed in the correct OU before applying GPOs. Computer accounts should not remain in the default `Computers` container.
 

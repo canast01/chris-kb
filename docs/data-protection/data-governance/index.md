@@ -92,7 +92,6 @@ flowchart TD
 │    Access review = Periodic check that all current permissions are still appropriate and needed       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Privileged Access Management (PAM)
 

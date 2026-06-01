@@ -70,7 +70,6 @@
 │    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Windows:**
 ```powershell

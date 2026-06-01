@@ -85,7 +85,6 @@ Settings → SSL Certificate → Upload Certificate
 │  openssl s_client    = CLI tool to verify TLS version and cipher negotiated                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Verify Certificate Expiry
 

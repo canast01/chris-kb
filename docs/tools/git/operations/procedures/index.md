@@ -60,7 +60,6 @@ release/  — Release preparation (release/v2.4.0)
 │  Short-lived     = feature branches should be merged within days, not weeks                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Deleting Branches
 

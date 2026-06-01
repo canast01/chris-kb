@@ -54,7 +54,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Pagination = Handling limit/offset for large result sets in API responses                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Capacity Trend Query
 

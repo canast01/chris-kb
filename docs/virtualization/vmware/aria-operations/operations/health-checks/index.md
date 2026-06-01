@@ -77,7 +77,6 @@ Aria Operations — Health Check Coverage Map
 │  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

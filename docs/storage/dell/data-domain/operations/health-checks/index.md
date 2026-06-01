@@ -52,7 +52,6 @@ flowchart TD
 │    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Weekly Health Check
 

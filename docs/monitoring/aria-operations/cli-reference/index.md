@@ -61,7 +61,6 @@ tail -f /data/vcops/log/collector.log
 │  proxy set         = Configures HTTP proxy for Aria Ops outbound internet connectivity                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -44,7 +44,6 @@ curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Typ
 │  JSON response = All API responses in JSON; use jq for command-line parsing                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

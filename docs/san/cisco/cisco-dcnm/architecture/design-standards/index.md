@@ -124,7 +124,6 @@ show zone status vsan 10
 │  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

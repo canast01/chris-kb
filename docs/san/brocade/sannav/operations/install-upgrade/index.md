@@ -110,7 +110,6 @@ passwd admin
 │  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Post-Upgrade Validation
 

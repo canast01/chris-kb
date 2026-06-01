@@ -88,7 +88,6 @@ trap cleanup EXIT
 │  Cert expiry check= Script querying ND cert store and alerting when < 30 days remain                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

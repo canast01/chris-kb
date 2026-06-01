@@ -82,7 +82,6 @@ VM → pNIC1 or pNIC2 → Switch A or B → Core network
 │    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

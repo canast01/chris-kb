@@ -65,7 +65,6 @@
 │  Credential Test     = LCM verifies stored account password still authenticates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Step 2 — Submit CSR to CA and retrieve the signed certificate chain.**
 

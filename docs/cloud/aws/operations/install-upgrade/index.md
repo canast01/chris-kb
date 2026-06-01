@@ -68,7 +68,6 @@ aws ssm describe-instance-patches --instance-id <i-xxxx> \
 │  Immutable upgrade= Never patch in place; always replace with pre-patched AMI                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Major version upgrades require:
 1. Test in staging environment first

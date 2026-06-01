@@ -63,7 +63,6 @@ sequenceDiagram
 │  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **SSSD configuration is written to `/etc/sssd/sssd.conf` automatically by realm.** Key settings to verify:
 

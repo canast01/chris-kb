@@ -50,7 +50,6 @@ flowchart TD
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### File/Volume Restore from Snapshot
 

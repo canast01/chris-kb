@@ -60,7 +60,6 @@ flowchart LR
 │    Disposition      = Final action on data: delete, archive, or transfer at end of retention          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Veeam GFS Retention (GUI-equivalent settings reference)
 

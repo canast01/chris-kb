@@ -70,7 +70,6 @@ flowchart TD
 │  LAPS          = auto-rotated local admin password; check rotation age                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Windows Services Status
 

@@ -66,7 +66,6 @@ show running-config
 │  Pre-change snap = always capture zone set before making any zone changes                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

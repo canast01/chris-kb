@@ -70,7 +70,6 @@
 │    Quiesce   = Cluster: move resources to peer node; HA group: disable before reboot                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Stop here if:** critical jobs are running and cannot be deferred. Reschedule the reboot.
 

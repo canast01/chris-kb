@@ -50,7 +50,6 @@ git push backup --mirror
 │   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Filesystem Backup (Control Node)
 

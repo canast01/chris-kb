@@ -59,7 +59,6 @@ Before escalating to Dell support, work through the standard diagnostic steps:
 │  Proxy check = If gateway VM uses proxy, verify proxy allows cloudiq.dell.com:443                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Health Score Calculation Delay
 

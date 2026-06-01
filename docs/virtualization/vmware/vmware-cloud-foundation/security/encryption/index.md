@@ -77,7 +77,6 @@ VCF Encryption — Certificate and Data Flow
 │  Master key   = SDDC Mgr DB encryption; derived from admin password                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Replacement procedure:**
 

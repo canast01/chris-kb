@@ -75,7 +75,6 @@ Lambda CLI: Deploy → Invoke → Monitor
 │  ECR             = Elastic Container Registry; source for Lambda container image                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Environment Variables
 

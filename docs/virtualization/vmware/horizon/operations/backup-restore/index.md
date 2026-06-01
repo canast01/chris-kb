@@ -61,7 +61,6 @@
 │  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Automate with Task Scheduler:**
 ```cmd

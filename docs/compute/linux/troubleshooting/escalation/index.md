@@ -64,7 +64,6 @@ flowchart TD
 │  war room    = Bridge call with all stakeholders during major incident                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 If the system is non-interactive (no TTY), use:
 ```bash

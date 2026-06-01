@@ -74,7 +74,6 @@ FlashArray Integration Map
 │  API token     = Authentication credential for REST and automation; scoped to array user role         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## VMware Integration
 

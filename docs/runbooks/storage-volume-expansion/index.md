@@ -73,7 +73,6 @@
 │    lvextend -r    = LVM: extends logical volume and resizes filesystem in one step                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Pure FlashArray:**
 ```bash

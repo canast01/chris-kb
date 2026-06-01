@@ -49,7 +49,6 @@ CG-<app>-<env>
 │    WAN dedup           = RPA deduplicates replication stream; reduces bandwidth by ~30–50%            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Example: `RPAC-SITEA-01`, `RPAC-SITEB-01`
 

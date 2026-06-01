@@ -68,7 +68,6 @@ VMkernel Internals — Resource Stack
 │  PDL       = Permanent Device Loss; device signals storage is gone permanently                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -46,7 +46,6 @@ purearray set --proxy https://<proxy-host>:<port>
 │  Email = Pure1 SMTP notification for proactive alerts; configure in org settings                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Email Alert Integration
 

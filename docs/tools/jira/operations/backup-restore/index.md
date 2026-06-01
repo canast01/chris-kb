@@ -93,7 +93,6 @@ echo "XML backup triggered at ${TIMESTAMP}"
 │  Verify       = compare row counts: SELECT count(*) FROM jiraissue;                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Full Database Backup
 

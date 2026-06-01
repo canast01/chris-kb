@@ -73,7 +73,6 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Place scripts in a location accessible to the SRM server service account and reference the UNC path in the recovery plan step.
 

@@ -58,7 +58,6 @@ Closed:      Caller confirmed resolution or auto-closed after N days
 │  Role inherit = group role automatically applies to all group members                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Priority Matrix
 

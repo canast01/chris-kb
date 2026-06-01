@@ -51,7 +51,6 @@ FROM pg_replication_slots;
 │    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## MySQL / MariaDB Replication
 

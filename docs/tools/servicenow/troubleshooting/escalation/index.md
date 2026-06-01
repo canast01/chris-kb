@@ -147,7 +147,6 @@ Secondary: [Platform Lead name + contact]
 │  Reproduce   = confirm issue in sub-production instance to isolate platform vs config                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

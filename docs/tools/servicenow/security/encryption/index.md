@@ -79,7 +79,6 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 │  Cipher suite= agreed TLS algorithms; ServiceNow enforces strong suites only                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Verify MID Server is using TLS 1.2+

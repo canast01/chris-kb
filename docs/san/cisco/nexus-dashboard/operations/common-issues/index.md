@@ -77,7 +77,6 @@ kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname>
 │  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Common causes:
 - SNMP credentials changed on switches: update in NDFC fabric settings

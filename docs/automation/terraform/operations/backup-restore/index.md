@@ -37,7 +37,6 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   │    State corruption = most common: concurrent apply or force-unlock; check integrity first    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## State Recovery After Corruption
 

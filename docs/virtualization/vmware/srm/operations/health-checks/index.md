@@ -60,7 +60,6 @@
 │  Datastore map = recovery datastore for each protected datastore                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 If site pairing shows error:
 ```powershell

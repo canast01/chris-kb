@@ -74,7 +74,6 @@ ESXi Host Design Checklist — Standard Layout
 │  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 The hostname set in DCUI must match the DNS A record. DNS mismatch causes certificate errors and SSL thumbprint mismatches when adding hosts to vCenter.
 

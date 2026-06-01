@@ -72,7 +72,6 @@ esxcli vsan debug network test
 │  Capacity 70%  = alert threshold; keep 30% free for resync headroom                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

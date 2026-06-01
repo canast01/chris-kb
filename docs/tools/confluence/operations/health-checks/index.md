@@ -57,7 +57,6 @@ flowchart TD
 │  System Info = Admin > System Information; shows memory, JVM version, and config                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### HTTP Health Endpoint
 

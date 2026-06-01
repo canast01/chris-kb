@@ -82,7 +82,6 @@ VCSA Procedure Flow — Maintenance Window
 │  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Pre-Maintenance Steps
 

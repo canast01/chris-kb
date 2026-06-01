@@ -89,7 +89,6 @@ Diagnostic Chain — Priority Order
 │  vpxd CPU      = high vCenter process CPU = query storm or stuck tasks                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Service Health
 

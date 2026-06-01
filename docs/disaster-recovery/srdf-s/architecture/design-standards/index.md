@@ -79,7 +79,6 @@ graph LR
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Examples:
 - `RDFG-S-DC1DC2-DB-01`

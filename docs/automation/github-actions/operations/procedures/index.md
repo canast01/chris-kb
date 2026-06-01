@@ -46,7 +46,6 @@ flowchart TD
 │   │    Workflow migration  = copy YAML to new repo; re-inject secrets; test before retiring old   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Reusable workflows reduce duplication by calling one workflow from another.
 

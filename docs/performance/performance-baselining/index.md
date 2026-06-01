@@ -68,7 +68,6 @@ vmstat -S M 5 12
 │    Deviation    = Metric outside normal range; signals regression or capacity issue                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Application Performance Baseline
 

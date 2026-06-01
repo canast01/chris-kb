@@ -66,7 +66,6 @@
 │  ProgramData   = Windows hidden folder; SRM writes logs here                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **SRM Appliance (Linux):**
 ```bash

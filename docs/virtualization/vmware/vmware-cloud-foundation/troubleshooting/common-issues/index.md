@@ -75,7 +75,6 @@ VCF Common Failure Points — Quick Reference
 │  Cert expiry   = check SDDC Mgr Certificates tab; renew >30d ahead                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Common Issues
 

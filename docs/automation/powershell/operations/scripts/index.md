@@ -56,7 +56,6 @@ Disconnect-VIServer -Confirm:$false
 │   │     Return values = output objects not strings; allows caller to filter with Where-Object     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Datastore Utilization Alert
 

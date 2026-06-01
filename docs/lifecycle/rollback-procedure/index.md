@@ -53,7 +53,6 @@ flowchart TD
 │    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Expected time:** 5–15 minutes
 

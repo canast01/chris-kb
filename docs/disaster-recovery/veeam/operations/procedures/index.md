@@ -69,7 +69,6 @@ sequenceDiagram
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 After creation:
 - [ ] Run the job once manually and verify success before relying on the schedule.

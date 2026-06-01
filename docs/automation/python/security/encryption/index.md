@@ -46,7 +46,6 @@ graph TD
 │   │           verify=False = requests flag to skip TLS verification; NEVER in production          │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Update the system CA bundle if API certs are self-signed

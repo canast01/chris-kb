@@ -93,7 +93,6 @@ show logging last 100 | grep fc1/3
 │  copy run start  = saves running config; loss of unsaved changes on reload                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

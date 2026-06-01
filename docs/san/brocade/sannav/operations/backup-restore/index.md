@@ -112,7 +112,6 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 │  Restore test    = quarterly test of full restore to validate backup integrity                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Post-Restore Validation
 

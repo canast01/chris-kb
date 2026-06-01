@@ -93,7 +93,6 @@ das.usedefaultisolationaddress = false
 │  Static IP    = required; DHCP lease expiry causes cert/DNS mismatch                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Avoid the **default resource pool** — all production VMs must be in a named pool.
 

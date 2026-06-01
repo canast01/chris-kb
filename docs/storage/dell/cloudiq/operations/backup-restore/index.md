@@ -74,7 +74,6 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
 │    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Document for each notification rule:
 

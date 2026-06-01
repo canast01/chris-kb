@@ -53,7 +53,6 @@ graph TD
 │    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## NetBackup (OST with DD Boost)
 

@@ -49,7 +49,6 @@ Sizing guidelines, design standards, and best practices.
 │  XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Authentication
 

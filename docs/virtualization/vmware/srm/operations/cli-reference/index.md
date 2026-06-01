@@ -66,7 +66,6 @@
 │  Replication lag= time delta between protected and recovery replica                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

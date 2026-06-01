@@ -50,7 +50,6 @@ InsightIQ web UI > Administration > Authentication > LDAP
 │  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Ensure these rules are persistent across reboots (via iptables-save or firewalld).
 

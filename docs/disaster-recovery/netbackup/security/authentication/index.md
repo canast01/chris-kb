@@ -53,7 +53,6 @@ nbcertcmd -listCerts | grep -E "Host|Expiry"
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### List and Revoke API Tokens
 

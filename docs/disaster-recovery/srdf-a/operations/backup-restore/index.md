@@ -69,7 +69,6 @@ symrdf -sid 000123456789 query -g <rdf_group>
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Important:** The `-force` flag is required when R1 is inaccessible and the link cannot confirm synchronization. Without it, `symrdf failover` will refuse to proceed if the link is already down.
 

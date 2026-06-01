@@ -68,7 +68,6 @@
 │  Network mapping= maps source portgroup to recovery portgroup                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 The protection group will include all VMs on the replicated datastores.
 

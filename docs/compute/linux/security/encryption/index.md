@@ -67,7 +67,6 @@ mount /dev/mapper/secure-data /mnt/secure-data
 │  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Key Slot Management
 

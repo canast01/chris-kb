@@ -90,7 +90,6 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 3. Confirm the SANnav service account (`sannav_svc`) has the **admin** role on the switch — zoning operations require admin privileges.
 

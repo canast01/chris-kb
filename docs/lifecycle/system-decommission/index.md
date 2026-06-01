@@ -49,7 +49,6 @@ flowchart TD
 │    Asset recovery = Return hardware to vendor, send to spare pool, or dispose per WEEE                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## 3. Data Retention Review
 

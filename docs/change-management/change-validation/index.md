@@ -63,7 +63,6 @@ curl -sf http://localhost:<port>/health && echo "OK"
 │    Baseline        = Pre-change metric snapshot; used as comparison target for post-change check      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Application / Endpoint Tests
 

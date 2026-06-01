@@ -67,7 +67,6 @@ ethtool <interface> | grep -E "Speed|Duplex"
 │    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Cloud Asset Inventory
 

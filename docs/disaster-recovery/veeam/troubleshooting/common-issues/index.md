@@ -65,7 +65,6 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```cmd
 # Test connectivity between VBR server and proxy (run on VBR server)

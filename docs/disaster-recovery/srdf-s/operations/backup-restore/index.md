@@ -72,7 +72,6 @@ symrdf list -rdfg <rdf_group_number> -detail
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 A planned `failover` without `-force` verifies synchronization first and will abort if data could be lost.
 

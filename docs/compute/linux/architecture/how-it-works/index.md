@@ -68,7 +68,6 @@ graph TB
 │  getty       = Terminal program that presents the login prompt on a virtual console                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## LVM Stack
 

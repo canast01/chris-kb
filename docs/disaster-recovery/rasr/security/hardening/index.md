@@ -83,7 +83,6 @@ uemcli /sys/setting show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Firmware and Software Updates
 

@@ -77,7 +77,6 @@ sudo systemctl restart sshd
 │  SSH Restriction     = Limit SSH to jump host CIDR only; disable for non-admins                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **NSX-T (read-only):**
 ```text

@@ -73,7 +73,6 @@ Infrastructure → Administration → Projects → select project → Members �
 │  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Configure:
 - Name: `proj-app-lon-prod`

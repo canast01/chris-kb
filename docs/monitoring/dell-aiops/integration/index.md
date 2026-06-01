@@ -40,7 +40,6 @@ SCG admin UI > Systems > [System] > Connection Status
 │  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 This integration allows correlating VM workload contention in Aria Operations with storage anomalies detected by Dell AIOps, enabling end-to-end root cause analysis across the VMware + Dell stack.
 

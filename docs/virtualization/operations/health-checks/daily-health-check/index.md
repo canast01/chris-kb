@@ -71,7 +71,6 @@ Morning Check Sequence
 │    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Also check: VCSA VAMI at `https://vcenter:5480` — confirm appliance health, disk usage, and certificate expiry.
 

@@ -117,7 +117,6 @@ show zoneset active   # zoning intact
 │  show system health= post-upgrade health check; all modules should be online                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 EPLD upgrades are always disruptive — they require a module reload or full switch reload depending on the platform.
 

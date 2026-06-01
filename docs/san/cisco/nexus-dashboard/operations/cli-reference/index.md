@@ -76,7 +76,6 @@ acs version
 │  REST API       = Preferred programmatic interface; CLI used for break-glass ops                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Backup and Restore
 

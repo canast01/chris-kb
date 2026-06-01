@@ -91,7 +91,6 @@ graph LR
 │  Crowd        = optional Atlassian SSO server; centralized auth if not using SAML                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Macro parameters:
 

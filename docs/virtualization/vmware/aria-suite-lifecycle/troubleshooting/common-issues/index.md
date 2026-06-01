@@ -67,7 +67,6 @@
 │  df -h               = Disk usage check; first step for any disk-related issue                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | Error Code | Meaning | Resolution |
 |---|---|---|

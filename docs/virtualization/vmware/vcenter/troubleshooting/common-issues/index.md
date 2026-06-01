@@ -84,7 +84,6 @@ Symptom Triage Map
 │  Log purge     = /var/log compression/rotation; also rotate stats DB                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Issue Summary
 

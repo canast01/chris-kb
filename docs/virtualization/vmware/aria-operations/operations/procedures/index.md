@@ -81,7 +81,6 @@ Aria Operations — Alert Lifecycle
 │  Policy Inheritance  = Child groups inherit parent policy; overridden at child level                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 6. Cancel alerts only after the underlying issue is fully resolved — not as a suppression mechanism
 

@@ -132,7 +132,6 @@ sudo sannav restart
 │  Break-glass     = local admin account used only when TACACS+ is unreachable                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

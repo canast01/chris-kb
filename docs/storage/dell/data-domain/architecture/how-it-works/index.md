@@ -61,7 +61,6 @@ graph TB
 │    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Each MTree is a logical partition; all data physically shares the same dedup pool. Quotas are enforced per MTree, but deduplication operates globally across all MTrees.
 

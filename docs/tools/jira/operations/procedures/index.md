@@ -60,7 +60,6 @@ Example:
 │  Backup verify  = check pg_dump file exists and is non-zero size after cron run                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Story Points
 

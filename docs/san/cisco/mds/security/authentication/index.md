@@ -95,7 +95,6 @@ flowchart TD
 │  FLOGI          = Fabric Login; N_Port to switch handshake where FC-SP auth occurs                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Testing and Verification
 

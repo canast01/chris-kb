@@ -50,7 +50,6 @@ nslookup <vcenter-fqdn>
 │    GSS          = VMware Global Support Services; escalate P1 outages with SR number                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Check Disk Partitions
 

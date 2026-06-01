@@ -75,7 +75,6 @@
 │    Snapshot stun= Momentary IO pause during snapshot create/delete; worse with large VMs              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **ESXi CLI:**
 ```bash

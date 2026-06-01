@@ -62,7 +62,6 @@ show feature           # enabled features (zone, dpvm, fcsp, etc.)
 │  show tech-support= full diagnostic bundle for Cisco TAC escalation                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Module / Slot Status
 

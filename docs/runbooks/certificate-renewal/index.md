@@ -52,7 +52,6 @@
 │    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Step 1 — Confirm Current Certificate
 

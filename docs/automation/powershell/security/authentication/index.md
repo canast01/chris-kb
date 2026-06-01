@@ -54,7 +54,6 @@ graph TD
 │   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## SecretManagement Module
 

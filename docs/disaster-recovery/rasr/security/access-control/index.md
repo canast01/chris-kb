@@ -79,7 +79,6 @@ uemcli /sys/auth/ldapgroup show
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Recovery Media Access Control
 

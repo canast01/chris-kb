@@ -67,7 +67,6 @@ graph TB
 │  IaC             = Infrastructure as Code; define Azure resources in declarative templates            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Identity Architecture
 

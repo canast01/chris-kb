@@ -59,7 +59,6 @@ flowchart LR
 │  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## log-archival.sh
 

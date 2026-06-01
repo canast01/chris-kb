@@ -73,7 +73,6 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 │  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | Issue Type | When to Use | Hierarchy Level |
 |---|---|---|

@@ -85,7 +85,6 @@ Escalation Path — Broadcom / VMware Support
 │  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **From vCenter UI:**
 ```text

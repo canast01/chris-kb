@@ -49,7 +49,6 @@ SyncIQ policy names must be consistent between primary and DR clusters and follo
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## DR Readiness Score
 

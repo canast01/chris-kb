@@ -78,7 +78,6 @@ For each application, document:
 │    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Azure
 

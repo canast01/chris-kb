@@ -60,7 +60,6 @@ Capacity Check Flow
 │    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Thresholds:
 - CPU > 70% average across cluster → investigate workload distribution

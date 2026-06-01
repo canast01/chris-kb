@@ -68,7 +68,6 @@ sequenceDiagram
 │  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Domain Join
 

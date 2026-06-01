@@ -79,7 +79,6 @@ BACKUP FLOW — vSAN VM TO TARGET
 │  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 | Layer | Provided by | Purpose |
 |---|---|---|

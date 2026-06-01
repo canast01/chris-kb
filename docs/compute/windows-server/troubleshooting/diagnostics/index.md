@@ -75,7 +75,6 @@ flowchart LR
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Key Security Event IDs
 

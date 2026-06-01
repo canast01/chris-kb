@@ -71,7 +71,6 @@ AWS CLI Daily Ops: Top Commands
 │  Session Manager = aws ssm start-session; interactive shell without SSH or bastion                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

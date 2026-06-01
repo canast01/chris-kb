@@ -89,7 +89,6 @@ SSO Authentication Flow
 │  AD identity  = Active Directory added as SSO identity source                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## SSO Security
 

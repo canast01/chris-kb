@@ -62,7 +62,6 @@ graph LR
 │    Compression ratio   = Typical 2:1–4:1 reduction on replication traffic via RPA dedup/compress      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Journal Sizing
 

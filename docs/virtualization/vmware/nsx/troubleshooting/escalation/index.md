@@ -118,7 +118,6 @@ curl -sk -u 'admin:password' \
 │  Config export = API GET of all NSX config; provides GSS full picture                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### ESXi Host DFW Logs
 

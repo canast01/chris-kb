@@ -88,7 +88,6 @@ openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1
 │  syslog TLS       = encrypted syslog; audit and event logs forwarded securely to SIEM                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### SANnav to Switch Communication
 

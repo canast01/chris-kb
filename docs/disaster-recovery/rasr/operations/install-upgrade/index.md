@@ -118,7 +118,6 @@ Get-Service -Name "DellRASR" | Select-Object Name, Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Replace `F:` with the actual drive letter of the USB.
 

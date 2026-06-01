@@ -77,7 +77,6 @@ ESXi Common Issue Resolution Paths
 │  vmk0     = management VMkernel adapter; ping test first step                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Resolution Steps
 

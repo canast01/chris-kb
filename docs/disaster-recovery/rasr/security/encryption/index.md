@@ -73,7 +73,6 @@ uemcli /stor/drive show -detail | grep -i encrypt
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Recovery Media Encryption
 
