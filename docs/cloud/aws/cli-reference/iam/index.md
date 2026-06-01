@@ -4,6 +4,11 @@ title: AWS CLI — IAM
 
 # AWS CLI — IAM
 
+
+<div class="kb-summary">
+AWS CLI — IAM reference.
+</div>
+
 ```text
 IAM CLI: Users · Roles · Policies · STS
 ──────────────────────────────────────────────────────────────

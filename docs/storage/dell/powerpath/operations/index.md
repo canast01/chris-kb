@@ -1,4 +1,9 @@
 # PowerPath — Operations
+
+<div class="kb-summary">
+PowerPath — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell PowerPath Operations ──────────────────────────────────────┐
 │                                                                                                       │

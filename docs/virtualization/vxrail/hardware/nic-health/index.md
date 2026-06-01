@@ -1,4 +1,9 @@
 # VxRail NIC Health
+
+<div class="kb-summary">
+VxRail NIC Health reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Physical NIC state, link status, uplinks, redundancy, and troubleshooting.

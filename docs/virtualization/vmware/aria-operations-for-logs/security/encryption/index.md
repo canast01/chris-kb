@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering TLS Certificate Replacement, Verifying Certificate Validity, Log Ingestion Transport Encryption, Data at Rest Encryption, TLS Configuration Hardening.
+</div>
+
 ## TLS Certificate Replacement
 
 Aria Operations for Logs ships with a self-signed certificate. Replace it with a CA-signed certificate for production before connecting any syslog sources or users.

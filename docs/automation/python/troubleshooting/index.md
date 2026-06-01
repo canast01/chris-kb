@@ -1,6 +1,11 @@
 # Python Automation — Troubleshooting
 
 
+
+<div class="kb-summary">
+Python Automation — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Python — Troubleshooting ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

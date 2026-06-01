@@ -1,6 +1,10 @@
 # VxRail Hardware
 
+
+<div class="kb-summary">
 VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmware inventory.
+</div>
+
 ```text
 ┌────────────────────────────────────────── VxRail — Hardware ──────────────────────────────────────────┐
 │                                                                                                       │

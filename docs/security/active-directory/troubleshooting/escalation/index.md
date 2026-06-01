@@ -1,6 +1,11 @@
 # Active Directory — Escalation
 
-Active Directory support is provided through the Microsoft Support portal at support.microsoft.com, with Service Requests (SRs) raised under the Windows Server or Microsoft 365/Entra product family. For critical AD outages (authentication down, replication split-brain, FSMO role loss), use the Severity A case classification and request an on-call engineer; Microsoft Premier or Unified Support contracts include faster SLA and proactive engagement. Microsoft FastTrack is available for AD-to-Entra ID migration projects at qualifying licence levels.
+
+<div class="kb-summary">
+Active Directory support is provided through the Microsoft Support portal at support.microsoft.com, with Service Requests (SRs) raised under the Windows Server or Microsoft 365/Entra product family.
+</div>
+
+ For critical AD outages (authentication down, replication split-brain, FSMO role loss), use the Severity A case classification and request an on-call engineer; Microsoft Premier or Unified Support contracts include faster SLA and proactive engagement. Microsoft FastTrack is available for AD-to-Entra ID migration projects at qualifying licence levels.
 
 **Data to collect before opening a case:**
 

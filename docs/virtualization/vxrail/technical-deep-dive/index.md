@@ -1,4 +1,9 @@
 # VxRail Technical Deep Dive
+
+<div class="kb-summary">
+VxRail Technical Deep Dive reference covering Overview, Platform Role, Core Components, Main Dependencies, Ports and Protocols and 7 more sections.
+</div>
+
 ## Overview
 
 VxRail is part of the virtualization platform. This page is for technical operations, troubleshooting, upgrade planning, and support handoff.

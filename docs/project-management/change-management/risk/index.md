@@ -1,5 +1,10 @@
 # Change Risk Assessment
 
+
+<div class="kb-summary">
+Change Risk Assessment reference covering Overview, Risk Assessment Matrix, Risk Identification Checklist, Risk Mitigation Examples, Residual Risk and Acceptance and 1 more sections.
+</div>
+
 ## Overview
 
 Risk assessment is a mandatory step for every change above the Standard tier. It ensures that implementation teams and approvers have a shared understanding of what could go wrong, how likely that is, and what controls are in place to reduce the probability or limit the impact. A well-completed risk assessment is a decision-support tool, not a compliance checkbox.

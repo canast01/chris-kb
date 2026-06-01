@@ -1,5 +1,10 @@
 # Linux — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Data Sources, dmesg — Kernel Ring Buffer, Audit Log (auditd), Authentication Events, Log Rotation and 3 more sections.
+</div>
+
 Diagnostic procedures and log analysis.
 
 ## Diagnostic Data Sources

@@ -1,6 +1,9 @@
 # ServiceNow — Access Control
 
+
+<div class="kb-summary">
 ServiceNow access control is enforced through Access Control Lists (ACLs), Roles, Groups, and data segmentation. The model is additive — access is denied by default unless an ACL explicitly grants it.
+</div>
 
 ---
 

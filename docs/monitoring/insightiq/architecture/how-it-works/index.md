@@ -1,5 +1,10 @@
 # InsightIQ — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Deployment Architecture, Component Roles, Data Collection, Storage and Retention, Sizing Guidelines and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── InsightIQ — How It Works ───────────────────────────────────────┐
 │                                                                                                       │

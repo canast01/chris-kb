@@ -1,5 +1,10 @@
 # Azure — Common Issues
 
+
+<div class="kb-summary">
+> Known failure modes, symptoms, causes, and fixes. See also: [Troubleshooting](../index.md) for full diagnostic procedures.
+</div>
+
 > Known failure modes, symptoms, causes, and fixes.
 
 See also: [Troubleshooting](../index.md) for full diagnostic procedures.

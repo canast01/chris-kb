@@ -1,5 +1,10 @@
 # SRM — How It Works (VMware Platform)
 
+
+<div class="kb-summary">
+How It Works (VMware Platform) reference covering Site Topology, Test Failover Workflow, Planned Migration, Disaster Recovery Failover, Failback Process and 2 more sections.
+</div>
+
 ## Site Topology
 
 SRM operates across two paired sites: a **protected site** (production) and a **recovery site** (DR). Each site requires:

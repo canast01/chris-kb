@@ -1,5 +1,10 @@
 # Certificates — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Certificate Diagnostic Tool Map, Useful Commands, Chain Validation.
+</div>
+
 ## Certificate Diagnostic Tool Map
 
 ```mermaid

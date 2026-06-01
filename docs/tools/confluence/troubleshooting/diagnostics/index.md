@@ -1,6 +1,9 @@
 # Confluence — Diagnostics
 
+
+<div class="kb-summary">
 This page covers diagnostic procedures for deep investigation of Confluence issues. Use these techniques when standard log checks are insufficient and before escalating to Atlassian Support.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # Database Failover Procedure
 
+
+<div class="kb-summary">
 Promote a standby/replica database to primary when the primary becomes unavailable. Follow the appropriate section for each platform.
+</div>
 
 ## Pre-Failover Checklist
 

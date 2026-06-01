@@ -1,5 +1,10 @@
 # ONTAP — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering ONTAP Version Matrix, Upgrade Paths, EOL Tracking, Refresh Planning.
+</div>
+
 ## ONTAP Version Matrix
 
 | Release | GA Date | Full Support End | Limited Support End | Notes |

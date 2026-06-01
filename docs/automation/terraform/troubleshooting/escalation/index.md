@@ -1,5 +1,10 @@
 # Terraform — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Escalation Decision Tree, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation and 1 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Terraform — Escalation ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,9 @@
 # Ollama Testing and Benchmarking
 
+
+<div class="kb-summary">
 This page covers testing Ollama with the CLI and REST API, benchmarking inference speed, comparing models, and validating API compatibility.
+</div>
 
 ## Basic CLI Testing
 

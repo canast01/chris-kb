@@ -1,6 +1,9 @@
 # Boot Diagnostics
 
+
+<div class="kb-summary">
 Azure Boot Diagnostics captures the serial console output and a screenshot of the VM's screen at boot time. It is essential for diagnosing VMs that fail to start or are unreachable via SSH/RDP.
+</div>
 
 ---
 

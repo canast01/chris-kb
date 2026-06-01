@@ -1,6 +1,9 @@
 # ServiceNow — Escalation
 
+
+<div class="kb-summary">
 This page defines the internal escalation matrix, ServiceNow support engagement procedures, SLA expectations for support cases, and the process for upgrade regression escalation.
+</div>
 
 ---
 

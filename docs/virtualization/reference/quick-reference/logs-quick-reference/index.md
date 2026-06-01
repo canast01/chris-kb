@@ -1,5 +1,10 @@
 # VMware Logs Quick Reference
 
+
+<div class="kb-summary">
+VMware Logs Quick Reference reference covering ESXi Log Locations, vCenter Appliance Log Locations, Collecting a vCenter Support Bundle, Collecting an ESXi Support Bundle, Using Aria Operations for Logs.
+</div>
+
 ## ESXi Log Locations
 
 ```bash

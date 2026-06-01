@@ -1,6 +1,9 @@
 # Database Replication Check
 
+
+<div class="kb-summary">
 Verify replication health, lag, and data consistency across primary and replica nodes.
+</div>
 
 ## PostgreSQL Streaming Replication
 

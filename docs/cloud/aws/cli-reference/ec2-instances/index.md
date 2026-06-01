@@ -1,5 +1,10 @@
 # EC2 — Instances
 
+
+<div class="kb-summary">
+EC2 — Instances reference.
+</div>
+
 ```text
 EC2 Instance CLI: State Management
 ──────────────────────────────────────────────────────────────

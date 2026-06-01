@@ -1,5 +1,10 @@
 # Aria Operations for Networks — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering SSH Access, Platform VM CLI Commands, Collector VM CLI Commands, REST API Usage, Useful Log Paths.
+</div>
+
 ## SSH Access
 
 **Platform VM** default OS user is `ubuntu`. There is no direct root login via SSH by default.

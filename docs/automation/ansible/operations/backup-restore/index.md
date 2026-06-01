@@ -1,6 +1,9 @@
 # Ansible — Backup & Restore
 
+
+<div class="kb-summary">
 > Part of the [Ansible Operations](../index.md) reference.
+</div>
 
 ## What to Back Up
 

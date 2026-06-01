@@ -1,5 +1,10 @@
 # CloudIQ — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Dell CloudIQ Escalation ───────────────────────────────────────┐
 │                                                                                                       │

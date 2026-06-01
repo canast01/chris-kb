@@ -1,5 +1,10 @@
 # vCenter Outage Runbook
 
+
+<div class="kb-summary">
+vCenter Outage Runbook reference covering Confirm Outage Scope, Check VCSA VM Power State, Check VCSA Appliance Management, Check DNS and Network Reachability, Check Disk Partitions and 4 more sections.
+</div>
+
 ## Confirm Outage Scope
 
 - Can you access the vSphere Client?

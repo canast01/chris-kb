@@ -1,7 +1,9 @@
 # Isolated Recovery Environment Ire
 
-Isolated Recovery Environment Ire operational notes and deep-dive references.
 
+<div class="kb-summary">
+Isolated Recovery Environment Ire operational notes and deep-dive references.
+</div>
 
 ```text
 ┌──────────────────────────────────── Isolated Recovery Environment ────────────────────────────────────┐

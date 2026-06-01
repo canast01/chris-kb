@@ -1,6 +1,9 @@
 # Azure — Hardening
 
+
+<div class="kb-summary">
 Azure hardening applies the principle of least privilege, reduces the attack surface, and enforces security configuration standards across subscriptions, resource groups, and individual resources.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Data Domain — CLI Reference
 
+
+<div class="kb-summary">
+Commonly used Data Domain OS (DDOS) commands for managing Dell EMC backup appliances. Data Domain is a purpose-built deduplication backup target — backup software writes to it, and it deduplicates data on the fly to save space. > Connect via SSH: `ssh sysadmin@<dd_hostname>`.
+</div>
+
 Commonly used Data Domain OS (DDOS) commands for managing Dell EMC backup appliances. Data Domain is a purpose-built deduplication backup target — backup software writes to it, and it deduplicates data on the fly to save space.
 
 > Connect via SSH: `ssh sysadmin@<dd_hostname>`. Use `ddsh` for extended diagnostics.

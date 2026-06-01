@@ -1,6 +1,9 @@
 # Certificates — Integrations
 
+
+<div class="kb-summary">
 Venafi TPP (or TLS Protect Cloud) provides the centralised policy and automation layer across all certificate sources. ADCS serves as the enterprise CA backend for internal certificates.
+</div>
 
 ## Certificate Integration Topology
 

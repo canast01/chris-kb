@@ -1,6 +1,9 @@
 # Confluence — Hardening
 
+
+<div class="kb-summary">
 Admin account hardening, plugin/marketplace control, audit log configuration, and security settings.
+</div>
 
 ## System Administrator Account Hardening
 

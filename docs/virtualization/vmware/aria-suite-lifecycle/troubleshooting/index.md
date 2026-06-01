@@ -1,4 +1,9 @@
 # Aria Suite Lifecycle — Troubleshooting
+
+<div class="kb-summary">
+Aria Suite Lifecycle — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria LCM — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

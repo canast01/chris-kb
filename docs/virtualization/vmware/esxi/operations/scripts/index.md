@@ -1,5 +1,10 @@
 # ESXi Scripts
 
+
+<div class="kb-summary">
+ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi Syslog and Event Collector (Python), NTP Configuration Audit (Bash), Ansible ESXi Configuration Playbook, Windows: ESXi Host Health via REST API (PowerShell) and 1 more sections.
+</div>
+
 ```text
 ESXi Automation Scripts — Tool Selection
 ┌───────────────────────────────────────────────────────┐

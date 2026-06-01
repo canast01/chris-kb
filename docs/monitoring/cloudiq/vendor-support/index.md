@@ -1,5 +1,10 @@
 # CloudIQ Vendor Support
 
+
+<div class="kb-summary">
+CloudIQ Vendor Support reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── CloudIQ — Vendor Support ───────────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # Key Management
 
+
+<div class="kb-summary">
 Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.
+</div>
 
 ## Key Types and Storage
 

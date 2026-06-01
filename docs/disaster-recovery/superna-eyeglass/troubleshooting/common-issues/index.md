@@ -1,5 +1,10 @@
 # Superna Eyeglass — Common Issues
 
+
+<div class="kb-summary">
+Superna Eyeglass — Common Issues reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Superna Eyeglass — Common Issues ───────────────────────────────────┐
 │                                                                                                       │

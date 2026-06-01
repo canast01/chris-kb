@@ -1,6 +1,9 @@
 # CloudIQ: Reports — On-Demand, Scheduled, Export, and Sharing
 
+
+<div class="kb-summary">
 Dell CloudIQ provides built-in reporting for capacity, health, alerts, and recommendations across your Dell infrastructure fleet. Reports can be generated on demand or scheduled for recurring delivery.
+</div>
 
 ## Report Types Available
 

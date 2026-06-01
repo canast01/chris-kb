@@ -1,5 +1,10 @@
 # Nexus Dashboard — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Overview, Cluster Naming, Network Interface Standards, Sizing Guidelines, Site Registration Standards and 6 more sections.
+</div>
+
 ```text
 ┌──────────────────────── Cisco Nexus Dashboard — Architecture Design Standards ────────────────────────┐
 │                                                                                                       │

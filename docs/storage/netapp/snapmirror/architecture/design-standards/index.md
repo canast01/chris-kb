@@ -1,6 +1,9 @@
 # SnapMirror — Standards
 
+
+<div class="kb-summary">
 > Part of the [SnapMirror Architecture](../index.md) reference.
+</div>
 
 ---
 

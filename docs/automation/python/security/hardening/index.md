@@ -1,5 +1,10 @@
 # Python Automation — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Secure Script Development Checklist Flow, Dependency Management, File and Permission Security, Hardening Checklist.
+</div>
+
 ## Secure Script Development Checklist Flow
 
 ```mermaid

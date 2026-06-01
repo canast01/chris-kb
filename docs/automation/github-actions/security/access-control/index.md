@@ -1,6 +1,9 @@
 # GitHub Actions — Access Control
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Security](../index.md) reference.
+</div>
 
 ## Secrets Management
 

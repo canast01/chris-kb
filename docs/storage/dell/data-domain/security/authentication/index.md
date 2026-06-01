@@ -1,5 +1,10 @@
 # Data Domain — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Overview, Active Directory Integration, Disable Local Admin When LDAP/AD Is Operational, Local User Management, Password Policy and 6 more sections.
+</div>
+
 ## Overview
 
 ```mermaid

@@ -1,6 +1,9 @@
 # PowerShell — Coding Standards
 
+
+<div class="kb-summary">
 Consistent standards reduce review friction, improve reliability, and make automation maintainable by the whole team — not just the original author.
+</div>
 
 ---
 

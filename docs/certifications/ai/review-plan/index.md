@@ -1,5 +1,10 @@
 # AI Certification Review Plan
 
+
+<div class="kb-summary">
+AI Certification Review Plan reference covering Target Exams and Timeline, 6-Week Study Schedule Template, Key Study Resources, Practice Exam Links, Weak Area Focus and 1 more sections.
+</div>
+
 ## Target Exams and Timeline
 
 | Exam | Code | Duration | Questions | Passing Score |

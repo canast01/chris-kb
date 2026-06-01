@@ -1,5 +1,10 @@
 # NetBackup — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Backup Data Encryption.
+</div>
+
 ```text
 ┌─────────────────────────────────────── NetBackup — Encryption ────────────────────────────────────────┐
 │                                                                                                       │

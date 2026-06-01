@@ -1,5 +1,10 @@
 # vCenter — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI), Cluster Capacity Report (PowerShell / PowerCLI), Daily Check Script (PowerShell/PowerCLI), Change Pre-Check Script (PowerShell/PowerCLI), Incident Triage Script (PowerShell/PowerCLI).
+</div>
+
 ```text
 ┌──────────────────────────────── vCenter Server — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │

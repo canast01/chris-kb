@@ -1,5 +1,10 @@
 # AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan
 
+
+<div class="kb-summary">
+**3 hrs/day · 50 Q&A per day · May 2026** AWS CLOUD PRACTITIONER CLF-C02 14-DAY STUDY PLAN  |  3 HRS/DAY  |  50 Q&A PER DAY Christos Anastasiadis  |  May 2026
+</div>
+
 **3 hrs/day · 50 Q&A per day · May 2026**
 
 AWS CLOUD PRACTITIONER CLF-C02

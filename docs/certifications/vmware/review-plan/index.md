@@ -1,5 +1,10 @@
 # Review Plan
 
+
+<div class="kb-summary">
+Review Plan reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
+</div>
+
 ## Purpose
 
 Use this page for practical VMware Review Plan notes, checks, troubleshooting, commands, standards, and field references.

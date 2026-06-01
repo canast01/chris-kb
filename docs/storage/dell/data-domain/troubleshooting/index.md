@@ -1,4 +1,9 @@
 # Data Domain — Troubleshooting
+
+<div class="kb-summary">
+Data Domain — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────── Dell Data Domain — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

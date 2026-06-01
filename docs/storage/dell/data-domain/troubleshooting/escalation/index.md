@@ -1,5 +1,10 @@
 # Data Domain — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, SLA Tiers, Information to Collect Before Opening a Case, Remote Support, Escalation Path and 2 more sections.
+</div>
+
 ## Support Portal
 
 **URL:** [https://www.dell.com/support](https://www.dell.com/support)

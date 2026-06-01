@@ -1,6 +1,9 @@
 # PowerShell — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [PowerShell Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

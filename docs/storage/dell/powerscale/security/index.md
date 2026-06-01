@@ -1,4 +1,9 @@
 # PowerScale — Security
+
+<div class="kb-summary">
+PowerScale — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell PowerScale Security ───────────────────────────────────────┐
 │                                                                                                       │

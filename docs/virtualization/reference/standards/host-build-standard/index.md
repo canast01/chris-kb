@@ -1,6 +1,9 @@
 # Host Build Standard
 
+
+<div class="kb-summary">
 > Part of the [Standards](../index.md) reference.
+</div>
 
 ---
 

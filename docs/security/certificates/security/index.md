@@ -1,5 +1,10 @@
 # Certificates — Security
 
+
+<div class="kb-summary">
+Certificates — Security reference.
+</div>
+
 <div class="kb-grid kb-grid-4">
 
 <a class="kb-card" href="authentication/">

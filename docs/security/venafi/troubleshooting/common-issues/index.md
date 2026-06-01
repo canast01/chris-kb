@@ -1,6 +1,9 @@
 # Venafi — Common Issues
 
+
+<div class="kb-summary">
 Known issues and resolution steps for frequent Venafi problems.
+</div>
 
 | Symptom | First Check |
 |---|---|

@@ -1,5 +1,10 @@
 # CyberArk — Security
 
+
+<div class="kb-summary">
+CyberArk — Security reference.
+</div>
+
 <div class="kb-grid kb-grid-2">
 
 <a class="kb-card" href="authentication/">

@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Health Checks, Weekly Health Checks, Pre-Upgrade Health Gate, Log File Locations on Appliance.
+</div>
+
 ## Daily Health Checks
 
 ### Cluster Node Status

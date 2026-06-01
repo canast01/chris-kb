@@ -1,6 +1,9 @@
 # Capacity Review
 
+
+<div class="kb-summary">
 Run this check weekly or after any significant workload addition.
+</div>
 
 ```text
 Capacity Check Flow

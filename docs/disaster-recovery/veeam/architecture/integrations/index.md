@@ -1,5 +1,10 @@
 # Veeam — Integrations
 
+
+<div class="kb-summary">
+Veeam — Integrations reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Veeam — Architecture Integrations ──────────────────────────────────┐
 │                                                                                                       │

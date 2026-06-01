@@ -1,6 +1,11 @@
 # Commvault — Troubleshooting
 
 
+
+<div class="kb-summary">
+Commvault — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────── Commvault Troubleshooting — Decision Tree ──────────────────────────────┐
 │                                                                                                       │

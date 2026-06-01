@@ -1,6 +1,11 @@
 # SRM — Troubleshooting
 
 
+
+<div class="kb-summary">
+SRM — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── SRM — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │

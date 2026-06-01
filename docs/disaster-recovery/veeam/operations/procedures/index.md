@@ -1,6 +1,9 @@
 # Veeam — Procedures
 
+
+<div class="kb-summary">
 Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.
+</div>
 
 ## Instant VM Recovery Flow
 

@@ -1,5 +1,10 @@
 # Jira — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation Communication Template, Post-Incident Review (PIR) Checklist.
+</div>
+
 ## Escalation Matrix
 
 ```mermaid

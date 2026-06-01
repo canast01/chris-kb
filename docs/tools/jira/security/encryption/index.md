@@ -1,6 +1,9 @@
 # Jira — Encryption
 
+
+<div class="kb-summary">
 Jira encryption spans transport security (TLS), at-rest storage, attachment handling, and database encryption. The approach differs between Data Center (self-managed) and Cloud deployments.
+</div>
 
 ---
 

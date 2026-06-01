@@ -1,5 +1,10 @@
 # FOD — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Related Reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell FoD — Authentication ──────────────────────────────────────┐
 │                                                                                                       │

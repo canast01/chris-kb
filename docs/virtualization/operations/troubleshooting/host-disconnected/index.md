@@ -1,6 +1,9 @@
 # Host Disconnected / Not Responding
 
+
+<div class="kb-summary">
 > Part of the [Troubleshooting](../index.md) hub.
+</div>
 
 ---
 ## Quick Triage

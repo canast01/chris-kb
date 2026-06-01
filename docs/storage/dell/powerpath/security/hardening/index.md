@@ -1,5 +1,10 @@
 # PowerPath — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Compliance.
+</div>
+
 ```text
 ┌────────────────────────────────── Dell PowerPath Security Hardening ──────────────────────────────────┐
 │                                                                                                       │

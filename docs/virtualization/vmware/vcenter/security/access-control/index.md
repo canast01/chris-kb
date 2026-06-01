@@ -1,5 +1,10 @@
 # vCenter Security — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and Identity Sources, Audit Logging — Access Events, PowerCLI — Permission Management and 3 more sections.
+</div>
+
 ```text
 RBAC Permission Model
 ════════════════════════════════════════════════════════

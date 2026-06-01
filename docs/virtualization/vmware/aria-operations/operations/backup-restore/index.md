@@ -1,5 +1,10 @@
 # Aria Operations — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Manual Backup via CLI, Backup via REST API, What Is and Is Not Backed Up, Restore Procedure, VM-Level Backup (Disaster Recovery).
+</div>
+
 ```text
 Aria Operations — Backup Architecture
 ┌─────────────────────────────────────────────────────┐

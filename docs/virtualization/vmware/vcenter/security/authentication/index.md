@@ -1,5 +1,10 @@
 # vCenter Security — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering SSO Security, TLS Configuration, Certificates to Track, Certificate Replacement Process, Validation After Replacement and 5 more sections.
+</div>
+
 ```text
 SSO Authentication Flow
 ════════════════════════════════════════════════════════

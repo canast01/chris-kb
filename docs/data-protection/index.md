@@ -1,6 +1,11 @@
 # Data Protection
 
 
+
+<div class="kb-summary">
+Data Protection reference: Backup Validation, Data Classification, Data Encryption, Data Governance, and 3 more.
+</div>
+
 ```text
 ┌───────────────── Data Protection — Classification, Encryption, Retention & Recovery ──────────────────┐
 │                                                                                                       │

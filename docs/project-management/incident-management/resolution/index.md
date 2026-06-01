@@ -1,5 +1,10 @@
 # Incident Resolution
 
+
+<div class="kb-summary">
+Incident Resolution reference covering Overview, Resolution vs Workaround, Resolution Steps Process, RCA Triggers, Post-Resolution Monitoring and 1 more sections.
+</div>
+
 ## Overview
 
 Resolution is the phase where the immediate problem is fixed and service is restored. It is distinct from root cause analysis — resolution focuses on getting users back online; RCA focuses on understanding why the failure happened and preventing recurrence. Both are important, but do not let RCA work delay restoration.

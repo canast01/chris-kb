@@ -1,7 +1,9 @@
 # Inventory
 
-Asset and configuration management references.
 
+<div class="kb-summary">
+Asset and configuration management references.
+</div>
 
 ```text
 ┌────────────────── Inventory — Asset Tracking, CMDB, Lifecycle & License Management ───────────────────┐

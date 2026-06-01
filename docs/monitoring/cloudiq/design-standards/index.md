@@ -1,5 +1,10 @@
 # CloudIQ Standards
 
+
+<div class="kb-summary">
+CloudIQ Standards reference covering System Tagging Policy, Health Score Thresholds, Alert Notification Routing, Capacity Warning Levels, Dashboard Standards and 2 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # ONTAP — Security
 
+
+<div class="kb-summary">
+ONTAP — Security reference: Access Control, Encryption, Authentication, Hardening.
+</div>
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>
 <a class="kb-card" href="encryption/"><strong>Encryption</strong><span>TLS certificate management and data encryption.</span></a>

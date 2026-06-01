@@ -1,5 +1,10 @@
 # Data Domain — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Issue Reference, Error Code Reference, Replication Lag — Step-by-Step Investigation.
+</div>
+
 ## Issue Reference
 
 | Symptom | Likely Cause | First Action |

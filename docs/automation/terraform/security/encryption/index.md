@@ -1,5 +1,10 @@
 # Terraform — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Secrets and Encryption Architecture, Secrets Management with Terraform, Sensitive Variable Handling, Encryption Reference.
+</div>
+
 ## Secrets and Encryption Architecture
 
 ```mermaid

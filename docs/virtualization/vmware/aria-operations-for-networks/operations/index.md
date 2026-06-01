@@ -1,4 +1,9 @@
 # Aria Ops for Networks — Operations
+
+<div class="kb-summary">
+Aria Ops for Networks — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Networks — Operations ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # FlashBlade — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Array Hardware, File Systems (NFS / SMB), Network, Object Store (S3), Replication (ActiveDR) and 3 more sections.
+</div>
+
 ```text
 purefb CLI Hierarchy
   purefb

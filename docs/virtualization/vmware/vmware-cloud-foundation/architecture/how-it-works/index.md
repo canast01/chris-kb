@@ -1,5 +1,10 @@
 # VCF — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Bundle Management, Password Management, Certificate Management, Network Pools, Host Commissioning and 1 more sections.
+</div>
+
 ```text
 VCF Bring-Up and Lifecycle Flow
 ┌──────────────────────────────────────────────────────┐

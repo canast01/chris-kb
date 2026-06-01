@@ -1,5 +1,10 @@
 # vCenter — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Pre-Maintenance Steps, Restarting Services Safely, Adding an ESXi Host to vCenter, Placing a Host in Maintenance Mode, vMotion — Migrating a VM and 6 more sections.
+</div>
+
 ```text
 VCSA Procedure Flow — Maintenance Window
 ════════════════════════════════════════════════════════

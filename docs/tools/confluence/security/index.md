@@ -1,6 +1,11 @@
 # Confluence — Security
 
 
+
+<div class="kb-summary">
+Confluence — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Confluence — Security Overview ────────────────────────────────────┐
 │                                                                                                       │

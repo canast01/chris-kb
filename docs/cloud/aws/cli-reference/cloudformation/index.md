@@ -1,5 +1,10 @@
 # CloudFormation
 
+
+<div class="kb-summary">
+CloudFormation reference.
+</div>
+
 ```text
 CloudFormation CLI: Stack Lifecycle
 ──────────────────────────────────────────────────────────────

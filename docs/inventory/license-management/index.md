@@ -1,6 +1,9 @@
 # License Management
 
+
+<div class="kb-summary">
 Track software entitlements, monitor utilisation against purchased seats, and prevent compliance violations.
+</div>
 
 ## License Inventory — Key Attributes
 

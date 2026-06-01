@@ -1,5 +1,10 @@
 # SRM Troubleshooting — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Triage Decision Tree, Recovery Plan Fails at Network Mapping Step, SRA Communication Failure, Recovery Plan Stuck `Running`, Site Pair Shows `Error`.
+</div>
+
 ## Triage Decision Tree
 
 Use this flowchart to quickly route to the correct troubleshooting section.

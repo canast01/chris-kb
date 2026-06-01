@@ -1,6 +1,11 @@
 # PowerShell — Operations
 
 
+
+<div class="kb-summary">
+PowerShell — Operations reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── PowerShell — Operations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

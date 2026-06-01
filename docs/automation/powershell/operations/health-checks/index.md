@@ -1,5 +1,10 @@
 # PowerShell — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering PowerShell Environment Health Check Flow.
+</div>
+
 ```text
 ┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

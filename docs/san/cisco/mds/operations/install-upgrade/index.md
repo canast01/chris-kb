@@ -1,6 +1,9 @@
 # MDS — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [Cisco MDS](../../index.md) reference.
+</div>
 
 ---
 

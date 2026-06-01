@@ -1,7 +1,9 @@
 # Performance
 
-References for capacity planning, performance management, and reliability engineering.
 
+<div class="kb-summary">
+References for capacity planning, performance management, and reliability engineering.
+</div>
 
 ```text
 ┌─────────────────────── Performance — Capacity, Baselining, Reliability & SLOs ────────────────────────┐

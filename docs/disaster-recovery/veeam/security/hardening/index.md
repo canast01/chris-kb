@@ -1,5 +1,10 @@
 # Veeam — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Network Security, Security Hardening Checklist.
+</div>
+
 ```text
 ┌────────────────────────────────────────── Veeam — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │

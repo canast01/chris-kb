@@ -1,6 +1,9 @@
 # Login and Access Issues
 
+
+<div class="kb-summary">
 > Part of the [Troubleshooting](../index.md) hub.
+</div>
 
 ---
 ## Cannot Log Into vCenter

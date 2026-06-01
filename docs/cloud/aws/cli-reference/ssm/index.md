@@ -1,5 +1,10 @@
 # Systems Manager (SSM)
 
+
+<div class="kb-summary">
+Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenance Windows, Patch Management, Inventory and 2 more sections.
+</div>
+
 ```text
 SSM CLI: Session · Command · Parameter Store · Patching
 ──────────────────────────────────────────────────────────────

@@ -1,5 +1,10 @@
 # Cisco MDS — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, SAN Fabric Topology.
+</div>
+
 ## Overview
 
 Cisco MDS 9000 series switches run NX-OS and provide scalable SAN fabric services supporting Fibre Channel (FC). The core isolation mechanism is the **VSAN (Virtual SAN)** — multiple logical fabrics share physical infrastructure while maintaining separate name servers, zoning databases, and fabric login tables. Each VSAN operates as an independent fabric.

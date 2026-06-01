@@ -1,6 +1,9 @@
 # ServiceNow — Authentication
 
+
+<div class="kb-summary">
 ServiceNow authentication covers how users, administrators, and integrations prove identity before accessing the platform. ServiceNow supports local accounts, LDAP, SAML 2.0 SSO, OAuth 2.0, and MFA through multiple providers.
+</div>
 
 ---
 

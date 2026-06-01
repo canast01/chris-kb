@@ -1,6 +1,9 @@
 # Venafi — Standards
 
+
+<div class="kb-summary">
 Certificate policy standards enforced through the Venafi policy tree. All certificates issued through Venafi must comply with these standards. Non-compliant requests are rejected at the policy folder level.
+</div>
 
 ---
 ## Policy Tree Naming Conventions

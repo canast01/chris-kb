@@ -1,4 +1,9 @@
 # Data Domain — Security
+
+<div class="kb-summary">
+Data Domain — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell Data Domain — Security ─────────────────────────────────────┐
 │                                                                                                       │

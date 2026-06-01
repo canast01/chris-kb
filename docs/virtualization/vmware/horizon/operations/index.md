@@ -1,4 +1,9 @@
 # Horizon (VDI) — Operations
+
+<div class="kb-summary">
+Horizon (VDI) — Operations reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Horizon — Operations ─────────────────────────────────────────┐
 │                                                                                                       │

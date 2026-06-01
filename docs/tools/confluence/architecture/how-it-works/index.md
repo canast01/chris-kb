@@ -1,6 +1,11 @@
 # Confluence — How It Works
 
-Confluence is Atlassian's enterprise wiki and collaboration platform, available in three deployment models: **Server** (EOL), **Data Center** (self-managed, HA-capable), and **Cloud** (SaaS). This page covers the internal component architecture and deployment topology for on-premises Data Center deployments.
+
+<div class="kb-summary">
+Confluence is Atlassian's enterprise wiki and collaboration platform, available in three deployment models: **Server** (EOL), **Data Center** (self-managed, HA-capable), and **Cloud** (SaaS).
+</div>
+
+ This page covers the internal component architecture and deployment topology for on-premises Data Center deployments.
 
 ---
 

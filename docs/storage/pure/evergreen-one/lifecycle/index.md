@@ -1,5 +1,10 @@
 # Pure Storage Evergreen//One Lifecycle
 
+
+<div class="kb-summary">
+Pure Storage Evergreen//One Lifecycle reference covering Overview, Service Agreement Lifecycle, Monthly Capacity True-Up, Hardware and Software Upgrade Lifecycle, Service Level Commitments and 1 more sections.
+</div>
+
 ```text
   Contract Lifecycle
   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐

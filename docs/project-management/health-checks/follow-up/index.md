@@ -1,5 +1,10 @@
 # Health Check Follow-Up and Open Item Tracking
 
+
+<div class="kb-summary">
+Health Check Follow-Up and Open Item Tracking reference covering Overview, Finding Classification, Creating Follow-Up Tickets, Owner Assignment, Tracking and Reporting and 1 more sections.
+</div>
+
 ## Overview
 
 Health check findings only have value if they are tracked to resolution. A finding that goes into a log and is never revisited is worse than useless — it creates a false sense that problems are being managed. This page covers how to turn health check output into tracked work items with owners and deadlines.

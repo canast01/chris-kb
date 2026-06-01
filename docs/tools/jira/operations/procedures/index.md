@@ -1,5 +1,10 @@
 # Jira — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Stories, Story Structure, Story Points, Epics, Story Splitting and 13 more sections.
+</div>
+
 ## Stories
 
 Story structure, acceptance criteria, story points, epics, and estimation.

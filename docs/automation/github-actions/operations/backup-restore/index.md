@@ -1,6 +1,9 @@
 # GitHub Actions — Backup & Restore
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Operations](../index.md) reference.
+</div>
 
 ## What to Back Up
 

@@ -1,5 +1,10 @@
 # Replication Failures Troubleshooting
 
+
+<div class="kb-summary">
+Replication Failures Troubleshooting reference covering Overview, Replication Technology Classification, Diagnostic Flowchart, ONTAP SnapMirror Troubleshooting, RecoverPoint Troubleshooting and 5 more sections.
+</div>
+
 ## Overview
 
 Replication failures degrade DR readiness and can result in RPO breaches. Each replication technology has distinct failure modes and tooling. This guide covers SRDF (Dell EMC PowerMax/VMAX), ONTAP SnapMirror, EMC RecoverPoint, vSphere Replication, and Veeam replication jobs. RPO breach assessment must happen immediately — sustained lag may trigger DR invocation.

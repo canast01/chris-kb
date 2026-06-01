@@ -1,6 +1,9 @@
 # Dell CoD — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Dell Capacity on Demand](../index.md) reference.
+</div>
 
 ---
 ## Array Capacity vs. COD Reserve Reporter

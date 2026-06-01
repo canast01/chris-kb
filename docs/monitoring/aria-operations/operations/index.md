@@ -1,4 +1,9 @@
 # Aria Operations Operations
+
+<div class="kb-summary">
+Aria Operations Operations reference covering Daily Checklist, Alert Triage Workflow, Monthly Tasks.
+</div>
+
 ## Daily Checklist
 
 Run through these checks each morning before the ops team stand-up.

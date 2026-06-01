@@ -1,5 +1,10 @@
 # Storage Products Reference
 
+
+<div class="kb-summary">
+Storage Products Reference reference covering Dell Technologies Storage Portfolio, NetApp Storage Portfolio, Pure Storage Portfolio, Product Comparison by Use Case, Study Checklist.
+</div>
+
 ## Dell Technologies Storage Portfolio
 
 | Product | Category | Key Characteristics |

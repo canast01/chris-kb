@@ -1,5 +1,10 @@
 # PowerMax — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Sizing Guidelines.
+</div>
+
 ```text
 ┌───────────────────────────── Dell PowerMax Architecture Design Standards ─────────────────────────────┐
 │                                                                                                       │

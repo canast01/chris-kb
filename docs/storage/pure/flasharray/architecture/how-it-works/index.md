@@ -1,5 +1,10 @@
 # FlashArray — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, HA Topology, ActiveCluster (Pods), Protection Groups, SafeMode.
+</div>
+
 ## Overview
 
 Pure Storage FlashArray is an all-flash block storage platform running Purity//FA OS. It is purpose-built for block workloads — databases, virtualisation, and latency-sensitive applications — and is designed around three core principles: all-flash always (no spinning disk tiering), active-active dual-controller high availability with no single point of failure, and non-disruptive operations including upgrades, hardware replacement, and capacity expansion.

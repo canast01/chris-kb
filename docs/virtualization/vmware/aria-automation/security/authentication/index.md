@@ -1,5 +1,10 @@
 # Aria Automation — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Architecture, Active Directory Integration via VIDM, API Authentication, API Service Account, Session and Token Policies and 2 more sections.
+</div>
+
 ## Authentication Architecture
 
 Aria Automation delegates all authentication to **Workspace ONE Access (VIDM)**. There is no standalone AD/LDAP connector in Aria Automation itself — VIDM acts as the identity broker between Aria Automation and Active Directory.

@@ -1,4 +1,9 @@
 # PowerPath — Troubleshooting
+
+<div class="kb-summary">
+PowerPath — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌─────────────────────────────────── Dell PowerPath Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │

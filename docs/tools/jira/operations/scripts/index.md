@@ -1,6 +1,9 @@
 # Jira — Scripts
 
+
+<div class="kb-summary">
 All scripts use environment variables for credentials. Set these before running:
+</div>
 
 ```bash
 export JIRA_URL="https://jira.example.com"

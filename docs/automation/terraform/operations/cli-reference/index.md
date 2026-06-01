@@ -1,6 +1,11 @@
 # Terraform CLI Reference
 
-Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in `.tf` files, and Terraform figures out what to create, change, or delete to reach that state. State is stored in a `.tfstate` file — it's Terraform's record of what it has actually deployed.
+
+<div class="kb-summary">
+Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in `.tf` files, and Terraform figures out what to create, change, or delete to reach that state.
+</div>
+
+ State is stored in a `.tfstate` file — it's Terraform's record of what it has actually deployed.
 
 > Install with `brew install terraform` (macOS), `apt install terraform` (Debian), or download from terraform.io. Run `terraform init` in any new working directory before other commands.
 

@@ -1,5 +1,10 @@
 # PowerStore — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Methods, Local Account Management, LDAP / Active Directory Integration, REST API Token Authentication, Certificate-Based API Access and 4 more sections.
+</div>
+
 ## Authentication Methods
 
 PowerStore Manager (the web UI) and REST API support three authentication mechanisms:

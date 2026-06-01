@@ -1,6 +1,9 @@
 # Daily VMware Operations Workflow
 
+
+<div class="kb-summary">
 A repeatable morning workflow to confirm the environment is healthy before the business day begins.
+</div>
 
 ## Step 1 — vCenter Alarm Triage (5 min)
 

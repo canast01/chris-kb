@@ -1,6 +1,9 @@
 # Git — How It Works
 
+
+<div class="kb-summary">
 Git is a distributed version control system where every working copy is a full repository with complete history.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # Failure Testing
 
+
+<div class="kb-summary">
 Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.
+</div>
 
 ## Test Categories
 

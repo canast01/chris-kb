@@ -1,5 +1,10 @@
 # PowerShell — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Install PowerShell 7+ (Windows), Upgrade PowerCLI, Update All Installed Modules, Version Reference.
+</div>
+
 ## Install PowerShell 7+ (Windows)
 
 ```powershell

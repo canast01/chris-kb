@@ -1,5 +1,10 @@
 # PowerMax — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, Integration Topology and 1 more sections.
+</div>
+
 ## VMware Integration
 
 PowerMax integrates with VMware vSphere via several paths:

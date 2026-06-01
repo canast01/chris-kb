@@ -1,6 +1,9 @@
 # Resource Optimization
 
+
+<div class="kb-summary">
 Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.
+</div>
 
 ## Identify Underutilised Resources
 

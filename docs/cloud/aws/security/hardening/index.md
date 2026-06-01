@@ -1,5 +1,10 @@
 # AWS — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Account Hardening Checklist, Root Account Protection, CloudTrail — Multi-Region with CloudWatch, GuardDuty — Enable All Features, Security Hub — Enable and Standards and 4 more sections.
+</div>
+
 ---
 
 ## Account Hardening Checklist

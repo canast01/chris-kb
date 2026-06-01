@@ -1,4 +1,9 @@
 # Aria Suite Lifecycle — Operations
+
+<div class="kb-summary">
+Aria Suite Lifecycle — Operations reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Aria LCM — Operations ────────────────────────────────────────┐
 │                                                                                                       │

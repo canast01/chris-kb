@@ -1,5 +1,10 @@
 # PowerStore — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Role-Based Access Control, User Account Management, Host Access Control, NFS Export Access Control, SMB Share Access Control and 1 more sections.
+</div>
+
 ## Role-Based Access Control
 
 PowerStore uses a role-based access control model. Every user (local or LDAP-mapped) is assigned exactly one role. Roles are non-cumulative — a user has the permissions of their assigned role and nothing more.

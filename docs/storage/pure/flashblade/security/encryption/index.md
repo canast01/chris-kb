@@ -1,5 +1,10 @@
 # FlashBlade — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Data at Rest, Data in Flight — NFS, Data in Flight — SMB, Data in Flight — Management and S3, Audit Logging and 1 more sections.
+</div>
+
 ```text
 FlashBlade Encryption Architecture
 ┌────────────────────────────────────────────────────────────┐

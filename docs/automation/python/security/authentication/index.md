@@ -1,5 +1,10 @@
 # Python Automation — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Credential Flow — API Authentication, .env Files with python-dotenv, OAuth 2.0 (Client Credentials), Credential Management Reference.
+</div>
+
 ## Credential Flow — API Authentication
 
 ```mermaid

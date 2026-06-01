@@ -1,6 +1,9 @@
 # CloudIQ — Scripts
 
+
+<div class="kb-summary">
 > Part of the [CloudIQ](../../index.md) reference.
+</div>
 
 ---
 ## Alert Poller

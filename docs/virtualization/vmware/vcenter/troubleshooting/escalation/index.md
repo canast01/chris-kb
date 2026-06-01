@@ -1,5 +1,10 @@
 # vCenter — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Severity Levels, SLA Tiers, Escalation Path, Useful Broadcom Resources, Information Broadcom Will Ask For.
+</div>
+
 ```text
 Escalation Path — Broadcom / VMware Support
 ════════════════════════════════════════════════════════

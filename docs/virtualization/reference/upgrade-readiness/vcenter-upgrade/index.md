@@ -1,5 +1,10 @@
 # vCenter Upgrade Readiness Checklist
 
+
+<div class="kb-summary">
+vCenter Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Post-Upgrade Validation.
+</div>
+
 ## Current State
 
 - Confirm current vCenter version and build number

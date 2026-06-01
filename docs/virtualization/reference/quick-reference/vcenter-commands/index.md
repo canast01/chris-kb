@@ -1,6 +1,9 @@
 # vCenter Service Commands
 
+
+<div class="kb-summary">
 > SSH to the vCenter appliance before running these commands.
+</div>
 
 ## Check All Services
 

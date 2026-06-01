@@ -1,5 +1,10 @@
 # COD — Backup & Restore
 
+
+<div class="kb-summary">
+COD — Backup & Restore reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell CoD — Backup and Restore ────────────────────────────────────┐
 │                                                                                                       │

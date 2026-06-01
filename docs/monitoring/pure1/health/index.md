@@ -1,5 +1,10 @@
 # Pure1 — Array Health
 
+
+<div class="kb-summary">
+Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Connectivity Health — Phone Home, Health Monitoring Integration, Common Health Issues.
+</div>
+
 ```text
 ┌────────────────────────────────────── Pure1 — Health Monitoring ──────────────────────────────────────┐
 │                                                                                                       │

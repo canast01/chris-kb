@@ -1,6 +1,9 @@
 # Decision Tree: Host Down
 
+
+<div class="kb-summary">
 Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter.
+</div>
 
 ```text
                     Host: Not Responding / Disconnected

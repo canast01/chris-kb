@@ -1,6 +1,9 @@
 # IRE — Security
 
+
+<div class="kb-summary">
 The IRE must maintain a higher security posture than production during a recovery operation, because production is compromised and the threat actor may still be active.
+</div>
 
 ## Security Principles
 

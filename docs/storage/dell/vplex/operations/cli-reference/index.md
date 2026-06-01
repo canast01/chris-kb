@@ -1,6 +1,11 @@
 # Dell VPLEX — CLI Reference (vplexcli)
 
-`vplexcli` is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with `vplexcli`. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g. `/clusters/cluster-1/`) and `ll` (list-long) is the standard inspection command.
+
+<div class="kb-summary">
+`vplexcli` is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with `vplexcli`. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g.
+</div>
+
+ `/clusters/cluster-1/`) and `ll` (list-long) is the standard inspection command.
 
 > **Access**: `ssh service@<VMS_IP>` → `vplexcli` — or run one-shot commands with `vplexcli -q -e "<command>"`.
 

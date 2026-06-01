@@ -1,5 +1,10 @@
 # Commvault — Scripts
 
+
+<div class="kb-summary">
+Commvault — Scripts reference.
+</div>
+
 ```text
 ┌──────────────────────────── Commvault Scripts — Automation and Reporting ─────────────────────────────┐
 │                                                                                                       │

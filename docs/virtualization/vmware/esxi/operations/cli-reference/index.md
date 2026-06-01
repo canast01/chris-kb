@@ -1,5 +1,10 @@
 # ESXi CLI Reference
 
+
+<div class="kb-summary">
+ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Datastores & VMDK, SAN Connectivity (iSCSI / FC), VM Management (vim-cmd) and 6 more sections.
+</div>
+
 ```text
 ESXi CLI Tool Map
 ┌─────────────────────────────────────────────────────────┐

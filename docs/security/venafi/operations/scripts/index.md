@@ -1,6 +1,11 @@
 # Venafi Scripts
 
-Automation scripts for Venafi cover certificate expiry reporting, automated renewal via VCert, discovery scan triggering, policy compliance reporting, and ADCS template alignment checking. Scripts are maintained in PowerShell (Windows environments) and Python (cross-platform / Linux runners).
+
+<div class="kb-summary">
+Automation scripts for Venafi cover certificate expiry reporting, automated renewal via VCert, discovery scan triggering, policy compliance reporting, and ADCS template alignment checking.
+</div>
+
+ Scripts are maintained in PowerShell (Windows environments) and Python (cross-platform / Linux runners).
 
 All scripts authenticate via API token (not username/password) and should store credentials in a secrets manager or environment variable — never hardcoded.
 

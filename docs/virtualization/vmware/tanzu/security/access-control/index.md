@@ -1,5 +1,10 @@
 # Tanzu — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Supervisor / vSphere Namespace RBAC, Kubernetes RBAC (Workload Clusters), Harbor RBAC, Network Policy (Namespace Isolation), Pod Security Admission and 1 more sections.
+</div>
+
 ---
 
 ## Supervisor / vSphere Namespace RBAC

@@ -1,5 +1,10 @@
 # Resource Contention Modeling
 
+
+<div class="kb-summary">
+Resource Contention Modeling reference covering CPU Contention, Memory Contention, Storage Latency, Network Contention, Contention Response Actions and 1 more sections.
+</div>
+
 ## CPU Contention
 
 **CPU Ready** is the primary indicator: time a vCPU waited in the run queue because the physical CPU was busy.

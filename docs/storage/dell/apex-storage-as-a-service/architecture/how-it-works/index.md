@@ -1,5 +1,10 @@
 # APEX Storage as a Service — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Use Cases, How It Works, Underlying Platforms, Best Practices.
+</div>
+
 ```text
 ┌─────────────────────────────────── Dell Apex STaaS — How It Works ────────────────────────────────────┐
 │                                                                                                       │

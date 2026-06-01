@@ -1,5 +1,10 @@
 # Dell ECS — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Overview, Data Durability Model, Configuration Backup, Restoring Object Data, Veeam Backup Integration and 1 more sections.
+</div>
+
 ## Overview
 
 Dell ECS is an object storage platform. Data protection is primarily delivered through:

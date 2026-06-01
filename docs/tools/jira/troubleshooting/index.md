@@ -1,6 +1,11 @@
 # Jira — Troubleshooting
 
 
+
+<div class="kb-summary">
+Jira — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Jira — Troubleshooting Overview ───────────────────────────────────┐
 │                                                                                                       │

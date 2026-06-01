@@ -1,6 +1,10 @@
 # API Connectivity
 
+
+<div class="kb-summary">
 Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.
+</div>
+
 ## Basic Connectivity Tests
 
 ```bash

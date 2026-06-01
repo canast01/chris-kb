@@ -1,5 +1,10 @@
 # Azure Storage Accounts
 
+
+<div class="kb-summary">
+Azure Storage Accounts reference covering Overview, Storage Account Service Hierarchy, Account Types, Replication Options, Creating Storage Accounts and 3 more sections.
+</div>
+
 ## Overview
 
 A Storage Account is the top-level namespace for all Azure Storage services (Blobs, Files, Queues, Tables). The account type, replication option, and access tier are set at creation and determine cost, durability, and available features.

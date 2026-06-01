@@ -1,5 +1,10 @@
 # Virtualization Network Validation
 
+
+<div class="kb-summary">
+Virtualization Network Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
+</div>
+
 ```text
 ┌────────────────────────────── Virtualization Network Validation Runbook ──────────────────────────────┐
 │                                                                                                       │

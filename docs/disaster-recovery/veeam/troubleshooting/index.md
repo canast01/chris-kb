@@ -1,6 +1,11 @@
 # Veeam — Troubleshooting
 
 
+
+<div class="kb-summary">
+Veeam — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Veeam — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │

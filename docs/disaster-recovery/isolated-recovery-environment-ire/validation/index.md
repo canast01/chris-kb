@@ -1,6 +1,9 @@
 # IRE — Validation
 
+
+<div class="kb-summary">
 Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, process functionality).
+</div>
 
 ## Validation Gates
 

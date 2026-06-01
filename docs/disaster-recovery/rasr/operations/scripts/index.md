@@ -1,5 +1,10 @@
 # RASR — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Script Inventory, New-RASRImage, Test-RASRImageAge, Remove-OldRASRImages, Test-RASRImageIntegrity and 2 more sections.
+</div>
+
 ## Script Inventory
 
 | Script | Purpose |

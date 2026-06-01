@@ -1,6 +1,11 @@
 # ONTAP — Encryption
 
-ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols. Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.
+
+<div class="kb-summary">
+ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp Aggregate Encryption (NAE), and encryption in transit via TLS for management interfaces and Kerberos/IPsec for data protocols.
+</div>
+
+ Key management is handled by the Onboard Key Manager (OKM) or an external KMIP key manager.
 
 ## Encryption Layer Architecture
 

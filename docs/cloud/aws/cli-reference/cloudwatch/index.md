@@ -1,5 +1,10 @@
 # CloudWatch
 
+
+<div class="kb-summary">
+CloudWatch reference.
+</div>
+
 ```text
 CloudWatch CLI: Metrics → Alarms → Logs
 ──────────────────────────────────────────────────────────────

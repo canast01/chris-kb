@@ -1,5 +1,10 @@
 # Data Domain — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, Certificate Management, Encryption Hardening and 4 more sections.
+</div>
+
 ## Overview
 
 ```mermaid

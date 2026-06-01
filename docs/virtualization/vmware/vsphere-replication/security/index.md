@@ -1,4 +1,9 @@
 # vSphere Replication — Security
+
+<div class="kb-summary">
+vSphere Replication — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── vSphere Replication — Security ────────────────────────────────────┐
 │                                                                                                       │

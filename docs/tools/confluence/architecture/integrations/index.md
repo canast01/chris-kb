@@ -1,6 +1,9 @@
 # Confluence — Integrations
 
+
+<div class="kb-summary">
 Confluence integrates with a wide range of external systems. This page covers the most common enterprise integrations: Jira, SCM platforms, LDAP/Active Directory, SMTP, webhooks, and the REST API.
+</div>
 
 ---
 

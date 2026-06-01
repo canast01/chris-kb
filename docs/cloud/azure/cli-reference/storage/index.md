@@ -1,5 +1,10 @@
 # Storage Accounts & Blobs
 
+
+<div class="kb-summary">
+Storage Accounts & Blobs reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

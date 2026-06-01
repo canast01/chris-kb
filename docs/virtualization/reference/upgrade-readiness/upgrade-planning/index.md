@@ -1,6 +1,9 @@
 # Upgrade Planning
 
+
+<div class="kb-summary">
 Upgrade planning should start before the maintenance window.
+</div>
 
 ## Key Planning Items
 

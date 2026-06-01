@@ -1,5 +1,10 @@
 # DNS and NTP Validation
 
+
+<div class="kb-summary">
+DNS and NTP Validation reference covering Why This Matters, NTP Validation — ESXi Host, NTP Validation — vCenter Appliance, DNS Validation — ESXi Host, DNS Validation — PowerCLI and 3 more sections.
+</div>
+
 ## Why This Matters
 
 Time and DNS are foundational dependencies for the entire VMware stack. Failures cause cascading issues:

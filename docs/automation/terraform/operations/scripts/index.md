@@ -1,5 +1,10 @@
 # Terraform — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Purpose, Multi-Workspace Deploy Pipeline, Windows: Terraform Plan and Apply (CMD Batch), Windows: Terraform State Audit (PowerShell).
+</div>
+
 ## Purpose
 
 Use this page for practical Terraform scripts, field-tested commands, known issues, and operational notes.

@@ -1,5 +1,10 @@
 # FlashArray — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
+</div>
+
 ```text
 Purity NDU Upgrade Sequence (non-disruptive)
   ┌──────────────────────────────────────────────────────┐

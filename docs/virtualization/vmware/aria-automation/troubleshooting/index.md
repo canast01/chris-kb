@@ -1,4 +1,9 @@
 # Aria Automation — Troubleshooting
+
+<div class="kb-summary">
+Aria Automation — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Aria Automation — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

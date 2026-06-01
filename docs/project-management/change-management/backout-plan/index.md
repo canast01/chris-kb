@@ -1,5 +1,10 @@
 # Backout Plan
 
+
+<div class="kb-summary">
+Backout Plan reference covering Overview, Backout Criteria, Backout Steps Template, Backout Checklist, Validation After Backout and 1 more sections.
+</div>
+
 ## Overview
 
 A backout plan defines exactly how to reverse a change if it fails or causes unintended impact. Every change with a risk score above 2 must have a documented backout plan approved before implementation begins. A vague "restore from backup" is not an acceptable backout plan — it must be specific, tested, and actionable in the heat of an incident.

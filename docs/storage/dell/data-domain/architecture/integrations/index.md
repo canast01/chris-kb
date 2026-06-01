@@ -1,5 +1,10 @@
 # Data Domain — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boost), CommVault (SISL + DD Boost), Avamar (RAIN Dedup with DD), NFS — Generic Backup Targets and 5 more sections.
+</div>
+
 ## DD Boost Backup Flow
 
 ```mermaid

@@ -1,6 +1,9 @@
 # ServiceNow — Operational Scripts
 
+
+<div class="kb-summary">
 Ready-to-use scripts for common ServiceNow operational tasks. All scripts use environment variables for credentials — never hardcode passwords.
+</div>
 
 ```bash
 # Set environment variables before running any script

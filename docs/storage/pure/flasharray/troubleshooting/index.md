@@ -1,5 +1,10 @@
 # FlashArray — Troubleshooting
 
+
+<div class="kb-summary">
+FlashArray — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 FlashArray Triage Entry Points
   Alert type ──► purealert list

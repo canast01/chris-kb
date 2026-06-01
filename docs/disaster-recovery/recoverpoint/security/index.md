@@ -1,6 +1,11 @@
 # RecoverPoint — Security
 
 
+
+<div class="kb-summary">
+RecoverPoint — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── RecoverPoint — Security ───────────────────────────────────────┐
 │                                                                                                       │

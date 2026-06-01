@@ -1,6 +1,9 @@
 # vSAN — Escalation
 
+
+<div class="kb-summary">
 Guidance on when to escalate vSAN incidents to VMware (Broadcom) support, what to collect before opening a case, and how to manage escalation effectively.
+</div>
 
 ```text
 ESCALATION PATH

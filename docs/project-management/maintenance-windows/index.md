@@ -1,6 +1,9 @@
 # Maintenance Windows
 
+
+<div class="kb-summary">
 Maintenance Windows operational notes and deep-dive references.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

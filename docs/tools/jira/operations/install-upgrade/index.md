@@ -1,5 +1,10 @@
 # Jira — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Version Matrix, Pre-Upgrade Checklist, Upgrade Procedure (Data Center), Rollback Procedure.
+</div>
+
 ## Version Matrix
 
 | Jira Version | Release Type | Java | PostgreSQL | End of Support |

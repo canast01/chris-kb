@@ -1,6 +1,9 @@
 # IRE — Clean Room
 
+
+<div class="kb-summary">
 The clean room is a verified, malware-free subset of the IRE used to analyse and validate recovered data before reintroducing it to production. Nothing leaves the clean room until it has been scanned and validated.
+</div>
 
 ## Purpose
 

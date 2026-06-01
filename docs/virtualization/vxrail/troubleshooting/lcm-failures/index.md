@@ -1,4 +1,9 @@
 # VxRail LCM Failures
+
+<div class="kb-summary">
+VxRail LCM Failures reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Lifecycle Manager failures, pre-check errors, upgrade stops, and recovery workflow.

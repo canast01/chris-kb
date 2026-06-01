@@ -1,5 +1,10 @@
 # Pure Storage Evergreen Troubleshooting
 
+
+<div class="kb-summary">
+Pure Storage Evergreen Troubleshooting reference covering Common Issues, Diagnostic Commands, Log Locations, Before Calling Support.
+</div>
+
 ```text
 Evergreen Troubleshooting Flow
   Symptom / alert

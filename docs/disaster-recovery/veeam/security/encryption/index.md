@@ -1,5 +1,10 @@
 # Veeam — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Backup Encryption.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Veeam — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │

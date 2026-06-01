@@ -1,5 +1,10 @@
 # PowerStore — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Data Collection, Component-Level Diagnostics, Event Log Analysis, Replication Diagnostics, Log Locations and 1 more sections.
+</div>
+
 ## Diagnostic Data Collection
 
 Before contacting Dell Support or performing deep troubleshooting, collect the standard diagnostic dataset. This avoids repeated back-and-forth with support and establishes a timestamped baseline.

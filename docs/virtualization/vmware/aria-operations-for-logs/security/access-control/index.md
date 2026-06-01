@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Roles, Configuring Active Directory Integration, AD Group-Based Role Assignment, Local User Accounts, API Authentication for Automation and 1 more sections.
+</div>
+
 ## RBAC Roles
 
 Aria Operations for Logs uses a simple two-tier RBAC model: users are either administrators or users. More granular access control is applied through Active Directory group assignment and, in Advanced/Enterprise editions, through **user roles** with object-level scoping.

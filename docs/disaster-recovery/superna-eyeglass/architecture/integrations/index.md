@@ -1,5 +1,10 @@
 # Superna Eyeglass — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email Notifications.
+</div>
+
 ## NetApp PowerScale (SyncIQ)
 
 ```mermaid

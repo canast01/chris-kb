@@ -1,6 +1,11 @@
 # GitHub Actions — Troubleshooting
 
 
+
+<div class="kb-summary">
+GitHub Actions — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────── GitHub Actions — Troubleshooting ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

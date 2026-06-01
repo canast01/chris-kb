@@ -1,4 +1,9 @@
 # VxRail Support Notes
+
+<div class="kb-summary">
+VxRail Support Notes reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 VxRail Support Notes notes for infrastructure operations, support, health checks, and troubleshooting.

@@ -1,6 +1,9 @@
 # Confluence — Escalation
 
+
+<div class="kb-summary">
 This page defines the escalation process for Confluence incidents: who handles what, when to escalate, what to collect before raising a ticket, SLA expectations, and how to reach Atlassian Support in a production emergency.
+</div>
 
 ---
 

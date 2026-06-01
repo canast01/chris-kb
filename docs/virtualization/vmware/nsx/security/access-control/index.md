@@ -1,5 +1,10 @@
 # NSX — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Model, Viewing Current Role Assignments, NSX Multitenancy Projects (NSX 4.1+), Firewall-Enforced Access Control, Principal Identities for Automation and 1 more sections.
+</div>
+
 ## RBAC Model
 
 NSX-T uses role-based access control (RBAC) with a flat role hierarchy. Roles are assigned to users or groups at the system level — there is no per-object permission granularity in base NSX (Project-scoped permissions are available with NSX Multitenancy in NSX 4.1+).

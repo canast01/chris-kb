@@ -1,6 +1,9 @@
 # Azure Monitor
 
+
+<div class="kb-summary">
 Azure Monitor is the unified observability platform for Azure. It collects metrics and logs from Azure resources, operating systems, applications, and custom sources, then provides tools for analysis, alerting, and visualisation.
+</div>
 
 ## Azure Monitor Data Flow
 

@@ -1,5 +1,10 @@
 # GitHub Actions — Scripts
 
+
+<div class="kb-summary">
+> Part of the [GitHub Actions Operations](../index.md) reference. Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.
+</div>
+
 > Part of the [GitHub Actions Operations](../index.md) reference.
 
 Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.

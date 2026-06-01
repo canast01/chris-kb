@@ -1,6 +1,9 @@
 # Health Checks
 
+
+<div class="kb-summary">
 Health Checks operational notes and deep-dive references.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

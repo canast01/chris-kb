@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Convention, Content Pack Standards, Alert Severity Standards, Cluster Sizing Rules.
+</div>
+
 ## Naming Convention
 
 Follow the same naming scheme as other LCM-managed appliances:

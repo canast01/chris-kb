@@ -1,5 +1,10 @@
 # Keystone — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, STaaS Consumption Model, Capacity Management Thresholds.
+</div>
+
 ## Overview
 
 NetApp Keystone is a Storage as a Service (STaaS) subscription that delivers on-premises NetApp hardware — AFF/FAS for block and file, StorageGRID for object — on an OpEx consumption model. NetApp installs, owns, and manages the hardware at the customer's data center or colocation facility. The customer commits to a minimum capacity per service tier and pays for committed capacity plus burst usage above the commitment. A Keystone Collector agent reports consumption telemetry to NetApp for billing.

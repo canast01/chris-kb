@@ -1,5 +1,10 @@
 # RASR — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Creating a System Image, Bare-Metal Restore to Replacement Hardware, Restore Decision Flowchart, Post-Restore Validation Checklist.
+</div>
+
 ## Creating a System Image
 
 ### Prerequisites

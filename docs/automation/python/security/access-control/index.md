@@ -1,5 +1,10 @@
 # Python Automation — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Least Privilege Access Model, AWS IAM Least Privilege, Access Policies Reference.
+</div>
+
 ## Least Privilege Access Model
 
 ```mermaid

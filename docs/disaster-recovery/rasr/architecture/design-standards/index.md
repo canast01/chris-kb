@@ -1,6 +1,9 @@
 # RASR — Standards
 
+
+<div class="kb-summary">
 > Part of the [RASR Architecture](../index.md) reference.
+</div>
 
 ---
 

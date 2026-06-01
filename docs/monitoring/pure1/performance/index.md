@@ -1,5 +1,10 @@
 # Pure1 — Performance
 
+
+<div class="kb-summary">
+Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues.
+</div>
+
 ```text
 ┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
 │                                                                                                       │

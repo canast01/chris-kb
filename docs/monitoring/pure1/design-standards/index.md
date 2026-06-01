@@ -1,5 +1,10 @@
 # Pure1 Standards
 
+
+<div class="kb-summary">
+Pure1 Standards reference covering Array Tagging Policy, Capacity Threshold Standards, Alert Notification Routing, Health Score Standards, API Access Standards and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── Pure1 — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │

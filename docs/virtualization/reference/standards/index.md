@@ -1,6 +1,9 @@
 # Virtualization Standards
 
+
+<div class="kb-summary">
 Build and operating standards for virtualization platforms.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

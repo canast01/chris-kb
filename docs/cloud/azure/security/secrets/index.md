@@ -1,6 +1,9 @@
 # Azure — Key Vault Secrets
 
+
+<div class="kb-summary">
 Key Vault secrets store arbitrary string values — passwords, connection strings, API keys, tokens — with versioning, expiry, access control, and audit logging.
+</div>
 
 ## Secret Structure
 

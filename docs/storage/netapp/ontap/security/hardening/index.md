@@ -1,6 +1,9 @@
 # ONTAP — Hardening
 
+
+<div class="kb-summary">
 Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.
+</div>
 
 ## Hardening Control Layers
 

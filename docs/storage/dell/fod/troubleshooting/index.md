@@ -1,4 +1,9 @@
 # FOD — Troubleshooting
+
+<div class="kb-summary">
+FOD — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell FoD — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

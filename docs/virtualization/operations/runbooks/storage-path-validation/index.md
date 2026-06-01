@@ -1,5 +1,10 @@
 # Virtualization Storage Path Validation
 
+
+<div class="kb-summary">
+Virtualization Storage Path Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────── Storage Path Validation Runbook ───────────────────────────────────┐
 │                                                                                                       │

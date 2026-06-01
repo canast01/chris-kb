@@ -1,6 +1,9 @@
 # Venafi — Procedures
 
+
+<div class="kb-summary">
 Operational procedures for certificate renewal, automation, and reporting.
+</div>
 
 ## Renewal and Reporting Workflow
 

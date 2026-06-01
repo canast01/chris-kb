@@ -1,6 +1,9 @@
 # SRDF/A — Integrations
 
+
+<div class="kb-summary">
 > Part of the [SRDF/A](../../index.md) reference.
+</div>
 
 ---
 ## SRM Integration Topology

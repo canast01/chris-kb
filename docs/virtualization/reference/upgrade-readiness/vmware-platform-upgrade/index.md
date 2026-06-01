@@ -1,6 +1,9 @@
 # VMware Platform Upgrade Procedure
 
+
+<div class="kb-summary">
 This procedure covers a full VMware platform upgrade including vCenter, ESXi, vSAN, NSX, and VCF-related components.
+</div>
 
 ## Roles and Responsibilities
 

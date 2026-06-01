@@ -1,6 +1,9 @@
 # Git — Hardening
 
+
+<div class="kb-summary">
 Hardening Git and its hosting platform closes the attack surface around the version control system — the most critical asset in software development pipelines.
+</div>
 
 ---
 

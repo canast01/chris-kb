@@ -1,5 +1,10 @@
 # Terraform — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Terraform Diagnostics Workflow, Plan Inspection, State Inspection, Diagnostics Reference.
+</div>
+
 ## Terraform Diagnostics Workflow
 
 ```mermaid

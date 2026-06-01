@@ -1,5 +1,10 @@
 # vSphere Replication — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking Too Long, Replication Fails with "Connection Refused" / "Connection Timeout", VRA Shows Disconnected / Site Pair Broken, "No Compatible Datastore" Error When Configuring Replication and 1 more sections.
+</div>
+
 ```text
   VR Triage Decision Tree
 ┌─────────────────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # PowerScale — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, NFS Export Management, SMB Share Management and 1 more sections.
+</div>
+
 ## Change Readiness
 
 Verify these items before performing any change on a PowerScale cluster — node additions, OneFS upgrades, SyncIQ policy changes, or quota modifications.

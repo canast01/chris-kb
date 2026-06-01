@@ -1,6 +1,11 @@
 # PowerShell — Troubleshooting
 
 
+
+<div class="kb-summary">
+PowerShell — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── PowerShell — Troubleshooting ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,9 @@
 # Aria Ops for Logs — Scripts
 
+
+<div class="kb-summary">
 Scripts for Aria Operations for Logs target four use cases: cluster health monitoring, log source coverage auditing, alert definition management, and log queries via the REST API. The API base URL is `https://<vrli-fqdn>/api/v2` with HTTP Basic authentication.
+</div>
 
 ---
 

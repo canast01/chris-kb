@@ -1,4 +1,9 @@
 # Aria Operations Scripts
+
+<div class="kb-summary">
+Aria Operations Scripts reference covering Authentication, Push Custom Metric, Script Inventory, Token Refresh.
+</div>
+
 ## Authentication
 
 All scripts authenticate via the Aria Operations REST API token endpoint. The session token is passed in the `Authorization: vRealizeOpsToken` header for subsequent requests.

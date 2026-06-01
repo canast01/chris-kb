@@ -1,4 +1,9 @@
 # VxRail Service Health
+
+<div class="kb-summary">
+VxRail Service Health reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 VxRail Manager service status, UI access, alerts, and management plane checks.

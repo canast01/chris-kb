@@ -1,6 +1,11 @@
 # FlashArray — Access Control
 
-FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported. All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.
+
+<div class="kb-summary">
+FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported.
+</div>
+
+ All human admin accounts should be mapped through directory service groups (AD or LDAP); individual named local accounts should be limited to break-glass scenarios and service accounts.
 
 ---
 

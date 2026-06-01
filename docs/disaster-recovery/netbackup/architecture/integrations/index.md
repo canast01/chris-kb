@@ -1,5 +1,10 @@
 # NetBackup Integration
 
+
+<div class="kb-summary">
+NetBackup Integration reference covering Integration Architecture, SIEM Integration, CyberArk Integration, OpsCenter / IT Analytics.
+</div>
+
 ## Integration Architecture
 
 ```mermaid

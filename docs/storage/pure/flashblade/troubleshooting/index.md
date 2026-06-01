@@ -1,5 +1,10 @@
 # FlashBlade — Troubleshooting
 
+
+<div class="kb-summary">
+FlashBlade — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 FlashBlade Triage Entry Points
   Alert type ──► purefb alert list

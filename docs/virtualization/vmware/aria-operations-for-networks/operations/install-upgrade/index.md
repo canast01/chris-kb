@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Install and Upgrade
 
+
+<div class="kb-summary">
+Install and Upgrade reference covering Prerequisites, Platform VM Deployment, Upgrade Process.
+</div>
+
 ## Prerequisites
 
 ### Infrastructure Requirements

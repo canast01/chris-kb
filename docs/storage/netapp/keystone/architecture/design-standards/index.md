@@ -1,5 +1,10 @@
 # Keystone — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Service Level Selection, Naming Conventions, Capacity Management.
+</div>
+
 ```text
 ┌─────────────────────────── NetApp Keystone — Architecture Design Standards ───────────────────────────┐
 │                                                                                                       │

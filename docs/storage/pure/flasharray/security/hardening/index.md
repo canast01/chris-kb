@@ -1,5 +1,10 @@
 # FlashArray — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
+</div>
+
 ```text
 FlashArray Hardening Sequence
   1. Change defaults ──► rename/vault pureuser, create named admins

@@ -1,6 +1,9 @@
 # Python Automation — Standards
 
+
+<div class="kb-summary">
 Consistent standards enforce code quality, make security reviews tractable, and allow any team member to understand, run, and modify automation safely.
+</div>
 
 ---
 

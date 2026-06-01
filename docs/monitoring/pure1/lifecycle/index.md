@@ -1,4 +1,9 @@
 # Pure1 Lifecycle
+
+<div class="kb-summary">
+Pure1 Lifecycle reference covering Platform Update Model, Array Onboarding, Array Decommission, Purity Version Compatibility, Pure1 REST API Lifecycle and 2 more sections.
+</div>
+
 ## Platform Update Model
 
 Pure1 is a SaaS platform managed entirely by Pure Storage. There is no customer-managed version to upgrade. Feature releases, analytics model updates, and UI changes are deployed by Pure Storage and communicated via Pure1 release notes.

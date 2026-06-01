@@ -1,6 +1,9 @@
 # SRDF/A — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [SRDF/A](../../index.md) reference.
+</div>
 
 ---
 ## Version Compatibility

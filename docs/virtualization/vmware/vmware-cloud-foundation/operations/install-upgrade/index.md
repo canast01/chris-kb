@@ -1,5 +1,10 @@
 # VCF Operations — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
+</div>
+
 ```text
 VCF Upgrade Flow — SDDC Manager Orchestration
 ┌─────────────────────────────────────────────────────┐

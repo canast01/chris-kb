@@ -1,5 +1,10 @@
 # Active Directory — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Privileged Access and Kerberos Security Flow, Privileged Access Workstations (PAWs), Protected Users Group, Kerberos Encryption Policy, Related Reference.
+</div>
+
 ## Privileged Access and Kerberos Security Flow
 
 ```mermaid

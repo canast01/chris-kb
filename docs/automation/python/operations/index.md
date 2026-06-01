@@ -1,6 +1,11 @@
 # Python Automation — Operations
 
 
+
+<div class="kb-summary">
+Python Automation — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Python — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

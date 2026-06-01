@@ -1,5 +1,10 @@
 # Aria Automation — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Version Matrix, Initial Deployment (New Environment), Pre-Upgrade Checklist, Post-Upgrade Validation, EOL Tracking and 2 more sections.
+</div>
+
 ## Version Matrix
 
 | Product Name | Version | vSphere Compatibility | Notes |

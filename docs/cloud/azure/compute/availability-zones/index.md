@@ -1,6 +1,9 @@
 # Availability Zones
 
+
+<div class="kb-summary">
 Availability Zones are physically separate datacenters within an Azure region, each with independent power, cooling, and networking. Deploying VMs across zones provides 99.99% SLA and protection against datacenter-level failures.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Service Status Verification, Certificate Expiry Checks, Disk Space Verification, NTP and Time Sync, Pre-Operation Health Summary.
+</div>
+
 ```text
   LCM Diagnostic Data Sources
 ┌─────────────────────────────────────────────────────────────────┐

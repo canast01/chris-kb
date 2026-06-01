@@ -1,5 +1,10 @@
 # Terraform — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Terraform RBAC and Backend Access Model, Least Privilege IAM for Terraform, Workspace and Environment Separation, Access Control Reference.
+</div>
+
 ## Terraform RBAC and Backend Access Model
 
 ```mermaid

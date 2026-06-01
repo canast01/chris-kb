@@ -1,5 +1,10 @@
 # FlashBlade — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Mechanisms Summary, Local Account Management, Active Directory Integration, LDAP Integration (Non-AD), SAML SSO Configuration and 3 more sections.
+</div>
+
 ```text
 FlashBlade Authentication — Data vs Management Plane
   Management plane (GUI / API / CLI):

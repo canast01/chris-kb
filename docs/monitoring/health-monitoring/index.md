@@ -1,5 +1,10 @@
 # Infrastructure Health Monitoring
 
+
+<div class="kb-summary">
+Infrastructure Health Monitoring reference covering Server Health (Windows), Storage Array Health, Network Health, Monitoring Agent Validation, Escalation Thresholds (reference).
+</div>
+
 ```text
 ┌─────────────────────────────────── Monitoring — Health Monitoring ────────────────────────────────────┐
 │                                                                                                       │

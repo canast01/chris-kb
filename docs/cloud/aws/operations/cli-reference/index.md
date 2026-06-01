@@ -1,5 +1,10 @@
 # AWS — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering EC2, S3, IAM, RDS, CloudWatch and 3 more sections.
+</div>
+
 ```text
 AWS CLI Daily Ops: Top Commands
 ──────────────────────────────────────────────────────────────

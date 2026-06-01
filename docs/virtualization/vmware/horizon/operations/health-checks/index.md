@@ -1,5 +1,10 @@
 # Horizon — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Desktop Pool Health, Active Session Count vs License, UAG Health Check, App Volumes Manager Health, DEM Share Accessibility and 3 more sections.
+</div>
+
 ```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐

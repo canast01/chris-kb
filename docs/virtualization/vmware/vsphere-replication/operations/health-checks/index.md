@@ -1,5 +1,10 @@
 # vSphere Replication — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering VRA and Site Pairing Status, Check All Replications for RPO Violations, Verify VRA Disk Space, VRS Health (if deployed), Verify Replication Files on Target Datastore and 2 more sections.
+</div>
+
 ```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐

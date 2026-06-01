@@ -1,6 +1,11 @@
 # NetBackup — Security
 
 
+
+<div class="kb-summary">
+NetBackup — Security reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── NetBackup — Security ─────────────────────────────────────────┐
 │                                                                                                       │

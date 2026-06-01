@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption Controls, Key Points.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell Apex STaaS — Encryption ─────────────────────────────────────┐
 │                                                                                                       │

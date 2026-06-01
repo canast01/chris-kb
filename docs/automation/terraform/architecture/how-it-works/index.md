@@ -1,6 +1,9 @@
 # Terraform — How It Works
 
+
+<div class="kb-summary">
 Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. All execution is driven by a single CLI binary — there are no separate agents.
+</div>
 
 ---
 

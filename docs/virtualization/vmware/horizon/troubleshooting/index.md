@@ -1,4 +1,9 @@
 # Horizon (VDI) — Troubleshooting
+
+<div class="kb-summary">
+Horizon (VDI) — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Horizon — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

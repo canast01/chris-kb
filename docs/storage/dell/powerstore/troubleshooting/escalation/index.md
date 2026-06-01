@@ -1,5 +1,10 @@
 # PowerStore — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Opening a Support Case, Required Information for a Case, Case Priority Levels, Escalation Path and 4 more sections.
+</div>
+
 ## Support Portal
 
 Dell PowerStore support cases are logged through the Dell support portal at [https://www.dell.com/support](https://www.dell.com/support). PowerStore is covered under the ProSupport or ProSupport Plus contract associated with the system's service tag.

@@ -1,6 +1,9 @@
 # Confluence — Scripts
 
+
+<div class="kb-summary">
 Production-ready scripts for Confluence administration. All scripts assume a Data Center deployment with PostgreSQL. Set environment variables before running.
+</div>
 
 ---
 

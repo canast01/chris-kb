@@ -1,6 +1,9 @@
 # Linux — Health Checks
 
+
+<div class="kb-summary">
 Routine checks, service validation, and status verification.
+</div>
 
 ## Health Check Flow
 

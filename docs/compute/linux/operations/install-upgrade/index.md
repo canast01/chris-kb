@@ -1,6 +1,9 @@
 # Linux — Install & Upgrade
 
+
+<div class="kb-summary">
 Installation, upgrade, patching, and decommission.
+</div>
 
 ## Linux Boot Sequence
 

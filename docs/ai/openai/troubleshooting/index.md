@@ -1,5 +1,10 @@
 # OpenAI API — Troubleshooting
 
+
+<div class="kb-summary">
+Troubleshooting reference covering Error Code Reference, Rate Limit Troubleshooting, Token Limit Issues, Authentication Issues, Timeout and Latency and 3 more sections.
+</div>
+
 ## Error Code Reference
 
 | HTTP code | Error type | Meaning | Fix |

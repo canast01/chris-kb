@@ -1,6 +1,9 @@
 # RASR — Hardening
 
+
+<div class="kb-summary">
 Hardening the RASR recovery environment: storage array management plane, iDRAC, recovery media, and the management hosts used to operate RASR.
+</div>
 
 ## Hardening Scope
 

@@ -1,5 +1,10 @@
 # SANnav — Troubleshooting
 
+
+<div class="kb-summary">
+SANnav — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── SANnav — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │

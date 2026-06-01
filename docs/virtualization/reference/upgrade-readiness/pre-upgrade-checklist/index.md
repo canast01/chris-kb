@@ -1,6 +1,9 @@
 # Pre-Upgrade Checklist
 
+
+<div class="kb-summary">
 Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX).
+</div>
 
 ## Backup and Recovery
 

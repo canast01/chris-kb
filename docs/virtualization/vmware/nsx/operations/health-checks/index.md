@@ -1,5 +1,10 @@
 # NSX — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Health Check Commands, Weekly Checks, Change Readiness Checklist.
+</div>
+
 ## Daily Checks
 
 | Check | Command / Location | Expected State |

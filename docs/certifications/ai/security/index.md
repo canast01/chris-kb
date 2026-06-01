@@ -1,5 +1,10 @@
 # AI Security and Responsible AI
 
+
+<div class="kb-summary">
+AI Security and Responsible AI reference covering Responsible AI Pillars, AI Safety Concepts, Data Privacy in the ML Lifecycle, Bias Types and Mitigations, AI Governance Frameworks and 1 more sections.
+</div>
+
 ## Responsible AI Pillars
 
 | Pillar | Definition | Example Control |

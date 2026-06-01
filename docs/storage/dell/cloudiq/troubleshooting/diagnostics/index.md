@@ -1,5 +1,10 @@
 # CloudIQ — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Log Locations, Before Calling Support.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell CloudIQ Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │

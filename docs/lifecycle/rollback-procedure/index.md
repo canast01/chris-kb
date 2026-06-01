@@ -1,6 +1,9 @@
 # Rollback Procedure
 
+
+<div class="kb-summary">
 Restores a system to its last known-good state when a change produces failures, instability, or unacceptable risk. Rollback must be faster and safer than attempting to fix the issue forward during an incident.
+</div>
 
 ## Decision Framework
 

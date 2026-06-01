@@ -1,5 +1,10 @@
 # Site Quality Dashboard
 
+
+<div class="kb-summary">
+Site Quality Dashboard reference covering Current state, Pages by section, Quality rules, Useful commands.
+</div>
+
 Generated: 2026-05-07
 
 ## Current state

@@ -1,5 +1,10 @@
 # Nexus Dashboard — Troubleshooting
 
+
+<div class="kb-summary">
+Nexus Dashboard — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────── Cisco Nexus Dashboard — Troubleshooting ───────────────────────────────┐
 │                                                                                                       │

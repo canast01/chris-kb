@@ -1,5 +1,10 @@
 # CloudIQ — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Audit Log, Security Baseline.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell CloudIQ — Hardening ───────────────────────────────────────┐
 │                                                                                                       │

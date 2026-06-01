@@ -1,5 +1,10 @@
 # Nexus Dashboard — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Key Hosted Applications, Deployment Topology, Node Types, Network Interfaces Per Node and 3 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────── Cisco Nexus Dashboard — How It Works ─────────────────────────────────┐
 │                                                                                                       │

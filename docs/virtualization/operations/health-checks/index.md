@@ -1,6 +1,9 @@
 # Virtualization Health Checks
 
+
+<div class="kb-summary">
 Reusable health checks for virtualization operations.
+</div>
 
 ```text
 Health Check Flows

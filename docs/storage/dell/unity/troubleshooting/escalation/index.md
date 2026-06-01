@@ -1,5 +1,10 @@
 # Unity — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
+</div>
+
 ## Support Portal
 
 Open and manage Unity support cases at [https://www.dell.com/support](https://www.dell.com/support). Log in with your Dell account and navigate to **My Cases** to create, update, and track cases.

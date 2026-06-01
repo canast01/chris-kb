@@ -1,5 +1,10 @@
 # ESXi Diagnostics
 
+
+<div class="kb-summary">
+ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Troubleshooting, Host Disconnect Troubleshooting, Maintenance Mode Validation.
+</div>
+
 ```text
 ESXi Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────┐

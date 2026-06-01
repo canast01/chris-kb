@@ -1,5 +1,10 @@
 # Service Restart Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Low–Medium | | Approval | Notify service owner; standard change for planned restarts | | Estimated time | 5–20 minutes | | Impact | Service unavailable during restart (seconds to minutes depending on startup time) |
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Low–Medium |

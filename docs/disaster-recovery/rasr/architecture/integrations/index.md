@@ -1,5 +1,10 @@
 # RASR — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Integration Overview, Dell OpenManage Integration, Backup Software Integration, Network Storage Integration, Integration Dependency Map.
+</div>
+
 ## Integration Overview
 
 RASR does not operate in isolation. In a production environment it integrates with server management platforms, directory services, network storage, and backup software. Understanding these integration points is essential for both building a reliable recovery workflow and for post-restore remediation.

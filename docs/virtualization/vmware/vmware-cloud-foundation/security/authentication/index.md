@@ -1,5 +1,10 @@
 # VCF Security — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Common Issues, Related Reference.
+</div>
+
 ```text
 VCF Authentication Flow
 ┌─────────────────────────────────────────────────────┐

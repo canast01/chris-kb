@@ -1,5 +1,10 @@
 # VCF — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Network Access Controls.
+</div>
+
 ```text
 ┌───────────────────────────────── VMware Cloud Foundation — Hardening ─────────────────────────────────┐
 │                                                                                                       │

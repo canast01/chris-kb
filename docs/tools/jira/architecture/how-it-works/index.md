@@ -1,5 +1,10 @@
 # Jira — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Deployment Models, Data Center Reference Architecture, Clustering, Port Reference, Cloud Architecture (Reference).
+</div>
+
 ## Deployment Models
 
 Jira is available in three deployment models, each with distinct architectural characteristics:

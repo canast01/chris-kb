@@ -1,6 +1,9 @@
 # SnapCenter — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [SnapCenter Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

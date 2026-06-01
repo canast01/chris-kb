@@ -1,5 +1,10 @@
 # SRM — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication Log Collection, SRA Logs, Check SRM Service Status, Verify Site Pairing Certificate and 2 more sections.
+</div>
+
 ```text
   SRM Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────────┐

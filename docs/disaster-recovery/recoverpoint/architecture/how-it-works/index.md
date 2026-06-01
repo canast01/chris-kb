@@ -1,5 +1,10 @@
 # RecoverPoint — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Topology, Journal Sizing, Journal Monitoring Thresholds, High Availability.
+</div>
+
 ## Overview
 
 Dell EMC RecoverPoint provides continuous data protection (CDP) and continuous remote replication (CRR) through journal-based replication. RPA (RecoverPoint Appliance) clusters at each site intercept writes via splitters and maintain a rolling journal enabling point-in-time recovery to any point within the journal window. All volumes that must be recovered together are grouped into a Consistency Group (CG).

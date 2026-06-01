@@ -1,5 +1,10 @@
 # Certificates — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checklist.
+</div>
+
 ## OCSP Stapling Flow
 
 ```mermaid

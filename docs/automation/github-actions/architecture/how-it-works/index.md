@@ -1,6 +1,9 @@
 # GitHub Actions — How It Works
 
+
+<div class="kb-summary">
 GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to repository events, schedules, or external triggers.
+</div>
 
 ---
 

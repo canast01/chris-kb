@@ -1,6 +1,9 @@
 # PowerScale — Encryption
 
+
+<div class="kb-summary">
 > TLS certificate management and data encryption for Dell PowerScale.
+</div>
 
 ## Encryption Layers
 

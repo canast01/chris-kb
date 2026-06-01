@@ -1,5 +1,10 @@
 # Aria Automation — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Get Failed Deployments in the Last 24 Hours, Blueprint Version Audit.
+</div>
+
 ## Get Failed Deployments in the Last 24 Hours
 
 Uses the Aria Automation REST API. Returns deployment name, ID, and failure reason.

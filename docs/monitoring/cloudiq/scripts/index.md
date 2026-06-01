@@ -1,4 +1,9 @@
 # CloudIQ Scripts
+
+<div class="kb-summary">
+CloudIQ Scripts reference covering Authentication, Capacity Trend Query, Create ServiceNow Incident on CRITICAL Alert (Event-Driven), Script Inventory, Rate Limiting.
+</div>
+
 ## Authentication
 
 CloudIQ REST API uses OAuth2 client credentials. All scripts load `client_id` and `client_secret` from the secrets manager at runtime.

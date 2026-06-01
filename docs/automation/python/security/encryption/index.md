@@ -1,5 +1,10 @@
 # Python Automation — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Secrets and Encryption Architecture, Encrypting Local Files with cryptography, Encryption Reference.
+</div>
+
 ## Secrets and Encryption Architecture
 
 ```mermaid

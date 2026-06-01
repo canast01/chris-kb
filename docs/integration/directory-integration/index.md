@@ -1,6 +1,10 @@
 # Directory Integration
 
+
+<div class="kb-summary">
 Connect Linux and Windows systems to Active Directory or LDAP for centralised authentication, group-based access control, and identity management.
+</div>
+
 ## Linux → Active Directory (SSSD)
 
 ### Join Domain

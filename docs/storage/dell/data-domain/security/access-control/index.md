@@ -1,5 +1,10 @@
 # Data Domain — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC — Role-Based Access Control, Audit Logging, Network Access Control, Security Incident Response.
+</div>
+
 ## RBAC — Role-Based Access Control
 
 Data Domain has a built-in role model. Assign the minimum required role per user or group.

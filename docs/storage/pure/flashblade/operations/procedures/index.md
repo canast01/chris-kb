@@ -1,5 +1,10 @@
 # FlashBlade — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Snapshots.
+</div>
+
 ```text
 FlashBlade NFS Filesystem Provisioning Flow
   ┌──────────────────────────────────────────────────────┐

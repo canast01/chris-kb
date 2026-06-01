@@ -1,6 +1,9 @@
 # Certificates — Install & Upgrade
 
+
+<div class="kb-summary">
 The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured wherever possible (Venafi, ACME, cert-manager). Manual processes are a fallback only.
+</div>
 
 ## Full Certificate Lifecycle
 

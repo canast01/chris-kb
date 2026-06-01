@@ -1,5 +1,10 @@
 # Dell ECS — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Version and Release Matrix, Pre-Upgrade Checks, Upgrade and Update Paths, Adding a New Node to an Existing VDC, Disk Replacement and 3 more sections.
+</div>
+
 ## Version and Release Matrix
 
 | ECS Version | Release Year | Key Features | Support Status |

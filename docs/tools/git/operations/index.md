@@ -1,6 +1,11 @@
 # Git — Operations
 
 
+
+<div class="kb-summary">
+Git — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── Git — Operations ───────────────────────────────────────────┐
 │                                                                                                       │

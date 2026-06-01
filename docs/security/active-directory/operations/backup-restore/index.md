@@ -1,6 +1,11 @@
 # Active Directory — Backup & Restore
 
-Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific recovery modes. This page covers the full lifecycle: backup strategy, restore decision logic, authoritative restore for accidentally deleted objects, and post-restore validation.
+
+<div class="kb-summary">
+Protecting Active Directory requires regular System State backups of every Domain Controller, a tested restore procedure, and familiarity with AD-specific recovery modes.
+</div>
+
+ This page covers the full lifecycle: backup strategy, restore decision logic, authoritative restore for accidentally deleted objects, and post-restore validation.
 
 ---
 

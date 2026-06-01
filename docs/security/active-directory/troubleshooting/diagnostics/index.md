@@ -1,5 +1,10 @@
 # Active Directory — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering DC Diagnostic Tool Map, Dcdiag Tests, Replication Diagnostics, Event Log Diagnostics, LDAP Diagnostics and 1 more sections.
+</div>
+
 ## DC Diagnostic Tool Map
 
 ```mermaid

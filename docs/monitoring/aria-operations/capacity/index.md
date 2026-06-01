@@ -1,5 +1,10 @@
 # Aria Operations: Capacity Analytics and Rightsizing
 
+
+<div class="kb-summary">
+Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizing Recommendations, Reclaim Workflow, Capacity Planning Reports, Common Capacity Issues.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
 │                                                                                                       │

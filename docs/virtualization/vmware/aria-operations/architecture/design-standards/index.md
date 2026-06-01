@@ -1,5 +1,10 @@
 # Aria Operations — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Alert Policy Standards, Related Sections.
+</div>
+
 ```text
 ┌────────────────────────────────── Aria Operations Design Standards ───────────────────────────────────┐
 │                                                                                                       │

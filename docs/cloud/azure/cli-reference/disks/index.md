@@ -1,5 +1,10 @@
 # Disks & Snapshots
 
+
+<div class="kb-summary">
+Disks & Snapshots reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

@@ -1,5 +1,10 @@
 # Aria Operations — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Cluster Node Health via API, Adapter Health, Disk and Storage Health, Service Health Commands, NTP and Time Sync and 3 more sections.
+</div>
+
 ```text
 Aria Operations — Health Check Coverage Map
 ┌─────────────────────────────────────────────────────┐

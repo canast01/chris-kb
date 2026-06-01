@@ -1,6 +1,9 @@
 # Serial Console
 
+
+<div class="kb-summary">
 Azure Serial Console provides out-of-band terminal access to a VM's serial port.
+</div>
 
 ---
 

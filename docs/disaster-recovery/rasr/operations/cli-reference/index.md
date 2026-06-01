@@ -1,5 +1,10 @@
 # RASR — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering rasrutil.exe — Primary Command-Line Interface, Exit Codes, WinPE Shell Commands, Scripted Backup Creation, Image Management Commands Reference.
+</div>
+
 ## rasrutil.exe — Primary Command-Line Interface
 
 `rasrutil.exe` is the main command-line tool for RASR operations on a running Windows Server. It is located at:

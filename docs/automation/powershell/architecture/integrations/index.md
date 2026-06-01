@@ -1,5 +1,10 @@
 # PowerShell — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering PowerCLI VM Management Flow, Windows.
+</div>
+
 ## PowerCLI VM Management Flow
 
 ```mermaid

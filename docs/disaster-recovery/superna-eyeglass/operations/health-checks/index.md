@@ -1,5 +1,10 @@
 # Superna Eyeglass — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale Cluster Health, Weekly DR Readiness Check, Health Check Summary Table and 1 more sections.
+</div>
+
 ## Overview
 
 Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.

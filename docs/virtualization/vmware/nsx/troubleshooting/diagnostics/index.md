@@ -1,5 +1,10 @@
 # NSX — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Ports and Protocols Reference, Log Locations, NSX Manager CLI Diagnostics, Edge Node CLI Diagnostics, ESXi Host NSX Diagnostics and 4 more sections.
+</div>
+
 ## Ports and Protocols Reference
 
 | Traffic | Protocol | Port | Direction |

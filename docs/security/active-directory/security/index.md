@@ -1,5 +1,10 @@
 # Active Directory — Security
 
+
+<div class="kb-summary">
+Active Directory — Security reference.
+</div>
+
 <div class="kb-grid kb-grid-4">
 
 <a class="kb-card" href="authentication/">

@@ -1,5 +1,10 @@
 # FlashBlade — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Management, File Restore Procedures, Object Store Restore Procedures, Veeam Backup & Replication Integration and 4 more sections.
+</div>
+
 ```text
 FlashBlade Data Protection Tiers
   ┌────────────────────────────────────────────────────────────┐

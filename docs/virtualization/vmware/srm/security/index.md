@@ -1,4 +1,9 @@
 # Site Recovery Manager — Security
+
+<div class="kb-summary">
+Site Recovery Manager — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
 │                                                                                                       │

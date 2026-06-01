@@ -1,5 +1,10 @@
 # Commvault — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Conventions, Retention Schedule, VMware vSphere Standards, Encryption Standard.
+</div>
+
 ```text
 ┌────────────────────────── Commvault Design Standards — Sizing and Topology ───────────────────────────┐
 │                                                                                                       │

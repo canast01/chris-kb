@@ -1,6 +1,11 @@
 # Jira — Operations
 
 
+
+<div class="kb-summary">
+Jira — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Jira — Operations Overview ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,4 +1,9 @@
 # COD — Troubleshooting
+
+<div class="kb-summary">
+COD — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell CoD — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

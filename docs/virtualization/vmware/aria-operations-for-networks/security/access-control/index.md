@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Built-in Roles, LDAP / Active Directory Integration, Local User Management, API Token Management, Network-Level Access Control and 3 more sections.
+</div>
+
 ---
 
 ## Built-in Roles

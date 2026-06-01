@@ -1,5 +1,10 @@
 # COD — Common Issues
 
+
+<div class="kb-summary">
+COD — Common Issues reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell CoD — Common Issues ───────────────────────────────────────┐
 │                                                                                                       │

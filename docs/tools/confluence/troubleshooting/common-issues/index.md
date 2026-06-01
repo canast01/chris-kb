@@ -1,6 +1,9 @@
 # Confluence — Common Issues
 
+
+<div class="kb-summary">
 Reference table of the most frequent Confluence operational problems, with root causes and resolution steps. Each issue includes the exact commands or UI steps needed to resolve it.
+</div>
 
 ---
 

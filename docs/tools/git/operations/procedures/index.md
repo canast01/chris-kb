@@ -1,5 +1,10 @@
 # Git — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Branching, Branch Naming Conventions, Deleting Branches, Tracking Remote Branches, Merge vs Rebase and 8 more sections.
+</div>
+
 ## Branching
 
 Branch naming conventions, creating and deleting branches, tracking remotes, and merge vs rebase.

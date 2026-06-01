@@ -1,5 +1,10 @@
 # vCenter — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, Recovery Scenarios, Certificates to Track Before Any Restore, vCenter High Availability (vCHA) vs. Backup and 1 more sections.
+</div>
+
 ```text
 VCSA Backup & Restore Architecture
 ════════════════════════════════════════════════════════

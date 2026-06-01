@@ -1,5 +1,10 @@
 # SAN Zoning
 
+
+<div class="kb-summary">
+SAN Zoning reference covering Zone Types, Hard vs Soft Zoning, Zone Sets, Single-Initiator Zoning, Cisco VSAN vs Brocade Virtual Fabric and 1 more sections.
+</div>
+
 ## Zone Types
 
 | Zone Type | Member Identifier | Pros | Cons |

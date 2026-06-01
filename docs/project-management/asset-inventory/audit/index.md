@@ -1,5 +1,10 @@
 # Asset Audit Process
 
+
+<div class="kb-summary">
+Asset Audit Process reference covering Overview, Audit Scope and Frequency, Discovery Tools, CMDB Reconciliation Steps, Discrepancy Tracking and 1 more sections.
+</div>
+
 ## Overview
 
 Regular asset audits ensure your CMDB reflects reality. Without periodic reconciliation, configuration drift accumulates — shadow IT, decommissioned hardware still listed as active, and undocumented dependencies all erode trust in asset data. A structured audit process keeps records accurate and supports change, incident, and capacity management.

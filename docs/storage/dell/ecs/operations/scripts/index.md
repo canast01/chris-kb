@@ -1,6 +1,9 @@
 # Dell ECS — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Dell ECS](../../index.md) reference.
+</div>
 
 ---
 ## Node & Capacity Health Check

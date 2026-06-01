@@ -1,5 +1,10 @@
 # Active Directory — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Controllers.
+</div>
+
 ## AGDLP Group Design Flow
 
 ```mermaid

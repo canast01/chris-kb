@@ -1,6 +1,9 @@
 # Data Classification
 
+
+<div class="kb-summary">
 Data classification defines how sensitive information must be labelled, handled, stored, and shared.
+</div>
 
 ## Classification Levels
 

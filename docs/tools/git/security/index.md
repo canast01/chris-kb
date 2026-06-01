@@ -1,6 +1,11 @@
 # Git — Security
 
 
+
+<div class="kb-summary">
+Git — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────────── Git — Security ────────────────────────────────────────────┐
 │                                                                                                       │

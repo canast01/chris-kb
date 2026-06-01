@@ -1,6 +1,9 @@
 # Known Issues and Fix Patterns
 
+
+<div class="kb-summary">
 Structured troubleshooting entries for common VMware/vSAN operational issues. Each entry includes specific diagnostic commands, relevant error messages or event IDs, and concrete fix steps.
+</div>
 
 ---
 

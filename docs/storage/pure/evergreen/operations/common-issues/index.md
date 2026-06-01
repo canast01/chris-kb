@@ -1,5 +1,10 @@
 # Evergreen — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Incident Triage Checklist, Common Issues Reference, Controller Upgrade Issues in Detail, Capacity Management Issues, Subscription and Lifecycle Issues and 2 more sections.
+</div>
+
 ```text
 Evergreen Common Issues — Triage
   Issue type

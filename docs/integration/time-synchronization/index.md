@@ -1,6 +1,10 @@
 # Time Synchronization
 
+
+<div class="kb-summary">
 Ensure consistent, accurate time across all infrastructure systems. Time drift causes Kerberos authentication failures, TLS errors, log correlation issues, and replication problems.
+</div>
+
 ## chrony (Recommended — RHEL 7+, Ubuntu 18.04+)
 
 ```bash

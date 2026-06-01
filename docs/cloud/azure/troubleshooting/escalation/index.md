@@ -1,6 +1,9 @@
 # Azure — Escalation
 
+
+<div class="kb-summary">
 > What to collect before opening a support case and how to engage Microsoft support.
+</div>
 
 ---
 

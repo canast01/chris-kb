@@ -1,4 +1,9 @@
 # Nexus Dashboard Scripts
+
+<div class="kb-summary">
+Nexus Dashboard Scripts reference covering Authentication, Fabric Fault Export, ACI Fault Summary (via APIC), Forward P1/P2 Faults to ServiceNow, Script Inventory.
+</div>
+
 ## Authentication
 
 Nexus Dashboard REST API uses OAuth2 token authentication. ACI APIC uses cookie-based authentication. Scripts load credentials from the secrets manager at runtime.

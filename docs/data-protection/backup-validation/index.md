@@ -1,6 +1,9 @@
 # Backup Validation
 
+
+<div class="kb-summary">
 Backup validation is the systematic process of confirming that backup data is intact, recoverable, and meets defined recovery objectives. A backup that has never been tested is an untested assumption — validation converts assumptions into evidence.
+</div>
 
 ---
 

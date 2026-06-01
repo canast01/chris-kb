@@ -1,5 +1,10 @@
 # Jira — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Flow, JVM Heap Analysis, Thread Dump Capture and Analysis, Database Slow Query Analysis, Support ZIP Collection and 1 more sections.
+</div>
+
 ## Diagnostic Flow
 
 ```mermaid

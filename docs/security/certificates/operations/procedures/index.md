@@ -1,5 +1,10 @@
 # Certificates — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Certificate Renewal and Revocation Workflow, Renewal, Inventory, TLS Validation.
+</div>
+
 ## Certificate Renewal and Revocation Workflow
 
 ```mermaid

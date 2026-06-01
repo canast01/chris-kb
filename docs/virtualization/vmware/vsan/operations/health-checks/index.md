@@ -1,5 +1,10 @@
 # vSAN — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Weekly Checks, Performance Baseline, Network Health, Stretched Cluster Checks, Change Readiness.
+</div>
+
 ```text
 vSAN HEALTH CHECK SCOPE
 

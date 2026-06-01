@@ -1,6 +1,9 @@
 # Nexus Dashboard — Authentication
 
+
+<div class="kb-summary">
 > Part of the [Nexus Dashboard](../../index.md) reference.
+</div>
 
 ---
 

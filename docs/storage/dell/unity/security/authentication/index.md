@@ -1,5 +1,10 @@
 # Unity — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Overview, Unisphere — Active Directory Integration, NAS Server — Active Directory Domain Join, NAS Server — NFS with Kerberos, LDAP for NFS UID/GID Mapping and 4 more sections.
+</div>
+
 ## Authentication Overview
 
 Dell Unity supports two authentication pathways that serve distinct purposes:

@@ -1,6 +1,9 @@
 # ExpressRoute
 
+
+<div class="kb-summary">
 Azure ExpressRoute provides dedicated private connectivity between on-premises networks and Azure, bypassing the public internet. It offers predictable latency, higher bandwidth options, and built-in redundancy through dual circuits.
+</div>
 
 ## ExpressRoute Connectivity Model
 

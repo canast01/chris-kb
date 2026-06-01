@@ -1,5 +1,10 @@
 # SRM — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Create a Protection Group (vSphere Replication), Create a Recovery Plan, Run a Test Failover (Non-Disruptive), Run a Planned Migration, Run a Disaster Recovery (Protected Site Down) and 4 more sections.
+</div>
+
 ```text
   Test Failover vs Actual Failover
 ┌──────────────────────────────────────────────────────────────┐

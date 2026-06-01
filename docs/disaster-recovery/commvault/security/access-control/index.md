@@ -1,5 +1,10 @@
 # Commvault — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Roles, Audit Trail.
+</div>
+
 ```text
 ┌─────────────────────────── Commvault Access Control — RBAC and Permissions ───────────────────────────┐
 │                                                                                                       │

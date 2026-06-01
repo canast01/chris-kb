@@ -1,5 +1,10 @@
 # VCF — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Supported Configurations, Compliance Checks in SDDC Manager.
+</div>
+
 ```text
 VCF Physical and Logical Design Requirements
 ┌─────────────────────────────────────────────────────┐

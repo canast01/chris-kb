@@ -1,5 +1,10 @@
 # vSphere Replication — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Get All Replicated VMs and RPO Compliance, Export Replication Status Report, Identify VMs Without Replication, Check VRA Disk Usage via REST API, Alert on VMs with Replication Lag Exceeding Threshold.
+</div>
+
 ```text
   VR Automation via PowerCLI + REST API + Python
 ┌──────────────────────────────────────────────────────────────┐

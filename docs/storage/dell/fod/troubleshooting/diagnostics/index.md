@@ -1,6 +1,9 @@
 # FOD — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [Flex on Demand](../../index.md) reference.
+</div>
 
 ---
 

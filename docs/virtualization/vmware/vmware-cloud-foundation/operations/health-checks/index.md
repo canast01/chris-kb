@@ -1,5 +1,10 @@
 # VCF — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Common Operational Issues.
+</div>
+
 ```text
 VCF Daily Health Check — Coverage Map
 ┌─────────────────────────────────────────────────────┐

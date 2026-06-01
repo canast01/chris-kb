@@ -1,5 +1,10 @@
 # Python Automation — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Purpose, Windows Python Environment Setup Flow.
+</div>
+
 ## Purpose
 
 Use this page for practical Python scripts, field-tested commands, known issues, and operational notes.

@@ -1,4 +1,9 @@
 # Tanzu — Security
+
+<div class="kb-summary">
+Tanzu — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── VMware Tanzu — Security ───────────────────────────────────────┐
 │                                                                                                       │

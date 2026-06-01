@@ -1,6 +1,9 @@
 # Git — Integrations
 
+
+<div class="kb-summary">
 This page covers how Git platforms (GitHub, GitLab) integrate with CI/CD pipelines, issue trackers, identity providers, container registries, and developer tooling.
+</div>
 
 ---
 

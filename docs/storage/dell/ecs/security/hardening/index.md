@@ -1,5 +1,10 @@
 # Dell ECS — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Network Segmentation, Operating System Hardening (Node-Level), Object Lock (WORM) Hardening, Secrets Management Integration and 1 more sections.
+</div>
+
 ## Hardening Checklist
 
 Apply these controls at initial deployment and validate at each quarterly security review.

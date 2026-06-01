@@ -1,5 +1,10 @@
 # Azure Files
 
+
+<div class="kb-summary">
+Azure Files reference covering Overview, Azure Files Architecture, Creating File Shares, Mounting on Linux, Mounting on Windows and 3 more sections.
+</div>
+
 ## Overview
 
 Azure Files provides fully managed cloud file shares accessible via SMB (2.1, 3.0, 3.1.1) and NFS 4.1 protocols. Shares are hosted in Storage Accounts and can be mounted on Windows, Linux, and macOS. Azure File Sync extends Azure Files to on-premises Windows Server environments.

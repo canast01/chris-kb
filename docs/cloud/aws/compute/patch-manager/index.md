@@ -1,5 +1,10 @@
 # AWS Patch Manager
 
+
+<div class="kb-summary">
+AWS Patch Manager reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── AWS Compute — Patch Manager ─────────────────────────────────────┐
 │                                                                                                       │

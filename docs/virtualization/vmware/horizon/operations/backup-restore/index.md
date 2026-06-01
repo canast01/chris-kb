@@ -1,5 +1,10 @@
 # Horizon — Backup and Restore
 
+
+<div class="kb-summary">
+Backup and Restore reference covering Verify the Backup, App Volumes Manager Database Backup, DEM Config Share Backup, AppStack VMDK Backup, Golden Image Snapshot Management and 2 more sections.
+</div>
+
 ```text
   Backup Sources                        Backup Methods
 ┌─────────────────────┐               ┌────────────────────────────┐

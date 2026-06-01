@@ -1,6 +1,9 @@
 # Azure — Private Link
 
+
+<div class="kb-summary">
 Azure Private Link enables private connectivity to Azure PaaS services (Storage, Key Vault, SQL, etc.) over a private endpoint in your VNet — eliminating exposure to the public internet.
+</div>
 
 ## Concepts
 

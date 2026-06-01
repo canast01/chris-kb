@@ -1,6 +1,10 @@
 # CloudIQ CLI Reference
 
+
+<div class="kb-summary">
 CloudIQ is accessed programmatically via its REST API using OAuth2 client credentials. There is no standalone CLI binary; all automation uses the REST API directly. The API base URL is `https://cloudiq.apis.dell.com`.
+</div>
+
 ---
 
 ## Authentication

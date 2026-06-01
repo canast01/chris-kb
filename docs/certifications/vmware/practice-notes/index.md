@@ -1,5 +1,10 @@
 # Practice Notes
 
+
+<div class="kb-summary">
+Practice Notes reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
+</div>
+
 ## Purpose
 
 Use this page for practical VMware Practice Notes notes, checks, troubleshooting, commands, standards, and field references.

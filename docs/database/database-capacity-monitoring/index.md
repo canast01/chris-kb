@@ -1,6 +1,9 @@
 # Database Capacity Monitoring
 
+
+<div class="kb-summary">
 Track database storage growth, identify capacity risks early, and plan expansion before thresholds are breached.
+</div>
 
 ## Current Capacity — Quick Check
 

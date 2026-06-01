@@ -1,6 +1,9 @@
 # Route Tables
 
+
+<div class="kb-summary">
 Azure Route Tables (User Defined Routes / UDRs) override Azure's default system routes
+</div>
 
 ## Adding User Defined Routes
 

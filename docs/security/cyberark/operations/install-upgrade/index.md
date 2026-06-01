@@ -1,6 +1,11 @@
 # CyberArk Lifecycle
 
-CyberArk follows a structured upgrade sequence to preserve Vault integrity: the Digital Vault is upgraded first, followed by CPM, then PSM, then PVWA; upgrading out of order is unsupported and may result in component incompatibility. The DR Vault must also be upgraded and its replication link verified after each major upgrade. CyberArk supports a rolling EOL model where each major version receives 5 years of support, with extended support available under a separate agreement.
+
+<div class="kb-summary">
+CyberArk follows a structured upgrade sequence to preserve Vault integrity: the Digital Vault is upgraded first, followed by CPM, then PSM, then PVWA; upgrading out of order is unsupported and may result in component incompatibility.
+</div>
+
+ The DR Vault must also be upgraded and its replication link verified after each major upgrade. CyberArk supports a rolling EOL model where each major version receives 5 years of support, with extended support available under a separate agreement.
 
 | Version (example) | GA Date | End of Support | Notes |
 |---|---|---|---|

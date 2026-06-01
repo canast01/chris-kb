@@ -1,5 +1,10 @@
 # FlashArray — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Protection Group Snapshot Configuration, Restore Procedures, Backup Validation, Snapshot Capacity Management, Backup Integration with Veeam.
+</div>
+
 ```text
 FlashArray Data Protection Tiers
   ┌────────────────────────────────────────────────────────────┐

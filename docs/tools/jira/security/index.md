@@ -1,6 +1,11 @@
 # Jira — Security
 
 
+
+<div class="kb-summary">
+Jira — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Jira — Security Overview ───────────────────────────────────────┐
 │                                                                                                       │

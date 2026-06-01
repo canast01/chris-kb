@@ -1,6 +1,9 @@
 # Environment Readiness Checklist
 
+
+<div class="kb-summary">
 Validates that infrastructure is prepared to receive a new workload, application deployment, or system migration. Complete before any provisioning begins.
+</div>
 
 ## Readiness Assessment Flow
 

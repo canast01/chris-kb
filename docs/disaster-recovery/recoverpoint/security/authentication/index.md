@@ -1,5 +1,10 @@
 # RecoverPoint — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering API Token Management.
+</div>
+
 ```text
 ┌──────────────────────────────────── RecoverPoint — Authentication ────────────────────────────────────┐
 │                                                                                                       │

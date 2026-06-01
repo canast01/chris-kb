@@ -1,5 +1,10 @@
 # Horizon — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected Sessions Older Than N Hours, Get All Desktops in Error State, Rebalance Instant Clone Pool, Export Entitlement Report and 3 more sections.
+</div>
+
 ```text
   Automation via PowerCLI / REST API
 ┌──────────────────────────────────────────────────────────┐

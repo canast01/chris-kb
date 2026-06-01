@@ -1,5 +1,10 @@
 # AWS S3
 
+
+<div class="kb-summary">
+AWS S3 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────────── S3 — Object Storage ─────────────────────────────────────────┐
 │                                                                                                       │

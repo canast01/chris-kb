@@ -1,5 +1,10 @@
 # Commvault — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Backup Types, Backup Job Execution, Restore Types, DR Copy Verification, Restore Decision Flowchart and 1 more sections.
+</div>
+
 ## Backup Types
 
 Commvault supports a tiered backup schedule model. Understanding backup types is essential for designing RPO-aligned protection policies.

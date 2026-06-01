@@ -1,6 +1,11 @@
 # Venafi — How It Works
 
-Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates. The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).
+
+<div class="kb-summary">
+Venafi Trust Protection Platform (TPP) is the enterprise certificate lifecycle management system. It enforces certificate policy, integrates with multiple CA backends, automates renewal, and provides visibility across all managed certificates.
+</div>
+
+ The SaaS equivalent is Venafi as a Service (VaaS / TLS Protect Cloud).
 
 ---
 

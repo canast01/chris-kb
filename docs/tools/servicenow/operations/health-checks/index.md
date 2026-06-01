@@ -1,6 +1,9 @@
 # ServiceNow — Health Checks
 
+
+<div class="kb-summary">
 Routine health checks detect degradation before users are impacted. This page defines the daily, weekly, and on-demand checks for a ServiceNow production instance, covering availability, performance, background processing, and MID Server health.
+</div>
 
 ---
 

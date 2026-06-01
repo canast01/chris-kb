@@ -1,5 +1,10 @@
 # Tanzu — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Get All TKG Clusters and Status, Get All PVCs Across All Namespaces (Identify Unbound), Check All Node Resource Usage, Export All Deployments and Services from Namespace, Verify Harbor Vulnerability Scanning and 2 more sections.
+</div>
+
 ---
 
 ## Get All TKG Clusters and Status

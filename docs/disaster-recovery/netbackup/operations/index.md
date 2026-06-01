@@ -1,6 +1,11 @@
 # NetBackup — Operations
 
 
+
+<div class="kb-summary">
+NetBackup — Operations reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── NetBackup — Operations ────────────────────────────────────────┐
 │                                                                                                       │

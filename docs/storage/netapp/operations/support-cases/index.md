@@ -1,4 +1,9 @@
 # NetApp Operations — Support Cases
+
+<div class="kb-summary">
+Support Cases reference covering Opening a Support Case, Case Severity Levels, Generating a Support Bundle, Information to Include in a Case, Keystone-Specific Cases and 2 more sections.
+</div>
+
 ## Opening a Support Case
 
 **Via NetApp Support Portal (mysupport.netapp.com):**

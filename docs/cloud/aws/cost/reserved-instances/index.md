@@ -1,5 +1,10 @@
 # AWS Reserved Instances
 
+
+<div class="kb-summary">
+AWS Reserved Instances reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── AWS Cost — Reserved Instances ────────────────────────────────────┐
 │                                                                                                       │

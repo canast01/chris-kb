@@ -1,6 +1,10 @@
 # Certificate Trust
 
+
+<div class="kb-summary">
 Configure and verify certificate trust chains so that services can validate TLS certificates from internal and external CAs.
+</div>
+
 ## Trust Store Locations
 
 | OS / Platform | System Trust Store | Command to Add CA |

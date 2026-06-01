@@ -1,5 +1,10 @@
 # SANnav — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Deployment Topology, Supported Hardware, Network Requirements, VM Sizing and 2 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── Brocade SANnav — How It Works ────────────────────────────────────┐
 │                                                                                                       │

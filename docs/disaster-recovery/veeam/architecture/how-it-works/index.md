@@ -1,5 +1,10 @@
 # Veeam — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Architecture, Supported Platforms, Retention Schedule, Sizing Guidelines and 1 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Veeam — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

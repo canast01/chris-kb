@@ -1,6 +1,9 @@
 # NetApp Keystone — Scripts
 
+
+<div class="kb-summary">
 > Part of the [NetApp Keystone](../index.md) reference.
+</div>
 
 ---
 ## Keystone Collector Health Check (Bash)

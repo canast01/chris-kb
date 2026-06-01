@@ -1,5 +1,10 @@
 # Account, Subscriptions & Resource Groups
 
+
+<div class="kb-summary">
+Account, Subscriptions & Resource Groups reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

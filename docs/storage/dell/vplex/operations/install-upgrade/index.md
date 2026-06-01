@@ -1,5 +1,10 @@
 # Dell VPLEX — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering GeoSynchrony Version Matrix, Upgrade Paths, Hardware Lifecycle, EOL Tracking.
+</div>
+
 ## GeoSynchrony Version Matrix
 
 VPLEX runs the GeoSynchrony software stack. Dell publishes end-of-support dates for each GeoSynchrony release. Running an unsupported version means no security patches, no bug fixes, and no Dell support for software issues.

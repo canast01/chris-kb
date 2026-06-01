@@ -1,5 +1,10 @@
 # vSAN — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations.
+</div>
+
 ```text
 vSAN INTEGRATION MAP
 

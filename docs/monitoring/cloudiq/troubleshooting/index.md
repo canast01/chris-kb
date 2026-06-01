@@ -1,4 +1,9 @@
 # CloudIQ Troubleshooting
+
+<div class="kb-summary">
+CloudIQ Troubleshooting reference covering Diagnostic Approach, Common Issues, SCG Log Locations, Dell Support Escalation.
+</div>
+
 ## Diagnostic Approach
 
 Before escalating to Dell support, work through the standard diagnostic steps:

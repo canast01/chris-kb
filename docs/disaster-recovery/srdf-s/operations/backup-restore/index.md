@@ -1,5 +1,10 @@
 # SRDF/S — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering SRDF/S Overview, SYMCLI Command Reference, Unplanned Failover Procedure, Link Suspension and Recovery, symrdf restore — After R1 Site Recovery and 3 more sections.
+</div>
+
 ## SRDF/S Overview
 
 **SRDF/S (Synchronous)** provides zero-data-loss replication between two VMAX/PowerMax arrays. Every host write is mirrored to the remote array before the I/O is acknowledged to the host. This guarantees write-order consistency and ensures R1 and R2 are always at the same recovery point.

@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Incident Triage, Maintenance Window, Operational Tasks.
+</div>
+
 ```text
 ┌────────────────────────────── Dell Apex STaaS — Operational Procedures ───────────────────────────────┐
 │                                                                                                       │

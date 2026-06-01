@@ -1,5 +1,10 @@
 # COD — Standards
 
+
+<div class="kb-summary">
+Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation Checklist.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell COD Design Standards ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # ESXi — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage.
+</div>
+
 ```text
 ┌───────────────────────────────────── ESXi — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │

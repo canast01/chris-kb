@@ -1,6 +1,9 @@
 # Database Health Check
 
+
+<div class="kb-summary">
 Verify database availability, connectivity, replication status, and resource utilization across common platforms.
+</div>
 
 ## Quick Status — All Platforms
 

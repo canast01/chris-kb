@@ -1,6 +1,9 @@
 # Terraform — Standards
 
+
+<div class="kb-summary">
 Consistent Terraform standards prevent state corruption, make code reviewable, and enable teams to manage infrastructure at scale without heroics.
+</div>
 
 ---
 

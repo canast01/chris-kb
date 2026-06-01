@@ -1,4 +1,9 @@
 # Aria Ops for Logs — Troubleshooting
+
+<div class="kb-summary">
+Aria Ops for Logs — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Logs — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │

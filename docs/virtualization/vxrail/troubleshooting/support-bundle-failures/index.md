@@ -1,4 +1,9 @@
 # VxRail Support Bundle Failures
+
+<div class="kb-summary">
+VxRail Support Bundle Failures reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Failed or incomplete support bundle collection troubleshooting.

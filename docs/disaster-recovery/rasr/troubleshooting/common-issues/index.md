@@ -1,6 +1,9 @@
 # RASR — Common Issues
 
+
+<div class="kb-summary">
 > Part of the [RASR Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

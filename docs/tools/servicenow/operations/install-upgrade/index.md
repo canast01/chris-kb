@@ -1,6 +1,9 @@
 # ServiceNow — Install & Upgrade
 
+
+<div class="kb-summary">
 ServiceNow cloud instances are upgraded by ServiceNow as part of the managed service. This page covers the upgrade lifecycle from planning through post-upgrade validation, including plugin management, skipped version handling, and rollback considerations.
+</div>
 
 ---
 

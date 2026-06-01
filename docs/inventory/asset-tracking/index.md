@@ -1,6 +1,9 @@
 # Asset Tracking
 
+
+<div class="kb-summary">
 Track hardware and cloud resources from procurement through decommission to maintain accurate inventory and prevent orphaned costs.
+</div>
 
 ## Asset Register — Key Attributes
 

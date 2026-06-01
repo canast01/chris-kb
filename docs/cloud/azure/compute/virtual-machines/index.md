@@ -1,6 +1,9 @@
 # Virtual Machines
 
+
+<div class="kb-summary">
 Reference for creating, managing, sizing, and operating Azure Virtual Machines using the `az vm` CLI commands.
+</div>
 
 ---
 

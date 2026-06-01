@@ -1,5 +1,10 @@
 # Unity — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Approach, System-Level Diagnostics, Storage Processor Diagnostics, Alert and Event Diagnostics, Storage Pool and Disk Diagnostics and 7 more sections.
+</div>
+
 ## Diagnostic Approach
 
 Follow this sequence when diagnosing a Unity issue. Start at the system level and narrow down to the specific component:

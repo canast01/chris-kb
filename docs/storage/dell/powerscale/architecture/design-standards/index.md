@@ -1,5 +1,10 @@
 # PowerScale — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist.
+</div>
+
 ```text
 ┌──────────────────────────── Dell PowerScale Architecture Design Standards ────────────────────────────┐
 │                                                                                                       │

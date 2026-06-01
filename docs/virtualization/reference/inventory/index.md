@@ -1,6 +1,9 @@
 # Virtualization Inventory
 
+
+<div class="kb-summary">
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

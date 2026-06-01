@@ -1,5 +1,10 @@
 # PowerStore — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Transit, Encryption Compliance Summary.
+</div>
+
 ## Data-at-Rest Encryption (D@RE)
 
 PowerStore encrypts all data at rest using AES-256 encryption at the drive level. D@RE is enabled by default on all PowerStore models and cannot be disabled. Encryption is transparent to hosts — no host-side configuration is required.

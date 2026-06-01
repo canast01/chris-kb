@@ -1,6 +1,9 @@
 # Emergency Change Procedure
 
+
+<div class="kb-summary">
 Emergency changes bypass the standard CAB cycle to address active outages or critical security incidents. All approvals and documentation occur during or immediately after implementation.
+</div>
 
 ## Trigger Conditions
 

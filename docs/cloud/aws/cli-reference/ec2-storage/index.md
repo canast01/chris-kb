@@ -1,5 +1,10 @@
 # EC2 — Images, Volumes & Snapshots
 
+
+<div class="kb-summary">
+EC2 — Images, Volumes & Snapshots reference.
+</div>
+
 ```text
 EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
 ──────────────────────────────────────────────────────────────

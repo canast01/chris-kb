@@ -1,5 +1,10 @@
 # Lambda
 
+
+<div class="kb-summary">
+Lambda reference covering Environment Variables, Event Source Mappings (SQS / Kinesis triggers), Layers, Versions and Aliases, Concurrency and 2 more sections.
+</div>
+
 ```text
 Lambda CLI: Deploy → Invoke → Monitor
 ──────────────────────────────────────────────────────────────

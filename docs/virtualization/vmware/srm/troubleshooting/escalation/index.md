@@ -1,5 +1,10 @@
 # SRM — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Before Opening a Support Case, Severity Definitions, If SRA Vendor is Involved, Support Portal, Escalation Path and 1 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────────── VMware SRM — Escalation ───────────────────────────────────────┐
 │                                                                                                       │

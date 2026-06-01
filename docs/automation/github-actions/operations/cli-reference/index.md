@@ -1,5 +1,10 @@
 # GitHub Actions — CLI Reference
 
+
+<div class="kb-summary">
+> Part of the [GitHub Actions Operations](../index.md) reference. The `gh` CLI (GitHub CLI) is the primary tool for managing GitHub Actions from the command line.
+</div>
+
 > Part of the [GitHub Actions Operations](../index.md) reference.
 
 The `gh` CLI (GitHub CLI) is the primary tool for managing GitHub Actions from the command line.

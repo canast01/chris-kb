@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Product Management Topology.
+</div>
+
 ## Overview
 
 Aria Suite Lifecycle (LCM) is a management appliance that deploys, upgrades, and manages the entire VMware Aria product suite from a single control plane. LCM eliminates per-product upgrade complexity by orchestrating pre-checks, snapshots, binary staging, sequential node upgrades, and post-checks as a single audited workflow. All credentials and certificates are stored in the integrated **Locker** vault.

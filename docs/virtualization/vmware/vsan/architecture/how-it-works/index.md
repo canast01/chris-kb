@@ -1,5 +1,10 @@
 # vSAN — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Storage Architecture Modes, Objects and Components, Write Path, Read Path, Core Components and 1 more sections.
+</div>
+
 ## Storage Architecture Modes
 
 ### Original Storage Architecture (OSA) — vSAN 6.x / 7.x

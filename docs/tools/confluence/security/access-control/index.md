@@ -1,6 +1,9 @@
 # Confluence — Access Control
 
+
+<div class="kb-summary">
 Space permissions, page restrictions, group-based access, and least-privilege configuration.
+</div>
 
 ## Access Control Model
 

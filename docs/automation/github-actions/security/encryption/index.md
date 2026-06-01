@@ -1,6 +1,9 @@
 # GitHub Actions — Encryption
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Security](../index.md) reference.
+</div>
 
 ---
 

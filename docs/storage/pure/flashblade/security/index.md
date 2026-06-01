@@ -1,5 +1,10 @@
 # FlashBlade — Security
 
+
+<div class="kb-summary">
+FlashBlade — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 FlashBlade Security Layers
 ┌──────────────────────────────────────────────────────────┐

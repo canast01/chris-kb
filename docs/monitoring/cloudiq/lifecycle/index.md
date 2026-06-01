@@ -1,4 +1,9 @@
 # CloudIQ Lifecycle
+
+<div class="kb-summary">
+CloudIQ Lifecycle reference covering Platform Update Model, Secure Connect Gateway (SCG) Lifecycle, Array Decommission, API Token Lifecycle, Release Notes Review.
+</div>
+
 ## Platform Update Model
 
 CloudIQ is a SaaS platform managed entirely by Dell. There is no customer-managed version to upgrade. Feature releases, AI model updates, and API changes are deployed by Dell and communicated via the CloudIQ release notes published in the CloudIQ portal under **Settings > Release Notes**.

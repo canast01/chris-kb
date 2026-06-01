@@ -1,6 +1,9 @@
 # Confluence — Encryption
 
+
+<div class="kb-summary">
 TLS configuration, data at rest encryption, attachment storage security, and database encryption.
+</div>
 
 ## TLS — Encryption in Transit
 

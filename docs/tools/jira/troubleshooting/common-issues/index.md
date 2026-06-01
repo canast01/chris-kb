@@ -1,5 +1,10 @@
 # Jira — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), Slow Board Loading, LDAP Sync Failures, Workflow Transition Failures and 3 more sections.
+</div>
+
 ## Quick Reference Table
 
 | Issue | Symptom | Primary Cause | First Action |

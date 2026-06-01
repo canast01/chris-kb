@@ -1,4 +1,9 @@
 # Pure1 Security
+
+<div class="kb-summary">
+Pure1 Security reference covering Access Control (RBAC), SSO Configuration (SAML 2.0), Authentication Flow (RSA Key), Audit Logging, Data Security and 1 more sections.
+</div>
+
 ## Access Control (RBAC)
 
 Pure1 uses role-based access control managed in the Pure1 portal. Assign the minimum required role to each user.

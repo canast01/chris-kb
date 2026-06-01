@@ -1,6 +1,9 @@
 # FlashArray — Common Issues
 
+
+<div class="kb-summary">
 Detailed resolution procedures for the most frequently encountered FlashArray issues. Each section includes diagnostic commands, root cause identification, and resolution steps.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Access Standard
 
+
+<div class="kb-summary">
+Access Standard reference covering Overview, Core Principles, vCenter Role Definitions, AD Group Mapping, Service Accounts and 5 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── vSphere — Access Standard ──────────────────────────────────────┐
 │                                                                                                       │

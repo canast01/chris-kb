@@ -1,5 +1,10 @@
 # ESXi — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Firewall Hardening, Advanced Security Settings, Secure Boot, Audit Logging, Host Profile Enforcement and 2 more sections.
+</div>
+
 ```text
 ESXi Host Hardening Layers
 ┌─────────────────────────────────────────────────────────┐

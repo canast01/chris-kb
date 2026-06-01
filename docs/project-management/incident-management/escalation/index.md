@@ -1,5 +1,10 @@
 # Incident Escalation
 
+
+<div class="kb-summary">
+Incident Escalation reference covering Overview, Priority Definitions, Escalation Matrix, P1/P2 Escalation Checklist, Vendor Escalation and 1 more sections.
+</div>
+
 ## Overview
 
 Escalation ensures that incidents get the right people involved at the right time. Failing to escalate promptly extends outage duration and can breach SLAs. Over-escalating creates alert fatigue and burns out senior staff on minor issues. The matrix below provides clear criteria for when and how to escalate.

@@ -1,5 +1,10 @@
 # VMware Maintenance Window Standards
 
+
+<div class="kb-summary">
+VMware Maintenance Window Standards reference covering Change Ticket Requirement, Stakeholder Notification, Window Definition, Pre-Change Evidence, Rollback Plan and 4 more sections.
+</div>
+
 ## Change Ticket Requirement
 
 All maintenance windows require an approved change ticket before work begins.

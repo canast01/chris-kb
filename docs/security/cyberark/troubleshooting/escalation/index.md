@@ -1,6 +1,11 @@
 # CyberArk Vendor Support
 
-CyberArk support is accessed through the CyberArk Support Portal at support.cyberark.com, where Service Requests (SRs) are raised by product area (Vault, CPM, PSM, PVWA). For Severity 1 issues (Vault down, authentication unavailable), call the CyberArk emergency support line referenced in the portal after creating the SR online. CyberArk Blue Team services provide incident response for PAM-related security incidents under a separate engagement.
+
+<div class="kb-summary">
+CyberArk support is accessed through the CyberArk Support Portal at support.cyberark.com, where Service Requests (SRs) are raised by product area (Vault, CPM, PSM, PVWA).
+</div>
+
+ For Severity 1 issues (Vault down, authentication unavailable), call the CyberArk emergency support line referenced in the portal after creating the SR online. CyberArk Blue Team services provide incident response for PAM-related security incidents under a separate engagement.
 
 **Data to collect before opening a case:**
 

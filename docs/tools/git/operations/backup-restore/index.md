@@ -1,6 +1,9 @@
 # Git — Backup & Restore
 
+
+<div class="kb-summary">
 This page covers repository backup strategies, platform-level backup procedures, and restore procedures for both individual repositories and full platform instances.
+</div>
 
 ---
 

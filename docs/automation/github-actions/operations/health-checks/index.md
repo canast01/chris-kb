@@ -1,6 +1,9 @@
 # GitHub Actions — Health Checks
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Operations](../index.md) reference.
+</div>
 
 ---
 

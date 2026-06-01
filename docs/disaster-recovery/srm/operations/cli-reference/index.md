@@ -1,5 +1,10 @@
 # SRM Operations — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering SRM Object Hierarchy, Recovery Plans, Test Failover, Recovery (Planned Migration / Failover), REST API.
+</div>
+
 ## SRM Object Hierarchy
 
 Protection Groups, Recovery Plans, and the steps that execute during failover form a strict containment hierarchy.

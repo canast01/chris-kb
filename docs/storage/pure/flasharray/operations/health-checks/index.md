@@ -1,5 +1,10 @@
 # FlashArray — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Health Check, Controller Health, Drive Health, Volume Health and 5 more sections.
+</div>
+
 ```text
 FlashArray Health Check Sequence
   purealert list ──► Any error/warning alerts?

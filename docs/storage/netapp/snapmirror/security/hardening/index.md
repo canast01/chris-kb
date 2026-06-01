@@ -1,6 +1,9 @@
 # SnapMirror — Hardening
 
+
+<div class="kb-summary">
 > Part of the [SnapMirror Security](../index.md) reference.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # Unity — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Dell Unity](../../index.md) reference.
+</div>
 
 ---
 ## System Health Check

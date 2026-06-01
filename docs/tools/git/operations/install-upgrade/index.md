@@ -1,6 +1,9 @@
 # Git — Install & Upgrade
 
+
+<div class="kb-summary">
 This page covers Git client installation and upgrades across operating systems, GitLab server upgrade procedures (Omnibus and Docker), GitHub Enterprise Server upgrades, pre-upgrade checklists, and rollback steps.
+</div>
 
 ---
 

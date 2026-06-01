@@ -1,6 +1,9 @@
 # RASR — Procedures
 
+
+<div class="kb-summary">
 > Part of the [RASR Operations](../index.md) reference.
+</div>
 
 ---
 

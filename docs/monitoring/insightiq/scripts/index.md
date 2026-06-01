@@ -1,4 +1,9 @@
 # InsightIQ Scripts
+
+<div class="kb-summary">
+InsightIQ Scripts reference covering Authentication, Threshold Alert Forwarding (SNMP), Automated Weekly Report Generation, Script Inventory, OneFS Performance Query (Direct API).
+</div>
+
 ## Authentication
 
 Scripts authenticate to the InsightIQ REST API using basic authentication with the admin service account. Credentials are loaded from the secrets manager at runtime.

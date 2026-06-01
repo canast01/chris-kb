@@ -1,5 +1,10 @@
 # SRDF/A — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Delta Set Mechanics, Lag Reference, Connectivity.
+</div>
+
 ## Overview
 
 SRDF/A (Asynchronous) replicates data from a source PowerMax to a target PowerMax by capturing writes into time-bounded delta sets (cycles) and transmitting them in order. The source array acknowledges writes to the host before transmission — host write latency is not affected by WAN latency. RPO is determined by cycle time (default 30 seconds). R1 is the source (production); R2 is the target (DR).

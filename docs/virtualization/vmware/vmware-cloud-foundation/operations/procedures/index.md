@@ -1,5 +1,10 @@
 # VCF — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering SDDC Manager Backup, Password Management, Useful Log Locations.
+</div>
+
 ```text
 VCF Operational Procedures — Decision Map
 ┌─────────────────────────────────────────────────────┐

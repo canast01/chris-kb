@@ -1,6 +1,9 @@
 # SANnav — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [SANnav](../../index.md) reference.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Terraform — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Drift Detection Flow, Daily Checks.
+</div>
+
 ## Drift Detection Flow
 
 ```mermaid

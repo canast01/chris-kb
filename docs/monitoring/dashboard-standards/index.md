@@ -1,5 +1,10 @@
 # Monitoring Dashboard Standards
 
+
+<div class="kb-summary">
+Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code, Validation Checklist, Dashboard Review Cadence.
+</div>
+
 ```text
 ┌────────────────────────────────── Monitoring — Dashboard Standards ───────────────────────────────────┐
 │                                                                                                       │

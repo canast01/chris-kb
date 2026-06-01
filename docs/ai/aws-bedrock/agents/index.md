@@ -1,6 +1,9 @@
 # Bedrock Agents
 
+
+<div class="kb-summary">
 AWS Bedrock Agents enable multi-step reasoning and action execution using foundation models. Agents can call APIs, query knowledge bases, and orchestrate complex workflows autonomously without custom orchestration code.
+</div>
 
 ## Creating an Agent
 

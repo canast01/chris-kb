@@ -1,6 +1,11 @@
 # VMware Certification
 
 
+
+<div class="kb-summary">
+VMware Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
+</div>
+
 <div class="kb-grid kb-grid-1">
 
 <a class="kb-card" href="exam-tracking/">

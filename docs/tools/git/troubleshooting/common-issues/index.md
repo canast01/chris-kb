@@ -1,6 +1,9 @@
 # Git — Common Issues
 
+
+<div class="kb-summary">
 Quick-reference for the most frequently encountered Git problems in enterprise environments, with precise fix commands and explanations.
+</div>
 
 ---
 

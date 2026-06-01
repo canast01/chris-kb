@@ -1,5 +1,10 @@
 # PowerPath — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Overview, Initial Diagnostic Commands, Linux-Specific Diagnostics, Windows-Specific Diagnostics, SAN Fabric Diagnostics and 3 more sections.
+</div>
+
 ## Diagnostic Overview
 
 ```mermaid

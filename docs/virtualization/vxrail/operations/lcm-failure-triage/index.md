@@ -1,5 +1,10 @@
 # VxRail LCM Failure Triage
 
+
+<div class="kb-summary">
+VxRail LCM Failure Triage reference covering Symptoms, Likely Causes, Commands, Troubleshooting Workflow, Resolution and 1 more sections.
+</div>
+
 ## Symptoms
 
 - VxRail lifecycle operation fails.

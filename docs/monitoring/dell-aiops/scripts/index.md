@@ -1,4 +1,9 @@
 # Dell AIOps Scripts
+
+<div class="kb-summary">
+Dell AIOps Scripts reference covering Authentication, Forward Critical Recommendations to ServiceNow, Weekly Health Score Report, Script Inventory.
+</div>
+
 ## Authentication
 
 Dell AIOps is accessed via the CloudIQ REST API using OAuth2 client credentials. All scripts load credentials from the secrets manager at runtime.

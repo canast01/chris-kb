@@ -1,5 +1,10 @@
 # Tanzu — Backup and Restore
 
+
+<div class="kb-summary">
+Backup and Restore reference covering What to Back Up, Back Up vCenter VCSA (Supervisor), Install and Configure Velero, Schedule Cluster Backups with Velero, Restore from Velero Backup and 3 more sections.
+</div>
+
 ---
 
 ## What to Back Up

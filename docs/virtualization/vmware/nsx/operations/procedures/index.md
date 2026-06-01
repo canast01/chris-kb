@@ -1,5 +1,10 @@
 # NSX — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Distributed Firewall Procedures, Segment Procedures, Gateway Procedures, Transport Node Maintenance, IPAM Procedures.
+</div>
+
 ## Distributed Firewall Procedures
 
 ### Add a DFW Rule — Procedure

@@ -1,6 +1,11 @@
 # RecoverPoint — Operations
 
 
+
+<div class="kb-summary">
+RecoverPoint — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────── RecoverPoint — Operations Overview ──────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # FlashBlade — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
+</div>
+
 ```text
 FlashBlade Integration Map
 ┌──────────────────────────────────────────────────────────┐

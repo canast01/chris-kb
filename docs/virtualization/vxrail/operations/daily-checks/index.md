@@ -1,5 +1,10 @@
 # VxRail Daily Checks
 
+
+<div class="kb-summary">
+VxRail Daily Checks reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 Daily Check Sequence
 ┌─────────────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # COD — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Post-Change Validation.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Dell COD Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

@@ -1,7 +1,9 @@
 # Troubleshooting
 
-Cross-platform troubleshooting guides for common infrastructure issues.
 
+<div class="kb-summary">
+Cross-platform troubleshooting guides for common infrastructure issues.
+</div>
 
 ```text
 ┌─────────────────────────────────── Cross-Platform Troubleshooting ────────────────────────────────────┐

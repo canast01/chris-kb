@@ -1,5 +1,10 @@
 # Horizon — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Engage VMware Support, Escalation Within VMware, Useful Resources.
+</div>
+
 ```text
   Escalation Path
 ┌──────────────────────────────────────────────────────────────┐

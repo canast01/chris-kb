@@ -1,5 +1,10 @@
 # Datastore Inventory
 
+
+<div class="kb-summary">
+Datastore Inventory reference covering Overview, Datastore Inventory Table, Fields Reference, Capacity Thresholds, Datastore Checklist.
+</div>
+
 ```text
 ┌──────────────────────────────────── vSphere — Datastore Inventory ────────────────────────────────────┐
 │                                                                                                       │

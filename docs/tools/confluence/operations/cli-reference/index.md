@@ -1,6 +1,11 @@
 # Confluence — CLI Reference
 
-Confluence administration via command line spans three toolsets: the **Atlassian CLI** (third-party Java tool for scripted space/page operations), **REST API via curl** (direct API access), and **JVM / application administration** commands. This page provides ready-to-use examples for all three.
+
+<div class="kb-summary">
+Confluence administration via command line spans three toolsets: the **Atlassian CLI** (third-party Java tool for scripted space/page operations), **REST API via curl** (direct API access), and **JVM / application administration** commands.
+</div>
+
+ This page provides ready-to-use examples for all three.
 
 ---
 

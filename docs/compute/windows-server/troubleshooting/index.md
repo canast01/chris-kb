@@ -1,6 +1,11 @@
 # Windows Server — Troubleshooting
 
 
+
+<div class="kb-summary">
+Windows Server — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────── Windows Server — Troubleshooting Overview ──────────────────────────────┐
 │                                                                                                       │

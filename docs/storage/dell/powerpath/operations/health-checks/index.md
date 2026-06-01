@@ -1,5 +1,10 @@
 # PowerPath — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Health Check, Pre-Maintenance Health Check, Path State Verification, Port / HBA Check, Policy Verification and 2 more sections.
+</div>
+
 ## Daily Health Check
 
 ```mermaid

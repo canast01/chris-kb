@@ -1,5 +1,10 @@
 # Ansible — CLI Reference
 
+
+<div class="kb-summary">
+> Part of the [Ansible Operations](../index.md) reference. Ansible is an agentless automation tool — it connects to remote hosts over SSH and runs tasks defined in YAML playbooks. There's nothing to install on the managed hosts.
+</div>
+
 > Part of the [Ansible Operations](../index.md) reference.
 
 Ansible is an agentless automation tool — it connects to remote hosts over SSH and runs tasks defined in YAML playbooks. There's nothing to install on the managed hosts. The control node (where you run `ansible` and `ansible-playbook`) needs Python and the Ansible package.

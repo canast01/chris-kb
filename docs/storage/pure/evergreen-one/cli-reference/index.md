@@ -1,6 +1,10 @@
 # Pure Evergreen//One CLI Reference
 
+
+<div class="kb-summary">
 > Part of the [Evergreen//One](../index.md) reference.
+</div>
+
 ---
 
 ```text

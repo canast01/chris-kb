@@ -1,6 +1,9 @@
 # System Onboarding Procedure
 
+
+<div class="kb-summary">
 Brings a new physical server, VM, or cloud instance into full production management — covering identity, networking, security, monitoring, backup, and documentation.
+</div>
 
 ## Onboarding Stages
 

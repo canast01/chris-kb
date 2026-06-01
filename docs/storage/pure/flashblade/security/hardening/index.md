@@ -1,5 +1,10 @@
 # FlashBlade — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
+</div>
+
 ```text
 FlashBlade Hardening Sequence
   1. Default credentials ──► rename/vault admin account

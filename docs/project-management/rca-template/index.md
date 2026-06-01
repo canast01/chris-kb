@@ -4,6 +4,11 @@ title: Root Cause Analysis Template
 
 # Root Cause Analysis Template
 
+
+<div class="kb-summary">
+Root Cause Analysis Template reference covering Overview, Incident Summary, Timeline, Root Cause, Corrective Actions and 1 more sections.
+</div>
+
 ## Overview
 
 This template documents incidents, root causes, corrective actions, and prevention strategies.

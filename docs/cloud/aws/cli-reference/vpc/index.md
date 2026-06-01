@@ -1,5 +1,10 @@
 # VPC & Networking
 
+
+<div class="kb-summary">
+VPC & Networking reference.
+</div>
+
 ```text
 VPC CLI: Network Resource Hierarchy
 ──────────────────────────────────────────────────────────────

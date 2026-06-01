@@ -1,5 +1,10 @@
 # NetBackup — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering NetBackup Access Control (NBAC).
+</div>
+
 ```text
 ┌───────────────────────────────────── NetBackup — Access Control ──────────────────────────────────────┐
 │                                                                                                       │

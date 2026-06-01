@@ -1,5 +1,10 @@
 # Business Impact Assessment
 
+
+<div class="kb-summary">
+Business Impact Assessment reference covering Overview, Impact Dimensions, User Impact Categories, SLA Breach Assessment, Affected Services Inventory and 1 more sections.
+</div>
+
 ## Overview
 
 A business impact assessment during an incident quantifies who is affected, which business processes are disrupted, what the financial and reputational exposure is, and whether SLA commitments are at risk. This assessment drives priority setting, escalation decisions, and stakeholder communication.

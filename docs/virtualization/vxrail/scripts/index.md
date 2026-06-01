@@ -1,6 +1,9 @@
 # VxRail — Scripts
 
+
+<div class="kb-summary">
 > Part of the [VxRail](../index.md) reference.
+</div>
 
 ---
 ## VxRail Cluster Health Check (PowerShell / PowerCLI)

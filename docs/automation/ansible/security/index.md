@@ -1,6 +1,11 @@
 # Ansible — Security
 
 
+
+<div class="kb-summary">
+Ansible — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Ansible — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

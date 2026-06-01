@@ -1,4 +1,9 @@
 # Dell ECS — Troubleshooting
+
+<div class="kb-summary">
+Dell ECS — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell ECS — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # VCF — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering vSAN Encryption.
+</div>
+
 ```text
 VCF Encryption — Certificate and Data Flow
 ┌─────────────────────────────────────────────────────┐

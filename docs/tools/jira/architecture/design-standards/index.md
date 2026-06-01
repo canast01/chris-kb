@@ -1,5 +1,10 @@
 # Jira — Architecture Standards
 
+
+<div class="kb-summary">
+Architecture Standards reference covering Project Naming Conventions, Workflow State Standards, Field Configuration Standards, Permission Scheme Standards, Notification Scheme Standards and 1 more sections.
+</div>
+
 ## Project Naming Conventions
 
 Consistent project keys and names reduce confusion, simplify JQL queries, and enable automation rules that target predictable patterns.

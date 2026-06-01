@@ -1,5 +1,10 @@
 # SANnav — Operations Common Issues
 
+
+<div class="kb-summary">
+Operations Common Issues reference covering Overview, Switch Not Appearing After Discovery, Zone Change Does Not Take Effect, Firmware Upgrade Reported as Complete but Switch Still on Old Version, Alert Emails Not Being Received and 3 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────────── SANnav — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │

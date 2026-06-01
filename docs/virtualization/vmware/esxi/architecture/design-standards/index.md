@@ -1,5 +1,10 @@
 # ESXi — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layout, NTP Configuration, VIB Acceptance Levels, Storage Path Configuration and 3 more sections.
+</div>
+
 ```text
 ESXi Host Design Checklist — Standard Layout
 ┌──────────────────────────────────────────────────────────┐

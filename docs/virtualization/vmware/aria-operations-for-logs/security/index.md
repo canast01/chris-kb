@@ -1,4 +1,9 @@
 # Aria Ops for Logs — Security
+
+<div class="kb-summary">
+Aria Ops for Logs — Security reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Aria Logs — Security ─────────────────────────────────────────┐
 │                                                                                                       │

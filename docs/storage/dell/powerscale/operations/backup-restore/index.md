@@ -1,6 +1,9 @@
 # PowerScale — Backup & Restore
 
+
+<div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell PowerScale.
+</div>
 
 ## Overview
 

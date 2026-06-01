@@ -1,5 +1,10 @@
 # ONTAP — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, HA Topology, Cluster Networking, Storage Hierarchy, SVM (Storage VM) Architecture and 3 more sections.
+</div>
+
 ## Overview
 
 NetApp ONTAP is a clustered storage operating system that abstracts physical hardware into logical constructs, enabling non-disruptive operations, multi-protocol data access, and built-in data protection. The hierarchy flows from cluster → nodes → aggregates → SVMs → volumes, with data served across NFS, SMB/CIFS, iSCSI, FC, FCoE, NVMe/FC, and S3 protocols simultaneously from a single cluster.

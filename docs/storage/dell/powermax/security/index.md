@@ -1,4 +1,9 @@
 # PowerMax — Security
+
+<div class="kb-summary">
+PowerMax — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Dell PowerMax Security ────────────────────────────────────────┐
 │                                                                                                       │

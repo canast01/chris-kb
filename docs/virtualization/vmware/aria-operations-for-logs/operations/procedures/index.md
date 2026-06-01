@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Search Examples, Alerts Overview, Alert Types and Configuration, Alert Query Syntax, Alert Threshold Settings and 3 more sections.
+</div>
+
 ## Search Examples
 
 ### Host Disconnect Events

@@ -1,5 +1,10 @@
 # SRM — Backup and Restore
 
+
+<div class="kb-summary">
+Backup and Restore reference covering Backup Schedule Recommendation, SRM Configuration Export (Migration / Documentation), vSphere Replication Appliance Backup, Recovery Plan PDF Export, SRM Database Considerations and 2 more sections.
+</div>
+
 ```text
   SRM Backup Sources
 ┌──────────────────────────────────────────────────────────────┐

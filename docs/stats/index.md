@@ -5,4 +5,9 @@ description: Visitor statistics for chrisanastasiadis.com
 
 # Site Stats
 
+
+<div class="kb-summary">
+Visitor statistics for chrisanastasiadis.com
+</div>
+
 Stats are generated at deploy time. Push a commit to refresh.

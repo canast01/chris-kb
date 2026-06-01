@@ -1,6 +1,9 @@
 # SnapCenter — Integrations
 
+
+<div class="kb-summary">
 > Part of the [SnapCenter Architecture](../index.md) reference.
+</div>
 
 ---
 

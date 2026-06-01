@@ -1,5 +1,10 @@
 # Windows Server — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Script Deployment and Scheduling, Disk Space Alert, Service Monitor, Event Log Query, Patch Status Report.
+</div>
+
 Automation scripts and reusable code.
 
 ## Script Deployment and Scheduling

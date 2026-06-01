@@ -1,6 +1,9 @@
 # NetApp Operations
 
+
+<div class="kb-summary">
 Use this section for practical notes, checks, commands, troubleshooting, design references, and change validation.
+</div>
 
 <div class="kb-grid kb-grid-3">
 

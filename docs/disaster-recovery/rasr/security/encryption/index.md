@@ -1,6 +1,9 @@
 # RASR — Encryption
 
+
+<div class="kb-summary">
 Encryption of backup/snapshot media, data in transit during recovery operations, and key management for RASR environments.
+</div>
 
 ## Encryption Layers in RASR
 

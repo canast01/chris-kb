@@ -1,5 +1,10 @@
 # FOD — Common Issues
 
+
+<div class="kb-summary">
+FOD — Common Issues reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell FoD — Common Issues ───────────────────────────────────────┐
 │                                                                                                       │

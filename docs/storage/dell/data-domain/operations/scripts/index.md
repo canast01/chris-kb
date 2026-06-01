@@ -1,5 +1,10 @@
 # Data Domain — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Daily Health Check, Ansible Daily Check Playbook, DDBoost Client Check, Windows: Data Domain Health Check via Plink (CMD), Windows: Data Domain Health via REST API (PowerShell) and 5 more sections.
+</div>
+
 ## Daily Health Check
 
 SSH to a Data Domain appliance and print a formatted health summary covering filesystem space, compression ratio, active alerts, replication state, and system uptime. Exits non-zero if any active alerts are found.

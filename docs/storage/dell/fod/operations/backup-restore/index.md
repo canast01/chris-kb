@@ -1,5 +1,10 @@
 # FOD — Backup & Restore
 
+
+<div class="kb-summary">
+FOD — Backup & Restore reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell FoD — Backup and Restore ────────────────────────────────────┐
 │                                                                                                       │

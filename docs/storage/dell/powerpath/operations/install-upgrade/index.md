@@ -4,6 +4,11 @@ title: PowerPath — Install & Upgrade
 
 # PowerPath — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Version and Release Matrix, Upgrade and Update Paths, EOL and Renewal Tracking, Replacement and Decommission Planning.
+</div>
+
 ## Version and Release Matrix
 
 | PowerPath Version | Supported Platforms | Key Changes | Support Status |

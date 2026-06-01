@@ -1,6 +1,9 @@
 # Azure — Install & Upgrade
 
+
+<div class="kb-summary">
 > VM image management, patching via Azure Update Manager, and service upgrades.
+</div>
 
 ---
 

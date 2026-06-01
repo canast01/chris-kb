@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge Base.
+</div>
+
 ```text
   LCM Escalation Path
 ┌─────────────────────────────────────────────────────────────────┐

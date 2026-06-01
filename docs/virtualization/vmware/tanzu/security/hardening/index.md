@@ -1,5 +1,10 @@
 # Tanzu — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Pod Security Admission, Default Deny Network Policy, Disallow Privileged Containers (OPA Gatekeeper), Require Resource Limits, Harbor Vulnerability Scanning Policy and 4 more sections.
+</div>
+
 ---
 
 ## Pod Security Admission

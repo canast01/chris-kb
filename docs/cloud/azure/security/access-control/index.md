@@ -1,6 +1,11 @@
 # Azure — Access Control
 
-Azure access control is built on Azure Role-Based Access Control (RBAC). Permissions are assigned by attaching role definitions to security principals (users, groups, service principals, managed identities) at a specific scope (management group, subscription, resource group, or resource).
+
+<div class="kb-summary">
+Azure access control is built on Azure Role-Based Access Control (RBAC).
+</div>
+
+ Permissions are assigned by attaching role definitions to security principals (users, groups, service principals, managed identities) at a specific scope (management group, subscription, resource group, or resource).
 
 ---
 

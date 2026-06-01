@@ -1,6 +1,9 @@
 # NVIDIA GPU Drivers
 
+
+<div class="kb-summary">
 Installing and maintaining NVIDIA drivers correctly is critical for GPU workloads. A driver mismatch between the kernel, CUDA toolkit, and frameworks is the most common source of GPU failures.
+</div>
 
 ## Checking Current State
 

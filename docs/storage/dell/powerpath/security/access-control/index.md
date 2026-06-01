@@ -1,5 +1,10 @@
 # PowerPath — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC, Sudoers Configuration, Audit Logging.
+</div>
+
 ## RBAC
 
 PowerPath does not have its own RBAC system — access control is delegated entirely to the host OS.

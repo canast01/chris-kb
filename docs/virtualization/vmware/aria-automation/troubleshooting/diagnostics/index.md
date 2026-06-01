@@ -1,5 +1,10 @@
 # Aria Automation — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Blueprints (Cloud Templates), Deployments, Requests and Catalog, Related Sections.
+</div>
+
 ## Blueprints (Cloud Templates)
 
 ### Blueprint Structure

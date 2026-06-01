@@ -1,5 +1,10 @@
 # Account Unlock Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Low | | Approval | Verify requester identity — no change ticket required for standard user accounts | | Estimated time | 5–15 minutes | | Impact | User regains access; no service disruption |
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Low |

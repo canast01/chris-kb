@@ -1,5 +1,10 @@
 # VM Performance Troubleshooting
 
+
+<div class="kb-summary">
+VM Performance Troubleshooting reference covering Triage Flow — Quick Start, Triage Flow — With Thresholds, Overview, VM Performance Symptom Matrix, Diagnostic Flowchart and 8 more sections.
+</div>
+
 ## Triage Flow — Quick Start
 
 Start here. OS first, then hypervisor, then storage/hardware.

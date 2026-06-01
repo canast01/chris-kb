@@ -1,5 +1,10 @@
 # PowerStore — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Overview, Management Plane Hardening, Host Connectivity Hardening, SupportAssist Hardening, Audit Logging and 2 more sections.
+</div>
+
 ## Overview
 
 PowerStore hardening covers four areas: securing the management plane (PowerStore Manager and REST API), securing host connectivity (FC, iSCSI, NFS, SMB), key management configuration, and reducing the operational attack surface through configuration discipline. PowerStoreOS is a closed purpose-built OS — hardening targets the management and connectivity interfaces, not the underlying OS which is not user-accessible.

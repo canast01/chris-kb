@@ -1,6 +1,11 @@
 # Active Directory Scripts
 
-PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed. Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.
+
+<div class="kb-summary">
+PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed.
+</div>
+
+ Audit scripts require at minimum Read access to the domain; replication and GPO tasks require Domain Admin rights.
 
 ## Audit Script Workflow
 

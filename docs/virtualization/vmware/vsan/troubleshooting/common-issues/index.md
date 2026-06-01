@@ -1,6 +1,9 @@
 # vSAN — Common Issues
 
+
+<div class="kb-summary">
 Reference for the most frequently encountered vSAN problems. Each entry includes symptoms, diagnostic steps, and resolution actions.
+</div>
 
 ---
 

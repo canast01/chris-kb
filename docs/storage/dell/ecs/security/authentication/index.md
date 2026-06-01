@@ -1,5 +1,10 @@
 # Dell ECS — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering User Model Overview, Local Accounts, LDAP / Active Directory, S3 Object User Authentication, Audit Logging and 1 more sections.
+</div>
+
 ## User Model Overview
 
 ECS has two distinct authentication contexts: **management plane** (portal/API administration) and **data plane** (S3/Swift/CAS object access). These use different identity sources and credential types.

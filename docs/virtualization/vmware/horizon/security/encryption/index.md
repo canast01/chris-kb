@@ -1,5 +1,10 @@
 # Horizon — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Connection Server Certificate, UAG Certificate, Clipboard Encryption and Control, USB Redirection Encryption, Persistent Disk Encryption and 2 more sections.
+</div>
+
 ```text
   TLS Encryption Path: Client to Desktop
 ┌──────────────┐  TLS 1.2+   ┌───────────┐  TLS 1.2+  ┌──────────────────┐

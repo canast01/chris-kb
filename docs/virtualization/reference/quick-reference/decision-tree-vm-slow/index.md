@@ -1,5 +1,10 @@
 # VM Slow Decision Tree
 
+
+<div class="kb-summary">
+VM Slow Decision Tree reference covering First Decision.
+</div>
+
 ```text
                          VM reported slow
                                │

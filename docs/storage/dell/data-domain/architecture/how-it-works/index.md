@@ -1,5 +1,10 @@
 # Data Domain — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Architecture, Data Path, Components, HA Options and 2 more sections.
+</div>
+
 ## Overview
 
 Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance built around **inline global deduplication**. All data is deduplicated as it is written using the SISL (Stream-Informed Segment Layout) engine — not in post-processing. Typical deduplication ratios: 20:1 or greater across mixed workloads.

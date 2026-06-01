@@ -1,5 +1,10 @@
 # AWS CloudTrail
 
+
+<div class="kb-summary">
+AWS CloudTrail reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────── CloudTrail — API Audit Logging ────────────────────────────────────┐
 │                                                                                                       │

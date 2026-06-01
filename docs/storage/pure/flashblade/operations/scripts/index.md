@@ -1,5 +1,10 @@
 # FlashBlade — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Array Health Check (Python), Filesystem Capacity Report (Bash), ActiveDR Replication Monitor (Python), Daily Check Script (Bash via SSH), S3 Bucket Audit (Python) and 1 more sections.
+</div>
+
 ```text
 Automation Architecture — FlashBlade
   Python / Bash / Ansible

@@ -1,6 +1,9 @@
 # RASR — Authentication
 
+
+<div class="kb-summary">
 Authentication controls for Dell Rapid Array Snapshot Recovery operations, recovery media access, and management interfaces.
+</div>
 
 ## Overview
 

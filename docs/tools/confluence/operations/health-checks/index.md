@@ -1,6 +1,9 @@
 # Confluence — Health Checks
 
+
+<div class="kb-summary">
 This page defines the daily health check procedure for Confluence Data Center. Run these checks as part of a morning operational routine or automate them with a monitoring script.
+</div>
 
 ---
 

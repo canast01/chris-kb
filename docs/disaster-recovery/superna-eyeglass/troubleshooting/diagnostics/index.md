@@ -1,5 +1,10 @@
 # Superna Eyeglass — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Commands.
+</div>
+
 ## Diagnostic Commands
 
 ```mermaid

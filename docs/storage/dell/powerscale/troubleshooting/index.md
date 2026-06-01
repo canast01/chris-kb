@@ -1,4 +1,9 @@
 # PowerScale — Troubleshooting
+
+<div class="kb-summary">
+PowerScale — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Dell PowerScale Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │

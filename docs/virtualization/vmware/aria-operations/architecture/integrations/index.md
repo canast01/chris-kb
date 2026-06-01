@@ -1,5 +1,10 @@
 # Aria Operations — Integration
 
+
+<div class="kb-summary">
+Integration reference covering NSX Adapter, Active Directory / LDAP Authentication, SMTP (Alert Email), ServiceNow ITSM Integration, Webhook / Generic REST Actions and 2 more sections.
+</div>
+
 ```text
 Aria Operations — Adapter and Outbound Integration Map
 ┌─────────────────────────────────────────────────────┐

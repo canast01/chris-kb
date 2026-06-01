@@ -1,5 +1,10 @@
 # vCenter — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Disk Partition Usage, SSO and Lookup Service Health, DNS and NTP Validation, PowerCLI Health Checks, Daily Checks and 2 more sections.
+</div>
+
 ```text
 Health Check Coverage Map
 ════════════════════════════════════════════════════════

@@ -1,5 +1,10 @@
 # Terraform — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Provider Credential Flow — CI/CD, CI/CD Credential Injection, Credential Management Reference.
+</div>
+
 ## Provider Credential Flow — CI/CD
 
 ```mermaid

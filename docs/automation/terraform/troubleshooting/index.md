@@ -1,6 +1,11 @@
 # Terraform — Troubleshooting
 
 
+
+<div class="kb-summary">
+Terraform — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Terraform — Troubleshooting ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

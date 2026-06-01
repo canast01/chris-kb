@@ -1,5 +1,10 @@
 # Aria Operations — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Sources, Configuring Active Directory / LDAP, LDAP Group Import and Role Assignment, Workspace ONE Access (VIDM) / SAML Integration, API Authentication and 3 more sections.
+</div>
+
 ## Authentication Sources
 
 Aria Operations supports multiple authentication sources. Users can authenticate against any configured source.

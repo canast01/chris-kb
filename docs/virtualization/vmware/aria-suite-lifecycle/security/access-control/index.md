@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Service Account for API Automation, Separation of Duties, Auditing Access.
+</div>
+
 ```text
   LCM RBAC — AD Groups → LCM Roles
 ┌─────────────────────────────────────────────────────────────────┐

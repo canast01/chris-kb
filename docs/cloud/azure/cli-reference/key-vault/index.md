@@ -1,5 +1,10 @@
 # Key Vault
 
+
+<div class="kb-summary">
+Key Vault reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

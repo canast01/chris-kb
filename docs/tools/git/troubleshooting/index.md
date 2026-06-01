@@ -1,6 +1,11 @@
 # Git — Troubleshooting
 
 
+
+<div class="kb-summary">
+Git — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Git — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │

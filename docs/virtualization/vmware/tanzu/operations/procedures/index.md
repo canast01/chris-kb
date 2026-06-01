@@ -1,5 +1,10 @@
 # Tanzu — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Create a vSphere Namespace, Deploy a TKG Workload Cluster in a Namespace, Grant Namespace Access to a Team, Configure Harbor Project with Vulnerability Scanning, Configure Pull-Through Cache in Harbor and 4 more sections.
+</div>
+
 ---
 
 ## Create a vSphere Namespace

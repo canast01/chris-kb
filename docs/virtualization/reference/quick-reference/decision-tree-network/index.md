@@ -1,6 +1,9 @@
 # Decision Tree: VM Network Issue
 
+
+<div class="kb-summary">
 Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.
+</div>
 
 ```text
                      VM: Cannot communicate

@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering NSX-T Integration, Physical Switch Integration — NetFlow/IPFIX, vDS IPFIX (ESXi Distributed Switch), NSX-T Built-In IPFIX, Palo Alto Firewall Integration and 2 more sections.
+</div>
+
 ## NSX-T Integration
 
 AON connects to NSX-T Manager with a **read-only** service account. The Collector polls the NSX-T API on a 10-minute interval (default).

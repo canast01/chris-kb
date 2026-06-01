@@ -1,6 +1,11 @@
 # Jira — Authentication
 
-Jira supports multiple authentication methods across its deployment models: Jira Software/Service Management Data Center (self-managed) and Jira Cloud. Authentication configuration is critical because Jira often contains sensitive project data, incident records, and change management workflows.
+
+<div class="kb-summary">
+Jira supports multiple authentication methods across its deployment models: Jira Software/Service Management Data Center (self-managed) and Jira Cloud.
+</div>
+
+ Authentication configuration is critical because Jira often contains sensitive project data, incident records, and change management workflows.
 
 ---
 

@@ -1,5 +1,10 @@
 # CloudIQ — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Maintenance Window.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell CloudIQ — Operational Procedures ────────────────────────────────┐
 │                                                                                                       │

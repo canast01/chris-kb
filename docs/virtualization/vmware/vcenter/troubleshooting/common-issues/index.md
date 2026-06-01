@@ -1,5 +1,10 @@
 # vCenter Troubleshooting — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Issue Summary, vCenter Services Not Starting, Certificate Errors, ESXi Host Disconnected or Not Responding, SSO / Authentication Failures and 5 more sections.
+</div>
+
 ```text
 Symptom Triage Map
 ════════════════════════════════════════════════════════

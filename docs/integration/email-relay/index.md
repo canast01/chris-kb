@@ -1,6 +1,9 @@
 # Email Relay
 
+
+<div class="kb-summary">
 > Covers Postfix SMTP relay configuration for outbound application and system mail.
+</div>
 
 ---
 

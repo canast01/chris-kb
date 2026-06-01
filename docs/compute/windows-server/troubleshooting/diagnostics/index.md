@@ -1,5 +1,10 @@
 # Windows Server — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Windows Event Log Pipeline, Key Security Event IDs, Searching by Event ID, Exporting Logs, Event Log Forwarding (WEF) and 3 more sections.
+</div>
+
 Diagnostic procedures and log analysis.
 
 ## Windows Event Log Pipeline

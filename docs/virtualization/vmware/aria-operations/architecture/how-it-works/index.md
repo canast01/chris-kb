@@ -1,5 +1,10 @@
 # Aria Operations — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, Core Internal Services and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── How Aria Operations Works ──────────────────────────────────────┐
 │                                                                                                       │

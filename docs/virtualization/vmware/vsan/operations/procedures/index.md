@@ -1,6 +1,9 @@
 # vSAN — Procedures
 
+
+<div class="kb-summary">
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
+</div>
 
 ```text
 KEY PROCEDURE FLOWS

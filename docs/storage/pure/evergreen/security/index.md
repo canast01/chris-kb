@@ -1,5 +1,10 @@
 # Pure Storage Evergreen Security
 
+
+<div class="kb-summary">
+Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security.
+</div>
+
 ```text
 Evergreen Security Controls
 ┌──────────────────────────────────────────────────────────┐

@@ -1,6 +1,9 @@
 # Ansible — Escalation
 
+
+<div class="kb-summary">
 > Part of the [Ansible Troubleshooting](../index.md) reference.
+</div>
 
 ## When to Escalate
 

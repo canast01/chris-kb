@@ -1,6 +1,10 @@
 # NetApp Keystone CLI Reference
 
+
+<div class="kb-summary">
 > Part of the [Keystone](../index.md) reference.
+</div>
+
 ---
 
 ## Overview

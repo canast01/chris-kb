@@ -1,5 +1,10 @@
 # AWS — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption Coverage Overview, KMS — Customer Managed Key (CMK), EBS — Encrypted Volume, RDS — Encryption at Rest, RDS — Enforce TLS and 4 more sections.
+</div>
+
 ---
 
 ## Encryption Coverage Overview

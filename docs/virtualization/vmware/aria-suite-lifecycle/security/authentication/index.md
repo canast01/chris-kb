@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Workspace ONE Access Integration, Active Directory Group Sync via VIDM, API Authentication, Local Accounts, Certificate Trust for API Clients and 2 more sections.
+</div>
+
 ```text
   LCM Authentication Architecture
 ┌─────────────────────────────────────────────────────────────────┐

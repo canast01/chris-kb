@@ -1,6 +1,9 @@
 # Windows Server — Hardening
 
+
+<div class="kb-summary">
 CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO hardening baseline, and Security Compliance Manager (SCM).
+</div>
 
 ## CIS Benchmark and Security Baselines
 

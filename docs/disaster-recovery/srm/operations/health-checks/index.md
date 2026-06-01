@@ -1,5 +1,10 @@
 # SRM Operations — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Weekly Checks, Quarterly.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRM — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │

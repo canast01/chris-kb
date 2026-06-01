@@ -1,5 +1,10 @@
 # Dell ECS — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Sizing and Capacity Model, Sizing by Workload, Network Sizing, Naming Conventions, Build and Deployment Baseline and 4 more sections.
+</div>
+
 ## Sizing and Capacity Model
 
 ECS nodes are standardised appliance configurations (ECS U-Series, CX-Series). Raw capacity is converted to usable capacity after erasure coding overhead (approximately 1.33× raw for 12+4 EC) and a 30% overhead reservation for metadata, journals, and rebuild workspace.

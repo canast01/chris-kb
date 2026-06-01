@@ -1,5 +1,10 @@
 # Unity — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Role-Based Access Control (RBAC), Local User Management, LDAP and Active Directory Group Mapping, iSCSI CHAP Authentication, NFS Export Access Control and 4 more sections.
+</div>
+
 ## Role-Based Access Control (RBAC)
 
 Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.

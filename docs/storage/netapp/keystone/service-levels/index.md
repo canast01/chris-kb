@@ -1,6 +1,10 @@
 # Keystone Service Levels
 
+
+<div class="kb-summary">
 NetApp Keystone offers tiered service levels based on performance characteristics. Each service level is defined by IOPS and latency targets per TB.
+</div>
+
 ## Standard Service Levels
 
 | Service Level | Workload Type | IOPS/TB | Latency Target |

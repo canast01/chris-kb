@@ -1,5 +1,10 @@
 # MDS — Troubleshooting
 
+
+<div class="kb-summary">
+MDS — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Cisco MDS 9000 — Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │

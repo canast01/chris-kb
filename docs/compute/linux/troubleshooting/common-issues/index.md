@@ -1,5 +1,10 @@
 # Linux — Common Issues
 
+
+<div class="kb-summary">
+Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues.
+</div>
+
 Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Linux server issues.

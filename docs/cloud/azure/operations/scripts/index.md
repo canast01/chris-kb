@@ -1,6 +1,9 @@
 # Azure — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Azure](../../index.md) reference.
+</div>
 
 ---
 ## Script Categories

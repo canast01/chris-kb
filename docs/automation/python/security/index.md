@@ -1,6 +1,11 @@
 # Python Automation — Security
 
 
+
+<div class="kb-summary">
+Python Automation — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── Python — Security ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

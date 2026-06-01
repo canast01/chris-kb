@@ -1,6 +1,9 @@
 # Change Validation
 
+
+<div class="kb-summary">
 Post-implementation checks to confirm a change achieved its intent, introduced no regressions, and the system is in a known-good state.
+</div>
 
 ## Validation Phases
 

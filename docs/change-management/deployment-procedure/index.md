@@ -1,6 +1,10 @@
 # Deployment Procedure
 
+
+<div class="kb-summary">
 Standard procedure for deploying infrastructure or application changes safely within an approved change window.
+</div>
+
 ## Pre-Deployment Checklist
 
 - [ ] Change ticket approved and in "Implementation" state

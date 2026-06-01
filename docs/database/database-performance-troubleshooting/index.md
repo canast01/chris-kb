@@ -1,6 +1,10 @@
 # Database Performance Troubleshooting
 
+
+<div class="kb-summary">
 Systematic approach to identifying and resolving database performance bottlenecks — from slow queries to I/O saturation and locking.
+</div>
+
 ## Triage — Identify the Bottleneck
 
 ```bash

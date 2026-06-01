@@ -1,5 +1,10 @@
 # Cluster Standard
 
+
+<div class="kb-summary">
+Cluster Standard reference covering Overview, Minimum Host Count, vSphere HA, DRS, EVC (Enhanced vMotion Compatibility) and 3 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── vSphere — Cluster Standard ──────────────────────────────────────┐
 │                                                                                                       │

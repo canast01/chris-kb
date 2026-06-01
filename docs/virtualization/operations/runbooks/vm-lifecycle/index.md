@@ -1,5 +1,10 @@
 # VM Lifecycle Runbook
 
+
+<div class="kb-summary">
+VM Lifecycle Runbook reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────────── VM Lifecycle Runbook ─────────────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # Venafi — Diagnostics
 
+
+<div class="kb-summary">
 Use this page for practical Venafi troubleshooting notes, checks, commands, change notes, and field references.
+</div>
 
 ## Venafi Diagnostic Flow
 

@@ -1,4 +1,9 @@
 # Automation
+
+<div class="kb-summary">
+Automation reference: Ansible, PowerShell, Python, Terraform, and 1 more.
+</div>
+
 ```text
 ┌──────────────────────────── Automation — Infrastructure Automation Tools ─────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,9 @@
 # Nexus Dashboard: Insights, Orchestrator, and Data Broker Integrations
 
+
+<div class="kb-summary">
 Cisco Nexus Dashboard acts as a hosting platform for multiple services: Nexus Dashboard Insights (NDI), Nexus Dashboard Orchestrator (NDO), and Nexus Dashboard Data Broker (NDDB). This page covers how to install, configure, and verify these service integrations.
+</div>
 
 ## Nexus Dashboard Services Overview
 

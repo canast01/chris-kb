@@ -1,6 +1,9 @@
 # Linux — Hardening
 
+
+<div class="kb-summary">
 CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login.defs, and PAM password policy.
+</div>
 
 ## Linux Hardening Layers
 

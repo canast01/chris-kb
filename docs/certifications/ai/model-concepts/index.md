@@ -1,5 +1,10 @@
 # AI Model Concepts
 
+
+<div class="kb-summary">
+AI Model Concepts reference covering Transformers and Attention Mechanisms, Embeddings, Tokens and Tokenization, Fine-Tuning vs. RAG vs. Prompting, Generation Parameters and 1 more sections.
+</div>
+
 ## Transformers and Attention Mechanisms
 
 The Transformer architecture underpins virtually all modern LLMs. Key components tested on AI certification exams:

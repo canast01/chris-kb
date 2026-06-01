@@ -1,5 +1,10 @@
 # Aria Automation — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering vracli (Appliance CLI), Kubernetes (On-Premises Appliance), PowerShell (PowervRA Module), Useful Log Paths.
+</div>
+
 ## vracli (Appliance CLI)
 
 SSH to the Aria Automation appliance and use `vracli` for appliance-level management.

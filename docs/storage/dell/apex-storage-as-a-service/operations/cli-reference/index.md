@@ -1,6 +1,10 @@
 # APEX Storage as a Service — API Reference
 
+
+<div class="kb-summary">
 > Part of the [APEX Storage as a Service](../index.md) reference.
+</div>
+
 ---
 
 APEX Storage as a Service has no local CLI. All management is through the **Dell APEX Console** (web portal at console.dell.com) or the **Dell Technologies Cloud API** at `api.dell.com`. The API follows REST conventions and uses OAuth2 client credentials for authentication.

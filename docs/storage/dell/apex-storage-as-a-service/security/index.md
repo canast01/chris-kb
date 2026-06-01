@@ -1,4 +1,9 @@
 # APEX Storage as a Service — Security
+
+<div class="kb-summary">
+APEX Storage as a Service — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell Apex STaaS — Security ──────────────────────────────────────┐
 │                                                                                                       │

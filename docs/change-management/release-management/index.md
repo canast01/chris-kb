@@ -1,6 +1,9 @@
 # Release Management
 
+
+<div class="kb-summary">
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
+</div>
 
 ## Release Types
 

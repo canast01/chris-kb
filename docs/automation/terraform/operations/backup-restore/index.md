@@ -1,5 +1,10 @@
 # Terraform — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering State File Backup, State Recovery After Corruption, Checklist Before Destructive Operations.
+</div>
+
 ## State File Backup
 
 The Terraform state file is the source of truth for managed infrastructure. Back it up before any destructive operation.

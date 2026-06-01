@@ -1,6 +1,9 @@
 # Jira — Hardening
 
+
+<div class="kb-summary">
 Hardening Jira reduces the attack surface of the instance by disabling unnecessary features, tightening configuration, enforcing auditability, and controlling plugin exposure.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # SnapMirror — Health Checks
 
+
+<div class="kb-summary">
 > Part of the [SnapMirror Operations](../index.md) reference.
+</div>
 
 ---
 

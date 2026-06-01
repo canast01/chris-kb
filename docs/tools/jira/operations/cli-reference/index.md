@@ -1,5 +1,10 @@
 # Jira — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Authentication Setup, REST API — curl Examples, Atlassian CLI (atlas), Admin Console Commands, JQL Query Reference.
+</div>
+
 ## Authentication Setup
 
 ### Environment Variables

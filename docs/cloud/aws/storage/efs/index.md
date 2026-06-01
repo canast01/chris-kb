@@ -1,5 +1,10 @@
 # AWS EFS
 
+
+<div class="kb-summary">
+AWS EFS reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── EFS — Elastic File System ──────────────────────────────────────┐
 │                                                                                                       │

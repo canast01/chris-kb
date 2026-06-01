@@ -1,6 +1,10 @@
 # Recovery Behavior Expectations
 
+
+<div class="kb-summary">
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
+</div>
+
 ## After Host Failure
 
 | Phase | Expected Behavior | Timeframe |

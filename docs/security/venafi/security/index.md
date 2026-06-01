@@ -1,5 +1,10 @@
 # Venafi — Security
 
+
+<div class="kb-summary">
+Venafi — Security reference.
+</div>
+
 <div class="kb-grid kb-grid-2">
 
 <a class="kb-card" href="authentication/">

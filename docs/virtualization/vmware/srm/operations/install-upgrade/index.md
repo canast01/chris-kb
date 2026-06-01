@@ -1,5 +1,10 @@
 # SRM — Install and Upgrade
 
+
+<div class="kb-summary">
+Install and Upgrade reference covering vSphere Replication Appliance Deployment, SRA Installation, Site Pairing, Upgrade Order, Post-Install Verification.
+</div>
+
 ```text
   SRM Upgrade Sequence (strictly ordered)
 ┌───────────────┐   ┌───────────────┐   ┌───────────────┐   ┌───────────────┐

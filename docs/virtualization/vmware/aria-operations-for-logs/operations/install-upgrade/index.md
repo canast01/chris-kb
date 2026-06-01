@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Initial Deployment, Adding Worker Nodes to the Cluster, Post-Upgrade Validation.
+</div>
+
 ## Initial Deployment
 
 Aria Operations for Logs is deployed as a Linux-based virtual appliance (OVA). For LCM-managed environments, use LCM to deploy and upgrade. For standalone deployments, use the manual OVA process below.

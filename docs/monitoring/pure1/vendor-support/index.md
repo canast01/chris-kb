@@ -1,5 +1,10 @@
 # Pure1 Vendor Support
 
+
+<div class="kb-summary">
+Pure1 Vendor Support reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Pure1 — Vendor Support ────────────────────────────────────────┐
 │                                                                                                       │

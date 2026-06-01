@@ -1,6 +1,9 @@
 # Python Automation — Backup & Restore
 
+
+<div class="kb-summary">
 Automation infrastructure must itself be protected. Loss of virtual environments, configuration, or secrets can halt all automated operations. This page covers what to back up, how, and how to restore quickly.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # FlashArray — Security
 
+
+<div class="kb-summary">
+FlashArray — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 FlashArray Security Layers
 ┌──────────────────────────────────────────────────────────┐

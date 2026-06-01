@@ -1,5 +1,10 @@
 # AWS Cross-Account Access
 
+
+<div class="kb-summary">
+AWS Cross-Account Access reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────── AWS Identity — Cross-Account Access ─────────────────────────────────┐
 │                                                                                                       │

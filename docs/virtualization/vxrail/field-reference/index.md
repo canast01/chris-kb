@@ -1,4 +1,9 @@
 # VxRail Field Reference
+
+<div class="kb-summary">
+VxRail Field Reference reference covering Overview, Daily Checks, Dependencies, Common Issues, Troubleshooting Workflow and 1 more sections.
+</div>
+
 ## Overview
 
 Core operational reference for VxRail infrastructure.

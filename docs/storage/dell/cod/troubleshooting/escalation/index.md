@@ -1,5 +1,10 @@
 # COD — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Information to Collect, Escalation Path.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Dell CoD — Escalation ────────────────────────────────────────┐
 │                                                                                                       │

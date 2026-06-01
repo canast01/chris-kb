@@ -1,5 +1,10 @@
 # VM Snapshot Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Low (taking) / Medium (removing) | | Approval | No formal change required to take; revert requires change ticket | | Estimated time | 2–5 minutes to create; 10–30 minutes to remove (consolidation) | | Impact | None during creation (brief I/O s
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Low (taking) / Medium (removing) |

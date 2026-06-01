@@ -1,6 +1,11 @@
 # NSX — CLI Reference
 
-Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing, and distributed firewall. NSX-T is VMware's software-defined networking platform — it creates virtual networks (segments), virtual routers (gateways), and enforces firewall rules at the hypervisor level.
+
+<div class="kb-summary">
+Commonly used NSX-T Manager and Edge CLI commands for managing overlays, routing, and distributed firewall.
+</div>
+
+ NSX-T is VMware's software-defined networking platform — it creates virtual networks (segments), virtual routers (gateways), and enforces firewall rules at the hypervisor level.
 
 > NSX Manager and Edge Node CLIs are accessed via SSH. Log in as `admin`. Run `nsxcli` on the Manager to enter the NSX management shell.
 

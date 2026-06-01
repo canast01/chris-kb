@@ -1,5 +1,10 @@
 # Capacity on Demand — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Capacity Model, HA and Redundancy, Activation Flow, DR Site COD Architecture.
+</div>
+
 ## Overview
 
 Capacity on Demand (COD) is a software-defined capacity licensing model for Dell PowerMax and VMAX arrays. Physical drives are installed in the array chassis at the factory but the capacity is logically locked at the array controller level until a COD license is applied. No truck roll or hardware change is required — activation is entirely software-driven through SYMCLI or Unisphere.

@@ -1,6 +1,9 @@
 # Windows Server — Authentication
 
+
+<div class="kb-summary">
 Active Directory integration, Kerberos, NTLM audit, LAPS, smart card, and Credential Guard.
+</div>
 
 ## Active Directory Domain Authentication
 

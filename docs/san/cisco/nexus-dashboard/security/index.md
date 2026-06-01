@@ -1,5 +1,10 @@
 # Nexus Dashboard — Security
 
+
+<div class="kb-summary">
+Nexus Dashboard — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Cisco Nexus Dashboard — Security ───────────────────────────────────┐
 │                                                                                                       │

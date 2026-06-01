@@ -1,5 +1,10 @@
 # vSAN — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Supported Backup Methods, vSAN Configuration Backup, Restore Procedures, Backup Validation and Testing, Recovery Point and Recovery Time Objectives.
+</div>
+
 ```text
 BACKUP FLOW — vSAN VM TO TARGET
 

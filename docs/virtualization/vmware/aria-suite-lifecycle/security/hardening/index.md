@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configuration, Firewall Rules for LCM, Hardening Checklist.
+</div>
+
 ```text
   LCM Hardening Controls
 ┌──────────────────────────────────────────────────────────────┐

@@ -1,6 +1,9 @@
 # Venafi Vendor Support
 
+
+<div class="kb-summary">
 Procedures for raising support cases with Venafi, collecting diagnostic data, and escalating critical incidents.
+</div>
 
 ---
 ## Support Portal

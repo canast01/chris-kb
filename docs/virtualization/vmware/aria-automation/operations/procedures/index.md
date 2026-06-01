@@ -1,5 +1,10 @@
 # Aria Automation — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Rotate Service Account Passwords, Stale Deployment Cleanup, Cloud Account Connectivity Failure, Adding a New Cloud Zone to a Project, Adding an Approval Policy and 1 more sections.
+</div>
+
 ## Rotate Service Account Passwords
 
 When rotating vCenter or NSX service account passwords:

@@ -1,5 +1,10 @@
 # VCF Operations — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Support Bundles, SDDC Manager REST API, Password Management, Service Status & Logs.
+</div>
+
 ```text
 VCF CLI Tool Map — Where to Run What
 ┌─────────────────────────────────────────────────────┐

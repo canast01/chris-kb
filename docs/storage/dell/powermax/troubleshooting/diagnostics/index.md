@@ -1,5 +1,10 @@
 # PowerMax — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Commands, Log Locations, Performance Analysis, Before Calling Support.
+</div>
+
 ## Diagnostic Commands
 
 ```bash

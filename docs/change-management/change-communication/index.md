@@ -1,6 +1,9 @@
 # Change Communication
 
+
+<div class="kb-summary">
 Structured approach to notifying stakeholders before, during, and after changes to maintain trust and minimize surprise.
+</div>
 
 ## Communication Timeline
 

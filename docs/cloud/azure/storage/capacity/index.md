@@ -1,5 +1,10 @@
 # Azure Storage — Capacity Monitoring
 
+
+<div class="kb-summary">
+Capacity Monitoring reference covering Overview, Storage Account Metrics, Capacity Alerts, Container-Level Capacity, Forecasting and Trend Analysis and 1 more sections.
+</div>
+
 ## Overview
 
 Monitoring storage capacity in Azure involves tracking used capacity at the account and container level, setting metric alerts before quotas are hit, and projecting growth to plan ahead. Azure Monitor provides built-in storage metrics with 93-day retention.

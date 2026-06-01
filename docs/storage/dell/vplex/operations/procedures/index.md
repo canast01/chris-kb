@@ -1,5 +1,10 @@
 # Dell VPLEX — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Consistency Groups, Metro Operations.
+</div>
+
 ## Change Readiness
 
 Verify these items before performing any VPLEX change — GeoSynchrony upgrades, director replacements, back-end storage changes, or storage view modifications.

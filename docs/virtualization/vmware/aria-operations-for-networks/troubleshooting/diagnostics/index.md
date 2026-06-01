@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Support Bundle, Collector VM Log Locations, Test Data Source Connectivity, Verify NetFlow Receipt, Check Data Source Last-Sync via API and 3 more sections.
+</div>
+
 ---
 
 ## Support Bundle

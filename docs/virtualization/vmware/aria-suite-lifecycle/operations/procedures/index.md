@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Rotate a Password in Locker, Add a vCenter Server to LCM, Content Migration Between Environments, Register VIDM (Workspace ONE Access), Decommission a Product from LCM.
+</div>
+
 ```text
   LCM Common Procedures
 ┌─────────────────────────────────────────────────────────────────┐

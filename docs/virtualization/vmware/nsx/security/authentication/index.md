@@ -1,5 +1,10 @@
 # NSX — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Local Accounts, LDAP / Active Directory Authentication, NSX Role Reference, API Authentication, Multi-Factor Authentication (MFA) and 2 more sections.
+</div>
+
 ## Local Accounts
 
 NSX Manager ships with three built-in local accounts:

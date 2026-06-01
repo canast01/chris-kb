@@ -1,6 +1,9 @@
 # Dell VPLEX — Backup & Restore
 
+
+<div class="kb-summary">
 > Backup configuration, restore procedures, and validation for Dell VPLEX.
+</div>
 
 ## Overview
 

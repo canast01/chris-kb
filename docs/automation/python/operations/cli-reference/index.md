@@ -1,5 +1,10 @@
 # Python Automation — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Python Script Execution Pipeline, Package Management (pip), Common Infrastructure Packages, Environment Variables, Running Scripts and 3 more sections.
+</div>
+
 ## Python Script Execution Pipeline
 
 ```mermaid

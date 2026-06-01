@@ -1,5 +1,10 @@
 # NetApp Keystone Standards
 
+
+<div class="kb-summary">
+NetApp Keystone Standards reference covering Service Level Selection, Naming Conventions, Capacity Management Thresholds, Monthly Operational Standards, Decommission Standards.
+</div>
+
 ## Service Level Selection
 
 Assign workloads to the appropriate Keystone service tier before provisioning. Tier selection directly affects billing — workloads on a higher-performance tier than needed incur unnecessary cost, while workloads under-tiered will breach SLA latency targets.

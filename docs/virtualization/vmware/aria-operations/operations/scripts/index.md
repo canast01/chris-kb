@@ -1,5 +1,10 @@
 # Aria Operations — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Export Active Alerts to CSV (Python), Capacity Report (PowerShell), Cluster Health Check (Bash), Alert Export via REST (Bash / curl), Related Sections.
+</div>
+
 ```text
 Aria Operations API — Script Interaction Pattern
 ┌─────────────────────────────────────────────────────┐

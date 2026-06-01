@@ -1,5 +1,10 @@
 # PowerMax — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Masking Views, Provisioning.
+</div>
+
 ## Change Readiness
 
 Verify these items before performing any change on the PowerMax — array configuration changes, code upgrades, or DR tests.

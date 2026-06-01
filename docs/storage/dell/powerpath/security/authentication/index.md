@@ -1,5 +1,10 @@
 # PowerPath — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Overview, Linux Authentication, Windows Authentication, AIX Authentication, Automation and Service Accounts and 4 more sections.
+</div>
+
 ## Overview
 
 ```mermaid

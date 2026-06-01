@@ -1,6 +1,9 @@
 # Data Encryption
 
+
+<div class="kb-summary">
 Encryption protects data at rest, in transit, and during processing against unauthorised access.
+</div>
 
 ## Encryption Requirements by Classification
 

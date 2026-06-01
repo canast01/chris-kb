@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Network Requirements Summary.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell Apex STaaS — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │

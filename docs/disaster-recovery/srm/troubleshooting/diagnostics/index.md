@@ -1,5 +1,10 @@
 # SRM Troubleshooting — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Log Locations.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRM — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │

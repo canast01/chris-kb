@@ -1,5 +1,10 @@
 # FlashArray — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Array Health Check (Python), ActiveCluster Pod Status Monitor (Python), Volume and Snapshot Report (Bash), Drive Failure Alert (Bash), Ansible FlashArray Health Playbook and 5 more sections.
+</div>
+
 ```text
 Automation Architecture — FlashArray
   Python / Bash / PowerShell / Ansible

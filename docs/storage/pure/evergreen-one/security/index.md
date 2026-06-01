@@ -1,5 +1,10 @@
 # Pure Storage Evergreen//One Security
 
+
+<div class="kb-summary">
+Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security — Pure-Managed Responsibilities.
+</div>
+
 ```text
   Pure Security Architecture
 

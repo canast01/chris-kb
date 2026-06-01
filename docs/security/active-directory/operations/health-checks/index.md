@@ -1,6 +1,11 @@
 # Active Directory — Health Checks
 
-Daily operations centre on replication health and authentication event monitoring across all Domain Controllers. Run `repadmin /replsummary` and `dcdiag /test:replications` each morning to surface any replication failures before they impact authentication or Group Policy delivery. Review Windows Event Log on all DCs for Event ID 4625 (logon failures) and Event ID 4740 (account lockouts), and confirm SYSVOL share accessibility and DNS zone health before declaring a DC healthy.
+
+<div class="kb-summary">
+Daily operations centre on replication health and authentication event monitoring across all Domain Controllers.
+</div>
+
+ Run `repadmin /replsummary` and `dcdiag /test:replications` each morning to surface any replication failures before they impact authentication or Group Policy delivery. Review Windows Event Log on all DCs for Event ID 4625 (logon failures) and Event ID 4740 (account lockouts), and confirm SYSVOL share accessibility and DNS zone health before declaring a DC healthy.
 
 **Daily checks:**
 

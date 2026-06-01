@@ -1,6 +1,9 @@
 # Asset Inventory
 
+
+<div class="kb-summary">
 Asset Inventory operational notes and deep-dive references.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

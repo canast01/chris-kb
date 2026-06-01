@@ -1,6 +1,9 @@
 # Virtualization Troubleshooting
 
+
+<div class="kb-summary">
 Common virtualization troubleshooting workflows.
+</div>
 
 ## Troubleshooting Flow
 

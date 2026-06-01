@@ -1,6 +1,10 @@
 # Access Review Procedure
 
+
+<div class="kb-summary">
 Periodic access reviews ensure that users and service accounts hold only the permissions required for their current role. Reviews reduce the blast radius of credential compromise and satisfy audit requirements.
+</div>
+
 ## Review Schedule
 
 | Scope | Frequency | Owner |

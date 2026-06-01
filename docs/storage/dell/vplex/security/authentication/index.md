@@ -1,6 +1,9 @@
 # Dell VPLEX — Authentication
 
+
+<div class="kb-summary">
 Authentication for VPLEX management is split across two interfaces: SSH-based `vplexcli` access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).
+</div>
 
 ```mermaid
 flowchart LR

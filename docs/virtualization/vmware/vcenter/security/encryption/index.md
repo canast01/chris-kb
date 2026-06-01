@@ -1,5 +1,10 @@
 # vCenter Security — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryption Key Flow, vSphere Trust Authority (vTA), Certificate Management and 3 more sections.
+</div>
+
 ```text
 vSphere Encryption Key Flow
 ════════════════════════════════════════════════════════

@@ -1,5 +1,10 @@
 # Python Automation — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Python Logging Pipeline, Reports.
+</div>
+
 ## Change Readiness
 
 - [ ] The change has been tested end-to-end in a non-production environment before touching the production script

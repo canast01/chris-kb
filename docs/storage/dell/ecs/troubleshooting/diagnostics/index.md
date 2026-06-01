@@ -1,5 +1,10 @@
 # Dell ECS — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Overview, Management API Diagnostics, S3 API Diagnostics, Node-Level SSH Diagnostics, Log Locations and 2 more sections.
+</div>
+
 ## Diagnostic Overview
 
 ECS diagnostics span three layers: the Management REST API (cluster-level health and configuration), node-level SSH access (OS and service health), and the S3 API (data path functional testing). Start with the REST API — it provides the fastest cluster-wide view — then drill into SSH-level diagnostics for specific node or service issues.

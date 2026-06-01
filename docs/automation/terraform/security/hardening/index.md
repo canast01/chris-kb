@@ -1,5 +1,10 @@
 # Terraform — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Security Scanning Pipeline, Dependency and Provider Security, Hardening Checklist.
+</div>
+
 ## Security Scanning Pipeline
 
 ```mermaid

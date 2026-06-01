@@ -1,4 +1,9 @@
 # PowerStore — Operations
+
+<div class="kb-summary">
+PowerStore — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell PowerStore Operations ──────────────────────────────────────┐
 │                                                                                                       │

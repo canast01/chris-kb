@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Integration with Aria Operations (vROps), NSX-T Syslog Integration, Linux Log Forwarding Agent, Windows Log Forwarding Agent, SNMP Trap Receiver and 2 more sections.
+</div>
+
 ## Integration with Aria Operations (vROps)
 
 Aria Operations for Logs integrates bi-directionally with Aria Operations:

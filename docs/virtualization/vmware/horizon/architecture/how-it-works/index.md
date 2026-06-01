@@ -1,5 +1,10 @@
 # Horizon — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Component Overview, Connection Flow, Blast Extreme vs PCoIP, Session Broker Role, Security Server Deprecation and 1 more sections.
+</div>
+
 ## Component Overview
 
 VMware Horizon is a broker-based VDI and published application delivery platform. The core components and their relationships:

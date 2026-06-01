@@ -1,5 +1,10 @@
 # Confluence — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Page Templates, Page Templates vs Blueprints, Updating and Deleting Templates, Common Storage Format Macros, Blueprints.
+</div>
+
 ## Page Templates
 
 Creating and managing page templates, blueprints, and template variables.

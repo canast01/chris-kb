@@ -1,6 +1,9 @@
 # Data Retention Policy
 
+
+<div class="kb-summary">
 This policy defines mandatory retention periods, storage tier assignments, and deletion procedures for all data types across the enterprise. Retention decisions are driven by business need, legal obligation, and regulatory requirement — not storage cost alone.
+</div>
 
 ---
 

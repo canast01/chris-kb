@@ -1,4 +1,9 @@
 # Public Key Infrastructure (PKI)
+
+<div class="kb-summary">
+Public Key Infrastructure (PKI) reference covering PKI Architecture (Typical Enterprise), TLS Handshake Flow, Certificate Validation Chain, ADCS Health Checks, CRL and OCSP Monitoring and 5 more sections.
+</div>
+
 ## PKI Architecture (Typical Enterprise)
 
 ```text

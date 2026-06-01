@@ -1,5 +1,10 @@
 # SRDF/S — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Available Scripts, Script Pattern — State Check.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRDF/S — Scripts ───────────────────────────────────────────┐
 │                                                                                                       │

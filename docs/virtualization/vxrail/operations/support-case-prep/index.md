@@ -1,4 +1,9 @@
 # VxRail Support Case Prep
+
+<div class="kb-summary">
+VxRail Support Case Prep reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Evidence, timeline, logs, screenshots, and clear issue summary for Dell support.

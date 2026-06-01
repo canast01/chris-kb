@@ -1,5 +1,10 @@
 # SRM Security — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering vCenter RBAC for DR Operators.
+</div>
+
 ## vCenter RBAC for DR Operators
 
 Define a dedicated `DR-Operator` role in vCenter with only the privileges required for SRM operations:

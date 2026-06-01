@@ -1,6 +1,9 @@
 # SRDF-A — Scripts
 
+
+<div class="kb-summary">
 > Part of the [SRDF/A](../../index.md) reference.
+</div>
 
 ---
 ## SRDF/A Cycle Time Monitor (Bash)

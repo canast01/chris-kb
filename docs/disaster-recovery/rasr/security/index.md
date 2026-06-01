@@ -1,6 +1,11 @@
 # RASR — Security
 
 
+
+<div class="kb-summary">
+RASR — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────────── RASR — Security ───────────────────────────────────────────┐
 │                                                                                                       │

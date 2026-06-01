@@ -1,5 +1,10 @@
 # FlashBlade — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Naming Conventions, Sizing Guidelines, Build Baseline, Configuration Checklist.
+</div>
+
 ```text
 FlashBlade Design Checklist
 ┌───────────────────────────────────────────────────────────┐

@@ -1,4 +1,9 @@
 # Aria Ops for Networks — Troubleshooting
+
+<div class="kb-summary">
+Aria Ops for Networks — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Aria Networks — Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # Service Level Objectives (SLO)
 
+
+<div class="kb-summary">
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
+</div>
 
 ## SLO vs SLA vs SLI
 

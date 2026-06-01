@@ -1,5 +1,10 @@
 # vSphere Replication — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authentication, Get Replication Status via REST API, PowerCLI — Replication Status, VRA Health API and 2 more sections.
+</div>
+
 ```text
   VR CLI and API Access
 ┌──────────────────────────────────────────────────────────────┐

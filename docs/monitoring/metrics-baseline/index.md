@@ -1,5 +1,10 @@
 # Performance Metrics Baseline
 
+
+<div class="kb-summary">
+Performance Metrics Baseline reference covering Documenting the Baseline, Setting Thresholds from Baseline, Baseline Review Cadence.
+</div>
+
 ```text
 ┌──────────────────────────────────── Monitoring — Metrics Baseline ────────────────────────────────────┐
 │                                                                                                       │

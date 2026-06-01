@@ -1,5 +1,10 @@
 # FOD — Integrations
 
+
+<div class="kb-summary">
+FOD — Integrations reference.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell FoD — Architecture Integrations ─────────────────────────────────┐
 │                                                                                                       │

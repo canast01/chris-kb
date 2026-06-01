@@ -1,6 +1,11 @@
 # SRDF/A — Operations
 
 
+
+<div class="kb-summary">
+SRDF/A — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRDF/A — Operations ─────────────────────────────────────────┐
 │                                                                                                       │

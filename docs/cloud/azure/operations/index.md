@@ -1,5 +1,10 @@
 # Azure — Operations
 
+
+<div class="kb-summary">
+Operations reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation.
+</div>
+
 ```text
 ┌────────────────────────────────────── Azure Operations Overview ──────────────────────────────────────┐
 │                                                                                                       │

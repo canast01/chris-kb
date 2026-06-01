@@ -1,6 +1,9 @@
 # Post-Change Validation (Virtualization)
 
+
+<div class="kb-summary">
 Run these checks after any infrastructure change — maintenance, upgrade, patch, or configuration modification. Document evidence in the change record before closing.
+</div>
 
 ```text
 Post-Change Validation Flow

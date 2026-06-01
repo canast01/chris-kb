@@ -1,6 +1,9 @@
 # Evergreen//One — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Pure Storage Evergreen//One](../index.md) reference.
+</div>
 
 ---
 

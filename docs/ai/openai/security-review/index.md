@@ -1,6 +1,9 @@
 # OpenAI Security Review
 
+
+<div class="kb-summary">
 Security considerations when integrating the OpenAI API into production systems: data retention policies, prompt injection, PII handling, compliance frameworks, and hardening API usage.
+</div>
 
 ## Data Retention Policies
 

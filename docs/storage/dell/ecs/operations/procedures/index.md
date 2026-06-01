@@ -1,5 +1,10 @@
 # Dell ECS — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Provisioning Flow: Namespace → Bucket → IAM User, Creating a Namespace and 7 more sections.
+</div>
+
 ## Change Readiness
 
 Verify these items before performing any change on an ECS cluster — node additions, software upgrades, replication group changes, or VDC configuration updates.

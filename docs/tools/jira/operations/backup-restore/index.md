@@ -1,5 +1,10 @@
 # Jira — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Backup Strategy Overview, XML Backup / Restore (Admin UI), File Storage Backup, Data Center Backup Best Practices, Restore Procedure and 1 more sections.
+</div>
+
 ## Backup Strategy Overview
 
 Jira requires three independent backup components for a complete recovery:

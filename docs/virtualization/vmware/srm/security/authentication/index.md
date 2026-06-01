@@ -1,5 +1,10 @@
 # SRM — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Site Pairing Authentication (Certificate-Based), SRA Authentication to Storage Array, REST API Authentication, vSphere Replication Authentication, Break-Glass Access to SRM and 1 more sections.
+</div>
+
 ```text
   SRM Authentication Chain
 ┌──────────────────────────────────────────────────────────────┐

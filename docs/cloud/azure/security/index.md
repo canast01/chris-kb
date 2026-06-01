@@ -1,4 +1,9 @@
 # Azure — Security
+
+<div class="kb-summary">
+Azure — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Azure Security Overview ───────────────────────────────────────┐
 │                                                                                                       │

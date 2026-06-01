@@ -1,5 +1,10 @@
 # SRM Operations — Scripts
 
+
+<div class="kb-summary">
+SRM Operations — Scripts reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────────── SRM — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │

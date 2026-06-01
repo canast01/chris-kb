@@ -1,5 +1,10 @@
 # Change Closeout
 
+
+<div class="kb-summary">
+Change Closeout reference covering Overview, Closeout Checklist, Change Outcome Classification, PIR (Post-Implementation Review), Lessons Learned and 1 more sections.
+</div>
+
 ## Overview
 
 Change closeout is the final phase of the change lifecycle. It ensures that the change is formally concluded, documentation is complete, CMDB records are updated, and any lessons learned are captured. Skipping closeout leaves the change process incomplete and can mask problems that should inform future changes.

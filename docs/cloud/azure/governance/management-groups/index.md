@@ -1,6 +1,9 @@
 # Management Groups
 
+
+<div class="kb-summary">
 Management groups provide a level of scope above subscriptions. They enable you to organise subscriptions into a hierarchy and apply governance controls (policies, RBAC) at scale without configuring each subscription individually.
+</div>
 
 ## Azure Resource Hierarchy
 

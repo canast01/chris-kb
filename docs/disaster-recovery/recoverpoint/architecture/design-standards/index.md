@@ -1,6 +1,9 @@
 # RecoverPoint — Standards
 
+
+<div class="kb-summary">
 > Part of the [RecoverPoint](../../index.md) > [Architecture](../index.md) reference.
+</div>
 
 ---
 

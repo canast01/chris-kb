@@ -1,6 +1,9 @@
 # Azure — Procedures
 
+
+<div class="kb-summary">
 > Day-to-day operational tasks across compute, storage, and networking.
+</div>
 
 ---
 

@@ -1,4 +1,9 @@
 # Site Recovery Manager — Troubleshooting
+
+<div class="kb-summary">
+Site Recovery Manager — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── SRM — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │

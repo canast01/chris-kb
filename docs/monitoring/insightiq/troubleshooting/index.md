@@ -1,6 +1,9 @@
 # InsightIQ: Collector Connectivity, Data Gaps, and Performance Issues
 
+
+<div class="kb-summary">
 This page covers common InsightIQ operational problems: connectivity failures between the InsightIQ collector and PowerScale clusters, data collection gaps, and performance degradation on the InsightIQ appliance itself.
+</div>
 
 ## Collector Connectivity Checks
 

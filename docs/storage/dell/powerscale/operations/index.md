@@ -1,4 +1,9 @@
 # PowerScale — Operations
+
+<div class="kb-summary">
+PowerScale — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell PowerScale Operations ──────────────────────────────────────┐
 │                                                                                                       │

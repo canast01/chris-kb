@@ -1,4 +1,9 @@
 # FOD — Security
+
+<div class="kb-summary">
+FOD — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Dell FoD — Security ─────────────────────────────────────────┐
 │                                                                                                       │

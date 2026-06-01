@@ -1,6 +1,11 @@
 # Veeam — Operations
 
 
+
+<div class="kb-summary">
+Veeam — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Veeam — Operations ──────────────────────────────────────────┐
 │                                                                                                       │

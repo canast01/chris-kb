@@ -1,5 +1,10 @@
 # Identity & RBAC
 
+
+<div class="kb-summary">
+Identity & RBAC reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

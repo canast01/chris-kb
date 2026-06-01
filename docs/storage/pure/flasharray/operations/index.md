@@ -1,5 +1,10 @@
 # FlashArray — Operations
 
+
+<div class="kb-summary">
+FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+</div>
+
 ```text
 FlashArray Day-to-Day Operations Flow
 ┌───────────────────────────────────────────────────────┐

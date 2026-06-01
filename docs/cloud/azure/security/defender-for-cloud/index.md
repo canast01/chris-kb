@@ -1,6 +1,11 @@
 # Defender for Cloud
 
-Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP). It provides security recommendations, threat protection, regulatory compliance assessment, and attack path analysis.
+
+<div class="kb-summary">
+Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP).
+</div>
+
+ It provides security recommendations, threat protection, regulatory compliance assessment, and attack path analysis.
 
 ## Defender for Cloud Coverage
 

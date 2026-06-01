@@ -1,4 +1,9 @@
 # PowerMax — Troubleshooting
+
+<div class="kb-summary">
+PowerMax — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell PowerMax Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │

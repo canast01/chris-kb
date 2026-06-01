@@ -1,5 +1,10 @@
 # Data Domain — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Weekly Health Check, Health Check — Pre-Change, Capacity Monitoring, Replication Health and 3 more sections.
+</div>
+
 ## Daily Checks
 
 ```mermaid

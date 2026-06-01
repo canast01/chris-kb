@@ -1,5 +1,10 @@
 # ONTAP — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelines, Configuration Checklist.
+</div>
+
 ## Naming Conventions
 
 | Object | Pattern | Example |

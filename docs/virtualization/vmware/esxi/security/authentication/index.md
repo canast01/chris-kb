@@ -1,5 +1,10 @@
 # ESXi — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Create a Break-Glass Local Account, Password Policy, Active Directory Integration, Authentication Hardening, Login Banner and 2 more sections.
+</div>
+
 ```text
 ESXi Authentication Paths
 ┌──────────────────────────────────────────────────────────┐

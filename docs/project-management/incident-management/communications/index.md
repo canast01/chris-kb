@@ -1,5 +1,10 @@
 # Incident Communications
 
+
+<div class="kb-summary">
+Incident Communications reference covering Overview, Communication Principles, Update Cadence, Communication Templates, Stakeholder Distribution and 1 more sections.
+</div>
+
 ## Overview
 
 Effective incident communication keeps stakeholders informed, reduces inbound noise to the response team, and builds trust with users and leadership. Poor communications during an incident — silence, vague updates, or contradictory messages — often cause as much damage as the incident itself.

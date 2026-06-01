@@ -1,4 +1,9 @@
 # COD — Lifecycle
+
+<div class="kb-summary">
+Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Cadence, Frame Decommission — COD Implications, COD vs. Standard Capacity Purchase.
+</div>
+
 ## Entitlement Lifecycle
 
 COD entitlements are tracked in the Dell License Management Portal and are tied to a specific PowerMax frame serial number (SID). The lifecycle of a COD entitlement follows this path:

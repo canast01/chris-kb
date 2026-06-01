@@ -1,6 +1,9 @@
 # Ansible — Hardening
 
+
+<div class="kb-summary">
 > Part of the [Ansible Security](../index.md) reference.
+</div>
 
 ## Control Node Hardening
 

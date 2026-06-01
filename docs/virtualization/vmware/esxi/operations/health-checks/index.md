@@ -1,5 +1,10 @@
 # ESXi — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Health Checklist.
+</div>
+
 ```text
 ESXi Health Check — Decision Flow
 ┌─────────────────────────────────────────────────────┐

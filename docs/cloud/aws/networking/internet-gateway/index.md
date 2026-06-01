@@ -1,5 +1,10 @@
 # AWS Internet Gateway
 
+
+<div class="kb-summary">
+AWS Internet Gateway reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌──────────────────────────── Internet Gateway — VPC Internet Connectivity ─────────────────────────────┐
 │                                                                                                       │

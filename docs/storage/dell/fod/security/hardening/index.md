@@ -1,5 +1,10 @@
 # FOD — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Checklist, Network Requirements Summary.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Dell FoD — Hardening ─────────────────────────────────────────┐
 │                                                                                                       │

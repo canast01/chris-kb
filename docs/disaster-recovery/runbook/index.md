@@ -1,5 +1,10 @@
 # Disaster Recovery Runbook
 
+
+<div class="kb-summary">
+Disaster Recovery Runbook reference covering Overview, Activation Criteria, Communication Tree, Phased Recovery Procedure, Validation Checklist and 1 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────────────── DR Runbook ──────────────────────────────────────────────┐
 │                                                                                                       │

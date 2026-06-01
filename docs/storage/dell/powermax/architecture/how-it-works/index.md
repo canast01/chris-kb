@@ -1,5 +1,10 @@
 # PowerMax — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Architecture, HA Topology, Components, Connectivity and 3 more sections.
+</div>
+
 ## Overview
 
 Dell PowerMax is an enterprise NVMe-oF all-flash array engineered for mission-critical tier-1 workloads. It is available in two models: **PowerMax 2000** (1–4 engines) and **PowerMax 8000** (1–8 engines). All flash media is NVMe, data is served over NVMe-oF (NVMe over FC or NVMe/TCP) or traditional FC/iSCSI, and latency is consistently sub-millisecond at scale. The array runs PowerMaxOS and is managed via Unisphere for PowerMax or SYMCLI (Solutions Enabler).

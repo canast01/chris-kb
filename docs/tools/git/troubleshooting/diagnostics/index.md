@@ -1,6 +1,9 @@
 # Git — Diagnostics
 
+
+<div class="kb-summary">
 Systematic diagnostic techniques for troubleshooting Git client, server, and network issues. Covers debug environment variables, SSH tracing, reflog recovery, and a structured diagnostic flowchart.
+</div>
 
 ---
 

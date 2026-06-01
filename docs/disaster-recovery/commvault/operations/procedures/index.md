@@ -1,6 +1,9 @@
 # Commvault — Procedures
 
+
+<div class="kb-summary">
 Operational procedures for change readiness, maintenance windows, and recurring operational tasks.
+</div>
 
 ## Change Readiness Check
 

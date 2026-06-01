@@ -1,5 +1,10 @@
 # NetBackup Scripts
 
+
+<div class="kb-summary">
+NetBackup Scripts reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── NetBackup — Scripts ─────────────────────────────────────────┐
 │                                                                                                       │

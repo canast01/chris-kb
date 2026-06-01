@@ -1,5 +1,10 @@
 # SRM Security — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Test Failover Network Isolation, Audit Logging.
+</div>
+
 ```text
 ┌─────────────────────────────────────────── SRM — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │

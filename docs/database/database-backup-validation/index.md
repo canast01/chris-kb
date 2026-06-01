@@ -1,6 +1,9 @@
 # Database Backup Validation
 
+
+<div class="kb-summary">
 Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.
+</div>
 
 ## Daily Backup Status Checks
 

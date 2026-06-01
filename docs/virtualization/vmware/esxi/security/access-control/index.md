@@ -1,5 +1,10 @@
 # ESXi Access Control
 
+
+<div class="kb-summary">
+ESXi Access Control reference covering Exception Users, Local Account Management, vCenter Role-Based Access Control, ESXi Shell and SSH Access Controls, Firewall Ruleset Management and 1 more sections.
+</div>
+
 ```text
 ESXi Access Control Model
 ┌──────────────────────────────────────────────────────┐

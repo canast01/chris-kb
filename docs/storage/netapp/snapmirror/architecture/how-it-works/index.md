@@ -1,5 +1,10 @@
 # SnapMirror — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Replication Types, Components, Connectivity, Key Commands and 2 more sections.
+</div>
+
 ## Overview
 
 SnapMirror is ONTAP's built-in replication engine, providing volume-level and SVM-level replication across ONTAP clusters. It supports three primary operating modes: asynchronous (SnapMirror Async, RPO-based), synchronous (SnapMirror Synchronous, zero RPO), and extended data protection (XDP/SnapVault, backup retention). Relationships are always managed from the destination cluster. SnapMirror Business Continuity (SMBC/AutomatedFailOver) extends synchronous replication with transparent host-level failover for SAN workloads.

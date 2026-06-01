@@ -1,6 +1,10 @@
 # VxRail Manager
 
+
+<div class="kb-summary">
 VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs.
+</div>
+
 ```text
 ┌────────────────────────────────────── VxRail Manager — Overview ──────────────────────────────────────┐
 │                                                                                                       │

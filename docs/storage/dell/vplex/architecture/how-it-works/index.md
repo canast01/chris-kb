@@ -1,5 +1,10 @@
 # VPLEX — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Deployment Models, Storage Object Hierarchy, VPLEX Metro Topology, Director Architecture and 5 more sections.
+</div>
+
 ## Overview
 
 Dell VPLEX is a storage federation and virtualisation platform that decouples physical storage from the host view, presenting virtual volumes to hosts regardless of which back-end array holds the data. VPLEX Local, Metro, and Geo represent progressively wider federation scopes.

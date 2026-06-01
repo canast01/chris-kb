@@ -1,6 +1,9 @@
 # CyberArk — Access Control
 
+
+<div class="kb-summary">
 All production safes enforce dual-control to prevent unilateral credential access. Safe access is managed via AD group membership mapped to Vault roles.
+</div>
 
 | Control | Implementation |
 |---|---|

@@ -1,5 +1,10 @@
 # Azure — Troubleshooting
 
+
+<div class="kb-summary">
+Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication Errors, Azure Storage Access Denied, AKS Pod Not Starting, App Service 502/503.
+</div>
+
 ```text
 ┌─────────────────────────────────── Azure Troubleshooting Overview ────────────────────────────────────┐
 │                                                                                                       │

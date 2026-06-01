@@ -1,5 +1,10 @@
 # PowerMax — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Overview, Unisphere Hardening, Solutions Enabler Hardening, Host Connectivity Hardening, SupportAssist and Remote Access Hardening and 3 more sections.
+</div>
+
 ## Overview
 
 PowerMax hardening focuses on three areas: securing the management interfaces (Unisphere and Solutions Enabler), securing replication and host connectivity, and reducing the attack surface through configuration discipline. PowerMax is a closed, purpose-built appliance — the hardening surface is primarily the management plane, not the array OS itself which is not directly user-accessible.

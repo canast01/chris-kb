@@ -1,5 +1,10 @@
 # Unity — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE), External Key Management (KMIP), Management Channel Encryption (TLS), iSCSI CHAP Authentication and 4 more sections.
+</div>
+
 ## Encryption Layers
 
 Dell Unity provides encryption at multiple layers. Understanding which layer is active and how to verify it is essential for compliance audits and security assessments.

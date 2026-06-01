@@ -1,5 +1,10 @@
 # Network Inventory
 
+
+<div class="kb-summary">
+Network Inventory reference covering Overview, Distributed Switches, Port Groups, VMkernel Adapters, Fields Reference and 1 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── vSphere — Network Inventory ─────────────────────────────────────┐
 │                                                                                                       │

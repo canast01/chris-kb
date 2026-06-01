@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Log File Locations, Generating a Support Bundle, Diagnosing Ingestion Issues, Diagnosing Query Performance Issues, Verifying Agent Connectivity and 1 more sections.
+</div>
+
 ## Log File Locations
 
 | Log | Path | Purpose |

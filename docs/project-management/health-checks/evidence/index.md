@@ -1,5 +1,10 @@
 # Evidence Capture and Audit Trail
 
+
+<div class="kb-summary">
+Evidence Capture and Audit Trail reference covering Overview, What Counts as Evidence, Naming Convention, Evidence Storage, Evidence Capture Checklist and 1 more sections.
+</div>
+
 ## Overview
 
 Evidence capture creates a verifiable record of infrastructure state at a given point in time. This is essential for change audits, incident post-mortems, compliance reviews, and dispute resolution. Screenshots and command output saved only in memory are lost the moment the session ends.

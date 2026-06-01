@@ -1,4 +1,9 @@
 # Security Incident Handling
+
+<div class="kb-summary">
+Security Incident Handling reference covering Severity Classification, Phase 1 — Identify and Triage, Phase 2 — Contain, Phase 3 — Investigate, Phase 4 — Eradicate and Recover and 3 more sections.
+</div>
+
 ## Severity Classification
 
 | Severity | Definition | Example | Response Time |

@@ -1,6 +1,9 @@
 # Azure — Certificates
 
+
+<div class="kb-summary">
 Azure Key Vault manages X.509 certificates, providing lifecycle management including creation, import, auto-renewal, and expiry alerting. Key Vault integrates with App Gateway, API Management, App Service, and other services for SSL/TLS offloading.
+</div>
 
 ## Creating a Key Vault Certificate
 

@@ -1,5 +1,10 @@
 # Exam Tracking
 
+
+<div class="kb-summary">
+Exam Tracking reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
+</div>
+
 ## Purpose
 
 Use this page for practical VMware Exam Tracking notes, checks, troubleshooting, commands, standards, and field references.

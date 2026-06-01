@@ -1,6 +1,9 @@
 # Linux — Authentication
 
+
+<div class="kb-summary">
 PAM, SSH public key auth, SSSD/AD integration, sudo, and MFA configuration.
+</div>
 
 ## Local Accounts
 

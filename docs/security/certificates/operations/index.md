@@ -1,5 +1,10 @@
 # Certificates — Operations
 
+
+<div class="kb-summary">
+Certificates — Operations reference.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="cli-reference/">

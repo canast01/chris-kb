@@ -1,5 +1,10 @@
 # SRM — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Least-Privilege Role Assignments, SRA Credential Management, Separation of Duties for Recovery, Network Access Control, Audit Trail.
+</div>
+
 ```text
   SRM RBAC: Recovery Plan Roles → vCenter Permissions
 ┌──────────────────────────────────────────────────────────────┐

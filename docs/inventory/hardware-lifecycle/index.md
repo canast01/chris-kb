@@ -1,6 +1,9 @@
 # Hardware Lifecycle Management
 
+
+<div class="kb-summary">
 Track physical infrastructure from procurement through secure disposal to optimise refresh cycles and maintain vendor support coverage.
+</div>
 
 ## Lifecycle Stages
 

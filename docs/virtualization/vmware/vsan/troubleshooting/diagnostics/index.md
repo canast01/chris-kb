@@ -1,6 +1,9 @@
 # vSAN — Diagnostics
 
+
+<div class="kb-summary">
 Diagnostic procedures for vSAN performance, object health, network issues, and disk failures. Use this page when initial health checks do not identify the root cause and deeper investigation is required.
+</div>
 
 ```text
 DIAGNOSTIC TOOL CHAIN

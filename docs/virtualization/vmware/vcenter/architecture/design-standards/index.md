@@ -1,5 +1,10 @@
 # vCenter — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Naming Conventions, Cluster Configuration Baseline, vSAN Cluster Baseline (where applicable), vCenter Configuration Checklist, VM Template Standards and 6 more sections.
+</div>
+
 ## Naming Conventions
 
 Consistent naming across the vSphere inventory is critical for readability, automation, and audit filtering.

@@ -1,5 +1,10 @@
 # Commvault — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Two-Factor Authentication, CyberArk Integration, Related Reference.
+</div>
+
 ```text
 ┌─────────────────────────── Commvault Authentication — Methods and Controls ───────────────────────────┐
 │                                                                                                       │

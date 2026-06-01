@@ -1,5 +1,10 @@
 # FlashArray — Design Standards
 
+
+<div class="kb-summary">
+FlashArray — Design Standards reference.
+</div>
+
 ```text
 FlashArray Design Checklist — Key Areas
 ┌──────────────────────────────────────────────────────────┐

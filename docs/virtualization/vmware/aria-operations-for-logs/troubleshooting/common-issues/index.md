@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Log Ingestion Stopped or Dropped to Zero, Searching vCenter Events, Agent Not Delivering Logs, Interactive Analytics Queries Time Out or Are Slow, Cluster Node Not Joining (Worker Fails to Join) and 3 more sections.
+</div>
+
 ## Log Ingestion Stopped or Dropped to Zero
 
 Symptoms: the ingestion rate in Administration → Cluster shows 0 events/sec; dashboards show no recent events; log sources are still active.

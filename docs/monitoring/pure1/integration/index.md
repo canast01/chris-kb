@@ -1,4 +1,9 @@
 # Pure1 Integration
+
+<div class="kb-summary">
+Pure1 Integration reference covering Overview, Native Array Integration, Email Alert Integration, Aria Operations Integration (Pure Storage Management Pack), Splunk Integration and 1 more sections.
+</div>
+
 ## Overview
 
 Pure1 integrates natively with all Pure Storage FlashArray and FlashBlade systems via outbound telemetry. External integrations extend Pure1 data and alerts into ITSM, observability, on-call, and notification platforms.

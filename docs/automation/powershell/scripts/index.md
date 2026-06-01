@@ -1,6 +1,9 @@
 # PowerShell — Scripts
 
+
+<div class="kb-summary">
 > Part of the [PowerShell](../index.md) reference.
+</div>
 
 ---
 

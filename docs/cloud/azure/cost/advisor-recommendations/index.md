@@ -1,6 +1,9 @@
 # Advisor Recommendations
 
+
+<div class="kb-summary">
 Azure Advisor analyses your usage and configuration and surfaces personalised recommendations across cost, security, reliability, performance, and operational excellence. The cost category is the most actionable for day-to-day spend control.
+</div>
 
 ## Advisor Recommendation Categories
 

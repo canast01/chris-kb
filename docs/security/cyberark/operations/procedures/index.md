@@ -1,6 +1,9 @@
 # CyberArk — Procedures
 
+
+<div class="kb-summary">
 Operational procedures for account management, password rotation, session management, and audit tasks.
+</div>
 
 ## Password Rotation Workflow
 

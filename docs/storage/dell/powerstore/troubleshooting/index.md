@@ -1,4 +1,9 @@
 # PowerStore — Troubleshooting
+
+<div class="kb-summary">
+PowerStore — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Dell PowerStore Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │

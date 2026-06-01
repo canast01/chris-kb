@@ -1,4 +1,9 @@
 # Unity — Troubleshooting
+
+<div class="kb-summary">
+Unity — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell Unity Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

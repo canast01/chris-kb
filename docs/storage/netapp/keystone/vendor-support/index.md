@@ -1,4 +1,9 @@
 # NetApp Keystone Vendor Support
+
+<div class="kb-summary">
+NetApp Keystone Vendor Support reference covering Keystone Success Manager, Support Portal, Opening a Case, Information to Collect, SLA Tiers and 1 more sections.
+</div>
+
 ## Keystone Success Manager
 
 Every Keystone subscription includes a dedicated Keystone Success Manager (KSM). The KSM is the primary NetApp contact for:

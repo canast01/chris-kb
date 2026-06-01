@@ -1,5 +1,10 @@
 # Azure Practice Notes
 
+
+<div class="kb-summary">
+Azure Practice Notes reference covering ARM vs Bicep vs Terraform, RBAC Scope Hierarchy, Policy vs Initiative, Common Scenario Mappings, Azure AD / Entra ID Key Concepts and 1 more sections.
+</div>
+
 ## ARM vs Bicep vs Terraform
 
 | Feature | ARM Templates | Bicep | Terraform |

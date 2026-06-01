@@ -1,5 +1,10 @@
 # PowerShell — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation, PowerShell Error Handling Flow.
+</div>
+
 ## Change Readiness
 
 - [ ] Script tested in non-production environment and output validated

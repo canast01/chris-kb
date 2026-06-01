@@ -1,5 +1,10 @@
 # PowerStore — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Protection Architecture Overview, Native Snapshots, Backup Integration, Backup Restore Procedures, Recovery Objectives.
+</div>
+
 ## Protection Architecture Overview
 
 PowerStore data protection is layered: native snapshots and replication provide first-line protection; external backup tools provide secondary copies. Use both — snapshots enable fast local restores; backup copies provide offsite protection and long-term retention.

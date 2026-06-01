@@ -1,5 +1,10 @@
 # PowerStore — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Initial Setup, Software Upgrade, Appliance Lifecycle.
+</div>
+
 ## Initial Setup
 
 ### Pre-Installation Requirements

@@ -1,5 +1,10 @@
 # Python Automation — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Python Automation Health Check Flow, Incident Triage.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

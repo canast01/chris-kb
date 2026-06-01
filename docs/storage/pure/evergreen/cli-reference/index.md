@@ -1,5 +1,10 @@
 # Pure Evergreen CLI Reference
 
+
+<div class="kb-summary">
+Pure Evergreen CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-array), Alerts.
+</div>
+
 ```text
 Evergreen Management Interfaces
   ┌────────────────────────────────────────────────────┐

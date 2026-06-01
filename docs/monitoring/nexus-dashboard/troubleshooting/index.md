@@ -1,6 +1,9 @@
 # Nexus Dashboard: Troubleshooting Connectivity, Service Failures, and Upgrade Issues
 
+
+<div class="kb-summary">
 This page covers common Nexus Dashboard operational problems: node connectivity failures, service application crashes, and issues encountered during software upgrades.
+</div>
 
 ## Checking Nexus Dashboard Cluster Health
 

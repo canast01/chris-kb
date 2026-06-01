@@ -1,6 +1,10 @@
 # VxRail Operations
 
+
+<div class="kb-summary">
 VxRail operations notes for daily checks, maintenance windows, node work, expansion, support cases, and post-change validation.
+</div>
+
 ```text
 ┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 │                                                                                                       │

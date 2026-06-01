@@ -1,5 +1,10 @@
 # Service Availability Monitoring
 
+
+<div class="kb-summary">
+Service Availability Monitoring reference covering Availability Calculation, Uptime Monitoring Tools, Azure Monitor — Availability Test, AWS Route 53 Health Checks, Availability Incident Tracking and 1 more sections.
+</div>
+
 ## Availability Calculation
 
 ```text

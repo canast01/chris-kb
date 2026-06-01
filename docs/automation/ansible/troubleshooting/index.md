@@ -1,6 +1,11 @@
 # Ansible — Troubleshooting
 
 
+
+<div class="kb-summary">
+Ansible — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌────────────────────────────────────── Ansible — Troubleshooting ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,5 +1,10 @@
 # Azure Managed Disks
 
+
+<div class="kb-summary">
+Azure Managed Disks reference covering Overview, Managed Disk Architecture, Disk Types, Creating and Attaching Disks, Resizing Disks and 3 more sections.
+</div>
+
 ## Overview
 
 Azure Managed Disks are block-level storage volumes managed by Azure and attached to Azure VMs. They abstract the underlying Storage Account and provide high availability through replication. The disk type determines IOPS, throughput, and cost.

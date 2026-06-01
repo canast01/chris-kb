@@ -1,4 +1,9 @@
 # Aria Operations — Troubleshooting
+
+<div class="kb-summary">
+Aria Operations — Troubleshooting reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

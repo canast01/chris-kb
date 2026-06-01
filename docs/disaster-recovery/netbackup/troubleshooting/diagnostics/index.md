@@ -1,6 +1,9 @@
 # NetBackup — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [NetBackup Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

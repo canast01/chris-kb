@@ -1,5 +1,10 @@
 # NetBackup — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering NetBackup Certificate Authority, NetBackup Web UI Authentication, External CA Support, Service Account Security, Related Reference.
+</div>
+
 ## NetBackup Certificate Authority
 
 All clients authenticate to the master server via certificates issued by the NetBackup CA:

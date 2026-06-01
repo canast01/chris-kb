@@ -1,6 +1,9 @@
 # Incident Management
 
+
+<div class="kb-summary">
 Incident Management operational notes and deep-dive references.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

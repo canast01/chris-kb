@@ -1,5 +1,10 @@
 # SRM — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Protection Group Health, RPO Compliance Check, SRA Status (Array-Based Replication), Placeholder VMs at Recovery Site, Recovery Plan Pre-Check and 2 more sections.
+</div>
+
 ```text
   Health Check Chain
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐

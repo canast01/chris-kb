@@ -1,5 +1,10 @@
 # Change Plan Template
 
+
+<div class="kb-summary">
+Change Plan Template reference covering Overview, Change Summary, Pre-Change Checklist, Implementation Steps, Validation Steps and 1 more sections.
+</div>
+
 ## Overview
 
 This template provides a structured format for planning infrastructure or application changes in production environments.

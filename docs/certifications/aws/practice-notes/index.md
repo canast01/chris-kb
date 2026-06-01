@@ -1,5 +1,10 @@
 # AWS Practice Notes
 
+
+<div class="kb-summary">
+AWS Practice Notes reference covering Service Comparison Tables, Common Gotchas, Architecture Patterns, IAM Quick Reference, Study Checklist.
+</div>
+
 ## Service Comparison Tables
 
 ### Compute

@@ -1,6 +1,11 @@
 # SRM — Security
 
 
+
+<div class="kb-summary">
+SRM — Security reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────────── SRM — Security ────────────────────────────────────────────┐
 │                                                                                                       │

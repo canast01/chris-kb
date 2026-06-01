@@ -1,5 +1,10 @@
 # vSphere Replication — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering vCenter Integration, SRM Integration, Network Requirements, Cross-vCenter Replication, Multi-Target Replication (Fan-Out) and 1 more sections.
+</div>
+
 ## vCenter Integration
 
 The VRA registers itself as a vCenter extension (plugin) during initial setup. This registration installs the vSphere Replication plugin in the vCenter UI (Site Recovery section) and grants the VRA API access to vCenter objects (VMs, datastores, hosts, clusters).

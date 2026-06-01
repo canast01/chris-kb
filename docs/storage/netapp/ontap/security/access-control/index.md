@@ -1,5 +1,10 @@
 # ONTAP — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Login Management, Audit Logging.
+</div>
+
 ## RBAC Scope Model
 
 ```mermaid

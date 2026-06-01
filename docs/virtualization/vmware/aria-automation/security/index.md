@@ -1,4 +1,9 @@
 # Aria Automation — Security
+
+<div class="kb-summary">
+Aria Automation — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Automation — Security ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # FlashBlade — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Commands, Performance Diagnostics, Log Locations, Before Calling Support.
+</div>
+
 ```text
 FlashBlade Diagnostic Sequence
   ┌──────────────────────────────────────────────────┐

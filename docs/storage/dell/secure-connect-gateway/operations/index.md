@@ -1,6 +1,9 @@
 # Secure Connect Gateway — Operations
 
+
+<div class="kb-summary">
 > Part of the [Secure Connect Gateway](../index.md) reference.
+</div>
 
 ---
 ## Daily Checks

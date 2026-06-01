@@ -1,5 +1,10 @@
 # NetBackup — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Guidelines.
+</div>
+
 ```text
 ┌────────────────────────────────────── NetBackup — How It Works ───────────────────────────────────────┐
 │                                                                                                       │

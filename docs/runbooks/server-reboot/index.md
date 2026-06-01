@@ -1,5 +1,10 @@
 # Server Reboot Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; maintenance window recommended for production | | Estimated time | 15–30 minutes (excludes application validation) | | Impact | Server and hosted services unavailable during reboot |
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Medium |

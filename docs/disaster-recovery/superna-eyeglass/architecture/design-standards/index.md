@@ -1,5 +1,10 @@
 # Superna Eyeglass — Standards
 
+
+<div class="kb-summary">
+Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover Test Frequency, Operational Standards, Policy Configuration.
+</div>
+
 ## SyncIQ Policy Naming
 
 SyncIQ policy names must be consistent between primary and DR clusters and follow the format:

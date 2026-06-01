@@ -1,4 +1,9 @@
 # Horizon (VDI) — Security
+
+<div class="kb-summary">
+Horizon (VDI) — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Horizon — Security ──────────────────────────────────────────┐
 │                                                                                                       │

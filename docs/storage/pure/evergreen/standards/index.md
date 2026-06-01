@@ -1,5 +1,10 @@
 # Pure Storage Evergreen Standards
 
+
+<div class="kb-summary">
+Pure Storage Evergreen Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist.
+</div>
+
 ```text
 Evergreen Standards — Object Naming and Design
 ┌──────────────────────────────────────────────────────────┐

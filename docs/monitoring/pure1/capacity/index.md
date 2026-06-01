@@ -1,5 +1,10 @@
 # Pure1 — Capacity
 
+
+<div class="kb-summary">
+Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Planning, Snapshot Space Management, Common Capacity Issues.
+</div>
+
 ```text
 ┌───────────────────────────────────── Pure1 — Capacity Management ─────────────────────────────────────┐
 │                                                                                                       │

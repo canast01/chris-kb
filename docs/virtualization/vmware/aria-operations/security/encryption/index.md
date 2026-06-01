@@ -1,5 +1,10 @@
 # Aria Operations — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering TLS Certificate Replacement, Cluster-Internal TLS, Data at Rest Encryption, Credential Encryption in Adapters, Certificate Expiry Monitoring and 1 more sections.
+</div>
+
 ## TLS Certificate Replacement
 
 Aria Operations ships with a self-signed certificate. Replace with a CA-signed certificate for production to avoid browser warnings, API trust failures, and integration issues with other Aria products.

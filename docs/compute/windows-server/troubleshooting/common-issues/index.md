@@ -1,5 +1,10 @@
 # Windows Server — Common Issues
 
+
+<div class="kb-summary">
+Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues.
+</div>
+
 Quick reference for common problems and resolutions.
 
 Structured approach to diagnosing common Windows Server issues.

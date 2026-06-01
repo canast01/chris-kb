@@ -1,5 +1,10 @@
 # Maintenance Window Communications
 
+
+<div class="kb-summary">
+Maintenance Window Communications reference covering Overview, Communication Timeline, Stakeholder List, Notification Templates, Bridge and War Room Details and 1 more sections.
+</div>
+
 ## Overview
 
 Clear, timely communications are as important as the technical work in a maintenance window. Users and stakeholders who are surprised by downtime are frustrated even when the work goes perfectly. A well-managed comms process sets expectations, reduces inbound queries during the window, and builds trust in the infrastructure team.

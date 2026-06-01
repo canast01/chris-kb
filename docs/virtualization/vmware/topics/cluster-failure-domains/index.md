@@ -1,6 +1,9 @@
 # Cluster Failure Domains
 
+
+<div class="kb-summary">
 A failure domain is the blast radius of a single fault: the set of hosts, storage, or network paths that share a common point of failure. Correctly mapping and configuring failure domains is the foundation of vSAN resilience, HA placement, and maintenance safety.
+</div>
 
 ---
 

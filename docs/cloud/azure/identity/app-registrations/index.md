@@ -1,6 +1,9 @@
 # App Registrations
 
+
+<div class="kb-summary">
 An app registration in Microsoft Entra ID creates an identity for an application that needs to authenticate with Azure AD or access Azure resources and APIs. It is the foundation for service principals, OAuth2 flows, and API permissions.
+</div>
 
 ## App Registration to Service Principal Model
 

@@ -1,5 +1,10 @@
 # Maintenance Window Closeout
 
+
+<div class="kb-summary">
+Maintenance Window Closeout reference covering Overview, Closeout Sequence, Closeout Checklist, Deferred Task Handling, Debrief and Lessons Learned and 1 more sections.
+</div>
+
 ## Overview
 
 Closeout formally ends the maintenance window, ensures all tasks are accounted for, and hands the environment back to normal operations. A rushed or skipped closeout leaves ambiguity about what was completed, creates gaps in the audit trail, and can leave monitoring in a suppressed state.

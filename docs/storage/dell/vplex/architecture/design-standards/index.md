@@ -1,6 +1,9 @@
 # Dell VPLEX — Standards
 
+
+<div class="kb-summary">
 Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments.
+</div>
 
 ```mermaid
 flowchart TD

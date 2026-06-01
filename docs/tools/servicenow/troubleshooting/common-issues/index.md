@@ -1,6 +1,9 @@
 # ServiceNow — Common Issues
 
+
+<div class="kb-summary">
 Quick-reference troubleshooting guide for frequently encountered ServiceNow operational problems. Each issue includes symptoms, root causes, diagnostic steps, and resolution procedures.
+</div>
 
 ---
 

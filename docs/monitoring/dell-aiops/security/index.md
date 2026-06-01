@@ -1,4 +1,9 @@
 # Dell AIOps Security
+
+<div class="kb-summary">
+Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, Audit Logging, Data Sovereignty, Network Security and 1 more sections.
+</div>
+
 ## Access Control (RBAC)
 
 Dell AIOps access control inherits from CloudIQ RBAC. Roles are assigned per user in the CloudIQ portal.

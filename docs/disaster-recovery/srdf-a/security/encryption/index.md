@@ -1,5 +1,10 @@
 # SRDF/A — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption In-Flight, Notes.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRDF/A — Encryption ─────────────────────────────────────────┐
 │                                                                                                       │

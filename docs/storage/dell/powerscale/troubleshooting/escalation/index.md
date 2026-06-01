@@ -1,5 +1,10 @@
 # PowerScale — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Procedure.
+</div>
+
 ## Support Portal
 
 Open and manage cases at [https://www.dell.com/support](https://www.dell.com/support). Log in with your Dell account and navigate to **My Cases** to track open cases.

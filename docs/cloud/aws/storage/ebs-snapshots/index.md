@@ -1,5 +1,10 @@
 # AWS EBS Snapshots
 
+
+<div class="kb-summary">
+AWS EBS Snapshots reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────── EBS Snapshots — Backup & Lifecycle ──────────────────────────────────┐
 │                                                                                                       │

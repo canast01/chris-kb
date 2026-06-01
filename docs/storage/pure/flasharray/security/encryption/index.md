@@ -1,5 +1,10 @@
 # FlashArray — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption at Rest, Encryption in Transit, TLS Configuration Reference, Compliance Mapping, Operational Checklist.
+</div>
+
 ```text
 FlashArray Encryption Architecture
 ┌────────────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # AWS — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering IAM Fundamentals, Least-Privilege Policy Design, Cross-Account Access, Resource-Based Policies, Permission Boundary and 4 more sections.
+</div>
+
 ---
 
 ## IAM Fundamentals

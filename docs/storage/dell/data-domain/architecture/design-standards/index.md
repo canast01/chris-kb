@@ -1,5 +1,10 @@
 # Data Domain — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Sizing Considerations, MTree Naming Convention, DD Boost Storage Unit Naming, Replication Context Naming, MTree Quota Standards and 4 more sections.
+</div>
+
 ## Sizing Considerations
 
 | Parameter | Guidance |

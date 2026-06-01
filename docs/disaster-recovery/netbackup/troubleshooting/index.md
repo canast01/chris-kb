@@ -1,6 +1,11 @@
 # NetBackup — Troubleshooting
 
 
+
+<div class="kb-summary">
+NetBackup — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── NetBackup — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # FOD — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Upgrade Notes, Design Standards.
+</div>
+
 ```text
 ┌────────────────────────────── Dell FoD — Architecture Design Standards ───────────────────────────────┐
 │                                                                                                       │

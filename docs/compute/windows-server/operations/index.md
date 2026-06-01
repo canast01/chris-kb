@@ -1,6 +1,11 @@
 # Windows Server — Operations
 
 
+
+<div class="kb-summary">
+Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+</div>
+
 ```text
 ┌───────────────────────────────────── Windows Server — Operations ─────────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # AWS — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Operations](../index.md) section.
+</div>
 
 ---
 

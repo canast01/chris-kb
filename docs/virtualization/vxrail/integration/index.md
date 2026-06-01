@@ -1,6 +1,9 @@
 # VxRail Integration
 
+
+<div class="kb-summary">
 > Part of the [VxRail](../index.md) reference.
+</div>
 
 ---
 ## vCenter Integration

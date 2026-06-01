@@ -1,6 +1,9 @@
 # VM Images
 
+
+<div class="kb-summary">
 Azure VM images are the base OS configurations used to create virtual machines. This page covers Marketplace images, custom images, Azure Compute Gallery (ACG), and image versioning.
+</div>
 
 ---
 

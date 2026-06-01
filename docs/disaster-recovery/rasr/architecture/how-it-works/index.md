@@ -1,5 +1,10 @@
 # RASR — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Architecture, Network Recovery Share Requirements, RASR vs Alternative Methods.
+</div>
+
 ## Overview
 
 RASR (Recovery and System Restore) is Dell's bare-metal recovery tool for Windows Server, shipped as part of the Dell OpenManage suite. It captures a full sector-level system image — including the OS volume, boot partition, and system state — and restores it to original or replacement hardware via a WinPE boot environment, without requiring a pre-installed OS. RASR is the last-resort bare-metal recovery mechanism for physical Dell PowerEdge servers.

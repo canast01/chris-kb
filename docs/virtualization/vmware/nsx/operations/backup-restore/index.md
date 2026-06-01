@@ -1,5 +1,10 @@
 # NSX — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering What NSX Backup Covers, Configure Backup, Verify Backup Integrity, Restore NSX Manager from Backup, Partial Configuration Recovery (No Full Restore) and 2 more sections.
+</div>
+
 ## What NSX Backup Covers
 
 The NSX Manager backup captures the full management plane state:

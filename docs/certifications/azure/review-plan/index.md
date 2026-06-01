@@ -1,5 +1,10 @@
 # Azure Certification Review Plan
 
+
+<div class="kb-summary">
+Azure Certification Review Plan reference covering Recommended Study Path, 8-Week AZ-104 Study Schedule, Microsoft Learn Resources, Sandbox and Lab Options, Practice Assessment Resources and 1 more sections.
+</div>
+
 ## Recommended Study Path
 
 | Stage | Exam | Prerequisites | Suggested Duration |

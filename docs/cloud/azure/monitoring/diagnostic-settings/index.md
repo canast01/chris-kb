@@ -1,6 +1,9 @@
 # Diagnostic Settings
 
+
+<div class="kb-summary">
 Diagnostic settings control which resource logs and metrics are exported from an Azure resource and where they are sent. Each resource supports its own set of log categories; enabling them is a prerequisite for log-based alerting, compliance archival, and operational analysis.
+</div>
 
 ## Diagnostic Settings Routing
 

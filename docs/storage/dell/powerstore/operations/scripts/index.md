@@ -1,5 +1,10 @@
 # PowerStore — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Authentication Helper, Daily Health Check Script, Volume Inventory Report, Replication Status Reporter, Snapshot Cleanup Script and 2 more sections.
+</div>
+
 ## Authentication Helper
 
 All scripts in this section use the REST API token-based authentication. Source this helper before running any other script.

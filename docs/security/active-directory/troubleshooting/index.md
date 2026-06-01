@@ -1,5 +1,10 @@
 # Active Directory — Troubleshooting
 
+
+<div class="kb-summary">
+Active Directory — Troubleshooting reference.
+</div>
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="common-issues/">

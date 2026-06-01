@@ -1,5 +1,10 @@
 # Maintenance Window Execution
 
+
+<div class="kb-summary">
+Maintenance Window Execution reference covering Overview, Go / No-Go at Window Open, Execution Checklist, Step-by-Step Discipline, Time Management During Execution and 1 more sections.
+</div>
+
 ## Overview
 
 Execution is where the planned work happens. The discipline during this phase — following the runbook, checking off steps, calling go/no-go at the right moments — determines whether the window succeeds. Improvisation during execution is a leading cause of extended windows and unplanned outages.

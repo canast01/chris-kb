@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Post-Deployment Checklist, SSH Hardening, Network Access Restriction, TLS Hardening, SIEM / Syslog Integration and 3 more sections.
+</div>
+
 ---
 
 ## Post-Deployment Checklist

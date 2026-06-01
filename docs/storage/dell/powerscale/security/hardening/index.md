@@ -1,6 +1,9 @@
 # PowerScale — Hardening
 
+
+<div class="kb-summary">
 > Security baselines and compliance configuration for Dell PowerScale.
+</div>
 
 ## Hardening Checklist
 

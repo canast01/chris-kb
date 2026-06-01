@@ -1,5 +1,10 @@
 # Security
 
+
+<div class="kb-summary">
+Security reference: Standard LDAP Integration, Standard SAML Configuration, Active Directory, CyberArk, and 4 more.
+</div>
+
 ## Shared Reference
 
 <div class="kb-grid kb-grid-3">

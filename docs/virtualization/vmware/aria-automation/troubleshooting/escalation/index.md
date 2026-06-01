@@ -1,5 +1,10 @@
 # Aria Automation — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, When to Escalate, Generating a Support Bundle, Information to Collect Before Opening a Case, SLA Tiers and 4 more sections.
+</div>
+
 ## Support Portal
 
 **Broadcom Support Portal:** [https://support.broadcom.com](https://support.broadcom.com)

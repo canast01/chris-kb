@@ -1,6 +1,9 @@
 # Management Access Check
 
+
+<div class="kb-summary">
 Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.
+</div>
 
 ```text
 Management Access Check Flow

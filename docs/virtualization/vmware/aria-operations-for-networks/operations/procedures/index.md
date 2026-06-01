@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Add a New vCenter Data Source, Configure NetFlow Export from a Cisco Switch, Run Microsegmentation Analysis for an Application, Export Security Group Recommendations to NSX, Create a Saved Search / Alert and 3 more sections.
+</div>
+
 ## Add a New vCenter Data Source
 
 1. Settings → Accounts and Data Sources → Add Source → vCenter Server

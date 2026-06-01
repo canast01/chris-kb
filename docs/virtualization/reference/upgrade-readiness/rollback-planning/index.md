@@ -1,6 +1,9 @@
 # Rollback Planning
 
+
+<div class="kb-summary">
 Rollback options differ significantly by component. Establish the rollback path before the maintenance window — not during an incident.
+</div>
 
 ## Rollback Readiness by Component
 

@@ -1,6 +1,9 @@
 # Terraform — Integrations
 
+
+<div class="kb-summary">
 Terraform integrates with cloud providers, secrets management, source control, and CI/CD systems. This page covers the major integrations used in enterprise environments.
+</div>
 
 ---
 

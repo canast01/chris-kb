@@ -1,4 +1,9 @@
 # VxRail Firmware Inventory
+
+<div class="kb-summary">
+VxRail Firmware Inventory reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Firmware versions, drift review, lifecycle alignment, and upgrade notes.

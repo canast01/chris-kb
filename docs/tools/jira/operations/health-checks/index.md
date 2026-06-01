@@ -1,5 +1,10 @@
 # Jira — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk Space, 4. Database Connectivity, 5. Search Index Status and 3 more sections.
+</div>
+
 ## Health Check Overview
 
 ```mermaid

@@ -1,5 +1,10 @@
 # Asset Cleanup and Decommission
 
+
+<div class="kb-summary">
+Asset Cleanup and Decommission reference covering Overview, Decommission Workflow, Data Wiping Standards, Dependency Verification Checklist, Physical Asset Disposal and 1 more sections.
+</div>
+
 ## Overview
 
 Asset cleanup covers the full workflow from decommission decision through physical disposal and CMDB record retirement. Skipping steps creates compliance gaps, security risks from data not wiped, and CMDB inaccuracies that affect downstream processes like change and incident management.

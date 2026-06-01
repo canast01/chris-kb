@@ -1,6 +1,9 @@
 # Active Directory Integration
 
+
+<div class="kb-summary">
 Active Directory serves as the central identity provider for the enterprise. Integrations span VMware infrastructure, Linux systems, network devices, security tooling, and SIEM platforms.
+</div>
 
 ---
 ## Integration Overview

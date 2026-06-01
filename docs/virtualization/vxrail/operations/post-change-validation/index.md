@@ -1,4 +1,9 @@
 # VxRail Post-Change Validation
+
+<div class="kb-summary">
+VxRail Post-Change Validation reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Validation after lifecycle, hardware, configuration, or support changes.

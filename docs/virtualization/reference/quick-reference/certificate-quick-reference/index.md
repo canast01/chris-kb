@@ -1,5 +1,10 @@
 # VMware Certificate Quick Reference
 
+
+<div class="kb-summary">
+VMware Certificate Quick Reference reference covering Check Expiration Quickly, Identify Certificate Type, Review Trusted Root Chain, Check STS Certificate, Validate After Replacement and 1 more sections.
+</div>
+
 ## Check Expiration Quickly
 
 In vCenter Appliance Management (VAMI) at `https://<vcenter>:5480`:

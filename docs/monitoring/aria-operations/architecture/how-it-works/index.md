@@ -1,5 +1,10 @@
 # Aria Operations — How It Works (Monitoring)
 
+
+<div class="kb-summary">
+How It Works (Monitoring) reference covering Analytics Cluster Topology, Component Roles, Deployment Sizing, Remote Collectors, Data Retention and 3 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────── Aria Operations — How It Works ────────────────────────────────────┐
 │                                                                                                       │

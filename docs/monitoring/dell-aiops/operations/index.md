@@ -1,4 +1,9 @@
 # Dell AIOps Operations
+
+<div class="kb-summary">
+Dell AIOps Operations reference covering Daily Checklist, Alert Triage Workflow, Health Score Decline Investigation.
+</div>
+
 ## Daily Checklist
 
 | Check | Location | Pass Criteria |

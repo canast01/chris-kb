@@ -1,6 +1,11 @@
 # Ansible — Operations
 
 
+
+<div class="kb-summary">
+Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Ansible — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -1,6 +1,9 @@
 # GitHub Actions — Integrations
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Architecture](../index.md) reference.
+</div>
 
 ## Cloud Providers
 

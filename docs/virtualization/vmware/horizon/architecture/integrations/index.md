@@ -1,5 +1,10 @@
 # Horizon — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Active Directory, vCenter Integration, vSAN Integration, App Volumes Integration, Dynamic Environment Manager (DEM) Integration and 4 more sections.
+</div>
+
 ## Active Directory
 
 Active Directory is a hard dependency — Connection Server must be domain-joined. Horizon uses AD for:

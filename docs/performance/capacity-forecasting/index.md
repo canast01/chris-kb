@@ -1,6 +1,9 @@
 # Capacity Forecasting
 
+
+<div class="kb-summary">
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
+</div>
 
 ## Forecasting Model
 

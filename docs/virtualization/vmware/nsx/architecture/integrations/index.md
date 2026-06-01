@@ -1,5 +1,10 @@
 # NSX — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Host Transport Node Profiles, VMware Cloud Foundation (VCF) Integration, Physical Underlay Requirements, BGP Integration with Physical Network, Active Directory / LDAP Integration and 2 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────── NSX Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │

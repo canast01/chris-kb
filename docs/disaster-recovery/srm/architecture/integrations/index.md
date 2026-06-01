@@ -1,5 +1,10 @@
 # SRM Architecture — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Integration Points Overview, Dell EMC SRA for PowerMax, Pure Storage SRA, NetApp SnapMirror SRA, vSphere Replication Configuration and 3 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────── SRM — Architecture Integrations ───────────────────────────────────┐
 │                                                                                                       │

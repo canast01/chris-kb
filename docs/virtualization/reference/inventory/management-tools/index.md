@@ -1,5 +1,10 @@
 # Management Tools
 
+
+<div class="kb-summary">
+Management Tools reference covering Overview, Core Management Tools, Backup and Data Protection, Monitoring and Alerting, Certificate Management and 2 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── VMware — Management Tools ──────────────────────────────────────┐
 │                                                                                                       │

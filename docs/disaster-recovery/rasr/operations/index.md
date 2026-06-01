@@ -1,6 +1,11 @@
 # RASR — Operations
 
 
+
+<div class="kb-summary">
+RASR — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── RASR — Operations ──────────────────────────────────────────┐
 │                                                                                                       │

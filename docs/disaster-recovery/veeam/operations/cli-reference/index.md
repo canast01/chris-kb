@@ -1,5 +1,10 @@
 # Veeam — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Backup Infrastructure Topology, Sessions & History, Restore Points, VM Restore, Infrastructure and 1 more sections.
+</div>
+
 ## Backup Infrastructure Topology
 
 The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.

@@ -1,5 +1,10 @@
 # CloudIQ — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering API Authentication, Related Reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell CloudIQ — Authentication ────────────────────────────────────┐
 │                                                                                                       │

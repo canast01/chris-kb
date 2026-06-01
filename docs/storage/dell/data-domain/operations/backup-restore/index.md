@@ -1,5 +1,10 @@
 # Data Domain — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Overview, DDBoost Restore (Backup Application), NFS Direct Restore, CIFS/SMB Direct Restore, VTL Restore and 5 more sections.
+</div>
+
 ## Overview
 
 ```mermaid

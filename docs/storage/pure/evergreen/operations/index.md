@@ -1,5 +1,10 @@
 # Evergreen — Operations
 
+
+<div class="kb-summary">
+Evergreen — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+</div>
+
 ```text
 Evergreen Operations Touch Points
   Pure1 portal ──► daily subscription + health review

@@ -1,5 +1,10 @@
 # HA Admission Control
 
+
+<div class="kb-summary">
+HA Admission Control reference covering Purpose, Admission Control Policies, Checking Admission Control Status, Configure Admission Control, Admission Control and Overcommit and 3 more sections.
+</div>
+
 ## Purpose
 
 Admission control reserves cluster capacity so that in the event of a host failure, vSphere HA can restart all VMs from the failed host on remaining hosts. Without it, a cluster at 100% utilisation cannot restart failed VMs.

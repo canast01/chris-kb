@@ -1,4 +1,9 @@
 # Aria Operations — Operations
+
+<div class="kb-summary">
+Aria Operations — Operations reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Aria Operations — Operations ─────────────────────────────────────┐
 │                                                                                                       │

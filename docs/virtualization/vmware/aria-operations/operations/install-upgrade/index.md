@@ -1,5 +1,10 @@
 # Aria Operations — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Interoperability Matrix, EOL Tracking, Pre-Upgrade Checklist, Post-Upgrade Validation, Related Sections.
+</div>
+
 ```text
 Aria Operations — Upgrade Paths
 ┌─────────────────────────────────────────────────────┐

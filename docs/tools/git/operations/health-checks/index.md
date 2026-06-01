@@ -1,6 +1,9 @@
 # Git — Health Checks
 
+
+<div class="kb-summary">
 This page covers repository integrity checks, platform-level health monitoring, disk usage analysis, and replication lag verification for GitLab Geo environments.
+</div>
 
 ---
 

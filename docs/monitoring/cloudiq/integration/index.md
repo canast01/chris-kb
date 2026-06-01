@@ -1,4 +1,9 @@
 # CloudIQ Integration
+
+<div class="kb-summary">
+CloudIQ Integration reference covering Overview, Native Platform Integrations (Inbound via SCG), ServiceNow Integration, REST API Access for Splunk / Grafana, Aria Operations Integration and 1 more sections.
+</div>
+
 ## Overview
 
 CloudIQ collects telemetry natively from all Dell platforms via the Secure Connect Gateway. External integrations extend alert delivery and data access into broader operational toolsets including ITSM, observability platforms, and notification systems.

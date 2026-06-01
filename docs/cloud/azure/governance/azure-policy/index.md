@@ -1,6 +1,9 @@
 # Azure Policy
 
+
+<div class="kb-summary">
 Azure Policy evaluates resources against defined rules and enforces organisational standards across your Azure environment. Policies can audit, deny, or automatically remediate non-compliant resources.
+</div>
 
 ## Built-in Policies
 

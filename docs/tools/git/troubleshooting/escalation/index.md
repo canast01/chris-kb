@@ -1,6 +1,9 @@
 # Git — Escalation
 
+
+<div class="kb-summary">
 Escalation paths for Git platform incidents, support ticket procedures, data collection requirements, emergency repository recovery, and SLA commitments.
+</div>
 
 ---
 

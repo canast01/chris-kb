@@ -1,5 +1,10 @@
 # Usage Metrics
 
+
+<div class="kb-summary">
+Usage Metrics reference covering Current totals, Section growth, Health checks.
+</div>
+
 Generated: 2026-05-07
 
 ## Current totals

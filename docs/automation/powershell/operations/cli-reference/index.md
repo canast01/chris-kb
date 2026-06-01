@@ -1,6 +1,11 @@
 # PowerShell — CLI Reference
 
-PowerShell is Microsoft's cross-platform command shell and scripting language. Unlike the old CMD prompt, PowerShell works with objects — every command outputs structured data you can pipe, filter, sort, and transform. The `VMware.PowerCLI` module extends PowerShell with hundreds of cmdlets for managing vSphere, making it the primary automation tool for VMware infrastructure.
+
+<div class="kb-summary">
+PowerShell is Microsoft's cross-platform command shell and scripting language. Unlike the old CMD prompt, PowerShell works with objects — every command outputs structured data you can pipe, filter, sort, and transform.
+</div>
+
+ The `VMware.PowerCLI` module extends PowerShell with hundreds of cmdlets for managing vSphere, making it the primary automation tool for VMware infrastructure.
 
 > Works on Windows, macOS, and Linux (PowerShell 7+). VMware PowerCLI requires `Install-Module VMware.PowerCLI`.
 

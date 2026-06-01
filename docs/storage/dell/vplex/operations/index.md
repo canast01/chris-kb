@@ -1,4 +1,9 @@
 # Dell VPLEX — Operations
+
+<div class="kb-summary">
+Dell VPLEX — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Dell VPLEX Operations ────────────────────────────────────────┐
 │                                                                                                       │

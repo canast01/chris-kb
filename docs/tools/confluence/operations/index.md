@@ -1,6 +1,11 @@
 # Confluence — Operations
 
 
+
+<div class="kb-summary">
+Confluence — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Confluence — Operations Overview ───────────────────────────────────┐
 │                                                                                                       │

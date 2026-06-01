@@ -1,5 +1,10 @@
 # Disaster Recovery
 
+
+<div class="kb-summary">
+Disaster Recovery reference: SRDF/S, SRDF/A, RecoverPoint, SRM, and 4 more.
+</div>
+
 ## Site Topology
 ```text
 ┌────────────────────────────────────────── Disaster Recovery ──────────────────────────────────────────┐

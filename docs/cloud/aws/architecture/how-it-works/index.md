@@ -1,5 +1,10 @@
 # AWS — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Account Structure, IAM Structure, High Availability, Disaster Recovery.
+</div>
+
 ## Overview
 
 AWS is deployed as a multi-account organisation via AWS Organizations. All production workloads run in dedicated member accounts. A management account holds only SCPs and consolidated billing — no workloads. An audit account aggregates CloudTrail and Config findings; a log archive account stores centralised log retention.

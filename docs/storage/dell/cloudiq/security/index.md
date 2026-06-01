@@ -1,4 +1,9 @@
 # CloudIQ — Security
+
+<div class="kb-summary">
+CloudIQ — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Dell CloudIQ — Security ───────────────────────────────────────┐
 │                                                                                                       │

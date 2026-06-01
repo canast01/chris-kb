@@ -1,5 +1,10 @@
 # Aria Operations for Networks — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Data at Rest, Data in Transit, Certificate Management, TLS Cipher Hardening, Credential Storage.
+</div>
+
 ---
 
 ## Data at Rest

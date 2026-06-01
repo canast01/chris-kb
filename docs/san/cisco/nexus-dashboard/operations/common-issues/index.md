@@ -1,6 +1,9 @@
 # Nexus Dashboard — Known Issues
 
+
+<div class="kb-summary">
 > Part of the [Nexus Dashboard](../../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../../troubleshooting/common-issues/index.md).
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # Linux — Procedures
 
+
+<div class="kb-summary">
 Day-to-day operational tasks and how-to guides.
+</div>
 
 ## Change Readiness Checks
 

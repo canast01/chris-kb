@@ -1,6 +1,9 @@
 # GitHub Actions — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Operations](../index.md) reference.
+</div>
 
 ---
 

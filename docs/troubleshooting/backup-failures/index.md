@@ -1,5 +1,10 @@
 # Backup Failures Troubleshooting
 
+
+<div class="kb-summary">
+Backup Failures Troubleshooting reference covering Overview, Failure Classification, Diagnostic Flowchart, Commvault Troubleshooting, NetBackup Troubleshooting and 4 more sections.
+</div>
+
 ## Overview
 
 Backup failures directly degrade recovery capability. This guide covers failure classification and deep troubleshooting for Veeam Backup & Replication, Commvault, and Veritas NetBackup in enterprise environments. Address failures within the RTO window defined for each protection tier.

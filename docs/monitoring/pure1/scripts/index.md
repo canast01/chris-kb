@@ -1,4 +1,9 @@
 # Pure1 Scripts
+
+<div class="kb-summary">
+Pure1 Scripts reference covering Authentication, Active Alert Export, Pure1 Meta Anomaly Query, Exponential Backoff for Rate Limiting, Script Inventory.
+</div>
+
 ## Authentication
 
 Pure1 REST API v1 uses RSA JWT authentication. The private key is stored in the secrets manager and loaded at runtime. Never store the private key in the repository or in plain text configuration files.

@@ -1,5 +1,10 @@
 # Aria Operations — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Adapter Collection Failures, Cluster Node Offline or Degraded, Dashboard Shows Stale or No Data, Capacity Data Not Updating, LDAP Authentication Failure and 2 more sections.
+</div>
+
 ## Adapter Collection Failures
 
 Symptoms: adapter shows **Not Collecting** in Administration → Solutions; metric data for the monitored system stops updating; dashboards show stale data.

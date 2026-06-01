@@ -1,6 +1,9 @@
 # Dell VPLEX — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Dell VPLEX](../../index.md) reference.
+</div>
 
 ```mermaid
 flowchart LR

@@ -1,5 +1,10 @@
 # PowerShell — Script Reference
 
+
+<div class="kb-summary">
+Script Reference reference covering VM Health Report, Datastore Utilization Alert.
+</div>
+
 ## VM Health Report
 
 Generates a per-cluster VM health report: power state, CPU/memory, snapshot age, and datastore utilization. Outputs to CSV and console.

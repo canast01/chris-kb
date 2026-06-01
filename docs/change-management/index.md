@@ -1,6 +1,11 @@
 # Change Management
 
 
+
+<div class="kb-summary">
+Change Management reference: Change Approval, Change Communication, Change Request, Change Validation, and 3 more.
+</div>
+
 ```text
 ┌────────────────────────────────────────── Change Management ──────────────────────────────────────────┐
 │                                                                                                       │

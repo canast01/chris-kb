@@ -1,6 +1,9 @@
 # Dell VPLEX — Integrations
 
+
+<div class="kb-summary">
 Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.
+</div>
 
 ```mermaid
 flowchart TB

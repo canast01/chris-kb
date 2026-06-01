@@ -1,6 +1,9 @@
 # Windows Server — Standards
 
+
+<div class="kb-summary">
 Sizing guidelines, design standards, and best practices.
+</div>
 
 ## Group Policy Processing Order
 

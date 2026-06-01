@@ -1,6 +1,9 @@
 # ServiceNow — Hardening
 
+
+<div class="kb-summary">
 Hardening ServiceNow reduces the risk of privilege escalation, data exfiltration, and integration abuse. The platform's flexibility (scripting, integrations, low-code) makes hardening essential to prevent misconfiguration from becoming a security incident.
+</div>
 
 ---
 

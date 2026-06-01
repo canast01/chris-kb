@@ -1,6 +1,9 @@
 # VMware Service Account Inventory
 
+
+<div class="kb-summary">
 Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.
+</div>
 
 ## Account Register
 

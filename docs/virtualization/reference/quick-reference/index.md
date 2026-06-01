@@ -1,6 +1,9 @@
 # Virtualization Quick Reference
 
+
+<div class="kb-summary">
 Fast operational tools for troubleshooting and validation.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

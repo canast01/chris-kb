@@ -1,7 +1,9 @@
 # Integration
 
-References for infrastructure service integrations and connectivity patterns.
 
+<div class="kb-summary">
+References for infrastructure service integrations and connectivity patterns.
+</div>
 
 ```text
 ┌─────────────────────── Integration — API, Certificate, Directory, Email & NTP ────────────────────────┐

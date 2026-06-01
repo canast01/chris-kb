@@ -1,5 +1,10 @@
 # Superna Eyeglass — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Opening a Support Request, Required Information for SR, Severity Levels, License Issues, Escalation Path.
+</div>
+
 ```text
 ┌──────────────────────────────────── Superna Eyeglass — Escalation ────────────────────────────────────┐
 │                                                                                                       │

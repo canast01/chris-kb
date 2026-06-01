@@ -1,5 +1,10 @@
 # Pure1 — Support
 
+
+<div class="kb-summary">
+Support reference covering Diagnostic Bundle Collection, Severity Definitions, Evergreen Support — What's Covered, Proactive Support Features, Escalation Path and 1 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── Pure1 — Support Integration ─────────────────────────────────────┐
 │                                                                                                       │

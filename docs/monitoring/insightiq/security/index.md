@@ -1,4 +1,9 @@
 # InsightIQ Security
+
+<div class="kb-summary">
+InsightIQ Security reference covering Authentication, OneFS Service Account Security, Database Backup Encryption, Audit Logging, Security Hardening Checklist.
+</div>
+
 ## Authentication
 
 InsightIQ supports local accounts and LDAP/Active Directory integration. LDAP integration is strongly preferred for production environments to enable centralised account management and audit.

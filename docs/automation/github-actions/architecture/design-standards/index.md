@@ -1,6 +1,9 @@
 # GitHub Actions — Standards
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Architecture](../index.md) reference.
+</div>
 
 ## Workflow File Structure
 

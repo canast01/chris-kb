@@ -1,5 +1,10 @@
 # Azure Services Reference
 
+
+<div class="kb-summary">
+Azure Services Reference reference covering Compute Services, Networking Services, Identity Services, Storage Services, Monitoring Services and 1 more sections.
+</div>
+
 ## Compute Services
 
 | Service | Category | Key Facts |

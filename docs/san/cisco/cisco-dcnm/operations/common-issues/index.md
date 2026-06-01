@@ -1,6 +1,9 @@
 # Cisco DCNM — Known Issues
 
+
+<div class="kb-summary">
 Quick reference for common problems and resolutions.
+</div>
 
 ## Fabric Discovery Failures
 

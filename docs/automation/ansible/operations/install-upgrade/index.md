@@ -1,6 +1,9 @@
 # Ansible — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [Ansible Operations](../index.md) reference.
+</div>
 
 ## Version Reference
 

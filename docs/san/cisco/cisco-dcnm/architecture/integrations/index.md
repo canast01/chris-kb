@@ -1,6 +1,9 @@
 # Cisco DCNM — Integrations
 
+
+<div class="kb-summary">
 > Part of the [Cisco DCNM](../../index.md) reference.
+</div>
 
 ---
 

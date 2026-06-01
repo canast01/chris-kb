@@ -1,6 +1,9 @@
 # ServiceNow — How It Works
 
+
+<div class="kb-summary">
 ServiceNow is delivered as a multi-instance SaaS platform running on dedicated infrastructure per customer. Each customer receives isolated database, application, and storage layers — there is no shared compute between tenants.
+</div>
 
 ---
 

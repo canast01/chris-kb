@@ -1,5 +1,10 @@
 # Evergreen//One — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering STaaS Delivery Model, Components, HA Topology, Connectivity, Sizing and Capacity Model.
+</div>
+
 ## STaaS Delivery Model
 
 ```mermaid

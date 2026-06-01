@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Escalation Path.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell Apex STaaS — Escalation ─────────────────────────────────────┐
 │                                                                                                       │

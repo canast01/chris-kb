@@ -1,6 +1,9 @@
 # Storage Design
 
+
+<div class="kb-summary">
 ![Storage Design Overview](../../assets/storage-design-overview.svg)
+</div>
 
 ## Overview
 

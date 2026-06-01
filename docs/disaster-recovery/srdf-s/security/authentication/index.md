@@ -1,5 +1,10 @@
 # SRDF/S — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Solutions Enabler RBAC.
+</div>
+
 ```text
 ┌─────────────────────────────────────── SRDF/S — Authentication ───────────────────────────────────────┐
 │                                                                                                       │

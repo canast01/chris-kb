@@ -1,6 +1,9 @@
 # Linux — Escalation
 
+
+<div class="kb-summary">
 Vendor escalation procedures and support contacts.
+</div>
 
 ## Escalation Decision Flow
 

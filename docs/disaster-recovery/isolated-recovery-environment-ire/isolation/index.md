@@ -1,6 +1,11 @@
 # IRE — Isolation
 
-The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks. Isolation is the foundational control: the IRE must never share network paths, credentials, or management planes with the production environment.
+
+<div class="kb-summary">
+The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks.
+</div>
+
+ Isolation is the foundational control: the IRE must never share network paths, credentials, or management planes with the production environment.
 
 ## Why Isolation Matters
 

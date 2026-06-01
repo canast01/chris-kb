@@ -1,6 +1,9 @@
 # RecoverPoint — Health Checks
 
+
+<div class="kb-summary">
 > Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference.
+</div>
 
 ---
 

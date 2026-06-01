@@ -1,5 +1,10 @@
 # Commvault — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Diagnostic Flow.
+</div>
+
 ## Diagnostic Flow
 
 ```mermaid

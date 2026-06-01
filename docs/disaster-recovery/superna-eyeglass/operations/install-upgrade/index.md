@@ -1,5 +1,10 @@
 # Superna Eyeglass — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Version Compatibility Matrix, EOL Tracking, License Management.
+</div>
+
 ## Version Compatibility Matrix
 
 Eyeglass version must be compatible with the deployed PowerScale OneFS version. Always verify before upgrading either system.

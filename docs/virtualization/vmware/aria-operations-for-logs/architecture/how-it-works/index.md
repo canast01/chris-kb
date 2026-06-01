@@ -1,5 +1,10 @@
 # Aria Operations for Logs — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog Configuration.
+</div>
+
 ## Overview
 
 Aria Operations for Logs (formerly vRealize Log Insight) collects, indexes, and correlates log data from VMware infrastructure and other sources. It provides real-time search, pattern-based alerting, content pack dashboards, and bidirectional launch-in-context integration with Aria Operations. Logs are retained in a hot Cassandra index and optionally archived to NFS for long-term storage.

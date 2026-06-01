@@ -1,6 +1,9 @@
 # Nexus Dashboard — Common Issues
 
+
+<div class="kb-summary">
 > Part of the [Nexus Dashboard](../../index.md) reference.
+</div>
 
 ---
 

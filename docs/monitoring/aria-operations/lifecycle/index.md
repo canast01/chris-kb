@@ -1,5 +1,10 @@
 # Aria Operations Lifecycle
 
+
+<div class="kb-summary">
+Aria Operations Lifecycle reference covering Upgrade Overview, Pre-Upgrade Checklist, Upgrade Procedure via LCM, Backup, EOL Tracking.
+</div>
+
 ```text
 ┌─────────────────────────────── Aria Operations — Lifecycle Management ────────────────────────────────┐
 │                                                                                                       │

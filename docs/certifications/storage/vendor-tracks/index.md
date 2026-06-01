@@ -1,5 +1,10 @@
 # Vendor Tracks
 
+
+<div class="kb-summary">
+Vendor Tracks reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
+</div>
+
 ## Purpose
 
 Use this page for practical Storage Vendor Tracks notes, checks, troubleshooting, commands, standards, and field references.

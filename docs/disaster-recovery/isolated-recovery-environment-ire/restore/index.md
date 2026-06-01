@@ -1,6 +1,9 @@
 # IRE — Restore
 
+
+<div class="kb-summary">
 Restoration in the IRE follows a staged process: retrieve the backup, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off.
+</div>
 
 ## Restore Workflow
 

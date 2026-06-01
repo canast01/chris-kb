@@ -1,5 +1,10 @@
 # Certificates — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering CA Key Protection Hierarchy, CA Key Protection, CRL Availability.
+</div>
+
 ## CA Key Protection Hierarchy
 
 ```mermaid

@@ -1,5 +1,10 @@
 # Veeam — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Release Cadence, Decommission Procedure.
+</div>
+
 ## Release Cadence
 
 Veeam releases major versions (VBR 12, 12.1, 12.2) annually with cumulative patches (P-releases) throughout the year.

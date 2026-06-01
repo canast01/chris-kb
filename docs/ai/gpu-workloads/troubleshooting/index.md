@@ -1,6 +1,9 @@
 # GPU Workload Troubleshooting
 
+
+<div class="kb-summary">
 This page covers the most common GPU workload failures: out-of-memory errors, CUDA runtime errors, driver mismatches, and multi-GPU communication issues.
+</div>
 
 ## Out-of-Memory (OOM) Errors
 

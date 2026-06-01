@@ -1,6 +1,9 @@
 # Policy and Initiative Assignments
 
+
+<div class="kb-summary">
 A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism that makes a policy active and enforceable.
+</div>
 
 ## Policy Assignment Scope Hierarchy
 

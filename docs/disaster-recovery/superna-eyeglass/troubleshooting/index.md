@@ -1,6 +1,11 @@
 # Superna Eyeglass — Troubleshooting
 
 
+
+<div class="kb-summary">
+Superna Eyeglass — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────── Superna Eyeglass — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

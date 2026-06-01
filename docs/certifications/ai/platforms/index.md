@@ -1,5 +1,10 @@
 # AI Platforms
 
+
+<div class="kb-summary">
+AI Platforms reference covering AWS Bedrock, Azure OpenAI Service, Google Vertex AI, Hugging Face, Platform Comparison Table and 1 more sections.
+</div>
+
 ## AWS Bedrock
 
 Amazon Bedrock is a fully managed service providing access to foundation models via API without managing infrastructure.

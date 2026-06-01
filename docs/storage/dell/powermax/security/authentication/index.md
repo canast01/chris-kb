@@ -1,5 +1,10 @@
 # PowerMax — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Overview, Unisphere Local Accounts, Active Directory / LDAP Integration, Role Mapping, Multi-Factor Authentication (MFA) and 5 more sections.
+</div>
+
 ## Overview
 
 PowerMax has two primary authentication surfaces: **Unisphere for PowerMax** (GUI and REST API) and **Solutions Enabler (SYMCLI)** running on management hosts. Both must be secured independently. Unisphere supports local accounts and external directory integration (LDAP/Active Directory). Solutions Enabler authentication is controlled at the OS level and via the SYMAPI daemon configuration.

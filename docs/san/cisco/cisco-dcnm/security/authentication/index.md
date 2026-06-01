@@ -1,6 +1,9 @@
 # Cisco DCNM — Authentication
 
+
+<div class="kb-summary">
 > Part of the [Cisco DCNM](../../index.md) reference.
+</div>
 
 ---
 

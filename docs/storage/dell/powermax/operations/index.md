@@ -1,4 +1,9 @@
 # PowerMax — Operations
+
+<div class="kb-summary">
+PowerMax — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell PowerMax Operations ───────────────────────────────────────┐
 │                                                                                                       │

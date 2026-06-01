@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Pre-Deployment Checklist, Deployment Size Reference, Certificate Standards, Upgrade Sequence Rules, Version Matrix Compliance.
+</div>
+
 ```text
   LCM Design Standards at a Glance
 ┌─────────────────────────────────────────────────────────────────┐

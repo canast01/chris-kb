@@ -1,5 +1,10 @@
 # SRDF/S — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Write Commit Model, RTT Requirements, Recovery Time Standards.
+</div>
+
 ## Overview
 
 SRDF/S (Synchronous) provides zero-data-loss replication between two PowerMax arrays. Every host write is committed to both the source (R1) and target (R2) before an acknowledgement is returned to the host. This guarantees RPO = 0 at the cost of write latency, which is directly proportional to inter-site round-trip time (RTT). Use case: financial transaction systems, active-active cluster workloads, and DR configurations where RPO = 0 is contractually required.

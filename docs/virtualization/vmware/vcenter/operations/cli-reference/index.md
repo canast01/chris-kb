@@ -1,5 +1,10 @@
 # vCenter — CLI Reference (PowerCLI & DCLI)
 
+
+<div class="kb-summary">
+CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Machines, Snapshots, Datastores and 3 more sections.
+</div>
+
 ```text
 vCenter CLI Interfaces
 ════════════════════════════════════════════════════════

@@ -1,5 +1,10 @@
 # FlashArray — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Host Volume Provisioning Flow, Host Management and 2 more sections.
+</div>
+
 ```text
 Host Volume Provisioning Flow
   ┌─────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # vSAN Degraded Object Runbook
 
+
+<div class="kb-summary">
+vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Identify Affected Objects, Check Failed Disks, Check Host Availability, Check Resync Status and 5 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── vSAN Snapshot Cleanup Runbook ────────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # InsightIQ: Workload Classification, Top Talkers, and Client Analysis
 
+
+<div class="kb-summary">
 InsightIQ provides client-level visibility into who is consuming PowerScale cluster resources. This page covers workload classification, identifying top-consuming clients, and using client analysis data for capacity and performance planning.
+</div>
 
 ## Workload and Client Visibility Overview
 

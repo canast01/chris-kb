@@ -1,5 +1,10 @@
 # SRDF/A — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Credential Rotation, Service Account Policy.
+</div>
+
 ```text
 ┌─────────────────────────────────────── SRDF/A — Authentication ───────────────────────────────────────┐
 │                                                                                                       │

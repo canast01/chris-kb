@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Backup & Restore
 
+
+<div class="kb-summary">
+APEX Storage as a Service — Backup & Restore reference.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell Apex STaaS — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │

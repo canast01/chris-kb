@@ -1,6 +1,9 @@
 # COD — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [COD](../../index.md) reference.
+</div>
 
 ---
 

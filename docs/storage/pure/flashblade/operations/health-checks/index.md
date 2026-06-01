@@ -1,5 +1,10 @@
 # FlashBlade — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Health Check, Array Health, Blade Health, Drive / Media Health and 4 more sections.
+</div>
+
 ```text
 FlashBlade Health Check Sequence
   purefb alert list ──► Any active alerts?

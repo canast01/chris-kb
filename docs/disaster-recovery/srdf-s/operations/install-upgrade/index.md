@@ -1,6 +1,9 @@
 # SRDF/S — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [SRDF/S Operations](../index.md) reference.
+</div>
 
 ---
 

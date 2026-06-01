@@ -1,5 +1,10 @@
 # Terraform — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Install Terraform (Linux), Version Management with tfenv, Upgrade Terraform In-Place, Upgrade Providers, Required Version Constraints and 1 more sections.
+</div>
+
 ## Install Terraform (Linux)
 
 ```bash

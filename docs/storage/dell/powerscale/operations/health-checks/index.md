@@ -1,5 +1,10 @@
 # PowerScale — Health Checks
 
+
+<div class="kb-summary">
+Health Checks reference covering Daily Checks, Health Check, Cluster Health Commands, Health Check Summary.
+</div>
+
 ## Daily Checks
 
 ```mermaid

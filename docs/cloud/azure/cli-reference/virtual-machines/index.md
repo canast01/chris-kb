@@ -1,5 +1,10 @@
 # Azure CLI — Virtual Machines
 
+
+<div class="kb-summary">
+Azure CLI — Virtual Machines reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

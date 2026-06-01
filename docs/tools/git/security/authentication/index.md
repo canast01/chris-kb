@@ -1,6 +1,9 @@
 # Git — Authentication
 
+
+<div class="kb-summary">
 Authentication in Git controls how users and automation prove identity when accessing repositories. Weak or misconfigured authentication is the most common cause of unauthorised code access and supply-chain incidents.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # NetApp Keystone — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Keystone Collector Deployment, Upgrade Keystone Collector, Add a New ONTAP Array to Keystone, Remove an Array from Keystone, Post-Upgrade Validation.
+</div>
+
 ## Keystone Collector Deployment
 
 The Keystone Collector is deployed as an OVA on vSphere. It collects usage data from ONTAP arrays and reports to the Keystone portal.

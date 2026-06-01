@@ -1,5 +1,10 @@
 # AWS — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Authentication Methods Overview, IAM Identity Center (SSO) Setup, MFA — Enforce for Console Users, OIDC Federation — GitHub Actions, IRSA — IAM Roles for Service Accounts (EKS) and 4 more sections.
+</div>
+
 ---
 
 ## Authentication Methods Overview

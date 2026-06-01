@@ -1,6 +1,9 @@
 # OpenAI Prompt Patterns
 
+
+<div class="kb-summary">
 Effective prompting is the difference between reliable production outputs and inconsistent results. This page covers system prompts, few-shot examples, chain-of-thought, structured output, and other patterns with working code.
+</div>
 
 ## System Prompts
 

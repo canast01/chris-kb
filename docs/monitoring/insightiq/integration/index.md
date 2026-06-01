@@ -1,4 +1,9 @@
 # InsightIQ Integration
+
+<div class="kb-summary">
+InsightIQ Integration reference covering Overview, OneFS Data Connector (Inbound), SMTP Email Alerts, SNMP Forwarding to Monitoring Platform, Syslog to SIEM and 2 more sections.
+</div>
+
 ## Overview
 
 InsightIQ integrates primarily with PowerScale (Isilon) clusters for data collection, and with enterprise monitoring, identity, and notification platforms for alerting and access management.

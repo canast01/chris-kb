@@ -1,6 +1,9 @@
 # Windows Server — Backup & Restore
 
+
+<div class="kb-summary">
 Veeam Agent for Windows, Windows Server Backup, restore procedures, and validation steps.
+</div>
 
 ## Veeam Agent for Windows
 

@@ -1,6 +1,11 @@
 # Confluence — Troubleshooting
 
 
+
+<div class="kb-summary">
+Confluence — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────── Confluence — Troubleshooting Overview ────────────────────────────────┐
 │                                                                                                       │

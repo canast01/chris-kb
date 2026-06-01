@@ -1,5 +1,10 @@
 # Python Automation — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering API Call and Retry Flow.
+</div>
+
 ## API Call and Retry Flow
 
 ```mermaid

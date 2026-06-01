@@ -1,5 +1,10 @@
 # Aria Automation — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Secrets and Encrypted Properties, TLS Certificate Management, Data at Rest Encryption, Kubernetes Secret Management.
+</div>
+
 ## Secrets and Encrypted Properties
 
 Sensitive values (passwords, API tokens, SSH keys) must not be stored as plaintext in cloud templates. Use one of the following methods:

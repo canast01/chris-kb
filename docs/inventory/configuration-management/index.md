@@ -1,6 +1,9 @@
 # Configuration Management
 
+
+<div class="kb-summary">
 Track, baseline, and enforce system configurations across infrastructure to prevent drift and maintain compliance.
+</div>
 
 ## Configuration Baseline
 

@@ -1,5 +1,10 @@
 # NSX — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Incident Triage, VM Cannot Communicate with Gateway, Geneve Tunnel Down Between Two Hosts, DFW Rules Not Applying, NSX Manager Cluster UNSTABLE and 2 more sections.
+</div>
+
 ## Incident Triage
 
 Work through this checklist for any NSX-related incident before diving into specific areas:

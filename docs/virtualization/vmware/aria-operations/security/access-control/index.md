@@ -1,5 +1,10 @@
 # Aria Operations — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Roles, Object-Level Access Permissions, Creating a Service Account for API Access, Reviewing Current Role Assignments, Local Admin Account Hardening.
+</div>
+
 ## RBAC Roles
 
 Aria Operations uses a hierarchical role model. Roles are assigned to local users or to groups imported from Active Directory / LDAP.

@@ -1,6 +1,11 @@
 # SRDF/A — Security
 
 
+
+<div class="kb-summary">
+SRDF/A — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRDF/A — Security ──────────────────────────────────────────┐
 │                                                                                                       │

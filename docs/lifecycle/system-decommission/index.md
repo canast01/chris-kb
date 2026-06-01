@@ -1,6 +1,9 @@
 # System Decommission Procedure
 
+
+<div class="kb-summary">
 Safely removes a server, VM, or cloud instance from production — preventing orphaned monitoring alerts, failed backup jobs, billing waste, and security exposure from unmanaged systems.
+</div>
 
 ## Decommission Workflow
 

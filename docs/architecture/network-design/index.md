@@ -1,6 +1,9 @@
 # Network Design
 
+
+<div class="kb-summary">
 ![Network Design Overview](../../assets/network-design-overview.svg)
+</div>
 
 ## Overview
 

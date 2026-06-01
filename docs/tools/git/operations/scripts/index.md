@@ -1,6 +1,9 @@
 # Git — Operational Scripts
 
+
+<div class="kb-summary">
 Production-ready shell scripts for common Git platform administration tasks. All scripts are designed to run safely in CI/CD pipelines or as scheduled cron jobs.
+</div>
 
 ---
 

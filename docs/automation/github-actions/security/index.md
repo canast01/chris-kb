@@ -1,6 +1,11 @@
 # GitHub Actions — Security
 
 
+
+<div class="kb-summary">
+GitHub Actions — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── GitHub Actions — Security ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

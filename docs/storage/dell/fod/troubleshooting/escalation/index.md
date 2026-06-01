@@ -1,5 +1,10 @@
 # FOD — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Escalation Path.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Dell FoD — Escalation ────────────────────────────────────────┐
 │                                                                                                       │

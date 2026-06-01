@@ -1,5 +1,10 @@
 # Horizon — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and Network Design, UAG Sizing, App Volumes Sizing and 3 more sections.
+</div>
+
 ```text
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
 ┌─────────────────────────────────────────────────────────────┐

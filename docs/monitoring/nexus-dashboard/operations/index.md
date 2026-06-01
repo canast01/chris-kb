@@ -1,5 +1,10 @@
 # Nexus Dashboard Operations
 
+
+<div class="kb-summary">
+Nexus Dashboard Operations reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Nexus Dashboard — Operations ─────────────────────────────────────┐
 │                                                                                                       │

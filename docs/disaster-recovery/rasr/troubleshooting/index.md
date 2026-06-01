@@ -1,6 +1,11 @@
 # RASR — Troubleshooting
 
 
+
+<div class="kb-summary">
+RASR — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── RASR — Troubleshooting ────────────────────────────────────────┐
 │                                                                                                       │

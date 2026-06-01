@@ -1,5 +1,10 @@
 # Git — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Commit Standards, Commit Message Conventions, Squashing Commits, Cherry-Picking, Viewing Commit History and 6 more sections.
+</div>
+
 ## Commit Standards
 
 Commit message conventions, amending commits, squashing, and cherry-picking.

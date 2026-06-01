@@ -1,6 +1,9 @@
 # Dell AIOps: Executive Reports, Trend Analysis, and Capacity Planning Exports
 
+
+<div class="kb-summary">
 Dell AIOps extends CloudIQ reporting with AI-enriched content: trend analysis, predicted capacity curves, and executive-level infrastructure health summaries. This page covers the available report types, scheduling, and export options.
+</div>
 
 ## AIOps Report Types
 

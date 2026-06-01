@@ -1,6 +1,9 @@
 # FabricOS — Access Control
 
+
+<div class="kb-summary">
 > Part of the [Security](../index.md) reference.
+</div>
 
 ---
 

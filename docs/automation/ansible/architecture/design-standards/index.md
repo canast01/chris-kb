@@ -1,6 +1,9 @@
 # Ansible — Standards
 
+
+<div class="kb-summary">
 > Part of the [Ansible Architecture](../index.md) reference.
+</div>
 
 ## Project Layout
 

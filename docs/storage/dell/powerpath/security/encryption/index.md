@@ -1,5 +1,10 @@
 # PowerPath — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Overview, Encryption Responsibility Matrix.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell PowerPath Security — Encryption ─────────────────────────────────┐
 │                                                                                                       │

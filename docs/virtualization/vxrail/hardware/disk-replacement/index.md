@@ -1,4 +1,9 @@
 # VxRail Disk Replacement
+
+<div class="kb-summary">
+VxRail Disk Replacement reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Disk fault workflow, vSAN impact, replacement validation, and vendor handoff.

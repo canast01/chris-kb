@@ -1,6 +1,9 @@
 # GPU Monitoring
 
+
+<div class="kb-summary">
 Monitoring GPU workloads requires tracking utilisation, memory, temperature, power draw, and errors. nvidia-smi provides instant snapshots; DCGM provides time-series and health checks for production clusters.
+</div>
 
 ## nvidia-smi Basics
 

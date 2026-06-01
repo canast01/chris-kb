@@ -1,5 +1,10 @@
 # Azure Blob Storage
 
+
+<div class="kb-summary">
+Azure Blob Storage reference covering Overview, Blob Lifecycle Management Flow, Access Tiers, Lifecycle Rules, SAS Tokens and 2 more sections.
+</div>
+
 ## Overview
 
 Azure Blob Storage is Microsoft's object store for unstructured data. Blobs are organised into containers within Storage Accounts. Three access tiers (Hot, Cool, Archive) control cost versus retrieval latency. Blob versioning, soft delete, and lifecycle management provide data protection and cost control.

@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & Time, Logs.
+</div>
+
 ```text
   LCM CLI Coverage (SSH to LCM as root)
 ┌─────────────────────────────────────────────────────────────────┐

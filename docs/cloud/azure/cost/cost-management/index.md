@@ -1,5 +1,10 @@
 # Azure Cost Management
 
+
+<div class="kb-summary">
+Azure Cost Management reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
+</div>
+
 ## Overview
 
 Azure Cost Management is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.

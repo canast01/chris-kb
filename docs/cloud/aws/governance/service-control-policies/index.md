@@ -1,5 +1,10 @@
 # AWS Service Control Policies
 
+
+<div class="kb-summary">
+AWS Service Control Policies reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────── AWS Governance — Service Control Policies ──────────────────────────────┐
 │                                                                                                       │

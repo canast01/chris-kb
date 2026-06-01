@@ -1,5 +1,10 @@
 # High CPU Troubleshooting
 
+
+<div class="kb-summary">
+High CPU Troubleshooting reference covering Overview, CPU Threshold Reference, Diagnostic Flowchart, Windows CPU Diagnosis, VMware ESXi: esxtop CPU Analysis and 4 more sections.
+</div>
+
 ## Overview
 
 High CPU utilization causes application latency, request queuing, and service instability. Effective diagnosis requires platform-specific tools to distinguish user-space runaway processes, kernel-level contention, JVM thread saturation, and hypervisor-level CPU ready time — each with different remediation paths.

@@ -1,6 +1,10 @@
 # Disaster Recovery Failover Procedure
 
+
+<div class="kb-summary">
 A controlled process for moving production workloads to the recovery site during an outage or declared disaster.
+</div>
+
 ## Decision Gate — When to Invoke DR Failover
 
 Before initiating failover, confirm:

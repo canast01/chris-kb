@@ -1,6 +1,9 @@
 # VxRail Vendor Support
 
+
+<div class="kb-summary">
 > Part of the [VxRail](../index.md) reference.
+</div>
 
 ---
 ## Opening a Support Request

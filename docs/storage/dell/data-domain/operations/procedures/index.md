@@ -1,5 +1,10 @@
 # Data Domain — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Change Readiness, Maintenance Window, Filesystem Cleaning.
+</div>
+
 ## Change Readiness
 
 Verify these items before performing any change on the Data Domain — DDOS upgrades, MTree reconfigurations, replication changes, or hardware expansions.

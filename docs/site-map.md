@@ -1,5 +1,10 @@
 # Site Map
 
+
+<div class="kb-summary">
+Site Map reference covering Infrastructure, Resilience & Recovery, Automation & Tooling, Security & Compliance, Operations & Monitoring.
+</div>
+
 ## Infrastructure
 
 | Section | Pages |

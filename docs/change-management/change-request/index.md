@@ -1,6 +1,9 @@
 # Change Request Procedure
 
+
+<div class="kb-summary">
 A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.
+</div>
 
 ## RFC Required Fields
 

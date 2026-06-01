@@ -1,5 +1,10 @@
 # PowerMax — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Software Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
+</div>
+
 ## Software Version Matrix
 
 | PowerMaxOS Release | Solutions Enabler | Unisphere for PowerMax | Notes |

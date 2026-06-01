@@ -1,6 +1,9 @@
 # High Availability Design
 
+
+<div class="kb-summary">
 ![High Availability Design Overview](../../assets/high-availability-design-overview.svg)
+</div>
 
 ## Overview
 

@@ -1,6 +1,11 @@
 # SRM — Operations
 
 
+
+<div class="kb-summary">
+SRM — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRM — Operations ───────────────────────────────────────────┐
 │                                                                                                       │

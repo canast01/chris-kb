@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Install & Upgrade
 
+
+<div class="kb-summary">
+APEX Storage as a Service — Install & Upgrade reference.
+</div>
+
 ```text
 ┌──────────────────────────────────── Dell Apex STaaS — Onboarding ─────────────────────────────────────┐
 │                                                                                                       │

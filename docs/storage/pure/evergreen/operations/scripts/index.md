@@ -1,5 +1,10 @@
 # Evergreen — Script Reference
 
+
+<div class="kb-summary">
+Script Reference reference covering Subscription Capacity Report, Alert Configuration Audit, Evergreen//One SLA Consumption Tracker, Protection Group Replication Status.
+</div>
+
 ```text
   Pure Script Execution Paths
 

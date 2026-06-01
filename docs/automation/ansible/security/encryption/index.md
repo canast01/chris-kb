@@ -1,6 +1,9 @@
 # Ansible — Encryption
 
+
+<div class="kb-summary">
 > Part of the [Ansible Security](../index.md) reference.
+</div>
 
 ## Ansible Vault
 

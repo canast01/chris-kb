@@ -1,6 +1,9 @@
 # Windows Server — Install & Upgrade
 
+
+<div class="kb-summary">
 Installation, upgrade, patching, and decommission.
+</div>
 
 ## Patch Deployment Ring Flow
 

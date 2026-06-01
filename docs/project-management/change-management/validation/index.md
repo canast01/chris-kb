@@ -1,5 +1,10 @@
 # Post-Change Validation
 
+
+<div class="kb-summary">
+Post-Change Validation reference covering Overview, Validation Principles, Standard Validation Checklist, Validation by Change Type, Monitoring Observation Period and 1 more sections.
+</div>
+
 ## Overview
 
 Validation confirms that a change achieved its intended outcome without introducing new problems. It is distinct from the implementation checklist — implementation confirms tasks were executed; validation confirms the service is healthy and behaving correctly. Both must be completed before a change is closed.

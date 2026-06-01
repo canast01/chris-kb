@@ -1,5 +1,10 @@
 # Maintenance Window Planning
 
+
+<div class="kb-summary">
+Maintenance Window Planning reference covering Overview, Planning Checklist, Window Scheduling Guidance, Dependency Mapping, Risk Review and 1 more sections.
+</div>
+
 ## Overview
 
 Good maintenance windows are won in the planning phase. The execution itself is often the easy part when planning has been thorough — the runbook is clear, dependencies are mapped, risks are understood, and stakeholders are prepared. This page covers the planning checklist and key decisions that must be made before a window is scheduled.

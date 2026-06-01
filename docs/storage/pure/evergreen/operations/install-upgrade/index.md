@@ -1,5 +1,10 @@
 # Evergreen — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh (Evergreen//Forever), Lifecycle Timeline and 1 more sections.
+</div>
+
 ```text
 Evergreen Upgrade Types
   ┌────────────────────────────────────────────────────────┐

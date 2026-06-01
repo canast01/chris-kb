@@ -1,6 +1,9 @@
 # SnapCenter — Health Checks
 
+
+<div class="kb-summary">
 > Part of the [SnapCenter Operations](../index.md) reference.
+</div>
 
 ---
 

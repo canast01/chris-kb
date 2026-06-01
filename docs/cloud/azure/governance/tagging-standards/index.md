@@ -1,6 +1,9 @@
 # Tagging Standards
 
+
+<div class="kb-summary">
 Azure resource tags are key-value pairs applied to resources and resource groups for organisation, cost attribution, automation, and governance. A consistent tagging standard is the foundation of effective cloud management.
+</div>
 
 ## Tag Governance Flow
 

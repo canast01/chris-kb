@@ -1,5 +1,10 @@
 # NetBackup CLI Reference
 
+
+<div class="kb-summary">
+NetBackup CLI Reference reference covering Master → Media → Client Topology, Restore Operations, Catalog & Media, Client & Policy Management, Error & Log Analysis.
+</div>
+
 ## Master → Media → Client Topology
 
 Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.

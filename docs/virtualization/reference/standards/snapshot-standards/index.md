@@ -1,5 +1,10 @@
 # VMware Snapshot Standards
 
+
+<div class="kb-summary">
+VMware Snapshot Standards reference covering Snapshots Are Temporary, Approved Use Cases, Maximum Snapshot Age, Snapshot Size Monitoring, Cleanup Responsibility and 3 more sections.
+</div>
+
 ## Snapshots Are Temporary
 
 Snapshots are not backups. They should be used for short-term protection during changes and removed after validation.

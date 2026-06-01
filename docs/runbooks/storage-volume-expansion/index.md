@@ -1,5 +1,10 @@
 # Storage Volume Expansion Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; confirm array pool capacity before expanding | | Estimated time | 20–40 minutes | | Impact | No downtime for online expansion; brief I/O pause during partition resize on some platforms |
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Medium |

@@ -1,5 +1,10 @@
 # vSphere Replication — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere Replication Server (Scale-Out) and 2 more sections.
+</div>
+
 ## Replication Engine — ESXi Kernel Module
 
 vSphere Replication operates at the hypervisor level using a kernel module (`hbr` — Host-Based Replication) loaded on each ESXi host. This module intercepts write I/Os to VM virtual disks and tracks which disk blocks have changed since the last replication cycle — functionally equivalent to Changed Block Tracking (CBT) but implemented as a separate subsystem within the VMkernel.

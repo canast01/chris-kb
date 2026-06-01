@@ -1,5 +1,10 @@
 # Aria Operations — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow, Common Maintenance Tasks, Creating a Custom Dashboard, Creating an Alert Definition and 2 more sections.
+</div>
+
 ```text
 Aria Operations — Alert Lifecycle
 ┌─────────────────────────────────────────────────────┐

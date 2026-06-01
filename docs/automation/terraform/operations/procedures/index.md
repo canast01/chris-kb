@@ -1,5 +1,10 @@
 # Terraform — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Standard Apply Workflow, Plan Workflows, Change Readiness, Maintenance Window, Post-Change Validation and 1 more sections.
+</div>
+
 ## Standard Apply Workflow
 
 ```mermaid

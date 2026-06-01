@@ -1,4 +1,9 @@
 # Nexus Dashboard Integration
+
+<div class="kb-summary">
+Nexus Dashboard Integration reference covering Overview, ACI APIC Integration, ServiceNow ITSM Integration, AAA / LDAP Integration, SMTP Notifications and 2 more sections.
+</div>
+
 ## Overview
 
 Nexus Dashboard integrates with Cisco ACI and NX-OS fabric infrastructure as its core data sources, and extends to ITSM, SIEM, notification, and AAA platforms for operational workflows.

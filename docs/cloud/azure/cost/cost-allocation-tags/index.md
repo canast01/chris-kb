@@ -1,6 +1,9 @@
 # Cost Allocation Tags
 
+
+<div class="kb-summary">
 Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres.
+</div>
 
 ## Enforcement with Policy
 

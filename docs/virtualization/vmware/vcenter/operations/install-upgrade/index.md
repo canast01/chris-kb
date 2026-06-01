@@ -1,5 +1,10 @@
 # vCenter — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere Lifecycle Manager (vLCM), Interoperability Matrix, Patch Cadence, EOL Planning and 2 more sections.
+</div>
+
 ```text
 vSphere Upgrade Sequence
 ════════════════════════════════════════════════════════

@@ -1,5 +1,10 @@
 # Python Automation — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Escalation Workflow, When to Escalate, What to Capture Before Escalating, Escalation Checklist, Raising the Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Python — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

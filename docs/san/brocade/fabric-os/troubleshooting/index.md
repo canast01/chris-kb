@@ -1,5 +1,10 @@
 # FabricOS — Troubleshooting
 
+
+<div class="kb-summary">
+FabricOS — Troubleshooting reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── FabricOS — Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

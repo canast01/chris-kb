@@ -1,5 +1,10 @@
 # NSX — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Baseline, NSX Manager Hardening Checklist, DFW Hardening Configuration, Edge Node Hardening, Transport Node Security and 1 more sections.
+</div>
+
 ## Hardening Baseline
 
 Follow the **VMware NSX Security Configuration Guide** published by Broadcom. The SCG maps NSX controls to CIS Benchmarks and DISA STIG requirements. Download from the Broadcom Knowledge Base for the specific NSX version in use.

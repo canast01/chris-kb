@@ -1,5 +1,10 @@
 # Network Connectivity Troubleshooting
 
+
+<div class="kb-summary">
+Network Connectivity Troubleshooting reference covering Overview, Failure Classification by OSI Layer, Diagnostic Flowchart, VLAN and Trunk Verification, Routing Table Verification and 6 more sections.
+</div>
+
 ## Overview
 
 Network failures must be diagnosed by layer — jumping straight to firewall rules wastes time when the issue is a downed physical link or a misconfigured VLAN. This guide follows the OSI model from physical through application, with enterprise tools for Linux, Windows, Cisco, and VMware ESXi environments.

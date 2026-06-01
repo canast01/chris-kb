@@ -1,5 +1,10 @@
 # Aria Ops for Logs — Backup & Restore
 
+
+<div class="kb-summary">
+Aria Operations for Logs does not include a native configuration backup utility. Recovery relies on: 1. **VM-level backup** of all cluster nodes (primary method for full restoration) 2. **NFS archive** of log data (for long-term log retention, not configuration recovery) 3.
+</div>
+
 Aria Operations for Logs does not include a native configuration backup utility. Recovery relies on:
 1. **VM-level backup** of all cluster nodes (primary method for full restoration)
 2. **NFS archive** of log data (for long-term log retention, not configuration recovery)

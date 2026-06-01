@@ -1,5 +1,10 @@
 # Dell ECS — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC, Namespace Isolation, Compliance, Access Review Procedure.
+</div>
+
 ## RBAC
 
 ECS implements role-based access at two levels: system management and object (data) access.

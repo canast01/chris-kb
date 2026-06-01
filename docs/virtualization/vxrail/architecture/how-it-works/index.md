@@ -1,5 +1,10 @@
 # VxRail — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, HCI Node Cluster, Cluster Topology, Node Components, VMkernel Network Design and 3 more sections.
+</div>
+
 ```text
 VxRail LCM Flow — How It Works
 ┌─────────────────────────────────────────────────────────────┐

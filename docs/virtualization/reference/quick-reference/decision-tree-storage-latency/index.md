@@ -1,6 +1,9 @@
 # Decision Tree: Storage Latency
 
+
+<div class="kb-summary">
 Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.
+</div>
 
 ```text
                Latency alert / VM storage slow

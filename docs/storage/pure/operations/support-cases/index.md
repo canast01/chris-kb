@@ -1,5 +1,10 @@
 # Pure Storage Support Cases
 
+
+<div class="kb-summary">
+Pure Storage Support Cases reference covering Opening a Support Case, Case Severity Levels, Gathering Diagnostic Information, What to Include in a Case, Escalating a Case and 2 more sections.
+</div>
+
 ```text
   Pure Support Case Flow
 

@@ -1,5 +1,10 @@
 # CloudIQ — Encryption
 
+
+<div class="kb-summary">
+CloudIQ — Encryption reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell CloudIQ — Encryption ──────────────────────────────────────┐
 │                                                                                                       │

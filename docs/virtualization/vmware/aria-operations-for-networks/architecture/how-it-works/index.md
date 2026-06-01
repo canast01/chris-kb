@@ -1,5 +1,10 @@
 # Aria Operations for Networks — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Deployment Model, Application Discovery Mechanism, Flow Data Retention Defaults, Internal Service Architecture.
+</div>
+
 ## Deployment Model
 
 Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) consists of two distinct VM roles deployed from separate OVAs:

@@ -1,6 +1,9 @@
 # SnapCenter — Encryption
 
+
+<div class="kb-summary">
 > Part of the [SnapCenter Security](../index.md) reference.
+</div>
 
 ---
 

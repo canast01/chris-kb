@@ -1,6 +1,9 @@
 # Azure — Privileged Identity Management (PIM)
 
+
+<div class="kb-summary">
 PIM provides just-in-time (JIT) privileged access to Azure resources and Entra ID roles, with time-bound activation, approval workflows, and audit logging. Requires **Entra ID P2**.
+</div>
 
 ## Access Model
 

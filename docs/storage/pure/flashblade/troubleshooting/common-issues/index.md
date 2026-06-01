@@ -1,6 +1,9 @@
 # FlashBlade — Common Issues
 
+
+<div class="kb-summary">
 > Part of the [FlashBlade Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

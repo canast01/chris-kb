@@ -1,4 +1,9 @@
 # InsightIQ Operations
+
+<div class="kb-summary">
+InsightIQ Operations reference covering Daily Checklist, Cluster Connection Troubleshooting, Capacity Review (Weekly), Appliance Health Checks, Alert Threshold Review (Monthly) and 2 more sections.
+</div>
+
 ## Daily Checklist
 
 | Check | Location | Pass Criteria |

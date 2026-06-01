@@ -1,6 +1,9 @@
 # VxRail Standards
 
+
+<div class="kb-summary">
 > Part of the [VxRail](../index.md) reference.
+</div>
 
 ```text
 VxRail Design Requirements — Key Standards

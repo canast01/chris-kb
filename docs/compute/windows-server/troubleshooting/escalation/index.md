@@ -1,6 +1,9 @@
 # Windows Server — Escalation
 
+
+<div class="kb-summary">
 What to collect before opening a support case and how to engage vendor support.
+</div>
 
 ## Escalation Flow
 

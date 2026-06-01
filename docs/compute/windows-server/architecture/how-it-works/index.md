@@ -1,5 +1,10 @@
 # Windows Server — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Editions and Installation Types, Role Topology.
+</div>
+
 ## Overview
 
 Windows Server delivers infrastructure services through **Roles** (major functions) and **Features** (supporting components) installed on top of the base OS. The current supported versions are 2019, 2022, and 2025, available in Standard and Datacenter editions. All server administration uses PowerShell, WinRM remoting, or RSAT tools. Server Core (no GUI) is the recommended installation type for security and performance.

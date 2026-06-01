@@ -1,5 +1,10 @@
 # RecoverPoint — Escalation
 
+
+<div class="kb-summary">
+RecoverPoint — Escalation reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── RecoverPoint — Escalation ──────────────────────────────────────┐
 │                                                                                                       │

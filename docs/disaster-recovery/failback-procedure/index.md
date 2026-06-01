@@ -1,6 +1,10 @@
 # Disaster Recovery Failback Procedure
 
+
+<div class="kb-summary">
 A controlled process for returning production workloads to the primary site after an outage has been resolved.
+</div>
+
 ## Decision Gate — When to Failback
 
 Before initiating failback, confirm:

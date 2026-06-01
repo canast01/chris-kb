@@ -1,5 +1,10 @@
 # Active Directory — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering AD Hardening Controls Flow, DCSync Attack Detection, Defender for Identity Deployment, Hardening Checklist.
+</div>
+
 ## AD Hardening Controls Flow
 
 ```mermaid

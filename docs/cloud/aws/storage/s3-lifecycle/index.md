@@ -1,5 +1,10 @@
 # AWS S3 Lifecycle
 
+
+<div class="kb-summary">
+AWS S3 Lifecycle reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ```text
 ┌────────────────────────────── S3 Lifecycle — Automated Tiering & Expiry ──────────────────────────────┐
 │                                                                                                       │

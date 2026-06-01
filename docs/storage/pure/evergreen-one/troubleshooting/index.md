@@ -1,5 +1,10 @@
 # Pure Storage Evergreen//One Troubleshooting
 
+
+<div class="kb-summary">
+Pure Storage Evergreen//One Troubleshooting reference covering Common Issues, Diagnostic Commands, Log Locations, Before Calling Support.
+</div>
+
 ```text
   Pure Triage Decision Tree
 

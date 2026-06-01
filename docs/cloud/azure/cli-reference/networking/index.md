@@ -1,5 +1,10 @@
 # Azure CLI — Networking
 
+
+<div class="kb-summary">
+Azure CLI — Networking reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

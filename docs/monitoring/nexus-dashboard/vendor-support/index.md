@@ -1,5 +1,10 @@
 # Nexus Dashboard Vendor Support
 
+
+<div class="kb-summary">
+Nexus Dashboard Vendor Support reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Nexus Dashboard — Vendor Support ───────────────────────────────────┐
 │                                                                                                       │

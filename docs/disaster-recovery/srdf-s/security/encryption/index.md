@@ -1,5 +1,10 @@
 # SRDF/S — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering FCIP Encryption.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRDF/S — Encryption ─────────────────────────────────────────┐
 │                                                                                                       │

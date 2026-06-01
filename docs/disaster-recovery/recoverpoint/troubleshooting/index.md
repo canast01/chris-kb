@@ -1,6 +1,11 @@
 # RecoverPoint — Troubleshooting
 
 
+
+<div class="kb-summary">
+RecoverPoint — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── RecoverPoint — Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │

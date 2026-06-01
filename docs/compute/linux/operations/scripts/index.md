@@ -1,5 +1,10 @@
 # Linux — Scripts
 
+
+<div class="kb-summary">
+Automation scripts and reusable code. Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
+</div>
+
 Automation scripts and reusable code.
 
 Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.

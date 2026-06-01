@@ -1,6 +1,10 @@
 # Capacity on Demand (COD) — CLI Reference
 
+
+<div class="kb-summary">
 > Part of the [COD](../index.md) reference.
+</div>
+
 ---
 
 Capacity on Demand is managed through **Solutions Enabler (SYMCLI)** and the **Unisphere REST API**. COD allows pre-installed but locked capacity on PowerMax/VMAX arrays to be unlocked via a license key without physical hardware installation. This page covers the commands used to inspect COD entitlement, activate capacity, and verify the result.

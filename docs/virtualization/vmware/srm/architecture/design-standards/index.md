@@ -1,5 +1,10 @@
 # SRM — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Test Network Design, IP Customization Strategy, Recovery Plan Structure Best Practices, RPO Targets and SRA Capability, Test Frequency Recommendations and 1 more sections.
+</div>
+
 ```text
   Replication Topology + Recovery Plan Structure
 ┌──────────────────────────────────────────────────────────────┐

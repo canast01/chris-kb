@@ -1,5 +1,10 @@
 # vCenter — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Service Health, Log Locations, DNS and NTP Validation, Certificate Checks, SSO and Identity Source Diagnostics and 4 more sections.
+</div>
+
 ```text
 Diagnostic Chain — Priority Order
 ════════════════════════════════════════════════════════

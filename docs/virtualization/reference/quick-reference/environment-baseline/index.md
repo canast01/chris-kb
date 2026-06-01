@@ -1,5 +1,10 @@
 # Environment Baseline
 
+
+<div class="kb-summary">
+Environment Baseline reference covering Core Platform, Networking, Storage, Backup, Monitoring.
+</div>
+
 ## Core Platform
 
 vCenter version  

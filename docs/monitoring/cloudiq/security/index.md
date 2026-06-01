@@ -1,4 +1,9 @@
 # CloudIQ Security
+
+<div class="kb-summary">
+CloudIQ Security reference covering Access Control (RBAC), SSO Configuration, SCG Certificate Security, Audit Logging, Data Residency and Privacy and 1 more sections.
+</div>
+
 ## Access Control (RBAC)
 
 CloudIQ uses role-based access control managed in the CloudIQ portal. Assign the minimum required role to each user.

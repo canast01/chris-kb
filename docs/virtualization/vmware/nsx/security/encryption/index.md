@@ -1,5 +1,10 @@
 # NSX — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Data in Transit, Certificate Management, Syslog over TLS, Backup Encryption.
+</div>
+
 ## Data in Transit
 
 ### API and UI (TLS)

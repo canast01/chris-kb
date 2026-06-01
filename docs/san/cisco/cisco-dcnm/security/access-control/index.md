@@ -1,5 +1,10 @@
 # Cisco DCNM — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Overview, Built-In Roles, Fabric-Level Scoping, LDAP Group to Role Mapping, Service Account Configuration and 2 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── Cisco DCNM — Access Control ─────────────────────────────────────┐
 │                                                                                                       │

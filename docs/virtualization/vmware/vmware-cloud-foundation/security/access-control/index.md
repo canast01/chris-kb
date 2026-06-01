@@ -1,5 +1,10 @@
 # VCF — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Credential Rotation, Quarterly Access Review Checklist.
+</div>
+
 ```text
 VCF RBAC Model — Role Assignment Flow
 ┌─────────────────────────────────────────────────────┐

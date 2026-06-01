@@ -1,4 +1,9 @@
 # VxRail Health Checks
+
+<div class="kb-summary">
+VxRail Health Checks reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.

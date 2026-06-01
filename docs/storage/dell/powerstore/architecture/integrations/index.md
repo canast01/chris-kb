@@ -1,5 +1,10 @@
 # PowerStore — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data Domain / PowerProtect), CloudIQ, SupportAssist (ESRS), SNMP Monitoring and 4 more sections.
+</div>
+
 ## VMware vSphere
 
 PowerStore is deeply integrated with VMware vSphere and is qualified as a VMware-certified storage solution.

@@ -1,5 +1,10 @@
 # SRDF/A — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering SRDF/A Overview, SYMCLI Command Reference, SRDF/A vs SRDF/S Differences, Re-establishing Replication After Recovery, SRDF/A Failover Flowchart and 2 more sections.
+</div>
+
 ## SRDF/A Overview
 
 **SRDF/A (Asynchronous)** replicates I/O from the source (R1) array to a remote target (R2) array in asynchronous cycles. A delta set of writes is accumulated on the source, then transmitted to the target as a single atomic update. This allows replication over high-latency WAN links with a defined RPO (typically seconds to minutes, depending on cycle time and bandwidth).

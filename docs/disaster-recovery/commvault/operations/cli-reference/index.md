@@ -1,5 +1,10 @@
 # Commvault — CLI Reference
 
+
+<div class="kb-summary">
+CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restore Operations, Clients & Policies, CommServe Maintenance and 1 more sections.
+</div>
+
 ## Backup Job Lifecycle
 
 From schedule trigger to media write, every CommVault backup job moves through a defined sequence of states.

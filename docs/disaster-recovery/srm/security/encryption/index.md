@@ -1,5 +1,10 @@
 # SRM Security — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Firewall Ports, Certificate Management.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRM — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │

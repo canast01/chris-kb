@@ -1,6 +1,9 @@
 # Confluence — Install & Upgrade
 
+
+<div class="kb-summary">
 This page covers the end-to-end upgrade procedure for Confluence Data Center, including pre-upgrade preparation, execution, validation, and rollback. Treat every upgrade as a change-controlled activity with a tested rollback path.
+</div>
 
 ---
 

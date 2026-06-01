@@ -1,5 +1,10 @@
 # Maintenance Window Runbook
 
+
+<div class="kb-summary">
+Maintenance Window Runbook reference covering Before Maintenance, During Maintenance, After Maintenance.
+</div>
+
 ```text
 ┌───────────────────────────────────── Maintenance Window Runbook ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,6 +1,9 @@
 # ServiceNow — Encryption
 
+
+<div class="kb-summary">
 ServiceNow encryption covers transport security (TLS), field-level data encryption, credential storage, and integration channel security. The platform is SaaS — many controls are handled by Atlassian, but field-level and integration encryption are customer-configured.
+</div>
 
 ---
 

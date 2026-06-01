@@ -1,5 +1,10 @@
 # Confluence — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Page Management, Creating Pages, Page History and Versioning, Page Permissions, Watching and Notifications and 13 more sections.
+</div>
+
 ## Page Management
 
 Creating, organizing, and managing Confluence pages including templates, macros, history, and permissions.

@@ -1,6 +1,9 @@
 # Ollama Troubleshooting
 
+
+<div class="kb-summary">
 Common Ollama issues include model load failures, slow inference, GPU not being detected, port conflicts, and service startup problems.
+</div>
 
 ## Checking Ollama Logs
 

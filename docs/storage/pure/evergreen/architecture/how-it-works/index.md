@@ -1,5 +1,10 @@
 # Evergreen — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Controller Refresh Model, HA Topology, Controllers (CT0 / CT1), DirectFlash Modules (DFM) and 4 more sections.
+</div>
+
 ```text
 Evergreen — What's Included vs. Customer-Managed
 ┌────────────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # FabricOS — Operations
 
+
+<div class="kb-summary">
+FabricOS — Operations reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── FabricOS — Operations ────────────────────────────────────────┐
 │                                                                                                       │

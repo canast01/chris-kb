@@ -1,5 +1,10 @@
 # ESXi — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Networking Architecture, VMkernel Adapters (vmk), Storage Architecture, CPU and Memory Scheduling, HA and DRS and 3 more sections.
+</div>
+
 ```text
 VMkernel Internals — Resource Stack
 ┌────────────────────────────────────────────────────────────┐

@@ -1,6 +1,9 @@
 # Storage — Certifications
 
+
+<div class="kb-summary">
 Storage operational notes and deep-dive references.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

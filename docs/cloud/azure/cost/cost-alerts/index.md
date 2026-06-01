@@ -1,6 +1,9 @@
 # Cost Alerts
 
+
+<div class="kb-summary">
 Azure Cost Management supports multiple alert types to notify teams of unexpected or excessive spending. Alerts complement budgets and provide finer-grained visibility into spend anomalies.
+</div>
 
 ## Cost Alert Types Overview
 

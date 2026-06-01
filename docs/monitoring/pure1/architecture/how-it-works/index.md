@@ -1,5 +1,10 @@
 # Pure1 — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Architecture, High Availability.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Pure1 — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

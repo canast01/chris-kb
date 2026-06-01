@@ -1,5 +1,10 @@
 # VxRail Pre-Change Health Validation
 
+
+<div class="kb-summary">
+VxRail Pre-Change Health Validation reference covering VxRail Manager, vCenter Health, vSAN Health, Hardware Health, Infrastructure and 1 more sections.
+</div>
+
 ```text
 Pre-Upgrade Checklist Flow
 ┌──────────────────────────────────────────────────────────────┐

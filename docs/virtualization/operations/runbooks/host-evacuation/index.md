@@ -1,5 +1,10 @@
 # ESXi Host Failure Runbook
 
+
+<div class="kb-summary">
+ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, Check Management Network, Check Hardware Management Interface, Review vCenter Alarms and 4 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── ESXi Host Evacuation Runbook ─────────────────────────────────────┐
 │                                                                                                       │

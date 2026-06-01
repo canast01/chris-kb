@@ -1,5 +1,10 @@
 # Windows Server — CLI Reference
 
+
+<div class="kb-summary">
+Commands, syntax, and quick reference. All commands are PowerShell unless noted as `cmd`.
+</div>
+
 Commands, syntax, and quick reference.
 
 All commands are PowerShell unless noted as `cmd`.

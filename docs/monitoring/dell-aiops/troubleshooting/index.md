@@ -1,6 +1,9 @@
 # Dell AIOps: Troubleshooting False Positives, Missing Data, and Integration Failures
 
+
+<div class="kb-summary">
 This page covers common operational problems with Dell AIOps: AI alert false positives, data gaps in the analytics pipeline, and failures in the integration between AIOps and connected systems.
+</div>
 
 ## Diagnosing False Positive AI Alerts
 

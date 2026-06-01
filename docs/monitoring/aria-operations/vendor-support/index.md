@@ -1,5 +1,10 @@
 # Aria Operations Vendor Support
 
+
+<div class="kb-summary">
+Aria Operations Vendor Support reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Aria Operations — Vendor Support ───────────────────────────────────┐
 │                                                                                                       │

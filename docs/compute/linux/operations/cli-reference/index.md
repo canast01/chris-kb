@@ -1,5 +1,10 @@
 # Linux — CLI Reference
 
+
+<div class="kb-summary">
+Commands, syntax, and quick reference. Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.
+</div>
+
 Commands, syntax, and quick reference.
 
 Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.

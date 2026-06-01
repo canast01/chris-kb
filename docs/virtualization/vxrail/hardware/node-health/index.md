@@ -1,4 +1,9 @@
 # VxRail Node Health
+
+<div class="kb-summary">
+VxRail Node Health reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Node hardware status, sensors, alerts, and serviceability checks.

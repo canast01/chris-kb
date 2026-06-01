@@ -1,5 +1,10 @@
 # Pure Storage Controller Upgrades
 
+
+<div class="kb-summary">
+Pure Storage Controller Upgrades reference covering How Controller Upgrades Work, Customer Pre-Upgrade Responsibilities, During the Upgrade, Verifying Paths During/After Upgrade, Post-Upgrade Verification and 1 more sections.
+</div>
+
 ```text
 Ever Modern Controller Upgrade — Step by Step
   ┌────────────────────────────────────────────────────┐

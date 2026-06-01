@@ -1,6 +1,9 @@
 # Ollama Installation Notes
 
+
+<div class="kb-summary">
 Ollama supports Linux, macOS, and Windows. On Linux, the recommended setup is the official install script or a manually configured systemd service. Docker is also well-supported.
+</div>
 
 ## Linux Installation
 

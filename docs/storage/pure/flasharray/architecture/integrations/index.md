@@ -1,5 +1,10 @@
 # FlashArray — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
+</div>
+
 ```text
 FlashArray Integration Map
 ┌──────────────────────────────────────────────────────────────┐

@@ -1,5 +1,10 @@
 # Cisco DCNM — Operations
 
+
+<div class="kb-summary">
+Cisco DCNM — Operations reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Cisco DCNM — Operations ───────────────────────────────────────┐
 │                                                                                                       │

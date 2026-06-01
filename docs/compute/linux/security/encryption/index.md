@@ -1,6 +1,9 @@
 # Linux — Encryption
 
+
+<div class="kb-summary">
 LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS for services, and encrypted volume management.
+</div>
 
 ## LUKS — Full Disk Encryption
 

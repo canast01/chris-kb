@@ -1,5 +1,10 @@
 # Aria Operations Security
 
+
+<div class="kb-summary">
+Aria Operations Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Operations — Security ──────────────────────────────────────┐
 │                                                                                                       │

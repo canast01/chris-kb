@@ -1,4 +1,9 @@
 # CloudIQ — Operations
+
+<div class="kb-summary">
+CloudIQ — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell CloudIQ — Operations ──────────────────────────────────────┐
 │                                                                                                       │

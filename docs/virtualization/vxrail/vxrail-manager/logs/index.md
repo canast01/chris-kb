@@ -1,4 +1,9 @@
 # VxRail Logs
+
+<div class="kb-summary">
+VxRail Logs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
+</div>
+
 ## Overview
 
 Useful VxRail Manager logs, collection patterns, timestamps, and case evidence.

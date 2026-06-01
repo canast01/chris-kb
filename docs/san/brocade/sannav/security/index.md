@@ -1,5 +1,10 @@
 # SANnav — Security
 
+
+<div class="kb-summary">
+SANnav — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SANnav — Security ──────────────────────────────────────────┐
 │                                                                                                       │

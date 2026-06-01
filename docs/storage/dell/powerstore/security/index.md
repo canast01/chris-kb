@@ -1,4 +1,9 @@
 # PowerStore — Security
+
+<div class="kb-summary">
+PowerStore — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Dell PowerStore Security ───────────────────────────────────────┐
 │                                                                                                       │

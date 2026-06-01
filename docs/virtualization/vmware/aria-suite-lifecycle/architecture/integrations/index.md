@@ -1,5 +1,10 @@
 # Aria Suite Lifecycle — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering vCenter Server, NSX-T Integration (Optional), SMTP Configuration, NFS Binary Repository, Proxy / Offline Depot and 2 more sections.
+</div>
+
 ```text
   LCM Integration Map
 ┌─────────────────────────────────────────────────────────────────┐

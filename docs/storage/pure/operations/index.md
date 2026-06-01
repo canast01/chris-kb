@@ -1,4 +1,9 @@
 # Pure Operations
+
+<div class="kb-summary">
+Pure Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Pure Storage Operations Hub ─────────────────────────────────────┐
 │                                                                                                       │

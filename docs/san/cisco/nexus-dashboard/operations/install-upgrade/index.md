@@ -1,6 +1,9 @@
 # Nexus Dashboard — Install & Upgrade
 
+
+<div class="kb-summary">
 > Part of the [Nexus Dashboard](../../index.md) reference.
+</div>
 
 ---
 

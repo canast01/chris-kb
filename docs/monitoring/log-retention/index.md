@@ -1,5 +1,10 @@
 # Log Retention Policy
 
+
+<div class="kb-summary">
+Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation Checklist.
+</div>
+
 ```text
 ┌───────────────────────────────────── Monitoring — Log Retention ──────────────────────────────────────┐
 │                                                                                                       │

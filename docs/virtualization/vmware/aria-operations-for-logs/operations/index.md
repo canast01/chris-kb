@@ -1,4 +1,9 @@
 # Aria Ops for Logs — Operations
+
+<div class="kb-summary">
+Aria Ops for Logs — Operations reference.
+</div>
+
 ```text
 ┌─────────────────────────────────────── Aria Logs — Operations ────────────────────────────────────────┐
 │                                                                                                       │

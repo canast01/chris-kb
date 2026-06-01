@@ -1,6 +1,9 @@
 # Linux — Access Control
 
+
+<div class="kb-summary">
 DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restrictions.
+</div>
 
 ## Discretionary Access Control (DAC)
 

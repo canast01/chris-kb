@@ -1,5 +1,10 @@
 # VCF — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering NSX Federation (Multi-Site VCF), Backup Integration, SIEM and Syslog Integration.
+</div>
+
 ```text
 VCF Integration Topology
 ┌─────────────────────────────────────────────────────┐

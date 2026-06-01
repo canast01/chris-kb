@@ -1,5 +1,10 @@
 # Pre-Maintenance Checks
 
+
+<div class="kb-summary">
+Pre-Maintenance Checks reference covering Overview, Pre-Check Timeline, Environment Health Checklist, Backup Verification, Rollback Readiness and 2 more sections.
+</div>
+
 ## Overview
 
 Pre-maintenance checks are the final gate before a window opens. They confirm that the environment is in the expected state, backups are valid, the team is ready, and all logistical requirements are met. A failed pre-check is a reason to defer — not push through.

@@ -1,5 +1,10 @@
 # Aria Operations — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Default Account Hardening, Replace Self-Signed Certificate, SSH Access Restriction, Network Segmentation, Audit Logging and 1 more sections.
+</div>
+
 ## Default Account Hardening
 
 Change the `admin` password immediately after deployment:

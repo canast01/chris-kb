@@ -1,6 +1,11 @@
 # Linux — Security
 
 
+
+<div class="kb-summary">
+Linux — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Linux — Security Overview ──────────────────────────────────────┐
 │                                                                                                       │

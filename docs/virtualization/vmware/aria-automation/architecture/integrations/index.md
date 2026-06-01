@@ -1,5 +1,10 @@
 # Aria Automation — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Overview, vCenter Cloud Account (Compute Integration), Active Directory / LDAP (User Authentication), GitHub / GitLab (Pipeline SCM), ServiceNow (Approval Workflows) and 3 more sections.
+</div>
+
 ## Overview
 
 Aria Automation integrates with external systems via Cloud Accounts, Integrations, and ABX (Action-Based eXtensibility). Integrations extend blueprints with ITSM workflows, configuration management, and source control.

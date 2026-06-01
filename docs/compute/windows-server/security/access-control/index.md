@@ -1,6 +1,9 @@
 # Windows Server — Access Control
 
+
+<div class="kb-summary">
 AD group design, GPO user rights, Just Enough Administration (JEA), LAPS, and built-in group review.
+</div>
 
 ## Active Directory Group Design
 

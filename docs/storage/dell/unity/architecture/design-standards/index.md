@@ -1,5 +1,10 @@
 # Unity — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Pool Design Decision Tree, Sizing Guidelines, Naming Conventions, Build Baseline, Configuration Checklist.
+</div>
+
 ## Pool Design Decision Tree
 
 ```mermaid

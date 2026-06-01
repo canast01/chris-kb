@@ -1,5 +1,10 @@
 # NetBackup — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands and 2 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── NetBackup — Backup & Restore ─────────────────────────────────────┐
 │                                                                                                       │

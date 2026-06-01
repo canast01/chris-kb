@@ -1,6 +1,9 @@
 # Aria Operations: Troubleshooting Common Issues
 
+
+<div class="kb-summary">
 This page covers frequent operational issues in VMware Aria Operations: adapter collection failures, login problems, data gaps, and performance degradation. Use these checks before raising a support case.
+</div>
 
 ## Checking Adapter and Collector Status
 

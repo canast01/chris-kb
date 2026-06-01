@@ -1,6 +1,9 @@
 # System Migration Procedure
 
+
+<div class="kb-summary">
 Structured procedure for migrating workloads between platforms, hypervisors, data centres, or cloud environments — covering planning through post-migration validation and cleanup.
+</div>
 
 ## Migration Types
 

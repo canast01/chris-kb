@@ -1,6 +1,9 @@
 # Database Maintenance Procedure
 
+
+<div class="kb-summary">
 Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
+</div>
 
 ## PostgreSQL Maintenance
 

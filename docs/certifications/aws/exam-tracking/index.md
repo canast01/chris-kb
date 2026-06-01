@@ -1,5 +1,10 @@
 # AWS Exam Tracking
 
+
+<div class="kb-summary">
+AWS Exam Tracking reference covering Certification Path Overview, Exam Scheduling, Domain Score Breakdown — SAA-C03, Exam Attempt Log, Retake and Recertification Notes and 1 more sections.
+</div>
+
 ## Certification Path Overview
 
 | Level | Exam | Code | Fee (USD) | Duration |

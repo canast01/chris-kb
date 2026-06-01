@@ -1,5 +1,10 @@
 # SRDF/A — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering On-Call Triage — SRDF/A Lag Alert, Diagnostic Command Reference.
+</div>
+
 ```text
 ┌──────────────────────────────────────── SRDF/A — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │

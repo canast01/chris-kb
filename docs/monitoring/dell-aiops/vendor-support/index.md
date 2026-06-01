@@ -1,5 +1,10 @@
 # Dell AIOps Vendor Support
 
+
+<div class="kb-summary">
+Dell AIOps Vendor Support reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell AIOps — Vendor Support ─────────────────────────────────────┐
 │                                                                                                       │

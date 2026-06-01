@@ -1,5 +1,10 @@
 # InsightIQ Vendor Support
 
+
+<div class="kb-summary">
+InsightIQ Vendor Support reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── InsightIQ — Vendor Support ──────────────────────────────────────┐
 │                                                                                                       │

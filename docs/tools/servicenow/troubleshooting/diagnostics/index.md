@@ -1,6 +1,9 @@
 # ServiceNow — Diagnostic Tools
 
+
+<div class="kb-summary">
 Reference guide for ServiceNow's built-in diagnostic tools, log file locations, and support information gathering procedures. Use these before engaging ServiceNow support to accelerate resolution.
+</div>
 
 ---
 

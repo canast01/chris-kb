@@ -1,5 +1,10 @@
 # Pure Storage Evergreen//One Standards
 
+
+<div class="kb-summary">
+Pure Storage Evergreen//One Standards reference covering Naming Conventions, Build Baseline, Service Agreement Checklist.
+</div>
+
 ```text
   Naming & Configuration Standards
 

@@ -1,5 +1,10 @@
 # Cisco DCNM — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Deployment Models, Management Flow, Network Requirements, VM Sizing (Standalone, 11.x) and 1 more sections.
+</div>
+
 ```text
 ┌────────────────────────────────────── Cisco DCNM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │

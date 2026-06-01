@@ -1,6 +1,9 @@
 # Linux — Integrations
 
+
+<div class="kb-summary">
 Integration with other platforms and external systems.
+</div>
 
 ## Active Directory Authentication Flow
 

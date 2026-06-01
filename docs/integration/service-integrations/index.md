@@ -1,6 +1,10 @@
 # Service Integrations
 
+
+<div class="kb-summary">
 Health checks and troubleshooting for common infrastructure integration points: monitoring, backup, authentication, logging, and ticketing.
+</div>
+
 ## Integration Health Overview
 
 | Integration | Health Check | Common Failure |

@@ -1,6 +1,9 @@
 # Aria Automation — Backup & Restore
 
+
+<div class="kb-summary">
 Aria Automation backup uses a built-in tool that exports the platform configuration and deployment state to an external NFS or SFTP target. The backup does not include running VMs or cloud resources — those are managed by vCenter and the respective cloud providers.
+</div>
 
 ---
 

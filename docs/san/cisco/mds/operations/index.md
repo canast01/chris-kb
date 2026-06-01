@@ -1,5 +1,10 @@
 # MDS — Operations
 
+
+<div class="kb-summary">
+MDS — Operations reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Cisco MDS 9000 — Operations ─────────────────────────────────────┐
 │                                                                                                       │

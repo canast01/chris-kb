@@ -1,6 +1,9 @@
 # ServiceNow — CLI & API Reference
 
+
+<div class="kb-summary">
 ServiceNow's primary programmatic interface is its REST API. This reference covers the Table API, Aggregate API, Import Set API, Scripted REST APIs, and the ServiceNow CLI tool with practical examples for each.
+</div>
 
 All examples use `$INSTANCE`, `$USER`, and `$PASS` environment variables:
 

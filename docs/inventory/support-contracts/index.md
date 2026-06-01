@@ -1,6 +1,9 @@
 # Support Contract Tracking
 
+
+<div class="kb-summary">
 Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.
+</div>
 
 ## Contract Register — Key Fields
 

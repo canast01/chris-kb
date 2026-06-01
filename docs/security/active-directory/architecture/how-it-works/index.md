@@ -1,5 +1,10 @@
 # Active Directory — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Forest and Domain Hierarchy, Core Components, FSMO Role Placement, Key Services and Ports, Replication Topology and 4 more sections.
+</div>
+
 ## Forest and Domain Hierarchy
 
 Active Directory is organised in a Forest → Domain → OU hierarchy:

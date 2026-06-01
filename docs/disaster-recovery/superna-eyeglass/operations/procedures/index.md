@@ -1,5 +1,10 @@
 # Superna Eyeglass — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Failover, Failback, Day-to-Day Operations.
+</div>
+
 ## Failover
 
 Eyeglass DR Assistant orchestrates failover of PowerScale (Isilon) access zones from a production cluster to a DR cluster. Failover includes stopping SyncIQ replication, activating DR access zones, and remapping NFS/SMB shares and DNS entries.

@@ -1,6 +1,9 @@
 # Confluence — Authentication
 
+
+<div class="kb-summary">
 SSO/SAML, LDAP/AD integration, local accounts, and two-factor authentication for Confluence Data Center and Server.
+</div>
 
 ## Authentication Methods
 

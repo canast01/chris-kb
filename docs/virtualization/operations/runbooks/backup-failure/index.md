@@ -1,5 +1,10 @@
 # VMware Backup Failure Runbook
 
+
+<div class="kb-summary">
+VMware Backup Failure Runbook reference covering Identify Failed VMs, Review the Error Message, Check VM Snapshot State, Check Datastore Free Space, Check Backup Proxy Health and 5 more sections.
+</div>
+
 ```text
 ┌──────────────────────────────────── VMware Backup Failure Runbook ────────────────────────────────────┐
 │                                                                                                       │

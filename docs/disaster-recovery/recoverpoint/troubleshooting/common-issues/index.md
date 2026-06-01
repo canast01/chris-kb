@@ -1,6 +1,9 @@
 # RecoverPoint — Common Issues
 
+
+<div class="kb-summary">
 > Part of the [RecoverPoint](../../index.md) > [Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

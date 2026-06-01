@@ -1,5 +1,10 @@
 # ServiceNow — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Incidents, Incident Lifecycle, Priority Matrix, SLA Targets, Assignment Rules and 21 more sections.
+</div>
+
 ## Incidents
 
 Incident lifecycle, SLA management, assignment rules, and escalation procedures.

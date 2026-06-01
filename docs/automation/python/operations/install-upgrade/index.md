@@ -1,6 +1,9 @@
 # Python Automation — Install & Upgrade
 
+
+<div class="kb-summary">
 Managing Python versions correctly is critical. A mishandled upgrade can silently break automation running in production. This page covers installation, version management, and safe upgrade procedures.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # AWS — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Identify Current Identity and Account, EC2 — Instance Diagnostics, EC2 — Network Diagnostics, RDS — Diagnostics, Lambda — Diagnostics and 3 more sections.
+</div>
+
 ---
 
 ## Identify Current Identity and Account

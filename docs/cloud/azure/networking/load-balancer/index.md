@@ -1,6 +1,9 @@
 # Load Balancer
 
+
+<div class="kb-summary">
 Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer for distributing inbound traffic to backend VMs or scale sets.
+</div>
 
 ## Frontend IPs
 

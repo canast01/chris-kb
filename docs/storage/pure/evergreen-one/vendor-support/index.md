@@ -1,5 +1,10 @@
 # Pure Storage Evergreen//One Vendor Support
 
+
+<div class="kb-summary">
+Pure Storage Evergreen//One Vendor Support reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
+</div>
+
 ```text
   Pure Support Case Flow
 

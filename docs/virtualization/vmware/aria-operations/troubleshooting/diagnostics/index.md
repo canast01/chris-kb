@@ -1,5 +1,10 @@
 # Aria Operations — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Alert Tuning, Capacity Planning, Dashboards, Reports, Related Sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── Aria Operations Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

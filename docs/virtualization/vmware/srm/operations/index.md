@@ -1,4 +1,9 @@
 # Site Recovery Manager — Operations
+
+<div class="kb-summary">
+Site Recovery Manager — Operations reference.
+</div>
+
 ```text
 ┌────────────────────────────────────────── SRM — Operations ───────────────────────────────────────────┐
 │                                                                                                       │

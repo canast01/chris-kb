@@ -1,6 +1,9 @@
 # FabricOS — Diagnostics
 
+
+<div class="kb-summary">
 > Part of the [Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

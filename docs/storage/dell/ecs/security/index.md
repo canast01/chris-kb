@@ -1,4 +1,9 @@
 # Dell ECS — Security
+
+<div class="kb-summary">
+Dell ECS — Security reference: Authentication, Access Control, Encryption, Hardening.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Dell ECS — Security ─────────────────────────────────────────┐
 │                                                                                                       │

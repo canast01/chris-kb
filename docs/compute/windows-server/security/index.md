@@ -1,6 +1,11 @@
 # Windows Server — Security
 
 
+
+<div class="kb-summary">
+Windows Server — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────── Windows Server — Security Overview ──────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # Active Directory — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Tiered Administration Model, Core Security Controls, AdminSDHolder Monitoring.
+</div>
+
 ## Tiered Administration Model
 
 Active Directory security is built around the three-tier admin model:

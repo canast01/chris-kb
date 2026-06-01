@@ -1,5 +1,10 @@
 # FabricOS — Security
 
+
+<div class="kb-summary">
+FabricOS — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── FabricOS — Security ─────────────────────────────────────────┐
 │                                                                                                       │

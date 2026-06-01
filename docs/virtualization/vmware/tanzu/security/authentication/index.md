@@ -1,5 +1,10 @@
 # Tanzu — Authentication
 
+
+<div class="kb-summary">
+Authentication reference covering Supervisor Authentication (vSphere with Tanzu), TKG Workload Cluster Authentication (Pinniped + Dex), Harbor Authentication, Service Account Tokens (Kubernetes), Pull Secret Management and 3 more sections.
+</div>
+
 ---
 
 ## Supervisor Authentication (vSphere with Tanzu)

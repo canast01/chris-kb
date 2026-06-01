@@ -1,6 +1,9 @@
 # SnapMirror — Known Issues
 
+
+<div class="kb-summary">
 > Part of the [SnapMirror Operations](../index.md) reference.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # Monitor & Alerts
 
+
+<div class="kb-summary">
+Monitor & Alerts reference.
+</div>
+
 > Part of the Azure CLI Reference.
 
 ---

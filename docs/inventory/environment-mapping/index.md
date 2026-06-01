@@ -1,6 +1,9 @@
 # Environment Mapping
 
+
+<div class="kb-summary">
 Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.
+</div>
 
 ## Environment Tiers
 

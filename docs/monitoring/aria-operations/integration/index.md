@@ -1,4 +1,9 @@
 # Aria Operations Integration
+
+<div class="kb-summary">
+Aria Operations Integration reference covering Overview, vCenter Integration, Slack / Teams Webhooks, Aria Logs Integration, Third-Party Management Pack Summary and 1 more sections.
+</div>
+
 ## Overview
 
 Aria Operations ingests telemetry from VMware infrastructure and third-party platforms via management packs (adapters). Outbound integrations route alerts and reports to ITSM, notification, and log platforms.

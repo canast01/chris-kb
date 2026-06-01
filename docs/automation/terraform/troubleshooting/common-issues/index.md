@@ -1,5 +1,10 @@
 # Terraform — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Terraform Troubleshooting Decision Flow, Refresh and Reconciliation Issues, Workspace Issues, Common Error Reference.
+</div>
+
 ## Terraform Troubleshooting Decision Flow
 
 ```mermaid

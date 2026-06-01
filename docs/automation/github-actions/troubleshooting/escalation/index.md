@@ -1,6 +1,9 @@
 # GitHub Actions — Escalation
 
+
+<div class="kb-summary">
 > Part of the [GitHub Actions Troubleshooting](../index.md) reference.
+</div>
 
 ---
 

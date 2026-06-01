@@ -4,6 +4,11 @@ title: You're Offline
 
 # You're offline
 
+
+<div class="kb-summary">
+You're offline reference.
+</div>
+
 ```text
 ┌────────────────────────────────── Offline — No Internet Connection ───────────────────────────────────┐
 │                                                                                                       │

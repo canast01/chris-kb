@@ -1,6 +1,9 @@
 # Superna Eyeglass — CLI Reference
 
+
+<div class="kb-summary">
 Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the `admin` user.
+</div>
 
 ```mermaid
 flowchart LR

@@ -1,6 +1,9 @@
 # Virtualization Upgrade Readiness
 
+
+<div class="kb-summary">
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
+</div>
 
 <div class="kb-grid kb-grid-5">
 

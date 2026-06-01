@@ -1,6 +1,10 @@
 # Aria Operations CLI Reference
 
+
+<div class="kb-summary">
 Aria Operations (formerly vRealize Operations) is managed via the REST API and the `vracli` tool on the vApp node. The REST API base URL is `https://<ariaops_fqdn>/suite-api/api`. SSH to the analytics node as root for appliance-level operations.
+</div>
+
 ---
 
 ## Appliance Status

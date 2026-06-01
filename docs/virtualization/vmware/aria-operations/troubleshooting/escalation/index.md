@@ -1,5 +1,10 @@
 # Aria Operations — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, Support Bundle Collection, Information to Collect Before Opening a Case, SLA Tiers, Escalation Path and 2 more sections.
+</div>
+
 ## Support Portal
 
 **Broadcom Support Portal:** [https://support.broadcom.com](https://support.broadcom.com)

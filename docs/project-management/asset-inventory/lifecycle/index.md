@@ -1,5 +1,10 @@
 # Asset Lifecycle Management
 
+
+<div class="kb-summary">
+Asset Lifecycle Management reference covering Overview, Lifecycle Stages, Refresh Cycles, EOL Tracking, Budget Planning and 1 more sections.
+</div>
+
 ## Overview
 
 Every asset moves through a predictable set of stages from procurement to disposal. Tracking these stages in the CMDB enables proactive refresh planning, accurate budgeting, and timely EOL management — avoiding the risk of running unsupported hardware or software in production.

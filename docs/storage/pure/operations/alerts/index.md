@@ -1,5 +1,10 @@
 # Pure Storage Operations — Alerts
 
+
+<div class="kb-summary">
+Alerts reference covering Viewing Alerts, Alert Severity Levels, Common Alert Types, Pure1 Phone-Home Connectivity, Alert Notifications and 2 more sections.
+</div>
+
 ```text
   Pure Alert Flow
 

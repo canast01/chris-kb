@@ -1,5 +1,10 @@
 # Certificate Renewal Runbook
 
+
+<div class="kb-summary">
+| Field | Value | |---|---| | Risk | Medium | | Approval | Standard change for planned renewals; emergency change if < 7 days to expiry | | Estimated time | 30–60 minutes | | Impact | Brief service interruption during hot-swap (seconds); expired cert causes full outage |
+</div>
+
 | Field | Value |
 |---|---|
 | Risk | Medium |

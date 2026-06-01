@@ -1,6 +1,9 @@
 # Reservations
 
+
+<div class="kb-summary">
 Azure Reserved Instances (RIs) offer significant discounts (up to 72%) over pay-as-you-go pricing in exchange for a 1-year or 3-year commitment. Reservations apply to VMs, SQL Databases, Cosmos DB, Storage, and other services.
+</div>
 
 ## Reservation Discount Application
 

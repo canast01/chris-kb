@@ -1,5 +1,10 @@
 # Azure Storage Private Endpoints
 
+
+<div class="kb-summary">
+Azure Storage Private Endpoints reference covering Overview, Creating a Private Endpoint for Storage, DNS Configuration, Verifying Connectivity, Network Isolation Configuration and 1 more sections.
+</div>
+
 ## Overview
 
 Private endpoints assign a private IP address from your VNet to an Azure Storage service, routing all traffic over the Microsoft backbone rather than the public internet. This eliminates the need for public IP access and enables granular network isolation via NSGs and UDRs.

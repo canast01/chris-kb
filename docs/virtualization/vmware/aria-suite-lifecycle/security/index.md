@@ -1,4 +1,9 @@
 # Aria Suite Lifecycle — Security
+
+<div class="kb-summary">
+Aria Suite Lifecycle — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Aria LCM — Security ─────────────────────────────────────────┐
 │                                                                                                       │

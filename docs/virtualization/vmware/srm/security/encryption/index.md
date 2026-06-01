@@ -1,5 +1,10 @@
 # SRM — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption at Recovery Site, Certificate Management for SRM Server, SRA Credential Storage Encryption, FIPS Mode.
+</div>
+
 ```text
   TLS Encryption Coverage
 ┌───────────────────────────────────────────────────────────────┐

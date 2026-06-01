@@ -1,4 +1,9 @@
 # APEX Storage as a Service — Troubleshooting
+
+<div class="kb-summary">
+APEX Storage as a Service — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌────────────────────────────────── Dell Apex STaaS — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │

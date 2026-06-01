@@ -1,4 +1,9 @@
 # Dell VPLEX — Troubleshooting
+
+<div class="kb-summary">
+Dell VPLEX — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
+</div>
+
 ```text
 ┌───────────────────────────────────── Dell VPLEX Troubleshooting ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # APEX Storage as a Service — Common Issues
 
+
+<div class="kb-summary">
+APEX Storage as a Service — Common Issues reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── Dell Apex STaaS — Common Issues ───────────────────────────────────┐
 │                                                                                                       │

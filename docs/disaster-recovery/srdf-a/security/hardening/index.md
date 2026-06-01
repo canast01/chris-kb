@@ -1,5 +1,10 @@
 # SRDF/A — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Network Port Requirements, Audit Logging.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRDF/A — Hardening ──────────────────────────────────────────┐
 │                                                                                                       │

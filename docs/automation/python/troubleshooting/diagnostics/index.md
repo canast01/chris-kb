@@ -1,5 +1,10 @@
 # Python Automation — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Python Diagnostics Workflow, Structured Logging, Import and Module Diagnostics, Runtime Inspection, Diagnostics Reference.
+</div>
+
 ## Python Diagnostics Workflow
 
 ```mermaid

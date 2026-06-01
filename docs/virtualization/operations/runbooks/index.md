@@ -1,6 +1,9 @@
 # Virtualization Runbooks
 
+
+<div class="kb-summary">
 Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up.
+</div>
 
 ```text
 Runbook Selection Flow

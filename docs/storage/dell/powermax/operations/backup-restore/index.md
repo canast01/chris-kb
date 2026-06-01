@@ -1,5 +1,10 @@
 # PowerMax — Backup & Restore
 
+
+<div class="kb-summary">
+Backup & Restore reference covering Overview, SnapVX Architecture, Creating and Managing Snapshots, Linking Snapshots for Backup or Restore, Restore Procedure and 6 more sections.
+</div>
+
 ## Overview
 
 PowerMax backup strategy centres on SnapVX (formerly TimeFinder/SnapVX) for local point-in-time copies and integration with enterprise backup platforms for offsite data protection. Because PowerMax is all-NVMe with sub-millisecond latency, snapshots are instantaneous and space-efficient — the array only allocates additional capacity for changed blocks. All snapshots are linked via masking views to backup proxy or media server hosts so production I/O is never disrupted during backup jobs.

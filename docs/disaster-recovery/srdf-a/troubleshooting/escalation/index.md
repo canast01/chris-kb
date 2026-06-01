@@ -1,5 +1,10 @@
 # SRDF/A — Escalation
 
+
+<div class="kb-summary">
+SRDF/A — Escalation reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── SRDF/A — Escalation ─────────────────────────────────────────┐
 │                                                                                                       │

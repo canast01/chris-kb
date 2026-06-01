@@ -1,6 +1,11 @@
 # Data Governance
 
-Data governance is the framework of policies, roles, processes, and controls that ensure data is consistently managed, protected, and compliant with regulatory requirements across the enterprise. Effective governance transforms data from a liability into a controlled, auditable asset.
+
+<div class="kb-summary">
+Data governance is the framework of policies, roles, processes, and controls that ensure data is consistently managed, protected, and compliant with regulatory requirements across the enterprise.
+</div>
+
+ Effective governance transforms data from a liability into a controlled, auditable asset.
 
 ---
 

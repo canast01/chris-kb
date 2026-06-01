@@ -1,6 +1,11 @@
 # Venafi — Health Checks
 
-Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA connectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.
+
+<div class="kb-summary">
+Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA co
+</div>
+
+nnectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.
 
 ## Daily Health Check Flow
 

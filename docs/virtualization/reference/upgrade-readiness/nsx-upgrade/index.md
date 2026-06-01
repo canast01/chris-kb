@@ -1,5 +1,10 @@
 # NSX Upgrade Readiness Checklist
 
+
+<div class="kb-summary">
+NSX Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Upgrade Process Overview, Post-Upgrade Validation.
+</div>
+
 ## Current State
 
 - Confirm current NSX Manager version

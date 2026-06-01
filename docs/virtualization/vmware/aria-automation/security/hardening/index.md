@@ -1,5 +1,10 @@
 # Aria Automation — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Default Account Hardening, Certificate Replacement, Service Account Principle of Least Privilege, SSH and Console Access, Kubernetes Security and 3 more sections.
+</div>
+
 ## Default Account Hardening
 
 The `admin` account is a local system account in the VIDM System Domain. Change its password immediately after deployment:

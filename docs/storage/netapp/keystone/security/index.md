@@ -1,4 +1,9 @@
 # NetApp Keystone Security
+
+<div class="kb-summary">
+NetApp Keystone Security reference covering Shared Responsibility, Keystone Collector Security, Storage Security, Access Control, Compliance.
+</div>
+
 ## Shared Responsibility
 
 Keystone operates on a shared responsibility model between NetApp and the customer.

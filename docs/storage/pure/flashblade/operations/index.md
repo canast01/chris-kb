@@ -1,5 +1,10 @@
 # FlashBlade — Operations
 
+
+<div class="kb-summary">
+FlashBlade — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
+</div>
+
 ```text
 FlashBlade Day-to-Day Operations
   Pure1 Cloud ──► fleet health + AI alerts + capacity forecast

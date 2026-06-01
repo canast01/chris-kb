@@ -1,6 +1,9 @@
 # Disaster Recovery Design
 
+
+<div class="kb-summary">
 ![Disaster Recovery Design Overview](../../assets/disaster-recovery-design-overview.svg)
+</div>
 
 ## Overview
 

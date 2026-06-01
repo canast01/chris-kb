@@ -1,6 +1,9 @@
 # Git — Encryption
 
+
+<div class="kb-summary">
 Git itself stores content as objects — commits, trees, blobs — without native encryption. Encryption is applied at the transport layer (SSH/TLS), at the signing layer (GPG/SSH signatures), and optionally at rest through credential helpers and storage-layer controls.
+</div>
 
 ---
 

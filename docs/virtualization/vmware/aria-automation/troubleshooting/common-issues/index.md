@@ -1,5 +1,10 @@
 # Aria Automation — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Blueprint Validation Errors, Deployment Stuck in "Creating" or "Deleting", ABX Action Failing, Authentication Failures (VIDM), Kubernetes Pod Failures.
+</div>
+
 ## Blueprint Validation Errors
 
 ```bash

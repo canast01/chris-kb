@@ -1,4 +1,9 @@
 # Aria Ops for Networks — Security
+
+<div class="kb-summary">
+Aria Ops for Networks — Security reference.
+</div>
+
 ```text
 ┌────────────────────────────────────── Aria Networks — Security ───────────────────────────────────────┐
 │                                                                                                       │

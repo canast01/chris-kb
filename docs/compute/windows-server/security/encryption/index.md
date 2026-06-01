@@ -1,6 +1,9 @@
 # Windows Server — Encryption
 
+
+<div class="kb-summary">
 BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signing.
+</div>
 
 ## BitLocker — Drive Encryption
 

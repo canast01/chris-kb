@@ -1,5 +1,10 @@
 # ESXi — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Resolution Steps, All Paths Down (APD) — Storage, High CPU Ready Time, High Memory Ballooning or Swapping, PSOD (Purple Screen of Death) and 3 more sections.
+</div>
+
 ```text
 ESXi Common Issue Resolution Paths
 ┌────────────────────────────────────────────────────────┐

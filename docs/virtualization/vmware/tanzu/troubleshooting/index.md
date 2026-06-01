@@ -1,4 +1,9 @@
 # Tanzu — Troubleshooting
+
+<div class="kb-summary">
+Tanzu — Troubleshooting reference.
+</div>
+
 ```text
 ┌─────────────────────────────────── VMware Tanzu — Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │

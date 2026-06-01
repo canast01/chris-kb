@@ -1,5 +1,10 @@
 # Data Domain — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Overview, Filesystem Diagnostics, Replication Diagnostics, DD Boost Diagnostics, Disk and Hardware Diagnostics and 5 more sections.
+</div>
+
 ## Overview
 
 ```mermaid

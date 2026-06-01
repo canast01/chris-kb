@@ -1,4 +1,9 @@
 # InsightIQ Lifecycle
+
+<div class="kb-summary">
+InsightIQ Lifecycle reference covering Compatibility Validation, Pre-Upgrade Checklist, Backup, Cluster Registration, Cluster Removal and 1 more sections.
+</div>
+
 ## Compatibility Validation
 
 Before any InsightIQ upgrade, or before upgrading a monitored OneFS cluster, validate compatibility using the [NetApp Interoperability Matrix Tool (IMT)](https://mysupport.netapp.com/matrix/).

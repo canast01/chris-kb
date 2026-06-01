@@ -1,5 +1,10 @@
 # PowerScale — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Quick Reference, Incident Triage.
+</div>
+
 ## Quick Reference
 
 | Symptom | Likely Cause | Action |

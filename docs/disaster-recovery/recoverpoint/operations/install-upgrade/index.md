@@ -1,5 +1,10 @@
 # RecoverPoint — Install & Upgrade
 
+
+<div class="kb-summary">
+> Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference. Dell RecoverPoint (RP/CL) provides continuous data protection and replication using dedicated RecoverPoint Appliances (RPAs) at each site.
+</div>
+
 > Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference.
 
 Dell RecoverPoint (RP/CL) provides continuous data protection and replication using dedicated RecoverPoint Appliances (RPAs) at each site. This page covers physical RPA deployment, cluster configuration, all splitter types, the upgrade procedure, and post-upgrade validation.

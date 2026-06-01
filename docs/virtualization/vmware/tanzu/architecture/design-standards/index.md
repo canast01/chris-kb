@@ -1,5 +1,10 @@
 # Tanzu — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Supervisor Cluster Sizing, TKG Workload Cluster Sizing, Namespace Design, Network CIDR Planning, Storage Policy Mapping and 4 more sections.
+</div>
+
 ## Supervisor Cluster Sizing
 
 The Supervisor control plane consists of exactly 3 VMs — this is fixed and cannot be changed post-deployment. vSphere selects the VM sizing based on the `size_hint` set during Workload Management enablement.

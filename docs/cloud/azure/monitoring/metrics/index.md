@@ -1,6 +1,9 @@
 # Metrics
 
+
+<div class="kb-summary">
 Azure Monitor Metrics is a time-series database that stores numeric data from Azure resources at near-real-time frequency. Platform metrics are collected automatically at no cost; custom metrics can be emitted from application code or agents.
+</div>
 
 ## Metrics Collection and Consumption
 

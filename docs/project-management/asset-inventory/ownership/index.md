@@ -1,5 +1,10 @@
 # Asset Ownership and Accountability
 
+
+<div class="kb-summary">
+Asset Ownership and Accountability reference covering Overview, Ownership Model, Ownership Assignment Process, Ownership Handover, Cost Allocation and 1 more sections.
+</div>
+
 ## Overview
 
 Every CI in the CMDB must have a named owner. Ownership determines who approves changes, who is accountable during incidents, who carries the cost, and who authorises decommission. Unowned assets are a governance risk and a common source of audit findings.

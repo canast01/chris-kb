@@ -1,6 +1,9 @@
 # PowerScale — Access Control
 
+
+<div class="kb-summary">
 > Roles, permissions, and least privilege access for Dell PowerScale.
+</div>
 
 ## RBAC
 

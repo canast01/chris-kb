@@ -1,4 +1,9 @@
 # vSphere Replication — Troubleshooting
+
+<div class="kb-summary">
+vSphere Replication — Troubleshooting reference.
+</div>
+
 ```text
 ┌──────────────────────────────── vSphere Replication — Troubleshooting ────────────────────────────────┐
 │                                                                                                       │

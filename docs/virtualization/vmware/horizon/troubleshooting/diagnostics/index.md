@@ -1,5 +1,10 @@
 # Horizon — Diagnostics
 
+
+<div class="kb-summary">
+Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log (Connection Server), Horizon Agent Logs in Guest VM, UAG Log Collection, Test Display Protocol Connectivity and 3 more sections.
+</div>
+
 ```text
   Diagnostic Data Sources
 ┌──────────────────────────────────────────────────────────────┐

@@ -1,6 +1,11 @@
 # Superna Eyeglass — Security
 
 
+
+<div class="kb-summary">
+Superna Eyeglass — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────── Superna Eyeglass — Security ─────────────────────────────────────┐
 │                                                                                                       │

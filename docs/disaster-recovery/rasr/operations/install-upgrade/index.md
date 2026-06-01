@@ -1,5 +1,10 @@
 # RASR — Install & Upgrade
 
+
+<div class="kb-summary">
+Install & Upgrade reference covering Prerequisites, Installation Steps, Agent Deployment at Scale, Upgrade Procedure, Version Compatibility Matrix and 1 more sections.
+</div>
+
 ## Prerequisites
 
 Before installing RASR, verify the following requirements are met on the target server.

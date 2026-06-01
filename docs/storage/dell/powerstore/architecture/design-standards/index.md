@@ -1,5 +1,10 @@
 # PowerStore — Standards
 
+
+<div class="kb-summary">
+Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Protection Policy Standards, Host Configuration Standards, Software Version Matrix and 2 more sections.
+</div>
+
 ## Naming Conventions
 
 Consistent naming prevents confusion during incidents and makes automation reliable. Apply these standards at initial deployment — renaming objects later requires API calls for each object.

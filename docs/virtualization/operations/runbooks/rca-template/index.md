@@ -4,6 +4,11 @@ title: RCA Template
 
 # RCA Template
 
+
+<div class="kb-summary">
+RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolution and 2 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────── RCA Template — Root Cause Analysis ──────────────────────────────────┐
 │                                                                                                       │

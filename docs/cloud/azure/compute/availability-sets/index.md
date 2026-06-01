@@ -1,6 +1,9 @@
 # Availability Sets
 
+
+<div class="kb-summary">
 Availability Sets provide high availability for Azure VMs by distributing them across fault domains (separate physical hardware) and update domains (staggered maintenance windows). They protect against both hardware failures and planned maintenance events.
+</div>
 
 ---
 

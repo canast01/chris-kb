@@ -1,4 +1,9 @@
 # Pure1 Troubleshooting
+
+<div class="kb-summary">
+Pure1 Troubleshooting reference covering Diagnostic Approach, Common Issues, Escalation to Pure Storage Support.
+</div>
+
 ## Diagnostic Approach
 
 1. Check the array's last-seen timestamp in Pure1 — this determines how stale the data is.

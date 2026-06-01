@@ -1,5 +1,10 @@
 # Evergreen//One (Evergreen Sub-Service)
 
+
+<div class="kb-summary">
+Evergreen//One (Evergreen Sub-Service) reference covering How Evergreen//One Works, Subscription Components, Pure1 Monitoring (Customer View), SLA Reporting, Capacity Management and 2 more sections.
+</div>
+
 ```text
   Evergreen//One Subscription Model
 

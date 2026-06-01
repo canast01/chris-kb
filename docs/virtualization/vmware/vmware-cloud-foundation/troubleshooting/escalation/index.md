@@ -1,5 +1,10 @@
 # VCF Troubleshooting — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Information to Collect Before Opening an SR, Support Tiers.
+</div>
+
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Escalation ─────────────────────────────────┐
 │                                                                                                       │

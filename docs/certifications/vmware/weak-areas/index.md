@@ -1,5 +1,10 @@
 # Weak Areas (VMware)
 
+
+<div class="kb-summary">
+Weak Areas (VMware) reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
+</div>
+
 ## Purpose
 
 Use this page for practical VMware Weak Areas notes, checks, troubleshooting, commands, standards, and field references.

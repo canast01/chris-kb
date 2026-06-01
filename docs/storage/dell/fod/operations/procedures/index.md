@@ -1,5 +1,10 @@
 # FOD — Procedures
 
+
+<div class="kb-summary">
+Procedures reference covering Incident Triage, Maintenance Window, Operational Tasks.
+</div>
+
 ```text
 ┌────────────────────────────────── Dell FoD — Operational Procedures ──────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,10 @@
 # COD — Integrations
 
+
+<div class="kb-summary">
+COD — Integrations reference.
+</div>
+
 ```text
 ┌──────────────────────────────── Dell CoD — Architecture Integrations ─────────────────────────────────┐
 │                                                                                                       │

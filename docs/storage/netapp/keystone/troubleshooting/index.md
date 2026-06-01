@@ -1,4 +1,9 @@
 # NetApp Keystone Troubleshooting
+
+<div class="kb-summary">
+NetApp Keystone Troubleshooting reference covering Common Issues, Diagnostic, Log Locations, Before Calling Support.
+</div>
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

@@ -1,5 +1,10 @@
 # vCenter — Integrations
 
+
+<div class="kb-summary">
+Integrations reference covering Veeam Backup & Replication, Identity and Authentication Integration, Monitoring Integration, NSX Integration.
+</div>
+
 ```text
 vCenter Integration Map
 ════════════════════════════════════════════════════════

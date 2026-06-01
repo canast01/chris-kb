@@ -1,5 +1,10 @@
 # RecoverPoint — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Role-Based Access Control.
+</div>
+
 ```text
 ┌──────────────────────────────────── RecoverPoint — Access Control ────────────────────────────────────┐
 │                                                                                                       │

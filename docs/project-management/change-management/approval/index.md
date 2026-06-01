@@ -1,5 +1,10 @@
 # Change Approval Process (Project)
 
+
+<div class="kb-summary">
+Change Approval Process (Project) reference covering Overview, Approval Tiers, CAB Process, Risk Scoring, Emergency Change Process and 1 more sections.
+</div>
+
 ## Overview
 
 The approval process ensures that changes are reviewed proportionally to their risk and impact before being implemented. Trivial changes should not require weeks of committee review; critical changes to production infrastructure should not be approved by a single engineer. The CAB (Change Advisory Board) and approval tiers below provide a framework for routing changes correctly.

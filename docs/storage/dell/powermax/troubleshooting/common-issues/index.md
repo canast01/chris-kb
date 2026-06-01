@@ -1,5 +1,10 @@
 # PowerMax — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Common Issues, Incident Triage.
+</div>
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

@@ -1,7 +1,9 @@
 # Database
 
-Operational references for database health, maintenance, and troubleshooting.
 
+<div class="kb-summary">
+Operational references for database health, maintenance, and troubleshooting.
+</div>
 
 ```text
 ┌────────────────────────── Database — Health, Backup, Failover & Performance ──────────────────────────┐

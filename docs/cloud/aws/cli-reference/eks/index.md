@@ -1,5 +1,10 @@
 # EKS
 
+
+<div class="kb-summary">
+EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access Entries and Auth Mode, Add-ons and 1 more sections.
+</div>
+
 ```text
 EKS CLI: Cluster → Nodes → Workloads
 ──────────────────────────────────────────────────────────────

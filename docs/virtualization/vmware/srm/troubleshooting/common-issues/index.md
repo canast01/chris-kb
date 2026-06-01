@@ -1,5 +1,10 @@
 # SRM — Common Issues
 
+
+<div class="kb-summary">
+Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA Not Found / Discovery Fails, Recovery Plan Stuck in "Running", Protection Group Shows Error, Test Failover: VMs Fail to Power On and 1 more sections.
+</div>
+
 ```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │

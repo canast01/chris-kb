@@ -1,5 +1,10 @@
 # Upgrade Sequence Reference
 
+
+<div class="kb-summary">
+Upgrade Sequence Reference reference covering Correct Upgrade Order, Why Order Matters, VCF (VMware Cloud Foundation) Sequence, Compatibility Matrix References, Key Version Constraints and 1 more sections.
+</div>
+
 ## Correct Upgrade Order
 
 Upgrading VMware components in the wrong order causes compatibility failures, plugin breakage, and in worst cases requires rollback. Always follow this sequence:

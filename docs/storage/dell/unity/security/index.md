@@ -1,4 +1,9 @@
 # Unity — Security
+
+<div class="kb-summary">
+Unity — Security reference.
+</div>
+
 ```text
 ┌───────────────────────────────────────── Dell Unity Security ─────────────────────────────────────────┐
 │                                                                                                       │

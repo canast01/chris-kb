@@ -1,5 +1,10 @@
 # Unity — Hardening
 
+
+<div class="kb-summary">
+Hardening reference covering Hardening Overview, Hardening Checklist, Credentials, Transport Security, Protocol Restrictions and 5 more sections.
+</div>
+
 ## Hardening Overview
 
 Apply these hardening steps to all Unity deployments before handing over to production operations. Each step reduces the attack surface, limits privilege exposure, or ensures audit trails are in place.

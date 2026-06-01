@@ -1,4 +1,9 @@
 # Azure Standards
+
+<div class="kb-summary">
+Azure Standards reference covering Naming Convention, Tagging Policy, Security Standards, RBAC Inheritance Model, Resource Lock Standards and 6 more sections.
+</div>
+
 ## Naming Convention
 
 Pattern: `<type>-<env>-<region>-<name>[-<seq>]` using CAF abbreviations:

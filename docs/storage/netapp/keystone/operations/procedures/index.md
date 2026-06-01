@@ -1,6 +1,9 @@
 # Keystone — Procedures
 
+
+<div class="kb-summary">
 > Part of the [Keystone Operations](../index.md) reference.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # VM Scale Sets
 
+
+<div class="kb-summary">
 Azure Virtual Machine Scale Sets (VMSS) allow you to deploy and manage a group of identical, load-balanced VMs that can automatically scale in or out based on demand or a defined schedule.
+</div>
 
 ---
 

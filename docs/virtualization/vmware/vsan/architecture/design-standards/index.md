@@ -1,5 +1,10 @@
 # vSAN — Design Standards
 
+
+<div class="kb-summary">
+Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
+</div>
+
 ## Cluster Configuration
 
 Apply the following configuration baseline to every vSAN cluster before placing it in production.

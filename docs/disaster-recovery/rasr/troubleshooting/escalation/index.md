@@ -1,5 +1,10 @@
 # RASR — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Escalation Tiers, Common Failure Scenarios and Escalation Path, Information to Collect Before Escalating, Dell EMC Support Contacts, RASR Diagnostic Checklist.
+</div>
+
 ## Escalation Tiers
 
 | Tier | Scope | SLA Target | Owner |

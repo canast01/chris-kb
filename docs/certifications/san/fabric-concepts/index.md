@@ -1,5 +1,10 @@
 # SAN Fabric Concepts
 
+
+<div class="kb-summary">
+SAN Fabric Concepts reference covering Fibre Channel Layer Model, Port Types, WWPN vs WWNN, Fabric IDs and Domain IDs, Fabric Login Sequence and 2 more sections.
+</div>
+
 ## Fibre Channel Layer Model
 
 | Layer | Name | Function |

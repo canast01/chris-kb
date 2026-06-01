@@ -1,6 +1,9 @@
 # RASR — Access Control
 
+
+<div class="kb-summary">
 Access control for RASR recovery operations, recovery media, snapshot management roles, and least-privilege principles.
+</div>
 
 ## Access Control Boundaries
 

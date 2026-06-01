@@ -1,5 +1,10 @@
 # Storage Practice Notes
 
+
+<div class="kb-summary">
+Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Thick Provisioning, Deduplication vs Compression, Replication Types, Snapshot vs Clone and 1 more sections.
+</div>
+
 ## RAID Level Quick Reference
 
 | RAID Level | Min Disks | Fault Tolerance | Overhead | Performance | Use Case |

@@ -1,5 +1,10 @@
 # Virtualization Glossary
 
+
+<div class="kb-summary">
+Virtualization Glossary reference covering HA, DRS, vMotion, Storage vMotion, Snapshot and 5 more sections.
+</div>
+
 ## HA
 High Availability. Automatically restarts VMs after host failure.
 

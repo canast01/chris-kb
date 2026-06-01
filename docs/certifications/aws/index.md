@@ -5,6 +5,11 @@ title: AWS — Certifications
 # AWS — Certifications
 
 
+
+<div class="kb-summary">
+Certifications reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
+</div>
+
 <div class="kb-grid kb-grid-1">
 
 <a class="kb-card" href="cloud-practitioner/">

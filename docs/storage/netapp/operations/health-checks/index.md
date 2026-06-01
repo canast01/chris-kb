@@ -1,4 +1,9 @@
 # NetApp Operations — Health Checks
+
+<div class="kb-summary">
+Health Checks reference covering Daily Health Check Workflow, AutoSupport Validation, Pre-Change Checklist, Health Summary Table.
+</div>
+
 ## Daily Health Check Workflow
 
 ```bash

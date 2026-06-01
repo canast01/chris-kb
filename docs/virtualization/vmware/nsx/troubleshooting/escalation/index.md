@@ -1,5 +1,10 @@
 # NSX — Escalation
 
+
+<div class="kb-summary">
+Escalation reference covering Support Portal, When to Escalate, Information to Collect Before Opening a Case, Severity Levels, Support Tier Response Times and 3 more sections.
+</div>
+
 ## Support Portal
 
 All VMware/NSX support is handled through the Broadcom Support Portal:

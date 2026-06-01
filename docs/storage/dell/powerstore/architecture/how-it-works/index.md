@@ -1,5 +1,10 @@
 # PowerStore — How It Works
 
+
+<div class="kb-summary">
+How It Works reference covering Overview, Architecture, Appliance Architecture, Hardware Models, Components and 4 more sections.
+</div>
+
 ## Overview
 
 Dell PowerStore is a mid-range all-flash platform built on an active-active appliance architecture with an NVMe-based internal fabric. It runs **PowerStoreOS (PSTROS)** — a microservices-based OS with containerised workloads. Two families: PowerStore **T** (scale-out capable) and PowerStore **X** (includes AppsOn — embedded vSphere).

@@ -1,6 +1,9 @@
 # Evergreen — Scripts
 
+
+<div class="kb-summary">
 > Part of the [Pure Storage Evergreen](../index.md) reference.
+</div>
 
 ```text
 Evergreen Automation Flow

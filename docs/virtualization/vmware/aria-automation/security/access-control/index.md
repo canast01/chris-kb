@@ -1,5 +1,10 @@
 # Aria Automation — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering RBAC Model, Configuring AD Group Role Assignments, Content Sharing (Service Broker), Approval Policies, Reviewing Role Assignments via API and 1 more sections.
+</div>
+
 ## RBAC Model
 
 Aria Automation uses a **project-based access control** model. All resource provisioning is scoped to a project. Organisation-level roles control platform administration; project-level roles control what users can do within a project.

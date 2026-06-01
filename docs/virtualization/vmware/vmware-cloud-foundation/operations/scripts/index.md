@@ -1,5 +1,10 @@
 # VCF Operations — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Trigger SoS Health Check and Poll Result (Bash).
+</div>
+
 ```text
 VCF API Automation — Data Flow
 ┌─────────────────────────────────────────────────────┐

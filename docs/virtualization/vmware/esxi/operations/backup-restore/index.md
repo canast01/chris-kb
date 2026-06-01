@@ -1,5 +1,10 @@
 # ESXi Backup & Restore
 
+
+<div class="kb-summary">
+ESXi Backup & Restore reference covering VM-Level Backup.
+</div>
+
 ```text
 ESXi Backup & Restore Flow
 ┌────────────────────────────────────────────────────────┐

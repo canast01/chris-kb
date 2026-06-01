@@ -1,6 +1,9 @@
 # Unity — Health Checks
 
+
+<div class="kb-summary">
 Daily and pre/post-change health checks for Dell Unity storage systems.
+</div>
 
 ## Daily Checks
 

@@ -1,5 +1,10 @@
 # FlashArray — Known Issues
 
+
+<div class="kb-summary">
+Known Issues reference covering Quick Reference, Incident Triage, Performance Issues, Latency Targets.
+</div>
+
 ```text
 FlashArray Triage Flow
   Alert / Symptom reported

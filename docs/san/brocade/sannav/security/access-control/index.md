@@ -1,5 +1,10 @@
 # SANnav — Access Control
 
+
+<div class="kb-summary">
+Access Control reference covering Overview, Built-In Roles, Resource Group Scoping, Service Accounts, Least Privilege Guidance and 2 more sections.
+</div>
+
 ```text
 ┌─────────────────────────────────────── SANnav — Access Control ───────────────────────────────────────┐
 │                                                                                                       │

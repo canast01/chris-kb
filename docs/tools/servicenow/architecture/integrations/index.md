@@ -1,6 +1,9 @@
 # ServiceNow — Integration Patterns
 
+
+<div class="kb-summary">
 ServiceNow is designed as an integration hub as much as an ITSM platform. Integration patterns range from simple REST API calls to complex bidirectional event streams via MID Servers. This page covers the primary patterns in use.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # PowerShell — Authentication
 
+
+<div class="kb-summary">
 > Part of the [PowerShell Security](../index.md) reference.
+</div>
 
 ---
 

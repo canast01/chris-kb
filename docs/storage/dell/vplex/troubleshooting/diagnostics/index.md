@@ -1,6 +1,9 @@
 # Dell VPLEX — Diagnostics
 
+
+<div class="kb-summary">
 Systematic diagnostic procedures for VPLEX faults. Work through the relevant section based on the reported symptom. Collect all outputs before calling Dell Support — they will ask for this data.
+</div>
 
 ```mermaid
 flowchart TD

@@ -1,5 +1,10 @@
 # SRM — Scripts
 
+
+<div class="kb-summary">
+Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Test Failover Date and Result, Alert on Plans Not Tested in 30 Days, Check Placeholder VMs Exist at Recovery Site, Export Recovery Plan Summary.
+</div>
+
 ```text
   SRM Automation via PowerCLI + REST API
 ┌──────────────────────────────────────────────────────────────┐

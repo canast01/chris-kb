@@ -1,5 +1,10 @@
 # FOD — Encryption
 
+
+<div class="kb-summary">
+Encryption reference covering Encryption Controls, Key Points.
+</div>
+
 ```text
 ┌──────────────────────────────────────── Dell FoD — Encryption ────────────────────────────────────────┐
 │                                                                                                       │
